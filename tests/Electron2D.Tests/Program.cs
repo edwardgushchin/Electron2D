@@ -24,6 +24,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES_HOST") == "1") { RenderingPrimitiveTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES") == "1") { RenderingPrimitiveTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE_HOST") == "1") { NavigationAvoidanceTests.RunHost(); return; }
@@ -107,6 +108,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON") == "1") { 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_CHILD") is { } dialogPath) { DialogTests.RunChild(dialogPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG") == "1") { DialogTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_BODY_STATE") == "1") { PhysicsBodyStateTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") == "1") { PhysicsParallelTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX_PROFILE") == "1") { PhysicsSandboxTests.RunProfile(); return; }

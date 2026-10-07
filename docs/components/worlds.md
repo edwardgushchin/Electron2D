@@ -18,6 +18,11 @@ SceneTree snapshots the changed viewport's canvas descendants, stopping at indep
 
 Spatial audio area routing selects the emitter's current physics world. RayCast, ShapeCast and direct scene queries use the same selected space. No parallel renderer or second scene-only physics solver is added.
 
+Failed GPU intervals reject subsequent query/step/binding access, while final
+resource disposal still releases the world. Release preserves the same
+owner-thread, active-solver and live body callback restrictions. GPU development
+checks verify failure cleanup and expiration of the borrowed space identity.
+
 ## Public use
 
 ```csharp

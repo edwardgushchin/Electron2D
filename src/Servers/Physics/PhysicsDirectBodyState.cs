@@ -11,12 +11,15 @@ namespace Electron2D;
 /// solver execution, including post-solver integration callbacks. Contact positions, normals and velocities
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
 /// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain
-/// unchanged by subsequent body or fixture edits. Whole-step tangential contact impulse aggregation remains incomplete.</remarks>
+/// unchanged by subsequent body or fixture edits. Live field reads retain the attachment
+/// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Whole-step tangential contact impulse aggregation remains incomplete.</remarks>
 public sealed class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
     private readonly PhysicsSpace _space;
     private readonly B2BodyId _id;
+    private readonly B2World _world;
+    private readonly B2Body _body;
     private B2ContactData[] _rawContacts = [];
     private Contact[] _contacts = [];
     private int _contactCount;
@@ -25,9 +28,14 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         Vector2 LocalPoint, Vector2 ColliderPoint, Vector2 Normal, Vector2 LocalVelocity, Vector2 ColliderVelocity, Vector2 Impulse);
 
     internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space, B2BodyId id)
-    { _runtime = runtime; _space = space; _id = id; PrepareContacts(runtime.ContactLimit); }
+    {
+        _runtime = runtime; _space = space; _id = id;
+        _world = B2Worlds.b2GetWorldFromId(space.WorldID); _body = b2GetBodyFullId(_world, id);
+        PrepareContacts(runtime.ContactLimit);
+    }
     internal bool Matches(PhysicsSpace space, B2BodyId id) => ReferenceEquals(_space, space) && _id == id;
     internal bool CallbackActive => _callbackDepth != 0;
+    internal bool HasCapturedContacts => _contactCount != 0;
     internal void BeginCallback() => _callbackDepth++;
     internal void EndCallback() => _callbackDepth--;
 
@@ -63,11 +71,11 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets angular velocity in radians per second; assignment wakes a dynamic body.</summary>
     /// <value>Angular velocity in radians per second; assignment wakes a dynamic body.</value>
-    public float AngularVelocity { get { return b2Body_GetAngularVelocity(Access()); } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetAngularVelocity(id, value); } }
+    public float AngularVelocity { get { Access(); return b2GetBodyState(_world, _body)?.angularVelocity ?? 0; } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetAngularVelocity(id, value); } }
 
     /// <summary>Gets or sets global-axis velocity in scene units per second; assignment wakes a dynamic body.</summary>
     /// <value>Global-axis velocity in scene units per second; assignment wakes a dynamic body.</value>
-    public Vector2 LinearVelocity { get { return ToScene(b2Body_GetLinearVelocity(Access())); } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetLinearVelocity(id, Shape.ToBackend(value)); } }
+    public Vector2 LinearVelocity { get { Access(); return ToScene(b2GetBodyState(_world, _body)?.linearVelocity ?? default); } set { var id = Access(); Finite(value); b2Body_SetAwake(id, true); b2Body_SetLinearVelocity(id, Shape.ToBackend(value)); } }
 
     /// <summary>Gets center-of-mass offset from the body origin along global axes, in scene units.</summary>
     /// <value>Center-of-mass offset from the body origin along global axes, in scene units.</value>
@@ -87,7 +95,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets whether the body is asleep; setting false wakes it.</summary>
     /// <value>Whether the body is asleep; setting false wakes it.</value>
-    public bool Sleeping { get { return !b2Body_IsAwake(Access()); } set { b2Body_SetAwake(Access(), !value); } }
+    public bool Sleeping { get { Access(); return _body.setIndex != (int)B2SolverSetType.b2_awakeSet; } set { b2Body_SetAwake(Access(), !value); } }
 
     /// <summary>Gets the last nonzero physics step in seconds; zero before the first step.</summary>
     /// <value>The last nonzero physics step in seconds; zero before the first step.</value>
@@ -115,7 +123,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets finite global body pose; assignment requires unit scale and zero skew.</summary>
     /// <value>Finite global body pose; assignment requires unit scale and zero skew.</value>
-    public Transform Transform { get { var id = Access(); return new(b2Rot_GetAngle(b2Body_GetRotation(id)), Vector2.One, 0, ToScene(b2Body_GetPosition(id))); } set { Access(); ValidateTransform(value); var owner = _runtime.Owners; if (owner.Scene is { } scene) { scene.GlobalTransform = value; scene.PrepareBackend(); } else owner.Server!.SetTransform(value); } }
+    public Transform Transform { get { Access(); var pose = b2GetBodyTransformQuick(_world, _body); return new(b2Rot_GetAngle(pose.q), Vector2.One, 0, ToScene(pose.p)); } set { Access(); ValidateTransform(value); var owner = _runtime.Owners; if (owner.Scene is { } scene) { scene.GlobalTransform = value; scene.PrepareBackend(); } else owner.Server!.SetTransform(value); } }
 
     /// <summary>Gets the persistent global force in scene units times kilograms per squared second.</summary>
     /// <returns>Gets the persistent global force in scene units times kilograms per squared second.</returns>

@@ -41,7 +41,7 @@ internal sealed class WorldRuntime
         }
     }
     internal PhysicsSpace Space { get { _ = SpaceRID; return ExistingSpace!; } }
-    internal void ValidateRelease() { lock (_gate) { if (_alive && SceneOwner is null && _resources == 1) ExistingSpace?.EnsureWorldBindingChange(); } }
+    internal void ValidateRelease() { lock (_gate) { if (_alive && SceneOwner is null && _resources == 1) ExistingSpace?.EnsureWorldRelease(); } }
     internal void Release()
     {
         lock (_gate) { if (--_resources == 0 && SceneOwner is null) Destroy(); }

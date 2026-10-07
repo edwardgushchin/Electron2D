@@ -13,6 +13,7 @@ internal static partial class PhysicsSandboxTests
 #else
         const string configuration = "Release";
 #endif
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_SERVER") == "1") { RunServerSmashProfile(); return; }
         using var font = new FontFile();
         font.LoadDynamicFont(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf"));
         using var bold = new FontFile();
@@ -20,10 +21,12 @@ internal static partial class PhysicsSandboxTests
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_LONG") == "1") { RunLongStress(font, bold, configuration); return; }
         var optimized = !(typeof(Engine).Assembly.GetCustomAttributes(typeof(DebuggableAttribute), false).OfType<DebuggableAttribute>().FirstOrDefault()?.IsJITOptimizerDisabled ?? false);
         var failures = new List<string>();
+        PhysicsSpace.ProfilingEnabled = true;
         var sceneFilter = Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_SCENE");
         var indices = sceneFilter is null ? Enumerable.Range(0, SandboxWindow.SceneNames.Length).ToArray() : sceneFilter.Split(',').Select(int.Parse).ToArray();
         var stressCount = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_STRESS_COUNT") ?? "512");
         var warmup = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_WARMUP") ?? "1600");
+        var physicsSamples = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_SAMPLES") ?? "256");
         var tag = Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_TAG") ?? "current";
         var path = System.IO.Path.GetFullPath($"bin/physics-sandbox/profile-{configuration}-{tag}.json");
         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(path)!);
@@ -37,28 +40,46 @@ internal static partial class PhysicsSandboxTests
             if (index == 11) scene.SetSmashPopulation(int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_SMASH_COUNT") ?? "9600"));
             root.AddChild(scene);
             using var tree = new SceneTree(root);
+            GPUPhysicsWorld? gpu = null;
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1")
+                gpu = scene.Colliders.OfType<PhysicsBody>().First().Space!.EnableGPUSolver();
             var constructionBytes = GC.GetAllocatedBytesForCurrentThread() - constructionStart;
             for (var i = 0; i < warmup; i++) { Exercise(scene, i); PhysicsTick(tree); }
-            var samples = new double[256];
+            var samples = new double[physicsSamples];
+            var sampleBytes = new long[physicsSamples];
+            var awakeCounts = new int[physicsSamples];
+            var phases = new double[8];
+            var gpuPhases = new double[4];
+            var phaseBytes = new long[8];
+            var space = scene.Colliders.OfType<PhysicsBody>().First().Space!;
             double backendStep = 0, backendSolve = 0, backendPairs = 0, backendCollide = 0, backendSensors = 0;
             var backendWorld = scene.Colliders.OfType<PhysicsBody>().First().Space!.WorldID;
             var allocated = GC.GetAllocatedBytesForCurrentThread();
+            var allThreadsAllocated = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++)
             {
+                var tickAllocated = GC.GetAllocatedBytesForCurrentThread();
                 var start = Stopwatch.GetTimestamp(); Exercise(scene, i + warmup); PhysicsTick(tree);
                 samples[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+                sampleBytes[i] = GC.GetAllocatedBytesForCurrentThread() - tickAllocated;
+                awakeCounts[i] = Box2D.NET.B2Worlds.b2GetWorldFromId(backendWorld).solverSets.data[(int)Box2D.NET.B2SolverSetType.b2_awakeSet].bodySims.count;
+                for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += space.ProfileMS[phase]; phaseBytes[phase] += space.ProfileBytes[phase]; }
+                if (gpu is not null) for (var phase = 0; phase < gpuPhases.Length; phase++) gpuPhases[phase] += gpu.SolverProfileMS[phase];
                 var bp = Box2D.NET.B2Worlds.b2World_GetProfile(backendWorld);
                 backendStep += bp.step; backendSolve += bp.solve; backendPairs += bp.pairs; backendCollide += bp.collide; backendSensors += bp.sensors;
             }
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
+            allThreadsAllocated = GC.GetTotalAllocatedBytes(true) - allThreadsAllocated;
             if (allocated != 0) failures.Add($"Physics {index}: {allocated} bytes across {samples.Length} ticks.");
+            if (allThreadsAllocated != 0) failures.Add($"Physics {index}, all managed threads: {allThreadsAllocated} bytes across {samples.Length} ticks.");
             Console.WriteLine($"Physics {index}: {samples.Average():0.000} ms/tick, {allocated} B/{samples.Length} ticks, {scene.BodyCount} bodies.");
-            physics.Add(new { scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length });
+            physics.Add(new { scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray() });
         }
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_HEADLESS") == "1")
         {
-            File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, warmupPhysics = warmup, physicsSamples = 256, physics }, new JsonSerializerOptions { WriteIndented = true }));
-            Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
+            File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, warmupPhysics = warmup, physicsSamples, physics, failures }, new JsonSerializerOptions { WriteIndented = true }));
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_DIAGNOSTIC") != "1")
+                Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
             return;
         }
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu");
@@ -67,17 +88,21 @@ internal static partial class PhysicsSandboxTests
         Engine.MaxFPS = 60;
         var native = new List<object>();
         var nativeWarmup = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_NATIVE_WARMUP") ?? "768");
-        const int nativeSamples = 192;
+        var nativeSamples = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_NATIVE_SAMPLES") ?? "192");
         var trialFrames = nativeWarmup + nativeSamples;
         using var window = new SandboxWindow(font, bold);
         bool[]? nativeInput = null;
-        var times = new double[192]; var renders = new double[192]; var bytes = new long[192]; var renderBytes = new long[192];
+        var times = new double[nativeSamples]; var renders = new double[nativeSamples]; var bytes = new long[nativeSamples]; var renderBytes = new long[nativeSamples];
+        var allThreadBytes = new long[nativeSamples];
+        var physicsPhaseBytes = new long[nativeSamples * 8];
+        long previousAllThreadBytes = 0;
         long previous = 0, previousBytes = 0, renderStart = 0, renderAllocated = 0;
         var frame = 0;
         Action pre = () => { if (frame % trialFrames != 0) Exercise(window.Scene, frame % trialFrames); renderStart = Stopwatch.GetTimestamp(); renderAllocated = GC.GetAllocatedBytesForCurrentThread(); };
         Action post = () =>
         {
             var now = Stopwatch.GetTimestamp(); var allocated = GC.GetAllocatedBytesForCurrentThread();
+            var allAllocated = GC.GetTotalAllocatedBytes(true);
             var renderMS = Stopwatch.GetElapsedTime(renderStart, now).TotalMilliseconds;
             var renderingBytes = allocated - renderAllocated;
             var trial = frame / trialFrames; var phase = frame % trialFrames;
@@ -87,6 +112,7 @@ internal static partial class PhysicsSandboxTests
                 window.SwitchScene(indices[trial]);
                 if (window.Scene.Index == 8) window.Scene.SetStoryParameter(stressCount);
                 if (window.Scene.Index == 11) window.Scene.SetSmashPopulation(int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_SMASH_COUNT") ?? "9600"));
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1") window.Scene.Colliders.OfType<PhysicsBody>().First().Space!.EnableGPUSolver();
                 Exercise(window.Scene, 0);
                 ClearProfileHover();
             }
@@ -95,13 +121,17 @@ internal static partial class PhysicsSandboxTests
                 var i = phase - nativeWarmup;
                 times[i] = Stopwatch.GetElapsedTime(previous, now).TotalMilliseconds;
                 renders[i] = renderMS; bytes[i] = allocated - previousBytes; renderBytes[i] = renderingBytes;
+                allThreadBytes[i] = allAllocated - previousAllThreadBytes;
+                var space = ((PhysicsBody)window.Scene.Colliders[0]).Space!;
+                space.ProfileBytes.CopyTo(physicsPhaseBytes, i * 8);
             }
             if (phase == trialFrames - 1)
             {
                 var mean = times.Average();
                 if (bytes.Max() != 0) failures.Add($"Native {trial}: max {bytes.Max()} bytes/frame, render max {renderBytes.Max()}.");
+                if (allThreadBytes.Max() != 0) failures.Add($"Native {trial}, all managed threads: max {allThreadBytes.Max()} bytes/frame.");
                 Console.WriteLine($"Profile {trial}: {1000 / mean:0.0} FPS, {bytes.Average():0.0} B/frame, max {bytes.Max()}, render {renderBytes.Average():0.0}");
-                native.Add(new { scene = SandboxWindow.SceneNames[indices[trial]], bodies = window.Scene.BodyCount, fps = 1000 / mean, frameMS = mean, frameP95MS = Percentile(times), renderMS = renders.Average(), renderP95MS = Percentile(renders), bytesPerFrame = bytes.Average(), renderBytesPerFrame = renderBytes.Average(), maxBytesPerFrame = bytes.Max(), maxRenderBytesPerFrame = renderBytes.Max() });
+                native.Add(new { scene = SandboxWindow.SceneNames[indices[trial]], bodies = window.Scene.BodyCount, fps = 1000 / mean, frameMS = mean, frameP95MS = Percentile(times), renderMS = renders.Average(), renderP95MS = Percentile(renders), bytesPerFrame = bytes.Average(), renderBytesPerFrame = renderBytes.Average(), maxBytesPerFrame = bytes.Max(), maxRenderBytesPerFrame = renderBytes.Max(), allThreadBytesPerFrame = allThreadBytes.Average(), maxAllThreadBytesPerFrame = allThreadBytes.Max(), sampleBytes = bytes.ToArray(), physicsPhaseBytes = physicsPhaseBytes.ToArray() });
                 if (window.Scene.Index == 11)
                 {
                     using var capture = RenderingServer.Service!.Readback();
@@ -109,13 +139,15 @@ internal static partial class PhysicsSandboxTests
                 }
             }
             frame++; previous = Stopwatch.GetTimestamp(); previousBytes = GC.GetAllocatedBytesForCurrentThread();
+            previousAllThreadBytes = GC.GetTotalAllocatedBytes(true);
         };
         window.Ready += _ => { nativeInput = SuppressProfileInput(); RenderingServer.FramePreDraw += pre; RenderingServer.FramePostDraw += post; };
         try { Check(RunProfileWindow(window) == 0 && frame >= indices.Length * trialFrames, "Complete native performance profile."); }
         finally { RestoreProfileInput(nativeInput); if (RenderingServer.IsAvailable) { RenderingServer.FramePreDraw -= pre; RenderingServer.FramePostDraw -= post; } }
-        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, maxPhysicsStepsPerFrame = 1, warmupPhysics = warmup, physicsSamples = 256, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner", physics, native }, new JsonSerializerOptions { WriteIndented = true }));
+        File.WriteAllText(path, JsonSerializer.Serialize(new { configuration, optimized, platform = System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier, backend = "gpu", maxFPS = 60, maxPhysicsStepsPerFrame = 1, warmupPhysics = warmup, physicsSamples, warmupNative = nativeWarmup, nativeSamples, thread = "scene/render owner and all managed threads", physics, native, failures }, new JsonSerializerOptions { WriteIndented = true }));
         Console.WriteLine("PhysicsSandbox performance profile: " + path);
-        Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_DIAGNOSTIC") != "1")
+            Check(failures.Count == 0, "Zero managed allocation budget: " + string.Join("; ", failures));
     }
 
     private static void RunLongStress(Font font, Font bold, string configuration)
@@ -199,6 +231,25 @@ internal static partial class PhysicsSandboxTests
             var body = scene.Bodies[0];
             body.ApplyCentralImpulse(new Vector2(frame % 96 == 0 ? 80 : -80, -40) * scale);
         }
+    }
+
+    private static string StateHash(PhysicsScene scene)
+    {
+        var values = new float[(scene.Bodies.Count + scene.SmashFragmentCount) * 6];
+        for (var i = 0; i < scene.Bodies.Count; i++)
+        {
+            var body = scene.Bodies[i]; var point = body.Position; var velocity = body.LinearVelocity;
+            values[i * 6] = point.X; values[i * 6 + 1] = point.Y; values[i * 6 + 2] = body.Rotation;
+            values[i * 6 + 3] = velocity.X; values[i * 6 + 4] = velocity.Y; values[i * 6 + 5] = body.AngularVelocity;
+        }
+        for (var i = 0; i < scene.SmashFragmentCount; i++)
+        {
+            var fragment = scene.SmashFragments[i]; var state = fragment.State!;
+            var offset = (scene.Bodies.Count + i) * 6; var point = fragment.Pose.Origin; var velocity = state.LinearVelocity;
+            values[offset] = point.X; values[offset + 1] = point.Y; values[offset + 2] = fragment.Pose.Rotation;
+            values[offset + 3] = velocity.X; values[offset + 4] = velocity.Y; values[offset + 5] = state.AngularVelocity;
+        }
+        return Convert.ToHexString(System.Security.Cryptography.SHA256.HashData(System.Runtime.InteropServices.MemoryMarshal.AsBytes(values.AsSpan())));
     }
 
     private static double Percentile(double[] samples)

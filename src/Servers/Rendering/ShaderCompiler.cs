@@ -22,6 +22,29 @@ internal static unsafe class ShaderCompiler
 
     internal static SDL.GPUShaderFormat GetFormats() => Run(ShaderCross.GetSPIRVShaderFormats);
 
+    internal static nint CreateComputePipeline(nint device, byte[] code) => Run(() =>
+    {
+        fixed (byte* pointer = code)
+        fixed (byte* entrypoint = "main\0"u8)
+        {
+            var reflection = ShaderCross.ReflectComputeSPIRV((nint)pointer, (nuint)code.Length, 0);
+            if (reflection == 0) throw new ArgumentException("Compute reflection failed: " + SDL.GetError(), nameof(code));
+            try
+            {
+                var metadata = Marshal.PtrToStructure<ShaderCross.ComputePipelineMetadata>(reflection);
+                var info = new ShaderCross.SPIRVInfo
+                {
+                    ByteCode = (nint)pointer,
+                    ByteCodeSize = (nuint)code.Length,
+                    Entrypoint = (nint)entrypoint,
+                    ShaderStage = ShaderCross.ShaderStage.Compute
+                };
+                return ShaderCross.CompileComputePipelineFromSPIRV(device, in info, in metadata, 0);
+            }
+            finally { SDL.Free(reflection); }
+        }
+    });
+
     internal static nint CreateShader(nint device, byte[] code, bool fragment) => Run(() =>
     {
         fixed (byte* pointer = code)
@@ -61,21 +84,22 @@ internal static unsafe class ShaderCompiler
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
                         r.NumUniformBuffers != program.BufferSizes.Length || !fragment && r.NumUniformBuffers != 1)
                         throw new NotSupportedException("The reflected resources do not match the canvas stage interface.");
-                    if (metadata.NumInputs > (fragment ? 3 : 4) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 3))
+                    if (metadata.NumInputs > (fragment ? 3 : 7) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 3))
                         throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two and one fragment color output.");
                     if (fragment) ValidateVaryings(metadata.Inputs, metadata.NumInputs);
                     if (!fragment)
                     {
-                        if (metadata.NumInputs is < 3 or > 4) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
+                        if (metadata.NumInputs is < 3 or > 7) throw new NotSupportedException("Canvas vertices require float2 position, float4 color and float2 UV.");
                         var locations = 0;
                         for (var i = 0; i < metadata.NumInputs; i++)
                         {
                             var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(metadata.Inputs + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
-                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 3 || field.VectorSize != (field.Location is 1 or 3 ? 4 : 2) ||
+                            if (field.VectorType != ShaderCross.IOVarType.Float32 || field.Location > 6 || field.VectorSize != (field.Location is 0 or 2 ? 2 : 4) ||
                                 (locations & (1 << (int)field.Location)) != 0)
-                                throw new NotSupportedException("Canvas vertex inputs must be position at location zero, color at one, UV at two and optional raw instance data at three.");
+                                throw new NotSupportedException("Canvas vertex inputs require position at zero, color at one, UV at two, then raw instance data or the complete hardware instance layout.");
                             locations |= 1 << (int)field.Location;
                         }
+                        if ((locations & 112) != 0 && (locations & 120) != 120) throw new NotSupportedException("Hardware instances require basis, translation, color and custom data at locations three through six.");
                         if ((locations & 7) != 7) throw new NotSupportedException("Canvas vertex inputs require position, color and UV.");
                     }
                     if (fragment) ValidateColor(metadata.Outputs);

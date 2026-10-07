@@ -13,7 +13,7 @@ internal sealed partial class PhysicsSpace
     private readonly record struct BodyMotion(B2Vec2 Center, B2Vec2 Velocity, float Angular, bool Active);
     private bool _dispatchingBodyStates;
     private readonly List<CallbackBody> _callbackBodies = [];
-    private readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, B2BodyId ID);
+    private readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, B2BodyId ID, PhysicsBody? Scene);
 
     private void CaptureBodyMotions()
     {
@@ -34,31 +34,68 @@ internal sealed partial class PhysicsSpace
         return motion.Active ? b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center))) : default;
     }
 
-    private void PrepareBodyStates(double delta)
+    private bool PrepareBodyStates(double delta)
     {
         LastStep = (float)delta;
         _callbackBodies.Clear();
+        var hasKinematicBodies = false;
+        var captureCallbacks = false;
+        var uniform = _fieldAreas.Count == 0 && !DefaultAreaFields.GravityPoint;
+        var gravity = DefaultAreaFields.GravityVector * DefaultAreaFields.Gravity;
+        var linearDamp = DefaultAreaFields.LinearDamp;
+        var angularDamp = DefaultAreaFields.AngularDamp;
         foreach (var body in _bodies)
         {
             var runtime = body.Runtime;
-            runtime.ApplyBeforeStep();
-            runtime.GetView(this, body.BackendID);
-            _callbackBodies.Add(new(runtime, body.BackendID));
+            if (body is RigidBody or CharacterBody)
+            {
+                if (!uniform) ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
+                if (body is RigidBody rigid) rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
+                else
+                {
+                    runtime.ApplyResolvedFields(body.BackendID, gravity, linearDamp, angularDamp, _defaultGravity, delta);
+                    ((CharacterBody)body).SetResolvedGravity(runtime.Gravity);
+                }
+            }
+            runtime.ApplyBeforeStep(body.BackendID, body);
+            captureCallbacks |= RequiresBodySnapshot(runtime, body);
+            if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+            else if (body is CharacterBody character) character.PrepareMotion(delta);
+            else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
+            hasKinematicBodies |= body.RequestedBodyType == B2BodyType.b2_kinematicBody && !body.PhysicsMadeStatic;
         }
         foreach (var body in _serverColliders)
         {
             if (body.IsArea) continue;
-            var runtime = PhysicsServer.Service.BodyRuntime(body.RID);
-            runtime.ApplyBeforeStep();
-            runtime.GetView(this, body.BackendID);
-            _callbackBodies.Add(new(runtime, body.BackendID));
+            var runtime = body.Runtime;
+            if (body.Mode != PhysicsServer.BodyMode.Static)
+            {
+                if (!uniform) ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GetTransform().Origin, out gravity, out linearDamp, out angularDamp);
+                runtime.ApplyResolvedFields(body.BackendID, gravity, linearDamp, angularDamp, _defaultGravity, delta);
+            }
+            runtime.ApplyBeforeStep(body.BackendID, null);
+            captureCallbacks |= RequiresBodySnapshot(runtime, null);
+            hasKinematicBodies |= body.Mode == PhysicsServer.BodyMode.Kinematic;
         }
+        if (captureCallbacks)
+        {
+            // Keep the complete order when callbacks can enable later receivers during dispatch.
+            foreach (var body in _bodies) _callbackBodies.Add(new(body.Runtime, body.BackendID, body));
+            foreach (var body in _serverColliders) if (!body.IsArea) _callbackBodies.Add(new(body.Runtime, body.BackendID, null));
+        }
+        return hasKinematicBodies;
     }
+
+    private static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>
+        runtime.ForceCallback is not null || runtime.SyncCallback is not null ||
+        (scene is RigidBody ? scene.GetType() != typeof(RigidBody) : runtime.MaxContacts > 0 || runtime.View is { IsDisposed: false, HasCapturedContacts: true });
 
     private bool Current(CallbackBody body)
     {
         try
         {
+            if (body.Scene is { } scene)
+                return !scene.IsDisposed && scene.Space == this && scene.BackendID == body.ID;
             var owner = body.Runtime.Owners;
             return (owner.Scene?.Space ?? owner.Server?.Space) == this &&
                 (owner.Scene?.BackendID ?? owner.Server!.BackendID) == body.ID;
@@ -70,7 +107,8 @@ internal sealed partial class PhysicsSpace
     {
         foreach (var body in _callbackBodies)
         {
-            if (Current(body) && body.Runtime.Owners.Scene is not RigidBody)
+            if (body.Scene is not RigidBody &&
+                (body.Runtime.MaxContacts > 0 || body.Runtime.View is { IsDisposed: false, HasCapturedContacts: true }) && Current(body))
                 body.Runtime.GetView(this, body.ID).CaptureContacts();
         }
     }
@@ -83,10 +121,10 @@ internal sealed partial class PhysicsSpace
         {
             foreach (var body in _callbackBodies)
             {
-                if (!Current(body)) continue;
-                var owner = body.Runtime.Owners.Scene;
+                var owner = body.Scene;
                 if (body.Runtime.ForceCallback is null && body.Runtime.SyncCallback is null &&
                     (owner is not RigidBody || owner.GetType() == typeof(RigidBody))) continue;
+                if (!Current(body)) continue;
                 if (b2Body_GetType(body.ID) == B2BodyType.b2_staticBody ||
                     !body.Runtime.ActiveBeforeStep && !b2Body_IsAwake(body.ID)) continue;
                 var state = body.Runtime.GetView(this, body.ID);

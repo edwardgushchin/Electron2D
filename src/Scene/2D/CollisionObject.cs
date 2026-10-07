@@ -13,8 +13,8 @@ public abstract partial class CollisionObject : Entity
     ];
 
     private CollisionDisableMode _disableMode;
-    internal bool PhysicsRemoved => IsInsideTree && ProcessingDisabled && _disableMode == CollisionDisableMode.Remove;
-    internal bool PhysicsMadeStatic => IsInsideTree && ProcessingDisabled && _disableMode == CollisionDisableMode.MakeStatic;
+    internal bool PhysicsRemoved => _disableMode == CollisionDisableMode.Remove && IsInsideTree && ProcessingDisabled;
+    internal bool PhysicsMadeStatic => _disableMode == CollisionDisableMode.MakeStatic && IsInsideTree && ProcessingDisabled;
 
     private uint _collisionLayer = 1;
     private uint _collisionMask = 1;

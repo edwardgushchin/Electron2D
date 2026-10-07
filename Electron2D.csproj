@@ -41,6 +41,7 @@
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Vendor/ICU/data/TextBreak78.dat" LogicalName="Electron2D.TextBreak.dat" />
     <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
+    <EmbeddedResource Include="src/Servers/Physics/Shaders/*.spv" LogicalName="Electron2D.PhysicsShaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Fonts/*.woff2;src/Scene/Theme/Fonts/*.ttf" LogicalName="Electron2D.Fonts.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Icons/*.svg" LogicalName="Electron2D.Icons.%(Filename)%(Extension)" />
   </ItemGroup>

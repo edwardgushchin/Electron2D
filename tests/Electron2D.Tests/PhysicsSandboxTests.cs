@@ -27,6 +27,8 @@ internal static partial class PhysicsSandboxTests
             if (current is not null) { root.RemoveChild(current); current.Dispose(); }
             current = new PhysicsScene(index, font);
             root.AddChild(current);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1")
+                current.Colliders.OfType<PhysicsBody>().First().Space!.EnableGPUSolver();
         }
         for (var index = 0; index < SandboxWindow.SceneNames.Length; index++)
         {
@@ -59,7 +61,7 @@ internal static partial class PhysicsSandboxTests
             Check(scene.PhysicsSteps == steps && scene.Bodies.Select(b => b.GlobalTransform).SequenceEqual(poses), "Pause retains body state: " + index);
             scene.StepOnce(); PhysicsTick(tree); PhysicsTick(tree);
             Check(scene.PhysicsSteps == steps + 1, "Single step advances exactly one interval: " + index);
-            var rids = scene.Bodies.Select(b => b.GetRID()).ToArray();
+            var rids = scene.Bodies.Select(b => b.GetRID()).Concat(scene.SmashFragments.Select(b => b.RID)).ToArray();
             Switch((index + 1) % SandboxWindow.SceneNames.Length);
             Check(scene.IsDisposed && scene.Bodies.All(b => b.IsDisposed), "Switch releases every scene node.");
             foreach (var rid in rids)
@@ -137,27 +139,67 @@ internal static partial class PhysicsSandboxTests
         for (var i = 0; i < 240; i++) PhysicsTick(tree);
         Check(current.ContactEvents > 0 && bird.Position.DistanceTo(new(160, 526)) > 150, "The projectile travels and generates real tower/floor contacts.");
         Switch(11);
-        var oldPiece = current!.Bodies[^1];
+        var oldPiece = current!.SmashFragments[^1];
         current.SetSmashPopulation(64);
-        Check(current.BodyCount == 65 && oldPiece.IsDisposed && current.SelectedBody is null, "Smash population removes actual bodies without selecting one.");
+        Check(current.BodyCount == 65 && oldPiece.IsDisposed && !current.HasSelection, "Smash population removes actual bodies without selecting one.");
         current.SetSmashPopulation(128);
-        Check(current.BodyCount == 129 && current.Bodies.All(b => b.Sleeping), "Rebuilt Smash is ready with a sleeping wall and block.");
-        var colorPiece = current.Bodies[1];
+        Check(current.BodyCount == 129 && current.Bodies.All(b => b.Sleeping) && current.SmashFragments.All(b => b.State!.Sleeping), "Rebuilt Smash is ready with a sleeping wall and block.");
+        var colorPiece = current.SmashFragments[0];
         Check(current.GetSmashColor(colorPiece) == PhysicsScene.SmashSleepingColor, "Sleeping fragments use the muted state color.");
-        colorPiece.Sleeping = false; colorPiece.LinearVelocity = Vector2.Zero;
+        colorPiece.State!.Sleeping = false; colorPiece.State.LinearVelocity = Vector2.Zero;
         Check(current.GetSmashColor(colorPiece) == PhysicsScene.Pink, "Awake slow fragments use pink.");
-        colorPiece.LinearVelocity = new(200 * PhysicsScene.SmashScale, 0);
+        colorPiece.State!.LinearVelocity = new(200 * PhysicsScene.SmashScale, 0);
         Check(current.GetSmashColor(colorPiece) == PhysicsScene.Apricot, "Fast fragments use apricot based on step travel and size.");
+        current.Act(2);
+        current.InputBounds = new Rect2(Vector2.Zero, new Vector2(1152, 800) * PhysicsScene.SmashScale);
+        var fragment = current.SmashFragments[0]; var fragmentPoint = fragment.Pose.Origin;
+        Pointer(root, fragmentPoint, true);
+        Check(current.SelectedRID == fragment.RID && current.SelectedRole == "Fragment", "Server fragments can be selected through scene queries.");
+        Motion(root, fragmentPoint + new Vector2(120, -100) * PhysicsScene.SmashScale);
+        for (var i = 0; i < 30; i++) PhysicsTick(tree);
+        Check(fragment.Pose.Origin.DistanceTo(fragmentPoint) > 10, "Grab forces move a server fragment through the solver.");
+        Pointer(root, fragment.Pose.Origin, false);
+        Key(root, Electron2D.Key.K); Check(fragment.Frozen && PhysicsServer.BodyGetMode(fragment.RID) == PhysicsServer.BodyMode.Static, "Fragment freeze uses a real static solver body.");
+        Key(root, Electron2D.Key.H); Check(fragment.Kinematic && PhysicsServer.BodyGetMode(fragment.RID) == PhysicsServer.BodyMode.Kinematic, "Fragment freeze mode uses a real kinematic solver body.");
+        Pointer(root, fragment.Pose.Origin, true);
+        var target = fragment.Pose.Origin + new Vector2(100, -80);
+        Motion(root, target); PhysicsTick(tree); PhysicsTick(tree);
+        Check(fragment.Pose.Origin.DistanceTo(target) < 1, $"Kinematic fragment dragging reaches the target pose: {fragment.Pose.Origin} vs {target}.");
+        Pointer(root, target, false);
+        Key(root, Electron2D.Key.K); Key(root, Electron2D.Key.L);
+        Check(PhysicsServer.BodyGetMode(fragment.RID) == PhysicsServer.BodyMode.RigidLinear, "Fragment rotation locking uses the solver's linear rigid mode.");
+        Key(root, Electron2D.Key.C); Check(!PhysicsServer.BodyGetConstantForce(fragment.RID).IsZeroApprox(), "Fragment persistent lift force is applied to its server body.");
+        Key(root, Electron2D.Key.C);
+        for (var policy = 1; policy <= 3; policy++)
+        {
+            Key(root, Electron2D.Key.V); PhysicsTick(tree);
+            Check(fragment.Policy == policy && (policy != 1 || fragment.State is null) &&
+                (policy != 2 || PhysicsServer.BodyGetMode(fragment.RID) == PhysicsServer.BodyMode.Static), "Server fragment participation policy: " + policy);
+        }
+        Key(root, Electron2D.Key.V); PhysicsTick(tree);
+        Check(fragment.Policy == 0 && fragment.State is { IsDisposed: false }, "Fragment participation can resume with a new live view.");
+        Pointer(root, new Vector2(300, 200) * PhysicsScene.SmashScale, true);
+        Pointer(root, new Vector2(300, 200) * PhysicsScene.SmashScale, false);
+        Check(!current.HasSelection, "An empty stage click clears the server-fragment selection.");
         current.SetStoryParameter(800 * PhysicsScene.SmashScale); current.Act(0);
         Check(current.Bodies[0].LinearVelocity == new Vector2(800 * PhysicsScene.SmashScale, 0), "Smash impact-speed control drives actual block velocity.");
         for (var i = 0; i < 120; i++) PhysicsTick(tree);
         Check(current.Score >= 16 && current.ContactEvents > 0, "Smash wakes and scatters the resized wall.");
+        var detachedView = current.SmashFragments[0].State!;
+        var retainedVelocity = detachedView.LinearVelocity; var retainedSleep = detachedView.Sleeping;
+        root.RemoveChild(current);
+        Check(detachedView.IsDisposed && current.SmashFragments.All(b => b.State is null), "Scene exit releases fragment attachments and live views.");
+        root.AddChild(current);
+        Check(current.SmashFragments.All(b => b.State is { IsDisposed: false }) &&
+            current.SmashFragments[0].State!.LinearVelocity.IsEqualApprox(retainedVelocity) &&
+            current.SmashFragments[0].State!.Sleeping == retainedSleep, "Reentry reattaches every server fragment and preserves motion/sleep state.");
         current.Act(2);
-        Check(current.Score == 0 && current.Bodies.All(b => b.LinearVelocity.IsZeroApprox()), "Rebuilding clears motion and score without replacing bodies.");
+        Check(current.Score == 0 && current.Bodies.All(b => b.LinearVelocity.IsZeroApprox()) && current.SmashFragments.All(b => b.State!.LinearVelocity.IsZeroApprox()), "Rebuilding clears motion and score without replacing bodies.");
         Console.WriteLine("Smash: checking maximum wall construction and teardown.");
         current.SetSmashPopulation(PhysicsScene.SmashMaximumCount);
         Check(current.BodyCount == PhysicsScene.SmashMaximumCount + 1, "Smash maximum consists of 65,536 real fragments and one block.");
         var largeWorld = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(current.Bodies[0].BackendID));
+        Check(Box2D.NET.B2Worlds.b2World_GetCounters(current.Bodies[0].Space!.WorldID).bodyCount == current.BodyCount + 4, "All fragments, the block and four boundaries belong to the same real solver world.");
         Check(largeWorld.bodyMoveEvents.capacity >= current.BodyCount, "Body movement events are prepared before a large sleeping wall wakes.");
         var dormantSlots = largeWorld.solverSets.data.AsSpan(3, largeWorld.solverSets.count - 3);
         long dormantBodies = 0, dormantContacts = 0;
@@ -167,8 +209,8 @@ internal static partial class PhysicsSandboxTests
             "Independent sleeping fragments prepare linear dormant storage, without full-world copies per island.");
         current.Act(0);
         for (var i = 0; i < 32; i++) PhysicsTick(tree);
-        Check(current.Bodies.All(b => b.Position.IsFinite() && b.LinearVelocity.IsFinite()), "Maximum Smash load preserves finite solver state.");
-        var removedMaximumPiece = current.Bodies[^1]; current.SetSmashPopulation(64);
+        Check(current.Bodies.All(b => b.Position.IsFinite() && b.LinearVelocity.IsFinite()) && current.SmashFragments.All(b => b.Pose.IsFinite() && b.State!.LinearVelocity.IsFinite()), "Maximum Smash load preserves finite solver state.");
+        var removedMaximumPiece = current.SmashFragments[^1]; current.SetSmashPopulation(64);
         Check(removedMaximumPiece.IsDisposed && current.BodyCount == 65, "Maximum population can shrink and release all removed bodies.");
         for (var i = 0; i < SandboxWindow.SceneNames.Length; i++) Switch(i % SandboxWindow.SceneNames.Length);
         Console.WriteLine("PhysicsSandbox passed: twelve stories, finite simulation, all 36 actions, pause/step, grabbing, freeze and repeated scene/RID cleanup.");
@@ -285,21 +327,21 @@ internal static partial class PhysicsSandboxTests
             var phase = (frame - 1) % framesPerScene;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
             if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); }
-            if (scene == 11 && phase == 0) { window.Scene.Running = false; window.Scene.Act(2); }
+            if (scene == 11 && phase == 0) { NativeKey(SDL.Scancode.P); window.Scene.Act(2); }
             if (scene == 11 && phase == 2)
             {
                 using var wall = RenderingServer.Service!.Readback();
                 wall.SavePNG(System.IO.Path.Combine(directory, "12-solid.png"));
                 var transform = window.Scene.GetGlobalTransformWithCanvas();
-                var first = transform * window.Scene.Bodies[1].GlobalPosition;
-                var last = transform * window.Scene.Bodies[^1].GlobalPosition;
+                var first = transform * window.Scene.SmashFragments[0].Pose.Origin;
+                var last = transform * window.Scene.SmashFragments[^1].Pose.Origin;
                 var fill = wall.GetPixel((int)first.X, (int)first.Y);
                 var seams = 0;
                 for (var y = (int)MathF.Ceiling(first.Y); y < (int)last.Y; y++)
                     for (var x = (int)MathF.Ceiling(first.X); x < (int)last.X; x++)
                         if (!wall.GetPixel(x, y).IsEqualApprox(fill)) seams++;
                 Check(!fill.IsEqualApprox(PhysicsScene.Paper) && seams == 0, $"Sleeping Smash wall reads as one solid object without raster seams: {seams} mismatched pixels.");
-                window.Scene.Act(0); window.Scene.Running = true;
+                window.Scene.Act(0); NativeKey(SDL.Scancode.P);
             }
             if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
             if (scene == 0 && phase == 3)
@@ -419,7 +461,7 @@ internal static partial class PhysicsSandboxTests
             if (scene == 9 && phase == 50)
             {
                 var friction = window.GetNode<CanvasLayer>("Interface").GetChildren().OfType<HSlider>().ElementAt(5);
-                Check(window.Scene.SelectedBody == window.Scene.Bodies[1] && Math.Abs(friction.Value - 1.2) < .001, "Rough tire friction displays its actual magnitude.");
+                Check(window.Scene.SelectedRID == window.Scene.Bodies[1].GetRID() && Math.Abs(friction.Value - 1.2) < .001, "Rough tire friction displays its actual magnitude.");
                 NativeClick(UI("Parameter5", .35f));
             }
             if (scene == 9 && phase == 52) Check(PhysicsServer.BodyGetFriction(window.Scene.Bodies[1].GetRID()) < 0, "Editing tire friction preserves rough material mixing.");
@@ -448,20 +490,20 @@ internal static partial class PhysicsSandboxTests
                 Check(window.Scene.SmashFragmentCount is >= 64 and <= 4096 && window.Scene.BodyCount == window.Scene.SmashFragmentCount + 1, "Native Smash population control changes real body count.");
                 using var controls = RenderingServer.Service!.Readback();
                 controls.SavePNG(System.IO.Path.Combine(directory, "12-controls.png"));
-                NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.Bodies[1].GlobalPosition);
+                NativeClick(window.Scene.GetGlobalTransformWithCanvas() * window.Scene.SmashFragments[0].Pose.Origin);
             }
             if (scene == 11 && phase == 54)
             {
-                Check(window.Scene.SelectedBody == window.Scene.Bodies[1] && Math.Abs(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Value - .0045) < .00001, "Fragment mass is shown without clamping.");
+                Check(window.Scene.SelectedRID == window.Scene.SmashFragments[0].RID && Math.Abs(window.GetNode<CanvasLayer>("Interface").GetNode<HSlider>("Parameter4").Value - .0045) < .00001, "Fragment mass is shown without clamping.");
                 NativeClick(UI("Parameter4", .1f));
             }
-            if (scene == 11 && phase == 56) Check(window.Scene.Bodies[1].Mass > 1, "Native object slider edits a Smash fragment's physical mass.");
+            if (scene == 11 && phase == 56) Check(PhysicsServer.BodyGetMass(window.Scene.SmashFragments[0].RID) > 1, "Native object slider edits a Smash fragment's physical mass.");
             if (scene == 11 && phase == 58) NativeClick(new(200, 210));
-            if (scene == 11 && phase == 60) Check(window.Scene.SelectedBody is null, "Empty Smash field click clears selection.");
+            if (scene == 11 && phase == 60) Check(!window.Scene.HasSelection, "Empty Smash field click clears selection.");
             if (scene == 11 && phase == 62) { window.Scene.SetSmashPopulation(PhysicsScene.SmashDefaultCount); window.Scene.Act(0); }
             if (scene == 11 && phase == 170)
             {
-                Check(window.Scene.Score > 50 && window.Scene.Bodies.All(b => b.Position.IsFinite()), "The rendered full-load impact scatters real fragments.");
+                Check(window.Scene.Score > 50 && window.Scene.SmashFragments.All(b => b.Pose.IsFinite()), "The rendered full-load impact scatters real fragments.");
                 using var impact = RenderingServer.Service!.Readback();
                 impact.SavePNG(System.IO.Path.Combine(directory, "12-impact.png"));
             }
@@ -478,7 +520,12 @@ internal static partial class PhysicsSandboxTests
 
     private static void PhysicsTick(SceneTree tree)
     {
-        try { tree.PhysicsFrame(1d / 60); }
+        try
+        {
+            tree.PhysicsFrame(1d / 60);
+            for (var i = 0; i < tree.Root.GetChildCount(); i++)
+                if (tree.Root.GetChild(i) is PhysicsScene scene) scene.CaptureSmashState();
+        }
         catch (Exception error) { Console.WriteLine("Original physics failure before teardown: " + error); throw; }
     }
     private static void NativeClick(Vector2 point)

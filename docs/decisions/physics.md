@@ -5,12 +5,12 @@ Last updated: 2026-10-07
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
 <a id="adr-0054"></a>
-## ADR 0054: Box2D-backed scene bodies and collision shapes
+## ADR 0054: CPU compatibility and GPU physics worlds
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 - Status: Accepted
-- Scope: First typed scene-body and shape vertical slice
+- Scope: Scene/server physics world backends, body integration and collision shapes
 - Depends on: [0012](product.md#adr-0012), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
 
 ### Context
@@ -19,6 +19,8 @@ The fixed physics frame, scene-node hierarchy, typed resources and retained rend
 
 ### Decision
 
+- Preserve managed Box2D.NET as the CPU backend and develop an Electron2D-owned GPU backend through the already vendored SDL GPU/ShaderCross interface. Game developers explicitly choose CPU/Box2D or GPU according to their simulation and deployment goals; CPU is a first-class selectable backend. Physical computation and canvas rendering have independent selection; GPU rendering must continue to support CPU physics. Startup fallback to CPU when GPU is unavailable is a separate configurable policy, not a replacement for explicit backend choice. A failed or partially committed GPU step must not silently replay on CPU. Requested and actual backend identity and startup fallback must be observable. These selection operations are a required integration contract, not currently exposed functionality.
+- Keep the scene/server RID, resource, owner-thread, query, live-state, callback/event order and world lifecycle contracts common to both paths. GPU computation includes broad-phase pairs, manifolds, contact/joint constraints, integration, sleeping and continuous collision; moving graphics or particle effects alone does not satisfy the GPU world. GPU data uses packed caller-retained storage, completed submissions define publication points, and unsupported hardware retains the CPU path. Shader binaries are built offline; runtime source compilers and public backend handles are excluded. The current internal bring-up executes velocity/position integration, circle/capsule/segment/polygon manifold generation and contact/revolute/wheel constraint solving; [GPU physics implementation status](../components/gpu-physics.md) records the remaining stages and verification limits.
 - Vendor all 233 C# source files of `ikpil/Box2D.NET` tag `3.1.654` at commit `5efc96def866edbb4e5a9368d84de5bf8c2dcaca` under `src/Vendor/Box2D.NET`, retaining the MIT license and [patch record](../../src/Vendor/Box2D.NET/VENDOR.md). Compile them into the single `Electron2D.dll`; make namespace-level backend declarations internal and expose no backend type through public/protected Electron2D signatures. Nullable and malformed upstream XML-comment compiler diagnostics are scoped to vendored files.
 - Map the reference's `Shape2D`, `CircleShape2D`, `RectangleShape2D`, `CollisionShape2D`, `CollisionObject2D`, `PhysicsBody2D`, `RigidBody2D` and `StaticBody2D` to `Shape`, `CircleShape`, `RectangleShape`, `CollisionShape`, `CollisionObject`, `PhysicsBody`, `RigidBody` and `StaticBody`. Preserve `RigidBody : PhysicsBody : CollisionObject : Entity` and the parallel `StaticBody` branch; `CollisionShape : Entity` is a direct collision-object child that borrows its shape resource. ADR 0055 extends that child role to Area. These names remove only the redundant dimensional suffix, not inherited responsibilities.
 - A `SceneTree` retains the distinct runtime worlds selected by its viewports, plus a fallback world for a viewport-free scene. Each world lazily owns one Box2D space and one logical canvas; the tree steps each distinct selected runtime once. Direct body entry creates a backend body; direct collision-shape children add circle/rectangle fixtures. Shape changes, disables and collision-layer/mask edits rebuild fixtures before the next step. Tree exit and disposal release bodies, fixtures and world, while borrowed Shape resources remain caller-owned. Failed geometry validation rejects before replacing existing fixtures.
@@ -35,7 +37,7 @@ Games can attach a `RigidBody` and `StaticBody` with `CollisionShape` children, 
 
 - Ship Box2D.NET as a managed package or expose its types publicly: ADRs 0004 and 0012 require one Electron2D-owned managed surface.
 - Add public PhysicsServer or RID placeholders around the first scene bodies: their resource-identity and direct-space contracts need a complete separate vertical slice.
-- Write a custom rigid-body solver: ADR 0012 selected the managed Box2D.NET backend.
+- Replace the CPU compatibility backend with a GPU-only solver: unsupported devices and headless CPU execution must remain supported.
 
 <a id="adr-0055"></a>
 ## ADR 0055

@@ -116,6 +116,6 @@ public sealed partial class RenderingServer
     {
         _capturedCanvasItems.Clear(); Capture(root);
         foreach (var item in _ownedCanvasItems) if (!item.IsDisposed && _capturedCanvasItems.Add(item)) _nodes.Add(item);
-        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
+        foreach (var weak in _serverSceneItems) if (weak.TryGetTarget(out var item) && !item.IsDisposed && !ReferenceEquals(item.Tree, root.Tree) && _capturedCanvasItems.Add(item) && item.ServerState is { ParentAssigned: true }) _nodes.Add(item);
     }
 }

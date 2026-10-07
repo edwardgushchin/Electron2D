@@ -4,6 +4,7 @@
 // SPDX-License-Identifier: MIT
 
 using System;
+using System.Runtime.Intrinsics;
 using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Constants;
 using static Box2D.NET.B2Distances;
@@ -687,7 +688,7 @@ namespace Box2D.NET
         }
 
         // Find the max separation between poly1 and poly2 using edge normals from poly1.
-        internal static float b2FindMaxSeparation(ref int edgeIndex, ref B2Polygon poly1, B2Polygon poly2)
+        internal static float b2FindMaxSeparation(ref int edgeIndex, ref B2Polygon poly1, ref B2Polygon poly2)
         {
             int count1 = poly1.count;
             int count2 = poly2.count;
@@ -697,6 +698,29 @@ namespace Box2D.NET
 
             int bestIndex = 0;
             float maxSeparation = -float.MaxValue;
+            if (count2 == 4 && Vector128.IsHardwareAccelerated)
+            {
+                var xs = Vector128.Create(v2s[0].X, v2s[1].X, v2s[2].X, v2s[3].X);
+                var ys = Vector128.Create(v2s[0].Y, v2s[1].Y, v2s[2].Y, v2s[3].Y);
+                for (int i = 0; i < count1; ++i)
+                {
+                    B2Vec2 n = n1s[i];
+                    B2Vec2 v1 = v1s[i];
+                    var x = Vector128.Multiply(Vector128.Create(n.X), Vector128.Subtract(xs, Vector128.Create(v1.X)));
+                    var y = Vector128.Multiply(Vector128.Create(n.Y), Vector128.Subtract(ys, Vector128.Create(v1.Y)));
+                    var distances = Vector128.Add(x, y);
+                    // Keep the scalar comparison order, including NaN and signed-zero choices.
+                    float si = float.MaxValue;
+                    float s0 = distances.GetElement(0), s1 = distances.GetElement(1), s2 = distances.GetElement(2), s3 = distances.GetElement(3);
+                    if (s0 < si) si = s0;
+                    if (s1 < si) si = s1;
+                    if (s2 < si) si = s2;
+                    if (s3 < si) si = s3;
+                    if (si > maxSeparation) { maxSeparation = si; bestIndex = i; }
+                }
+                edgeIndex = bestIndex;
+                return maxSeparation;
+            }
             for (int i = 0; i < count1; ++i)
             {
                 // Get poly1 normal in frame2.
@@ -778,10 +802,10 @@ namespace Box2D.NET
             }
 
             int edgeA = 0;
-            float separationA = b2FindMaxSeparation(ref edgeA, ref localPolyA, localPolyB);
+            float separationA = b2FindMaxSeparation(ref edgeA, ref localPolyA, ref localPolyB);
 
             int edgeB = 0;
-            float separationB = b2FindMaxSeparation(ref edgeB, ref localPolyB, localPolyA);
+            float separationB = b2FindMaxSeparation(ref edgeB, ref localPolyB, ref localPolyA);
 
             float radius = localPolyA.radius + localPolyB.radius;
 

@@ -8,7 +8,7 @@ internal static partial class RenderingRuntimeTests
         using var texture = ImageTexture.CreateFromImage(image);
         using var shader = fixture is null ? null : LoadShader(fixture);
         using var material = shader is null ? null : new ShaderMaterial { Shader = shader };
-        var window = new Window { Size = new(96, 80), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        var window = new Window { Size = new(512, 384), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var parent = new Entity { Name = "Snap0", Position = new(8.6f, 8.6f) }; window.AddChild(parent);
         var draws = 0;
         parent.AddChild(new CanvasNode { Name = "Snap1", Position = new(0.6f, 0.6f), DrawAction = n => { draws++; n.DrawRect(new(0, 0, 3, 3), Colors.Red); } });
@@ -65,7 +65,7 @@ internal static partial class RenderingRuntimeTests
                             break;
                         case 4:
                             Pixel(frame, 9, 9, Colors.Red); Pixel(frame, 40, 30, Colors.Red);
-                            Check(draws == 1 && parent.Position == new Vector2(8.6f, 8.6f), "Snapping replay preserves commands and logical transforms.");
+                            Check(draws == 1 && parent.Position == new Vector2(8.6f, 8.6f), $"Snapping replay preserves commands and logical transforms: draws={draws}, position={parent.Position}.");
                             window.Tree!.Quit(); break;
                     }
                 }

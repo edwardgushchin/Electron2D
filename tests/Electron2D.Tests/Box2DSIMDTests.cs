@@ -5,6 +5,7 @@ internal static class Box2DSIMDTests
 {
     internal static void Run()
     {
+        VerifyPolygonSeparation();
         var random = new Random(712);
         float[] edge = [0, -0f, 1, -1, float.Epsilon, -float.Epsilon, float.MaxValue, float.MinValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN];
         for (var i = 0; i < 4096; i++)
@@ -33,6 +34,45 @@ internal static class Box2DSIMDTests
                 zero &= a[lane] == 0;
             }
             if (b2AllZeroW(a) != zero) throw new InvalidOperationException("SIMD zero reduction differs from scalar arithmetic.");
+        }
+    }
+
+    private static void VerifyPolygonSeparation()
+    {
+        var random = new Random(174);
+        float[] edges = [0, -0f, float.Epsilon, -float.Epsilon, float.MaxValue, float.MinValue, float.PositiveInfinity, float.NegativeInfinity, float.NaN];
+        for (var sample = 0; sample < 4096; sample++)
+        {
+            var first = new B2Polygon { count = 2 + sample % 7 };
+            var second = new B2Polygon { count = sample % 8 == 0 ? 2 + sample % 7 : 4 };
+            for (var i = 0; i < first.count; i++)
+            {
+                first.vertices[i] = new((float)random.NextDouble() * 20 - 10, (float)random.NextDouble() * 20 - 10);
+                first.normals[i] = new((float)random.NextDouble() * 2 - 1, (float)random.NextDouble() * 2 - 1);
+            }
+            for (var i = 0; i < second.count; i++)
+                second.vertices[i] = new((float)random.NextDouble() * 20 - 10, (float)random.NextDouble() * 20 - 10);
+            if (sample < edges.Length * edges.Length)
+            {
+                first.normals[0] = new(edges[sample % edges.Length], edges[sample / edges.Length]);
+                second.vertices[0] = new(edges[(sample + 3) % edges.Length], edges[(sample + 5) % edges.Length]);
+            }
+            var expectedEdge = 0; var expected = -float.MaxValue;
+            for (var i = 0; i < first.count; i++)
+            {
+                var normal = first.normals[i]; var origin = first.vertices[i]; var minimum = float.MaxValue;
+                for (var j = 0; j < second.count; j++)
+                {
+                    var point = second.vertices[j];
+                    var value = normal.X * (point.X - origin.X) + normal.Y * (point.Y - origin.Y);
+                    if (value < minimum) minimum = value;
+                }
+                if (minimum > expected) { expected = minimum; expectedEdge = i; }
+            }
+            var actualEdge = -1;
+            var actual = B2Manifolds.b2FindMaxSeparation(ref actualEdge, ref first, ref second);
+            Equal(actual, expected, true);
+            if (actualEdge != expectedEdge) throw new InvalidOperationException("Polygon separation chose a different edge.");
         }
     }
 

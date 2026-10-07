@@ -25,6 +25,7 @@ var program = ShaderCompiler.ValidateFragmentInterface(bytecode);
 | --- | --- |
 | `internal static SDL3.SDL.GPUShaderFormat GetFormats()` | [Backend formats](#backend-formats) |
 | `internal static nint CreateShader(nint device, byte[] code, bool fragment)` | [GPU shader creation](#gpu-shader-creation) |
+| `internal static nint CreateComputePipeline(nint device, byte[] code)` | Reflect offline SPIR-V and create an internal SDL compute pipeline; retain/free cold reflection storage. |
 | `internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode)` | [Fragment validation](#fragment-validation) |
 | `internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment, IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)` | [Shared validation](#shared-validation) |
 

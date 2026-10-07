@@ -21,7 +21,47 @@ internal static class SceneHierarchyTests
         CanvasAppearanceValues();
         PackedHierarchy();
         CallbackFailures();
+        CachedSchedules();
         Console.WriteLine("Scene hierarchy checks passed.");
+    }
+
+    private static void CachedSchedules()
+    {
+        var order = new List<int>(8);
+        using var root = new Node();
+        var first = new ScheduleNode(1, order) { Name = "First", ProcessEnabled = true, ProcessPriority = -1, PhysicsProcessEnabled = true };
+        var later = new ScheduleNode(2, order) { Name = "Later", PhysicsProcessEnabled = true };
+        var added = new ScheduleNode(3, order) { Name = "Added", ProcessEnabled = true, PhysicsProcessEnabled = true };
+        root.AddChild(first); root.AddChild(later);
+        using var tree = new SceneTree(root);
+        first.Next = () => { later.ProcessEnabled = true; later.ProcessPriority = -10; root.AddChild(added); first.Next = null; };
+        tree.ProcessFrame(.01);
+        Check(order.SequenceEqual([1, 2]), "Late enabling is immediate; priority changes and additions wait for the next captured schedule.");
+        order.Clear(); tree.ProcessFrame(.01);
+        Check(order.SequenceEqual([2, 1, 3]), "Priority and membership changes invalidate the idle schedule.");
+        first.PhysicsProcessPriority = 5; later.PhysicsProcessPriority = -5; added.PhysicsProcessPriority = 1;
+        order.Clear(); tree.PhysicsFrame(.01);
+        Check(order.SequenceEqual([2, 3, 1]), "Physics owns an independent priority snapshot.");
+        first.PhysicsProcessPriority = -20;
+        order.Clear(); tree.PhysicsFrame(.01);
+        Check(order.SequenceEqual([1, 2, 3]), "A live priority write invalidates a previously used physics snapshot.");
+        first.ProcessPriority = later.ProcessPriority = added.ProcessPriority = 0;
+        root.MoveChild(added, 0); order.Clear(); tree.ProcessFrame(.01);
+        Check(order.SequenceEqual([3, 1, 2]), "Equal-priority order follows a changed tree order.");
+        first.Next = () => { root.RemoveChild(later); first.Next = null; };
+        order.Clear(); tree.ProcessFrame(.01);
+        Check(order.SequenceEqual([3, 1]), "Removal during callbacks skips a retained later entry.");
+        later.Dispose();
+        for (var i = 0; i < 16; i++) { order.Clear(); tree.ProcessFrame(.01); tree.PhysicsFrame(.01); }
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 128; i++) { order.Clear(); tree.ProcessFrame(.01); tree.PhysicsFrame(.01); }
+        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Both prepared schedule lanes allocate zero managed bytes.");
+    }
+    private sealed class ScheduleNode(int id, List<int> order) : Node
+    {
+        internal Action? Next;
+        protected override void OnProcess(double delta) { order.Add(id); Next?.Invoke(); }
+        protected override void OnPhysicsProcess(double delta) => order.Add(id);
     }
 
     private static void MixedTree()

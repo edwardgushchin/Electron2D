@@ -20,7 +20,7 @@ Combines a stable rendering canvas and lazily created physics space. Viewport.Wo
 | `RID Space { get; }` | Stable borrowed registered physics identity, allocated on first physics use. |
 | `PhysicsDirectSpaceState DirectSpaceState { get; }` | Cached live query view; disposed views are recreated. |
 | `CreateDuplicateInstance()` / `CopyCustomStateTo(...)` | Borrow the complete runtime without cloning solver state; bound target replacement rejects. |
-| `ValidateDisposal()` / `Dispose(bool)` | Validate unbound final native ownership and release the wrapper's runtime reference. |
+| `ValidateDisposal()` / `Dispose(bool)` | Validate unbound final native ownership and release the wrapper's runtime reference, including after a failed GPU interval. Owner/solver/live-body-callback guards remain enforced. |
 
 ## Lifecycle and limits
 

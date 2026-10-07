@@ -6,7 +6,7 @@ internal sealed class PhysicsTaskScheduler : IDisposable
 {
     private sealed class Job
     {
-        internal readonly ManualResetEventSlim Done = new(true);
+        internal readonly ManualResetEvent Done = new(true);
         internal int Remaining;
         internal bool InUse;
         internal Exception? Failure;
@@ -73,9 +73,15 @@ internal sealed class PhysicsTaskScheduler : IDisposable
     internal void Finish(object task, object userContext)
     {
         var job = (Job)task;
-        job.Done.Wait();
+        job.Done.WaitOne();
         job.InUse = false;
         if (job.Failure is { } failure) throw new InvalidOperationException("Physics worker failed.", failure);
+    }
+
+    internal void Drain()
+    {
+        foreach (var job in _jobs)
+            if (job.InUse) { job.Done.WaitOne(); job.InUse = false; }
     }
 
     private void Run(int index)

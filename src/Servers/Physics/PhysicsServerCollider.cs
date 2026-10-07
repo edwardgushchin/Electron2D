@@ -25,6 +25,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     private Vector2 _linearVelocity;
     private float _angularVelocity;
     private PhysicsServer.BodyMode _mode = PhysicsServer.BodyMode.Rigid;
+    private PhysicsBodyRuntime? _runtime;
+    internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(RID);
 
     private readonly record struct ShapeSlot(PhysicsServerShape Shape, Transform LocalTransform, bool Disabled,
         bool OneWay = false, float Margin = 0, Vector2 Direction = default);

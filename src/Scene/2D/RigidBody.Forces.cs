@@ -146,6 +146,7 @@ public partial class RigidBody
 
     internal void ApplyConstantForces()
     {
+        if (_constantForce == Vector2.Zero && _constantTorque == 0) return;
         if (_freeze || PhysicsMadeStatic || !HasBackend || !b2Body_IsAwake(BackendID)) return;
         if (_constantForce != Vector2.Zero)
             b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(_constantForce), wake: false);

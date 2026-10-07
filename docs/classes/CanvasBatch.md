@@ -9,20 +9,20 @@ Last updated: 2026-10-04
 
 ## Description
 
-A contiguous vertex range with one borrowed material state, command texture, filter, addressing mode and anisotropy limit. CanvasItem.AppendCanvas coalesces adjacent ranges only when those values match, preserving draw order. Backend caches own native resources; this record owns none.
+A contiguous vertex range with one borrowed material state, command texture, filter, addressing mode and anisotropy limit. CanvasItem.AppendCanvas coalesces adjacent ranges only when those values match, preserving draw order. Instanced ranges additionally reference FirstInstance/InstanceCount in the owning viewport frame and do not merge with ordinary vertex ranges. Backend caches own native resources; this record owns none.
 
 ## Member summary
 
 | Declaration | Contract |
 | --- | --- |
-| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false)` | [Construction and values](#construction-and-values) |
+| `CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0)` | [Construction and values](#construction-and-values) |
 | `internal byte[]? ShaderCode { get; }` | [Shader code](#shader-code) |
 
 ## Member descriptions
 
 ### Construction and values
 
-`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false)`
+`CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null, TextureFilter Filter = TextureFilter.Nearest, TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1, BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0)`
 
 First and Count index the prepared triangle list. Material null selects the built-in program. Texture null means opaque white for the built-in command sampler. Filter, Repeat and MaxAnisotropy are resolved per item before batching; tiled commands force Enabled addressing. These values participate in batch equality. These arguments become record properties.
 

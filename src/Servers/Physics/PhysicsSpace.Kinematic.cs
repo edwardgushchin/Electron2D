@@ -12,8 +12,9 @@ internal sealed partial class PhysicsSpace
     private readonly Dictionary<int, (double X, double Y, double Angular)> _jointImpulseVelocities = [];
     private readonly record struct KinematicStepForce(B2BodyId ID, B2Vec2 Force, float Torque);
 
-    private void StepKinematicPaths(double delta)
+    private void StepKinematicPaths(double delta, bool hasKinematicBodies)
     {
+        if (!hasKinematicBodies) { StepBackend((float)delta); return; }
         var minimumExtent = B2_HUGE;
         foreach (var body in _bodies)
             if (body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
@@ -55,7 +56,18 @@ internal sealed partial class PhysicsSpace
         _jointImpulseVelocities.Clear();
         foreach (var joint in _jointRuntimes) joint.ValidateSolverStep(this);
         foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
-        b2World_Step(_worldID, delta, 4);
+        try { b2World_Step(_worldID, delta, 4); }
+        catch (Exception failure) when (_gpuWorld is not null)
+        {
+            // A partially committed GPU interval cannot be replayed through the compatibility solver.
+            _gpuFailure = failure;
+            _tasks.Drain();
+            var world = b2GetWorldFromId(_worldID);
+            world.locked = false;
+            foreach (var arena in world.arena.AsSpan()) arena.Abort();
+            world.reusableStepContext.Reset();
+            throw;
+        }
     }
 
     internal void ValidateJointImpulse(B2BodyId id, B2Vec2 impulse, B2Vec2 point)

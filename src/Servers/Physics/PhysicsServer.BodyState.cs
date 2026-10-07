@@ -14,10 +14,10 @@ public sealed partial class PhysicsServer
 
     internal PhysicsBodyRuntime BodyRuntime(RID body)
     {
-        ResolveBodyOwners(body);
+        var owners = ResolveBodyOwners(body);
         lock (_registryGate)
         {
-            if (!_bodyRuntimes.TryGetValue(body, out var runtime)) _bodyRuntimes.Add(body, runtime = new(body, _sceneObjects.GetValueOrDefault(body)));
+            if (!_bodyRuntimes.TryGetValue(body, out var runtime)) _bodyRuntimes.Add(body, runtime = new(body, _sceneObjects.GetValueOrDefault(body), owners.Server));
             return runtime;
         }
     }

@@ -25,6 +25,22 @@ namespace Box2D.NET
 
         public B2Array<B2ArenaEntry<T>> entries;
 
+        // These arena types gather existing graph objects; their slots are pointers, not owned objects.
+        internal static readonly bool BorrowedReferences = typeof(T) == typeof(B2ContactSim) || typeof(T) == typeof(B2JointSim);
+
+        internal void Reserve(int minimumCapacity)
+        {
+            if (minimumCapacity <= capacity) return;
+            if (allocation != 0) throw new InvalidOperationException("An in-use arena cannot grow.");
+            var next = b2Alloc<T>(minimumCapacity, initializeElements: false);
+            data.AsSpan().CopyTo(next);
+            if (!typeof(T).IsValueType && !BorrowedReferences)
+                for (var i = capacity; i < minimumCapacity; i++) next[i] = new T();
+            b2Free(data.Array, capacity);
+            data = next;
+            capacity = minimumCapacity;
+        }
+
         public int Grow()
         {
             // Stack must not be in use
@@ -32,9 +48,7 @@ namespace Box2D.NET
 
             if (maxAllocation > capacity)
             {
-                b2Free(data.Array, capacity);
-                capacity = maxAllocation + maxAllocation / 2;
-                data = b2Alloc<T>(capacity);
+                Reserve(maxAllocation + maxAllocation / 2);
             }
 
             return capacity;
@@ -50,6 +64,14 @@ namespace Box2D.NET
             index = 0;
             allocation = 0;
             maxAllocation = 0;
+        }
+
+        public void Abort()
+        {
+            for (int i = 0; i < entries.count; i++)
+                if (entries.data[i].usedMalloc) b2Free(entries.data[i].data.Array, entries.data[i].size);
+            b2Array_Clear(ref entries);
+            index = allocation = 0;
         }
     }
 }

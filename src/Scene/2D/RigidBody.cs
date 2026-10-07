@@ -264,13 +264,14 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnShapesRebuilt() => ApplyMass(_mass);
 
-    internal override void OnBackendAdvanced()
+    internal override void OnBackendAdvanced(B2World world, B2Body body)
     {
         if (FrozenKinematic) ResetFrozenSolverPose();
-        var velocity = b2Body_GetLinearVelocity(BackendID);
+        var state = b2GetBodyState(world, body);
+        var velocity = state?.linearVelocity ?? default;
         _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter, velocity.Y * PhysicsSpace.UnitsPerMeter);
-        _angularVelocity = b2Body_GetAngularVelocity(BackendID);
-        var sleeping = !b2Body_IsAwake(BackendID);
+        _angularVelocity = state?.angularVelocity ?? 0;
+        var sleeping = state is null;
         if (sleeping != _sleeping) _sleepChangePending = true;
         _sleeping = sleeping;
     }
@@ -299,7 +300,7 @@ public partial class RigidBody : PhysicsBody
         {
             dampedVelocity = b2Body_GetLinearVelocity(BackendID) * linearFactor;
             dampedAngularVelocity = b2Body_GetAngularVelocity(BackendID) * angularFactor;
-            force = Shape.ToBackend(extraAcceleration) * b2Body_GetMass(BackendID);
+            if (extraAcceleration != Vector2.Zero) force = Shape.ToBackend(extraAcceleration) * b2Body_GetMass(BackendID);
             if (!float.IsFinite(dampedVelocity.X) || !float.IsFinite(dampedVelocity.Y) ||
                 !float.IsFinite(dampedAngularVelocity) || !float.IsFinite(force.X) || !float.IsFinite(force.Y))
                 throw new InvalidOperationException("The resolved physics field would produce nonfinite motion.");

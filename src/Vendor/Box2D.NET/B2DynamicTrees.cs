@@ -1107,6 +1107,7 @@ namespace Box2D.NET
 
         /// Query an AABB for overlapping proxies. The callback class is called for each proxy that overlaps the supplied AABB.
         /// @return performance data
+        [SkipLocalsInit]
         public static B2TreeStats b2DynamicTree_Query<T>(B2DynamicTree tree, in B2AABB aabb, ulong maskBits, b2TreeQueryCallbackFcn<T> callback, ref T context) where T : struct
         {
             B2TreeStats result = new B2TreeStats();
@@ -1118,7 +1119,8 @@ namespace Box2D.NET
 
             //int[] stack = stackalloc int[B2_TREE_STACK_SIZE];
             B2_ASSERT(B2_TREE_STACK_SIZE == B2FixedArray1024<int>.Size);
-            var dummy = new B2FixedArray1024<int>();
+            // Every live stack entry is written by a push before it can be popped.
+            Unsafe.SkipInit(out B2FixedArray1024<int> dummy);
             var stack = dummy.AsSpan();
             int stackCount = 0;
             stack[stackCount++] = tree.root;

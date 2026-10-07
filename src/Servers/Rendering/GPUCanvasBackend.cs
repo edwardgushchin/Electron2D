@@ -7,10 +7,10 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
 {
     private readonly RenderHandle _device;
     private readonly nint _window;
-    private readonly RenderHandle _vertexShader;
+    private readonly RenderHandle _vertexShader, _instancedVertexShader;
     private readonly byte[] _defaultFragment;
-    private readonly Dictionary<(byte[] Code, BlendMode Blend), RenderHandle> _pipelines = [];
-    private readonly HashSet<(byte[] Code, BlendMode Blend)> _usedPrograms = [];
+    private readonly Dictionary<(byte[] Code, BlendMode Blend, bool Instanced), RenderHandle> _pipelines = [];
+    private readonly HashSet<(byte[] Code, BlendMode Blend, bool Instanced)> _usedPrograms = [];
     private readonly Dictionary<Texture, GPUTexture> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
@@ -29,6 +29,8 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
     internal override string Driver { get; }
     private nint Device => _device.DangerousGetHandle();
 
+    internal RenderHandle RetainComputeDevice() => new(Device, static _ => { }, _device);
+
     internal GPUCanvasBackend(SafeHandle window)
     {
         _window = window.DangerousGetHandle();
@@ -36,7 +38,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         _relaxedAndroidDevice = relaxed;
         _device = new RenderHandle(device, SDL.DestroyGPUDevice, window);
         var claimed = false;
-        RenderHandle? vertex = null;
+        RenderHandle? vertex = null, instancedVertex = null;
         try
         {
             Check(SDL.ClaimWindowForGPUDevice(Device, _window), "claim window for GPU rendering");
@@ -44,12 +46,13 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
             vertex = CreateShader(BuiltInShaders.Vertex, fragment: false);
             _vertexShader = vertex;
+            _instancedVertexShader = instancedVertex = CreateShader(BuiltInShaders.InstancedVertex, fragment: false);
             _defaultFragment = BuiltInShaders.Fragment;
-            _pipelines.Add((_defaultFragment, BlendMode.Mix), CreatePipeline(_defaultFragment, BlendMode.Mix));
+            _pipelines.Add((_defaultFragment, BlendMode.Mix, false), CreatePipeline(_defaultFragment, BlendMode.Mix));
         }
         catch
         {
-            vertex?.Dispose();
+            vertex?.Dispose(); instancedVertex?.Dispose();
             if (claimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);
             _device.Dispose();
             throw;
@@ -90,15 +93,18 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         return new RenderHandle(ShaderCompiler.CreateShader(Device, code, fragment), h => SDL.ReleaseGPUShader(Device, h), _device);
     }
 
-    private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false)
+    private RenderHandle CreatePipeline(byte[] code, BlendMode blend, bool overwrite = false, bool instanced = false)
     {
         using var fragment = CreateShader(code, fragment: true);
-        var buffer = new SDL.GPUVertexBufferDescription { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
-        var attributes = stackalloc SDL.GPUVertexAttribute[4];
+        var buffers = stackalloc SDL.GPUVertexBufferDescription[2];
+        buffers[0] = new() { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
+        buffers[1] = new() { Slot = 1, Pitch = (uint)sizeof(CanvasInstance), InputRate = SDL.GPUVertexInputRate.Instance };
+        var attributes = stackalloc SDL.GPUVertexAttribute[7];
         attributes[0] = new() { Location = 0, Format = SDL.GPUVertexElementFormat.Float2, Offset = 0 };
         attributes[1] = new() { Location = 1, Format = SDL.GPUVertexElementFormat.Float4, Offset = 8 };
         attributes[2] = new() { Location = 2, Format = SDL.GPUVertexElementFormat.Float2, Offset = 24 };
         attributes[3] = new() { Location = 3, Format = SDL.GPUVertexElementFormat.Float4, Offset = 32 };
+        if (instanced) for (uint i = 3; i < 7; i++) attributes[i] = new() { Location = i, BufferSlot = 1, Format = SDL.GPUVertexElementFormat.Float4, Offset = (i - 3) * 16 };
         var blendState = blend switch
         {
             BlendMode.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
@@ -124,18 +130,18 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         };
         var info = new SDL.GPUGraphicsPipelineCreateInfo
         {
-            VertexShader = _vertexShader.DangerousGetHandle(),
+            VertexShader = (instanced ? _instancedVertexShader : _vertexShader).DangerousGetHandle(),
             FragmentShader = fragment.DangerousGetHandle(),
             PrimitiveType = SDL.GPUPrimitiveType.TriangleList,
             // Required when the Android device does not support depth clamping.
             RasterizerState = new() { EnableDepthClip = true },
-            VertexInputState = new() { VertexBufferDescriptions = (nint)(&buffer), NumVertexBuffers = 1, VertexAttributes = (nint)attributes, NumVertexAttributes = 4 },
+            VertexInputState = new() { VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = instanced ? 2u : 1u, VertexAttributes = (nint)attributes, NumVertexAttributes = instanced ? 7u : 4u },
             TargetInfo = new() { ColorTargetDescriptions = (nint)(&color), NumColorTargets = 1 }
         };
         return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances)
     {
         var size = output.Size; var screen = false; var screenMipmaps = false;
         foreach (var batch in batches)
@@ -144,15 +150,15 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             screenMipmaps |= batch.Mipmaps || batch.Operation is not (CanvasOperation.GroupEnd or CanvasOperation.MaskEnd) && batch.Material?.Program.UsesScreenTexture == true;
             if (batch.Material?.Program.TimeUniform is not null && !float.IsFinite((float)time))
                 throw new InvalidOperationException("The render clock exceeds the finite float32 range required by shader TIME.");
-            var code = batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment; var key = (code, batch.Blend);
+            var code = batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment; var key = (code, batch.Blend, batch.InstanceCount > 0);
             _usedPrograms.Add(key);
-            if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, batch.Blend));
+            if (!_pipelines.ContainsKey(key)) _pipelines.Add(key, CreatePipeline(code, batch.Blend, instanced: batch.InstanceCount > 0));
             if (batch.MaskShader) _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             if (batch.GroupShader)
             {
-                _usedPrograms.Add((_defaultFragment, BlendMode.PremultAlpha));
-                if (!_pipelines.ContainsKey((_defaultFragment, BlendMode.PremultAlpha)))
-                    _pipelines.Add((_defaultFragment, BlendMode.PremultAlpha), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha));
+                _usedPrograms.Add((_defaultFragment, BlendMode.PremultAlpha, false));
+                if (!_pipelines.ContainsKey((_defaultFragment, BlendMode.PremultAlpha, false)))
+                    _pipelines.Add((_defaultFragment, BlendMode.PremultAlpha, false), CreatePipeline(_defaultFragment, BlendMode.PremultAlpha));
                 _ = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled);
             }
             if (batch.Material is { } material && material.Textures.Length != 0) { _usedMaterials.Add(material); PrepareTextures(material); }
@@ -161,7 +167,9 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             if (batch.Operation == CanvasOperation.GroupBegin) _clearPipeline ??= CreatePipeline(_defaultFragment, BlendMode.Mix, overwrite: true);
         }
         if (screen) _ = BackBuffer(output, screenMipmaps);
-        EnsureBuffers(checked(vertices.Length * sizeof(CanvasVertex)));
+        var vertexBytes = checked(vertices.Length * sizeof(CanvasVertex));
+        var uploadBytes = checked(vertexBytes + instances.Length * sizeof(CanvasInstance));
+        EnsureBuffers(uploadBytes);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw Failure("acquire a GPU command buffer");
         var swapchainAcquired = false; nint pass = 0;
@@ -172,17 +180,22 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             {
                 var mapped = SDL.MapGPUTransferBuffer(Device, _transfer!.DangerousGetHandle(), true);
                 if (mapped == 0) throw Failure("map vertex upload memory");
-                try { vertices.CopyTo(new Span<CanvasVertex>((void*)mapped, vertices.Length)); }
+                try
+                {
+                    vertices.CopyTo(new Span<CanvasVertex>((void*)mapped, vertices.Length));
+                    instances.CopyTo(new Span<CanvasInstance>((void*)(mapped + vertexBytes), instances.Length));
+                }
                 finally { SDL.UnmapGPUTransferBuffer(Device, _transfer.DangerousGetHandle()); }
                 var copy = SDL.BeginGPUCopyPass(command); if (copy == 0) throw Failure("begin vertex upload");
                 SDL.UploadToGPUBuffer(copy, new SDL.GPUTransferBufferLocation { TransferBuffer = _transfer.DangerousGetHandle() },
-                    new SDL.GPUBufferRegion { Buffer = _vertexBuffer!.DangerousGetHandle(), Size = (uint)(vertices.Length * sizeof(CanvasVertex)) }, true);
+                    new SDL.GPUBufferRegion { Buffer = _vertexBuffer!.DangerousGetHandle(), Size = (uint)uploadBytes }, true);
                 SDL.EndGPUCopyPass(copy);
             }
             if (!clearEnabled) Blit(command, output.Current.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
             pass = BeginPass(command, output.Next.DangerousGetHandle(), clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
             var inGroup = false; var copied = false;
             var maskSamplers = stackalloc SDL.GPUTextureSamplerBinding[2];
+            var bindings = stackalloc SDL.GPUBufferBinding[2];
             foreach (var batch in batches)
             {
                 if (batch.Operation == CanvasOperation.Copy)
@@ -224,8 +237,11 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
                 if (!clip.HasArea()) continue;
                 var scissor = new SDL.Rect { X = clip.Position.X, Y = clip.Position.Y, W = clip.Size.X, H = clip.Size.Y }; SDL.SetGPUScissor(pass, in scissor);
                 var dimensions = new Vector2(size.X, size.Y); SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector2));
-                var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle() }; SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
-                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipeline! : _pipelines[(batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment, batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend)];
+                bindings[0] = new() { Buffer = _vertexBuffer!.DangerousGetHandle() };
+                bindings[1] = new() { Buffer = _vertexBuffer.DangerousGetHandle(), Offset = checked((uint)(vertexBytes + batch.FirstInstance * sizeof(CanvasInstance))) };
+                var bindingCount = batch.InstanceCount > 0 ? 2 : 1;
+                SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(bindings, bindingCount), (uint)bindingCount);
+                var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipeline! : _pipelines[(batch.MaskShader ? BuiltInShaders.Clip : batch.ShaderCode ?? _defaultFragment, batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend, batch.InstanceCount > 0)];
                 SDL.BindGPUGraphicsPipeline(pass, pipeline.DangerousGetHandle());
                 batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y));
                 if (batch.MaskShader)
@@ -250,7 +266,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
                     var sampler = batch.GroupShader ? new SDL.GPUTextureSamplerBinding { Texture = output.BackBuffer!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Nearest, TextureRepeat.Disabled) } : CanvasBinding(batch);
                     SDL.BindGPUFragmentSamplers(pass, 0, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(&sampler, 1), 1);
                 }
-                SDL.DrawGPUPrimitives(pass, (uint)batch.Count, 1, (uint)batch.First, 0);
+                SDL.DrawGPUPrimitives(pass, (uint)batch.Count, (uint)Math.Max(1, batch.InstanceCount), (uint)batch.First, 0);
             }
             SDL.EndGPURenderPass(pass); pass = 0;
             if (present)
@@ -384,7 +400,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         display.SetWindowVisible(visible);
         if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; }
     }
-    internal override void BeginFrame() { _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix)); _usedTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix, false)); _usedTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
@@ -468,7 +484,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
         _samplers.Clear(); _whiteTexture?.Dispose();
-        _pipelines.Clear(); _clearPipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose();
+        _pipelines.Clear(); _clearPipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose(); _instancedVertexShader.Dispose();
         if (_windowClaimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);
         _device.Dispose();
         if (!idle) throw Failure("wait for GPU shutdown");

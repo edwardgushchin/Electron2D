@@ -453,14 +453,15 @@ namespace Box2D.NET
         // Update the contact manifold and touching status.
         // Note: do not assume the shape AABBs are overlapping or are valid.
         internal static bool b2UpdateContact(B2World world, B2ContactSim contactSim, B2Shape shapeA, in B2Transform transformA, B2Vec2 centerOffsetA,
-            B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB)
+            B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB, B2Manifold[] generatedManifolds = null, int generatedIndex = 0)
         {
             // Save old manifold
             B2Manifold oldManifold = contactSim.manifold;
 
             // Compute new manifold
             b2ManifoldFcn fcn = s_registers[(int)shapeA.type, (int)shapeB.type].fcn;
-            contactSim.manifold = fcn(shapeA, transformA, shapeB, transformB, ref contactSim.cache);
+            contactSim.manifold = generatedManifolds == null
+                ? fcn(shapeA, transformA, shapeB, transformB, ref contactSim.cache) : generatedManifolds[generatedIndex];
 
             // Keep these updated in case the values on the shapes are modified
             contactSim.friction = world.frictionCallback(shapeA.material.friction, shapeA.material.userMaterialId,

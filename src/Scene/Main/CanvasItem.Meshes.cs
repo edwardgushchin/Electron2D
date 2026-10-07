@@ -46,7 +46,8 @@ public abstract partial class CanvasItem
     /// <param name="multiMesh">Borrowed live instance storage.</param>
     /// <param name="texture">Optional borrowed surface texture.</param>
     /// <remarks>Replays the visible prefix in surface/instance order; transforms, instance colors, shader data
-    /// and eligible physics interpolation are read during replay rather than copied into drawing commands.</remarks>
+    /// and eligible physics interpolation are read during replay rather than copied into drawing commands.
+    /// Eligible GPU triangle surfaces use hardware instances; other canvas policies retain expanded geometry.</remarks>
     /// <exception cref="InvalidOperationException">Called outside the drawing scope.</exception>
     /// <exception cref="ObjectDisposedException">A supplied resource is disposed.</exception>
     public void DrawMultiMesh(MultiMesh multiMesh, Texture? texture = null)

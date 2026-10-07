@@ -8,11 +8,11 @@ internal sealed partial class SandboxWindow
     private readonly List<HSlider> _parameters = [];
     private readonly List<string> _parameterNames = [];
     private readonly float[] _defaults = new float[12];
-    private readonly Dictionary<PhysicsBody, float[]> _objectDefaults = [];
+    private readonly Dictionary<RID, float[]> _objectDefaults = [];
     private readonly Button[] _tabs = new Button[3];
     private readonly string[] _units = ["u/s²", "s⁻¹", "s⁻¹", "×", "kg", "", "", "×", "s⁻¹", "s⁻¹", "", "bodies"];
     private Entity _parameterReadout = null!;
-    private PhysicsBody? _parameterBody;
+    private RID _parameterBody;
     private bool _syncingParameters;
     private int _parameterGroup, _selectionRevision;
 
@@ -47,7 +47,7 @@ internal sealed partial class SandboxWindow
             c.DrawString(bold, new(896, 252), title, fontSize: 17, modulate: PhysicsScene.Ink);
             Span<char> text = stackalloc char[96];
             int count;
-            if (_parameterGroup == 1 && Scene.SelectedBody is null) text.TryWrite(CultureInfo.InvariantCulture, $"Click a body in the scene", out count);
+            if (_parameterGroup == 1 && !Scene.HasSelection) text.TryWrite(CultureInfo.InvariantCulture, $"Click a body in the scene", out count);
             else if (_parameterGroup == 1) text.TryWrite(CultureInfo.InvariantCulture, $"#{Scene.SelectedNumber} · {Scene.SelectedState}", out count);
             else text.TryWrite(CultureInfo.InvariantCulture, $"{(_parameterGroup == 0 ? "Affects every body" : "Tune this scene's main action")}", out count);
             PhysicsScene.DrawReadout(c, font, new(896, 273), text[..count], 14, PhysicsScene.Muted);
@@ -75,7 +75,7 @@ internal sealed partial class SandboxWindow
                 c.DrawString(font, new(896, 602), "u = scene units", fontSize: 13, modulate: PhysicsScene.Muted);
                 c.DrawString(font, new(896, 625), "Tick marks show factory values.", fontSize: 13, modulate: PhysicsScene.Muted);
             }
-            else if (_parameterGroup == 1 && Scene.SelectedBody is null)
+            else if (_parameterGroup == 1 && !Scene.HasSelection)
             {
                 c.DrawString(font, new(896, 320), "Drag to grab and edit an object.", fontSize: 13, modulate: PhysicsScene.Muted);
                 c.DrawString(font, new(896, 345), "Click empty space to deselect.", fontSize: 13, modulate: PhysicsScene.Muted);
@@ -115,7 +115,7 @@ internal sealed partial class SandboxWindow
     {
         _parameterGroup = group;
         for (var i = 0; i < 3; i++) _tabs[i].SetPressedNoSignal(i == group);
-        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group && (group != 1 || _parameterBody is not null) && (i != 11 || SceneIndex == 11);
+        for (var i = 0; i < _parameters.Count; i++) _parameters[i].Visible = Group(i) == group && (group != 1 || _parameterBody.IsValid()) && (i != 11 || SceneIndex == 11);
         _parameterReadout.QueueRedraw();
     }
     private Texture Thumb(Color color)
@@ -150,46 +150,47 @@ internal sealed partial class SandboxWindow
             case 1: Scene.WorldLinearDamp = value; break;
             case 2: Scene.WorldAngularDamp = value; break;
             case 3: Engine.TimeScale = value; break;
-            case 4: if (_parameterBody is RigidBody rigid) rigid.Mass = value; break;
-            case 5: if (_parameterBody is not null) PhysicsServer.BodySetFriction(_parameterBody.GetRID(), MathF.CopySign(value, PhysicsServer.BodyGetFriction(_parameterBody.GetRID()))); break;
-            case 6: if (_parameterBody is not null) PhysicsServer.BodySetBounce(_parameterBody.GetRID(), MathF.CopySign(value, PhysicsServer.BodyGetBounce(_parameterBody.GetRID()))); break;
-            case 7: if (_parameterBody is RigidBody gravity) gravity.GravityScale = value; break;
-            case 8: if (_parameterBody is RigidBody linear) linear.LinearDamp = value; break;
-            case 9: if (_parameterBody is RigidBody angular) angular.AngularDamp = value; break;
+            case 4: if (Scene.SelectedIsRigid) PhysicsServer.BodySetMass(_parameterBody, value); break;
+            case 5: if (_parameterBody.IsValid()) PhysicsServer.BodySetFriction(_parameterBody, MathF.CopySign(value, PhysicsServer.BodyGetFriction(_parameterBody))); break;
+            case 6: if (_parameterBody.IsValid()) PhysicsServer.BodySetBounce(_parameterBody, MathF.CopySign(value, PhysicsServer.BodyGetBounce(_parameterBody))); break;
+            case 7: if (Scene.SelectedIsRigid) PhysicsServer.BodySetGravityScale(_parameterBody, value); break;
+            case 8: if (Scene.SelectedIsRigid) PhysicsServer.BodySetLinearDamp(_parameterBody, value); break;
+            case 9: if (Scene.SelectedIsRigid) PhysicsServer.BodySetAngularDamp(_parameterBody, value); break;
             case 10: Scene.SetStoryParameter(value); break;
             case 11: Scene.SetSmashPopulation((int)value); break;
         }
+        Scene.RefreshSmash();
         _parameterReadout.QueueRedraw();
     }
     private void RefreshSelection()
     {
-        if (_selectionRevision == Scene.SelectionRevision && ReferenceEquals(_parameterBody, Scene.SelectedBody)) return;
+        if (_selectionRevision == Scene.SelectionRevision && _parameterBody == Scene.SelectedRID) return;
         _selectionRevision = Scene.SelectionRevision;
         SyncParameters(); ShowParameters(1);
     }
-    private static float[] ObjectValues(PhysicsBody body) => [(body as RigidBody)?.Mass ?? 1, MathF.Abs(PhysicsServer.BodyGetFriction(body.GetRID())), MathF.Abs(PhysicsServer.BodyGetBounce(body.GetRID())), (body as RigidBody)?.GravityScale ?? 1, (body as RigidBody)?.LinearDamp ?? 0, (body as RigidBody)?.AngularDamp ?? 0];
+    private static float[] ObjectValues(RID body) => [PhysicsServer.BodyGetMass(body), MathF.Abs(PhysicsServer.BodyGetFriction(body)), MathF.Abs(PhysicsServer.BodyGetBounce(body)), PhysicsServer.BodyGetGravityScale(body), PhysicsServer.BodyGetLinearDamp(body), PhysicsServer.BodyGetAngularDamp(body)];
     private void CaptureDefaults()
     {
         _objectDefaults.Clear();
-        foreach (var body in Scene.Colliders.OfType<PhysicsBody>()) _objectDefaults.Add(body, ObjectValues(body));
+        foreach (var body in Scene.Colliders.OfType<PhysicsBody>()) _objectDefaults.Add(body.GetRID(), ObjectValues(body.GetRID()));
         _defaults[0] = Scene.WorldGravity; _defaults[1] = Scene.WorldLinearDamp; _defaults[2] = Scene.WorldAngularDamp; _defaults[3] = 1; _defaults[10] = Scene.StoryParameter; _defaults[11] = Scene.SmashFragmentCount;
     }
     private void SyncParameters()
     {
         if (_parameters.Count == 0) return;
-        foreach (var body in _objectDefaults.Keys) if (body.IsDisposed) _objectDefaults.Remove(body);
+        foreach (var body in _objectDefaults.Keys) if (!Scene.ContainsBody(body)) _objectDefaults.Remove(body);
         _syncingParameters = true;
         try
         {
-            _parameterBody = Scene.SelectedBody;
+            _parameterBody = Scene.SelectedRID;
             _parameters[0].SetValueNoSignal(Scene.WorldGravity); _parameters[1].SetValueNoSignal(Scene.WorldLinearDamp); _parameters[2].SetValueNoSignal(Scene.WorldAngularDamp); _parameters[3].SetValueNoSignal(Engine.TimeScale);
-            _parameters[4].Editable = _parameters[7].Editable = _parameters[8].Editable = _parameters[9].Editable = _parameterBody is RigidBody;
-            _parameters[5].Editable = _parameters[6].Editable = _parameterBody is not null;
-            _parameters[4].SetValueNoSignal((_parameterBody as RigidBody)?.Mass ?? 1);
-            _parameters[5].SetValueNoSignal(_parameterBody is null ? 1 : MathF.Abs(PhysicsServer.BodyGetFriction(_parameterBody.GetRID())));
-            _parameters[6].SetValueNoSignal(_parameterBody is null ? 0 : MathF.Abs(PhysicsServer.BodyGetBounce(_parameterBody.GetRID())));
-            _parameters[7].SetValueNoSignal((_parameterBody as RigidBody)?.GravityScale ?? 1); _parameters[8].SetValueNoSignal((_parameterBody as RigidBody)?.LinearDamp ?? 0); _parameters[9].SetValueNoSignal((_parameterBody as RigidBody)?.AngularDamp ?? 0);
-            if (_parameterBody is not null)
+            _parameters[4].Editable = _parameters[7].Editable = _parameters[8].Editable = _parameters[9].Editable = Scene.SelectedIsRigid;
+            _parameters[5].Editable = _parameters[6].Editable = _parameterBody.IsValid();
+            _parameters[4].SetValueNoSignal(_parameterBody.IsValid() ? PhysicsServer.BodyGetMass(_parameterBody) : 1);
+            _parameters[5].SetValueNoSignal(!_parameterBody.IsValid() ? 1 : MathF.Abs(PhysicsServer.BodyGetFriction(_parameterBody)));
+            _parameters[6].SetValueNoSignal(!_parameterBody.IsValid() ? 0 : MathF.Abs(PhysicsServer.BodyGetBounce(_parameterBody)));
+            _parameters[7].SetValueNoSignal(_parameterBody.IsValid() ? PhysicsServer.BodyGetGravityScale(_parameterBody) : 1); _parameters[8].SetValueNoSignal(_parameterBody.IsValid() ? PhysicsServer.BodyGetLinearDamp(_parameterBody) : 0); _parameters[9].SetValueNoSignal(_parameterBody.IsValid() ? PhysicsServer.BodyGetAngularDamp(_parameterBody) : 0);
+            if (_parameterBody.IsValid())
             {
                 if (!_objectDefaults.TryGetValue(_parameterBody, out var initial)) _objectDefaults.Add(_parameterBody, initial = ObjectValues(_parameterBody));
                 initial.CopyTo(_defaults, 4);

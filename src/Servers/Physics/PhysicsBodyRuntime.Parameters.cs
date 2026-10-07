@@ -24,7 +24,7 @@ internal sealed partial class PhysicsBodyRuntime
         if (owners.Scene is { } scene) scene.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
     }
 
-    internal void ApplyResolvedFields(Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
+    internal void ApplyResolvedFields(Box2D.NET.B2BodyId id, Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
     {
         var scaledGravity = gravity * BodyGravityScale;
         var resolvedLinear = BodyLinearDampMode == RigidBody.DampMode.Replace ? BodyLinearDamp : linearDamp + BodyLinearDamp;
@@ -35,15 +35,14 @@ internal sealed partial class PhysicsBodyRuntime
         if (!scaledGravity.IsFinite() || !acceleration.IsFinite() || !float.IsFinite(resolvedLinear) ||
             !float.IsFinite(resolvedAngular) || !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
             throw new InvalidOperationException("The resolved body field exceeds the finite simulation range.");
-        var id = BodyID;
         var changed = FieldsInitialized && (Gravity != scaledGravity || LinearDamp != resolvedLinear || AngularDamp != resolvedAngular);
-        var active = b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody && !Omitted && (changed || b2Body_IsAwake(id));
+        var active = b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody && !OmitForces && (changed || b2Body_IsAwake(id));
         var linear = default(Box2D.NET.B2Vec2); var angular = 0f; var force = default(Box2D.NET.B2Vec2);
         if (active)
         {
             linear = b2Body_GetLinearVelocity(id) * linearFactor;
             angular = b2Body_GetAngularVelocity(id) * angularFactor;
-            force = Shape.ToBackend(acceleration) * b2Body_GetMass(id);
+            if (acceleration != Vector2.Zero) force = Shape.ToBackend(acceleration) * b2Body_GetMass(id);
             if (!float.IsFinite(linear.X) || !float.IsFinite(linear.Y) || !float.IsFinite(angular) ||
                 !float.IsFinite(force.X) || !float.IsFinite(force.Y))
                 throw new InvalidOperationException("The resolved body field would produce nonfinite motion.");
