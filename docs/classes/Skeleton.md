@@ -7,6 +7,10 @@ Last updated: 2026-10-07
 - Inherits: [Entity](Entity.md)
 - Component: [Skeletal animation](../components/skeletal-animation.md)
 
+## Physical skeletal integration
+
+SkeletonModificationPhysicalBones now transfers actual solved PhysicalBone world poses into selected bones using the existing transient local override/strength/rollback transaction. Physics nodes keep separate scene ownership and inherited rigid-body restrictions.
+
 ## Description
 
 [Jiggle and held stacks](../components/skeletal-animation.md#jiggle-and-nested-stacks) now use this same pose transaction. Internal ExecuteStack selects the explicitly requested child for a direct Stack.Execute call, preventing unrelated root siblings from running; ordinary ExecuteModifications still selects the assigned root. Nested calls retain the outer authored-pose/request transaction.

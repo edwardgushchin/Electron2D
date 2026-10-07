@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Physical skeletal integration
+
+[Physics-driven bones](../components/skeletal-animation.md#physics-driven-bones) feed solved rigid-body poses into the existing retained weighted Polygon palette. The renderer continues using ordinary triangles; server-owned palette and generic Mesh skin storage/consumers remain separate.
+
 ## Jiggle controller integration
 
 Jiggle/held controller output now reaches the existing palette/weighted Polygon consumer on GPU and compatibility. Dynamic-point collision uses the real shared physics world and no extra render/native dependency. Whole-bone collisions, generic Mesh skin storage and server-owned palette attachment are not implied.

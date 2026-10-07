@@ -699,6 +699,81 @@
       "godot": "SkeletonModification2DStackHolder::method:set_held_modification_stack(SkeletonModificationStack2D:)",
       "electron2d": "method:Electron2D.SkeletonModificationStackHolder.SetHeldModificationStack(Electron2D.SkeletonModificationStack)",
       "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "class:PhysicalBone2D",
+      "electron2d": "T:Electron2D.PhysicalBone",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::method:get_joint()",
+      "electron2d": "method:Electron2D.PhysicalBone.GetJoint()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::method:is_simulating_physics()",
+      "electron2d": "method:Electron2D.PhysicalBone.IsSimulatingPhysics()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::property:auto_configure_joint",
+      "electron2d": "property:Electron2D.PhysicalBone.AutoConfigureJoint()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::property:bone2d_index",
+      "electron2d": "property:Electron2D.PhysicalBone.BoneIndex()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::property:bone2d_nodepath",
+      "electron2d": "property:Electron2D.PhysicalBone.BoneNodePath()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::property:follow_bone_when_simulating",
+      "electron2d": "property:Electron2D.PhysicalBone.FollowBoneWhenSimulating()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "PhysicalBone2D::property:simulate_physics",
+      "electron2d": "property:Electron2D.PhysicalBone.SimulatePhysics()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "class:SkeletonModification2DPhysicalBones",
+      "electron2d": "T:Electron2D.SkeletonModificationPhysicalBones",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::method:fetch_physical_bones()",
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.FetchPhysicalBones()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::method:get_physical_bone_node(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.GetPhysicalBoneNode(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::method:set_physical_bone_node(int:,NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.SetPhysicalBoneNode(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::method:start_simulation(StringName[]:)",
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.StartSimulation(System.String[])",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::method:stop_simulation(StringName[]:)",
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.StopSimulation(System.String[])",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
+    },
+    {
+      "godot": "SkeletonModification2DPhysicalBones::property:physical_bone_chain_length",
+      "electron2d": "property:Electron2D.SkeletonModificationPhysicalBones.PhysicalBoneChainLength()",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
     }
   ],
   "extras": [
@@ -1001,6 +1076,61 @@
       "electron2d": "method:Electron2D.SkeletonModificationStack.ValidateDisposal()",
       "reason": "Inherited disposal validation rejects wrong scene owner or running setup/execution before the terminal state changes, preserving borrowed nested graph bindings. Actual callback/disposal/retry cases exercised by SkeletonJiggleTests.",
       "adr": "ADR 0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicalBone..ctor()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationPhysicalBones..ctor()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicalBone.CreateSceneInstanceFactory()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicalBone.GetConfigurationWarnings()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicalBone.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicalBone.OnNotification(System.Int32)",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.CreateDuplicateInstance()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.GetPropertyDescriptors()",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.OnExecute(System.Double)",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationPhysicalBones.OnSetupModification(Electron2D.SkeletonModificationStack)",
+      "reason": "Reviewed constructors and inherited warning/notification/schema/copy/scene-factory hooks for executable physical skeletal nodes and resources. No extra simulation or backend-facing public API.",
+      "adr": "ADR 0004/0008/0013/0014/0084/0092"
     }
   ],
   "statusGroups": [
@@ -1189,6 +1319,27 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": [
+        "class:PhysicalBone2D",
+        "PhysicalBone2D::method:get_joint()",
+        "PhysicalBone2D::method:is_simulating_physics()",
+        "PhysicalBone2D::property:auto_configure_joint",
+        "PhysicalBone2D::property:bone2d_index",
+        "PhysicalBone2D::property:bone2d_nodepath",
+        "PhysicalBone2D::property:follow_bone_when_simulating",
+        "PhysicalBone2D::property:simulate_physics",
+        "class:SkeletonModification2DPhysicalBones",
+        "SkeletonModification2DPhysicalBones::method:fetch_physical_bones()",
+        "SkeletonModification2DPhysicalBones::method:get_physical_bone_node(int:)",
+        "SkeletonModification2DPhysicalBones::method:set_physical_bone_node(int:,NodePath:)",
+        "SkeletonModification2DPhysicalBones::method:start_simulation(StringName[]:)",
+        "SkeletonModification2DPhysicalBones::method:stop_simulation(StringName[]:)",
+        "SkeletonModification2DPhysicalBones::property:physical_bone_chain_length"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0014/0063/0084/0092: actual RigidBody-backed PhysicalBone ownership, authored joint configuration, request/active/follower state, retained configured versus effective collision filters and solved body-to-bone transient pose transfer. Typed copied paths/names, BFS fetch, independent fresh scenes and weighted Polygon consumers execute. Unit-scale/skew physics restrictions, cold transitions and native/platform acceptance limits remain explicit."
     }
   ]
 }

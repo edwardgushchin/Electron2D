@@ -28,6 +28,9 @@ public abstract class PhysicsBody : CollisionObject
     internal B2BodyId BackendID => _bodyID;
     internal PhysicsSpace? Space => _space;
     internal bool HasBackend => _space is not null;
+    internal virtual bool CollisionResponseEnabled => true;
+    internal uint EffectiveCollisionLayer => CollisionResponseEnabled ? CollisionLayer : 0;
+    internal uint EffectiveCollisionMask => CollisionResponseEnabled ? CollisionMask : 0;
     internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
     internal ElectronObject? GetShapeNode(int index) => GetShapeOwnerObject(index);
@@ -312,8 +315,8 @@ public abstract class PhysicsBody : CollisionObject
 
         var definition = b2DefaultShapeDef();
         definition.updateBodyMass = false;
-        definition.filter.categoryBits = CollisionLayer;
-        definition.filter.maskBits = CollisionMask;
+        definition.filter.categoryBits = EffectiveCollisionLayer;
+        definition.filter.maskBits = EffectiveCollisionMask;
         definition.density = MovesWithSimulation ? 1f : 0f;
         var runtime = PhysicsServer.Service.BodyRuntime(PhysicsRID);
         PhysicsSpace.SetMaterial(ref definition, runtime.GetFriction(), runtime.GetBounce());

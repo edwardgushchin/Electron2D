@@ -8,6 +8,10 @@ Last updated: 2026-10-07
 - Inherited by: no production type currently
 - Component: [Canvas rendering](../components/canvas-rendering.md)
 
+## Physical skeletal integration
+
+The existing weighted palette now consumes actual PhysicsBody-driven bone transforms through PhysicalBone and SkeletonModificationPhysicalBones. No separate skin render pass is introduced.
+
 ## Skeletal deformation
 
 The [skeletal component](../components/skeletal-animation.md) adds Skeleton, a relative borrowed rig path, and copied bone path/weight authoring. Paths resolve relative to the rig. Records with mismatched source counts or missing bones do not contribute; four strongest positive influences normalize per point and zero sums preserve input. The retained skin uses live/interpolated poses without retriangulating; inversion ignores it. Ordinary forced redraws reuse point, UV, color and contour scratch arrays. Versioned stored bone records restore atomically. Both current native backends execute skin positions while keeping original color/UV/materials and triangulation.

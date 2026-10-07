@@ -18,6 +18,7 @@ public static partial class ResourceFileTypes
         RegisterNode("CPUParticles", CreateCPUParticles);
         RegisterNode("Skeleton", CreateSkeleton);
         RegisterNode("Bone", CreateBone);
+        RegisterNode("PhysicalBone", CreatePhysicalBone);
         RegisterResource("SkeletonModificationStack", CreateSkeletonStack);
         RegisterResource("SkeletonModificationLookAt", CreateSkeletonLookAt);
         RegisterResource("SkeletonModificationTwoBoneIK", CreateSkeletonTwoBoneIK);
@@ -25,6 +26,7 @@ public static partial class ResourceFileTypes
         RegisterResource("SkeletonModificationFABRIK", CreateSkeletonFABRIK);
         RegisterResource("SkeletonModificationJiggle", CreateSkeletonJiggle);
         RegisterResource("SkeletonModificationStackHolder", CreateSkeletonStackHolder);
+        RegisterResource("SkeletonModificationPhysicalBones", CreateSkeletonPhysicalBones);
         RegisterResourceArray<SkeletonModification>();
         RegisterResource("Resource", CreateResource);
         RegisterResource("PackedScene", CreatePackedScene);
@@ -63,6 +65,7 @@ public static partial class ResourceFileTypes
     private static CPUParticles CreateCPUParticles() => new();
     private static Skeleton CreateSkeleton() => new();
     private static Bone CreateBone() => new();
+    private static PhysicalBone CreatePhysicalBone() => new();
     private static SkeletonModificationStack CreateSkeletonStack() => new();
     private static SkeletonModificationLookAt CreateSkeletonLookAt() => new();
     private static SkeletonModificationTwoBoneIK CreateSkeletonTwoBoneIK() => new();
@@ -70,6 +73,7 @@ public static partial class ResourceFileTypes
     private static SkeletonModificationFABRIK CreateSkeletonFABRIK() => new();
     private static SkeletonModificationJiggle CreateSkeletonJiggle() => new();
     private static SkeletonModificationStackHolder CreateSkeletonStackHolder() => new();
+    private static SkeletonModificationPhysicalBones CreateSkeletonPhysicalBones() => new();
     private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
     private static CodeHighlighter CreateCodeHighlighter() => new();
     private static RichTextEffect CreateRichTextEffect() => new();

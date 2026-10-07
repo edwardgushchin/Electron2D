@@ -9,6 +9,10 @@ Last updated: 2026-09-30
 - **Declaration:** `public abstract class Joint : Entity`
 - **Component:** [Physics joints](../components/physics-joints.md)
 
+## Physical skeletal integration
+
+PhysicalBone can configure an authored direct child joint to its physical parent/body and align its origin. The existing connection-time anchor contract remains unchanged; moving the joint alone does not rebuild it.
+
 ## Description
 
 The base spatial role for constraints between two distinct [PhysicsBody](PhysicsBody.md) nodes. `NodeA` and `NodeB` use the existing string node-path syntax and resolve from the joint in its scene tree. The joint stores configuration while detached. After both endpoints belong to the same active physics world, its concrete subclass creates a solver constraint. Invalid paths, non-body nodes, duplicate endpoints or bodies outside the same world leave it unconfigured and produce warnings. It reconnects after a body reenters, and the old constraint is removed before a body or the joint exits. The global anchor is sampled when the connection is made; moving the joint node alone does not retune an existing constraint. The node itself draws no geometry.

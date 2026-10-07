@@ -78,7 +78,9 @@
     "SkeletonModification2DCCDIK": "SkeletonModificationCCDIK",
     "SkeletonModification2DFABRIK": "SkeletonModificationFABRIK",
     "SkeletonModification2DJiggle": "SkeletonModificationJiggle",
-    "SkeletonModification2DStackHolder": "SkeletonModificationStackHolder"
+    "SkeletonModification2DStackHolder": "SkeletonModificationStackHolder",
+    "PhysicalBone2D": "PhysicalBone",
+    "SkeletonModification2DPhysicalBones": "SkeletonModificationPhysicalBones"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

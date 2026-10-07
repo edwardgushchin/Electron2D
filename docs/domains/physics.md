@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Physical skeletal integration
+
+[PhysicalBone](../classes/PhysicalBone.md) adds real skeletal rigid bodies with inherited forces, freeze, contacts and authored joints. Static followers use effective zero collision filters while preserving configured filters; the idle modification consumer publishes solved poses to the rig.
+
 ## Jiggle controller integration
 
 Jiggle uses the existing direct-world ray query during Physics execution, with body/layer filtering and fixture preparation, to revert a blocked dynamic-point candidate. It does not add a physics body, joint or whole-bone collision shape. Collider misuse in Idle fails explicitly.

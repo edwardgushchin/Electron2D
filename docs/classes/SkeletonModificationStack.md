@@ -7,6 +7,10 @@ Last updated: 2026-10-07
 - Inherits: [Resource](Resource.md)
 - Component: [Skeletal animation](../components/skeletal-animation.md)
 
+## Physical skeletal integration
+
+SkeletonModificationPhysicalBones executes within this ordered resource graph. Default idle observes completed physics; explicit physics stages prior solved poses. Graph copies retain configuration rather than pending body commands.
+
 ## Description
 
 [Held stacks](SkeletonModificationStackHolder.md) share the same skeleton using weak holder leases and a separate direct-root binding flag. Final lease release recursively detaches the child; one holder removal preserves shared aliases. Direct child Execute selects itself through the skeleton transaction; nested execution does not run root siblings. Child Strength is independent of parent Strength. Setup/execution depth is bounded to 128 with finally cleanup. Running/off-owner disposal rejects before terminal state.

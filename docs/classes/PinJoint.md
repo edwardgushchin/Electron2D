@@ -8,6 +8,10 @@ Last updated: 2026-09-30
 - **Declaration:** `public sealed class PinJoint : Joint`
 - **Component:** [Physics joints](../components/physics-joints.md)
 
+## Physical skeletal integration
+
+Authored PinJoint children of PhysicalBone use the existing native solver. Auto configuration places the anchor at the physical node origin; an offset shape center of mass permits an actual pendulum rotation.
+
 ## Description
 
 A revolute constraint: two body-local anchor points meet at this node's global origin, while the bodies may rotate relative to one another. The angle is zero at the time of attachment, so limits and motor speed describe subsequent relative rotation. [Joint](Joint.md) owns path resolution, collision policy and backend lifetime. An empty body or joint geometry without two valid attached bodies creates no constraint. The pin's linear anchor is rigid; adjustable positional softness is not yet available.

@@ -9,6 +9,10 @@ Last updated: 2026-10-07
 
 - Inherited by: [SkeletonModificationLookAt](SkeletonModificationLookAt.md), [SkeletonModificationTwoBoneIK](SkeletonModificationTwoBoneIK.md), [SkeletonModificationCCDIK](SkeletonModificationCCDIK.md), [SkeletonModificationFABRIK](SkeletonModificationFABRIK.md), [SkeletonModificationJiggle](SkeletonModificationJiggle.md), [SkeletonModificationStackHolder](SkeletonModificationStackHolder.md)
 
+## Physical skeletal integration
+
+SkeletonModificationPhysicalBones is the concrete real-body pose consumer, reusing this setup/phase/strength and owner transaction without adding a backend interface.
+
 ## Description
 
 [SkeletonModificationJiggle](SkeletonModificationJiggle.md) and [SkeletonModificationStackHolder](SkeletonModificationStackHolder.md) add actual dynamic joint and nested graph behavior. Internal OnUnbindStack cleanup runs after raw binding drops and releases weak child leases or transient history. Bound reset and disposal validate owner/running state before changing lifetime, so execution cannot silently lose a borrowed graph.

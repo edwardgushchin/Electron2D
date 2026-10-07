@@ -2,6 +2,10 @@
 
 Last updated: 2026-09-30
 
+## Physical skeletal integration
+
+PhysicalBone borrows its first authored direct Joint child and optionally configures physical parent/body endpoints and its origin. Skeleton-parent endpoints remain authored. Existing ADR 0084 anchors are sampled when a connection is built; no joints are generated.
+
 ## Scope and owned types
 
 [Joint](../classes/Joint.md) is the spatial base that stores two body paths, resolves them against one SceneTree world, and owns a backend constraint lifetime. [PinJoint](../classes/PinJoint.md) makes a revolute connection with collision suppression, angular limits and a finite-torque motor. [GrooveJoint](../classes/GrooveJoint.md) keeps a second-body anchor inside a finite guide on the first body while allowing free rotation. [DampedSpringJoint](../classes/DampedSpringJoint.md) supplies an elastic force and axial damping between sampled anchors. All inherit Entity's transform and Node's scene lifecycle; none replaces a PhysicsBody or owns shape resources.

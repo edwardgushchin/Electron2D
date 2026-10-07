@@ -20,7 +20,7 @@ internal sealed partial class PhysicsSpace
             if (body.GetRID() != rid) continue;
             var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, Shape.ToBackend(point));
             velocity = ToScene(backendVelocity);
-            layer = body.CollisionLayer;
+            layer = body.EffectiveCollisionLayer;
             return true;
         }
         for (var index = 0; index < _serverColliders.Count; index++)

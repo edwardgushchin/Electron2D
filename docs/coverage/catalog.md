@@ -604,7 +604,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PathFollow2D](classes/PathFollow2D.md) | Node2D | Implemented | 7 |
 | [PathFollow3D](classes/PathFollow3D.md) | Node3D | Excluded | 16 |
 | [Performance](classes/Performance.md) | Object | Blocked | 74 |
-| [PhysicalBone2D](classes/PhysicalBone2D.md) | RigidBody2D | Blocked | 7 |
+| [PhysicalBone2D](classes/PhysicalBone2D.md) | RigidBody2D | Implemented | 7 |
 | [PhysicalBone3D](classes/PhysicalBone3D.md) | PhysicsBody3D | Excluded | 32 |
 | [PhysicalBoneSimulator3D](classes/PhysicalBoneSimulator3D.md) | SkeletonModifier3D | Excluded | 5 |
 | [PhysicalSkyMaterial](classes/PhysicalSkyMaterial.md) | Material | Excluded | 11 |
@@ -784,7 +784,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SkeletonModification2DFABRIK](classes/SkeletonModification2DFABRIK.md) | SkeletonModification2D | Implemented | 10 |
 | [SkeletonModification2DJiggle](classes/SkeletonModification2DJiggle.md) | SkeletonModification2D | Implemented | 28 |
 | [SkeletonModification2DLookAt](classes/SkeletonModification2DLookAt.md) | SkeletonModification2D | Implemented | 13 |
-| [SkeletonModification2DPhysicalBones](classes/SkeletonModification2DPhysicalBones.md) | SkeletonModification2D | Blocked | 6 |
+| [SkeletonModification2DPhysicalBones](classes/SkeletonModification2DPhysicalBones.md) | SkeletonModification2D | Implemented | 6 |
 | [SkeletonModification2DStackHolder](classes/SkeletonModification2DStackHolder.md) | SkeletonModification2D | Implemented | 2 |
 | [SkeletonModification2DTwoBoneIK](classes/SkeletonModification2DTwoBoneIK.md) | SkeletonModification2D | Implemented | 12 |
 | [SkeletonModificationStack2D](classes/SkeletonModificationStack2D.md) | Resource | Implemented | 12 |

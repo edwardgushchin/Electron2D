@@ -8,6 +8,10 @@ Last updated: 2026-10-05
 - **Declaration:** `public abstract class PhysicsBody : CollisionObject`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
+## Physical skeletal integration
+
+PhysicalBone overrides internal effective filters for inactive followers: prepared fixtures and motion-layer lookup use zero, while public CollisionLayer/CollisionMask retain configured values. Other body classes retain their ordinary filters.
+
 ## Description
 
 The shared scene-body role. It registers a backend body when entering a SceneTree and unregisters on exit or disposal. Attached [Joint](Joint.md) constraints are released before the backend body is destroyed. Direct [CollisionShape](CollisionShape.md) children supply fixtures; their resource, disabled state, one-way side, local pose and collision-filter changes are applied before the next physics step or motion query. The body owns backend fixtures and never owns a borrowed Shape or PhysicsMaterial resource. Concrete RigidBody and StaticBody types expose their material override properties; edits rebuild these fixtures before stepping. `MoveAndCollide` and `TestMove` run kinematic sweeps over the registered space; explicit and active-joint RID exceptions suppress a body pair in both those sweeps and ordinary solver contacts. `GetGravity()` exposes the last resolved field for a dynamic body.

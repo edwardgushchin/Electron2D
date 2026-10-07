@@ -5,6 +5,10 @@ Last updated: 2026-10-07
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
+## Physical skeletal integration
+
+PhysicalBone simulation now produces Bone transforms through SkeletonModificationPhysicalBones; retained Polygon influences consume them through the existing palette and triangle submission.
+
 ## Jiggle controller integration
 
 Jiggle and nested child stacks now feed ordinary bone poses into the retained Polygon palette. Both current native backends exercise real spring/nested-strength/collision-blocked pixels without a new shader/pass. Warm query/solve/render intervals reuse storage.

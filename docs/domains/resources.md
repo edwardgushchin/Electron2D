@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Physical skeletal integration
+
+PhysicalBone and SkeletonModificationPhysicalBones have exact node/resource factories and copied bounded consumer paths. Fresh scenes restore independent modification graphs and run actual physics-driven poses; pending named commands and live bindings are transient.
+
 ## Jiggle controller integration
 
 Jiggle owns copied bounded configuration and transient numeric history; StackHolder borrows a force-copied child graph with weak scene leases. Nested aliases retain independent scene copies, clear transient binding on final release and reject active disposal before terminal changes. Existing typed resource/factory/copy machinery supplies fresh-process persistence.

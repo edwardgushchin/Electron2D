@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Physical skeletal integration
+
+Exact PhysicalBone and SkeletonModificationPhysicalBones factories retain inherited node/body/joint properties and copied string[] path slots. Fresh-process scenes run actual joint-driven bone pose transfer. Pending command names and weak scene bindings are transient.
+
 ## Jiggle controller integration
 
 Jiggle joint configuration and borrowed StackHolder child references now have exact registered schemas. Existing resource arrays and forced copy sessions preserve child aliases while excluding weak leases/live history. Fresh-process files execute nested controllers, with bounded blob validation before replacement.
