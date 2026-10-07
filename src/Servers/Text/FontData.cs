@@ -75,13 +75,20 @@ internal sealed partial class FontData : IDisposable
     {
         lock (_gate)
         {
-            Check(); var cache = Authored?.Clone();
+            Check();
+            if (SystemFaces != null)
+            {
+                if ((uint)instance.FaceIndex >= SystemFaces.Length) throw new ArgumentOutOfRangeException(nameof(instance));
+                var coordinates = new Dictionary<uint, float>(_instance?.Coordinates ?? []); foreach (var pair in instance.Coordinates) coordinates[pair.Key] = pair.Value;
+                instance = instance with { FaceIndex = SystemFaces[instance.FaceIndex], Coordinates = coordinates };
+            }
+            var cache = Authored?.Clone();
             if (cache != null && _bytes.Length > 0 && !Authored!.Matches(instance)) cache.Sizes.Clear();
             var result = new FontData(_bytes, instance.FaceIndex, instance, cache);
             try
             {
                 result.Hinting = Hinting; result.SubpixelPositioning = SubpixelPositioning; result.KeepRoundingRemainders = KeepRoundingRemainders; result.Oversampling = Oversampling; result.ModulateColorGlyphs = ModulateColorGlyphs;
-                result.OpenTypeFeatures = OpenTypeFeatures; return result;
+                result.OpenTypeFeatures = OpenTypeFeatures; result.AllowSystemFallback = AllowSystemFallback; result.AdvertisedFaceCount = AdvertisedFaceCount; return result;
             }
             catch { result.Dispose(); throw; }
         }
@@ -97,6 +104,7 @@ internal sealed partial class FontData : IDisposable
         {
             if (_readers <= 0) throw new InvalidOperationException("Font data has no active reader.");
             _readers--;
+            if (_readers == 0) ReleaseRetiredSystemSources();
             if (_retired && _readers == 0) DisposeNative();
         }
     }
@@ -273,7 +281,7 @@ internal sealed partial class FontData : IDisposable
         // Recorded canvas commands retain immutable CPU pixels independently of the native face.
         // Retired snapshots follow ordinary renderer eviction and need no native font ownership.
         foreach (var glyph in _glyphs.Values) if (glyph.Texture is { } texture) texture.RetainRendererCache = false;
-        Authored?.RetireTextures(); _glyphs.Clear();
+        ClearSystemSources(); Authored?.RetireTextures(); _glyphs.Clear();
         try { _precision?.Dispose(); }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally
@@ -292,7 +300,7 @@ internal sealed partial class FontData : IDisposable
     {
         if (_disposed) return;
         _disposed = true;
-        if (HasData) Run(Operation.Dispose);
+        if (HasData) Run(Operation.Dispose); else ClearSystemSources();
     }
     ~FontData() { if (!_disposed && HasData && !Environment.HasShutdownStarted) try { FontThread.Invoke(ExecuteDispose); } catch { } }
     private void ExecuteDispose() => ReleaseNative();

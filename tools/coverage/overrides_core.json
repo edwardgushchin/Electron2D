@@ -688,7 +688,22 @@
     {"godot": "class:Script", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
     {"godot": "class:CSharpScript", "electron2d": "T:Electron2D.Script", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
     {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1()", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
-    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1(Func<T>)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."}
+    {"godot": "CSharpScript::method:new()", "electron2d": "method:Electron2D.Script.New`1(Func<T>)", "reason": "ADR 0091: compiled project Node/Resource source assets use explicit exact factories/typed schemas, matching portable-PDB documents/checksums, typed CLR/default/constant metadata, .cs loader/atomic saver and registered archive identities. ScriptTests constructs actual user classes, restores state/references in a fresh process and executes ordinary callbacks; RichTextLabel consumes compatible compiled resource effects. No live reassignment, Reload/keep-state or RPC completion is claimed."},
+    {
+      "godot": "OS::method:get_system_font_path(String:,int:,int:,bool:)",
+      "electron2d": "method:Electron2D.OS.GetSystemFontPath(System.String,System.Int32,System.Int32,System.Boolean)",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "OS::method:get_system_font_path_for_text(String:,String:,String:,String:,int:,int:,bool:)",
+      "electron2d": "method:Electron2D.OS.GetSystemFontPathForText(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean)",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "OS::method:get_system_fonts()",
+      "electron2d": "method:Electron2D.OS.GetSystemFonts()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    }
   ],
   "extras": [
     {"electron2d": "T:Electron2D.JoypadInfo", "reason": "Typed projection of the platform-info dictionary returned by Input.GetJoyInfo; omits unavailable platform-specific fields.", "adr": "docs/decisions/input.md#adr-0038"},
@@ -1025,7 +1040,6 @@
       "reason": "Typed feature, path, or lifecycle helper of directory-backed settings; no exact upstream declaration.",
       "adr": "adr-0019"
     },
-
     {
       "electron2d": "T:Electron2D.EventConnection",
       "reason": "Typed event subscription/disconnection replacing dynamic signals.",
@@ -1804,6 +1818,15 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004: pinned Script.xml at ed1daf0bf001b61586d9930840f2f1394092c079 declares instance_has deprecated=\"Compare this script with [method Object.get_script] instead.\" Do not expose a deprecated mirror. Modern typed object-script identity remains the explicit live binding dependency under ADR 0091."
+    },
+    {
+      "godot": [
+        "OS::method:get_system_font_path(String:,int:,int:,bool:)",
+        "OS::method:get_system_font_path_for_text(String:,String:,String:,String:,int:,int:,bool:)",
+        "OS::method:get_system_fonts()"
+      ],
+      "state": "Partial",
+      "reason": "Current Linux Fontconfig profile enumerates scalable families and resolves style/text/locale requests with exact path/face ownership; unavailable catalogs return empty results. Trigger: owning Windows DirectWrite and Apple CoreText provider slices must connect these same static OS contracts, with actual target discovery/ownership fixtures. Discovery does not depend on a graphics session."
     }
   ]
 }

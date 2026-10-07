@@ -24,6 +24,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "empty") { SystemFontTests.RunEmptyCatalog(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "collection") { SystemFontTests.RunCollectionCatalog(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CATALOG") == "1") { SystemFontTests.RunCatalog(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_CHILD") is { } systemFontPath) { SystemFontTests.RunChild(systemFontPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT_HOST") == "1") { SystemFontTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SYSTEM_FONT") == "1") { SystemFontTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_CHILD") is { } fontCachePath) { FontCacheTests.RunChild(fontCachePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE_HOST") == "1") { FontCacheTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT_CACHE") == "1") { FontCacheTests.Run(); return; }
@@ -440,6 +446,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FONT") == "1")
     NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     FontCacheTests.Run();
+    SystemFontTests.Run();
     FontLifetimeTests.Run(FontTestFixtures.OpenSans);
     FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
     LabelTests.Run(FontTestFixtures.OpenSans);
@@ -635,6 +642,7 @@ LabelSettingsTests.Run();
 NativeFontPrecisionTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 FontFileTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 FontCacheTests.Run();
+SystemFontTests.Run();
 FontLifetimeTests.Run(FontTestFixtures.OpenSans);
 FontTests.Run(FontTestFixtures.OpenSans, FontTestFixtures.Arabic);
 LabelTests.Run(FontTestFixtures.OpenSans);

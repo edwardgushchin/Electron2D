@@ -46,7 +46,7 @@ internal static class TextLayoutBreakTests
     }
     private static void VerifyLayoutConsumers()
     {
-        using var empty = new FontFile(); var layout = new TextLayout();
+        using var empty = new FontFile { AllowSystemFallback = false }; var layout = new TextLayout();
         foreach (var item in DictionaryCases.Take(4))
         {
             var width = (item.Lines[0] + 1) * 12;
@@ -70,7 +70,7 @@ internal static class TextLayoutBreakTests
     }
     private static void VerifyNeutralDirection()
     {
-        using var font = new FontFile { Data = FontTestFixtures.OpenSans }; var layout = new TextLayout();
+        using var font = new FontFile { Data = FontTestFixtures.OpenSans, AllowSystemFallback = false }; var layout = new TextLayout();
         foreach (var language in new[] { "ar", "ff", "ku", "he-IL" })
         {
             layout.Build(font, Key("123", -1), new TextLayoutOptions(Language: language, Overrun: 0, VisibleCharacters: -1));
@@ -90,7 +90,7 @@ internal static class TextLayoutBreakTests
     {
         var previous = TranslationServer.Culture;
         using var catalog = new Translation { Locale = "de-DE" };
-        using var font = new FontFile { Data = FontTestFixtures.OpenSans };
+        using var font = new FontFile { Data = FontTestFixtures.OpenSans, AllowSystemFallback = false };
         try
         {
             TranslationServer.Culture = CultureInfo.GetCultureInfo("de-AT"); TranslationServer.AddTranslation(catalog);

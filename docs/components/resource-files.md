@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Scope and owned types
 
@@ -58,3 +58,7 @@ ColorPalette has a compiled built-in resource factory and stored Color[] schema.
 FontVariation is a registered resource factory. Stored configuration includes borrowed BaseFont graph references, copied numeric design coordinates, features, synthetic outline/baseline/spacing and palette settings. The numeric-coordinate codec writes sorted uint tags with finite floats and rejects negative/oversized counts, duplicate tags and nonfinite values on read. FontVariationTests loads and shapes a stored instance in a fresh process; serialization itself does not establish a native render or editor authoring gate.
 
 Script archives store editable source text and a stable compiled type ID resolved against explicit host registration. Project Node/Resource registrations reuse exact file factories and typed stored property schemas. A fresh host registers its compiled classes before scene loading and executes the restored class’s ordinary callbacks; storage does not recompile or reassign CLR types.
+
+## System font integration
+
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.

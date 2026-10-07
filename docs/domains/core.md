@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 ## Responsibility
 
@@ -196,3 +196,7 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 [File dialogs](../components/file-dialogs.md) now execute scoped browsing, five selection modes, typed custom options, filters, menus, overwrite/folder workflows and recoverable desktop Linux trash. The shared FileDialogMode identity spans the custom browser and DisplayServer; native-file-extra and foreign platform gates remain explicit. Six permanent ui_filedialog actions use the existing InputMap settings loader.
 
 [Compiled C# source assets](../components/scripting.md) register exact project Node/Resource factories and typed schemas, validate portable-PDB source/type association, load/save Script resources, and reconstruct actual user classes through scene archives. Project callbacks retain ordinary lifecycle and source-resource disposal does not unload their compiled class. RichTextLabel consumes owned compiled effect instances. Live reassignment, implementation reload/migration, scene RPC and foreign target source-symbol prerequisites remain explicit dependencies.
+
+## System font integration
+
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.

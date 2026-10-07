@@ -18,7 +18,7 @@ internal static class FontTests
 
     private static void VerifyDefaultsAndGuards()
     {
-        using var empty = new FontFile();
+        using var empty = new FontFile { AllowSystemFallback = false };
         Check(empty.Fallbacks.Length == 0 && empty.GetHeight() == 0 && empty.GetAscent() == 0 && empty.GetDescent() == 0 &&
             empty.GetFontName() == string.Empty && empty.GetFontStyleName() == string.Empty && empty.GetFontWeight() == 400 && empty.GetFontStretch() == 100 &&
             empty.GetFontStyle() == FontStyle.None && empty.GetFaceCount() == 0 && empty.GetSupportedChars() == string.Empty && !empty.HasChar('A') && empty.GetCharSize('A', 16) == Vector2.Zero,

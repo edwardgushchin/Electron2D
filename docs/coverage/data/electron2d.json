@@ -8399,6 +8399,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SystemFont",
+    "kind": "type",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "SystemFont",
+    "signature": "public class Electron2D.SystemFont",
+    "visibility": "public",
+    "baseType": "Electron2D.Font",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TCPServer",
     "kind": "type",
     "declaringType": "Electron2D.TCPServer",
@@ -16643,6 +16658,19 @@
     "declaringType": "Electron2D.SyntaxHighlighter",
     "name": ".ctor",
     "signature": "public SyntaxHighlighter()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SystemFont..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SystemFont",
+    "name": ".ctor",
+    "signature": "public SystemFont()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -77705,7 +77733,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Font",
     "name": "GetFaceCount",
-    "signature": "public System.Int32 GetFaceCount()",
+    "signature": "public virtual System.Int32 GetFaceCount()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -99201,6 +99229,102 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSystemFontPath(System.String,System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSystemFontPath",
+    "signature": "public static System.String GetSystemFontPath(System.String fontName, System.Int32 weight = 400, System.Int32 stretch = 100, System.Boolean italic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "weight",
+        "type": "System.Int32",
+        "default": "400"
+      },
+      {
+        "name": "stretch",
+        "type": "System.Int32",
+        "default": "100"
+      },
+      {
+        "name": "italic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSystemFontPathForText(System.String,System.String,System.String,System.String,System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSystemFontPathForText",
+    "signature": "public static System.String[] GetSystemFontPathForText(System.String fontName, System.String text, System.String locale = \u0022\u0022, System.String script = \u0022\u0022, System.Int32 weight = 400, System.Int32 stretch = 100, System.Boolean italic = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "locale",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "script",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "weight",
+        "type": "System.Int32",
+        "default": "400"
+      },
+      {
+        "name": "stretch",
+        "type": "System.Int32",
+        "default": "100"
+      },
+      {
+        "name": "italic",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.OS.GetSystemFonts()",
+    "kind": "method",
+    "declaringType": "Electron2D.OS",
+    "name": "GetSystemFonts",
+    "signature": "public static System.String[] GetSystemFonts()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
     "value": null
   },
   {
@@ -124696,6 +124820,116 @@
     "name": "UpdateCache",
     "signature": "public System.Void UpdateCache()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.GetFaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "GetFaceCount",
+    "signature": "public override System.Int32 GetFaceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SystemFont.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -160008,6 +160242,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.FontFile.AllowSystemFallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.FontFile",
+    "name": "AllowSystemFallback",
+    "signature": "public System.Boolean AllowSystemFallback { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.FontFile.Data()",
     "kind": "property",
     "declaringType": "Electron2D.FontFile",
@@ -171926,6 +172173,136 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.AllowSystemFallback()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "AllowSystemFallback",
+    "signature": "public System.Boolean AllowSystemFallback { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.FontItalic()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "FontItalic",
+    "signature": "public System.Boolean FontItalic { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.FontNames()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "FontNames",
+    "signature": "public System.String[] FontNames { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.FontStretch()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "FontStretch",
+    "signature": "public System.Int32 FontStretch { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.FontWeight()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "FontWeight",
+    "signature": "public System.Int32 FontWeight { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.Hinting()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "Hinting",
+    "signature": "public Electron2D.FontHinting Hinting { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontHinting",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.KeepRoundingRemainders()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "KeepRoundingRemainders",
+    "signature": "public System.Boolean KeepRoundingRemainders { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.ModulateColorGlyphs()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "ModulateColorGlyphs",
+    "signature": "public System.Boolean ModulateColorGlyphs { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.Oversampling()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "Oversampling",
+    "signature": "public System.Single Oversampling { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SystemFont.SubpixelPositioning()",
+    "kind": "property",
+    "declaringType": "Electron2D.SystemFont",
+    "name": "SubpixelPositioning",
+    "signature": "public Electron2D.FontSubpixelPositioning SubpixelPositioning { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.FontSubpixelPositioning",
     "value": null
   },
   {

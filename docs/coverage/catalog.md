@@ -839,7 +839,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [SubtweenTweener](classes/SubtweenTweener.md) | Tweener | Implemented | 1 |
 | [SurfaceTool](classes/SurfaceTool.md) | RefCounted | Blocked | 46 |
 | [SyntaxHighlighter](classes/SyntaxHighlighter.md) | Resource | Implemented | 7 |
-| [SystemFont](classes/SystemFont.md) | Font | Blocked | 17 |
+| [SystemFont](classes/SystemFont.md) | Font | Partial | 17 |
 | [TCPServer](classes/TCPServer.md) | SocketServer | Implemented | 3 |
 | [TLSOptions](classes/TLSOptions.md) | RefCounted | Implemented | 9 |
 | [TabBar](classes/TabBar.md) | Control | Implemented | 99 |

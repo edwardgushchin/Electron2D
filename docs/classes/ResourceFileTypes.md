@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -89,3 +89,7 @@ The [PopupMenu consumer](../components/popup-menus.md) uses all 37 declared menu
 [Tab panels](../components/tab-panels.md) add TabContainer as an executable consumer with all 31 declared theme keys, Container fitting/maximum propagation and exact scene/file factories. Indexed restore uses a private typed schema count before owned child construction. Public signatures of these shared owners are unchanged.
 
 [Dropdown choices](../components/dropdown-choices.md) add OptionButton as an executable Button/PopupMenu consumer with three arrow theme keys and an exact scene/file factory. Selected item translation uses the shared Button text path. Disposed borrowed button icons read as null and clear on owner processing, avoiding the internal-process/deferred-cleanup race. Public shared-owner signatures remain unchanged.
+
+## System font integration
+
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.

@@ -36,6 +36,7 @@ public static partial class ResourceFileTypes
         RegisterResource("StyleBoxTexture", CreateTextureStyleFileResource);
         RegisterResource("StyleBoxEmpty", CreateEmptyFileResource);
         RegisterResource("FontFile", CreateFontFileResource);
+        RegisterResource("SystemFont", CreateSystemFontResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
         RegisterResource("SegmentShape", CreateSegmentFileResource);
@@ -67,6 +68,7 @@ public static partial class ResourceFileTypes
     private static StyleBoxTexture CreateTextureStyleFileResource() => new();
     private static StyleBoxEmpty CreateEmptyFileResource() => new();
     private static FontFile CreateFontFileResource() => new();
+    private static SystemFont CreateSystemFontResource() => new();
     /// <summary>Registers a compiled node factory used by file-backed PackedScene.</summary><typeparam name="TNode">Exact concrete node type.</typeparam><param name="id">Stable portable schema ID.</param><param name="factory">Static exact-type constructor.</param>
     public static void RegisterNode<TNode>(string id, Func<TNode> factory) where TNode : Node => Register(id, factory);
     /// <summary>Registers a compiled resource factory with storage-enabled typed properties.</summary><typeparam name="TResource">Exact concrete resource type.</typeparam><param name="id">Stable portable schema ID.</param><param name="factory">Static exact-type constructor.</param>

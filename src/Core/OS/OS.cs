@@ -5,7 +5,7 @@ namespace Electron2D;
 /// <summary>Owns process-wide operating-system operations through a retained service object.</summary>
 /// <remarks>The current filesystem operation uses the Linux desktop's recoverable trash service.
 /// Unavailable platform services fail explicitly. Native libraries are system facilities and remain process-owned.</remarks>
-public sealed class OS : ElectronObject
+public sealed partial class OS : ElectronObject
 {
     internal static OS Service { get; } = new();
     private OS() { }

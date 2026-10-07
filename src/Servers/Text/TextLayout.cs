@@ -151,6 +151,8 @@ internal sealed partial class TextLayout
                 for (var i = start; i < end; i++) if (!IsIgnorable(i) && source.GetGlyphIndex(_scalars[i]) == 0) { supported = false; break; }
                 if (supported) { face = source; break; }
             }
+            if (face == null)
+                foreach (var source in sources) if (source.FindSystemFallback(_scalars.AsSpan(start, end - start), _options.Language ?? "") is { } fallback) { face = fallback; break; }
             for (var i = start; i < end; i++)
             {
                 _faces[i] = face;
@@ -158,6 +160,8 @@ internal sealed partial class TextLayout
                 {
                     foreach (var source in sources) if (source.GetGlyphIndex(_scalars[i]) != 0) { _faces[i] = source; break; }
                 }
+                if (_faces[i] is null && !IsIgnorable(i))
+                    foreach (var source in sources) if (source.FindSystemFallback(_scalars[i], _options.Language ?? "") is { } fallback) { _faces[i] = fallback; break; }
                 _scripts[i] = new Codepoint(_scalars[i]).Script;
             }
             start = end;

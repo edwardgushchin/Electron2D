@@ -8,7 +8,7 @@ Last updated: 2026-10-07
 
 ## Description and example
 
-Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 and bitmap-font authoring require separate format integration. Font provides measurement, drawing and ordered borrowed fallbacks.
+Owns scalable font source bytes and independent native metric, shaping and glyph caches. Replacement retains retired native faces only until active readers finish, then explicitly releases their handles and encoded bytes. Already recorded immutable glyph images remain valid; their native renderer payload is released after the first unused frame. Use Data for copied in-memory data or LoadDynamicFont for an operating-system, res:// or user:// file. TTF, OTF, TTC, WOFF and WOFF2 use the SFNT loading path; Type 1 requires separate non-SFNT integration; bitmap font import and indexed authoring execute through the common path below. Font provides measurement, drawing and ordered borrowed fallbacks.
 
 ```csharp
 using var font = new FontFile();
@@ -37,7 +37,7 @@ Vector2 size = font.GetStringSize("Hello", fontSize: 20);
 | `public bool ModulateColorGlyphs { get; set; }` | False; controls requested RGB modulation of intrinsic-color glyphs. |
 | `public Dictionary<string, int> OpenTypeFeatureOverrides { get; set; }` | Independent dictionary snapshot, initially empty. |
 | `public void LoadDynamicFont(string path)` | Validates a new face before committing bytes and reset settings. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Inherited properties plus all fourteen typed stored properties and the internal cache snapshot. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Inherited properties plus all fifteen typed stored properties and the internal cache snapshot. |
 | `protected override Resource CreateDuplicateInstance()` | Creates an exact FontFile; unhandled derived factories are rejected. |
 | `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies bytes, configuration, metadata and fallback graph policy. |
 | `protected override void OnResetState()` | Clears source/native state and resets raster settings; preserves features/fallbacks. |
@@ -72,11 +72,11 @@ Nonnegative integer values are passed to HarfBuzz; zero disables a boolean featu
 ## Copying, storage and verification
 
 <a id="getpropertydescriptors"></a><a id="createduplicateinstance"></a><a id="copycustomstateto"></a><a id="onresetstate"></a><a id="dispose"></a>
-All fourteen scalar/source properties plus the internal typed cache snapshot have typed stored descriptors. Data precedes metadata/settings during restoration. The positioning revert value is the constructor default Auto. Copies own independent native caches and byte views; feature dictionaries are independent, while fallbacks follow Resource's shallow/deep graph policy and preserve repeated aliases. ResetState clears bytes/native state and applies file-load reset settings without discarding fallbacks/features. Disposal releases owned data and does not dispose borrowed fallback resources.
+All fifteen scalar/source properties plus the internal typed cache snapshot have typed stored descriptors. Data precedes metadata/settings during restoration. The positioning revert value is the constructor default Auto. Copies own independent native caches and byte views; feature dictionaries are independent, while fallbacks follow Resource's shallow/deep graph policy and preserve repeated aliases. ResetState clears bytes/native state and applies file-load reset settings without discarding fallbacks/features. Disposal releases owned data and does not dispose borrowed fallback resources.
 
 [FontFileTests](../../tests/Electron2D.Tests/FontFileTests.cs) passes defaults, readable/raw feature equivalence, native glyph effects, negative-feature omission, deferred realization, data/file rollback, 64 MiB limits, metadata, callback ordering/failures, exact copies, graph aliases and typed descriptors. Sixty-four measured scalar configuration cycles after sixty-four warmup cycles allocate zero managed bytes. [NativeFontPrecisionTests](../../tests/Electron2D.Tests/NativeFontPrecisionTests.cs) adds exact metric and raster oracles. These focused results are Linux x64 checks; they do not establish other native platforms, all font/color formats or owner visual acceptance.
 
-Bitmap loading and indexed glyph/size/texture/kerning/instance authoring now execute as described below. System font discovery/fallback, language/script policies, additional native raster modes and MSDF retain their exact coverage dependencies. Typed FontVariation instances and copied primary-face axis/palette metadata execute separately. See [coverage](../coverage/classes/FontFile.md), [ADR 0046](../decisions/rendering.md#adr-0046) and [NativeFontPrecision](NativeFontPrecision.md).
+Bitmap loading and indexed glyph/size/texture/kerning/instance authoring now execute as described below. language/script policies, additional native raster modes and MSDF retain their exact coverage dependencies. Typed FontVariation instances and copied primary-face axis/palette metadata execute separately. See [coverage](../coverage/classes/FontFile.md), [ADR 0046](../decisions/rendering.md#adr-0046) and [NativeFontPrecision](NativeFontPrecision.md).
 
 ## Typed file integration
 
@@ -478,3 +478,12 @@ Uses the fixed bitmap-size and numeric scaling policy above. Equal property writ
 Uses the fixed bitmap-size and numeric scaling policy above. Equal property writes are silent; invalid sizes/modes fail before publication. Disposed resources reject access.
 
 Type 1 PFB/PFM dynamic sources remain unsupported by the SFNT-backed native source profile; their nominal/kerning callbacks and format fixtures are tracked as a separate source capability in coverage. BMFont loading uses the executable bitmap path above.
+
+## System font integration
+
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
+
+<a id="allowsystemfallback"></a>
+`public bool AllowSystemFallback { get; set; }`
+
+True initially and after file/bitmap reset. Missing shaped/drawn glyphs can load bounded owned platform sources after explicit fallbacks. Equal writes are silent; changing the policy invalidates layout and retains old fallback faces until active readers finish. Discovery is cold; prepared lookups reuse native faces. Missing or unsupported catalogs retain hexadecimal missing output. Source paths are not persisted with the permission.

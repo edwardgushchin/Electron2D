@@ -102,7 +102,7 @@ public abstract class Font : Resource
     public int GetFontStretch() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FontStretch ?? 100; } }
     /// <summary>Returns the number of faces in the primary font collection.</summary>
     /// <returns>The collection face count, or zero without data.</returns><exception cref="ObjectDisposedException">The font is disposed.</exception>
-    public int GetFaceCount() { lock (FontGate) { ThrowIfDisposed(); return PrimaryData?.FaceCount ?? 0; } }
+    public virtual int GetFaceCount() { lock (FontGate) { ThrowIfDisposed(); var data = PrimaryData; return data?.AdvertisedFaceCount ?? data?.FaceCount ?? 0; } }
     /// <summary>Returns additional spacing supplied by this font.</summary>
     /// <param name="spacing">The spacing category.</param><returns>Zero for an unmodified font.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The spacing category is invalid.</exception>
@@ -199,7 +199,7 @@ public abstract class Font : Resource
         ValidateCharacter(character); ValidateSize(fontSize);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var source = FindSource((uint)character);
+            using var read = BeginRead(); var source = FindSource((uint)character, true);
             var result = source is null ? Vector2.Zero : new Vector2(source.GetGlyphAdvance(source.GetGlyphIndex((uint)character), fontSize), GetHeight(fontSize));
             if (read.IsCurrent) return result;
         }
@@ -348,7 +348,7 @@ public abstract class Font : Resource
         ValidateCharacter(character); ValidateSize(size); ValidateDraw(canvas, position, color, oversampling);
         for (var attempt = 0; attempt < MaximumReadAttempts; attempt++)
         {
-            using var read = BeginRead(); var source = FindSource((uint)character);
+            using var read = BeginRead(); var source = FindSource((uint)character, true);
             if (source is null) { if (read.IsCurrent) return 0; continue; }
             var glyph = source.GetGlyphIndex((uint)character);
             var image = source.GetGlyph(glyph, size, outline, Math.Max(0, oversampling), position, out var rasterPosition);
@@ -509,7 +509,7 @@ public abstract class Font : Resource
         {
             font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation);
             var data = font.PrimaryData;
-            if (data is { HasData: true } && !_sources.Contains(data)) _sources.Add(data);
+            if (data is not null && (data.HasData || data.AllowSystemFallback) && !_sources.Contains(data)) _sources.Add(data);
             if (font.BaseDependency is { } dependency) CollectDependency(dependency, depth + 1);
             foreach (var fallback in font.EffectiveFallbacks) if (fallback is not null) CollectSources(fallback, depth + 1);
         }
@@ -520,9 +520,11 @@ public abstract class Font : Resource
         if (_dependencies.Contains(font)) return;
         lock (font.FontGate) { font.ThrowIfDisposed(); _dependencies.Add(font); _dependencyGenerations.Add(font._generation); if (font.BaseDependency is { } parent) CollectDependency(parent, depth + 1); }
     }
-    private FontData? FindSource(uint character)
+    private FontData? FindSource(uint character, bool systemFallback = false)
     {
-        foreach (var source in GetSources()) if (source.GetGlyphIndex(character) != 0) return source; return null;
+        foreach (var source in GetSources()) if (source.GetGlyphIndex(character) != 0) return source;
+        if (systemFallback) foreach (var source in GetSources()) if (source.FindSystemFallback(character, "") is { } fallback) return fallback;
+        return null;
     }
     private float GetMetric(int size, int kind)
     {

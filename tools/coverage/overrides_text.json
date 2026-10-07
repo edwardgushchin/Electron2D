@@ -4024,6 +4024,66 @@
       "godot": "TextServer::enum_value:FixedSizeScaleMode.FIXED_SIZE_SCALE_INTEGER_ONLY",
       "electron2d": "enumValue:Electron2D.FixedSizeScaleMode.IntegerOnly()",
       "reason": "ADR 0046: executable FontFile bitmap/indexed authoring connects copied image pages, glyph/size/metric/kerning caches, packed native atlas shelves and independently realized source instances with shared shaping, FontVariation, canvas/Label/RichTextLabel and typed stored caches. FontCacheTests covers authored/dynamic/import/rollback/duplication/fresh-process storage and prepared draws on current Linux GPU/compatibility; native allocations and other target/editor acceptance are separate."
+    },
+    {
+      "godot": "FontFile::property:allow_system_fallback",
+      "electron2d": "property:Electron2D.FontFile.AllowSystemFallback()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "class:SystemFont",
+      "electron2d": "T:Electron2D.SystemFont",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:allow_system_fallback",
+      "electron2d": "property:Electron2D.SystemFont.AllowSystemFallback()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:font_italic",
+      "electron2d": "property:Electron2D.SystemFont.FontItalic()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:font_names",
+      "electron2d": "property:Electron2D.SystemFont.FontNames()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:font_stretch",
+      "electron2d": "property:Electron2D.SystemFont.FontStretch()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:font_weight",
+      "electron2d": "property:Electron2D.SystemFont.FontWeight()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:hinting",
+      "electron2d": "property:Electron2D.SystemFont.Hinting()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:keep_rounding_remainders",
+      "electron2d": "property:Electron2D.SystemFont.KeepRoundingRemainders()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:modulate_color_glyphs",
+      "electron2d": "property:Electron2D.SystemFont.ModulateColorGlyphs()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:oversampling",
+      "electron2d": "property:Electron2D.SystemFont.Oversampling()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "SystemFont::property:subpixel_positioning",
+      "electron2d": "property:Electron2D.SystemFont.SubpixelPositioning()",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
     }
   ],
   "statusGroups": [
@@ -4215,13 +4275,6 @@
         "FontFile::method:remove_script_support_override(String:)",
         "FontFile::method:set_language_support_override(String:,bool:)",
         "FontFile::method:set_script_support_override(String:,bool:)"
-      ]
-    },
-    {
-      "state": "Unimplemented",
-      "reason": "Automatic system-font discovery and locale/script fallback selection are not implemented. Current Fallbacks are an explicit borrowed font graph; add actual platform discovery and ownership before exposing this source setting.",
-      "godot": [
-        "FontFile::property:allow_system_fallback"
       ]
     },
     {
@@ -5116,6 +5169,79 @@
       "godot": [
         "FontFile::method:load_dynamic_font(String:)"
       ]
+    },
+    {
+      "godot": [
+        "FontFile::property:allow_system_fallback",
+        "SystemFont::property:allow_system_fallback",
+        "SystemFont::property:font_italic",
+        "SystemFont::property:font_names",
+        "SystemFont::property:font_stretch",
+        "SystemFont::property:font_weight",
+        "SystemFont::property:hinting",
+        "SystemFont::property:keep_rounding_remainders",
+        "SystemFont::property:modulate_color_glyphs",
+        "SystemFont::property:oversampling",
+        "SystemFont::property:subpixel_positioning"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": [
+        "class:SystemFont"
+      ],
+      "state": "Partial",
+      "reason": "SystemFont resolves and owns Linux system faces, styles/variables, logical collection faces, common text consumers and typed storage; absent catalogs use a borrowed theme source. Exact remaining dependencies: CoreText and DirectWrite providers on their owning targets; native antialiasing/bitmap/autohinter/mipmap modes and MSDF sampling from FontFile foundation. No inert policies are exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:antialiasing"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:disable_embedded_bitmaps"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:force_autohinter"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:generate_mipmaps"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:msdf_pixel_range"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:msdf_size"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
+    },
+    {
+      "godot": [
+        "SystemFont::property:multichannel_signed_distance_field"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: first executable FontFile native raster policy/MSDF slice must apply this same policy across SystemFont-owned primary/fallback faces, duplication/storage and both applicable canvas backend contracts. Platform discovery is implemented separately; no passive setting is exposed."
     }
   ],
   "extras": [
@@ -5577,6 +5703,41 @@
     {
       "electron2d": "method:Electron2D.FontFile.GetSpacing(Electron2D.TextSpacingType)",
       "reason": "Concrete dispatch of inherited Font.GetSpacing using the primary indexed FontFile cache. No independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SystemFont..ctor()",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.CreateDuplicateInstance()",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.Dispose(System.Boolean)",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.GetFaceCount()",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.GetPropertyDescriptors()",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
+      "adr": "docs/decisions/rendering.md#adr-0046"
+    },
+    {
+      "electron2d": "method:Electron2D.SystemFont.OnResetState()",
+      "reason": "Typed SystemFont construction, inherited Font.GetFaceCount dispatch or Resource copy/storage/reset/disposal projection for executable system font ownership; no independent capability.",
       "adr": "docs/decisions/rendering.md#adr-0046"
     }
   ]

@@ -65,7 +65,7 @@ public partial class FontFile
         lock (FontGate)
         {
             ThrowIfDisposed(); replacement = new FontData([], authored: imported.Cache);
-            replacement.Hinting = FontHinting.None; replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled;
+            replacement.AllowSystemFallback = true; replacement.Hinting = FontHinting.None; replacement.SubpixelPositioning = FontSubpixelPositioning.Disabled;
             replacement.OpenTypeFeatures = _fontData!.OpenTypeFeatures; replacement.FamilyName = imported.Name; replacement.FontStyle = imported.Style;
             replacement.FontWeight = (imported.Style & FontStyle.Bold) != 0 ? 700 : 400;
             retired.Add(_fontData); retired.AddRange(_cacheData.Values); _cacheData.Clear(); _caches.Clear(); _caches.Add(imported.Cache);

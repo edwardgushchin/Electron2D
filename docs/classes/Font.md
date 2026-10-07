@@ -1,6 +1,6 @@
 # Font
 
-Last updated: 2026-09-27
+Last updated: 2026-10-07
 
 **Inherits:** [Resource](Resource.md) · **Source:** [Font.cs](../../src/Scene/Resources/Font.cs) · **Component:** [Text](../components/text.md)
 
@@ -420,3 +420,7 @@ Uses the inherited [Resource graph/lifecycle contract](Resource.md) for the conc
 ## Verification and limits
 
 [FontTests](../../tests/Electron2D.Tests/FontTests.cs) exercises real metrics, ligatures, BiDi, fallbacks, wrapping, justification, character bounds, all six draw entrypoints, native-thread dispatch, graph copying, callback failure and warmed reuse. [FontRenderingTests](../../tests/Electron2D.Tests/FontRenderingTests.cs) supplies the native pixel gate. Empty text, missing glyphs, invalid scalars and disposed resources have explicit checks. Cache misses, public snapshots and first glyph rasterization may allocate; prepared measured paths are checked separately. Public TextServer RID services, font discovery, bitmap/cache authoring and unsupported platforms remain exact [coverage](../coverage/classes/Font.md) gaps. Native allocator counts and owner acceptance are not inferred from managed tests.
+
+## System font integration
+
+[System font matching](../components/system-fonts.md) adds installed families/styles/logical collection faces and owned automatic text fallback over the shared native owner and canvas path. FontFile.AllowSystemFallback defaults to true; explicit resources retain precedence and explicit support queries remain distinct from automatic rendered coverage. Active parent readers retain retired fallback faces through policy changes. SystemFont archives store preferences and rematch the host. The current Linux catalog and both canvas consumers are exercised; CoreText/DirectWrite, extra raster/MSDF, native allocator and foreign acceptance gates remain explicit.
