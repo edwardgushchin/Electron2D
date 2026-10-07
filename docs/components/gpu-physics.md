@@ -35,13 +35,21 @@ use the common managed world path.
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
-176 and 160 bytes; solver uniforms occupy 48 bytes. GPU/transfer buffers retain
+176 and 192 bytes; solver uniforms occupy 64 bytes. GPU/transfer buffers retain
 capacity. Colored groups execute in parallel without shared dynamic-body writes;
 overflow preserves serial joint/contact order. The earlier
 `EnableGPUIntegration` entry remains a numeric development check.
 
+Contact and joint preparation also runs on GPU before the substeps: effective
+masses, relative restitution velocity, static/contact softening, warm-start
+reset, local anchor frames, and pin/wheel spring and motor coefficients. Filter
+joint base tuning is preserved; its spring-force application still runs in the
+managed preflight. Solved contact impulses publish directly to their manifolds,
+without a CPU SIMD preparation/store pass. Joint frames and coefficients publish
+with impulses for subsequent queries and finalization.
+
 The solver and manifold callbacks run on the world owner. CPU pair generation,
-constraint preparation, sleep/CCD finalization and queries remain in the managed
+sleep/CCD finalization and queries remain in the managed
 backend; large worlds retain CPU contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
 ownership and rejects replay while permitting world disposal. This hybrid stage
@@ -67,9 +75,16 @@ complete world parity. The development world check compares 120 falling/contact
 ticks with CPU, reads contacts and direct queries, invokes post-solver callbacks
 and verifies faulted-world disposal without replay. Eight prepared dispatches
 at each tested size allocate zero managed bytes in the checked Linux/Vulkan run.
-The solver conformance check compares 64 four-substep batches, including
-colored/serial contacts and motor/limit/spring joint equations; eight prepared
-solver submissions also allocate zero managed bytes.
+The solver conformance check compares 64 raw four-substep batches, including
+colored/serial contacts, static/kinematic bodies, zero hertz/inertia, disabled
+warm starting, contact softening and motor/limit/spring joint equations. Extra
+batches cross 64-invocation preparation boundaries and contain up to 1,025
+colored contacts/joints plus overflow constraints; eight prepared
+solver submissions also allocate zero managed bytes. Refined divide/root
+operations correct small GPU arithmetic errors before stiff constraints amplify
+them. A kinematic wheel regression failed the existing 2e-5 tolerance before
+refinement and passes without changing that tolerance. This does not establish
+bit-identical cross-device execution.
 Manifold checks compare 4,290 pairs across nine supported shape combinations,
 including rotated/offset and rounded geometry, exact contact feature IDs,
 one/two/empty contacts and an unused arena tail. Eight warmed submissions at
@@ -92,6 +107,11 @@ during impact propagation, so this is not an all-awake steady-state benchmark.
 The collision stage averaged 63.85 ms, including geometry packing, another
 submission/readback and managed contact updates. The hybrid transfer path
 remains expensive; this result does not establish an application speedup.
+With GPU constraint preparation and refined arithmetic, a subsequent isolated
+32-warmup/64-sample run averaged 168.27 ms, p95 228.22 ms, again with zero
+owner/all-thread managed bytes. Solver time was 50.42 ms and collision time
+78.74 ms; awake bodies increased from 6,425 to 41,122 among 65,537 total bodies.
+This remains a hybrid throughput result, not a sustained FPS or speedup claim.
 The real native window run (32 warmup/64 measured frames, 65,537 bodies)
 reached 5.32 FPS. Its zero-allocation gate failed: three frames allocated 4,992
 managed bytes each outside the measured physics phases and renderer. The same
@@ -101,6 +121,6 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU broad phase, chain manifolds and constraint preparation, spring
+Remaining work: GPU broad phase, chain manifolds, resident manifold-to-constraint flow, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.

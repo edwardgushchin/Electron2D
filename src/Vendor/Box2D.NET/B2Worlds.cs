@@ -802,9 +802,12 @@ namespace Box2D.NET
             world.inv_dt = context.inv_dt;
 
             // Hertz values get reduced for large time steps
-            float contactHertz = b2MinFloat(world.contactHertz, 0.125f * context.inv_h);
-            context.contactSoftness = b2MakeSoft(contactHertz, world.contactDampingRatio, context.h);
-            context.staticSoftness = b2MakeSoft(2.0f * contactHertz, world.contactDampingRatio, context.h);
+            if (world.solveConstraints == null)
+            {
+                float contactHertz = b2MinFloat(world.contactHertz, 0.125f * context.inv_h);
+                context.contactSoftness = b2MakeSoft(contactHertz, world.contactDampingRatio, context.h);
+                context.staticSoftness = b2MakeSoft(2.0f * contactHertz, world.contactDampingRatio, context.h);
+            }
 
             context.restitutionThreshold = world.restitutionThreshold;
             context.maxLinearVelocity = world.maxLinearSpeed;

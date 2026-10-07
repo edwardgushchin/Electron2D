@@ -1908,15 +1908,7 @@ public enum b2SolverBlockType
 
                 if (world.solveConstraints != null)
                 {
-                    ulong gpuPrepareTicks = b2GetTicks();
-                    b2PrepareJointsTask(0, awakeJointCount, stepContext);
-                    b2PrepareContactsTask(0, simdContactCount, stepContext);
-                    b2PrepareOverflowJoints(stepContext);
-                    b2PrepareOverflowContacts(stepContext);
-                    world.profile.prepareConstraints += b2GetMillisecondsAndReset(ref gpuPrepareTicks);
                     world.solveConstraints(stepContext);
-                    b2StoreOverflowImpulses(stepContext);
-                    b2StoreImpulsesTask(0, simdContactCount, stepContext);
                 }
 
                 // Finish constraint solve

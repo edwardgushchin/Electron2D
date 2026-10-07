@@ -5,7 +5,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU integration, manifolds and constraints execute here; pairs/preparation and sleep/CCD
+// GPU integration, manifolds and constraints execute here; pairs and sleep/CCD
 // still use the compatibility world until their GPU stages are connected.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {

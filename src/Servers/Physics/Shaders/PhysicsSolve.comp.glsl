@@ -9,12 +9,12 @@ struct Contact {
 };
 struct Joint {
     vec4 ids; vec4 mass; vec4 frameA; vec4 frameB; vec4 geometry;
-    vec4 soft; vec4 spring; vec4 motor; vec4 impulses; vec4 limits;
+    vec4 soft; vec4 spring; vec4 motor; vec4 impulses; vec4 limits; vec4 poseA; vec4 poseB;
 };
 layout(std430, set = 1, binding = 0) buffer Bodies { Body bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Contacts { Contact contacts[]; };
 layout(std430, set = 1, binding = 2) buffer Joints { Joint joints[]; };
-layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; };
+layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; vec4 preparation; };
 
 float cross2(vec2 a, vec2 b) { precise float r = a.x * b.y - a.y * b.x; return r; }
 float dot2(vec2 a, vec2 b) { precise float r = a.x * b.x + a.y * b.y; return r; }
@@ -38,7 +38,81 @@ void applyImpulse(inout vec3 a, inout vec3 b, vec4 mass, vec2 ra, vec2 rb, vec2 
     vb.z = vb.z + mass.w * cross2(rb, impulse);
     a = va; b = vb;
 }
-vec2 relativeVelocity(vec3 a, vec3 b, vec2 ra, vec2 rb) { return (b.xy + angular(b.z, rb)) - (a.xy + angular(a.z, ra)); }
+vec2 relativeVelocity(vec3 a, vec3 b, vec2 ra, vec2 rb) { precise vec2 r = (b.xy + angular(b.z, rb)) - (a.xy + angular(a.z, ra)); return r; }
+
+vec3 makeSoft(float hertz, float damping)
+{
+    if (hertz == 0) return vec3(0);
+    precise float omega = 2.0 * 3.14159265359 * hertz;
+    precise float a1 = 2.0 * damping + step.z * omega;
+    precise float a2 = step.z * omega * a1;
+    precise float a3 = divideRefined(1.0, 1.0 + a2);
+    precise vec3 result = vec3(divideRefined(omega, a1), a2 * a3, a3);
+    return result;
+}
+void preparePoint(Contact c, vec3 a, vec3 b, vec4 anchors, inout vec4 params, inout vec4 impulses, float warm)
+{
+    vec2 n = c.normal.xy, t = vec2(n.y, -n.x), ra = anchors.xy, rb = anchors.zw;
+    precise float rnA = cross2(ra, n), rnB = cross2(rb, n);
+    precise float kn = c.mass.x + c.mass.y + c.mass.z * rnA * rnA + c.mass.w * rnB * rnB;
+    precise float rtA = cross2(ra, t), rtB = cross2(rb, t);
+    precise float kt = c.mass.x + c.mass.y + c.mass.z * rtA * rtA + c.mass.w * rtB * rtB;
+    params.x = kn > 0 ? divideRefined(1.0, kn) : 0; params.y = kt > 0 ? divideRefined(1.0, kt) : 0;
+    params.z -= dot2(rb - ra, n); params.w = dot2(n, relativeVelocity(a, b, ra, rb));
+    impulses.xy *= warm; impulses.zw = vec2(0);
+}
+void prepareContact(uint index)
+{
+    Contact c = contacts[index];
+    precise float hertz = min(preparation.x, 0.125 * solve.y), damping = preparation.y;
+    if (c.ids.x < 0 || c.ids.y < 0) hertz *= 2.0;
+    else if (c.ids.w == 0 && preparation.z != 0)
+    {
+        precise float ratio = 1;
+        if (c.mass.x < c.mass.y) ratio = max(0.5, c.mass.x / c.mass.y);
+        else if (c.mass.y < c.mass.x) ratio = max(0.5, c.mass.y / c.mass.x);
+        hertz *= ratio; damping *= ratio;
+    }
+    c.soft.xyz = makeSoft(hertz, damping);
+    precise float k = c.mass.z + c.mass.w;
+    c.rolling.y = k > 0 ? divideRefined(1.0, k) : 0;
+    float warm = (uint(preparation.w) & 1u) != 0 ? 1 : 0;
+    c.rolling.z *= warm;
+    vec3 a = readBody(int(c.ids.x)).velocity.xyz, b = readBody(int(c.ids.y)).velocity.xyz;
+    preparePoint(c, a, b, c.anchors1, c.params1, c.impulses1, warm);
+    if (c.ids.z > 1) preparePoint(c, a, b, c.anchors2, c.params2, c.impulses2, warm);
+    else { c.anchors2 = vec4(0); c.params2 = vec4(0); c.impulses2 = vec4(0); }
+    contacts[index] = c;
+}
+void prepareJoint(uint index)
+{
+    Joint j = joints[index];
+    j.soft.xyz = makeSoft(min(j.soft.x, 0.25 * solve.y), j.soft.y);
+    if (j.ids.z == 0) { joints[index] = j; return; }
+    j.spring.xyz = makeSoft(j.spring.x, j.spring.y);
+    j.frameA.xy = rotate(j.poseA.xy, j.frameA.xy - j.poseA.zw);
+    j.frameA.zw = rotate(j.poseA.xy, j.frameA.zw);
+    j.frameB.xy = rotate(j.poseB.xy, j.frameB.xy - j.poseB.zw);
+    j.frameB.zw = rotate(j.poseB.xy, j.frameB.zw);
+    precise vec2 delta = j.geometry.zw - j.geometry.xy;
+    precise float angularMass = j.mass.z + j.mass.w;
+    angularMass = angularMass > 0 ? divideRefined(1.0, angularMass) : 0;
+    j.geometry = vec4(delta, angularMass, 0);
+    if (j.ids.z == 2)
+    {
+        vec2 ra = j.frameA.xy, rb = j.frameB.xy;
+        precise vec2 d = delta + (rb - ra);
+        vec2 axis = j.frameA.zw, perpendicular = vec2(-axis.y, axis.x);
+        precise float s1 = cross2(d + ra, perpendicular), s2 = cross2(rb, perpendicular);
+        precise float kp = j.mass.x + j.mass.y + j.mass.z * s1 * s1 + j.mass.w * s2 * s2;
+        precise float a1 = cross2(d + ra, axis), a2 = cross2(rb, axis);
+        precise float ka = j.mass.x + j.mass.y + j.mass.z * a1 * a1 + j.mass.w * a2 * a2;
+        j.geometry.z = ka > 0 ? divideRefined(1.0, ka) : 0; j.geometry.w = kp > 0 ? divideRefined(1.0, kp) : 0;
+        j.soft.w = angularMass;
+    }
+    if ((uint(preparation.w) & 2u) == 0) { j.impulses = vec4(0); j.limits = vec4(0); }
+    joints[index] = j;
+}
 
 void contactPoint(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 params, inout vec4 impulses,
     Body ba, Body bb, uint stage)
@@ -113,7 +187,7 @@ float angleOf(vec2 q)
 {
     if (q.x == 0 && q.y == 0) return 0;
     precise float ax = abs(q.x); precise float ay = abs(q.y);
-    precise float a = min(ay, ax) / max(ay, ax);
+    precise float a = divideRefined(min(ay, ax), max(ay, ax));
     precise float s = a * a; precise float c = s * a; precise float fourth = s * s;
     precise float r = 0.024840285 * fourth + 0.18681418;
     precise float t = -0.094097948 * fourth - 0.33213072;
@@ -123,13 +197,24 @@ float angleOf(vec2 q)
     if (q.y < 0) r = -r;
     return r;
 }
-float limitImpulse(float error, float velocity, float mass, float accumulated, vec3 softness, bool bias)
+float limitImpulse(float error, float velocity, float mass, inout float accumulated, vec3 softness, bool bias)
 {
     precise float speedBias = 0; precise float scale = 1; precise float impulseScale = 0;
     if (error > 0) speedBias = error * solve.y;
     else if (bias) { speedBias = softness.x * error; scale = softness.y; impulseScale = softness.z; }
     precise float impulse = -scale * mass * (velocity + speedBias) - impulseScale * accumulated;
-    return max(accumulated + impulse, 0.0) - accumulated;
+    precise float previous = accumulated;
+    accumulated = max(previous + impulse, 0.0);
+    return accumulated - previous;
+}
+void applyWheelImpulse(inout vec3 a, inout vec3 b, vec4 mass, vec2 axis, float leverA, float leverB, float impulse)
+{
+    precise vec3 va = a, vb = b;
+    precise vec2 p = impulse * axis;
+    precise float la = impulse * leverA, lb = impulse * leverB;
+    va.xy -= mass.x * p; va.z -= mass.z * la;
+    vb.xy += mass.y * p; vb.z += mass.w * lb;
+    a = va; b = vb;
 }
 void solveJoint(uint index, uint stage)
 {
@@ -184,22 +269,20 @@ void solveJoint(uint index, uint stage)
                 precise float velocity = wheel ? dot2(axis, b.xy - a.xy) + ab * b.z - aa * a.z : b.z - a.z;
                 precise float impulse = -j.spring.y * j.geometry.z * (velocity + j.spring.x * error) - j.spring.z * j.impulses.z;
                 j.impulses.z += impulse;
-                if (wheel) applyImpulse(a, b, j.mass, vec2(0), vec2(0), impulse * axis);
-                a.z -= j.mass.z * impulse * (wheel ? aa : 1.0); b.z += j.mass.w * impulse * (wheel ? ab : 1.0);
+                if (wheel) applyWheelImpulse(a, b, j.mass, axis, aa, ab, impulse);
+                else { a.z -= j.mass.z * impulse; b.z += j.mass.w * impulse; }
             }
         }
         if ((flags & 4u) != 0 && (wheel || !fixedRotation))
         {
             precise float velocity = wheel ? dot2(axis, b.xy - a.xy) + ab * b.z - aa * a.z : b.z - a.z;
             precise float impulse = limitImpulse(position - j.motor.z, velocity, j.geometry.z, j.limits.x, j.soft.xyz, bias);
-            j.limits.x += impulse;
-            if (wheel) { a.xy -= j.mass.x * impulse * axis; b.xy += j.mass.y * impulse * axis; }
-            a.z -= j.mass.z * impulse * (wheel ? aa : 1.0); b.z += j.mass.w * impulse * (wheel ? ab : 1.0);
+            if (wheel) applyWheelImpulse(a, b, j.mass, axis, aa, ab, impulse);
+            else { a.z -= j.mass.z * impulse; b.z += j.mass.w * impulse; }
             velocity = wheel ? dot2(axis, a.xy - b.xy) + aa * a.z - ab * b.z : a.z - b.z;
             impulse = limitImpulse(j.motor.w - position, velocity, j.geometry.z, j.limits.y, j.soft.xyz, bias);
-            j.limits.y += impulse;
-            if (wheel) { a.xy += j.mass.x * impulse * axis; b.xy -= j.mass.y * impulse * axis; }
-            a.z += j.mass.z * impulse * (wheel ? aa : 1.0); b.z -= j.mass.w * impulse * (wheel ? ab : 1.0);
+            if (wheel) applyWheelImpulse(a, b, j.mass, axis, aa, ab, -impulse);
+            else { a.z += j.mass.z * impulse; b.z -= j.mass.w * impulse; }
         }
         if (wheel)
         {
@@ -208,8 +291,7 @@ void solveJoint(uint index, uint stage)
             precise float velocity = dot2(perp, b.xy - a.xy) + pb * b.z - pa * a.z;
             precise float impulse = -scale * j.geometry.w * (velocity + speedBias) - impulseScale * j.impulses.x;
             j.impulses.x += impulse;
-            a.xy -= j.mass.x * impulse * perp; b.xy += j.mass.y * impulse * perp;
-            a.z -= j.mass.z * impulse * pa; b.z += j.mass.w * impulse * pb;
+            applyWheelImpulse(a, b, j.mass, perp, pa, pb, impulse);
         }
         else
         {
@@ -219,7 +301,7 @@ void solveJoint(uint index, uint stage)
             precise float k11 = j.mass.x + j.mass.y + ra.y * ra.y * j.mass.z + rb.y * rb.y * j.mass.w;
             precise float k12 = -ra.y * ra.x * j.mass.z - rb.y * rb.x * j.mass.w;
             precise float k22 = j.mass.x + j.mass.y + ra.x * ra.x * j.mass.z + rb.x * rb.x * j.mass.w;
-            precise float det = k11 * k22 - k12 * k12; precise float inverse = det != 0 ? 1.0 / det : 0;
+            precise float det = k11 * k22 - k12 * k12; precise float inverse = det != 0 ? divideRefined(1.0, det) : 0;
             precise vec2 rhs = velocity + speedBias;
             precise vec2 solution = inverse * vec2(k22 * rhs.x - k12 * rhs.y, k11 * rhs.y - k12 * rhs.x);
             precise vec2 impulse = -scale * solution - impulseScale * j.impulses.xy;
@@ -232,6 +314,14 @@ void processConstraint(uint index, uint stage) { if (stage < 6) solveContact(ind
 void main()
 {
     uint i = gl_GlobalInvocationID.x; uint stage = uint(control.y);
+    if (stage == 9 || stage == 10)
+    {
+        if (i < uint(control.w))
+        {
+            if (stage == 9) prepareContact(uint(control.x) + i); else prepareJoint(uint(control.x) + i);
+        }
+        return;
+    }
     if (stage < 2)
     {
         if (i >= uint(control.z)) return;

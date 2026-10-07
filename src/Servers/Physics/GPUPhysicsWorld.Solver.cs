@@ -16,12 +16,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [StructLayout(LayoutKind.Sequential)]
     private struct Joint
     {
-        internal Float4 IDs, Mass, FrameA, FrameB, Geometry, Soft, Spring, Motor, Impulses, Limits;
+        internal Float4 IDs, Mass, FrameA, FrameB, Geometry, Soft, Spring, Motor, Impulses, Limits, PoseA, PoseB;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct SolverStep
     {
-        internal Float4 Values, Control, Solve;
+        internal Float4 Values, Control, Solve, Preparation;
     }
     private readonly Storage<Contact> _contactStorage;
     private readonly Storage<Joint> _jointStorage;
@@ -63,8 +63,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var settings = new SolverStep
             {
                 Values = new(context.world.gravity.X, context.world.gravity.Y, context.h, context.maxLinearVelocity),
-                Solve = new(context.world.restitutionThreshold, context.inv_h, context.world.contactSpeed, 0)
+                Solve = new(context.world.restitutionThreshold, context.inv_h, context.world.contactSpeed, 0),
+                Preparation = new(context.world.contactHertz, context.world.contactDampingRatio, context.world.enableContactSoftening ? 1 : 0,
+                    (context.world.enableWarmStarting ? 1 : 0) | (context.enableWarmStarting ? 2 : 0))
             };
+            ExecuteSolverStage(command, ref settings, 9, 0, contactCount, false, count, context);
+            ExecuteSolverStage(command, ref settings, 10, 0, jointCount, false, count, context);
             for (var substep = 0; substep < context.subStepCount; substep++)
             {
                 ExecuteSolverStage(command, ref settings, 0, 0, count, false, count, context);
@@ -87,11 +91,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var profileFinished = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             _bodyStorage.Read(count); _contactStorage.Read(contactCount); _jointStorage.Read(jointCount);
             for (var i = 0; i < contactCount; i++)
-                if (!Finite(_contactStorage.Data[i].Impulses1) || !Finite(_contactStorage.Data[i].Impulses2) || !Finite(_contactStorage.Data[i].Rolling))
-                    throw new InvalidOperationException("GPU contact solving returned nonfinite impulses.");
+                if (!Finite(_contactStorage.Data[i].Impulses1) || !Finite(_contactStorage.Data[i].Impulses2) || !Finite(_contactStorage.Data[i].Rolling) ||
+                    !Finite(_contactStorage.Data[i].Params1) || !Finite(_contactStorage.Data[i].Params2) || !Finite(_contactStorage.Data[i].Soft))
+                    throw new InvalidOperationException("GPU contact preparation or solving returned nonfinite state.");
             for (var i = 0; i < jointCount; i++)
-                if (!Finite(_jointStorage.Data[i].Impulses) || !Finite(_jointStorage.Data[i].Limits))
-                    throw new InvalidOperationException("GPU joint solving returned nonfinite impulses.");
+                if (!Finite(_jointStorage.Data[i].Impulses) || !Finite(_jointStorage.Data[i].Limits) || !Finite(_jointStorage.Data[i].FrameA) ||
+                    !Finite(_jointStorage.Data[i].FrameB) || !Finite(_jointStorage.Data[i].Geometry) || !Finite(_jointStorage.Data[i].Soft) || !Finite(_jointStorage.Data[i].Spring))
+                    throw new InvalidOperationException("GPU joint preparation or solving returned nonfinite state.");
             PublishBodies(context, count); PublishConstraints(context);
             if (PhysicsSpace.ProfilingEnabled)
             {
@@ -145,68 +151,55 @@ internal sealed unsafe partial class GPUPhysicsWorld
             ref var group = ref context.graph.colors[color];
             for (var i = 0; i < group.contactSims.count; i++)
             {
-                Contact packet;
-                if (color == B2Constants.B2_GRAPH_COLOR_COUNT - 1)
+                var c = group.contactSims.data[i]; var m = c.manifold; var p1 = m.points[0]; var p2 = m.points[1];
+                _contactStorage.Data[_contactStarts[color] + i] = new()
                 {
-                    ref var c = ref group.overflowConstraints.AsSpan()[i]; var p1 = c.points[0]; var p2 = c.points[1];
-                    packet = new()
-                    {
-                        IDs = new(c.indexA, c.indexB, c.pointCount, 1),
-                        Mass = new(c.invMassA, c.invMassB, c.invIA, c.invIB),
-                        Normal = new(c.normal.X, c.normal.Y, c.friction, c.tangentSpeed),
-                        Rolling = new(c.rollingResistance, c.rollingMass, c.rollingImpulse, c.restitution),
-                        Soft = new(c.softness.biasRate, c.softness.massScale, c.softness.impulseScale, 0),
-                        Anchors1 = new(p1.anchorA.X, p1.anchorA.Y, p1.anchorB.X, p1.anchorB.Y),
-                        Params1 = new(p1.normalMass, p1.tangentMass, p1.baseSeparation, p1.relativeVelocity),
-                        Impulses1 = new(p1.normalImpulse, p1.tangentImpulse, p1.totalNormalImpulse, 0),
-                        Anchors2 = new(p2.anchorA.X, p2.anchorA.Y, p2.anchorB.X, p2.anchorB.Y),
-                        Params2 = new(p2.normalMass, p2.tangentMass, p2.baseSeparation, p2.relativeVelocity),
-                        Impulses2 = new(p2.normalImpulse, p2.tangentImpulse, p2.totalNormalImpulse, 0)
-                    };
-                }
-                else
-                {
-                    ref var c = ref group.simdConstraints.AsSpan()[i / B2Cores.B2_SIMD_WIDTH]; var lane = i % B2Cores.B2_SIMD_WIDTH;
-                    packet = new()
-                    {
-                        IDs = new(c.indexA[lane], c.indexB[lane], group.contactSims.data[i].manifold.pointCount, 0),
-                        Mass = new(c.invMassA[lane], c.invMassB[lane], c.invIA[lane], c.invIB[lane]),
-                        Normal = new(c.normal.X[lane], c.normal.Y[lane], c.friction[lane], c.tangentSpeed[lane]),
-                        Rolling = new(c.rollingResistance[lane], c.rollingMass[lane], c.rollingImpulse[lane], c.restitution[lane]),
-                        Soft = new(c.biasRate[lane], c.massScale[lane], c.impulseScale[lane], 0),
-                        Anchors1 = new(c.anchorA1.X[lane], c.anchorA1.Y[lane], c.anchorB1.X[lane], c.anchorB1.Y[lane]),
-                        Params1 = new(c.normalMass1[lane], c.tangentMass1[lane], c.baseSeparation1[lane], c.relativeVelocity1[lane]),
-                        Impulses1 = new(c.normalImpulse1[lane], c.tangentImpulse1[lane], c.totalNormalImpulse1[lane], 0),
-                        Anchors2 = new(c.anchorA2.X[lane], c.anchorA2.Y[lane], c.anchorB2.X[lane], c.anchorB2.Y[lane]),
-                        Params2 = new(c.normalMass2[lane], c.tangentMass2[lane], c.baseSeparation2[lane], c.relativeVelocity2[lane]),
-                        Impulses2 = new(c.normalImpulse2[lane], c.tangentImpulse2[lane], c.totalNormalImpulse2[lane], 0)
-                    };
-                }
-                _contactStorage.Data[_contactStarts[color] + i] = packet;
+                    IDs = new(c.bodySimIndexA, c.bodySimIndexB, m.pointCount, color == B2Constants.B2_GRAPH_COLOR_COUNT - 1 ? 1 : 0),
+                    Mass = new(c.invMassA, c.invMassB, c.invIA, c.invIB),
+                    Normal = new(m.normal.X, m.normal.Y, c.friction, c.tangentSpeed),
+                    Rolling = new(c.rollingResistance, 0, m.rollingImpulse, c.restitution),
+                    Anchors1 = new(p1.anchorA.X, p1.anchorA.Y, p1.anchorB.X, p1.anchorB.Y),
+                    Params1 = new(0, 0, p1.separation, 0),
+                    Impulses1 = new(p1.normalImpulse, p1.tangentImpulse, 0, 0),
+                    Anchors2 = new(p2.anchorA.X, p2.anchorA.Y, p2.anchorB.X, p2.anchorB.Y),
+                    Params2 = new(0, 0, p2.separation, 0),
+                    Impulses2 = new(p2.normalImpulse, p2.tangentImpulse, 0, 0)
+                };
             }
-            for (var i = 0; i < group.jointSims.count; i++) _jointStorage.Data[_jointStarts[color] + i] = PackJoint(group.jointSims.data[i]);
+            for (var i = 0; i < group.jointSims.count; i++) _jointStorage.Data[_jointStarts[color] + i] = PackJoint(context, group.jointSims.data[i]);
         }
     }
 
-    private static Joint PackJoint(B2JointSim j)
+    private static Joint PackJoint(B2StepContext context, B2JointSim j)
     {
-        if (j.type == B2JointType.b2_filterJoint) return default;
-        var p = new Joint { Mass = new(j.invMassA, j.invMassB, j.invIA, j.invIB), Soft = new(j.constraintSoftness.biasRate, j.constraintSoftness.massScale, j.constraintSoftness.impulseScale, 0) };
+        if (j.type == B2JointType.b2_filterJoint)
+            return new() { Mass = new(j.invMassA, j.invMassB, j.invIA, j.invIB), Soft = new(j.constraintHertz, j.constraintDampingRatio, 0, 0) };
+        var world = context.world; var a = world.bodies.data[j.bodyIdA]; var b = world.bodies.data[j.bodyIdB];
+        var sa = B2Bodies.b2GetBodySim(world, a); var sb = B2Bodies.b2GetBodySim(world, b);
+        var p = new Joint
+        {
+            Mass = new(sa.invMass, sb.invMass, sa.invInertia, sb.invInertia),
+            Soft = new(j.constraintHertz, j.constraintDampingRatio, 0, 0),
+            FrameA = new(j.localFrameA.p.X, j.localFrameA.p.Y, j.localFrameA.q.c, j.localFrameA.q.s),
+            FrameB = new(j.localFrameB.p.X, j.localFrameB.p.Y, j.localFrameB.q.c, j.localFrameB.q.s),
+            PoseA = new(sa.transform.q.c, sa.transform.q.s, sa.localCenter.X, sa.localCenter.Y),
+            PoseB = new(sb.transform.q.c, sb.transform.q.s, sb.localCenter.X, sb.localCenter.Y),
+            Geometry = new(sa.center.X, sa.center.Y, sb.center.X, sb.center.Y)
+        };
+        var indexA = a.setIndex == (int)B2SolverSetType.b2_awakeSet ? a.localIndex : -1;
+        var indexB = b.setIndex == (int)B2SolverSetType.b2_awakeSet ? b.localIndex : -1;
         if (j.type == B2JointType.b2_revoluteJoint)
         {
             ref var q = ref j.uj.revoluteJoint;
-            p.IDs = new(q.indexA, q.indexB, 1, (q.enableSpring ? 1 : 0) | (q.enableMotor ? 2 : 0) | (q.enableLimit ? 4 : 0));
-            p.FrameA = new(q.frameA.p.X, q.frameA.p.Y, q.frameA.q.c, q.frameA.q.s); p.FrameB = new(q.frameB.p.X, q.frameB.p.Y, q.frameB.q.c, q.frameB.q.s);
-            p.Geometry = new(q.deltaCenter.X, q.deltaCenter.Y, q.axialMass, 0); p.Spring = new(q.springSoftness.biasRate, q.springSoftness.massScale, q.springSoftness.impulseScale, q.targetAngle);
+            p.IDs = new(indexA, indexB, 1, (q.enableSpring ? 1 : 0) | (q.enableMotor ? 2 : 0) | (q.enableLimit ? 4 : 0));
+            p.Spring = new(q.hertz, q.dampingRatio, 0, q.targetAngle);
             p.Motor = new(q.maxMotorTorque, q.motorSpeed, q.lowerAngle, q.upperAngle); p.Impulses = new(q.linearImpulse.X, q.linearImpulse.Y, q.springImpulse, q.motorImpulse); p.Limits = new(q.lowerImpulse, q.upperImpulse, 0, 0);
         }
         else if (j.type == B2JointType.b2_wheelJoint)
         {
             ref var q = ref j.uj.wheelJoint;
-            p.IDs = new(q.indexA, q.indexB, 2, (q.enableSpring ? 1 : 0) | (q.enableMotor ? 2 : 0) | (q.enableLimit ? 4 : 0));
-            p.FrameA = new(q.frameA.p.X, q.frameA.p.Y, q.frameA.q.c, q.frameA.q.s); p.FrameB = new(q.frameB.p.X, q.frameB.p.Y, q.frameB.q.c, q.frameB.q.s);
-            p.Geometry = new(q.deltaCenter.X, q.deltaCenter.Y, q.axialMass, q.perpMass); p.Soft.W = q.motorMass;
-            p.Spring = new(q.springSoftness.biasRate, q.springSoftness.massScale, q.springSoftness.impulseScale, 0); p.Motor = new(q.maxMotorTorque, q.motorSpeed, q.lowerTranslation, q.upperTranslation);
+            p.IDs = new(indexA, indexB, 2, (q.enableSpring ? 1 : 0) | (q.enableMotor ? 2 : 0) | (q.enableLimit ? 4 : 0));
+            p.Spring = new(q.hertz, q.dampingRatio, 0, 0); p.Motor = new(q.maxMotorTorque, q.motorSpeed, q.lowerTranslation, q.upperTranslation);
             p.Impulses = new(q.perpImpulse, 0, q.springImpulse, q.motorImpulse); p.Limits = new(q.lowerImpulse, q.upperImpulse, 0, 0);
         }
         else throw new NotSupportedException($"GPU constraints do not support the internal {j.type} joint yet.");
@@ -221,30 +214,39 @@ internal sealed unsafe partial class GPUPhysicsWorld
             for (var i = 0; i < group.contactSims.count; i++)
             {
                 var packet = _contactStorage.Data[_contactStarts[color] + i];
-                if (color == B2Constants.B2_GRAPH_COLOR_COUNT - 1)
+                ref var m = ref group.contactSims.data[i].manifold; m.rollingImpulse = packet.Rolling.Z;
+                m.points[0].normalImpulse = packet.Impulses1.X; m.points[0].tangentImpulse = packet.Impulses1.Y;
+                m.points[0].totalNormalImpulse = packet.Impulses1.Z; m.points[0].normalVelocity = packet.Params1.W;
+                if (m.pointCount > 1)
                 {
-                    ref var c = ref group.overflowConstraints.AsSpan()[i]; c.rollingImpulse = packet.Rolling.Z;
-                    c.points[0].normalImpulse = packet.Impulses1.X; c.points[0].tangentImpulse = packet.Impulses1.Y; c.points[0].totalNormalImpulse = packet.Impulses1.Z;
-                    c.points[1].normalImpulse = packet.Impulses2.X; c.points[1].tangentImpulse = packet.Impulses2.Y; c.points[1].totalNormalImpulse = packet.Impulses2.Z;
-                }
-                else
-                {
-                    ref var c = ref group.simdConstraints.AsSpan()[i / B2Cores.B2_SIMD_WIDTH]; var lane = i % B2Cores.B2_SIMD_WIDTH;
-                    c.rollingImpulse[lane] = packet.Rolling.Z;
-                    c.normalImpulse1[lane] = packet.Impulses1.X; c.tangentImpulse1[lane] = packet.Impulses1.Y; c.totalNormalImpulse1[lane] = packet.Impulses1.Z;
-                    c.normalImpulse2[lane] = packet.Impulses2.X; c.tangentImpulse2[lane] = packet.Impulses2.Y; c.totalNormalImpulse2[lane] = packet.Impulses2.Z;
+                    m.points[1].normalImpulse = packet.Impulses2.X; m.points[1].tangentImpulse = packet.Impulses2.Y;
+                    m.points[1].totalNormalImpulse = packet.Impulses2.Z; m.points[1].normalVelocity = packet.Params2.W;
                 }
             }
             for (var i = 0; i < group.jointSims.count; i++)
             {
                 var joint = group.jointSims.data[i]; var p = _jointStorage.Data[_jointStarts[color] + i];
+                joint.invMassA = p.Mass.X; joint.invMassB = p.Mass.Y; joint.invIA = p.Mass.Z; joint.invIB = p.Mass.W;
+                joint.constraintSoftness = new(p.Soft.X, p.Soft.Y, p.Soft.Z);
                 if (joint.type == B2JointType.b2_revoluteJoint)
                 {
-                    ref var q = ref joint.uj.revoluteJoint; q.linearImpulse = new(p.Impulses.X, p.Impulses.Y); q.springImpulse = p.Impulses.Z; q.motorImpulse = p.Impulses.W; q.lowerImpulse = p.Limits.X; q.upperImpulse = p.Limits.Y;
+                    ref var q = ref joint.uj.revoluteJoint;
+                    q.indexA = (int)p.IDs.X; q.indexB = (int)p.IDs.Y;
+                    q.frameA = new(new(p.FrameA.X, p.FrameA.Y), new(p.FrameA.Z, p.FrameA.W));
+                    q.frameB = new(new(p.FrameB.X, p.FrameB.Y), new(p.FrameB.Z, p.FrameB.W));
+                    q.deltaCenter = new(p.Geometry.X, p.Geometry.Y); q.axialMass = p.Geometry.Z;
+                    q.springSoftness = new(p.Spring.X, p.Spring.Y, p.Spring.Z);
+                    q.linearImpulse = new(p.Impulses.X, p.Impulses.Y); q.springImpulse = p.Impulses.Z; q.motorImpulse = p.Impulses.W; q.lowerImpulse = p.Limits.X; q.upperImpulse = p.Limits.Y;
                 }
                 else if (joint.type == B2JointType.b2_wheelJoint)
                 {
-                    ref var q = ref joint.uj.wheelJoint; q.perpImpulse = p.Impulses.X; q.springImpulse = p.Impulses.Z; q.motorImpulse = p.Impulses.W; q.lowerImpulse = p.Limits.X; q.upperImpulse = p.Limits.Y;
+                    ref var q = ref joint.uj.wheelJoint;
+                    q.indexA = (int)p.IDs.X; q.indexB = (int)p.IDs.Y;
+                    q.frameA = new(new(p.FrameA.X, p.FrameA.Y), new(p.FrameA.Z, p.FrameA.W));
+                    q.frameB = new(new(p.FrameB.X, p.FrameB.Y), new(p.FrameB.Z, p.FrameB.W));
+                    q.deltaCenter = new(p.Geometry.X, p.Geometry.Y); q.axialMass = p.Geometry.Z; q.perpMass = p.Geometry.W;
+                    q.motorMass = p.Soft.W; q.springSoftness = new(p.Spring.X, p.Spring.Y, p.Spring.Z);
+                    q.perpImpulse = p.Impulses.X; q.springImpulse = p.Impulses.Z; q.motorImpulse = p.Impulses.W; q.lowerImpulse = p.Limits.X; q.upperImpulse = p.Limits.Y;
                 }
             }
         }
