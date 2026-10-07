@@ -286,6 +286,18 @@ namespace Box2D.NET
                 return true;
             }
 
+            return b2AddFilteredPair(shapeIdA, shapeIdB, ref queryContext);
+        }
+
+        // Both tree paths share the user callback and ordered pair publication.
+        // The GPU path has already checked built-in filters in its query batch.
+        internal static bool b2AddFilteredPair(int shapeIdA, int shapeIdB, ref B2QueryPairContext queryContext)
+        {
+            B2World world = queryContext.world;
+            B2BroadPhase broadPhase = world.broadPhase;
+            B2Shape shapeA = b2Array_Get(ref world.shapes, shapeIdA);
+            B2Shape shapeB = b2Array_Get(ref world.shapes, shapeIdB);
+
             // Custom user filter
             if (shapeA.enableCustomFiltering || shapeB.enableCustomFiltering)
             {

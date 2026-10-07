@@ -23,7 +23,7 @@ The spring-joint force preflight/application still belongs to CPU world setup.
 
 Broad-phase AABB traversal now runs on GPU before manifold generation. The owner
 packs the current static/kinematic/dynamic trees as 32-byte threaded nodes and
-32-byte moved-proxy queries. Escape links preserve the existing child2-first
+48-byte moved-proxy queries. Escape links preserve the existing child2-first
 visitation order without a shader stack limit. Dynamic queries visit kinematic,
 static and dynamic trees; other proxies visit only the dynamic tree. Fat bounds
 and zero-category pruning match the CPU search. The GPU emits real candidate
@@ -31,11 +31,24 @@ proxy keys; it does not receive CPU-generated overlap pairs.
 
 Each query retains a power-of-two candidate capacity. A normal batch uses one
 submission/readback; overflow reports the full count and repeats the unchanged
-GPU query after growing storage, before invoking any pair filters or creating
-contacts. There is no density cap or truncated-pair fallback. Existing-pair and
-moved-pair deduplication, shape/body/joint/user filters, contact creation and tree
-maintenance remain managed. Buffers and per-shape capacity hints retain their peak
-size; new topology/capacity can allocate outside the warmed checks.
+GPU query after growing storage, before invoking any user filters or creating
+contacts. There is no density cap or truncated-pair fallback. The GPU also applies
+self/moved-pair deduplication, existing-contact lookup, same-body and sensor veto,
+64-bit category/mask and signed group filtering, and joint collision veto. The
+shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
+Joint filtering walks the smaller body adjacency list. Only user filters and
+ordered contact creation remain on the owner after readback; tree maintenance
+and the source pair table remain managed. Buffers and per-shape capacity hints
+retain their peak size; new topology/capacity can allocate outside warmed checks.
+
+Filter inputs use 48 bytes per shape, 32 bytes per joint and 8 bytes per shared
+pair-table slot. Shape records are packed in slot order; moved flags come directly
+from the move array rather than one hash lookup per shape. Tree, shape, joint and
+pair-table snapshots are currently uploaded on each moving batch. The internal
+cumulative `BroadPhaseProfileMS` measures host packing, command recording/uploads,
+submit/fence/readback, and result validation/user filtering/list publication.
+It excludes the later managed contact creation loop. Cumulative upload/readback
+bytes and candidate totals make transfer volume visible without per-frame logs.
 
 Contact geometry is generated on GPU for all nine registered pair families
 among circles, capsules, two-sided segments and convex polygons (up to eight
@@ -87,7 +100,7 @@ without a CPU SIMD preparation/store pass. Joint frames and coefficients publish
 with impulses for subsequent queries and finalization.
 
 The tree, solver and manifold callbacks run on the world owner. Tree maintenance,
-pair filtering/contact creation, sleep/CCD finalization and queries remain in the managed
+user filtering/contact creation, sleep/CCD finalization and queries remain in the managed
 backend; large worlds retain CPU contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
 ownership and rejects replay while permitting world disposal. This hybrid stage
@@ -203,7 +216,7 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU tree maintenance and pair filtering/contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: GPU tree/pair-table maintenance and contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -275,3 +288,38 @@ Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-pairs-final-{a
 initial evidence is `profile-Release-gpu-pairs-before.json` and
 `profile-Release-gpu-pairs-initial.json`. Shader binary SHA-256:
 `265c455c256b04207dc1b9655b90997eb483f72c9d24ae2ef524bc65a85a9855`.
+
+With built-in GPU pair filtering, the dense oracle verifies exactly 32,894 initial
+pairs for 257 overlapping bodies (two joint vetoes), and no existing-contact
+candidates on later unchanged passes. It also toggles collide-connected and destroys
+a joint while retaining CPU pair and custom-filter order. The expanded focused
+runner passes with the same warmed zero-managed-allocation budget.
+
+The first filter implementation packed shapes during tree traversal and performed
+one moved-set hash lookup per shape. Its packing phase averaged 12.31 ms; switching
+to sequential shape slots and marking moved flags from the move array removed that
+work. Four subsequent same-binary profiles used the same 65,537-body,
+32-warmup/64-measurement headless workload, sequentially GPU A/CPU A/CPU B/GPU B.
+No build, formatter or other test ran concurrently.
+
+| Pair traversal/filtering | Whole step mean | Step p95 | Pair stage mean | All-thread managed bytes |
+| --- | ---: | ---: | ---: | ---: |
+| GPU A | 166.78 ms | 259.57 ms | 14.07 ms | 0 |
+| CPU A | 165.34 ms | 259.33 ms | 10.94 ms | 0 |
+| CPU B | 166.01 ms | 259.00 ms | 10.92 ms | 0 |
+| GPU B | 164.06 ms | 250.94 ms | 13.32 ms | 0 |
+
+All hashes and awake-body progressions match the preceding profiles. GPU host
+packing averaged 5.46/5.08 ms; command recording/uploads 1.35/1.29 ms;
+submit/fence/readback 3.71/3.47 ms; result processing 0.94/0.88 ms. The later
+managed contact creation loop is outside those four host phases but inside the
+pair-stage total. These are host timings, not GPU timestamp measurements.
+Each GPU run transferred 1,072,996,000 input bytes and 156,052,512 readback bytes
+across 64 measured steps and returned 496,638 filtered candidates. Tree and source
+pair-table residency remain unfinished. The pair stage is still slower than CPU;
+the whole-step spread does not establish a sustained end-to-end speedup or 60 FPS.
+
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-filters-final-{a,b}.json`;
+the initial packing evidence is `profile-Release-gpu-filters-a.json`. Current
+`PhysicsBroadPhase.comp.spv` SHA-256:
+`3fda139685616a94bdc828ee29022949877a74f62f0ce8d96faa1df36d3266d4`.

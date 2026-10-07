@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 namespace Electron2D;
 
 // GPU tree traversal, integration, manifolds and constraints execute here;
-// tree maintenance, pair filtering and sleep/CCD still use the shared world.
+// tree maintenance, user filtering and sleep/CCD still use the shared world.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -48,6 +48,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _historyStorage = new(this); _matchedStorage = new(this);
             _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
             _treeStorage = new(this); _treeQueryStorage = new(this); _treeCandidateStorage = new(this);
+            _broadShapeStorage = new(this); _broadJointStorage = new(this); _existingPairStorage = new(this);
         }
         catch
         {
@@ -171,6 +172,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         EnsureOwner();
         _disposed = true; _manifoldContext = null; _solvedWorld = null;
         _treeStorage.Dispose(); _treeQueryStorage.Dispose(); _treeCandidateStorage.Dispose(); _broadPhase.Dispose();
+        _broadShapeStorage.Dispose(); _broadJointStorage.Dispose(); _existingPairStorage.Dispose();
         _historyStorage.Dispose(); _matchedStorage.Dispose();
         _geometryStorage.Dispose(); _pairStorage.Dispose(); _manifoldStorage.Dispose(); _collide.Dispose();
         _contactInputStorage.Dispose(); _fallbackManifoldStorage.Dispose();

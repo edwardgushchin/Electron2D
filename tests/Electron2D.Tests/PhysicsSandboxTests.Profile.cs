@@ -67,6 +67,10 @@ internal static partial class PhysicsSandboxTests
             var space = scene.Colliders.OfType<PhysicsBody>().First().Space!;
             double backendStep = 0, backendSolve = 0, backendPairs = 0, backendCollide = 0, backendSensors = 0;
             var backendWorld = scene.Colliders.OfType<PhysicsBody>().First().Space!.WorldID;
+            var broadPhaseStart = gpu?.BroadPhaseProfileMS.ToArray();
+            var broadPhaseUploadStart = gpu?.BroadPhaseUploadBytes ?? 0;
+            var broadPhaseReadbackStart = gpu?.BroadPhaseReadbackBytes ?? 0;
+            var broadPhaseCandidateStart = gpu?.BroadPhaseCandidateTotal ?? 0;
             var allocated = GC.GetAllocatedBytesForCurrentThread();
             var allThreadsAllocated = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++)
@@ -91,7 +95,11 @@ internal static partial class PhysicsSandboxTests
             if (allocated != 0) failures.Add($"Physics {index}: {allocated} bytes across {samples.Length} ticks.");
             if (allThreadsAllocated != 0) failures.Add($"Physics {index}, all managed threads: {allThreadsAllocated} bytes across {samples.Length} ticks.");
             Console.WriteLine($"Physics {index}: {samples.Average():0.000} ms/tick, {allocated} B/{samples.Length} ticks, {scene.BodyCount} bodies.");
-            physics.Add(new { scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
+            var broadPhaseMS = gpu?.BroadPhaseProfileMS.Select((value, i) => (value - broadPhaseStart![i]) / samples.Length).ToArray();
+            var broadPhaseUploadBytes = (gpu?.BroadPhaseUploadBytes ?? 0) - broadPhaseUploadStart;
+            var broadPhaseReadbackBytes = (gpu?.BroadPhaseReadbackBytes ?? 0) - broadPhaseReadbackStart;
+            var broadPhaseCandidates = (gpu?.BroadPhaseCandidateTotal ?? 0) - broadPhaseCandidateStart;
+            physics.Add(new { broadPhaseMS, broadPhaseUploadBytes, broadPhaseReadbackBytes, broadPhaseCandidates, scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
         }
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_HEADLESS") == "1")
         {

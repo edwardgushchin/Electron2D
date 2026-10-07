@@ -20,7 +20,7 @@ internal static partial class GPUPhysicsTests
         foreach (var count in new[] { 0, 1, 63, 64, 65, 257, 4097 })
             VerifyBroadPhase(gpu, count, false);
         VerifyBroadPhase(gpu, 257, true);
-        Console.WriteLine("GPU tree traversal matches CPU pair and custom-filter order: dispatch edges, mixed proxies, dense overflow, filters, joints, reuse and zero warmed managed bytes.");
+        Console.WriteLine("GPU tree traversal and built-in filtering match CPU pair/custom-filter order: dispatch edges, mixed proxies, dense overflow, masks/groups, joint edits, existing pairs, reuse and zero warmed managed bytes.");
     }
 
     private static void VerifyBroadPhase(GPUPhysicsWorld gpu, int count, bool dense)
@@ -35,6 +35,7 @@ internal static partial class GPUPhysicsTests
         var filters = expectedFilters;
         var owner = Environment.CurrentManagedThreadId;
         var passes = 0;
+        var jointID = new B2JointId();
         world.customFilterFcn = (a, b, _) =>
         {
             if (owner != Environment.CurrentManagedThreadId) throw new Exception("GPU pair filters left the owner thread.");
@@ -69,6 +70,10 @@ internal static partial class GPUPhysicsTests
                 throw new Exception("The dense fixture must exceed the original per-move arena estimate.");
             if (passes == 0 && dense && gpu.BroadPhaseRetryCount != 1)
                 throw new Exception("Dense GPU output must grow and retry without dropping pairs.");
+            if (dense && gpu.BroadPhaseCandidateCount != expected.Count)
+                throw new Exception("Built-in filtering must remove all rejected pairs before GPU readback.");
+            if (dense && passes == 0 && expected.Count != count * (count - 1) / 2 - 2)
+                throw new Exception("The dense fixture must exclude exactly the two joint-veto pairs.");
             passes++;
         };
         try
@@ -89,11 +94,17 @@ internal static partial class GPUPhysicsTests
                 if (!dense && i % 13 == 0)
                     shapes.Add(b2CreateCircleShape(body, shapeDef, new B2Circle { center = new(.1f, 0), radius = .4f }));
             }
-            if (count > 5 && !dense)
+            if (count > 8)
             {
                 var joint = B2Joints.b2DefaultRevoluteJointDef();
                 joint.@base.bodyIdA = bodies[2]; joint.@base.bodyIdB = bodies[5]; joint.@base.collideConnected = false;
-                B2Joints.b2CreateRevoluteJoint(id, joint);
+                jointID = B2Joints.b2CreateRevoluteJoint(id, joint);
+                // A later allowed edge must not hide an earlier veto in either list.
+                foreach (var (a, b, collide) in new[] { (2, 6, true), (2, 7, false), (2, 8, true), (5, 7, true) })
+                {
+                    joint.@base.bodyIdA = bodies[a]; joint.@base.bodyIdB = bodies[b]; joint.@base.collideConnected = collide;
+                    B2Joints.b2CreateRevoluteJoint(id, joint);
+                }
             }
             b2UpdateBroadPhasePairs(world);
             if (count == 0 && (passes != 0 || gpu.BroadPhaseCandidateCount != 0))
@@ -104,6 +115,16 @@ internal static partial class GPUPhysicsTests
             {
                 for (var i = pass; i < shapes.Count; i += pass + 1)
                     b2BufferMove(world.broadPhase, world.shapes.data[shapes[i].index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+            }
+            if (count > 8)
+            {
+                B2Joints.b2Joint_SetCollideConnected(jointID, true);
+                b2UpdateBroadPhasePairs(world);
+                B2Joints.b2Joint_SetCollideConnected(jointID, false);
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+                B2Joints.b2DestroyJoint(jointID, true);
                 b2UpdateBroadPhasePairs(world);
             }
             if (count > 5 && !dense)

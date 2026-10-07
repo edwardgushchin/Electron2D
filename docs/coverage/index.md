@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-08
 
-The internal [GPU physics stage](../components/gpu-physics.md) now executes moved-proxy AABB tree traversal with complete grow-and-retry candidate output and exact CPU pair-order checks. Tree maintenance, pair filters/contact creation and backend selection remain incomplete GPU-world obligations. No public declaration coverage is closed by this internal stage.
+The internal [GPU physics stage](../components/gpu-physics.md) now executes moved-proxy AABB tree traversal and built-in pair filtering with complete grow-and-retry candidate output and exact CPU pair/custom-filter order checks. Tree/pair-table maintenance, contact creation and backend selection remain incomplete GPU-world obligations. User callbacks deliberately remain on the owner thread. No public declaration coverage is closed by this internal stage.
 
 The [graph authoring slice](../components/graph-authoring.md) connects GraphElement/GraphNode/GraphFrame/GraphEdit with typed compressed ports, request-driven wiring, nested logical frames, pointer/keyboard authoring, navigation/minimap/menu and fresh registered scene/value storage. Current native rendered and prepared allocation evidence is separate from semantic accessibility, concrete editor operations and foreign/physical acceptance.
 
