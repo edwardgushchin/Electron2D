@@ -26,8 +26,17 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                     for (var i = 0; i < arrays.SurfaceCount; i++)
                     {
                         var surface = arrays.Get(i); var first = vertices.Count;
-                        AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
-                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
+                        var instanceCount = 0; var firstInstance = 0;
+                        if (instances is not null && !snap && palette.IsEmpty && surface.Data.Bones.Length == 0 &&
+                            surface.Primitive is Mesh.PrimitiveType.Triangles or Mesh.PrimitiveType.TriangleStrip &&
+                            RenderingServer.Service is { } renderer && renderer.CanInstance(skinOwner) &&
+                            TryInstanceBounds(surface.Data, out var bounds) && renderer.TryAppendInstances(instances, transform, color, bounds, fraction, out firstInstance))
+                        {
+                            instanceCount = instances.DrawCount;
+                            AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity);
+                        }
+                        else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
+                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, firstInstance, instanceCount);
                     }
                 }
                 return;
@@ -101,13 +110,24 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         return bounds;
     }
     private static void AddBatch(List<CanvasBatch> batches, int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
-        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip)
+        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, int firstInstance = 0, int instanceCount = 0)
     {
         if (count == 0) return;
         var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
-        if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
+        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
             batches[^1] = last with { Count = last.Count + count };
-        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip));
+        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount));
+    }
+    private static bool TryInstanceBounds(MeshSurfaceData data, out Rect2 bounds)
+    {
+        bounds = default;
+        if (data.Vertices.Length == 0) return false;
+        foreach (var color in data.Colors)
+            if (color.R is < 0 or > 1 || color.G is < 0 or > 1 || color.B is < 0 or > 1 || color.A is < 0 or > 1) return false;
+        var minimum = data.Vertices[0]; var maximum = minimum;
+        foreach (var vertex in data.Vertices) { minimum = minimum.Min(vertex); maximum = maximum.Max(vertex); }
+        bounds = new(minimum, maximum - minimum);
+        return bounds.IsFinite() && bounds.End.IsFinite();
     }
     private static void AppendSurfaceInstances(List<CanvasVertex> output, MeshSurfaceData data, Mesh.PrimitiveType primitive, Transform transform, Color modulation, bool snap, MultiMesh? instances, float fraction, ReadOnlySpan<Transform> palette, Transform toPalette, Transform fromPalette)
     {

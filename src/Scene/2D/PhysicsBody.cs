@@ -3,6 +3,7 @@ using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Types;
+using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
@@ -16,6 +17,10 @@ public abstract class PhysicsBody : CollisionObject
     private B2BodyId _bodyID;
     private Vector2 _lastPosition;
     private float _lastRotation;
+    private Transform _validatedTransform = Transform.Identity;
+    private float _validatedRotation;
+    private Transform _preparedTransform;
+    private long _preparedGeometryEpoch = -1;
     private volatile bool _shapesDirty = true;
     private PhysicsMaterial? _materialOverride;
     private ulong _appliedMaterialRevision;
@@ -62,7 +67,8 @@ public abstract class PhysicsBody : CollisionObject
     internal void AttachBackend(PhysicsSpace space)
     {
         if (_space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
-        ValidatePhysicsTransform();
+        var transform = GlobalTransform;
+        ValidatePhysicsTransform(transform);
         var definition = CreateBodyDefinition();
         if (PhysicsMadeStatic)
         {
@@ -70,8 +76,8 @@ public abstract class PhysicsBody : CollisionObject
             definition.linearVelocity = default;
             definition.angularVelocity = 0;
         }
-        _lastPosition = GlobalPosition;
-        _lastRotation = GlobalRotation;
+        _lastPosition = transform.Origin;
+        _lastRotation = _validatedRotation;
         definition.position = Shape.ToBackend(_lastPosition);
         definition.rotation = b2MakeRot(_lastRotation);
         _bodyID = b2CreateBody(space.WorldID, definition);
@@ -85,7 +91,11 @@ public abstract class PhysicsBody : CollisionObject
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         if (_space is null) return;
-        if (this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody) rigid.OnBackendAdvanced();
+        if (this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody)
+        {
+            var world = b2GetWorldFromId(_space.WorldID);
+            rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, _bodyID));
+        }
         b2DestroyBody(_bodyID);
         _backendShapes.Clear();
         _appliedShapeRevisions.Clear();
@@ -96,7 +106,11 @@ public abstract class PhysicsBody : CollisionObject
     internal void PrepareBackend()
     {
         if (_space is null) return;
-        ValidatePhysicsTransform();
+        var transform = GlobalTransform;
+        var geometryEpoch = Shape.GeometryEpoch;
+        if (!_shapesDirty && geometryEpoch == _preparedGeometryEpoch && transform == _preparedTransform &&
+            (_materialOverride is null || !_materialOverride.IsDisposed && _materialOverride.Revision == _appliedMaterialRevision)) return;
+        ValidatePhysicsTransform(transform);
         if (_materialOverride is { IsDisposed: true })
         {
             _materialOverride = null;
@@ -112,31 +126,45 @@ public abstract class PhysicsBody : CollisionObject
             for (var index = 0; index < ShapeSlots.Count; index++)
                 if (ShapeSlots[index].Revision != _appliedShapeRevisions[index]) { MarkShapesDirty(); break; }
         if (_shapesDirty) RebuildShapes();
-        var position = GlobalPosition;
-        var rotation = GlobalRotation;
+        var position = transform.Origin;
+        var rotation = _validatedRotation;
         if (position != _lastPosition || rotation != _lastRotation)
         {
             ApplySceneTransform(position, rotation);
             _lastPosition = position;
             _lastRotation = rotation;
         }
+        _preparedTransform = transform;
+        _preparedGeometryEpoch = geometryEpoch;
     }
 
     internal virtual void ApplySceneTransform(Vector2 position, float rotation) =>
         b2Body_SetTransform(_bodyID, Shape.ToBackend(position), b2MakeRot(rotation));
 
-    internal void CompleteBackend()
+    internal void CompleteBackend(B2World? world = null)
     {
         if (_space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
-        var position = b2Body_GetPosition(_bodyID);
-        var rotation = b2Body_GetRotation(_bodyID);
+        world ??= b2GetWorldFromId(_space.WorldID);
+        var backendBody = b2GetBodyFullId(world, _bodyID);
+        var backendTransform = b2GetBodyTransformQuick(world, backendBody);
+        var position = backendTransform.p;
+        var rotation = backendTransform.q;
         var scenePosition = new Vector2(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter);
         var sceneRotation = b2Rot_GetAngle(rotation);
         _lastPosition = scenePosition;
         _lastRotation = sceneRotation;
-        if (GlobalPosition != scenePosition || GlobalRotation != sceneRotation)
-            GlobalTransform = new Transform(sceneRotation, Vector2.One, 0, scenePosition);
-        OnBackendAdvanced();
+        var current = GlobalTransform;
+        var currentRotation = current.X == _validatedTransform.X && current.Y == _validatedTransform.Y
+            ? _validatedRotation : current.Rotation;
+        if (current.Origin != scenePosition || currentRotation != sceneRotation)
+        {
+            var solverTransform = new Transform(sceneRotation, Vector2.One, 0, scenePosition);
+            GlobalTransform = solverTransform;
+            _validatedTransform = solverTransform;
+            _validatedRotation = sceneRotation;
+            _preparedTransform = solverTransform;
+        }
+        OnBackendAdvanced(world, backendBody);
     }
 
     internal abstract B2BodyType RequestedBodyType { get; }
@@ -162,7 +190,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal abstract B2BodyDef CreateBodyDefinition();
     internal abstract bool MovesWithSimulation { get; }
-    internal virtual void OnBackendAdvanced() { }
+    internal virtual void OnBackendAdvanced(B2World world, B2Body body) { }
     internal virtual void OnShapesRebuilt() => PhysicsServer.Service.BodyRuntime(PhysicsRID).ApplyMassProfile();
     internal virtual Vector2 EffectiveGravity => Vector2.Zero;
 
@@ -338,11 +366,13 @@ public abstract class PhysicsBody : CollisionObject
         _shapesDirty = false;
     }
 
-    private void ValidatePhysicsTransform()
+    private void ValidatePhysicsTransform(Transform transform)
     {
-        var transform = GlobalTransform;
+        if (transform.X == _validatedTransform.X && transform.Y == _validatedTransform.Y) return;
         if (!transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
+        _validatedTransform = transform;
+        _validatedRotation = transform.Rotation;
     }
 
     private void OnMaterialChanged(Resource _) { if (IsDisposed) return; PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides(); MarkShapesDirty(); }

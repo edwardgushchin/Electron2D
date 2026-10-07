@@ -119,7 +119,7 @@ internal sealed partial class SandboxWindow : Window
         if (Scene is not null) { _stageClip.RemoveChild(Scene); Scene.Dispose(); }
         SceneIndex = index; Scene = new PhysicsScene(index, _regular) { Running = !_paused, PhysicsInterpolationMode = PhysicsInterpolationMode.Off, InputBounds = Playfield };
         _stageClip.AddChild(Scene); FrameScene(); Engine.TimeScale = 1;
-        _selectionRevision = Scene.SelectionRevision; CaptureDefaults(); SyncParameters(); ShowParameters(0);
+        _selectionRevision = Scene.SelectionRevision; CaptureDefaults(); SyncParameters(); ShowParameters(0); _telemetry.QueueRedraw();
         _story.Text = Stories[index]; _help.Text = Scene.Help;
         _selector.Select(index); _selector.ReleaseFocus(); UpdateActions();
     }

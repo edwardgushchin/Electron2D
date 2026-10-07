@@ -8,6 +8,7 @@ internal static class PhysicsBodyStateTests
         VerifyBodyViewSynchronization();
         VerifyCustomIntegration();
         VerifySolvedContacts();
+        VerifyServerContactLimit();
         VerifyServerCallbacksAndLifetime();
         VerifyServerFieldsAndForces();
         VerifyCallbackFailureAndMutations();
@@ -160,6 +161,32 @@ internal static class PhysicsBodyStateTests
         tree.PhysicsFrame(1d / 60);
     }
 
+    private static void VerifyServerContactLimit()
+    {
+        using var circle = new CircleShape();
+        using var floorShape = new RectangleShape { Size = new(200, 20) };
+        var space = PhysicsServer.SpaceCreate();
+        var body = PhysicsServer.BodyCreate(); var floor = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.SpaceSetActive(space, true);
+            PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Static);
+            PhysicsServer.BodyAddShape(floor, floorShape.GetRID()); PhysicsServer.BodySetTransform(floor, new(0, new(0, 100)));
+            PhysicsServer.BodySetSpace(floor, space); PhysicsServer.BodyAddShape(body, circle.GetRID());
+            PhysicsServer.BodySetMaxContactsReported(body, 4); PhysicsServer.BodySetSpace(body, space);
+            var state = PhysicsServer.BodyGetDirectState(body)!;
+            for (var i = 0; i < 120; i++) PhysicsServer.SpaceStep(space, 1d / 60);
+            Check(state.GetContactCount() > 0, "Server views capture requested solved contacts without callbacks.");
+            PhysicsServer.BodySetMaxContactsReported(body, 0);
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            Check(state.GetContactCount() == 0, "Removing the server contact cap clears the previous snapshot on the next step.");
+            var before = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 32; i++) { PhysicsServer.SpaceStep(space, 1d / 60); _ = state.Transform; }
+            Check(GC.GetAllocatedBytesForCurrentThread() == before, "A persistent zero-contact server view remains live without per-step allocations.");
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
+    }
+
     private static void VerifyServerCallbacksAndLifetime()
     {
         var server = PhysicsServer.Service;
@@ -180,6 +207,17 @@ internal static class PhysicsBodyStateTests
         PhysicsServer.SpaceStep(space, 1d / 60);
         Check(sequence.SequenceEqual(new[] { 1, 2 }) && PhysicsServer.BodyIsOmittingForceIntegration(body), "Typed force data precedes sync without changing omission policy.");
         var state = PhysicsServer.BodyGetDirectState(body)!;
+        var pose = state.Transform;
+        var viewBytes = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 32; i++) Check(state.Transform == pose, "An unchanged live pose retains its exact transform.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == viewBytes, "Repeated live pose reads allocate no managed bytes.");
+        state.Transform = new(.7f, pose.Origin + new Vector2(3, -4));
+        Check(state.Transform == PhysicsServer.BodyGetTransform(body) && state.Transform != pose &&
+            state.Transform.Origin.IsEqualApprox(pose.Origin + new Vector2(3, -4)),
+            "Direct pose writes are immediately visible and match the live server pose.");
+        PhysicsServer.BodySetTransform(body, new(.2f, pose.Origin));
+        Check(state.Transform == PhysicsServer.BodyGetTransform(body) && state.Transform.Origin.IsEqualApprox(pose.Origin),
+            "Server pose writes are visible through an already acquired view.");
         state.AngularVelocity = 2; state.SetConstantForce(new(1, 0)); state.SetConstantTorque(3);
         PhysicsServer.BodySetForceIntegrationCallback(body, null); PhysicsServer.BodySetStateSyncCallback(body, null);
         PhysicsServer.BodySetSpace(body, default);
@@ -206,6 +244,11 @@ internal static class PhysicsBodyStateTests
         tree.PhysicsFrame(1d / 60);
         Check(second.Calls == 1 && !second.IsInsideTree, "Removing a later body safely skips its captured callback entry.");
         second.Dispose();
+        var later = new RigidBody { Name = "LateReceiver", GravityScale = 0, CanSleep = false };
+        root.AddChild(later); var calls = 0;
+        first.Update = _ => PhysicsServer.BodySetStateSyncCallback(later.GetRID(), _ => calls++);
+        tree.PhysicsFrame(1d / 60);
+        Check(calls == 1, "An earlier integration callback can enable a later ordinary body's sync callback in the same frame.");
     }
 
     private static void VerifyServerFieldsAndForces()

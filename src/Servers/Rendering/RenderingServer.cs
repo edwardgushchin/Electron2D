@@ -22,6 +22,10 @@ public sealed partial class RenderingServer : ElectronObject
     private readonly Window _window;
     private readonly int _ownerThread = Environment.CurrentManagedThreadId;
     private List<CanvasItem> _nodes = [];
+    private readonly List<CanvasItem> _sceneCanvasItems = [];
+    private readonly List<Viewport> _sceneViewports = [];
+    private SceneTree? _capturedTree;
+    private ulong _capturedRevision;
     private List<CanvasVertex> _vertices = [];
     private List<CanvasBatch> _batches = [];
     private List<RenderEntry> _order = [];
@@ -106,6 +110,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly Viewport Viewport = viewport;
         internal readonly List<CanvasItem> Nodes = [];
         internal readonly List<CanvasVertex> Vertices = [];
+        internal readonly List<CanvasInstance> Instances = [];
         internal readonly List<CanvasBatch> Batches = [];
         internal readonly List<RenderEntry> Order = [];
         internal readonly Dictionary<CanvasItem, Transform> Repeats = [], Transforms = [];
@@ -119,18 +124,19 @@ public sealed partial class RenderingServer : ElectronObject
     private readonly Dictionary<Viewport, CanvasFrame> _canvasFrames = new(ReferenceEqualityComparer.Instance);
     private readonly List<CanvasFrame> _activeFrames = [];
     private void UseFrame(CanvasFrame frame)
-    { _viewport = frame.Viewport; _nodes = frame.Nodes; _vertices = frame.Vertices; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
+    { _viewport = frame.Viewport; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
     private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
     private void CaptureViewports(Node node)
     {
-        if (node is Viewport viewport && (ReferenceEquals(viewport, _window) || viewport is SubViewport || viewport is Window { Embedder: not null }))
+        CaptureScene(node);
+        foreach (var viewport in _sceneViewports)
         {
+            if (!ReferenceEquals(viewport, _window) && viewport is not SubViewport && viewport is not Window { Embedder: not null }) continue;
             if (!_canvasFrames.TryGetValue(viewport, out var frame)) _canvasFrames.Add(viewport, frame = new(viewport));
             viewport.RenderingOwner = this; frame.State = 0; frame.Wanted = frame.Drawn = false; _activeFrames.Add(frame);
             var size = ReferenceEquals(viewport, _window) ? _backend.GetPixelSize() : viewport is SubViewport sub ? sub.Size : ((Window)viewport).Size;
             if (size.X > 0 && size.Y > 0) _backend.Target(viewport, size, FrameClear(viewport));
         }
-        for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) CaptureViewports(node.GetChild(i, includeInternal: true));
     }
     internal void InvalidateViewportRecordings(Viewport viewport)
     { EnsureOwner(); InvalidateViewportRecordings(_window, viewport); }
@@ -155,7 +161,7 @@ public sealed partial class RenderingServer : ElectronObject
             CanvasTime = (CanvasTime + step) % ProjectSettings.GetWithOverride(ProjectSettings.RenderingTimeRolloverSeconds);
             _interpolationFraction = tree.PhysicsInterpolation ? (float)Engine.PhysicsInterpolationFraction : 1f;
             _activeFrames.Clear(); CaptureViewports(tree.Root);
-            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderCanvas() is not null && node.RenderVisible && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
+            if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             foreach (var viewport in _canvasFrames.Keys) if (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, tree)) { _backend.ReleaseTarget(viewport); viewport.RenderingOwner = null; _canvasFrames.Remove(viewport); }
             _backend.BeginFrame();
@@ -167,7 +173,7 @@ public sealed partial class RenderingServer : ElectronObject
         }
         finally
         {
-            foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
+            foreach (var frame in _activeFrames) { frame.Nodes.Clear(); frame.Vertices.Clear(); frame.Instances.Clear(); frame.Batches.Clear(); Array.Clear(frame.TextureScratch); frame.Order.Clear(); frame.Repeats.Clear(); frame.Transforms.Clear(); frame.YSort.Clear(); }
             _activeFrames.Clear(); _submittingTextures = false; _rendering = false;
         }
     }
@@ -196,20 +202,27 @@ public sealed partial class RenderingServer : ElectronObject
         foreach (var child in _activeFrames) if (child.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.WhenParentVisible } && ReferenceEquals(child.Viewport.Parent?.GetViewport(), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
         _submittingTextures = true;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances)); }
         finally { _submittingTextures = false; }
         if (frame.Viewport is SubViewport completed) completed.Submitted();
         frame.State = 2; frame.Drawn = true;
     }
     private void BuildFrame(CanvasFrame frame, SceneTree tree)
     {
-        UseFrame(frame); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+        UseFrame(frame); _instances.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
         var viewport = frame.Viewport; var pixels = _backend.FindTarget(viewport)!.Size;
         var framebufferTransform = ReferenceEquals(viewport, _window) ? new Transform(0f, new Vector2((float)pixels.X / _window.Size.X, (float)pixels.Y / _window.Size.Y), 0f, Vector2.Zero) : Transform.Identity;
         // Drawing callbacks may change parenting, visibility or sibling order.
         _nodes.Clear();
         CaptureCanvasScene(tree.Root);
-        for (var i = _nodes.Count - 1; i >= 0; i--) if (_nodes[i].RenderCanvas() is not { } canvas || !canvas.View(viewport, out _, out _, out _) || !_nodes[i].RenderLive(tree)) _nodes.RemoveAt(i);
+        var visibleCount = 0;
+        for (var index = 0; index < _nodes.Count; index++)
+        {
+            var node = _nodes[index];
+            if ((node.RenderLive(tree) || node is VisibleOnScreenNotifier && !node.IsDisposed && ReferenceEquals(node.Tree, tree)) && node.RenderCanvas() is { } canvas && canvas.View(viewport, out _, out _, out _))
+                _nodes[visibleCount++] = node;
+        }
+        _nodes.RemoveRange(visibleCount, _nodes.Count - visibleCount);
         foreach (var node in _nodes)
             if (node is VisibleOnScreenNotifier notifier) notifier.ScreenCandidate = false;
         _canvasChildOrder.Clear(); _canvasRootOrder.Clear();
@@ -290,8 +303,27 @@ public sealed partial class RenderingServer : ElectronObject
 
     private void Capture(Node node)
     {
-        if (node is CanvasItem item && _capturedCanvasItems.Add(item)) _nodes.Add(item);
-        for (var i = 0; i < node.GetChildCount(includeInternal: true); i++) Capture(node.GetChild(i, includeInternal: true));
+        CaptureScene(node);
+        _nodes.AddRange(_sceneCanvasItems);
+    }
+
+    private void CaptureScene(Node root)
+    {
+        var tree = root.Tree!;
+        if (ReferenceEquals(tree, _capturedTree) && tree.PathRevision == _capturedRevision) return;
+        _sceneCanvasItems.Clear();
+        _sceneViewports.Clear();
+        CaptureSceneNodes(root);
+        _capturedTree = tree;
+        _capturedRevision = tree.PathRevision;
+    }
+
+    private void CaptureSceneNodes(Node node)
+    {
+        if (node is CanvasItem item) _sceneCanvasItems.Add(item);
+        if (node is Viewport viewport) _sceneViewports.Add(viewport);
+        var children = node.AllChildren;
+        for (var i = 0; i < children.Count; i++) CaptureSceneNodes(children[i]);
     }
 
     private void OrderCanvas(CanvasItem item, Transform transform, bool alreadyYSorted = false)
@@ -443,7 +475,8 @@ public sealed partial class RenderingServer : ElectronObject
             finally
             {
                 FramePreDrawCore = FramePostDrawCore = null; foreach (var viewport in _canvasFrames.Keys) viewport.RenderingOwner = null; _canvasFrames.Clear(); _activeFrames.Clear();
-                _nodes.Clear(); _vertices.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+                _nodes.Clear(); _vertices.Clear(); _instances.Clear(); _batches.Clear(); _order.Clear(); _repeatTransforms.Clear(); _canvasTransforms.Clear(); _ySort.Clear();
+                _sceneCanvasItems.Clear(); _sceneViewports.Clear(); _capturedTree = null;
                 if (ReferenceEquals(Service, this)) Volatile.Write(ref _instance, null);
             }
             if (errors is not null) throw new AggregateException("Rendering cleanup failed.", errors);

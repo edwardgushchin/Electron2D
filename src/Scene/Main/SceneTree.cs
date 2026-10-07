@@ -38,7 +38,11 @@ public sealed partial class SceneTree : MainLoop
     private readonly int _ownerThreadId = Environment.CurrentManagedThreadId;
     private readonly HashSet<GroupOperationKey> _uniqueGroupOperations = [];
     private readonly List<Node> _scheduleTraversal = [];
-    private readonly List<ScheduledNode> _scheduledNodes = [];
+    private readonly List<ScheduledNode> _processSchedule = [], _physicsSchedule = [];
+    private ulong _scheduleRevision;
+    private ulong _processScheduleRevision = ulong.MaxValue, _physicsScheduleRevision = ulong.MaxValue;
+    private ulong _processSchedulePath = ulong.MaxValue, _physicsSchedulePath = ulong.MaxValue;
+    internal void InvalidateProcessOrder() => _scheduleRevision++;
     private readonly List<SceneTreeTimer> _timerSnapshot = [];
     private readonly List<SceneTreeTimer> _timers = [];
     private readonly List<Tween> _tweenSnapshot = [];
@@ -1083,7 +1087,7 @@ public sealed partial class SceneTree : MainLoop
 
         _tweens.Clear();
         _scheduleTraversal.Clear();
-        _scheduledNodes.Clear();
+        _processSchedule.Clear(); _physicsSchedule.Clear();
         _timerSnapshot.Clear();
         _tweenSnapshot.Clear();
 
@@ -1259,17 +1263,13 @@ public sealed partial class SceneTree : MainLoop
             }
 
             if (!physics) { PollMultiplayer(ref errors); FlushTransformNotifications(ref errors); }
-            _scheduledNodes.Clear();
-            CaptureScheduledNodes(physics);
-            _scheduledNodes.Sort();
-
-            foreach (var item in _scheduledNodes)
+            foreach (var item in CaptureScheduledNodes(physics))
             {
                 var node = item.Node;
-                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
+                if (!node.HasProcessCallback(physics))
                     continue;
 
-                if (!node.HasProcessCallback(physics))
+                if (node.IsDisposed || !ReferenceEquals(node.Tree, this) || !node.CanProcess())
                     continue;
 
                 try
@@ -1298,7 +1298,6 @@ public sealed partial class SceneTree : MainLoop
         finally
         {
             _inPhysicsFrame = false;
-            _scheduledNodes.Clear();
             _scheduleTraversal.Clear();
             _timerSnapshot.Clear();
             _tweenSnapshot.Clear();
@@ -1377,26 +1376,41 @@ public sealed partial class SceneTree : MainLoop
         }
     }
 
-    private void CaptureScheduledNodes(bool physics)
+    private List<ScheduledNode> CaptureScheduledNodes(bool physics)
     {
+        var schedule = physics ? _physicsSchedule : _processSchedule;
+        ref var path = ref (physics ? ref _physicsSchedulePath : ref _processSchedulePath);
+        ref var revision = ref (physics ? ref _physicsScheduleRevision : ref _processScheduleRevision);
+        if (path == PathRevision && revision == _scheduleRevision) return schedule;
+        schedule.Clear();
         _scheduleTraversal.Clear();
         _scheduleTraversal.Add(Root);
         var order = 0;
+        var previousPriority = int.MinValue;
+        var sorted = true;
 
         while (_scheduleTraversal.Count != 0)
         {
             var last = _scheduleTraversal.Count - 1;
             var node = _scheduleTraversal[last];
             _scheduleTraversal.RemoveAt(last);
-            _scheduledNodes.Add(new ScheduledNode(
+            var priority = physics ? node.PhysicsProcessPriority : node.ProcessPriority;
+            if (priority < previousPriority) sorted = false;
+            previousPriority = priority;
+            schedule.Add(new ScheduledNode(
                 node,
-                physics ? node.PhysicsProcessPriority : node.ProcessPriority,
+                priority,
                 order++));
 
             var children = node.AllChildren;
             for (var index = children.Count - 1; index >= 0; index--)
                 _scheduleTraversal.Add(children[index]);
         }
+        if (!sorted) schedule.Sort();
+        // Preparing either lane also prepares storage for the other lane's first frame.
+        (physics ? _processSchedule : _physicsSchedule).EnsureCapacity(schedule.Capacity);
+        path = PathRevision; revision = _scheduleRevision;
+        return schedule;
     }
 
     private void CaptureInputNodes()

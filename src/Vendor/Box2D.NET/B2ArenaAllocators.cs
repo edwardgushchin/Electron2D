@@ -31,8 +31,7 @@ namespace Box2D.NET
         {
             B2_ASSERT(capacity >= 0);
             B2ArenaAllocatorTyped<T> allocatorImpl = new B2ArenaAllocatorTyped<T>();
-            allocatorImpl.capacity = capacity;
-            allocatorImpl.data = b2Alloc<T>(capacity);
+            allocatorImpl.Reserve(capacity);
             allocatorImpl.allocation = 0;
             allocatorImpl.maxAllocation = 0;
             allocatorImpl.index = 0;
@@ -52,7 +51,7 @@ namespace Box2D.NET
             if (alloc.index + size32 > alloc.capacity)
             {
                 // fall back to the heap (undesirable)
-                entry.data = b2Alloc<T>(size32);
+                entry.data = b2Alloc<T>(size32, !B2ArenaAllocatorTyped<T>.BorrowedReferences);
                 entry.usedMalloc = true;
 
                 //B2_ASSERT(((uintptr_t)entry.data & 0x1F) == 0);

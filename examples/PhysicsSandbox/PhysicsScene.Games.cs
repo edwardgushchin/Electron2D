@@ -3,23 +3,6 @@ namespace Electron2D.Examples.PhysicsSandbox;
 internal sealed partial class PhysicsScene
 {
     private const float ParticleRadius = 8;
-    private readonly List<RigidBody> _smashPieces = [];
-    private readonly List<Entity> _smashGroups = [];
-    private readonly List<RectangleShape> _smashShapes = [];
-    private readonly List<PhysicsMaterial> _smashMaterials = [];
-    internal const int SmashDefaultCount = 9600, SmashMaximumCount = 65536;
-    private bool[] _smashMoved = [];
-    private Vector2[] _smashPrevious = [];
-    private float[] _smashAngles = [];
-    private Vector2[] _smashVertices = [];
-    private Color[] _smashPalette = [];
-    internal const float SmashScale = 20;
-    private int _smashColumns, _smashRows;
-    private float _smashSize, _smashStep = 1f / 60;
-    internal static readonly Color SmashSleepingColor = Muted.Lerp(Paper, .4f);
-    private RigidBody? _smashBlock;
-    private float _smashSpeed = 600 * SmashScale;
-    internal int SmashFragmentCount => _smashPieces.Count;
     private readonly List<RigidBody> _particles = [];
     private readonly List<RigidBody> _wheels = [];
     private readonly List<(RigidBody Body, Vector2 Home)> _targets = [];
@@ -47,105 +30,6 @@ internal sealed partial class PhysicsScene
         else if (Index == 10) _slingPower = value;
         else if (Index == 11) _smashSpeed = value;
         else _impulseScale = value;
-    }
-
-    private void BuildSmash()
-    {
-        _smashMoved = new bool[SmashMaximumCount]; _smashPrevious = new Vector2[SmashMaximumCount]; _smashAngles = new float[SmashMaximumCount];
-        _smashVertices = new Vector2[SmashMaximumCount * 2]; _smashPalette = new Color[SmashMaximumCount];
-        _worldGravity = _worldAngularDamp = 0; _worldLinearDamp = .02f;
-        Enclose();
-        _smashBlock = Place(new RigidBody { Mass = 12, LinearDamp = 0, AngularDamp = 0 }, Box(64 * SmashScale, 64 * SmashScale), new Vector2(230, 361) * SmashScale, Pink);
-        _smashBlock.PhysicsMaterialOverride = SurfaceMaterial(.05f, .15f);
-        _storyVisual.Draw += DrawSmash;
-        SetSmashPopulation(SmashDefaultCount);
-        ResetSmash(true);
-        Actions = ["Launch block [B]", "Shockwave [N]", "Rebuild wall [F]"];
-        Help = "B: launch · N: shockwave · F: rebuild · drag the block or fragments · tune impact speed and fragment count";
-        Observation = "A heavy block wakes and scatters a sleeping wall in zero gravity. All fragments use real rigid-body contacts.";
-    }
-
-    internal void SetSmashPopulation(int count)
-    {
-        count = Math.Clamp(count, 64, SmashMaximumCount);
-        _smashColumns = (int)MathF.Ceiling(MathF.Sqrt(count * 1.5f));
-        _smashRows = (count + _smashColumns - 1) / _smashColumns;
-        // Keep solver geometry above collision tolerances; the camera supplies the small screen size.
-        _smashSize = MathF.Min(2.4f, 360f / _smashColumns * .85f) * SmashScale;
-        foreach (var shape in _smashShapes) shape.Size = new(_smashSize, _smashSize);
-        while (_smashPieces.Count < count)
-        {
-            var i = _smashPieces.Count;
-            var group = i / 128;
-            if (group == _smashShapes.Count)
-            {
-                // Bound resource event fan-out and unsubscribe copying to the same 128-body groups.
-                _smashShapes.Add((RectangleShape)Box(_smashSize, _smashSize));
-                _smashMaterials.Add(SurfaceMaterial(.05f, .1f));
-            }
-            var body = Place(new RigidBody { Mass = .0045f, LinearDamp = 0, AngularDamp = .05f, Sleeping = true }, _smashShapes[group], SmashHome(i),
-                i % 3 == 0 ? Blush : i % 3 == 1 ? Berry : Apricot);
-            body.PhysicsMaterialOverride = _smashMaterials[group]; _smashPalette[i] = _colors[body]; _smashPieces.Add(body);
-        }
-        while (_smashPieces.Count > count)
-        {
-            var body = _smashPieces[^1]; _smashPieces.RemoveAt(_smashPieces.Count - 1);
-            _numbers.Remove(body); Bodies.RemoveAt(Bodies.Count - 1); Colliders.RemoveAt(Colliders.Count - 1); _colors.Remove(body); _shapeOwners.Remove(body); _flashes.Remove(body);
-            body.Parent!.RemoveChild(body); body.Dispose();
-        }
-        if (SelectedBody is { IsDisposed: true }) { SelectedBody = null; _selected = null; _grab = default; }
-        ResetSmash(false);
-    }
-
-    private Vector2 SmashHome(int index) => new(625 * SmashScale + (index % _smashColumns - (_smashColumns - 1) * .5f) * (_smashSize / .85f), 361 * SmashScale + (index / _smashColumns - (_smashRows - 1) * .5f) * (_smashSize / .85f));
-
-    private void ResetSmash(bool launch)
-    {
-        ReleaseGrab(false); _flashes.Clear(); Array.Clear(_smashMoved); Score = 0;
-        for (var i = 0; i < _smashPieces.Count; i++)
-        {
-            var body = _smashPieces[i];
-            body.Freeze = false; body.Position = SmashHome(i); body.Rotation = 0;
-            body.LinearVelocity = Vector2.Zero; body.AngularVelocity = 0; body.Sleeping = WorldGravity == 0; _smashPrevious[i] = body.Position; _smashAngles[i] = body.Rotation;
-        }
-        if (_smashBlock is not { } block) return;
-        block.Freeze = false; block.Position = new Vector2(230, 361) * SmashScale; block.Rotation = 0;
-        block.LinearVelocity = launch ? new(_smashSpeed, 0) : Vector2.Zero; block.AngularVelocity = 0; block.Sleeping = !launch; block.QueueRedraw();
-    }
-
-    internal Color GetSmashColor(RigidBody body)
-    {
-        if (body.Freeze) return body.FreezeMode == RigidFreezeMode.Static ? Blush : Berry;
-        if (body.Sleeping) return SmashSleepingColor;
-        var size = body == _smashBlock ? 64 * SmashScale : _smashSize;
-        var speed = body.LinearVelocity.Length() + MathF.Abs(body.AngularVelocity) * size * .7071068f;
-        return speed * _smashStep > size * .25f ? Apricot : Pink;
-    }
-
-    private void DrawSmash(CanvasItem canvas)
-    {
-        var count = _smashPieces.Count;
-        var fraction = Running ? (float)Engine.PhysicsInterpolationFraction : 1f;
-        // Fill the cell pitch with half a screen pixel of overlap to hide rasterization seams.
-        var visualSize = _smashSize / .85f + .5f / PresentationZoom;
-        var half = visualSize * .5f;
-        for (var i = 0; i < count; i++)
-        {
-            var body = _smashPieces[i];
-            var center = _smashPrevious[i].Lerp(body.Position, fraction);
-            var axis = Vector2.FromAngle(Mathf.LerpAngle(_smashAngles[i], body.Rotation, fraction)) * half;
-            _smashPalette[i] = GetSmashColor(body);
-            _smashVertices[i * 2] = center - axis; _smashVertices[i * 2 + 1] = center + axis;
-        }
-        // Flat-ended segments of equal length and width draw each fragment's rotated square.
-        canvas.DrawMultilineColors(_smashVertices.AsSpan(0, count * 2), _smashPalette.AsSpan(0, count), visualSize);
-    }
-
-    private void ActSmash(int action)
-    {
-        if (action != 1) { ResetSmash(action == 0); return; }
-        foreach (var body in _smashPieces)
-            body.ApplyCentralImpulse((body.Position - new Vector2(625, 361) * SmashScale).Normalized() * (body.Mass * 260 * SmashScale));
     }
 
     private void BuildStress()
@@ -276,11 +160,6 @@ internal sealed partial class PhysicsScene
     private void AdvanceGames(float delta)
     {
         _smashStep = delta;
-        for (var i = 0; i < _smashPieces.Count; i++)
-        {
-            _smashPrevious[i] = _smashPieces[i].Position; _smashAngles[i] = _smashPieces[i].Rotation;
-            if (!_smashMoved[i] && _smashPieces[i].Position.DistanceSquaredTo(SmashHome(i)) > 28 * 28 * SmashScale * SmashScale) { _smashMoved[i] = true; Score++; }
-        }
         if (_chassis is not null)
         {
             var throttle = (_bikeDemo && Score == 0 || Input.IsPhysicalKeyPressed(Key.W) || Input.IsPhysicalKeyPressed(Key.Up) ? 1 : 0) - (Input.IsPhysicalKeyPressed(Key.S) || Input.IsPhysicalKeyPressed(Key.Down) ? 1 : 0);

@@ -715,7 +715,9 @@ public partial class Node : ElectronObject
         set
         {
             EnsureMutable();
+            if (_processPriority == value) return;
             _processPriority = value;
+            Tree?.InvalidateProcessOrder();
         }
     }
 
@@ -733,7 +735,9 @@ public partial class Node : ElectronObject
         set
         {
             EnsureMutable();
+            if (_physicsProcessPriority == value) return;
             _physicsProcessPriority = value;
+            Tree?.InvalidateProcessOrder();
         }
     }
 

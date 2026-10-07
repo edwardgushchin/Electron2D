@@ -639,6 +639,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | --- | --- | --- |
 | [ThemeOwner](classes/ThemeOwner.md), [ThemeOwner.Store<T>](classes/ThemeOwner.md#store) | [ThemeOwner.cs](../src/Scene/Theme/ThemeOwner.cs) | [themes](components/themes.md) |
 | [CanvasVertex](classes/CanvasVertex.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [CanvasInstance](classes/CanvasInstance.md) | [RenderingServer.Instances.cs](../src/Servers/Rendering/RenderingServer.Instances.cs) | [meshes](components/meshes.md) |
 | [CanvasAnimationSlice](classes/CanvasAnimationSlice.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasCommand](classes/CanvasCommand.md) | [CanvasGeometry.cs](../src/Servers/Rendering/CanvasGeometry.cs) | [canvas-rendering](components/canvas-rendering.md) |
 | [CanvasBatch](classes/CanvasBatch.md) | [CanvasBackend.cs](../src/Servers/Rendering/CanvasBackend.cs) | [canvas-rendering](components/canvas-rendering.md) |

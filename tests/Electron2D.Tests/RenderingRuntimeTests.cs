@@ -14,6 +14,16 @@ internal static partial class RenderingRuntimeTests
             Engine.MaxFPS = 60;
             ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_ORDER") == "1") { foreach (var backend in new[] { "gpu", "compatibility" }) { ProjectSettings.Set(ProjectSettings.RenderingMethod, backend); VerifyCanvasOrdering(backend); } return; }
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CANVAS_TOPOLOGY_NATIVE") == "1")
+            {
+                foreach (var backend in new[] { "gpu", "compatibility" })
+                {
+                    ProjectSettings.Set(ProjectSettings.RenderingMethod, backend);
+                    VerifyFrame(backend);
+                    VerifyCanvasPixelSnap(backend);
+                }
+                return;
+            }
             if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_RID_NATIVE") == "1")
             {
                 foreach (var backend in Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? new[] { "compatibility" } : new[] { "gpu", "compatibility" })
@@ -617,7 +627,7 @@ internal static partial class RenderingRuntimeTests
 
     private static void VerifyFrame(string expectedBackend)
     {
-        var window = new Window { Title = "Electron2D canvas verification", Size = new Vector2i(128, 96) };
+        var window = new Window { Title = "Electron2D canvas verification", Size = new Vector2i(512, 384) };
         var red = new CanvasNode { Name = "red", DrawAction = n => n.DrawRect(new Rect2(8, 8, 64, 40), Colors.Red) };
         var green = new CanvasNode { Name = "green", ZIndex = 1, DrawAction = n => n.DrawRect(new Rect2(24, 16, 32, 24), new Color(0, 1, 0, 0.5f)) };
         var blue = new CanvasNode { Name = "blue", Position = new Vector2(88, 8), Scale = new Vector2(2, 2), DrawAction = n => n.DrawRect(new Rect2(0, 0, 8, 8), Colors.Blue) };
@@ -625,6 +635,7 @@ internal static partial class RenderingRuntimeTests
         var line = new CanvasNode { Name = "line", DrawAction = n => n.DrawLine(new Vector2(8, 64), new Vector2(72, 64), Colors.Yellow, 2) };
         window.AddChild(green); window.AddChild(red); window.AddChild(blue); window.AddChild(hidden); window.AddChild(line);
         var frames = 0;
+        CanvasNode? addedDuringDraw = null;
         Image? first = null;
         var hook = new CanvasNode
         {
@@ -658,10 +669,27 @@ internal static partial class RenderingRuntimeTests
                         Pixel(frame, 14, 12, Colors.Red);
                         Check(red.Draws == 1, "Changing transform reuses retained local commands.");
                         red.QueueRedraw(); red.QueueRedraw();
+                        red.DrawAction = n =>
+                        {
+                            n.DrawRect(new Rect2(8, 8, 64, 40), Colors.Red);
+                            if (addedDuringDraw is not null) return;
+                            addedDuringDraw = new CanvasNode { Name = "addedDuringDraw", DrawAction = c => c.DrawRect(new Rect2(100, 60, 8, 8), Colors.Cyan) };
+                            window.AddChild(addedDuringDraw);
+                        };
+                    }
+                    else if (frames == 3)
+                    {
+                        Check(red.Draws == 2, "Redraw requests coalesce before the next frame.");
+                        Check(addedDuringDraw is { Draws: 0 }, "Drawing uses a stable preparation snapshot when a callback adds a canvas.");
+                    }
+                    else if (frames == 4)
+                    {
+                        Pixel(frame, 104, 64, Colors.Cyan);
+                        addedDuringDraw!.Dispose();
                     }
                     else
                     {
-                        Check(red.Draws == 2, "Redraw requests coalesce before the next frame.");
+                        Pixel(frame, 104, 64, Colors.Black);
                         node.Tree!.Quit(7);
                     }
                 };
@@ -670,7 +698,7 @@ internal static partial class RenderingRuntimeTests
         window.AddChild(hook);
         try
         {
-            Check(Engine.Run(window) == 7 && frames == 3, "Scene frames submit and quit through Engine.Run.");
+            Check(Engine.Run(window) == 7 && frames == 5, "Scene frames submit and invalidate topology after drawing mutations.");
             Released(window);
             var output = Environment.GetEnvironmentVariable("ELECTRON2D_RENDER_OUTPUT");
             if (output is not null && first is not null)

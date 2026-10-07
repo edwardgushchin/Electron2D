@@ -386,8 +386,9 @@ public abstract partial class CanvasItem
                 capturedMaterial = true;
             }
             var repeat = command.Tile ? TextureRepeat.Enabled : inheritedRepeat;
-            if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == replay.Texture &&
+            if (batches.Count != 0 && batches[^1] is var last && last.Operation == CanvasOperation.Draw && last.InstanceCount == 0 && last.Material == material && last.Texture == replay.Texture &&
                 last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == commandClip)
+
                 batches[^1] = last with { Count = last.Count + count };
             else batches.Add(new(first, count, material, replay.Texture, filter, repeat, anisotropy, blend, commandClip));
         }

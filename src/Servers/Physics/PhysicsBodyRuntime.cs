@@ -5,7 +5,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<CollisionObject>? sceneOwner)
+internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<CollisionObject>? sceneOwner, PhysicsServerCollider? serverOwner)
 {
     internal RID RID { get; } = rid;
     internal float Mass = 1;
@@ -25,12 +25,14 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal PhysicsDirectBodyState? View;
     internal bool ActiveBeforeStep;
     internal bool FieldsInitialized;
+    internal bool Released;
 
     internal (PhysicsBody? Scene, PhysicsServerCollider? Server) Owners
     {
         get
         {
-            if (sceneOwner is null) return PhysicsServer.Service.ResolveBodyOwners(RID);
+            if (serverOwner is not null && !Released) return (null, serverOwner);
+            if (sceneOwner is null) throw new ArgumentException("The RID does not identify a live physics body.", nameof(RID));
             if (sceneOwner.TryGetTarget(out var node) && node is PhysicsBody body && !body.IsDisposed) return (body, null);
             throw new ArgumentException("The RID does not identify a live physics body.", nameof(RID));
         }
@@ -76,13 +78,13 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         Mass = mass; Inertia = inertia; CustomCenter = center;
     }
 
-    internal void ApplyBeforeStep()
+    internal void ApplyBeforeStep(B2BodyId id, PhysicsBody? scene)
     {
-        var id = BodyID;
-        ActiveBeforeStep = b2Body_GetType(id) != B2BodyType.b2_staticBody && b2Body_IsAwake(id);
-        if (b2Body_GetType(id) == B2BodyType.b2_staticBody ||
-            b2Body_GetType(id) == B2BodyType.b2_dynamicBody && !b2Body_IsAwake(id)) return;
-        if (Omitted)
+        var type = b2Body_GetType(id);
+        ActiveBeforeStep = type != B2BodyType.b2_staticBody && b2Body_IsAwake(id);
+        if (type == B2BodyType.b2_staticBody || type == B2BodyType.b2_dynamicBody && !ActiveBeforeStep) return;
+        var rigid = scene as RigidBody;
+        if (rigid?.CustomIntegrator ?? OmitForces)
         {
             b2Body_SetGravityScale(id, 0);
             var sim = Simulation(id);
@@ -93,7 +95,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         if (PendingForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(PendingForce), false);
         if (PendingTorque != 0 && !RotationLocked) b2Body_ApplyTorque(id, PendingTorque * PhysicsMass.InertiaScale, false);
         PendingForce = default; PendingTorque = 0;
-        if (Owners.Scene is RigidBody rigid) { rigid.ApplyConstantForces(); return; }
+        if (rigid is not null) { rigid.ApplyConstantForces(); return; }
         b2Body_SetGravityScale(id, BodyGravityScale);
         if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(ConstantForce), false);
         if (ConstantTorque != 0) b2Body_ApplyTorque(id, ConstantTorque * 0.0001f, false);

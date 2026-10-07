@@ -12,6 +12,8 @@ namespace Electron2D;
 public abstract partial class Shape : Resource
 {
     private ulong _revision;
+    private static long _geometryEpoch;
+    internal static long GeometryEpoch => Volatile.Read(ref _geometryEpoch);
     private readonly object _queryRIDGate = new();
     private RID _queryRID;
     private bool _serverOwned;
@@ -64,6 +66,7 @@ public abstract partial class Shape : Resource
     internal void EmitGeometryChanged()
     {
         _revision++;
+        Interlocked.Increment(ref _geometryEpoch);
         RID rid;
         lock (_queryRIDGate) rid = _queryRID;
         if (rid.IsValid()) PhysicsServer.Service.MarkBorrowedShapeDirty(rid);
@@ -75,6 +78,7 @@ public abstract partial class Shape : Resource
     {
         if (disposing)
         {
+            Interlocked.Increment(ref _geometryEpoch);
             RID rid;
             lock (_queryRIDGate) { rid = _queryRID; _queryRID = default; }
             if (rid.IsValid() && !_serverOwned) PhysicsServer.Service.UnregisterBorrowedShape(rid);

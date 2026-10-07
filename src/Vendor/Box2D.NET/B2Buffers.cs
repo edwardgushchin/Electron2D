@@ -68,7 +68,7 @@ namespace Box2D.NET
             b2_freeFcn = freeFcn;
         }
 
-        public static T[] b2Alloc<T>(int size) where T : new()
+        public static T[] b2Alloc<T>(int size, bool initializeElements = true) where T : new()
         {
             if (size == 0)
             {
@@ -76,7 +76,7 @@ namespace Box2D.NET
             }
 
             T[] ptr = null;
-            if (typeof(T).IsValueType)
+            if (typeof(T).IsValueType || !initializeElements)
             {
                 ptr = new T[size];
             }

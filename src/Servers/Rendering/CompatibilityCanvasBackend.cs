@@ -110,7 +110,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances)
     {
         foreach (var batch in batches)
             if (batch.ShaderCode is not null)

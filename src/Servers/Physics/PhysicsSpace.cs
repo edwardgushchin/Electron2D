@@ -17,6 +17,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private const ulong AbsorbentMaterial = 2;
 
     private readonly List<PhysicsBody> _bodies = [];
+    private int _serverAreaCount;
     private readonly List<RigidBody> _contactBodies = [];
     private readonly List<Joint> _joints = [];
     private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
@@ -31,7 +32,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly B2WorldId _worldID;
     private readonly PhysicsTaskScheduler _tasks;
-    private readonly Vector2 _defaultGravity;
+    private Vector2 _defaultGravity;
     private readonly int _ownerThreadID = Environment.CurrentManagedThreadId;
     internal PhysicsAreaFields DefaultAreaFields { get; }
     private bool _stepping;
@@ -212,10 +213,26 @@ internal sealed partial class PhysicsSpace : IDisposable
         for (var index = 0; index < world.constraintGraph.colors.Length; index++)
         {
             ref var color = ref world.constraintGraph.colors[index];
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref color.contactSims, contacts);
+            // A regular color contains at most one constraint per dynamic body; overflow has no such bound.
+            Box2D.NET.B2Arrays.b2Array_Reserve(ref color.contactSims,
+                index == Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX ? contacts : capacity);
             if (index != Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX && color.bodySet.blockCount < (capacity + 63) / 64)
                 Box2D.NET.B2BitSets.b2GrowBitSet(ref color.bodySet, (capacity + 63) / 64);
         }
+        if (capacity >= 256) PrepareArenaCapacity(world, capacity, contacts);
+    }
+
+    private static void PrepareArenaCapacity(B2World world, int bodies, int contacts)
+    {
+        var arena = world.arena;
+        arena.GetOrCreateFor<int>().Reserve(checked(bodies * 9 + 96));
+        arena.GetOrCreateFor<B2MoveResult>().Reserve(bodies + 32);
+        arena.GetOrCreateFor<B2MovePair>().Reserve(checked(bodies * 32));
+        arena.GetOrCreateFor<B2ContactSim>().Reserve(contacts + 128);
+        arena.GetOrCreateFor<B2ContactConstraintSIMD>().Reserve(contacts / B2Cores.B2_SIMD_WIDTH + 128);
+        arena.GetOrCreateFor<B2ContactConstraint>().Reserve(contacts);
+        arena.GetOrCreateFor<B2SolverBlock>().Reserve((bodies + contacts * 2) / 32 + 512);
+        arena.GetOrCreateFor<B2SolverStage>().Reserve(256);
     }
 
     internal void Add(PhysicsBody body)
@@ -301,8 +318,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         _serverColliders.EnsureCapacity(_serverColliders.Count + 1);
         collider.AttachBackend(this, spaceRID);
         _serverColliders.Add(collider);
+        if (collider.IsArea) _serverAreaCount++;
         PrepareSolverCapacity();
-        PrepareMonitoringCapacity();
+        if (_areas.Count != 0 || _serverAreaCount != 0) PrepareMonitoringCapacity();
         if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
     }
 
@@ -311,7 +329,10 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
         if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID);
-        if (!_serverColliders.Remove(collider)) return;
+        if (_serverColliders.Count != 0 && ReferenceEquals(_serverColliders[^1], collider))
+            _serverColliders.RemoveAt(_serverColliders.Count - 1);
+        else if (!_serverColliders.Remove(collider)) return;
+        if (collider.IsArea) _serverAreaCount--;
         if (!collider.IsArea) foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(collider.RID);
         foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
         ForgetAreaMonitors(collider.RID);
@@ -332,6 +353,22 @@ internal sealed partial class PhysicsSpace : IDisposable
         DispatchEvents();
     }
 
+    internal static bool ProfilingEnabled;
+    internal readonly double[] ProfileMS = new double[8];
+    internal readonly long[] ProfileBytes = new long[8];
+    private long _profileAllocated;
+
+    private void RecordStepPhase(int index, ref long mark)
+    {
+        if (!ProfilingEnabled) return;
+        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        ProfileBytes[index] = allocated - _profileAllocated;
+        _profileAllocated = allocated;
+        var now = System.Diagnostics.Stopwatch.GetTimestamp();
+        ProfileMS[index] = System.Diagnostics.Stopwatch.GetElapsedTime(mark, now).TotalMilliseconds;
+        mark = now;
+    }
+
     internal void Step(double delta)
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
@@ -341,35 +378,36 @@ internal sealed partial class PhysicsSpace : IDisposable
         _stepping = true;
         List<Exception>? errors = null;
         var solverAdvanced = false;
+        var profileMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+        if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
         try
         {
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
             foreach (var collider in _serverColliders) collider.PrepareBackend();
             foreach (var joint in _joints) joint.PrepareBackend();
-            ApplyAreaFields(delta);
-            PrepareBodyStates(delta);
-            foreach (var body in _bodies)
-            {
-                if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
-                else if (body is CharacterBody character) character.PrepareMotion(delta);
-                else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
-            }
+            RecordStepPhase(0, ref profileMark);
+            PrepareAreaFields();
+            RecordStepPhase(1, ref profileMark);
+            var hasKinematicBodies = PrepareBodyStates(delta);
             _contactStep++;
             var world = b2GetWorldFromId(_worldID);
             world.workerCount = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
-            StepKinematicPaths(delta);
+            RecordStepPhase(2, ref profileMark);
+            StepKinematicPaths(delta, hasKinematicBodies);
+            RecordStepPhase(3, ref profileMark);
             solverAdvanced = true;
             foreach (var body in _bodies)
             {
                 try
                 {
-                    body.CompleteBackend();
+                    body.CompleteBackend(world);
                     if (body is AnimatableBody animatable) animatable.SyncPose();
                     else if (body is CharacterBody character) character.CaptureSolverPose();
                 }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
+            RecordStepPhase(4, ref profileMark);
             CaptureBodyMotions();
             if (world.workerCount == 1 || _bodies.Count < 256)
                 CollectBodyContactRange(0, _bodies.Count, 0, this);
@@ -386,9 +424,11 @@ internal sealed partial class PhysicsSpace : IDisposable
                 if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
                 rigid.QueueContactChanges(_contactEvents);
             }
+            RecordStepPhase(5, ref profileMark);
             ScanAreas();
             ScanAreaMonitors();
             CaptureBodyStates();
+            RecordStepPhase(6, ref profileMark);
         }
         catch (Exception error) { (errors ??= []).Add(error); }
         finally { PruneOneWayPairs(); _stepping = false; }
@@ -396,6 +436,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         catch (Exception error) { (errors ??= []).Add(error); }
         try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
+        RecordStepPhase(7, ref profileMark);
         if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
     }
 
@@ -405,7 +446,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         var space = (PhysicsSpace)context;
         for (var i = start; i < end; i++)
-            if (space._bodies[i] is RigidBody rigid)
+            if (space._bodies[i] is RigidBody { NeedsContactSnapshot: true } rigid)
                 rigid.CollectContacts(rigid.Runtime.GetView(space, rigid.BackendID));
     }
 
@@ -533,8 +574,15 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
     }
 
-    private void ApplyAreaFields(double delta)
+    private void PrepareAreaFields()
     {
+        var gravity = DefaultAreaFields.GravityPoint ? Vector2.Zero : DefaultAreaFields.GravityVector * DefaultAreaFields.Gravity;
+        if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
+        if (gravity != _defaultGravity)
+        {
+            b2World_SetGravity(_worldID, Shape.ToBackend(gravity));
+            _defaultGravity = gravity;
+        }
         // ponytail: Stable insertion order is quadratic in field areas; use indexed sorting if large-world profiling needs it.
         _fieldAreas.Clear();
         foreach (var area in _areas)
@@ -543,27 +591,6 @@ internal sealed partial class PhysicsSpace : IDisposable
             if (collider.AreaFields is { } fields)
                 AddFieldArea(fields, collider.CollisionMask, collider.BackendShapes, collider.GetTransform());
 
-        foreach (var body in _bodies)
-        {
-            if (body is not RigidBody && body is not CharacterBody) continue;
-            ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GlobalPosition,
-                out var gravity, out var linearDamp, out var angularDamp);
-            if (body is RigidBody rigid)
-                rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-            else
-            {
-                var runtime = PhysicsServer.Service.BodyRuntime(body.PhysicsRID);
-                runtime.ApplyResolvedFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-                ((CharacterBody)body).SetResolvedGravity(runtime.Gravity);
-            }
-        }
-        foreach (var body in _serverColliders)
-        {
-            if (body.IsArea || body.Mode == PhysicsServer.BodyMode.Static) continue;
-            ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GetTransform().Origin,
-                out var gravity, out var linearDamp, out var angularDamp);
-            PhysicsServer.Service.BodyRuntime(body.RID).ApplyResolvedFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-        }
     }
 
     private void AddFieldArea(PhysicsAreaFields fields, uint mask, IReadOnlyList<B2ShapeId> shapes, Transform transform)

@@ -38,6 +38,11 @@ namespace Box2D.NET
 {
     internal static class B2Solvers
     {
+        // Prepare every task delegate together; rare island/CCD work must not allocate on first use.
+        private static readonly b2TaskCallback SplitIslandTask = b2SplitIslandTask;
+        private static readonly b2TaskCallback SolverTask = b2SolverTask;
+        private static readonly b2TaskCallback FinalizeBodiesTask = b2FinalizeBodiesTask;
+        private static readonly b2TaskCallback BulletBodyTask = b2BulletBodyTask;
         // todo testing
         public const int ITERATIONS = 1;
         public const int RELAX_ITERATIONS = 1;
@@ -1648,7 +1653,7 @@ public enum b2SolverBlockType
                 object splitIslandTask = null;
                 if (world.splitIslandId != B2_NULL_INDEX)
                 {
-                    splitIslandTask = world.enqueueTaskFcn(b2SplitIslandTask, 1, 1, world, world.userTaskContext);
+                    splitIslandTask = world.enqueueTaskFcn(SplitIslandTask, 1, 1, world, world.userTaskContext);
                     world.taskCount += 1;
                     world.activeTaskCount += splitIslandTask == null ? 0 : 1;
                 }
@@ -1876,7 +1881,7 @@ public enum b2SolverBlockType
 
                     workerContext[i].context = stepContext;
                     workerContext[i].workerIndex = i;
-                    workerContext[i].userTask = world.enqueueTaskFcn(b2SolverTask, 1, 1, workerContext[i], world.userTaskContext);
+                    workerContext[i].userTask = world.enqueueTaskFcn(SolverTask, 1, 1, workerContext[i], world.userTaskContext);
                     world.taskCount += 1;
                     world.activeTaskCount += workerContext[i].userTask == null ? 0 : 1;
                 }
@@ -1920,7 +1925,7 @@ public enum b2SolverBlockType
 
                 // Finalize bodies. Must happen after the constraint solver and after island splitting.
                 object finalizeBodiesTask =
-                    world.enqueueTaskFcn(b2FinalizeBodiesTask, awakeBodyCount, 64, stepContext, world.userTaskContext);
+                    world.enqueueTaskFcn(FinalizeBodiesTask, awakeBodyCount, 64, stepContext, world.userTaskContext);
                 world.taskCount += 1;
                 if (finalizeBodiesTask != null)
                 {
@@ -2165,7 +2170,7 @@ public enum b2SolverBlockType
                 // Fast bullet bodies
                 // Note: a bullet body may be moving slow
                 int minRange = 8;
-                object userBulletBodyTask = world.enqueueTaskFcn(b2BulletBodyTask, bulletBodyCount, minRange, stepContext,
+                object userBulletBodyTask = world.enqueueTaskFcn(BulletBodyTask, bulletBodyCount, minRange, stepContext,
                     world.userTaskContext);
                 world.taskCount += 1;
                 if (userBulletBodyTask != null)

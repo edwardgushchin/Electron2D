@@ -40,12 +40,13 @@ internal sealed partial class PhysicsScene : Entity
     internal Rect2? InputBounds { get; set; }
     internal Vector2 CameraTarget => (_chassis ?? (PhysicsBody?)_character ?? _probe ?? _tug)?.GlobalPosition ?? new Vector2(576, 400);
     internal float PresentationZoom { get; set; } = 1;
-    internal int SelectedNumber => SelectedBody is { } body ? _numbers.GetValueOrDefault(body) : 0;
-    internal string SelectedState => SelectedBody is RigidBody b ? b.Freeze ? "frozen" : b.Sleeping ? "sleeping" : "awake" : "static / character";
+    internal int SelectedNumber => _selectedFragment?.Number ?? (SelectedBody is { } body ? _numbers.GetValueOrDefault(body) : 0);
+    internal string SelectedState => _selectedFragment is { } fragment ? fragment.Policy == 1 ? "removed" : fragment.Frozen || fragment.Policy == 2 ? "frozen" : fragment.State?.Sleeping == true ? "sleeping" : "awake" : SelectedBody is RigidBody b ? b.Freeze ? "frozen" : b.Sleeping ? "sleeping" : "awake" : "static / character";
     internal string SelectedRole
     {
         get
         {
+            if (_selectedFragment is not null) return "Fragment";
             if (SelectedBody is not { } body) return "Select an object";
             if (body == _smashBlock) return "Smash block";
             if (Index == 11) return "Fragment";
@@ -85,7 +86,7 @@ internal sealed partial class PhysicsScene : Entity
     private RigidBody? _selected;
     private bool _disposed;
     internal int Index { get; }
-    internal int BodyCount => Colliders.Count(b => !b.IsDisposed && (b is RigidBody or CharacterBody or AnimatableBody)) + _serverBodies.Count(b => PhysicsServer.BodyGetMode(b.RID) != PhysicsServer.BodyMode.Static);
+    internal int BodyCount => Colliders.Count(b => !b.IsDisposed && (b is RigidBody or CharacterBody or AnimatableBody)) + _serverBodies.Count(b => PhysicsServer.BodyGetMode(b.RID) != PhysicsServer.BodyMode.Static) + _smashPieces.Count;
     internal int ContactEvents { get; private set; }
     internal int Score { get; private set; }
     internal int PhysicsSteps { get; private set; }
@@ -134,6 +135,7 @@ internal sealed partial class PhysicsScene : Entity
     }
     internal void ReleaseGrab(bool shoot = true)
     {
+        if (_grab.IsValid() && _selectedFragment is { Frozen: true, Kinematic: true, State: { } state }) state.LinearVelocity = Vector2.Zero;
         _grab = default;
         if (_pulling && shoot) ShootBird();
         _pulling = false;
@@ -147,30 +149,15 @@ internal sealed partial class PhysicsScene : Entity
     {
         body.Name = "Body" + ++_serial;
         _numbers[body] = _serial;
-        var batch = Index == 11 && body is RigidBody && shape is RectangleShape rectangle && rectangle.Size.X < 64 * SmashScale;
-        body.PhysicsInterpolationMode = batch ? PhysicsInterpolationMode.Off : PhysicsInterpolationMode.On;
-        body.Visible = !batch;
+        body.PhysicsInterpolationMode = PhysicsInterpolationMode.On;
         body.Position = position;
         body.AddChild(new CollisionShape { Name = "Geometry", Shape = shape });
-        Colliders.Add(body);
-        _colors[body] = color;
-        if (!batch) body.Draw += c => DrawCollider(c, body, _colors[body]);
-        if (batch)
-        {
-            // ponytail: 128-child groups bound insertion work; remove after indexed child-name lookup.
-            var group = _smashPieces.Count / 128;
-            if (group == _smashGroups.Count)
-            {
-                var parent = new Entity { Name = "Fragments" + group };
-                _smashGroups.Add(parent); AddChild(parent);
-            }
-            _smashGroups[group].AddChild(body);
-        }
-        else AddChild(body);
+        Colliders.Add(body); _colors[body] = color;
+        body.Draw += c => DrawCollider(c, body, _colors[body]);
+        AddChild(body);
         if (body is RigidBody rigid)
         {
             Bodies.Add(rigid);
-            if (batch) return body;
             rigid.ContactMonitor = true;
             rigid.MaxContactsReported = 8;
             rigid.BodyShapeEntered += (_, _, _, _) => { ContactEvents++; if (Index != 8) { _flashes[rigid] = _time + .12; rigid.QueueRedraw(); } };
@@ -230,6 +217,7 @@ internal sealed partial class PhysicsScene : Entity
 
     protected override void OnExitTree()
     {
+        DetachSmash();
         _worldSpace = default;
         base.OnExitTree();
     }
@@ -263,11 +251,17 @@ internal sealed partial class PhysicsScene : Entity
             var turn = (Input.IsPhysicalKeyPressed(Key.E) ? 1 : 0) - (Input.IsPhysicalKeyPressed(Key.Q) ? 1 : 0);
             if (turn != 0) body.ApplyTorque(turn * 14000 * _impulseScale);
         }
+        if (_selectedFragment is { Frozen: false, Policy: not 1 and not 2 } fragment)
+        {
+            var turn = (Input.IsPhysicalKeyPressed(Key.E) ? 1 : 0) - (Input.IsPhysicalKeyPressed(Key.Q) ? 1 : 0);
+            if (turn != 0) PhysicsServer.BodyApplyTorque(fragment.RID, turn * 14000 * _impulseScale);
+        }
         if (_independentSpace.IsValid()) PhysicsServer.SpaceStep(_independentSpace, delta);
     }
 
     protected override void OnProcess(double delta)
     {
+        CaptureSmashState();
         foreach (var body in Bodies)
         {
             if (body.IsDisposed) continue;
@@ -300,6 +294,8 @@ internal sealed partial class PhysicsScene : Entity
             if (click.ButtonIndex == MouseButton.Right)
             {
                 if (_selected is { Freeze: false }) _selected.ApplyImpulse(new Vector2(450, -260) * _impulseScale, point - _selected.GlobalPosition);
+                else if (_selectedFragment is { Frozen: false, State: { } state } fragment)
+                    PhysicsServer.BodyApplyImpulse(fragment.RID, new Vector2(450, -260) * _impulseScale, point - state.Transform.Origin);
                 else Spawn(point);
                 ReleaseGrab();
             }
@@ -308,6 +304,7 @@ internal sealed partial class PhysicsScene : Entity
             return;
         }
         if (@event is not InputEventKey { Pressed: true, Echo: false } key) return;
+        if (SmashKey(key.Keycode)) { GetViewport()!.SetInputAsHandled(); return; }
         switch (key.Keycode)
         {
             case Key.B: Act(0); break;
@@ -346,6 +343,7 @@ internal sealed partial class PhysicsScene : Entity
         SelectionRevision = unchecked(SelectionRevision + 1);
         _pick.Position = point;
         SelectedBody = null;
+        _selectedFragment = null;
         _selected = null;
         _grab = default;
         var count = GetWorld()!.DirectSpaceState.IntersectPoint(_pick, _pickHits.AsSpan(0, 32));
@@ -362,6 +360,13 @@ internal sealed partial class PhysicsScene : Entity
                 _grabLocal = body.GlobalTransform.AffineInverse() * point;
                 return;
             }
+            if (_smashLookup.TryGetValue(hit.ColliderRID, out var fragment))
+            {
+                _selectedFragment = fragment;
+                _grab = PhysicsServer.BodyGetMode(fragment.RID) == PhysicsServer.BodyMode.Static ? default : fragment.RID;
+                _grabLocal = (fragment.State?.Transform ?? fragment.Pose).AffineInverse() * point;
+                return;
+            }
             if (_serverBodies.Any(b => b.RID == hit.ColliderRID))
             {
                 _grab = hit.ColliderRID;
@@ -374,6 +379,12 @@ internal sealed partial class PhysicsScene : Entity
     private void ApplyGrab(float delta)
     {
         if (!_grab.IsValid()) return;
+        if (_selectedFragment is { Frozen: true, Kinematic: true, State: { } fragmentState })
+        {
+            var fragmentPose = fragmentState.Transform;
+            fragmentState.LinearVelocity = delta > 0 ? (_pointer - fragmentPose * _grabLocal) / delta : Vector2.Zero;
+            return;
+        }
         if (_selected is { Freeze: true, FreezeMode: RigidFreezeMode.Kinematic })
         {
             _selected.GlobalPosition = _pointer - (_selected.GlobalTransform * _grabLocal - _selected.GlobalPosition);
@@ -491,15 +502,19 @@ internal sealed partial class PhysicsScene : Entity
 
     private void DrawSelection(CanvasItem c)
     {
-        if (SelectedBody is not { IsDisposed: false } body) return;
-        if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());
         Rect2? bounds = null;
-        foreach (var owner in owners)
-            for (var i = 0; i < body.ShapeOwnerGetShapeCount(owner); i++)
-            {
-                var r = body.GlobalTransform * body.ShapeOwnerGetTransform(owner) * body.ShapeOwnerGetShape(owner, i).GetRect();
-                bounds = bounds is { } old ? old.Merge(r) : r;
-            }
+        if (_selectedFragment is { IsDisposed: false } fragment)
+            bounds = fragment.Pose * new Rect2(new Vector2(-_smashSize / 2, -_smashSize / 2), new Vector2(_smashSize, _smashSize));
+        else if (SelectedBody is { IsDisposed: false } body)
+        {
+            if (!_shapeOwners.TryGetValue(body, out var owners)) _shapeOwners.Add(body, owners = body.GetShapeOwners());
+            foreach (var owner in owners)
+                for (var i = 0; i < body.ShapeOwnerGetShapeCount(owner); i++)
+                {
+                    var r = body.GlobalTransform * body.ShapeOwnerGetTransform(owner) * body.ShapeOwnerGetShape(owner, i).GetRect();
+                    bounds = bounds is { } old ? old.Merge(r) : r;
+                }
+        }
         if (bounds is not { } rect) return;
         rect = rect.Grow(5 / PresentationZoom);
         c.DrawRect(rect, Pink, false, 2 / PresentationZoom);
@@ -521,6 +536,7 @@ internal sealed partial class PhysicsScene : Entity
         {
             _disposed = true;
             ReleaseGrab(false);
+            DisposeSmash();
             foreach (var handle in _serverHandles.AsEnumerable().Reverse()) PhysicsServer.FreeRID(handle);
             _serverHandles.Clear();
         }

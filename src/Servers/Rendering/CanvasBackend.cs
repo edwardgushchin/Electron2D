@@ -9,7 +9,7 @@ internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, Mas
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }
@@ -41,7 +41,7 @@ internal abstract class CanvasBackend : IDisposable
     internal virtual void SetWindowVisible(DisplayServer display, bool visible) => display.SetWindowVisible(visible);
     internal virtual void BeginFrame() { }
     internal virtual void EndFrame() { }
-    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time);
+    internal abstract void Draw(CanvasRenderTarget target, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances);
     internal abstract Image Readback(CanvasRenderTarget target, bool backBuffer = false);
     internal virtual nint GetNativeHandle(DisplayServer.HandleType type) =>
         throw new NotSupportedException($"The {Driver} renderer has no {type} identity.");

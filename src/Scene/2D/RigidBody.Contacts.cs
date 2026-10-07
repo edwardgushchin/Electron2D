@@ -26,6 +26,7 @@ public partial class RigidBody
     private int _contactCount;
     private bool _dispatchingContact;
     private bool _sleepChangePending;
+    internal bool NeedsContactSnapshot => _contactMonitor || _maxContactsReported > 0 || Runtime.View is { IsDisposed: false };
 
     /// <summary>Gets or sets whether this body reports object-level contact entry and exit.</summary>
     /// <value>False by default; reporting also requires <see cref="MaxContactsReported"/> greater than zero.</value>
@@ -161,6 +162,7 @@ public partial class RigidBody
 
     internal void QueueContactChanges(List<PhysicsSpace.ContactEvent> events)
     {
+        if (!_contactMonitor) return;
         foreach (var change in _pairChanges) events.Add(new(this, change));
         _pairChanges.Clear();
     }

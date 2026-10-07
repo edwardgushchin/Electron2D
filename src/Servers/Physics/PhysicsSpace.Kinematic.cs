@@ -12,8 +12,9 @@ internal sealed partial class PhysicsSpace
     private readonly Dictionary<int, (double X, double Y, double Angular)> _jointImpulseVelocities = [];
     private readonly record struct KinematicStepForce(B2BodyId ID, B2Vec2 Force, float Torque);
 
-    private void StepKinematicPaths(double delta)
+    private void StepKinematicPaths(double delta, bool hasKinematicBodies)
     {
+        if (!hasKinematicBodies) { StepBackend((float)delta); return; }
         var minimumExtent = B2_HUGE;
         foreach (var body in _bodies)
             if (body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
