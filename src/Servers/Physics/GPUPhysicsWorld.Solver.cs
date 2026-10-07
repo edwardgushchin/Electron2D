@@ -14,6 +14,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal Float4 Anchors1, Params1, Impulses1, Anchors2, Params2, Impulses2;
     }
     [StructLayout(LayoutKind.Sequential)]
+    private struct ContactInput
+    {
+        internal Float4 IDs, Mass, Material, Warm, Source, Offset;
+    }
+    [StructLayout(LayoutKind.Sequential)]
     private struct Joint
     {
         internal Float4 IDs, Mass, FrameA, FrameB, Geometry, Soft, Spring, Motor, Impulses, Limits, PoseA, PoseB;
@@ -24,6 +29,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal Float4 Values, Control, Solve, Preparation;
     }
     private readonly Storage<Contact> _contactStorage;
+    private readonly Storage<ContactInput> _contactInputStorage;
+    private readonly Storage<ManifoldResult> _fallbackManifoldStorage;
+    internal int ResidentContactCount { get; private set; }
+    internal int UploadedManifoldCount { get; private set; }
+    internal long ContactUploadBytes { get; private set; }
     private readonly Storage<Joint> _jointStorage;
     private readonly int[] _contactStarts = new int[B2Constants.B2_GRAPH_COLOR_COUNT], _contactCounts = new int[B2Constants.B2_GRAPH_COLOR_COUNT];
     private readonly int[] _jointStarts = new int[B2Constants.B2_GRAPH_COLOR_COUNT], _jointCounts = new int[B2Constants.B2_GRAPH_COLOR_COUNT];
@@ -35,7 +45,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         EnsureOwner();
         var profileStart = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var count = context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count;
-        if (count == 0) return;
+        ResidentContactCount = UploadedManifoldCount = 0; ContactUploadBytes = 0;
+        if (count == 0) { context.generatedManifoldOwner = null!; _manifoldContext = null; return; }
         // Follow the world's prepared storage budget rather than its temporarily sleeping population.
         _bodyStorage.Reserve(Math.Max(count, context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.capacity));
         PackBodies(context, count);
@@ -49,7 +60,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
         }
         _contactStorage.Reserve(Math.Max(Math.Max(1, contactCount), context.world.contacts.capacity));
         _jointStorage.Reserve(Math.Max(Math.Max(1, jointCount), context.world.joints.capacity));
+        _contactInputStorage.Reserve(_contactStorage.Data.Length);
+        _fallbackManifoldStorage.Reserve(_contactStorage.Data.Length);
+        _manifoldStorage.Reserve(1);
         PackConstraints(context);
+        context.generatedManifoldOwner = null!; _manifoldContext = null;
+        ContactUploadBytes = (long)contactCount * sizeof(ContactInput) + (long)UploadedManifoldCount * sizeof(ManifoldResult);
         var profilePacked = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw Failure("acquire constraint commands");
@@ -58,7 +74,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         {
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin constraint upload");
-            _bodyStorage.Upload(copy, count); _contactStorage.Upload(copy, contactCount); _jointStorage.Upload(copy, jointCount);
+            _bodyStorage.Upload(copy, count); _contactInputStorage.Upload(copy, contactCount); _jointStorage.Upload(copy, jointCount);
+            _fallbackManifoldStorage.Upload(copy, UploadedManifoldCount);
             SDL.EndGPUCopyPass(copy);
             var settings = new SolverStep
             {
@@ -139,6 +156,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, binding, 3);
         if (compute == 0) throw Failure("begin a constraint stage");
         SDL.BindGPUComputePipeline(compute, _solve.DangerousGetHandle());
+        var inputs = stackalloc nint[3] { _contactInputStorage.Handle, _manifoldStorage.Handle, _fallbackManifoldStorage.Handle };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
         fixed (SolverStep* uniform = &settings) SDL.PushGPUComputeUniformData(command, 0, (nint)uniform, (uint)sizeof(SolverStep));
         SDL.DispatchGPUCompute(compute, serial ? 1 : checked((uint)(count + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute); DispatchCount++;
@@ -151,19 +170,35 @@ internal sealed unsafe partial class GPUPhysicsWorld
             ref var group = ref context.graph.colors[color];
             for (var i = 0; i < group.contactSims.count; i++)
             {
-                var c = group.contactSims.data[i]; var m = c.manifold; var p1 = m.points[0]; var p2 = m.points[1];
-                _contactStorage.Data[_contactStarts[color] + i] = new()
+                var c = group.contactSims.data[i]; ref readonly var m = ref c.manifold;
+                ref readonly var p1 = ref m.points[0]; ref readonly var p2 = ref m.points[1];
+                var source = -1; var offset = default(Float4);
+                if (ReferenceEquals(context.generatedManifoldOwner, this) && ReferenceEquals(_manifoldContext, context) &&
+                    c.generatedManifoldVersion == CollisionSubmissionCount)
+                {
+                    source = c.generatedManifoldIndex; offset = _centerOffsets[source]; ResidentContactCount++;
+                }
+                if (source < 0)
+                {
+                    var fallback = UploadedManifoldCount++;
+                    _fallbackManifoldStorage.Data[fallback] = new()
+                    {
+                        Normal = new(m.normal.X, m.normal.Y, m.pointCount, 0),
+                        Anchor1 = new(p1.anchorA.X, p1.anchorA.Y, p1.separation, p1.id),
+                        Point1 = new(p1.anchorB.X, p1.anchorB.Y, 0, 0),
+                        Anchor2 = new(p2.anchorA.X, p2.anchorA.Y, p2.separation, p2.id),
+                        Point2 = new(p2.anchorB.X, p2.anchorB.Y, 0, 0)
+                    };
+                    source = -fallback - 1;
+                }
+                _contactInputStorage.Data[_contactStarts[color] + i] = new()
                 {
                     IDs = new(c.bodySimIndexA, c.bodySimIndexB, m.pointCount, color == B2Constants.B2_GRAPH_COLOR_COUNT - 1 ? 1 : 0),
                     Mass = new(c.invMassA, c.invMassB, c.invIA, c.invIB),
-                    Normal = new(m.normal.X, m.normal.Y, c.friction, c.tangentSpeed),
-                    Rolling = new(c.rollingResistance, 0, m.rollingImpulse, c.restitution),
-                    Anchors1 = new(p1.anchorA.X, p1.anchorA.Y, p1.anchorB.X, p1.anchorB.Y),
-                    Params1 = new(0, 0, p1.separation, 0),
-                    Impulses1 = new(p1.normalImpulse, p1.tangentImpulse, 0, 0),
-                    Anchors2 = new(p2.anchorA.X, p2.anchorA.Y, p2.anchorB.X, p2.anchorB.Y),
-                    Params2 = new(0, 0, p2.separation, 0),
-                    Impulses2 = new(p2.normalImpulse, p2.tangentImpulse, 0, 0)
+                    Material = new(c.friction, c.tangentSpeed, c.rollingResistance, c.restitution),
+                    Warm = new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
+                    Source = new(source, m.rollingImpulse, p1.id, p2.id),
+                    Offset = offset
                 };
             }
             for (var i = 0; i < group.jointSims.count; i++) _jointStorage.Data[_jointStarts[color] + i] = PackJoint(context, group.jointSims.data[i]);

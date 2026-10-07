@@ -25,6 +25,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private readonly Storage<CollisionPair> _pairStorage;
     private readonly Storage<ManifoldResult> _manifoldStorage;
     private B2Manifold[] _manifolds = [];
+    private Float4[] _centerOffsets = [];
+    private B2StepContext? _manifoldContext;
     private int[] _geometryStamps = [];
     private int _geometryStamp;
     internal long CollisionSubmissionCount { get; private set; }
@@ -35,11 +37,14 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var world = context.world;
         if ((uint)count > (uint)context.contacts.Count) throw new ArgumentOutOfRangeException(nameof(count));
         context.generatedManifolds = null!;
+        context.generatedManifoldOwner = null!;
+        _manifoldContext = null;
         if (count == 0) return;
         _geometryStorage.Reserve(world.shapes.capacity);
         _pairStorage.Reserve(world.contacts.capacity);
         _manifoldStorage.Reserve(world.contacts.capacity);
         if (_manifolds.Length < _pairStorage.Data.Length) _manifolds = new B2Manifold[_pairStorage.Data.Length];
+        if (_centerOffsets.Length < _pairStorage.Data.Length) _centerOffsets = new Float4[_pairStorage.Data.Length];
         if (_geometryStamps.Length < _geometryStorage.Data.Length) _geometryStamps = new int[_geometryStorage.Data.Length];
         if (_geometryStamp == int.MaxValue) { Array.Clear(_geometryStamps); _geometryStamp = 0; }
         _geometryStamp++;
@@ -51,8 +56,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (b2AABB_Overlaps(a.fatAABB, b.fatAABB))
             {
                 PackGeometry(a, contact.shapeIdA); PackGeometry(b, contact.shapeIdB);
-                var poseA = b2GetBodySim(world, world.bodies.data[a.bodyId]).transform;
-                var poseB = b2GetBodySim(world, world.bodies.data[b.bodyId]).transform;
+                var simA = b2GetBodySim(world, world.bodies.data[a.bodyId]);
+                var simB = b2GetBodySim(world, world.bodies.data[b.bodyId]);
+                var poseA = simA.transform; var poseB = simB.transform;
+                var offsetA = b2RotateVector(poseA.q, simA.localCenter);
+                var offsetB = b2RotateVector(poseB.q, simB.localCenter);
+                _centerOffsets[i] = new(offsetA.X, offsetA.Y, offsetB.X, offsetB.Y);
                 pair.PoseA = new(poseA.p.X, poseA.p.Y, poseA.q.c, poseA.q.s);
                 pair.PoseB = new(poseB.p.X, poseB.p.Y, poseB.q.c, poseB.q.s);
                 pair.IDs.Z = 1;
@@ -75,8 +84,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (manifold.pointCount > 0) manifold.points[0] = UnpackPoint(result.Anchor1, result.Point1);
             if (manifold.pointCount > 1) manifold.points[1] = UnpackPoint(result.Anchor2, result.Point2);
             _manifolds[i] = manifold;
+            context.contacts[i].generatedManifoldVersion = CollisionSubmissionCount;
+            context.contacts[i].generatedManifoldIndex = i;
         }
         context.generatedManifolds = _manifolds;
+        context.generatedManifoldOwner = this;
+        _manifoldContext = context;
     }
 
     private static B2ManifoldPoint UnpackPoint(Float4 anchor, Float4 point) => new()

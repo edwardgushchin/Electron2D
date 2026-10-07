@@ -43,6 +43,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
             _collide = collide = CreatePipeline("PhysicsCollide.comp.spv");
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
+            _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
         }
         catch
@@ -165,8 +166,9 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     {
         if (_disposed) return;
         EnsureOwner();
-        _disposed = true;
+        _disposed = true; _manifoldContext = null;
         _geometryStorage.Dispose(); _pairStorage.Dispose(); _manifoldStorage.Dispose(); _collide.Dispose();
+        _contactInputStorage.Dispose(); _fallbackManifoldStorage.Dispose();
         _bodyStorage.Dispose(); _contactStorage.Dispose(); _jointStorage.Dispose(); _solve.Dispose(); _integrate.Dispose(); _device.Dispose();
         SDL.QuitSubSystem(SDL.InitFlags.Video);
     }

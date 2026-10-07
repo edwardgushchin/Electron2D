@@ -145,6 +145,12 @@ The internal world selects retained workers for large awake populations and eigh
 
 Rigid-body monitoring and direct-state contact values share one traversal of the finished solver. Each world captures awake body motion once for contact-point velocities. Weak fixture owner tags avoid registry lookups during collection. Large worlds collect private per-body snapshots on retained workers, then queue changes in body order and invoke all user callbacks on the scene owner. Pair order, contact caps, retained values after fixture edits and zero-allocation warm steps are preserved. See the [performance measurements](../components/box2d-performance.md) for the full SceneTree benchmark and its limits.
 
+The developing GPU path retains generated manifold geometry for constraint preparation,
+using batch provenance and feature identity across graph moves with step-scoped validity.
+Managed material callbacks, warm-start matching and contact transitions still require
+manifold readback. Geometry overrides cover contacts awakened after collision collection;
+see [GPU physics](../components/gpu-physics.md) for transfer and conformance evidence.
+
 The sandbox Smash workload covers a large sleeping fragment wall using public scene bodies. Shared solver sets prepare whole-world capacities; dormant slots start small and retain island-specific high-water storage. New larger topologies require warmup before the measured interval. The 65,536-fragment regression checks linear dormant storage and finite real contact simulation; prepared sleep/wake and the native owner-thread profile enforce the measured allocation boundary. See [PhysicsSandbox](../components/physics-sandbox.md) and [its performance report](../components/physics-sandbox-performance.md).
 
 ## Executable viewport worlds

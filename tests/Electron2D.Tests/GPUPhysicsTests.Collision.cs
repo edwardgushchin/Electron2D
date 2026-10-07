@@ -45,7 +45,7 @@ internal static partial class GPUPhysicsTests
                 sims[2 * i] = new() { transform = poseA }; sims[2 * i + 1] = new() { transform = poseB };
                 world.bodies.data[2 * i] = new() { setIndex = 0, localIndex = 2 * i };
                 world.bodies.data[2 * i + 1] = new() { setIndex = 0, localIndex = 2 * i + 1 };
-                context.contacts[i] = new() { shapeIdA = 2 * i, shapeIdB = 2 * i + 1 };
+                context.contacts[i] = new() { contactId = i, shapeIdA = 2 * i, shapeIdB = 2 * i + 1 };
                 expected[i] = CollisionReference(a, poseA, b, poseB);
                 if (i % 17 == 0)
                 {

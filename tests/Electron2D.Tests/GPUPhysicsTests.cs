@@ -9,6 +9,7 @@ internal static partial class GPUPhysicsTests
         foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
         VerifyConstraints(gpu);
         VerifyManifolds(gpu);
+        VerifyResidentConstraints(gpu);
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyOwnedWorldFailure();

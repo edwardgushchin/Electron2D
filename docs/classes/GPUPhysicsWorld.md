@@ -12,7 +12,8 @@ The developing GPU-world host currently executes velocity and delta-pose
 integration, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
-Contact/joint records occupy 176/192 bytes. GPU/transfer buffers grow together
+Contact/joint working records occupy 176/192 bytes. Contact uploads use 96-byte
+inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
 
 `GenerateManifolds` packs geometry once per referenced shape, current pair
@@ -26,7 +27,16 @@ belong to the CPU path.
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned
 pose/velocity is finite, then publishes the result into the managed query mirror.
-`Solve` uploads raw constraints and computes their effective masses, softness,
+`Solve` resolves generated manifolds by per-contact batch version and slot, then
+selects retained feature IDs on GPU. Captured center offsets
+preserve mass-relative anchors. Missing provenance or an internal geometry replacement has an explicit
+upload; no CPU solve is substituted. Step reset, collision replacement and solve
+consumption prevent reuse of stale buffers. Inputs/manifolds are read-only during
+solving. `ResidentContactCount`, `UploadedManifoldCount` and `ContactUploadBytes`
+record the most recent solve's transfer accounting. The managed collision
+readback remains for material/event/warm-start processing.
+
+`Solve` uploads raw constraint inputs and computes their effective masses, softness,
 anchor frames and warm-start state on GPU. It retains states across all four substeps, preserves colored/overflow
 ordering, then publishes poses, prepared joint frames and contact/joint impulses after one
 submission fence. `Dispose` releases buffers, pipelines, device reference and video reference on

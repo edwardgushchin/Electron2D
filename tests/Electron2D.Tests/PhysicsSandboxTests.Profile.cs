@@ -42,7 +42,16 @@ internal static partial class PhysicsSandboxTests
             using var tree = new SceneTree(root);
             GPUPhysicsWorld? gpu = null;
             if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1")
-                gpu = scene.Colliders.OfType<PhysicsBody>().First().Space!.EnableGPUSolver();
+            {
+                var gpuSpace = scene.Colliders.OfType<PhysicsBody>().First().Space!;
+                gpu = gpuSpace.EnableGPUSolver();
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_UPLOAD_MANIFOLDS") == "1")
+                    Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID).solveConstraints = context =>
+                    {
+                        context.generatedManifoldOwner = null!;
+                        gpu.Solve(context);
+                    };
+            }
             var constructionBytes = GC.GetAllocatedBytesForCurrentThread() - constructionStart;
             for (var i = 0; i < warmup; i++) { Exercise(scene, i); PhysicsTick(tree); }
             var samples = new double[physicsSamples];
@@ -50,6 +59,7 @@ internal static partial class PhysicsSandboxTests
             var awakeCounts = new int[physicsSamples];
             var phases = new double[8];
             var gpuPhases = new double[4];
+            long residentContacts = 0, uploadedManifolds = 0, contactUploadBytes = 0;
             var phaseBytes = new long[8];
             var space = scene.Colliders.OfType<PhysicsBody>().First().Space!;
             double backendStep = 0, backendSolve = 0, backendPairs = 0, backendCollide = 0, backendSensors = 0;
@@ -64,7 +74,11 @@ internal static partial class PhysicsSandboxTests
                 sampleBytes[i] = GC.GetAllocatedBytesForCurrentThread() - tickAllocated;
                 awakeCounts[i] = Box2D.NET.B2Worlds.b2GetWorldFromId(backendWorld).solverSets.data[(int)Box2D.NET.B2SolverSetType.b2_awakeSet].bodySims.count;
                 for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += space.ProfileMS[phase]; phaseBytes[phase] += space.ProfileBytes[phase]; }
-                if (gpu is not null) for (var phase = 0; phase < gpuPhases.Length; phase++) gpuPhases[phase] += gpu.SolverProfileMS[phase];
+                if (gpu is not null)
+                {
+                    for (var phase = 0; phase < gpuPhases.Length; phase++) gpuPhases[phase] += gpu.SolverProfileMS[phase];
+                    residentContacts += gpu.ResidentContactCount; uploadedManifolds += gpu.UploadedManifoldCount; contactUploadBytes += gpu.ContactUploadBytes;
+                }
                 var bp = Box2D.NET.B2Worlds.b2World_GetProfile(backendWorld);
                 backendStep += bp.step; backendSolve += bp.solve; backendPairs += bp.pairs; backendCollide += bp.collide; backendSensors += bp.sensors;
             }
@@ -73,7 +87,7 @@ internal static partial class PhysicsSandboxTests
             if (allocated != 0) failures.Add($"Physics {index}: {allocated} bytes across {samples.Length} ticks.");
             if (allThreadsAllocated != 0) failures.Add($"Physics {index}, all managed threads: {allThreadsAllocated} bytes across {samples.Length} ticks.");
             Console.WriteLine($"Physics {index}: {samples.Average():0.000} ms/tick, {allocated} B/{samples.Length} ticks, {scene.BodyCount} bodies.");
-            physics.Add(new { scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray() });
+            physics.Add(new { scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes });
         }
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_HEADLESS") == "1")
         {

@@ -32,6 +32,19 @@ for the collision fence and validates the batch before publication. Material
 mixing, pre-solve filtering, warm-start matching and contact transitions still
 use the common managed world path.
 
+The generated manifold buffer now remains available to constraint preparation.
+Each contact carries the generating batch version and slot through graph copies;
+the owner/step marker prevents cross-world or old-step reuse. Feature IDs resolve
+point reordering or pruning directly on GPU. Center-of-mass offsets are captured at the
+collision pose. The solver uploads a 96-byte input (body indices/masses,
+materials, retained impulses, source and offsets) instead of retransmitting the
+176-byte contact record. Missing provenance or an explicit internal geometry replacement uses a separate
+80-byte override; this includes sleeping contacts awakened after collision
+collection. Reset, another collision batch and consumption invalidate reuse.
+The input/manifold buffers bind read-only during solving. The first manifold
+readback and managed event/warm-start processing still remain; this is partial
+residency, not elimination of the collision synchronization fence.
+
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
@@ -85,6 +98,13 @@ operations correct small GPU arithmetic errors before stiff constraints amplify
 them. A kinematic wheel regression failed the existing 2e-5 tolerance before
 refinement and passes without changing that tolerance. This does not establish
 bit-identical cross-device execution.
+Resident-path checks compare body states and contact impulses against CPU
+solving at 3, 63, 64, 65, 66, 67 and 1,027 contacts. They exercise nonzero mass
+centers, graph copies, feature reordering/pruning, explicit overrides and older batches,
+pre-solve veto, overwritten/empty/consumed batches and step reset. Eight warmed
+collision/update/solve cycles allocate zero all-thread managed bytes on the
+checked Linux/Vulkan path. Transfer counters assert exactly 96 bytes per
+resident contact plus 80 bytes per geometry override.
 Manifold checks compare 4,290 pairs across nine supported shape combinations,
 including rotated/offset and rounded geometry, exact contact feature IDs,
 one/two/empty contacts and an unused arena tail. Eight warmed submissions at
@@ -112,6 +132,23 @@ With GPU constraint preparation and refined arithmetic, a subsequent isolated
 owner/all-thread managed bytes. Solver time was 50.42 ms and collision time
 78.74 ms; awake bodies increased from 6,425 to 41,122 among 65,537 total bodies.
 This remains a hybrid throughput result, not a sustained FPS or speedup claim.
+Resident-geometry transfer was compared with forced raw geometry upload in two
+consecutive runs of the same final binary (32 warmup/64 measured ticks, headless,
+65,537 bodies). Resident/raw averaged 184.58/188.83 ms, p95 231.87/271.46 ms;
+both allocated zero owner/all-thread managed bytes. Both ended with the same
+state hash `13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`
+and 6,425→41,122 awake bodies during the measured interval. Across 4,969,124
+solver contacts, residency uploaded 477,035,904 bytes instead of 874,565,824
+(45.45% less); all contacts reused geometry. Host packing/recording averaged
+3.97/1.92 ms with residency and 4.84/2.62 ms with forced uploads. This short
+pair establishes lower transfer volume, not an end-to-end speedup. Collision
+processing still averaged 91.84/92.53 ms. The earlier full-geometry CPU comparison
+candidate cost 9.07 ms to pack and was replaced by batch provenance carried with
+the contact. The diagnostic profile flag
+`ELECTRON2D_SANDBOX_PROFILE_UPLOAD_MANIFOLDS=1` disables reuse only in the test
+host; no production backend setting or CPU solver fallback is added.
+Artifacts: `bin/physics-sandbox/profile-Release-gpu-resident-final.json` and
+`profile-Release-gpu-resident-final-upload.json` (ignored local evidence).
 The real native window run (32 warmup/64 measured frames, 65,537 bodies)
 reached 5.32 FPS. Its zero-allocation gate failed: three frames allocated 4,992
 managed bytes each outside the measured physics phases and renderer. The same
@@ -121,6 +158,6 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU broad phase, chain manifolds, resident manifold-to-constraint flow, spring
+Remaining work: GPU broad phase, chain manifolds, GPU contact transitions/warm-start matching without manifold readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.

@@ -32,6 +32,11 @@ namespace Box2D.NET
 
         public B2Manifold manifold;
 
+        // Current GPU geometry provenance survives graph copies and common contact processing.
+        // An internal geometry replacement must clear the version; COM shifts and point pruning preserve it.
+        internal long generatedManifoldVersion;
+        internal int generatedManifoldIndex;
+
         // Mixed friction and restitution
         public float friction;
         public float restitution;
@@ -65,6 +70,8 @@ namespace Box2D.NET
             invIB = other.invIB;
 
             manifold = other.manifold;
+            generatedManifoldVersion = other.generatedManifoldVersion;
+            generatedManifoldIndex = other.generatedManifoldIndex;
 
             friction = other.friction;
             restitution = other.restitution;

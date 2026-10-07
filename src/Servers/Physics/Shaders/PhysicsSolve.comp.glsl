@@ -7,6 +7,8 @@ struct Contact {
     vec4 anchors1; vec4 params1; vec4 impulses1;
     vec4 anchors2; vec4 params2; vec4 impulses2;
 };
+struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; };
+struct Manifold { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 struct Joint {
     vec4 ids; vec4 mass; vec4 frameA; vec4 frameB; vec4 geometry;
     vec4 soft; vec4 spring; vec4 motor; vec4 impulses; vec4 limits; vec4 poseA; vec4 poseB;
@@ -14,6 +16,9 @@ struct Joint {
 layout(std430, set = 1, binding = 0) buffer Bodies { Body bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Contacts { Contact contacts[]; };
 layout(std430, set = 1, binding = 2) buffer Joints { Joint joints[]; };
+layout(std430, set = 0, binding = 0) readonly buffer Inputs { ContactInput inputs[]; };
+layout(std430, set = 0, binding = 1) readonly buffer Manifolds { Manifold manifolds[]; };
+layout(std430, set = 0, binding = 2) readonly buffer Fallbacks { Manifold fallbacks[]; };
 layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; vec4 preparation; };
 
 float cross2(vec2 a, vec2 b) { precise float r = a.x * b.y - a.y * b.x; return r; }
@@ -63,7 +68,20 @@ void preparePoint(Contact c, vec3 a, vec3 b, vec4 anchors, inout vec4 params, in
 }
 void prepareContact(uint index)
 {
-    Contact c = contacts[index];
+    ContactInput packet = inputs[index];
+    int source = int(packet.source.x);
+    Manifold m;
+    if (source >= 0) m = manifolds[source]; else m = fallbacks[-source - 1];
+    bool first = source < 0 || packet.source.z == m.anchor1.w;
+    bool second = source >= 0 && packet.source.w == m.anchor1.w;
+    vec4 a1 = first ? m.anchor1 : m.anchor2, b1 = first ? m.point1 : m.point2;
+    vec4 a2 = second ? m.anchor1 : m.anchor2, b2 = second ? m.point1 : m.point2;
+    Contact c;
+    c.ids = packet.ids; c.mass = packet.mass; c.normal = vec4(m.normal.xy, packet.material.xy);
+    c.rolling = vec4(packet.material.z, 0, packet.source.y, packet.material.w); c.soft = vec4(0);
+    c.anchors1 = vec4(a1.xy, b1.xy) - packet.offset; c.anchors2 = vec4(a2.xy, b2.xy) - packet.offset;
+    c.params1 = vec4(0, 0, a1.z, 0); c.params2 = vec4(0, 0, a2.z, 0);
+    c.impulses1 = vec4(packet.warm.xy, 0, 0); c.impulses2 = vec4(packet.warm.zw, 0, 0);
     precise float hertz = min(preparation.x, 0.125 * solve.y), damping = preparation.y;
     if (c.ids.x < 0 || c.ids.y < 0) hertz *= 2.0;
     else if (c.ids.w == 0 && preparation.z != 0)

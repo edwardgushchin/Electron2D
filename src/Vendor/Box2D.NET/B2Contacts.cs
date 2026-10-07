@@ -282,6 +282,7 @@ namespace Box2D.NET
             contactSim.shapeIdB = shapeIdB;
             contactSim.cache = b2_emptySimplexCache;
             contactSim.manifold = new B2Manifold();
+            contactSim.generatedManifoldVersion = 0;
 
             // These also get updated in the narrow phase
             contactSim.friction = world.frictionCallback(shapeA.material.friction, shapeA.material.userMaterialId,
@@ -459,6 +460,7 @@ namespace Box2D.NET
             B2Manifold oldManifold = contactSim.manifold;
 
             // Compute new manifold
+            if (generatedManifolds == null) contactSim.generatedManifoldVersion = 0;
             b2ManifoldFcn fcn = s_registers[(int)shapeA.type, (int)shapeB.type].fcn;
             contactSim.manifold = generatedManifolds == null
                 ? fcn(shapeA, transformA, shapeB, transformB, ref contactSim.cache) : generatedManifolds[generatedIndex];
