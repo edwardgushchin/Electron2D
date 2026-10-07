@@ -9,6 +9,8 @@ Last updated: 2026-10-07
 
 ## Description
 
+[Held stacks](SkeletonModificationStackHolder.md) share the same skeleton using weak holder leases and a separate direct-root binding flag. Final lease release recursively detaches the child; one holder removal preserves shared aliases. Direct child Execute selects itself through the skeleton transaction; nested execution does not run root siblings. Child Strength is independent of parent Strength. Setup/execution depth is bounded to 128 with finally cleanup. Running/off-owner disposal rejects before terminal state.
+
 Three concrete [IK resources](../components/skeletal-animation.md#executable-ik-solvers) run as ordinary ordered borrowed modifications. They request transient poses at Strength; failed passes restore pre-existing requests as well as authored poses. Exact resource registration and the existing forced scene-copy policy give each instantiated rig independent joint configuration/caches.
 
 Ordered borrowed modification list, initially empty and disabled, with strength one. ModificationCount grows with null slots or shrinks/detaches absent resources; the capacity limit is 4096. Null slots skip execution. Repeated references remain aliases and removing one slot does not detach a still-present modification. Enabled gates execution, while EnableAllModifications changes each present modifier. Strength is a requested blend value consumed by concrete modifiers.
@@ -192,6 +194,18 @@ One initially; valid range zero through one.
 
 Scene-bound calls follow the skeleton's owner thread. Cold structure/rest/path edits prepare new arrays and weak bindings; ordinary pose updates and retained replay reuse capacity. All numeric configuration requires finite values; strengths range from zero to one and phase selections use the existing ProcessPhase semantics. Invalid indices, disposed values, competing live bindings and structural reentry reject. User callbacks run after binding or setup commitment. Execution failures attempt every authored-pose restoration and release guards; setup failures keep GetIsSetup false for explicit retry. Resource graph persistence excludes transient setup, target references, palette RIDs and simulation history.
 
-SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, jiggle/stack-holder resources, physics synchronization and general Mesh skin channels retain exact coverage triggers.
+SkeletonTests exercises DFS membership/rest/indices, auto endpoints, persistent/transient/physics overrides, AnimationPlayer tracks, presentation interpolation, noncommuting and TopLevel coordinate transforms, strongest-four skin weights, path rename/reconnect, constraints, callback failures/reentry, owner guards, unique scene copies, fresh-process files and actual native pixels. 128 warmed managed pose/redraw/skin/replay iterations and 64 prepared native GPU/compatibility intervals allocate zero managed bytes. Native/backend allocations, large-rig performance, other platforms and owner acceptance are unverified. Editor gizmos, physics synchronization and general Mesh skin channels retain exact coverage triggers.
 
 See [skeletal animation](../components/skeletal-animation.md), [the mesh decision](../decisions/mesh.md#adr-0092) and the linked base-class lifecycle.
+
+## Disposal validation extension
+
+| Signature | Contract |
+| --- | --- |
+| `protected override System.Void ValidateDisposal()` | [Validates owner and active graph before disposal.](#validatedisposal) |
+
+### ValidateDisposal
+
+`protected override System.Void ValidateDisposal()`
+
+Rejects wrong-owner or active setup/execution removal with InvalidOperationException before the terminal transition. This inherited validation callback is side-effect-free and tolerates repeated calls. Once the graph is idle, ordinary disposal clears transient bindings and owned storage, releases weak held-child leases and preserves caller-owned resources. Explicit disposal from a running child/modification callback is verified to leave IsDisposed=false and permit retry.

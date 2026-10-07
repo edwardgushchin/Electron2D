@@ -126,8 +126,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
 | Trigger: actual PhysicalBone/PhysicsBody synchronization, simulation selection/start/stop, joint ownership and native physics-driven skeletal output; the concrete IK resources do not supply physical bones (ADRs 0028/0092). | 1 |
 | Trigger: actual PhysicsBody-to-Bone synchronization, simulation ownership, joint/pose reset and native physics execution over the implemented Skeleton/Bone hierarchy. | 1 |
-| Trigger: borrowed child-stack binding, phase/strength composition, nested execution/cycle guards, copied scene ownership and actual modified pose output over the implemented stack (ADRs 0014/0028/0092). | 1 |
-| Trigger: bounded jiggle spring/damping/gravity state, reset/interpolation and copied joint settings driving the implemented Skeleton palette; optional collision queries require actual physics-world ownership (ADRs 0028/0092). | 1 |
 | Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |

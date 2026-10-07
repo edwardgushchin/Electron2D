@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Jiggle controller integration
+
+Jiggle owns copied bounded configuration and transient numeric history; StackHolder borrows a force-copied child graph with weak scene leases. Nested aliases retain independent scene copies, clear transient binding on final release and reject active disposal before terminal changes. Existing typed resource/factory/copy machinery supplies fresh-process persistence.
+
 ## Executable IK integration
 
 Concrete TwoBoneIK/CCDIK/FABRIK resources retain copied bounded joint configuration and weak scene binding under the existing stack ownership policy. Their exact factories/archives support fresh-process files and forced independent scene copies; prepared scratch is transient and scene-node references remain borrowed.

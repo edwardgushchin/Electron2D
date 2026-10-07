@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Jiggle controller integration
+
+Jiggle joint configuration and borrowed StackHolder child references now have exact registered schemas. Existing resource arrays and forced copy sessions preserve child aliases while excluding weak leases/live history. Fresh-process files execute nested controllers, with bounded blob validation before replacement.
+
 ## Executable IK integration
 
 Registered TwoBoneIK/CCDIK/FABRIK modification resources persist exact selections and scalar/vector policies through bounded joint state, existing nullable resource arrays and independent PackedScene stack graphs. Fresh-process checks exercise actual solver behavior after restoration.

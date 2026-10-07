@@ -83,6 +83,10 @@ The [frequency-filter family](../components/audio-playback.md#frequency-filters)
 
 The [AudioStreamEmitter](classes/AudioStreamPlayer2D.md), [AudioListener2D](classes/AudioListener2D.md), [Area2D](classes/Area2D.md) and [Viewport](classes/Viewport.md) slice now executes position-based attenuation and panning, one viewport listener, shaped Area bus routing and the typed global 2D pan setting over the current FAudio graph. `AudioSpatialTests` checks GPU/compatibility Linux Wayland native PCM, scene storage and 64 warmed owner-thread matrix/point-query updates without managed or custom-allocator calls. Prepared stream transitions execute; sample playback and editor-hint autoplay retain their exact Partial dependencies. Embedded viewports, physical listening and other platforms are unverified.
 
+## Jiggle controller integration
+
+The [Jiggle/nested-stack slice](../components/skeletal-animation.md#jiggle-and-nested-stacks) executes dynamic joint parameters/reset, real physics ray rejection, child phases/strength/aliases and independent persistent scene graphs. Managed/native rendered evidence remains distinct from whole-bone collision, native allocator, editor, foreign platform and owner acceptance.
+
 ## Executable IK integration
 
 The [IK slice](../components/skeletal-animation.md#executable-ik-solvers) connects three concrete target-driven solvers to typed bone/stack state, fresh-process scenes and visible weighted Polygon output. Prepared managed and Linux native GPU/compatibility checks remain separate from native allocator, foreign-platform, editor and owner acceptance.

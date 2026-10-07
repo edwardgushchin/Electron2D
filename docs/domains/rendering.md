@@ -4,6 +4,10 @@ Last updated: 2026-10-07
 
 Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
+## Jiggle controller integration
+
+Jiggle/held controller output now reaches the existing palette/weighted Polygon consumer on GPU and compatibility. Dynamic-point collision uses the real shared physics world and no extra render/native dependency. Whole-bone collisions, generic Mesh skin storage and server-owned palette attachment are not implied.
+
 ## Executable IK integration
 
 Three concrete IK resources now exercise the existing skeletal palette-to-Polygon triangle path on both Linux native backend. The solvers do not add native dependencies, generic Mesh skin storage or caller-owned palette attachment. Those producer/consumer families retain exact coverage triggers.

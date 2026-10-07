@@ -39,8 +39,11 @@ public abstract class SkeletonModification : Resource
     }
     internal void Unbind(SkeletonModificationStack stack)
     {
-        lock (ModificationGate) if (_stack is not null && _stack.TryGetTarget(out var old) && ReferenceEquals(old, stack)) { _stack = null; _owner = null; _setup = false; }
+        var removed = false;
+        lock (ModificationGate) if (_stack is not null && _stack.TryGetTarget(out var old) && ReferenceEquals(old, stack)) { _stack = null; _owner = null; _setup = false; removed = true; }
+        if (removed) OnUnbindStack();
     }
+    internal virtual void OnUnbindStack() { }
     internal void Run(double delta)
     {
         lock (ModificationGate) { ThrowIfDisposed(); if (!_setup || Stack() is null) throw new InvalidOperationException("Modification is not setup."); if (!_enabled) return; }
@@ -71,7 +74,11 @@ public abstract class SkeletonModification : Resource
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ModificationProperties);
     /// <inheritdoc />
-    protected override void OnResetState() { lock (ModificationGate) { _stack = null; _owner = null; _setup = false; } }
+    protected override void OnResetState() { lock (ModificationGate) { ValidateIdleBinding(); _stack = null; _owner = null; _setup = false; } OnUnbindStack(); }
+    private void ValidateIdleBinding() { if (_owner is not null && _owner.TryGetTarget(out var owner) && !owner.IsDisposed) owner.Tree?.EnsureOwnerThread(); if (Stack() is { IsRunning: true }) throw new InvalidOperationException("A running modification cannot reset or dispose its binding."); }
+    /// <summary>Rejects off-owner disposal or removal of a modification during setup/execution.</summary>
+    /// <remarks>Validation is side-effect-free and runs before the disposal state changes.</remarks>
+    protected override void ValidateDisposal() { base.ValidateDisposal(); lock (ModificationGate) ValidateIdleBinding(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) lock (ModificationGate) { _stack = null; _owner = null; _setup = false; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { lock (ModificationGate) { _stack = null; _owner = null; _setup = false; } OnUnbindStack(); } base.Dispose(disposing); }
 }

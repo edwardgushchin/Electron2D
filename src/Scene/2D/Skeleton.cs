@@ -83,6 +83,8 @@ public class Skeleton : Entity
     /// <remarks>Physics prepares overrides; idle applies them. Authored bone poses are retained independently of modification writes.
     /// Reentry and structural mutation during execution reject; callback failure restores authored poses, prior override requests and execution guards.</remarks>
     public void ExecuteModifications(double delta, ProcessPhase executionMode)
+        => ExecuteStack(_stack, delta, executionMode);
+    internal void ExecuteStack(SkeletonModificationStack? stack, double delta, ProcessPhase executionMode)
     {
         EnsureMutable(); EnsureSetup(); ValidateExecution(delta, executionMode); if (_executing) throw new InvalidOperationException("Skeleton execution cannot reenter.");
         _executing = true;
@@ -91,7 +93,7 @@ public class Skeleton : Entity
         {
             for (var i = 0; i < _bones.Count; i++) _bones[i].ApplyModifiedPose(_bones[i].AuthoredPose);
             foreach (var bone in _bones) bone.BeginModification();
-            if (_stack is not null) _stack.Execute(delta, executionMode);
+            if (stack is not null) stack.Execute(delta, executionMode);
             if (_dirty) throw new InvalidOperationException("Bone setup changed during modification execution.");
             if (executionMode == ProcessPhase.Idle)
                 for (var i = 0; i < _bones.Count; i++)

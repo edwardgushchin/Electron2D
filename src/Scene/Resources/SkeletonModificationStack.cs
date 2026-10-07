@@ -8,9 +8,12 @@ public sealed class SkeletonModificationStack : Resource
 {
     private readonly object _gate = new();
     private readonly List<SkeletonModification?> _mods = [];
+    private readonly List<WeakReference<SkeletonModificationStackHolder>> _holders = [];
     private WeakReference<Skeleton>? _skeleton;
     private bool _enabled, _setup, _executing, _preparing;
     private float _strength = 1;
+    private bool _directBinding;
+    [ThreadStatic] private static int _setupDepth, _executeDepth;
     /// <summary>Creates an empty disabled stack at full strength.</summary>
     public SkeletonModificationStack() { }
     /// <summary>Gets or sets whether the ordered stack executes.</summary><value>False initially.</value>
@@ -24,6 +27,27 @@ public sealed class SkeletonModificationStack : Resource
     private void Edit(bool structure = false) { Read(); if (structure && (_executing || _preparing)) throw new InvalidOperationException("A running modification list cannot restructure."); }
     internal void ValidateBinding(Skeleton skeleton) { lock (_gate) { Read(); if (Owner() is { IsInsideTree: true } old && !ReferenceEquals(old, skeleton)) throw new InvalidOperationException("A stack already belongs to another attached skeleton."); } }
     internal void Bind(Skeleton? skeleton)
+    {
+        lock (_gate) { Read(); _directBinding = skeleton is not null; if (skeleton is null && _holders.Count > 0) return; }
+        BindCore(skeleton);
+    }
+    internal void AcquireHolder(SkeletonModificationStackHolder holder, Skeleton owner)
+    {
+        lock (_gate) { Read(); ValidateBinding(owner); foreach (var reference in _holders) if (reference.TryGetTarget(out var old) && ReferenceEquals(old, holder)) return; _holders.Add(new(holder)); }
+        BindCore(owner);
+    }
+    internal void ReleaseHolder(SkeletonModificationStackHolder holder)
+    {
+        lock (_gate)
+        {
+            if (IsDisposed) return; Read();
+            for (var i = _holders.Count - 1; i >= 0; i--) if (!_holders[i].TryGetTarget(out var old) || old.IsDisposed || ReferenceEquals(old, holder)) _holders.RemoveAt(i);
+            if (_holders.Count == 0 && !_directBinding) BindCore(null);
+        }
+    }
+    internal void InvalidateSetup() { lock (_gate) { Read(); _setup = false; } }
+    internal bool IsRunning { get { lock (_gate) return _executing || _preparing; } }
+    private void BindCore(Skeleton? skeleton)
     {
         lock (_gate)
         {
@@ -45,10 +69,10 @@ public sealed class SkeletonModificationStack : Resource
     {
         lock (_gate)
         {
-            Read(); if (_setup) return; if (Owner() is null) throw new InvalidOperationException("Stack setup requires a bound skeleton."); if (_preparing || _executing) throw new InvalidOperationException("Stack setup cannot reenter."); _preparing = true;
+            Read(); if (_setup) return; if (Owner() is null) throw new InvalidOperationException("Stack setup requires a bound skeleton."); if (_preparing || _executing) throw new InvalidOperationException("Stack setup cannot reenter."); if (_setupDepth == 128) throw new InvalidOperationException("Stack nesting exceeds 128 levels."); _preparing = true; _setupDepth++;
             List<Exception>? errors = null;
             try { foreach (var mod in _mods) if (mod is not null) try { mod.Bind(this); } catch (Exception error) { (errors ??= []).Add(error); } _setup = errors is null; }
-            finally { _preparing = false; }
+            finally { _preparing = false; _setupDepth--; }
             if (errors is not null) throw new AggregateException("Modification setup failed.", errors);
         }
     }
@@ -57,12 +81,12 @@ public sealed class SkeletonModificationStack : Resource
     public void Execute(double delta, ProcessPhase executionMode)
     {
         Skeleton.ValidateExecution(delta, executionMode);
-        var owner = GetSkeleton(); if (owner is { Executing: false }) { owner.ExecuteModifications(delta, executionMode); return; }
+        var owner = GetSkeleton(); if (owner is { Executing: false }) { owner.ExecuteStack(this, delta, executionMode); return; }
         lock (_gate)
         {
-            Read(); if (!_setup || Owner() is not { IsInsideTree: true }) throw new InvalidOperationException("Stack is not prepared on an attached skeleton."); if (!_enabled) return; if (_executing || _preparing) throw new InvalidOperationException("Stack execution cannot reenter."); _executing = true;
+            Read(); if (!_setup || Owner() is not { IsInsideTree: true }) throw new InvalidOperationException("Stack is not prepared on an attached skeleton."); if (!_enabled) return; if (_executing || _preparing) throw new InvalidOperationException("Stack execution cannot reenter."); if (_executeDepth == 128) throw new InvalidOperationException("Stack nesting exceeds 128 levels."); _executing = true; _executeDepth++;
             try { for (var i = 0; i < _mods.Count; i++) if (_mods[i] is { } mod && mod.ExecutionMode == executionMode) mod.Run(delta); }
-            finally { _executing = false; }
+            finally { _executing = false; _executeDepth--; }
         }
     }
     /// <summary>Enables or disables all present modifications.</summary><param name="enabled">Requested enable state.</param>
@@ -98,6 +122,9 @@ public sealed class SkeletonModificationStack : Resource
         for (var i = 0; i < mods.Length; i++) if (mods[i] is { } mod) mods[i] = (SkeletonModification)forceDuplicateSubresource(mod)!;
         copy._enabled = enabled; copy._strength = strength; copy._mods.AddRange(mods);
     }
+    /// <summary>Rejects off-owner disposal and disposal while this stack is setting up or executing.</summary>
+    /// <remarks>Validation runs before the terminal disposal transition and does not modify graph state.</remarks>
+    protected override void ValidateDisposal() { base.ValidateDisposal(); lock (_gate) { Owner()?.Tree?.EnsureOwnerThread(); if (_executing || _preparing) throw new InvalidOperationException("A running stack cannot be disposed."); } }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) lock (_gate) { foreach (var mod in _mods) if (mod is { IsDisposed: false }) Detach(mod); _mods.Clear(); _skeleton = null; _setup = false; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) lock (_gate) { foreach (var mod in _mods) if (mod is { IsDisposed: false }) Detach(mod); _mods.Clear(); _holders.Clear(); _skeleton = null; _setup = false; _directBinding = false; } base.Dispose(disposing); }
 }

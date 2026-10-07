@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-07
 
+## Jiggle controller integration
+
+Jiggle uses the existing direct-world ray query during Physics execution, with body/layer filtering and fixture preparation, to revert a blocked dynamic-point candidate. It does not add a physics body, joint or whole-bone collision shape. Collider misuse in Idle fails explicitly.
+
 ## Responsibility
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.

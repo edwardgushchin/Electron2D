@@ -76,7 +76,9 @@
     "SkeletonModification2DLookAt": "SkeletonModificationLookAt",
     "SkeletonModification2DTwoBoneIK": "SkeletonModificationTwoBoneIK",
     "SkeletonModification2DCCDIK": "SkeletonModificationCCDIK",
-    "SkeletonModification2DFABRIK": "SkeletonModificationFABRIK"
+    "SkeletonModification2DFABRIK": "SkeletonModificationFABRIK",
+    "SkeletonModification2DJiggle": "SkeletonModificationJiggle",
+    "SkeletonModification2DStackHolder": "SkeletonModificationStackHolder"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

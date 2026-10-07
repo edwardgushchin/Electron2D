@@ -1,10 +1,12 @@
 # PhysicsDirectSpaceState
 
-Last updated: 2026-10-06
+Last updated: 2026-10-07
 
 **Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
 ## Description
+
+Jiggle uses the existing internal scalar ray overload for a candidate dynamic point in the attached scene world, bodies-only with its 32-bit collision mask. Query preparation and owner/stepping guards are unchanged. Tests exercise real scene fixture hits before a physics step and warmed native render/query intervals; whole-bone collision is not supplied by this ray.
 
 A live view of one existing Box2D space, shared by [World](World.md) and [PhysicsServer.SpaceGetDirectState](PhysicsServer.md). It prepares pending scene fixture and transform edits before querying, including queries before the first physics frame. It does not advance simulation or own a second world. Attached queries require the space's owner thread and reject execution while its solver is stepping. A freed space makes a retained view unusable.
 

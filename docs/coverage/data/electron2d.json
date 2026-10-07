@@ -8100,6 +8100,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.SkeletonModificationJiggle",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SkeletonModificationJiggle",
+    "signature": "public sealed class Electron2D.SkeletonModificationJiggle",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.SkeletonModificationLookAt",
     "kind": "type",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -8122,6 +8137,21 @@
     "signature": "public sealed class Electron2D.SkeletonModificationStack",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.SkeletonModificationStackHolder",
+    "kind": "type",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "SkeletonModificationStackHolder",
+    "signature": "public sealed class Electron2D.SkeletonModificationStackHolder",
+    "visibility": "public",
+    "baseType": "Electron2D.SkeletonModification",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -16577,6 +16607,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.SkeletonModificationJiggle..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationJiggle()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.SkeletonModificationLookAt..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -16595,6 +16638,19 @@
     "declaringType": "Electron2D.SkeletonModificationStack",
     "name": ".ctor",
     "signature": "public SkeletonModificationStack()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.SkeletonModificationStackHolder..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": ".ctor",
+    "signature": "public SkeletonModificationStackHolder()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -122568,6 +122624,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModification.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModification",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationCCDIK.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationCCDIK",
@@ -123252,6 +123321,530 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SkeletonModificationJiggle.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetCollisionMask()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetCollisionMask",
+    "signature": "public System.UInt32 GetCollisionMask()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointBoneIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointBoneIndex",
+    "signature": "public System.Int32 GetJiggleJointBoneIndex(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointBoneNode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointBoneNode",
+    "signature": "public System.String GetJiggleJointBoneNode(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointDamping(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointDamping",
+    "signature": "public System.Single GetJiggleJointDamping(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointGravity(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointGravity",
+    "signature": "public Electron2D.Vector2 GetJiggleJointGravity(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointMass(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointMass",
+    "signature": "public System.Single GetJiggleJointMass(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointOverride(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointOverride",
+    "signature": "public System.Boolean GetJiggleJointOverride(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointStiffness(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointStiffness",
+    "signature": "public System.Single GetJiggleJointStiffness(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointUseGravity(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetJiggleJointUseGravity",
+    "signature": "public System.Boolean GetJiggleJointUseGravity(System.Int32 jointIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.GetUseColliders()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "GetUseColliders",
+    "signature": "public System.Boolean GetUseColliders()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.OnSetupModification(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "OnSetupModification",
+    "signature": "protected override System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.Reset()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "Reset",
+    "signature": "public System.Void Reset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetCollisionMask(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetCollisionMask",
+    "signature": "public System.Void SetCollisionMask(System.UInt32 collisionMask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointBoneIndex(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointBoneIndex",
+    "signature": "public System.Void SetJiggleJointBoneIndex(System.Int32 jointIndex, System.Int32 boneIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointBoneNode(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointBoneNode",
+    "signature": "public System.Void SetJiggleJointBoneNode(System.Int32 jointIndex, System.String boneNode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "boneNode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointDamping(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointDamping",
+    "signature": "public System.Void SetJiggleJointDamping(System.Int32 jointIndex, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointGravity(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointGravity",
+    "signature": "public System.Void SetJiggleJointGravity(System.Int32 jointIndex, Electron2D.Vector2 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointMass(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointMass",
+    "signature": "public System.Void SetJiggleJointMass(System.Int32 jointIndex, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointOverride(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointOverride",
+    "signature": "public System.Void SetJiggleJointOverride(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointStiffness(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointStiffness",
+    "signature": "public System.Void SetJiggleJointStiffness(System.Int32 jointIndex, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointUseGravity(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetJiggleJointUseGravity",
+    "signature": "public System.Void SetJiggleJointUseGravity(System.Int32 jointIndex, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "jointIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationJiggle.SetUseColliders(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "SetUseColliders",
+    "signature": "public System.Void SetUseColliders(System.Boolean useColliders)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "useColliders",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SkeletonModificationLookAt.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.SkeletonModificationLookAt",
@@ -123771,6 +124364,154 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStack.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStack",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.GetHeldModificationStack()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "GetHeldModificationStack",
+    "signature": "public Electron2D.SkeletonModificationStack GetHeldModificationStack()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.SkeletonModificationStack",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.OnExecute(System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "OnExecute",
+    "signature": "protected override System.Void OnExecute(System.Double delta)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "delta",
+        "type": "System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.OnSetupModification(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "OnSetupModification",
+    "signature": "protected override System.Void OnSetupModification(Electron2D.SkeletonModificationStack modificationStack)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "modificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SkeletonModificationStackHolder.SetHeldModificationStack(Electron2D.SkeletonModificationStack)",
+    "kind": "method",
+    "declaringType": "Electron2D.SkeletonModificationStackHolder",
+    "name": "SetHeldModificationStack",
+    "signature": "public System.Void SetHeldModificationStack(Electron2D.SkeletonModificationStack heldModificationStack)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "heldModificationStack",
+        "type": "Electron2D.SkeletonModificationStack",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -175163,6 +175904,97 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.Damping()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "Damping",
+    "signature": "public System.Single Damping { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.Gravity()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "Gravity",
+    "signature": "public Electron2D.Vector2 Gravity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.JiggleDataChainLength()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "JiggleDataChainLength",
+    "signature": "public System.Int32 JiggleDataChainLength { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.Mass()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "Mass",
+    "signature": "public System.Single Mass { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.Stiffness()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "Stiffness",
+    "signature": "public System.Single Stiffness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.TargetNodePath()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "TargetNodePath",
+    "signature": "public System.String TargetNodePath { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.SkeletonModificationJiggle.UseGravity()",
+    "kind": "property",
+    "declaringType": "Electron2D.SkeletonModificationJiggle",
+    "name": "UseGravity",
+    "signature": "public System.Boolean UseGravity { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

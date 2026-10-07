@@ -539,6 +539,166 @@
       "godot": "SkeletonModification2DTwoBoneIK::property:target_nodepath",
       "electron2d": "property:Electron2D.SkeletonModificationTwoBoneIK.TargetNodePath()",
       "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": "class:SkeletonModification2DJiggle",
+      "electron2d": "T:Electron2D.SkeletonModificationJiggle",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_collision_mask()",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetCollisionMask()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_bone2d_node(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointBoneNode(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_bone_index(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointBoneIndex(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_damping(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointDamping(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_gravity(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointGravity(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_mass(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointMass(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_override(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointOverride(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_stiffness(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointStiffness(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_jiggle_joint_use_gravity(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetJiggleJointUseGravity(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:get_use_colliders()",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetUseColliders()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:reset()",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.Reset()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_collision_mask(int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetCollisionMask(System.UInt32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_bone2d_node(int:,NodePath:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointBoneNode(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_bone_index(int:,int:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointBoneIndex(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_damping(int:,float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointDamping(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_gravity(int:,Vector2:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointGravity(System.Int32,Electron2D.Vector2)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_mass(int:,float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointMass(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_override(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointOverride(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_stiffness(int:,float:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointStiffness(System.Int32,System.Single)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_jiggle_joint_use_gravity(int:,bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetJiggleJointUseGravity(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::method:set_use_colliders(bool:)",
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.SetUseColliders(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:damping",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.Damping()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:gravity",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.Gravity()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:jiggle_data_chain_length",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.JiggleDataChainLength()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:mass",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.Mass()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:stiffness",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.Stiffness()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:target_nodepath",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.TargetNodePath()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DJiggle::property:use_gravity",
+      "electron2d": "property:Electron2D.SkeletonModificationJiggle.UseGravity()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "class:SkeletonModification2DStackHolder",
+      "electron2d": "T:Electron2D.SkeletonModificationStackHolder",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DStackHolder::method:get_held_modification_stack()",
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.GetHeldModificationStack()",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
+    },
+    {
+      "godot": "SkeletonModification2DStackHolder::method:set_held_modification_stack(SkeletonModificationStack2D:)",
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.SetHeldModificationStack(Electron2D.SkeletonModificationStack)",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
     }
   ],
   "extras": [
@@ -771,6 +931,76 @@
       "electron2d": "method:Electron2D.SkeletonModificationTwoBoneIK.OnExecute(System.Double)",
       "reason": "Reviewed exact resource construction, copied schema and typed OnExecute implementations. CCDIK Get/SetConstraintInLocalSpace projects the pinned stored constraint_in_localspace coordinate policy (header default true), applying actual local/global clamps; no editor runtime switch or dynamic indexed selector.",
       "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationJiggle..ctor()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "constructor:Electron2D.SkeletonModificationStackHolder..ctor()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.CreateDuplicateInstance()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.GetPropertyDescriptors()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.OnExecute(System.Double)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationJiggle.OnSetupModification(Electron2D.SkeletonModificationStack)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.CreateDuplicateInstance()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.GetPropertyDescriptors()",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.OnExecute(System.Double)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStackHolder.OnSetupModification(Electron2D.SkeletonModificationStack)",
+      "reason": "Reviewed exact resource construction, executable inherited setup/execute and copied typed schema callbacks. Held child graphs always force duplicate with aliases through existing resource sessions; no extra editor switch or generic backend facade.",
+      "adr": "ADR 0004/0008/0013/0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModification.ValidateDisposal()",
+      "reason": "Inherited disposal validation rejects wrong scene owner or running setup/execution before the terminal state changes, preserving borrowed nested graph bindings. Actual callback/disposal/retry cases exercised by SkeletonJiggleTests.",
+      "adr": "ADR 0014/0092"
+    },
+    {
+      "electron2d": "method:Electron2D.SkeletonModificationStack.ValidateDisposal()",
+      "reason": "Inherited disposal validation rejects wrong scene owner or running setup/execution before the terminal state changes, preserving borrowed nested graph bindings. Actual callback/disposal/retry cases exercised by SkeletonJiggleTests.",
+      "adr": "ADR 0014/0092"
     }
   ],
   "statusGroups": [
@@ -921,6 +1151,44 @@
       ],
       "state": "Implemented",
       "reason": "ADRs 0004/0008/0014/0028/0092: typed TwoBoneIK law-of-cosines/distance/side solver, authored-order CCD pass with explicit tip and local/global/inverted constraints, bounded ten-pass FABRIK with world magnets and final target orientation. Weak path/index bindings, copied versioned joint state, ordinary modification phases/strength, fresh-process scenes and actual weighted Polygon output execute. Numeric/degenerate/missing/owner/failure guards and prepared allocation checks distinguish Linux native/foreign/large-rig limits."
+    },
+    {
+      "godot": [
+        "class:SkeletonModification2DJiggle",
+        "SkeletonModification2DJiggle::method:get_collision_mask()",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_bone2d_node(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_bone_index(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_damping(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_gravity(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_mass(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_override(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_stiffness(int:)",
+        "SkeletonModification2DJiggle::method:get_jiggle_joint_use_gravity(int:)",
+        "SkeletonModification2DJiggle::method:get_use_colliders()",
+        "SkeletonModification2DJiggle::method:reset()",
+        "SkeletonModification2DJiggle::method:set_collision_mask(int:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_bone2d_node(int:,NodePath:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_bone_index(int:,int:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_damping(int:,float:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_gravity(int:,Vector2:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_mass(int:,float:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_override(int:,bool:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_stiffness(int:,float:)",
+        "SkeletonModification2DJiggle::method:set_jiggle_joint_use_gravity(int:,bool:)",
+        "SkeletonModification2DJiggle::method:set_use_colliders(bool:)",
+        "SkeletonModification2DJiggle::property:damping",
+        "SkeletonModification2DJiggle::property:gravity",
+        "SkeletonModification2DJiggle::property:jiggle_data_chain_length",
+        "SkeletonModification2DJiggle::property:mass",
+        "SkeletonModification2DJiggle::property:stiffness",
+        "SkeletonModification2DJiggle::property:target_nodepath",
+        "SkeletonModification2DJiggle::property:use_gravity",
+        "class:SkeletonModification2DStackHolder",
+        "SkeletonModification2DStackHolder::method:get_held_modification_stack()",
+        "SkeletonModification2DStackHolder::method:set_held_modification_stack(SkeletonModificationStack2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0008/0014/0028/0063/0092: actual retained Jiggle force/acceleration/velocity, positive mass/default propagation/joint overrides/gravity/reset and physics-only world ray collision rejection. Borrowed nested stacks preserve independent child strength, matching phases, shared-child ownership, bounded cycle/reentry guards and exact direct-child execution. Copied graphs/joint schema restore fresh scenes; headless/native pixels and warm measurements distinguish native allocator, whole-bone collision, foreign/owner limits."
     }
   ]
 }
