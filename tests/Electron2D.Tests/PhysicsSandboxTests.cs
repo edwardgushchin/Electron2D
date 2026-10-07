@@ -285,6 +285,22 @@ internal static partial class PhysicsSandboxTests
             var phase = (frame - 1) % framesPerScene;
             if (scene >= SandboxWindow.SceneNames.Length) { window.Tree!.Quit(); return; }
             if (phase == 0) { window.SwitchScene(scene); Check(window.Scene.SelectedBody is null, "New native story has no selection."); }
+            if (scene == 11 && phase == 0) { window.Scene.Running = false; window.Scene.Act(2); }
+            if (scene == 11 && phase == 2)
+            {
+                using var wall = RenderingServer.Service!.Readback();
+                wall.SavePNG(System.IO.Path.Combine(directory, "12-solid.png"));
+                var transform = window.Scene.GetGlobalTransformWithCanvas();
+                var first = transform * window.Scene.Bodies[1].GlobalPosition;
+                var last = transform * window.Scene.Bodies[^1].GlobalPosition;
+                var fill = wall.GetPixel((int)first.X, (int)first.Y);
+                var seams = 0;
+                for (var y = (int)MathF.Ceiling(first.Y); y < (int)last.Y; y++)
+                    for (var x = (int)MathF.Ceiling(first.X); x < (int)last.X; x++)
+                        if (!wall.GetPixel(x, y).IsEqualApprox(fill)) seams++;
+                Check(!fill.IsEqualApprox(PhysicsScene.Paper) && seams == 0, $"Sleeping Smash wall reads as one solid object without raster seams: {seams} mismatched pixels.");
+                window.Scene.Act(0); window.Scene.Running = true;
+            }
             if (scene == 0 && phase == 2) NativeClick(UI("SceneSelector"));
             if (scene == 0 && phase == 3)
             {

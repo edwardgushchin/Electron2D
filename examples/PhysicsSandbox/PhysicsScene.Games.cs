@@ -126,7 +126,9 @@ internal sealed partial class PhysicsScene
     {
         var count = _smashPieces.Count;
         var fraction = Running ? (float)Engine.PhysicsInterpolationFraction : 1f;
-        var half = _smashSize * .5f;
+        // Fill the cell pitch with half a screen pixel of overlap to hide rasterization seams.
+        var visualSize = _smashSize / .85f + .5f / PresentationZoom;
+        var half = visualSize * .5f;
         for (var i = 0; i < count; i++)
         {
             var body = _smashPieces[i];
@@ -135,8 +137,8 @@ internal sealed partial class PhysicsScene
             _smashPalette[i] = GetSmashColor(body);
             _smashVertices[i * 2] = center - axis; _smashVertices[i * 2 + 1] = center + axis;
         }
-        // Flat-ended segments of equal length and width are the actual rotated square silhouettes.
-        canvas.DrawMultilineColors(_smashVertices.AsSpan(0, count * 2), _smashPalette.AsSpan(0, count), _smashSize);
+        // Flat-ended segments of equal length and width draw each fragment's rotated square.
+        canvas.DrawMultilineColors(_smashVertices.AsSpan(0, count * 2), _smashPalette.AsSpan(0, count), visualSize);
     }
 
     private void ActSmash(int action)
