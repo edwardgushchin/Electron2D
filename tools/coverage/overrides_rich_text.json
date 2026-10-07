@@ -1,0 +1,1563 @@
+{
+  "mappings": [
+    {
+      "godot": "@GlobalScope::enum:InlineAlignment",
+      "electron2d": "T:Electron2D.InlineAlignment",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BASELINE_TO",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.BaselineTo()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BOTTOM",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.Bottom()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BOTTOM_TO",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.BottomTo()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_CENTER",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.Center()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_CENTER_TO",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.CenterTo()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_IMAGE_MASK",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.ImageMask()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TEXT_MASK",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.TextMask()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TOP",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.Top()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TOP_TO",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.TopTo()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_BASELINE",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.ToBaseline()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_BOTTOM",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.ToBottom()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_CENTER",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.ToCenter()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_TOP",
+      "electron2d": "enumValue:Electron2D.InlineAlignment.ToTop()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "class:CharFXTransform",
+      "electron2d": "T:Electron2D.CharFXTransform",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:color",
+      "electron2d": "property:Electron2D.CharFXTransform.Color()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:elapsed_time",
+      "electron2d": "property:Electron2D.CharFXTransform.ElapsedTime()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:env",
+      "electron2d": "property:Electron2D.CharFXTransform.Env()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:font",
+      "electron2d": "property:Electron2D.CharFXTransform.Font()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:glyph_count",
+      "electron2d": "property:Electron2D.CharFXTransform.GlyphCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:glyph_flags",
+      "electron2d": "property:Electron2D.CharFXTransform.GlyphFlags()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:glyph_index",
+      "electron2d": "property:Electron2D.CharFXTransform.GlyphIndex()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:offset",
+      "electron2d": "property:Electron2D.CharFXTransform.Offset()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:outline",
+      "electron2d": "property:Electron2D.CharFXTransform.Outline()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:range",
+      "electron2d": "property:Electron2D.CharFXTransform.Range()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:relative_index",
+      "electron2d": "property:Electron2D.CharFXTransform.RelativeIndex()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:transform",
+      "electron2d": "property:Electron2D.CharFXTransform.Transform()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "CharFXTransform::property:visible",
+      "electron2d": "property:Electron2D.CharFXTransform.Visible()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "class:RichTextEffect",
+      "electron2d": "T:Electron2D.RichTextEffect",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextEffect::method:_process_custom_fx(CharFXTransform:)",
+      "electron2d": "method:Electron2D.RichTextEffect.OnProcessCustomFX(Electron2D.CharFXTransform)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "class:RichTextLabel",
+      "electron2d": "T:Electron2D.RichTextLabel",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum:ImageUnit",
+      "electron2d": "T:Electron2D.RichTextLabel.ImageUnit",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum:ImageUpdateMask",
+      "electron2d": "T:Electron2D.RichTextLabel.ImageUpdateMask",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum:ListType",
+      "electron2d": "T:Electron2D.RichTextLabel.ListType",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum:MenuItems",
+      "electron2d": "T:Electron2D.RichTextLabel.MenuItems",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum:MetaUnderline",
+      "electron2d": "T:Electron2D.RichTextLabel.MetaUnderline",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_EM",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUnit.EM()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_PERCENT",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUnit.Percent()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_PIXEL",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUnit.Pixel()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_ALIGNMENT",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Alignment()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_COLOR",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Color()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_PAD",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Pad()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_REGION",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Region()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_SIZE",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Size()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_TEXTURE",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Texture()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_TOOLTIP",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Tooltip()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_WIDTH_UNIT",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.WidthUnit()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ListType.LIST_DOTS",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ListType.Dots()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ListType.LIST_LETTERS",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ListType.Letters()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ListType.LIST_NUMBERS",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ListType.Numbers()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:ListType.LIST_ROMAN",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.ListType.Roman()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MenuItems.MENU_COPY",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MenuItems.Copy()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MenuItems.MENU_MAX",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MenuItems.Max()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MenuItems.MENU_SELECT_ALL",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MenuItems.SelectAll()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_ALWAYS",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MetaUnderline.Always()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_NEVER",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MetaUnderline.Never()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_ON_HOVER",
+      "electron2d": "enumValue:Electron2D.RichTextLabel.MetaUnderline.OnHover()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:add_hr(int:,int:,Color:,int:HorizontalAlignment,bool:,bool:)",
+      "electron2d": "method:Electron2D.RichTextLabel.AddHR(System.Int32,System.Int32,System.Nullable<Electron2D.Color>,Electron2D.HorizontalAlignment,System.Boolean,System.Boolean)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:add_image(Texture2D:,float:,float:,Color:,int:InlineAlignment,Rect2:,Variant:,bool:,String:,int:RichTextLabel.ImageUnit,int:RichTextLabel.ImageUnit,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.AddImage(Electron2D.Texture,System.Single,System.Single,System.Nullable<Electron2D.Color>,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:add_image(Texture2D:,float:,float:,Color:,int:InlineAlignment,Rect2:,Variant:,bool:,String:,int:RichTextLabel.ImageUnit,int:RichTextLabel.ImageUnit,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.AddImage`1(T,Electron2D.Texture,System.Single,System.Single,System.Nullable<Electron2D.Color>,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:add_text(String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.AddText(System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:append_text(String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.AppendText(System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:clear()",
+      "electron2d": "method:Electron2D.RichTextLabel.Clear()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:deselect()",
+      "electron2d": "method:Electron2D.RichTextLabel.Deselect()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_character_line(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetCharacterLine(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_character_paragraph(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetCharacterParagraph(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_content_height()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetContentHeight()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_content_width()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetContentWidth()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_line_count()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetLineCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_line_height(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetLineHeight(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_line_offset(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetLineOffset(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_line_range(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetLineRange(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_line_width(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetLineWidth(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_menu()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetMenu()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_paragraph_count()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetParagraphCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_paragraph_offset(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.GetParagraphOffset(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_parsed_text()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetParsedText()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_selected_text()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetSelectedText()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_selection_from()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetSelectionFrom()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_selection_line_offset()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetSelectionLineOffset()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_selection_to()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetSelectionTo()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_total_character_count()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetTotalCharacterCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_v_scroll_bar()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetVScrollBar()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_visible_content_rect()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetVisibleContentRect()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_visible_line_count()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetVisibleLineCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:get_visible_paragraph_count()",
+      "electron2d": "method:Electron2D.RichTextLabel.GetVisibleParagraphCount()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:install_effect(Variant:)",
+      "electron2d": "method:Electron2D.RichTextLabel.InstallEffect(Electron2D.RichTextEffect)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:invalidate_paragraph(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.InvalidateParagraph(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:is_finished()",
+      "electron2d": "method:Electron2D.RichTextLabel.IsFinished()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:is_menu_visible()",
+      "electron2d": "method:Electron2D.RichTextLabel.IsMenuVisible()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:menu_option(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.MenuOption(Electron2D.RichTextLabel.MenuItems)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:newline()",
+      "electron2d": "method:Electron2D.RichTextLabel.Newline()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:parse_bbcode(String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.ParseBBCode(System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:parse_expressions_for_values(PackedStringArray:)",
+      "electron2d": "method:Electron2D.RichTextLabel.ParseExpressionsForValues(System.String[])",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:pop()",
+      "electron2d": "method:Electron2D.RichTextLabel.Pop()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:pop_all()",
+      "electron2d": "method:Electron2D.RichTextLabel.PopAll()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:pop_context()",
+      "electron2d": "method:Electron2D.RichTextLabel.PopContext()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_bgcolor(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushBGColor(Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_bold()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushBold()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_bold_italics()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushBoldItalics()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_cell()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushCell()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_color(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushColor(Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_context()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushContext()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_customfx(RichTextEffect:,Dictionary:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushCustomFX(Electron2D.RichTextEffect,Electron2D.RichTextEffectEnvironment)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_dropcap(String:,Font:,int:,Rect2:,Color:,int:,Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushDropcap(System.String,Electron2D.Font,System.Int32,Electron2D.Rect2,System.Nullable<Electron2D.Color>,System.Int32,System.Nullable<Electron2D.Color>)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_fgcolor(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushFGColor(Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_font(Font:,int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushFont(Electron2D.Font,System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_font_size(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushFontSize(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_hint(String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushHint(System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_indent(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushIndent(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_italics()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushItalics()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_language(String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushLanguage(System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_list(int:,int:RichTextLabel.ListType,bool:,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushList(System.Int32,Electron2D.RichTextLabel.ListType,System.Boolean,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_meta(Variant:,int:RichTextLabel.MetaUnderline,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushMeta`1(T,Electron2D.RichTextLabel.MetaUnderline,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_mono()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushMono()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_normal()",
+      "electron2d": "method:Electron2D.RichTextLabel.PushNormal()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_outline_color(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushOutlineColor(Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_outline_size(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushOutlineSize(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_paragraph(int:HorizontalAlignment,int:Control.TextDirection,String:,int:TextServer.StructuredTextParser,int:TextServer.JustificationFlag,PackedFloat32Array:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushParagraph(Electron2D.HorizontalAlignment,Electron2D.TextDirection,System.String,Electron2D.StructuredTextParser,Electron2D.TextJustificationFlags,System.Single[])",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_strikethrough(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushStrikethrough(System.Nullable<Electron2D.Color>)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_table(int:,int:InlineAlignment,int:,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushTable(System.Int32,Electron2D.InlineAlignment,System.Int32,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:push_underline(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.PushUnderline(System.Nullable<Electron2D.Color>)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:reload_effects()",
+      "electron2d": "method:Electron2D.RichTextLabel.ReloadEffects()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:remove_paragraph(int:,bool:)",
+      "electron2d": "method:Electron2D.RichTextLabel.RemoveParagraph(System.Int32,System.Boolean)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:scroll_to_line(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.ScrollToLine(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:scroll_to_paragraph(int:)",
+      "electron2d": "method:Electron2D.RichTextLabel.ScrollToParagraph(System.Int32)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:scroll_to_selection()",
+      "electron2d": "method:Electron2D.RichTextLabel.ScrollToSelection()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:select_all()",
+      "electron2d": "method:Electron2D.RichTextLabel.SelectAll()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_cell_border_color(Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetCellBorderColor(Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_cell_padding(Rect2:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetCellPadding(Electron2D.Rect2)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_cell_row_background_color(Color:,Color:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetCellRowBackgroundColor(Electron2D.Color,Electron2D.Color)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_cell_size_override(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetCellSizeOverride(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_table_column_expand(int:,bool:,int:,bool:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetTableColumnExpand(System.Int32,System.Boolean,System.Int32,System.Boolean)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:set_table_column_name(int:,String:)",
+      "electron2d": "method:Electron2D.RichTextLabel.SetTableColumnName(System.Int32,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::method:update_image(Variant:,int:RichTextLabel.ImageUpdateMask,Texture2D:,float:,float:,Color:,int:InlineAlignment,Rect2:,bool:,String:,int:RichTextLabel.ImageUnit,int:RichTextLabel.ImageUnit)",
+      "electron2d": "method:Electron2D.RichTextLabel.UpdateImage`1(T,Electron2D.RichTextLabel.ImageUpdateMask,Electron2D.Texture,System.Single,System.Single,System.Nullable<Electron2D.Color>,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:autowrap_mode",
+      "electron2d": "property:Electron2D.RichTextLabel.AutowrapMode()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:autowrap_trim_flags",
+      "electron2d": "property:Electron2D.RichTextLabel.AutowrapTrimFlags()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:bbcode_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.BBCodeEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:clip_contents",
+      "electron2d": "property:Electron2D.Control.ClipContents()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:context_menu_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.ContextMenuEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:custom_effects",
+      "electron2d": "property:Electron2D.RichTextLabel.CustomEffects()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:deselect_on_focus_loss_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.DeselectOnFocusLossEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:drag_and_drop_selection_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.DragAndDropSelectionEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:fit_content",
+      "electron2d": "property:Electron2D.RichTextLabel.FitContent()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:hint_underlined",
+      "electron2d": "property:Electron2D.RichTextLabel.HintUnderlined()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:horizontal_alignment",
+      "electron2d": "property:Electron2D.RichTextLabel.HorizontalAlignment()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:justification_flags",
+      "electron2d": "property:Electron2D.RichTextLabel.JustificationFlags()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:language",
+      "electron2d": "property:Electron2D.RichTextLabel.Language()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:meta_underlined",
+      "electron2d": "property:Electron2D.RichTextLabel.MetaUnderlined()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:progress_bar_delay",
+      "electron2d": "property:Electron2D.RichTextLabel.ProgressBarDelay()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:scroll_active",
+      "electron2d": "property:Electron2D.RichTextLabel.ScrollActive()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:scroll_following",
+      "electron2d": "property:Electron2D.RichTextLabel.ScrollFollowing()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:scroll_following_visible_characters",
+      "electron2d": "property:Electron2D.RichTextLabel.ScrollFollowingVisibleCharacters()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:selection_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.SelectionEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:shortcut_keys_enabled",
+      "electron2d": "property:Electron2D.RichTextLabel.ShortcutKeysEnabled()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:structured_text_bidi_override",
+      "electron2d": "property:Electron2D.RichTextLabel.StructuredTextBIDIOverride()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:structured_text_bidi_override_options",
+      "electron2d": "property:Electron2D.RichTextLabel.StructuredTextBIDIOverrideOptions()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:tab_size",
+      "electron2d": "property:Electron2D.RichTextLabel.TabSize()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:tab_stops",
+      "electron2d": "property:Electron2D.RichTextLabel.TabStops()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:text",
+      "electron2d": "property:Electron2D.RichTextLabel.Text()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:text_direction",
+      "electron2d": "property:Electron2D.RichTextLabel.TextDirection()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:threaded",
+      "electron2d": "property:Electron2D.RichTextLabel.Threaded()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:vertical_alignment",
+      "electron2d": "property:Electron2D.RichTextLabel.VerticalAlignment()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:visible_characters",
+      "electron2d": "property:Electron2D.RichTextLabel.VisibleCharacters()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:visible_characters_behavior",
+      "electron2d": "property:Electron2D.RichTextLabel.VisibleCharactersBehavior()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::property:visible_ratio",
+      "electron2d": "property:Electron2D.RichTextLabel.VisibleRatio()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::signal:finished()",
+      "electron2d": "event:Electron2D.RichTextLabel.Finished()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::signal:meta_clicked(Variant:)",
+      "electron2d": "event:Electron2D.RichTextLabel.MetaClicked()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::signal:meta_hover_ended(Variant:)",
+      "electron2d": "event:Electron2D.RichTextLabel.MetaHoverEnded()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::signal:meta_hover_started(Variant:)",
+      "electron2d": "event:Electron2D.RichTextLabel.MetaHoverStarted()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:bold_font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:bold_font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:bold_italics_font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:bold_italics_font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:default_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:focus",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:font_selected_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:font_shadow_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:horizontal_rule",
+      "electron2d": "method:Electron2D.Control.GetThemeIcon(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:italics_font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:italics_font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:line_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:mono_font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:mono_font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:normal",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:normal_font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:normal_font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:paragraph_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:selection_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:shadow_offset_x",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:shadow_offset_y",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:shadow_outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:strikethrough_alpha",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:table_border",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:table_even_row_bg",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:table_h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:table_odd_row_bg",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:table_v_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:text_highlight_h_padding",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:text_highlight_v_padding",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "RichTextLabel::theme_item:underline_alpha",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum:GraphemeFlag",
+      "electron2d": "T:Electron2D.TextGraphemeFlags",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_BREAK_HARD",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.BreakHard()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_BREAK_SOFT",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.BreakSoft()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_CONNECTED",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Connected()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_ELONGATION",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Elongation()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_EMBEDDED_OBJECT",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.EmbeddedObject()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_PUNCTUATION",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Punctuation()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_RTL",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.RTL()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SAFE_TO_INSERT_TATWEEL",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.SafeToInsertTatweel()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SOFT_HYPHEN",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.SoftHyphen()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SPACE",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Space()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_TAB",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Tab()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_UNDERSCORE",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Underscore()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_VALID",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Valid()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_VIRTUAL",
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.Virtual()",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.RichTextEffectEnvironment",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "T:Electron2D.RichTextMetadata",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.CharFXTransform..ctor()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RichTextEffect..ctor()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RichTextEffectEnvironment..ctor()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RichTextLabel..ctor()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RichTextLabel..ctor(System.String)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.TextGraphemeFlags.None()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.CharFXTransform.GetGlyphIndex(System.Int32)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.CharFXTransform.GetPropertyDescriptors()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffect.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffect.CreateDuplicateInstance()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffect.GetPropertyDescriptors()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.AddElement`1(System.String,T)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.Clear()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.GetElementCount(System.String)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.GetKeys()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.Remove(System.String)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.Set`1(System.String,T)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.TryGetElement`1(System.String,System.Int32,ref T)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.TryGetNumber(System.String,ref System.Double)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextEffectEnvironment.TryGet`1(System.String,ref T)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.CreateSceneInstanceFactory()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.Dispose(System.Boolean)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.GetPropertyDescriptors()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnGetCursorShape(Electron2D.Vector2)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnGetDragData(Electron2D.Vector2)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnGetMinimumSize()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnGetTooltip(Electron2D.Vector2)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.OnNotification(System.Int32)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextLabel.ValidateDisposal()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "method:Electron2D.RichTextMetadata.TryGet`1(ref T)",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "property:Electron2D.RichTextEffect.BBCode()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    },
+    {
+      "electron2d": "property:Electron2D.RichTextEffectEnvironment.Count()",
+      "reason": "Typed named effect arguments, exact borrowed metadata/image keys, context-bound font glyph lookup, default construction or inherited scene/drawing/descriptor lifecycle projection of the rich document concept. Runtime payloads are not a scene Variant protocol.",
+      "adr": "ADR 0004/0014/0038/0046"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "@GlobalScope::enum:InlineAlignment",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BASELINE_TO",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BOTTOM",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_BOTTOM_TO",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_CENTER",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_CENTER_TO",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_IMAGE_MASK",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TEXT_MASK",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TOP",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TOP_TO",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_BASELINE",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_BOTTOM",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_CENTER",
+        "@GlobalScope::enum_value:InlineAlignment.INLINE_ALIGNMENT_TO_TOP",
+        "class:CharFXTransform",
+        "CharFXTransform::property:color",
+        "CharFXTransform::property:elapsed_time",
+        "CharFXTransform::property:env",
+        "CharFXTransform::property:font",
+        "CharFXTransform::property:glyph_count",
+        "CharFXTransform::property:glyph_flags",
+        "CharFXTransform::property:glyph_index",
+        "CharFXTransform::property:offset",
+        "CharFXTransform::property:outline",
+        "CharFXTransform::property:range",
+        "CharFXTransform::property:relative_index",
+        "CharFXTransform::property:transform",
+        "CharFXTransform::property:visible",
+        "class:RichTextEffect",
+        "RichTextEffect::method:_process_custom_fx(CharFXTransform:)",
+        "RichTextLabel::enum:ImageUnit",
+        "RichTextLabel::enum:ImageUpdateMask",
+        "RichTextLabel::enum:ListType",
+        "RichTextLabel::enum:MenuItems",
+        "RichTextLabel::enum:MetaUnderline",
+        "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_EM",
+        "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_PERCENT",
+        "RichTextLabel::enum_value:ImageUnit.IMAGE_UNIT_PIXEL",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_ALIGNMENT",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_COLOR",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_PAD",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_REGION",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_SIZE",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_TEXTURE",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_TOOLTIP",
+        "RichTextLabel::enum_value:ImageUpdateMask.UPDATE_WIDTH_UNIT",
+        "RichTextLabel::enum_value:ListType.LIST_DOTS",
+        "RichTextLabel::enum_value:ListType.LIST_LETTERS",
+        "RichTextLabel::enum_value:ListType.LIST_NUMBERS",
+        "RichTextLabel::enum_value:ListType.LIST_ROMAN",
+        "RichTextLabel::enum_value:MenuItems.MENU_COPY",
+        "RichTextLabel::enum_value:MenuItems.MENU_MAX",
+        "RichTextLabel::enum_value:MenuItems.MENU_SELECT_ALL",
+        "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_ALWAYS",
+        "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_NEVER",
+        "RichTextLabel::enum_value:MetaUnderline.META_UNDERLINE_ON_HOVER",
+        "RichTextLabel::method:add_hr(int:,int:,Color:,int:HorizontalAlignment,bool:,bool:)",
+        "RichTextLabel::method:add_image(Texture2D:,float:,float:,Color:,int:InlineAlignment,Rect2:,Variant:,bool:,String:,int:RichTextLabel.ImageUnit,int:RichTextLabel.ImageUnit,String:)",
+        "RichTextLabel::method:add_text(String:)",
+        "RichTextLabel::method:clear()",
+        "RichTextLabel::method:deselect()",
+        "RichTextLabel::method:get_character_line(int:)",
+        "RichTextLabel::method:get_character_paragraph(int:)",
+        "RichTextLabel::method:get_content_height()",
+        "RichTextLabel::method:get_content_width()",
+        "RichTextLabel::method:get_line_count()",
+        "RichTextLabel::method:get_line_height(int:)",
+        "RichTextLabel::method:get_line_offset(int:)",
+        "RichTextLabel::method:get_line_range(int:)",
+        "RichTextLabel::method:get_line_width(int:)",
+        "RichTextLabel::method:get_menu()",
+        "RichTextLabel::method:get_paragraph_count()",
+        "RichTextLabel::method:get_paragraph_offset(int:)",
+        "RichTextLabel::method:get_parsed_text()",
+        "RichTextLabel::method:get_selected_text()",
+        "RichTextLabel::method:get_selection_from()",
+        "RichTextLabel::method:get_selection_line_offset()",
+        "RichTextLabel::method:get_selection_to()",
+        "RichTextLabel::method:get_total_character_count()",
+        "RichTextLabel::method:get_v_scroll_bar()",
+        "RichTextLabel::method:get_visible_content_rect()",
+        "RichTextLabel::method:get_visible_line_count()",
+        "RichTextLabel::method:get_visible_paragraph_count()",
+        "RichTextLabel::method:invalidate_paragraph(int:)",
+        "RichTextLabel::method:is_finished()",
+        "RichTextLabel::method:is_menu_visible()",
+        "RichTextLabel::method:menu_option(int:)",
+        "RichTextLabel::method:newline()",
+        "RichTextLabel::method:parse_expressions_for_values(PackedStringArray:)",
+        "RichTextLabel::method:pop()",
+        "RichTextLabel::method:pop_all()",
+        "RichTextLabel::method:pop_context()",
+        "RichTextLabel::method:push_bgcolor(Color:)",
+        "RichTextLabel::method:push_bold()",
+        "RichTextLabel::method:push_bold_italics()",
+        "RichTextLabel::method:push_cell()",
+        "RichTextLabel::method:push_color(Color:)",
+        "RichTextLabel::method:push_context()",
+        "RichTextLabel::method:push_customfx(RichTextEffect:,Dictionary:)",
+        "RichTextLabel::method:push_dropcap(String:,Font:,int:,Rect2:,Color:,int:,Color:)",
+        "RichTextLabel::method:push_fgcolor(Color:)",
+        "RichTextLabel::method:push_font(Font:,int:)",
+        "RichTextLabel::method:push_font_size(int:)",
+        "RichTextLabel::method:push_hint(String:)",
+        "RichTextLabel::method:push_indent(int:)",
+        "RichTextLabel::method:push_italics()",
+        "RichTextLabel::method:push_language(String:)",
+        "RichTextLabel::method:push_list(int:,int:RichTextLabel.ListType,bool:,String:)",
+        "RichTextLabel::method:push_meta(Variant:,int:RichTextLabel.MetaUnderline,String:)",
+        "RichTextLabel::method:push_mono()",
+        "RichTextLabel::method:push_normal()",
+        "RichTextLabel::method:push_outline_color(Color:)",
+        "RichTextLabel::method:push_outline_size(int:)",
+        "RichTextLabel::method:push_paragraph(int:HorizontalAlignment,int:Control.TextDirection,String:,int:TextServer.StructuredTextParser,int:TextServer.JustificationFlag,PackedFloat32Array:)",
+        "RichTextLabel::method:push_strikethrough(Color:)",
+        "RichTextLabel::method:push_table(int:,int:InlineAlignment,int:,String:)",
+        "RichTextLabel::method:push_underline(Color:)",
+        "RichTextLabel::method:remove_paragraph(int:,bool:)",
+        "RichTextLabel::method:scroll_to_line(int:)",
+        "RichTextLabel::method:scroll_to_paragraph(int:)",
+        "RichTextLabel::method:scroll_to_selection()",
+        "RichTextLabel::method:select_all()",
+        "RichTextLabel::method:set_cell_border_color(Color:)",
+        "RichTextLabel::method:set_cell_padding(Rect2:)",
+        "RichTextLabel::method:set_cell_row_background_color(Color:,Color:)",
+        "RichTextLabel::method:set_cell_size_override(Vector2:,Vector2:)",
+        "RichTextLabel::method:set_table_column_expand(int:,bool:,int:,bool:)",
+        "RichTextLabel::method:update_image(Variant:,int:RichTextLabel.ImageUpdateMask,Texture2D:,float:,float:,Color:,int:InlineAlignment,Rect2:,bool:,String:,int:RichTextLabel.ImageUnit,int:RichTextLabel.ImageUnit)",
+        "RichTextLabel::property:autowrap_mode",
+        "RichTextLabel::property:autowrap_trim_flags",
+        "RichTextLabel::property:clip_contents",
+        "RichTextLabel::property:context_menu_enabled",
+        "RichTextLabel::property:deselect_on_focus_loss_enabled",
+        "RichTextLabel::property:drag_and_drop_selection_enabled",
+        "RichTextLabel::property:fit_content",
+        "RichTextLabel::property:focus_mode",
+        "RichTextLabel::property:hint_underlined",
+        "RichTextLabel::property:horizontal_alignment",
+        "RichTextLabel::property:justification_flags",
+        "RichTextLabel::property:language",
+        "RichTextLabel::property:meta_underlined",
+        "RichTextLabel::property:progress_bar_delay",
+        "RichTextLabel::property:scroll_active",
+        "RichTextLabel::property:scroll_following",
+        "RichTextLabel::property:scroll_following_visible_characters",
+        "RichTextLabel::property:selection_enabled",
+        "RichTextLabel::property:shortcut_keys_enabled",
+        "RichTextLabel::property:structured_text_bidi_override",
+        "RichTextLabel::property:structured_text_bidi_override_options",
+        "RichTextLabel::property:tab_size",
+        "RichTextLabel::property:tab_stops",
+        "RichTextLabel::property:text_direction",
+        "RichTextLabel::property:threaded",
+        "RichTextLabel::property:vertical_alignment",
+        "RichTextLabel::property:visible_characters",
+        "RichTextLabel::property:visible_characters_behavior",
+        "RichTextLabel::property:visible_ratio",
+        "RichTextLabel::signal:finished()",
+        "RichTextLabel::signal:meta_clicked(Variant:)",
+        "RichTextLabel::signal:meta_hover_ended(Variant:)",
+        "RichTextLabel::signal:meta_hover_started(Variant:)",
+        "RichTextLabel::theme_item:bold_font",
+        "RichTextLabel::theme_item:bold_font_size",
+        "RichTextLabel::theme_item:bold_italics_font",
+        "RichTextLabel::theme_item:bold_italics_font_size",
+        "RichTextLabel::theme_item:default_color",
+        "RichTextLabel::theme_item:focus",
+        "RichTextLabel::theme_item:font_outline_color",
+        "RichTextLabel::theme_item:font_selected_color",
+        "RichTextLabel::theme_item:font_shadow_color",
+        "RichTextLabel::theme_item:horizontal_rule",
+        "RichTextLabel::theme_item:italics_font",
+        "RichTextLabel::theme_item:italics_font_size",
+        "RichTextLabel::theme_item:line_separation",
+        "RichTextLabel::theme_item:mono_font",
+        "RichTextLabel::theme_item:mono_font_size",
+        "RichTextLabel::theme_item:normal",
+        "RichTextLabel::theme_item:normal_font",
+        "RichTextLabel::theme_item:normal_font_size",
+        "RichTextLabel::theme_item:outline_size",
+        "RichTextLabel::theme_item:paragraph_separation",
+        "RichTextLabel::theme_item:selection_color",
+        "RichTextLabel::theme_item:shadow_offset_x",
+        "RichTextLabel::theme_item:shadow_offset_y",
+        "RichTextLabel::theme_item:shadow_outline_size",
+        "RichTextLabel::theme_item:strikethrough_alpha",
+        "RichTextLabel::theme_item:table_border",
+        "RichTextLabel::theme_item:table_even_row_bg",
+        "RichTextLabel::theme_item:table_h_separation",
+        "RichTextLabel::theme_item:table_odd_row_bg",
+        "RichTextLabel::theme_item:table_v_separation",
+        "RichTextLabel::theme_item:text_highlight_h_padding",
+        "RichTextLabel::theme_item:text_highlight_v_padding",
+        "RichTextLabel::theme_item:underline_alpha",
+        "TextServer::enum:GraphemeFlag",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_BREAK_HARD",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_BREAK_SOFT",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_CONNECTED",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_ELONGATION",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_EMBEDDED_OBJECT",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_PUNCTUATION",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_RTL",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SAFE_TO_INSERT_TATWEEL",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SOFT_HYPHEN",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_SPACE",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_TAB",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_UNDERSCORE",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_VALID",
+        "TextServer::enum_value:GraphemeFlag.GRAPHEME_IS_VIRTUAL"
+      ],
+      "state": "Implemented",
+      "reason": "Executable rich document under ADRs 0004/0014/0038/0046/0051/0083: styled scalar paragraphs, borrowed fonts/images, tables/drop caps/lists, typed links and custom effect arguments/state, real canvas glyph effects, root queries, selection/scroll/input and registered scene/resource storage. See rich-text component for verified current backends and exact remaining dependencies."
+    },
+    {
+      "godot": [
+        "class:RichTextLabel"
+      ],
+      "state": "Partial",
+      "reason": "Rich document, current native canvases and typed C# effects execute. Advanced variable-font font tags require FontVariation coordinates, spacing/embolden/face/transform and per-instance cache identity under ADR 0046; semantic table/image names require AccessibilityServer; editor import/authoring needs ADR 0090. Physical and foreign-platform acceptance remain unverified."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:append_text(String:)"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:install_effect(Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:parse_bbcode(String:)"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:reload_effects()"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:set_table_column_name(int:,String:)"
+      ],
+      "state": "Partial",
+      "reason": "Retains the column name for its owned table; assistive publication requires semantic AccessibilityServer table/cell nodes. Include this projection in that service first slice."
+    },
+    {
+      "godot": [
+        "RichTextLabel::property:bbcode_enabled"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::property:custom_effects"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::property:text"
+      ],
+      "state": "Partial",
+      "reason": "Styles, text, images/tables, links, builtin effects and typed installed C# effects execute. Remaining advanced font tag spacing, slant, embolden, face index and variable coordinates depend on FontVariation per-instance shaping/raster identity under ADR 0046; ResourceLoader cannot yet install compiled source/assembly-associated Script providers under ADR 0091. No inert font variation or script switch is exposed."
+    },
+    {
+      "godot": [
+        "RichTextLabel::method:is_ready()"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: pinned RichTextLabel.xml is_ready has deprecated=\"Use is_finished() instead.\"; IsFinished is the modern API. No deprecated alias is exposed."
+    }
+  ]
+}

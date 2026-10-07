@@ -36,6 +36,16 @@ internal static class OkColor
 
     private readonly record struct Cs(float C0, float CMid, float CMax);
 
+    internal static Rgb HSVToSRGB(float hue, float saturation, float value)
+    {
+        if (value == 0) return default;
+        var a = Mathf.Cos(2 * Pi * hue); var b = Mathf.Sin(2 * Pi * hue); var cusp = FindCusp(a, b); var st = ToSt(cusp); const float s0 = .5f; var k = 1 - s0 / st.S;
+        var lv = 1 - saturation * s0 / (s0 + st.T - st.T * k * saturation); var cv = saturation * st.T * s0 / (s0 + st.T - st.T * k * saturation);
+        var l = value * lv; var c = value * cv; var lvt = ToeInverse(lv); var cvt = cv * lvt / lv; var next = ToeInverse(l); c *= next / l; l = next;
+        var scaleRGB = OKLABToLinearSRGB(new(lvt, a * cvt, b * cvt)); var scale = MathF.Cbrt(1 / Math.Max(Math.Max(scaleRGB.R, scaleRGB.G), Math.Max(scaleRGB.B, 0))); l *= scale; c *= scale;
+        var rgb = OKLABToLinearSRGB(new(l, c * a, c * b)); return new(ToSRGBChannel(rgb.R), ToSRGBChannel(rgb.G), ToSRGBChannel(rgb.B));
+    }
+
     internal static Rgb ToSRGB(float hue, float saturation, float lightness)
     {
         if (lightness == 1f)

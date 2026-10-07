@@ -21,6 +21,7 @@ public static partial class ResourceFileTypes
         RegisterResource("ColorPalette", CreateColorPalette);
         RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
         RegisterResource("CodeHighlighter", CreateCodeHighlighter);
+        RegisterResource("RichTextEffect", CreateRichTextEffect);
         RegisterNode("Sprite", CreateSprite);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
@@ -44,6 +45,7 @@ public static partial class ResourceFileTypes
     private static Entity CreateEntity() => new();
     private static SyntaxHighlighter CreateSyntaxHighlighter() => new();
     private static CodeHighlighter CreateCodeHighlighter() => new();
+    private static RichTextEffect CreateRichTextEffect() => new();
     private static Resource CreateResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();

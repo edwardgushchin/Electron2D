@@ -15,7 +15,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "audio", "mesh", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "audio", "mesh", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -662,6 +662,8 @@ def render():
             updated = "2026-10-04"
         if name in {"Engine", "ProjectSettings", "Input", "InputMap", "ThemeDB", "AudioServer", "PhysicsServer2D", "DisplayServer", "RenderingServer"}:
             updated = "2026-10-04"
+        if name in {"RichTextLabel", "RichTextEffect", "CharFXTransform", "@GlobalScope", "TextServer"}:
+            updated = "2026-10-07"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
@@ -774,7 +776,7 @@ def render():
     engine_only = [entry for entry in engine if entry["id"] not in used_engine]
     if len(used_engine) + len(engine_only) != len(engine):
         raise ValueError("Electron2D accounting mismatch")
-    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-10-03", "",
+    lines = ["# Electron2D declarations without an audited upstream row", "", "Last updated: 2026-10-07", "",
              "These declarations are present in the compiled runtime. A blank upstream cell means no exact counterpart was established by the conservative name-and-arity mapper; it does not claim an intentional extension. Review each against the linked Godot class page and record a rationale before declaring parity.", "",
              "| Godot API | Electron2D API | State | Reason / next action |", "| --- | --- | --- | --- |"]
     for entry in engine_only:
@@ -783,7 +785,7 @@ def render():
         reason = f"Electron2D-specific: {extra['reason']} ({extra.get('adr', 'class reference')})." if extra else "Audit the corresponding type family; document a typed-C# rationale or link the exact upstream row."
         lines.append(f"| — | {engine_link(entry, from_class=False)} | {state} | {cell(reason)} |")
     page_text[COVERAGE / "electron2d-unmapped.md"] = "\n".join(lines) + "\n"
-    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-10-03", "",
+    catalog = ["# Godot class-reference catalog", "", "Last updated: 2026-10-07", "",
                f"Source: Godot `{upstream['godot_version']}` at `{COMMIT}`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.", "",
                "| Godot class | Base | Class state | Declared members |", "| --- | --- | --- | ---: |"]
     for item in upstream["types"]:
@@ -793,7 +795,7 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Reassess dependencies for " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " before selecting their slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-10-03", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-10-07", "",
             "Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Close {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",

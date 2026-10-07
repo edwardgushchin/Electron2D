@@ -212,3 +212,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Hierarchical cells](../components/hierarchical-cells.md) now connect Tree/TreeItem ownership, columns, typed metadata, checks/ranges/buttons, ordinary GUI input, embedded cell editors and real canvas drawing. Stored column configuration reloads in a fresh process; runtime item graphs and semantic/native/editor gates retain their explicit limits.
 
 [Code authoring](../components/code-authoring.md) now specializes TextEdit through CodeEdit, with grouped multicaret source edits, delimiters/folds, gutter markers, typed application completion, hints and symbol callbacks. Fresh file scenes and current native rendered/input hosts execute; semantic/editor/physical/foreign gates remain explicit.
+
+[Rich text](../components/rich-text.md) connects styled shaped paragraphs, inline images/tables/drop caps, typed links and glyph effects to the existing Control, canvas, font, input and scene-resource backends. Root queries and runtime manual stacks remain separate from stored source; native/current/foreign and advanced font/script/accessibility dependencies are explicit.

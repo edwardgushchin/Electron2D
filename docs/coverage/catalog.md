@@ -1,6 +1,6 @@
 # Godot class-reference catalog
 
-Last updated: 2026-10-03
+Last updated: 2026-10-07
 
 Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Every XML class is listed, including editor and 3D exclusions. Texture pages use Electron2D names; Texture and Texture2D share one page with separate source sections.
 
@@ -165,7 +165,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
 | [CenterContainer](classes/CenterContainer.md) | Container | Implemented | 1 |
 | [ChainIK3D](classes/ChainIK3D.md) | IKModifier3D | Excluded | 17 |
-| [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Blocked | 13 |
+| [CharFXTransform](classes/CharFXTransform.md) | RefCounted | Implemented | 13 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | PhysicsBody2D | Implemented | 40 |
 | [CharacterBody3D](classes/CharacterBody3D.md) | PhysicsBody3D | Excluded | 41 |
 | [CheckBox](classes/CheckBox.md) | Button | Implemented | 13 |
@@ -740,8 +740,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ResourceUID](classes/ResourceUID.md) | Object | Implemented | 13 |
 | [RetargetModifier3D](classes/RetargetModifier3D.md) | SkeletonModifier3D | Excluded | 14 |
 | [RibbonTrailMesh](classes/RibbonTrailMesh.md) | PrimitiveMesh | Excluded | 9 |
-| [RichTextEffect](classes/RichTextEffect.md) | Resource | Blocked | 1 |
-| [RichTextLabel](classes/RichTextLabel.md) | Control | Blocked | 173 |
+| [RichTextEffect](classes/RichTextEffect.md) | Resource | Implemented | 1 |
+| [RichTextLabel](classes/RichTextLabel.md) | Control | Partial | 173 |
 | [RigidBody2D](classes/RigidBody2D.md) | PhysicsBody2D | Partial | 54 |
 | [RigidBody3D](classes/RigidBody3D.md) | PhysicsBody3D | Excluded | 51 |
 | [RootMotionView](classes/RootMotionView.md) | VisualInstance3D | Excluded | 5 |

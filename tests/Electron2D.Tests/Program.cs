@@ -24,6 +24,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RICH_TEXT_CHILD") is { } richPath) { RichTextTests.RunChild(richPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RICH_TEXT_HOST") == "1") { RichTextTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RICH_TEXT") == "1") { RichTextTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT_CHILD") is { } codePath) { CodeEditTests.RunChild(codePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT_HOST") == "1") { CodeEditTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CODE_EDIT") == "1") { CodeEditTests.Run(); return; }
@@ -570,6 +573,7 @@ LineEditTests.Run();
 TextEditTests.Run();
 TreeTests.Run();
 CodeEditTests.Run();
+RichTextTests.Run();
 NetworkingTests.Run();
 UPNPTests.Run();
 DTLSTests.Run();

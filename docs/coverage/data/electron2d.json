@@ -2578,6 +2578,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CharFXTransform",
+    "kind": "type",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "CharFXTransform",
+    "signature": "public class Electron2D.CharFXTransform",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CharacterBody",
     "kind": "type",
     "declaringType": "Electron2D.CharacterBody",
@@ -4673,6 +4688,24 @@
     "baseType": "Electron2D.Mesh",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.InlineAlignment",
+    "kind": "type",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "InlineAlignment",
+    "signature": "public enum Electron2D.InlineAlignment",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -7172,6 +7205,152 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RichTextEffect",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "RichTextEffect",
+    "signature": "public class Electron2D.RichTextEffect",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextEffectEnvironment",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "RichTextEffectEnvironment",
+    "signature": "public sealed class Electron2D.RichTextEffectEnvironment",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "RichTextLabel",
+    "signature": "public class Electron2D.RichTextLabel",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel.ImageUnit",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel.ImageUnit",
+    "name": "ImageUnit",
+    "signature": "public enum Electron2D.RichTextLabel.ImageUnit",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel.ImageUpdateMask",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "ImageUpdateMask",
+    "signature": "public enum Electron2D.RichTextLabel.ImageUpdateMask",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel.ListType",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel.ListType",
+    "name": "ListType",
+    "signature": "public enum Electron2D.RichTextLabel.ListType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel.MenuItems",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel.MenuItems",
+    "name": "MenuItems",
+    "signature": "public enum Electron2D.RichTextLabel.MenuItems",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextLabel.MetaUnderline",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextLabel.MetaUnderline",
+    "name": "MetaUnderline",
+    "signature": "public enum Electron2D.RichTextLabel.MetaUnderline",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RichTextMetadata",
+    "kind": "type",
+    "declaringType": "Electron2D.RichTextMetadata",
+    "name": "RichTextMetadata",
+    "signature": "public sealed class Electron2D.RichTextMetadata",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RigidBody",
     "kind": "type",
     "declaringType": "Electron2D.RigidBody",
@@ -8313,6 +8492,24 @@
     "declaringType": "Electron2D.TextEditCaretType",
     "name": "TextEditCaretType",
     "signature": "public enum Electron2D.TextEditCaretType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextGraphemeFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "TextGraphemeFlags",
+    "signature": "public enum Electron2D.TextGraphemeFlags",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -12571,6 +12768,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CharFXTransform..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": ".ctor",
+    "signature": "public CharFXTransform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.CharacterBody..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.CharacterBody",
@@ -15452,6 +15662,64 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RichTextEffect..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": ".ctor",
+    "signature": "public RichTextEffect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RichTextEffectEnvironment..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": ".ctor",
+    "signature": "public RichTextEffectEnvironment()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RichTextLabel..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": ".ctor",
+    "signature": "public RichTextLabel()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RichTextLabel..ctor(System.String)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": ".ctor",
+    "signature": "public RichTextLabel(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -24902,6 +25170,175 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.InlineAlignment.BaselineTo()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "BaselineTo",
+    "signature": "public const Electron2D.InlineAlignment BaselineTo = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.Bottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "Bottom",
+    "signature": "public const Electron2D.InlineAlignment Bottom = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.BottomTo()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "BottomTo",
+    "signature": "public const Electron2D.InlineAlignment BottomTo = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.Center()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "Center",
+    "signature": "public const Electron2D.InlineAlignment Center = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.CenterTo()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "CenterTo",
+    "signature": "public const Electron2D.InlineAlignment CenterTo = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.ImageMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "ImageMask",
+    "signature": "public const Electron2D.InlineAlignment ImageMask = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.TextMask()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "TextMask",
+    "signature": "public const Electron2D.InlineAlignment TextMask = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.ToBaseline()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "ToBaseline",
+    "signature": "public const Electron2D.InlineAlignment ToBaseline = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.ToBottom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "ToBottom",
+    "signature": "public const Electron2D.InlineAlignment ToBottom = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "12"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.ToCenter()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "ToCenter",
+    "signature": "public const Electron2D.InlineAlignment ToCenter = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.ToTop()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "ToTop",
+    "signature": "public const Electron2D.InlineAlignment ToTop = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.Top()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "Top",
+    "signature": "public const Electron2D.InlineAlignment Top = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.InlineAlignment.TopTo()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.InlineAlignment",
+    "name": "TopTo",
+    "signature": "public const Electron2D.InlineAlignment TopTo = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.InlineAlignment",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.InputBindingKind.Action()",
     "kind": "enumValue",
     "declaringType": "Electron2D.InputBindingKind",
@@ -30037,6 +30474,279 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUnit.EM()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUnit",
+    "name": "EM",
+    "signature": "public const Electron2D.RichTextLabel.ImageUnit EM = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUnit",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUnit.Percent()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUnit",
+    "name": "Percent",
+    "signature": "public const Electron2D.RichTextLabel.ImageUnit Percent = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUnit",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUnit.Pixel()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUnit",
+    "name": "Pixel",
+    "signature": "public const Electron2D.RichTextLabel.ImageUnit Pixel = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUnit",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Alignment()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Alignment",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Alignment = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Color()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Color",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Color = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Pad()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Pad",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Pad = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Region()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Region",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Region = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Size()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Size",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Size = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Texture()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Texture",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Texture = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.Tooltip()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "Tooltip",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask Tooltip = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ImageUpdateMask.WidthUnit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "name": "WidthUnit",
+    "signature": "public const Electron2D.RichTextLabel.ImageUpdateMask WidthUnit = 128",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ImageUpdateMask",
+    "value": "128"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ListType.Dots()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ListType",
+    "name": "Dots",
+    "signature": "public const Electron2D.RichTextLabel.ListType Dots = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ListType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ListType.Letters()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ListType",
+    "name": "Letters",
+    "signature": "public const Electron2D.RichTextLabel.ListType Letters = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ListType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ListType.Numbers()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ListType",
+    "name": "Numbers",
+    "signature": "public const Electron2D.RichTextLabel.ListType Numbers = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ListType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.ListType.Roman()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.ListType",
+    "name": "Roman",
+    "signature": "public const Electron2D.RichTextLabel.ListType Roman = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.ListType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MenuItems.Copy()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MenuItems",
+    "name": "Copy",
+    "signature": "public const Electron2D.RichTextLabel.MenuItems Copy = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MenuItems",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MenuItems.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MenuItems",
+    "name": "Max",
+    "signature": "public const Electron2D.RichTextLabel.MenuItems Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MenuItems",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MenuItems.SelectAll()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MenuItems",
+    "name": "SelectAll",
+    "signature": "public const Electron2D.RichTextLabel.MenuItems SelectAll = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MenuItems",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MetaUnderline.Always()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MetaUnderline",
+    "name": "Always",
+    "signature": "public const Electron2D.RichTextLabel.MetaUnderline Always = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MetaUnderline",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MetaUnderline.Never()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MetaUnderline",
+    "name": "Never",
+    "signature": "public const Electron2D.RichTextLabel.MetaUnderline Never = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MetaUnderline",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RichTextLabel.MetaUnderline.OnHover()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RichTextLabel.MetaUnderline",
+    "name": "OnHover",
+    "signature": "public const Electron2D.RichTextLabel.MetaUnderline OnHover = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextLabel.MetaUnderline",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.RigidBody.DampMode.Combine()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RigidBody.DampMode",
@@ -31270,6 +31980,201 @@
     "parameters": [],
     "returnType": "Electron2D.TextEditCaretType",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.BreakHard()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "BreakHard",
+    "signature": "public const Electron2D.TextGraphemeFlags BreakHard = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.BreakSoft()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "BreakSoft",
+    "signature": "public const Electron2D.TextGraphemeFlags BreakSoft = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Connected()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Connected",
+    "signature": "public const Electron2D.TextGraphemeFlags Connected = 1024",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "1024"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Elongation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Elongation",
+    "signature": "public const Electron2D.TextGraphemeFlags Elongation = 128",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "128"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.EmbeddedObject()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "EmbeddedObject",
+    "signature": "public const Electron2D.TextGraphemeFlags EmbeddedObject = 4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "4096"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.None()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "None",
+    "signature": "public const Electron2D.TextGraphemeFlags None = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Punctuation()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Punctuation",
+    "signature": "public const Electron2D.TextGraphemeFlags Punctuation = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "256"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.RTL()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "RTL",
+    "signature": "public const Electron2D.TextGraphemeFlags RTL = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.SafeToInsertTatweel()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "SafeToInsertTatweel",
+    "signature": "public const Electron2D.TextGraphemeFlags SafeToInsertTatweel = 2048",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "2048"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.SoftHyphen()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "SoftHyphen",
+    "signature": "public const Electron2D.TextGraphemeFlags SoftHyphen = 8192",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "8192"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Space()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Space",
+    "signature": "public const Electron2D.TextGraphemeFlags Space = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Tab()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Tab",
+    "signature": "public const Electron2D.TextGraphemeFlags Tab = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Underscore()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Underscore",
+    "signature": "public const Electron2D.TextGraphemeFlags Underscore = 512",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "512"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Valid()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Valid",
+    "signature": "public const Electron2D.TextGraphemeFlags Valid = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TextGraphemeFlags.Virtual()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TextGraphemeFlags",
+    "name": "Virtual",
+    "signature": "public const Electron2D.TextGraphemeFlags Virtual = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": "4"
   },
   {
     "id": "enumValue:Electron2D.TextJustificationFlags.AfterLastTab()",
@@ -36651,6 +37556,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.Resource\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RichTextLabel.Finished()",
+    "kind": "event",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Finished",
+    "signature": "public event System.Action Finished",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RichTextLabel.MetaClicked()",
+    "kind": "event",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "MetaClicked",
+    "signature": "public event System.Action\u003CElectron2D.RichTextMetadata\u003E MetaClicked",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RichTextMetadata\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RichTextLabel.MetaHoverEnded()",
+    "kind": "event",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "MetaHoverEnded",
+    "signature": "public event System.Action\u003CElectron2D.RichTextMetadata\u003E MetaHoverEnded",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RichTextMetadata\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.RichTextLabel.MetaHoverStarted()",
+    "kind": "event",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "MetaHoverStarted",
+    "signature": "public event System.Action\u003CElectron2D.RichTextMetadata\u003E MetaHoverStarted",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.RichTextMetadata\u003E",
     "value": null
   },
   {
@@ -60187,6 +61144,38 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CharFXTransform.GetGlyphIndex(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "GetGlyphIndex",
+    "signature": "public System.Int32 GetGlyphIndex(System.Int32 character)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CharFXTransform.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -108909,6 +109898,2073 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RichTextEffect.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffect.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffect.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffect.OnProcessCustomFX(Electron2D.CharFXTransform)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "OnProcessCustomFX",
+    "signature": "protected virtual System.Boolean OnProcessCustomFX(Electron2D.CharFXTransform charFX)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "charFX",
+        "type": "Electron2D.CharFXTransform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.AddElement\u00601(System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "AddElement",
+    "signature": "public System.Void AddElement\u003CT\u003E(System.String name, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.GetElementCount(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "GetElementCount",
+    "signature": "public System.Int32 GetElementCount(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.GetKeys()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "GetKeys",
+    "signature": "public System.String[] GetKeys()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.Remove(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "Remove",
+    "signature": "public System.Boolean Remove(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.Set\u00601(System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "Set",
+    "signature": "public System.Void Set\u003CT\u003E(System.String name, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.TryGetElement\u00601(System.String,System.Int32,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "TryGetElement",
+    "signature": "public System.Boolean TryGetElement\u003CT\u003E(System.String name, System.Int32 index, out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.TryGetNumber(System.String,ref System.Double)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "TryGetNumber",
+    "signature": "public System.Boolean TryGetNumber(System.String name, out System.Double value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref System.Double",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextEffectEnvironment.TryGet\u00601(System.String,ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "TryGet",
+    "signature": "public System.Boolean TryGet\u003CT\u003E(System.String name, out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.AddHR(System.Int32,System.Int32,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.HorizontalAlignment,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AddHR",
+    "signature": "public System.Void AddHR(System.Int32 width = 90, System.Int32 height = 2, System.Nullable\u003CElectron2D.Color\u003E color = null, Electron2D.HorizontalAlignment alignment = Center, System.Boolean widthInPercent = true, System.Boolean heightInPercent = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "width",
+        "type": "System.Int32",
+        "default": "90"
+      },
+      {
+        "name": "height",
+        "type": "System.Int32",
+        "default": "2"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "alignment",
+        "type": "Electron2D.HorizontalAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "widthInPercent",
+        "type": "System.Boolean",
+        "default": "true"
+      },
+      {
+        "name": "heightInPercent",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.AddImage(Electron2D.Texture,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AddImage",
+    "signature": "public System.Void AddImage(Electron2D.Texture image, System.Single width = 0f, System.Single height = 0f, System.Nullable\u003CElectron2D.Color\u003E color = null, Electron2D.InlineAlignment inlineAlign = Center, Electron2D.Rect2 region = default, System.Boolean pad = false, System.String tooltip = \u0022\u0022, Electron2D.RichTextLabel.ImageUnit widthUnit = Pixel, Electron2D.RichTextLabel.ImageUnit heightUnit = Pixel, System.String altText = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "image",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "height",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "pad",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "widthUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      },
+      {
+        "name": "heightUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      },
+      {
+        "name": "altText",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.AddImage\u00601(T,Electron2D.Texture,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AddImage",
+    "signature": "public System.Void AddImage\u003CT\u003E(T key, Electron2D.Texture image, System.Single width = 0f, System.Single height = 0f, System.Nullable\u003CElectron2D.Color\u003E color = null, Electron2D.InlineAlignment inlineAlign = Center, Electron2D.Rect2 region = default, System.Boolean pad = false, System.String tooltip = \u0022\u0022, Electron2D.RichTextLabel.ImageUnit widthUnit = Pixel, Electron2D.RichTextLabel.ImageUnit heightUnit = Pixel, System.String altText = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "image",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "height",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "pad",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "widthUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      },
+      {
+        "name": "heightUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      },
+      {
+        "name": "altText",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.AddText(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AddText",
+    "signature": "public System.Void AddText(System.String text)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.AppendText(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AppendText",
+    "signature": "public System.Void AppendText(System.String bbcode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bbcode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.Deselect()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Deselect",
+    "signature": "public System.Void Deselect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetCharacterLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetCharacterLine",
+    "signature": "public System.Int32 GetCharacterLine(System.Int32 character)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetCharacterParagraph(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetCharacterParagraph",
+    "signature": "public System.Int32 GetCharacterParagraph(System.Int32 character)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "character",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetContentHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetContentHeight",
+    "signature": "public System.Int32 GetContentHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetContentWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetContentWidth",
+    "signature": "public System.Int32 GetContentWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetLineCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetLineCount",
+    "signature": "public System.Int32 GetLineCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetLineHeight(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetLineHeight",
+    "signature": "public System.Int32 GetLineHeight(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetLineOffset(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetLineOffset",
+    "signature": "public System.Single GetLineOffset(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetLineRange(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetLineRange",
+    "signature": "public Electron2D.Vector2i GetLineRange(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetLineWidth(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetLineWidth",
+    "signature": "public System.Int32 GetLineWidth(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetMenu()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetMenu",
+    "signature": "public Electron2D.PopupMenu GetMenu()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PopupMenu",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetParagraphCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetParagraphCount",
+    "signature": "public System.Int32 GetParagraphCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetParagraphOffset(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetParagraphOffset",
+    "signature": "public System.Single GetParagraphOffset(System.Int32 paragraph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paragraph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetParsedText()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetParsedText",
+    "signature": "public System.String GetParsedText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetSelectedText()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetSelectedText",
+    "signature": "public System.String GetSelectedText()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetSelectionFrom()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetSelectionFrom",
+    "signature": "public System.Int32 GetSelectionFrom()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetSelectionLineOffset()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetSelectionLineOffset",
+    "signature": "public System.Single GetSelectionLineOffset()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetSelectionTo()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetSelectionTo",
+    "signature": "public System.Int32 GetSelectionTo()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetTotalCharacterCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetTotalCharacterCount",
+    "signature": "public System.Int32 GetTotalCharacterCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetVScrollBar()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetVScrollBar",
+    "signature": "public Electron2D.VScrollBar GetVScrollBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VScrollBar",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetVisibleContentRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetVisibleContentRect",
+    "signature": "public Electron2D.Rect2i GetVisibleContentRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetVisibleLineCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetVisibleLineCount",
+    "signature": "public System.Int32 GetVisibleLineCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.GetVisibleParagraphCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "GetVisibleParagraphCount",
+    "signature": "public System.Int32 GetVisibleParagraphCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.InstallEffect(Electron2D.RichTextEffect)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "InstallEffect",
+    "signature": "public System.Void InstallEffect(Electron2D.RichTextEffect effect)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "effect",
+        "type": "Electron2D.RichTextEffect",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.InvalidateParagraph(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "InvalidateParagraph",
+    "signature": "public System.Boolean InvalidateParagraph(System.Int32 paragraph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paragraph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.IsFinished()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "IsFinished",
+    "signature": "public System.Boolean IsFinished()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.IsMenuVisible()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "IsMenuVisible",
+    "signature": "public System.Boolean IsMenuVisible()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.MenuOption(Electron2D.RichTextLabel.MenuItems)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "MenuOption",
+    "signature": "public System.Void MenuOption(Electron2D.RichTextLabel.MenuItems option)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "option",
+        "type": "Electron2D.RichTextLabel.MenuItems",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.Newline()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Newline",
+    "signature": "public System.Void Newline()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent inputEvent)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnGetCursorShape(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnGetCursorShape",
+    "signature": "protected override Electron2D.CursorShape OnGetCursorShape(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CursorShape",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnGetDragData(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnGetDragData",
+    "signature": "protected override Electron2D.DragPayload OnGetDragData(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.DragPayload",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnGetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnGetTooltip",
+    "signature": "protected override System.String OnGetTooltip(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ParseBBCode(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ParseBBCode",
+    "signature": "public System.Void ParseBBCode(System.String bbcode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "bbcode",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ParseExpressionsForValues(System.String[])",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ParseExpressionsForValues",
+    "signature": "public Electron2D.RichTextEffectEnvironment ParseExpressionsForValues(System.String[] expressions)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "expressions",
+        "type": "System.String[]",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RichTextEffectEnvironment",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.Pop()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Pop",
+    "signature": "public System.Void Pop()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PopAll()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PopAll",
+    "signature": "public System.Void PopAll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PopContext()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PopContext",
+    "signature": "public System.Void PopContext()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushBGColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushBGColor",
+    "signature": "public System.Void PushBGColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushBold()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushBold",
+    "signature": "public System.Void PushBold()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushBoldItalics()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushBoldItalics",
+    "signature": "public System.Void PushBoldItalics()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushCell()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushCell",
+    "signature": "public System.Void PushCell()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushColor",
+    "signature": "public System.Void PushColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushContext()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushContext",
+    "signature": "public System.Void PushContext()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushCustomFX(Electron2D.RichTextEffect,Electron2D.RichTextEffectEnvironment)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushCustomFX",
+    "signature": "public System.Void PushCustomFX(Electron2D.RichTextEffect effect, Electron2D.RichTextEffectEnvironment env)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "effect",
+        "type": "Electron2D.RichTextEffect",
+        "default": null
+      },
+      {
+        "name": "env",
+        "type": "Electron2D.RichTextEffectEnvironment",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushDropcap(System.String,Electron2D.Font,System.Int32,Electron2D.Rect2,System.Nullable\u003CElectron2D.Color\u003E,System.Int32,System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushDropcap",
+    "signature": "public System.Void PushDropcap(System.String text, Electron2D.Font font, System.Int32 size, Electron2D.Rect2 dropcapMargins = default, System.Nullable\u003CElectron2D.Color\u003E color = null, System.Int32 outlineSize = 0, System.Nullable\u003CElectron2D.Color\u003E outlineColor = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "text",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "dropcapMargins",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": "0"
+      },
+      {
+        "name": "outlineColor",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushFGColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushFGColor",
+    "signature": "public System.Void PushFGColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushFont(Electron2D.Font,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushFont",
+    "signature": "public System.Void PushFont(Electron2D.Font font, System.Int32 fontSize = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "font",
+        "type": "Electron2D.Font",
+        "default": null
+      },
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushFontSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushFontSize",
+    "signature": "public System.Void PushFontSize(System.Int32 fontSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fontSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushHint(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushHint",
+    "signature": "public System.Void PushHint(System.String description)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushIndent(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushIndent",
+    "signature": "public System.Void PushIndent(System.Int32 level)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "level",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushItalics()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushItalics",
+    "signature": "public System.Void PushItalics()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushLanguage(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushLanguage",
+    "signature": "public System.Void PushLanguage(System.String language)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushList(System.Int32,Electron2D.RichTextLabel.ListType,System.Boolean,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushList",
+    "signature": "public System.Void PushList(System.Int32 level, Electron2D.RichTextLabel.ListType type, System.Boolean capitalize, System.String bullet = \u0022\\u2022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "level",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "Electron2D.RichTextLabel.ListType",
+        "default": null
+      },
+      {
+        "name": "capitalize",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "bullet",
+        "type": "System.String",
+        "default": "\u0022\\u2022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushMeta\u00601(T,Electron2D.RichTextLabel.MetaUnderline,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushMeta",
+    "signature": "public System.Void PushMeta\u003CT\u003E(T data, Electron2D.RichTextLabel.MetaUnderline underlineMode = Always, System.String tooltip = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "data",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "underlineMode",
+        "type": "Electron2D.RichTextLabel.MetaUnderline",
+        "default": "Always"
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushMono()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushMono",
+    "signature": "public System.Void PushMono()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushNormal()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushNormal",
+    "signature": "public System.Void PushNormal()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushOutlineColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushOutlineColor",
+    "signature": "public System.Void PushOutlineColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushOutlineSize(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushOutlineSize",
+    "signature": "public System.Void PushOutlineSize(System.Int32 outlineSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outlineSize",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushParagraph(Electron2D.HorizontalAlignment,Electron2D.TextDirection,System.String,Electron2D.StructuredTextParser,Electron2D.TextJustificationFlags,System.Single[])",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushParagraph",
+    "signature": "public System.Void PushParagraph(Electron2D.HorizontalAlignment alignment, Electron2D.TextDirection baseDirection = Auto, System.String language = \u0022\u0022, Electron2D.StructuredTextParser stParser = Default, Electron2D.TextJustificationFlags justificationFlags = Kashida, WordBound, SkipLastLine, DoNotSkipSingleLine, System.Single[] tabStops = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "alignment",
+        "type": "Electron2D.HorizontalAlignment",
+        "default": null
+      },
+      {
+        "name": "baseDirection",
+        "type": "Electron2D.TextDirection",
+        "default": "Auto"
+      },
+      {
+        "name": "language",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "stParser",
+        "type": "Electron2D.StructuredTextParser",
+        "default": "Default"
+      },
+      {
+        "name": "justificationFlags",
+        "type": "Electron2D.TextJustificationFlags",
+        "default": "Kashida, WordBound, SkipLastLine, DoNotSkipSingleLine"
+      },
+      {
+        "name": "tabStops",
+        "type": "System.Single[]",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushStrikethrough(System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushStrikethrough",
+    "signature": "public System.Void PushStrikethrough(System.Nullable\u003CElectron2D.Color\u003E color = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushTable(System.Int32,Electron2D.InlineAlignment,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushTable",
+    "signature": "public System.Void PushTable(System.Int32 columns, Electron2D.InlineAlignment inlineAlign = Top, System.Int32 alignToRow = -1, System.String name = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "columns",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Top"
+      },
+      {
+        "name": "alignToRow",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.PushUnderline(System.Nullable\u003CElectron2D.Color\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "PushUnderline",
+    "signature": "public System.Void PushUnderline(System.Nullable\u003CElectron2D.Color\u003E color = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ReloadEffects()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ReloadEffects",
+    "signature": "public System.Void ReloadEffects()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.RemoveParagraph(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "RemoveParagraph",
+    "signature": "public System.Boolean RemoveParagraph(System.Int32 paragraph, System.Boolean noInvalidate = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paragraph",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "noInvalidate",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ScrollToLine(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollToLine",
+    "signature": "public System.Void ScrollToLine(System.Int32 line)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "line",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ScrollToParagraph(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollToParagraph",
+    "signature": "public System.Void ScrollToParagraph(System.Int32 paragraph)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "paragraph",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ScrollToSelection()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollToSelection",
+    "signature": "public System.Void ScrollToSelection()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SelectAll()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SelectAll",
+    "signature": "public System.Void SelectAll()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetCellBorderColor(Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetCellBorderColor",
+    "signature": "public System.Void SetCellBorderColor(Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetCellPadding(Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetCellPadding",
+    "signature": "public System.Void SetCellPadding(Electron2D.Rect2 padding)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "padding",
+        "type": "Electron2D.Rect2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetCellRowBackgroundColor(Electron2D.Color,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetCellRowBackgroundColor",
+    "signature": "public System.Void SetCellRowBackgroundColor(Electron2D.Color oddRowBG, Electron2D.Color evenRowBG)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "oddRowBG",
+        "type": "Electron2D.Color",
+        "default": null
+      },
+      {
+        "name": "evenRowBG",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetCellSizeOverride(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetCellSizeOverride",
+    "signature": "public System.Void SetCellSizeOverride(Electron2D.Vector2 minSize, Electron2D.Vector2 maxSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "minSize",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "maxSize",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetTableColumnExpand(System.Int32,System.Boolean,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetTableColumnExpand",
+    "signature": "public System.Void SetTableColumnExpand(System.Int32 column, System.Boolean expand, System.Int32 ratio = 1, System.Boolean shrink = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "expand",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "ratio",
+        "type": "System.Int32",
+        "default": "1"
+      },
+      {
+        "name": "shrink",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.SetTableColumnName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SetTableColumnName",
+    "signature": "public System.Void SetTableColumnName(System.Int32 column, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "column",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.UpdateImage\u00601(T,Electron2D.RichTextLabel.ImageUpdateMask,Electron2D.Texture,System.Single,System.Single,System.Nullable\u003CElectron2D.Color\u003E,Electron2D.InlineAlignment,Electron2D.Rect2,System.Boolean,System.String,Electron2D.RichTextLabel.ImageUnit,Electron2D.RichTextLabel.ImageUnit)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "UpdateImage",
+    "signature": "public System.Void UpdateImage\u003CT\u003E(T key, Electron2D.RichTextLabel.ImageUpdateMask mask, Electron2D.Texture image, System.Single width = 0f, System.Single height = 0f, System.Nullable\u003CElectron2D.Color\u003E color = null, Electron2D.InlineAlignment inlineAlign = Center, Electron2D.Rect2 region = default, System.Boolean pad = false, System.String tooltip = \u0022\u0022, Electron2D.RichTextLabel.ImageUnit widthUnit = Pixel, Electron2D.RichTextLabel.ImageUnit heightUnit = Pixel)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "key",
+        "type": "T",
+        "default": null
+      },
+      {
+        "name": "mask",
+        "type": "Electron2D.RichTextLabel.ImageUpdateMask",
+        "default": null
+      },
+      {
+        "name": "image",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "width",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "height",
+        "type": "System.Single",
+        "default": "0f"
+      },
+      {
+        "name": "color",
+        "type": "System.Nullable\u003CElectron2D.Color\u003E",
+        "default": "null"
+      },
+      {
+        "name": "inlineAlign",
+        "type": "Electron2D.InlineAlignment",
+        "default": "Center"
+      },
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      },
+      {
+        "name": "pad",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "widthUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      },
+      {
+        "name": "heightUnit",
+        "type": "Electron2D.RichTextLabel.ImageUnit",
+        "default": "Pixel"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextLabel.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RichTextMetadata.TryGet\u00601(ref T)",
+    "kind": "method",
+    "declaringType": "Electron2D.RichTextMetadata",
+    "name": "TryGet",
+    "signature": "public System.Boolean TryGet\u003CT\u003E(out T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "ref T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RigidBody.AddConstantCentralForce(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.RigidBody",
@@ -145980,6 +149036,175 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CharFXTransform.Color()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Color",
+    "signature": "public Electron2D.Color Color { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.ElapsedTime()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "ElapsedTime",
+    "signature": "public System.Double ElapsedTime { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Env()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Env",
+    "signature": "public Electron2D.RichTextEffectEnvironment Env { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextEffectEnvironment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Font()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Font",
+    "signature": "public Electron2D.Font Font { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Font",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.GlyphCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "GlyphCount",
+    "signature": "public System.Int32 GlyphCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.GlyphFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "GlyphFlags",
+    "signature": "public Electron2D.TextGraphemeFlags GlyphFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextGraphemeFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.GlyphIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "GlyphIndex",
+    "signature": "public System.Int32 GlyphIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Offset",
+    "signature": "public Electron2D.Vector2 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Outline()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Outline",
+    "signature": "public System.Boolean Outline { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Range()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Range",
+    "signature": "public Electron2D.Vector2i Range { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.RelativeIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "RelativeIndex",
+    "signature": "public System.Int32 RelativeIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Transform()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Transform",
+    "signature": "public Electron2D.Transform Transform { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CharFXTransform.Visible()",
+    "kind": "property",
+    "declaringType": "Electron2D.CharFXTransform",
+    "name": "Visible",
+    "signature": "public System.Boolean Visible { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CharacterBody.FloorBlockOnWall()",
     "kind": "property",
     "declaringType": "Electron2D.CharacterBody",
@@ -159887,6 +163112,422 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextEffect.BBCode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextEffect",
+    "name": "BBCode",
+    "signature": "public System.String BBCode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextEffectEnvironment.Count()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextEffectEnvironment",
+    "name": "Count",
+    "signature": "public System.Int32 Count { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.AutowrapMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AutowrapMode",
+    "signature": "public Electron2D.TextAutowrapMode AutowrapMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextAutowrapMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.AutowrapTrimFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "AutowrapTrimFlags",
+    "signature": "public Electron2D.TextLineBreakFlags AutowrapTrimFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextLineBreakFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.BBCodeEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "BBCodeEnabled",
+    "signature": "public System.Boolean BBCodeEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ContextMenuEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ContextMenuEnabled",
+    "signature": "public System.Boolean ContextMenuEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.CustomEffects()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "CustomEffects",
+    "signature": "public Electron2D.RichTextEffect[] CustomEffects { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RichTextEffect[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.DeselectOnFocusLossEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "DeselectOnFocusLossEnabled",
+    "signature": "public System.Boolean DeselectOnFocusLossEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.DragAndDropSelectionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "DragAndDropSelectionEnabled",
+    "signature": "public System.Boolean DragAndDropSelectionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.FitContent()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "FitContent",
+    "signature": "public System.Boolean FitContent { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.HintUnderlined()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "HintUnderlined",
+    "signature": "public System.Boolean HintUnderlined { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.HorizontalAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "HorizontalAlignment",
+    "signature": "public Electron2D.HorizontalAlignment HorizontalAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.HorizontalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.JustificationFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "JustificationFlags",
+    "signature": "public Electron2D.TextJustificationFlags JustificationFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextJustificationFlags",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Language",
+    "signature": "public System.String Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.MetaUnderlined()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "MetaUnderlined",
+    "signature": "public System.Boolean MetaUnderlined { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ProgressBarDelay()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ProgressBarDelay",
+    "signature": "public System.Int32 ProgressBarDelay { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ScrollActive()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollActive",
+    "signature": "public System.Boolean ScrollActive { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ScrollFollowing()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollFollowing",
+    "signature": "public System.Boolean ScrollFollowing { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ScrollFollowingVisibleCharacters()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ScrollFollowingVisibleCharacters",
+    "signature": "public System.Boolean ScrollFollowingVisibleCharacters { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.SelectionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "SelectionEnabled",
+    "signature": "public System.Boolean SelectionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.ShortcutKeysEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "ShortcutKeysEnabled",
+    "signature": "public System.Boolean ShortcutKeysEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.StructuredTextBIDIOverride()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "StructuredTextBIDIOverride",
+    "signature": "public Electron2D.StructuredTextParser StructuredTextBIDIOverride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.StructuredTextParser",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.StructuredTextBIDIOverrideOptions()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "StructuredTextBIDIOverrideOptions",
+    "signature": "public System.String[] StructuredTextBIDIOverrideOptions { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.TabSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "TabSize",
+    "signature": "public System.Int32 TabSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.TabStops()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "TabStops",
+    "signature": "public System.Single[] TabStops { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.Text()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Text",
+    "signature": "public System.String Text { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.TextDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "TextDirection",
+    "signature": "public Electron2D.TextDirection TextDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.Threaded()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "Threaded",
+    "signature": "public System.Boolean Threaded { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.VerticalAlignment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "VerticalAlignment",
+    "signature": "public Electron2D.VerticalAlignment VerticalAlignment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.VerticalAlignment",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.VisibleCharacters()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "VisibleCharacters",
+    "signature": "public System.Int32 VisibleCharacters { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.VisibleCharactersBehavior()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "VisibleCharactersBehavior",
+    "signature": "public Electron2D.TextVisibleCharactersBehavior VisibleCharactersBehavior { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextVisibleCharactersBehavior",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RichTextLabel.VisibleRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.RichTextLabel",
+    "name": "VisibleRatio",
+    "signature": "public System.Single VisibleRatio { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

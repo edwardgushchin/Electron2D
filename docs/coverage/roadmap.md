@@ -1,10 +1,10 @@
 # Coverage roadmap
 
-Last updated: 2026-10-03
+Last updated: 2026-10-07
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1376 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1371 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 972 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -49,6 +49,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
+| [RichTextLabel](classes/RichTextLabel.md) | 0 | 8 |
 | [Area2D](classes/Area2D.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
@@ -92,7 +93,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 26 |
+| GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 24 |
 | Navigation2D: trigger is the first NavigationServer2D map, polygon, region and avoidance backend slice (ADR 0052). | 10 |
 | Trigger: first 2D skeletal animation and inverse-kinematics slice. | 9 |
 | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. | 8 |
@@ -135,7 +136,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
-| Trigger: first typed rich-text effect slice after 2D GUI and text rendering (ADR 0028). | 1 |
 | Trigger: platform font discovery, matching and owned fallback faces over the integrated FontFile backend (ADR 0046). | 1 |
 | Trigger: typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space. | 1 |
 | Trigger: typed live body-state callback and solver ownership over the PhysicsServer space. | 1 |
