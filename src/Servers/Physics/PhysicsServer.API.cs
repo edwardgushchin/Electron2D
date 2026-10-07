@@ -293,13 +293,13 @@ public sealed partial class PhysicsServer
 
     /// <summary>Sets the maximum retained contact-point count for a body.</summary>
     /// <param name="body">A live body RID.</param>
-    /// <param name="amount">Nonnegative cap; zero disables contact snapshots.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The cap is negative.</exception>
+    /// <param name="amount">A cap from zero through 4095; zero disables snapshots. Assignment clears the old point count.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The cap is outside zero through 4095.</exception>
     public static void BodySetMaxContactsReported(RID body, int amount) => Service.BodySetMaxContactsReportedCore(body, amount);
 
     /// <summary>Gets the body's configured contact-point limit.</summary>
     /// <param name="body">A live body RID.</param>
-    /// <returns>The nonnegative limit; zero disables contact snapshots.</returns>
+    /// <returns>The configured limit, from zero through 4095; zero disables contact snapshots.</returns>
     public static int BodyGetMaxContactsReported(RID body) => Service.BodyGetMaxContactsReportedCore(body);
 
     /// <summary>Excludes two bodies from ordinary contact and motion tests when either body lists the other.</summary>

@@ -48,20 +48,21 @@ public partial class RigidBody
 
     /// <summary>Gets or sets the maximum number of contact points reported from a fixed step.</summary>
     /// <value>Zero by default, which disables contact-point reporting and contact entry/exit.</value>
-    /// <exception cref="ArgumentOutOfRangeException">The assigned count is negative.</exception>
-    /// <remarks>Attached access requires the scene owner thread. The assignment prepares contact storage; reported points are capped after each fixed step.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The assigned count is outside zero through 4095.</exception>
+    /// <remarks>Attached access requires the scene owner thread. The assignment prepares bounded point storage. A full slot set keeps the deepest contacts; equal-depth candidates retain existing slots.</remarks>
     public int MaxContactsReported
     {
         get { ThrowIfDisposed(); return _maxContactsReported; }
         set
         {
             EnsureMutable();
-            if (value < 0) throw new ArgumentOutOfRangeException(nameof(value));
+            if ((uint)value > PhysicsBodyRuntime.MaxContactLimit) throw new ArgumentOutOfRangeException(nameof(value));
             _contacts.EnsureCapacity(value); _nextContacts.EnsureCapacity(value);
             _shapePairs.Prepare(value);
             _pairChanges.EnsureCapacity(checked(value * 4));
             PhysicsServer.Service.BodyRuntime(PhysicsRID).View?.PrepareContacts(value);
             _maxContactsReported = value;
+            _contactCount = 0;
             Space?.PrepareMonitoringCapacity();
         }
     }
@@ -117,47 +118,19 @@ public partial class RigidBody
     internal void CollectContacts(PhysicsDirectBodyState state)
     {
         _nextContacts.Clear(); _shapePairs.Begin();
-        var pointCount = 0;
         state.BeginContactSnapshot();
-        if (_maxContactsReported > 0 && HasBackend)
-        {
-            var world = b2GetWorldFromId(Space!.WorldID);
-            var body = b2GetBodyFullId(world, BackendID);
-            var key = body.headContactKey;
-            var pairs = 0;
-            // Preserve the backend's linked-pair order and cap without copying whole manifolds.
-            while (key != B2_NULL_INDEX && pairs < _maxContactsReported)
-            {
-                var contact = b2Array_Get(ref world.contacts, key >> 1);
-                var edge = key & 1;
-                key = contact.edges[edge].nextKey;
-                if ((contact.flags & (uint)B2ContactFlags.b2_contactTouchingFlag) == 0) continue;
-                pairs++;
-                ref var manifold = ref b2GetContactSim(world, contact).manifold;
-                var retained = Math.Min(manifold.pointCount, _maxContactsReported - pointCount);
-                pointCount += retained;
-                var first = edge == 0;
-                var ownShape = b2Array_Get(ref world.shapes, first ? contact.shapeIdA : contact.shapeIdB);
-                var otherShape = b2Array_Get(ref world.shapes, first ? contact.shapeIdB : contact.shapeIdA);
-                var ownTag = ownShape.userData.GetRef<PhysicsFixtureTag>();
-                var otherTag = otherShape.userData.GetRef<PhysicsFixtureTag>();
-                var otherObject = otherTag?.SceneObject;
-                if (ownTag is not null && otherTag is not null)
-                    state.CaptureContact(ref manifold, b2MakeBodyId(world, otherShape.bodyId), first,
-                        ownTag, otherTag, otherObject, _maxContactsReported);
-                if (!_contactMonitor || retained == 0) continue;
-                if (otherObject is PhysicsBody other && !ReferenceEquals(other, this))
+        if (HasBackend) state.CaptureContacts();
+        if (_contactMonitor)
+            foreach (ref readonly var contact in state.CapturedContacts)
+                if (contact.Other.SceneObject is PhysicsBody other && !ReferenceEquals(other, this))
                 {
                     _nextContacts.Add(other);
-                    if (ownTag is not null && otherTag is not null)
-                        _shapePairs.Observe(new(otherTag.ColliderRID, other, false, otherTag.ShapeIndex, ownTag.ShapeIndex));
+                    _shapePairs.Observe(new(contact.Collider, other, false, contact.ColliderShape, contact.LocalShape));
                 }
-            }
-        }
 
         _pairChanges.Clear(); _shapePairs.Commit(_pairChanges);
         (_contacts, _nextContacts) = (_nextContacts, _contacts);
-        _contactCount = pointCount;
+        _contactCount = state.CapturedContacts.Length;
     }
 
     internal void QueueContactChanges(List<PhysicsSpace.ContactEvent> events)

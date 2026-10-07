@@ -1986,7 +1986,7 @@
         "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)"
       ],
       "state": "Partial",
-      "reason": "Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload and exact capped-contact priority require the existing tile/contact integration triggers (ADR 0058, ShapePairEventTests)."
+      "reason": "Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload requires the existing tile-body integration trigger (ADR 0058, ShapePairEventTests)."
     },
     {
       "godot": [
@@ -2027,7 +2027,7 @@
         "class:PhysicsDirectBodyState2D"
       ],
       "state": "Partial",
-      "reason": "Live owner-thread state, post-solver callbacks, forces, field integration and contact snapshots execute. Virtual tile collider object identity and whole-step tangential impulse aggregation remain exact gaps (ADR 0070, PhysicsBodyStateTests)."
+      "reason": "Live owner-thread state, post-solver callbacks, forces, fields and complete normal/tangential frame impulses execute. Virtual tile collider object identity remains a separate gap (ADR 0070, PhysicsBodyStateTests, PhysicsContactImpulseTests)."
     },
     {
       "godot": [
@@ -2086,8 +2086,8 @@
       "godot": [
         "PhysicsDirectBodyState2D::method:get_contact_impulse(int:)"
       ],
-      "state": "Partial",
-      "reason": "Total normal impulse across four substeps and final-substep tangent impulse are reported; exact whole-step tangential aggregate requires a backend contact accumulator exposed before constraint impulses are discarded (ADR 0070)."
+      "state": "Implemented",
+      "reason": "Signed normal/tangential impulses include warm starting, CPU scalar/SIMD or GPU substeps and every internal kinematic interval. Solve epochs prevent sleeping replay; paired momentum and zero warmed allocation are verified by PhysicsContactImpulseTests (ADR 0070)."
     },
     {
       "godot": [
@@ -2858,15 +2858,15 @@
         "RigidBody2D::signal:body_exited(Node:)"
       ],
       "state": "Partial",
-      "reason": "Current scene-body snapshots and deduplicated transitions execute; tile-map virtual collision bodies and reference selection among simultaneous contacts above the cap remain to be integrated and audited."
+      "reason": "Current scene-body snapshots and deduplicated transitions use the same deepest retained points as direct state. Tile-map virtual collision bodies remain to be integrated."
     },
     {
       "godot": [
         "RigidBody2D::method:get_contact_count()",
         "RigidBody2D::property:max_contacts_reported"
       ],
-      "state": "Partial",
-      "reason": "Current manifold points are counted up to the configured cap; exact reference point-selection priority and the reference upper bound remain to be audited."
+      "state": "Implemented",
+      "reason": "Zero through 4095 accepted; setters clear the old point count and reject other values before mutation. All candidates are scanned, replacing the first shallowest retained slot only for a strictly deeper point. Scene monitoring and direct state share selection; PhysicsContactImpulseTests checks scene/server limits, ties and deeper late candidates."
     },
     {
       "godot": [

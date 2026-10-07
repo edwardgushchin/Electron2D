@@ -45,6 +45,9 @@ namespace Box2D.NET
         /// impulse
         public float totalNormalImpulse;
 
+        // Signed friction impulse applied across all substeps, including warm starting.
+        internal float totalTangentImpulse;
+
         /// Relative normal velocity pre-solve. Used for hit events. If the normal impulse is
         /// zero then there was no hit. Negative means shapes are approaching.
         public float normalVelocity;

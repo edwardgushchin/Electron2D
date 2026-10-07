@@ -206,3 +206,14 @@ CPU/GPU body runtime. PhysicsServerStateTests verifies raw kinematic target trav
 scene/server/direct-state consistency, detach/reentry and owner/phase guards on the
 Vulkan solver path. Its 64 warmed state/read/step cycles allocate zero all-thread
 managed bytes; GPU completeness and foreign-device/native allocation remain open.
+
+Normal and signed tangent impulses now cover all solver substeps, including warm
+starting. The two reserved endpoint-vector w components hold tangent totals without
+changing 128-byte input or 208-byte working layouts; resident history feature IDs
+are unchanged. Publication tags the native solve epoch. The shared reporting path
+aggregates multiple kinematic intervals, retains short-lived contacts and selects
+deepest capped contacts before callbacks. PhysicsContactImpulseTests verifies CPU/GPU momentum, paired signs,
+sleep reset, cap bounds/ties and zero warmed all-thread managed allocation. One full
+GPU run passed all physics checks and then aborted inside GTK/libdecor while opening
+a renderer-lifetime test window; a fresh identical run passed completely. This
+intermittent native-window failure was not fixed by the contact change.

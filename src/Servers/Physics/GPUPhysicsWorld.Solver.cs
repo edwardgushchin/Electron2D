@@ -112,7 +112,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             _bodyStorage.Read(count); _contactStorage.Read(contactCount); _jointStorage.Read(jointCount);
             for (var i = 0; i < contactCount; i++)
                 if (!Finite(_contactStorage.Data[i].Impulses1) || !Finite(_contactStorage.Data[i].Impulses2) || !Finite(_contactStorage.Data[i].Rolling) ||
-                    !Finite(_contactStorage.Data[i].Params1) || !Finite(_contactStorage.Data[i].Params2) || !Finite(_contactStorage.Data[i].Soft))
+                    !Finite(_contactStorage.Data[i].SurfaceA) || !Finite(_contactStorage.Data[i].SurfaceB) || !Finite(_contactStorage.Data[i].Params1) || !Finite(_contactStorage.Data[i].Params2) || !Finite(_contactStorage.Data[i].Soft))
                     throw new InvalidOperationException("GPU contact preparation or solving returned nonfinite state.");
             for (var i = 0; i < jointCount; i++)
                 if (!Finite(_jointStorage.Data[i].Impulses) || !Finite(_jointStorage.Data[i].Limits) || !Finite(_jointStorage.Data[i].FrameA) ||
@@ -255,15 +255,16 @@ internal sealed unsafe partial class GPUPhysicsWorld
             {
                 var packet = _contactStorage.Data[_contactStarts[color] + i];
                 var contact = group.contactSims.data[i];
+                contact.solvedStep = context.world.stepIndex;
                 contact.generatedManifoldVersion = -(SolverSubmissionCount + 1);
                 contact.generatedManifoldIndex = _contactStarts[color] + i;
                 ref var m = ref contact.manifold; m.rollingImpulse = packet.Rolling.Z;
                 m.points[0].normalImpulse = packet.Impulses1.X; m.points[0].tangentImpulse = packet.Impulses1.Y;
-                m.points[0].totalNormalImpulse = packet.Impulses1.Z; m.points[0].normalVelocity = packet.Params1.W;
+                m.points[0].totalNormalImpulse = packet.Impulses1.Z; m.points[0].totalTangentImpulse = packet.SurfaceA.W; m.points[0].normalVelocity = packet.Params1.W;
                 if (m.pointCount > 1)
                 {
                     m.points[1].normalImpulse = packet.Impulses2.X; m.points[1].tangentImpulse = packet.Impulses2.Y;
-                    m.points[1].totalNormalImpulse = packet.Impulses2.Z; m.points[1].normalVelocity = packet.Params2.W;
+                    m.points[1].totalNormalImpulse = packet.Impulses2.Z; m.points[1].totalTangentImpulse = packet.SurfaceB.W; m.points[1].normalVelocity = packet.Params2.W;
                 }
             }
             for (var i = 0; i < group.jointSims.count; i++)

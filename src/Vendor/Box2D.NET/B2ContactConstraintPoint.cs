@@ -13,6 +13,7 @@ namespace Box2D.NET
         public float normalImpulse;
         public float tangentImpulse;
         public float totalNormalImpulse;
+        internal float totalTangentImpulse;
         public float normalMass;
         public float tangentMass;
     }

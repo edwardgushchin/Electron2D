@@ -52,3 +52,8 @@ shares transform, linear/angular velocity, sleep, automatic sleep policy and axi
 projection across scene/server owners and direct views. Non-rigid scene contact
 velocity is distinct from character movement input and restored at attachment.
 PhysicsServerStateTests covers CPU/GPU behavior and warmed allocation.
+
+ContactLimit accepts zero through 4095 for both scene and raw owners. The common
+limit constant keeps their validation aligned; reconfiguration clears retained point
+counts before the next solve. Selected object/shape monitoring follows direct-state
+point selection. PhysicsContactImpulseTests covers boundary and replacement behavior.

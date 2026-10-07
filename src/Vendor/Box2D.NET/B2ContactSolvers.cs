@@ -141,6 +141,7 @@ namespace Box2D.NET
                     cp.normalImpulse = warmStartScale * mp.normalImpulse;
                     cp.tangentImpulse = warmStartScale * mp.tangentImpulse;
                     cp.totalNormalImpulse = 0.0f;
+                    cp.totalTangentImpulse = 0.0f;
 
                     B2Vec2 rA = mp.anchorA;
                     B2Vec2 rB = mp.anchorB;
@@ -221,6 +222,7 @@ namespace Box2D.NET
                     B2Vec2 P = b2Add(b2MulSV(cp.normalImpulse, normal), b2MulSV(cp.tangentImpulse, tangent));
 
                     cp.totalNormalImpulse += cp.normalImpulse;
+                    cp.totalTangentImpulse += cp.tangentImpulse;
 
                     wA -= iA * b2Cross(rA, P);
                     vA = b2MulAdd(vA, -mA, P);
@@ -376,6 +378,7 @@ namespace Box2D.NET
                     float newImpulse = b2ClampFloat(cp.tangentImpulse + impulse, -maxFriction, maxFriction);
                     impulse = newImpulse - cp.tangentImpulse;
                     cp.tangentImpulse = newImpulse;
+                    cp.totalTangentImpulse += impulse;
 
                     // apply tangent impulse
                     B2Vec2 P = b2MulSV(impulse, tangent);
@@ -533,6 +536,7 @@ namespace Box2D.NET
             {
                 ref B2ContactConstraint constraint = ref constraints[i];
                 B2ContactSim contact = contacts[i];
+                contact.solvedStep = context.world.stepIndex;
                 ref B2Manifold manifold = ref contact.manifold;
                 int pointCount = manifold.pointCount;
 
@@ -541,6 +545,7 @@ namespace Box2D.NET
                     manifold.points[j].normalImpulse = constraint.points[j].normalImpulse;
                     manifold.points[j].tangentImpulse = constraint.points[j].tangentImpulse;
                     manifold.points[j].totalNormalImpulse = constraint.points[j].totalNormalImpulse;
+                    manifold.points[j].totalTangentImpulse = constraint.points[j].totalTangentImpulse;
                     manifold.points[j].normalVelocity = constraint.points[j].relativeVelocity;
                 }
 
@@ -1262,6 +1267,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                             constraint.normalImpulse1[j] = warmStartScale * mp.normalImpulse;
                             constraint.tangentImpulse1[j] = warmStartScale * mp.tangentImpulse;
                             constraint.totalNormalImpulse1[j] = 0.0f;
+                            constraint.totalTangentImpulse1[j] = 0.0f;
 
                             float rnA = b2Cross(rA, normal);
                             float rnB = b2Cross(rB, normal);
@@ -1299,6 +1305,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                             constraint.normalImpulse2[j] = warmStartScale * mp.normalImpulse;
                             constraint.tangentImpulse2[j] = warmStartScale * mp.tangentImpulse;
                             constraint.totalNormalImpulse2[j] = 0.0f;
+                            constraint.totalTangentImpulse2[j] = 0.0f;
 
                             float rnA = b2Cross(rA, normal);
                             float rnB = b2Cross(rB, normal);
@@ -1322,6 +1329,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                             constraint.normalImpulse2[j] = 0.0f;
                             constraint.tangentImpulse2[j] = 0.0f;
                             constraint.totalNormalImpulse2[j] = 0.0f;
+                            constraint.totalTangentImpulse2[j] = 0.0f;
                             constraint.anchorA2.X[j] = 0.0f;
                             constraint.anchorA2.Y[j] = 0.0f;
                             constraint.anchorB2.X[j] = 0.0f;
@@ -1364,6 +1372,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                         constraint.normalImpulse1[j] = 0.0f;
                         constraint.tangentImpulse1[j] = 0.0f;
                         constraint.totalNormalImpulse1[j] = 0.0f;
+                        constraint.totalTangentImpulse1[j] = 0.0f;
                         constraint.normalMass1[j] = 0.0f;
                         constraint.tangentMass1[j] = 0.0f;
 
@@ -1375,6 +1384,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                         constraint.normalImpulse2[j] = 0.0f;
                         constraint.tangentImpulse2[j] = 0.0f;
                         constraint.totalNormalImpulse2[j] = 0.0f;
+                        constraint.totalTangentImpulse2[j] = 0.0f;
                         constraint.normalMass2[j] = 0.0f;
                         constraint.tangentMass2[j] = 0.0f;
 
@@ -1422,6 +1432,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     bB.v.Y = b2MulAddW(bB.v.Y, c.invMassB, P.Y);
 
                     c.totalNormalImpulse1 = b2AddW(c.totalNormalImpulse1, c.normalImpulse1);
+                    c.totalTangentImpulse1 = b2AddW(c.totalTangentImpulse1, c.tangentImpulse1);
                 }
 
                 if (!b2AllZeroW(c.normalMass2))
@@ -1441,6 +1452,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     bB.v.Y = b2MulAddW(bB.v.Y, c.invMassB, P.Y);
 
                     c.totalNormalImpulse2 = b2AddW(c.totalNormalImpulse2, c.normalImpulse2);
+                    c.totalTangentImpulse2 = b2AddW(c.totalTangentImpulse2, c.tangentImpulse2);
                 }
 
                 bA.w = b2MulSubW(bA.w, c.invIA, c.rollingImpulse);
@@ -1624,6 +1636,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     newImpulse = b2MaxW(b2SubW(b2ZeroW(), maxFriction), b2MinW(newImpulse, maxFriction));
                     B2FloatW impulse = b2SubW(newImpulse, c.tangentImpulse1);
                     c.tangentImpulse1 = newImpulse;
+                    c.totalTangentImpulse1 = b2AddW(c.totalTangentImpulse1, impulse);
 
                     // Apply contact impulse
                     B2FloatW Px = b2MulW(impulse, tangentX);
@@ -1662,6 +1675,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     newImpulse = b2MaxW(b2SubW(b2ZeroW(), maxFriction), b2MinW(newImpulse, maxFriction));
                     B2FloatW impulse = b2SubW(newImpulse, c.tangentImpulse2);
                     c.tangentImpulse2 = newImpulse;
+                    c.totalTangentImpulse2 = b2AddW(c.totalTangentImpulse2, impulse);
 
                     // Apply contact impulse
                     B2FloatW Px = b2MulW(impulse, tangentX);
@@ -1837,17 +1851,20 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
 
                 for (int laneIndex = 0; laneIndex < B2_SIMD_WIDTH; ++laneIndex)
                 {
+                    if (contacts[baseIndex + laneIndex] != null) contacts[baseIndex + laneIndex].solvedStep = context.world.stepIndex;
                     ref B2Manifold m = ref contacts[baseIndex + laneIndex] == null ? ref dummy : ref contacts[baseIndex + laneIndex].manifold;
                     m.rollingImpulse = rollingImpulse[laneIndex];
 
                     m.points[0].normalImpulse = normalImpulse1[laneIndex];
                     m.points[0].tangentImpulse = tangentImpulse1[laneIndex];
                     m.points[0].totalNormalImpulse = totalNormalImpulse1[laneIndex];
+                    m.points[0].totalTangentImpulse = c.totalTangentImpulse1[laneIndex];
                     m.points[0].normalVelocity = normalVelocity1[laneIndex];
 
                     m.points[1].normalImpulse = normalImpulse2[laneIndex];
                     m.points[1].tangentImpulse = tangentImpulse2[laneIndex];
                     m.points[1].totalNormalImpulse = totalNormalImpulse2[laneIndex];
+                    m.points[1].totalTangentImpulse = c.totalTangentImpulse2[laneIndex];
                     m.points[1].normalVelocity = normalVelocity2[laneIndex];
                 }
             }

@@ -32,11 +32,13 @@ namespace Box2D.NET
         public B2FloatW baseSeparation1;
         public B2FloatW normalImpulse1;
         public B2FloatW totalNormalImpulse1;
+        internal B2FloatW totalTangentImpulse1;
         public B2FloatW tangentImpulse1;
         public B2Vec2W anchorA2, anchorB2;
         public B2FloatW baseSeparation2;
         public B2FloatW normalImpulse2;
         public B2FloatW totalNormalImpulse2;
+        internal B2FloatW totalTangentImpulse2;
         public B2FloatW tangentImpulse2;
         public B2FloatW normalMass2, tangentMass2;
         public B2FloatW restitution;

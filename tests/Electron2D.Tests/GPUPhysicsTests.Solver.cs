@@ -22,7 +22,7 @@ internal static partial class GPUPhysicsTests
                     {
                         var ep = em.points[point]; var ap = am.points[point];
                         Near(ep.normalImpulse, ap.normalImpulse); Near(ep.tangentImpulse, ap.tangentImpulse);
-                        Near(ep.totalNormalImpulse, ap.totalNormalImpulse); Near(ep.normalVelocity, ap.normalVelocity);
+                        Near(ep.totalNormalImpulse, ap.totalNormalImpulse); Near(ep.totalTangentImpulse, ap.totalTangentImpulse); Near(ep.normalVelocity, ap.normalVelocity);
                     }
                 }
                 for (var i = 0; i < e.jointSims.count; i++)

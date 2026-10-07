@@ -16,6 +16,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal Vector2 ConstantForce;
     internal float ConstantTorque;
     internal bool OmitForces;
+    internal const int MaxContactLimit = 4095;
     internal int MaxContacts;
     internal Vector2 Gravity;
     internal float LinearDamp;

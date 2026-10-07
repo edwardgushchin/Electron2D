@@ -125,7 +125,33 @@ Adds TotalGravity * Step to linear velocity, then applies max(0, 1 - Step * damp
 
 GetContactCount is capped by the body's configured contact limit, zero by default. Each zero-based index yields both direct shape indices, collider RID/instance identity, global contact points, global outward normal and global-axis point velocities. GetContactColliderObject returns the live scene CollisionObject or null for server-only or released objects. Virtual tile collider identity remains Partial until typed tile-body integration. Contact snapshots survive fixture edits and queries during callbacks.
 
-GetContactImpulse uses scene units times kg/s. The normal component is accumulated across four solver substeps; the tangential component currently describes the final substep. **Whole-step tangential aggregation remains Partial** until the backend exposes that contact accumulator. No aggregate compatibility claim is made for that component.
+GetContactImpulse uses scene units times kg/s and reports impulse applied to this
+body. Both normal and signed friction components sum warm starting and every solver
+substep. Internal kinematic intervals accumulate vectors in world axes per canonical
+fixture pair and contact feature. A shared contact is counted once even when both
+ends report it. Sleeping manifolds with an older solve epoch report zero. Totals
+belong to contacts observed during the completed outer frame and stay unchanged
+after pose/fixture callback mutations. Short contacts that separate before the last
+internal interval are retained for that frame; a later frame without the contact
+clears it. Each feature uses its last observed geometry and greatest observed depth.
+Per-body encounter lists avoid scanning all world contacts for every reporter.
+
+Limits accept zero through 4095. A setter clears the old point count. Selection
+fills slots in backend encounter order, then replaces the first shallowest retained
+slot only for a strictly deeper candidate. Equal depths keep existing slots. Rigid
+object/shape monitoring derives from exactly this selected snapshot. Depth and a
+weak fixture-owner tag are private selection metadata, not new public contact fields.
+
+[PhysicsContactImpulseTests](../../tests/Electron2D.Tests/PhysicsContactImpulseTests.cs)
+compares reported impulses against actual linear momentum changes for scene/raw
+bodies, checks both participants, multiple native intervals, transient bounce contacts, rotating normals, sleep reset, cap bounds
+and ties, and measures 64 warmed active subdivided contact frames at zero all-thread
+managed bytes on CPU and Linux/Vulkan GPU. Raw constraint checks also compare the
+new tangent totals between scalar/SIMD CPU and GPU without changing tolerance.
+Native allocation, foreign devices, broad-scene performance and visual acceptance
+remain unverified. Large reporting limits cost O(candidates * limit). The optional
+multi-interval feature map retains its observed peak; larger unseen contact/feature
+sets can grow it outside the checked warm interval.
 
 <a id="getspacestate"></a>
 ### GetSpaceState() and GetVelocityAtLocalPosition(...)
@@ -156,13 +182,13 @@ ApplyForce/ApplyCentralForce/ApplyTorque queue one-step input in the shared body
 
 ## Internal kinematic integration intervals
 
-Fast kinematic travel may divide one fixed frame into several native world calls under [ADR 0075](../decisions/physics.md#adr-0075). Step and callback timing retain the outer frame; current contact impulse snapshots expose the last native solve. Whole-step impulse aggregation remains a separately tracked Partial contract. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) verifies full outer force duration and one integration callback.
+Fast kinematic travel may divide one fixed frame into several native world calls under [ADR 0075](../decisions/physics.md#adr-0075). Step, callback timing and contact impulse totals retain the complete outer frame, including all internal native intervals. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) verifies full outer force duration and one integration callback.
 
 ## Selected field parameters
 
 Typed PhysicsServer gravity/damping parameters feed the same reported TotalGravity/TotalLinearDamp/TotalAngularDamp and automatic integration policy for server/non-rigid bodies. CharacterBody.GetGravity reports the same scaled selected field. Custom integration still omits automatic effects while retaining selected-field reporting. [ADR 0076](../decisions/physics-mass.md#adr-0076) and [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) cover the shared policy.
 
-Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
+Contact limits prepare bounded point storage before fixed stepping. Every touching pair is scanned directly, retaining the deepest points without copying raw manifolds; no early pair cap hides later candidates. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
 
 Contact monitoring and direct-state values use the same solved-pair traversal. Snapshot collection may run on internal world workers; contact, integration and sync callbacks remain on the scene owner thread. The owner waits for every collector before any game callback can edit bodies or fixtures.
 

@@ -282,6 +282,7 @@ namespace Box2D.NET
             contactSim.shapeIdB = shapeIdB;
             contactSim.cache = b2_emptySimplexCache;
             contactSim.manifold = new B2Manifold();
+            contactSim.solvedStep = 0;
             contactSim.generatedManifoldVersion = 0;
 
             // These also get updated in the narrow phase
@@ -564,6 +565,7 @@ namespace Box2D.NET
                 mp2.normalImpulse = 0.0f;
                 mp2.tangentImpulse = 0.0f;
                 mp2.totalNormalImpulse = 0.0f;
+                mp2.totalTangentImpulse = 0.0f;
                 mp2.normalVelocity = 0.0f;
                 mp2.persisted = false;
 

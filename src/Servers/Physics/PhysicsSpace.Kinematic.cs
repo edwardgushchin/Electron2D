@@ -14,6 +14,7 @@ internal sealed partial class PhysicsSpace
 
     private void StepKinematicPaths(double delta, bool hasKinematicBodies)
     {
+        _aggregateContactImpulses = false; _frameContactIndices.Clear(); _frameContacts.Clear();
         if (!hasKinematicBodies) { StepBackend((float)delta); return; }
         var minimumExtent = B2_HUGE;
         foreach (var body in _bodies)
@@ -34,6 +35,7 @@ internal sealed partial class PhysicsSpace
             throw new InvalidOperationException("Kinematic displacement exceeds the finite integration range.");
         var steps = Math.Max(1, (int)countValue);
         if (steps == 1) { StepBackend((float)delta); return; }
+        BeginFrameContacts();
         _kinematicStepForces.Clear();
         foreach (var body in _bodies) Capture(body.BackendID);
         foreach (var body in _serverColliders) if (!body.IsArea) Capture(body.BackendID);
@@ -47,6 +49,7 @@ internal sealed partial class PhysicsSpace
                     sim.force = body.Force; sim.torque = body.Torque;
                 }
             StepBackend(subDelta);
+            CaptureIntervalImpulses();
         }
     }
 

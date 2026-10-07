@@ -49,3 +49,18 @@ Movement events reserve the rounded whole-world body capacity during membership 
 State/query access also rejects a locked underlying solver before mutation. Raw
 server kinematic targets are prepared before common path subdivision and consumed
 after the completed interval. Scene and server state tests exercise this on CPU/GPU.
+
+## Contact impulse publication
+
+[PhysicsSpace.ContactImpulses.cs](../../src/Servers/Physics/PhysicsSpace.ContactImpulses.cs)
+keeps a reusable feature map only for frames subdivided into multiple native calls.
+Reported fixture pairs are canonicalized, including swapped feature bytes and
+impulse direction; per-solve epochs prevent double counting both reporters. The
+map indexes retained records and per-body encounter lists. Records sum global-axis
+vectors, retain last geometry and greatest depth, and preserve transient contacts
+that separate before the final interval. A single native
+interval reads current-epoch manifold totals directly; sleeping/stale solves return
+zero. All accumulation precedes worker snapshot collection and public callbacks.
+PhysicsContactImpulseTests checks momentum, raw/scene roles, shared pairs, sleeping
+frames and zero warmed allocation on CPU/GPU. Unseen larger topology can grow the
+retained map; it is not an unlimited preallocated contact store.

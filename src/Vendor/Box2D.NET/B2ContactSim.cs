@@ -31,6 +31,7 @@ namespace Box2D.NET
         public float invIB;
 
         public B2Manifold manifold;
+        internal ulong solvedStep;
         internal B2Vec2 surfaceLinearA, surfaceLinearB;
         internal float surfaceAngularA, surfaceAngularB;
 
@@ -73,6 +74,7 @@ namespace Box2D.NET
             invIB = other.invIB;
 
             manifold = other.manifold;
+            solvedStep = other.solvedStep;
             surfaceLinearA = other.surfaceLinearA; surfaceLinearB = other.surfaceLinearB;
             surfaceAngularA = other.surfaceAngularA; surfaceAngularB = other.surfaceAngularB;
             generatedManifoldVersion = other.generatedManifoldVersion;

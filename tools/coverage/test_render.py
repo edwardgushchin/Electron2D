@@ -198,7 +198,7 @@ def main():
     assert len(body_state_rows) == 43
     assert {state: sum(f" | {state} | " in row for row in body_state_rows)
             for state in ("Implemented", "Partial", "Blocked")} == {
-                "Implemented": 40, "Partial": 3, "Blocked": 0}
+                "Implemented": 41, "Partial": 2, "Blocked": 0}
     assert "../../classes/PhysicsDirectBodyState.md" in class_rows["PhysicsDirectBodyState2D"]
     shape_rows = [row for row in pages[CLASS_PAGES / "Shape2D.md"].splitlines()
                   if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -405,9 +405,9 @@ def main():
     assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                        if row.startswith("| [`property int linear_damp_mode"))
     for prefix, status in (("method get_colliding_bodies", "Partial"),
-                           ("method get_contact_count", "Partial"),
+                           ("method get_contact_count", "Implemented"),
                            ("property bool contact_monitor", "Implemented"),
-                           ("property int max_contacts_reported", "Partial"),
+                           ("property int max_contacts_reported", "Implemented"),
                            ("signal body_entered", "Partial"),
                            ("signal body_exited", "Partial"),
                            ("signal body_shape_entered", "Partial"),

@@ -74,7 +74,7 @@ void prepareContact(uint index)
     vec4 a1 = first ? m.anchor1 : m.anchor2, b1 = first ? m.point1 : m.point2;
     vec4 a2 = second ? m.anchor1 : m.anchor2, b2 = second ? m.point1 : m.point2;
     Contact c;
-    c.surfaceA = packet.surfaceA; c.surfaceB = packet.surfaceB;
+    c.surfaceA = vec4(packet.surfaceA.xyz, 0); c.surfaceB = vec4(packet.surfaceB.xyz, 0);
     c.ids = packet.ids; c.mass = packet.mass; c.normal = vec4(m.normal.xy, packet.material.xy);
     c.rolling = vec4(packet.material.z, 0, packet.source.y, packet.material.w); c.soft = vec4(0);
     c.anchors1 = vec4(a1.xy, b1.xy) - packet.offset; c.anchors2 = vec4(a2.xy, b2.xy) - packet.offset;
@@ -138,14 +138,14 @@ void prepareJoint(uint index)
 }
 
 void contactPoint(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 params, inout vec4 impulses,
-    Body ba, Body bb, uint stage)
+    inout float totalTangent, Body ba, Body bb, uint stage)
 {
     vec2 ra = anchors.xy; vec2 rb = anchors.zw; vec2 n = c.normal.xy; vec2 t = vec2(n.y, -n.x);
     if (stage == 2)
     {
         precise vec2 p = impulses.x * n + impulses.y * t;
         applyImpulse(a, b, c.mass, ra, rb, p);
-        impulses.z += impulses.x;
+        impulses.z += impulses.x; totalTangent += impulses.y;
         return;
     }
     precise float impulse;
@@ -172,13 +172,13 @@ void contactPoint(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 para
     impulse = updated - impulses.x; impulses.x = updated; impulses.z += impulse;
     applyImpulse(a, b, c.mass, ra, rb, impulse * n);
 }
-void contactFriction(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 params, inout vec4 impulses)
+void contactFriction(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 params, inout vec4 impulses, inout float totalTangent)
 {
     vec2 t = vec2(c.normal.y, -c.normal.x);
     precise float speed = dot2(relativeVelocity(a, b, anchors.xy, anchors.zw), t) - c.normal.w;
     precise float limit = c.normal.z * impulses.x;
     precise float updated = clamp(impulses.y - params.y * speed, -limit, limit);
-    precise float impulse = updated - impulses.y; impulses.y = updated;
+    precise float impulse = updated - impulses.y; impulses.y = updated; totalTangent += impulse;
     applyImpulse(a, b, c.mass, anchors.xy, anchors.zw, impulse * t);
 }
 void solveContact(uint index, uint stage)
@@ -186,16 +186,16 @@ void solveContact(uint index, uint stage)
     Contact c = contacts[index];
     Body ba = readBody(int(c.ids.x)); Body bb = readBody(int(c.ids.y));
     precise vec3 a = ba.velocity.xyz + c.surfaceA.xyz; precise vec3 b = bb.velocity.xyz + c.surfaceB.xyz;
-    contactPoint(a, b, c, c.anchors1, c.params1, c.impulses1, ba, bb, stage);
-    if (c.ids.z > 1) contactPoint(a, b, c, c.anchors2, c.params2, c.impulses2, ba, bb, stage);
+    contactPoint(a, b, c, c.anchors1, c.params1, c.impulses1, c.surfaceA.w, ba, bb, stage);
+    if (c.ids.z > 1) contactPoint(a, b, c, c.anchors2, c.params2, c.impulses2, c.surfaceB.w, ba, bb, stage);
     if (stage == 2)
     {
         a.z -= c.mass.z * c.rolling.z; b.z += c.mass.w * c.rolling.z;
     }
     else if (stage == 3 || stage == 4)
     {
-        contactFriction(a, b, c, c.anchors1, c.params1, c.impulses1);
-        if (c.ids.z > 1) contactFriction(a, b, c, c.anchors2, c.params2, c.impulses2);
+        contactFriction(a, b, c, c.anchors1, c.params1, c.impulses1, c.surfaceA.w);
+        if (c.ids.z > 1) contactFriction(a, b, c, c.anchors2, c.params2, c.impulses2, c.surfaceB.w);
         precise float limit = c.rolling.x * (c.impulses1.x + (c.ids.z > 1 ? c.impulses2.x : 0.0));
         precise float updated = clamp(c.rolling.z + c.rolling.y * (a.z - b.z), -limit, limit);
         precise float impulse = updated - c.rolling.z; c.rolling.z = updated;

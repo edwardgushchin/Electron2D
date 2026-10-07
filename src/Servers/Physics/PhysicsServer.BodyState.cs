@@ -67,7 +67,7 @@ public sealed partial class PhysicsServer
 
     internal void BodySetMaxContactsReportedCore(RID body, int amount)
     {
-        ThrowIfDisposed(); if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount));
+        ThrowIfDisposed(); if ((uint)amount > PhysicsBodyRuntime.MaxContactLimit) throw new ArgumentOutOfRangeException(nameof(amount));
         var runtime = BodyRuntime(body); runtime.EnsureMutable();
         if (runtime.Owners.Scene is RigidBody rigid) rigid.MaxContactsReported = amount;
         else { runtime.View?.PrepareContacts(amount); runtime.MaxContacts = amount; }

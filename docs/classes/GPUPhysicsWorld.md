@@ -63,3 +63,10 @@ Contact inputs/working records include two virtual endpoint velocities. Preparat
 warm start, solving and restitution add those velocities without changing the
 integrated body state. Surface conformance includes static endpoints in colored
 and serial overflow constraints.
+
+Working contact records remain 208 bytes. Endpoint-vector xyz still stores virtual
+linear/angular velocity; their two reserved w components now accumulate signed
+tangential impulse for points one and two. Feature IDs remain in Impulses1/2.W for
+resident history matching. Publication includes the tangent totals and native solve
+epoch; shader numeric validation checks these fields before exposing results.
+PhysicsContactImpulseTests verifies world momentum and outer-frame sums.

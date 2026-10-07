@@ -106,7 +106,7 @@ Frees only caller-owned server resources. Joint free removes its native handle a
 | `public static void BodySetStateSyncCallback(RID body, Action<PhysicsDirectBodyState>? callback)` | Set/clear the following sync observer. |
 | `public static void BodySetOmitForceIntegration(RID body, bool enable)` | Control default gravity/damping/force omission. |
 | `public static bool BodyIsOmittingForceIntegration(RID body)` | Read omission policy. |
-| `public static void BodySetMaxContactsReported(RID body, int amount)` | Set a nonnegative contact-point cap. |
+| `public static void BodySetMaxContactsReported(RID body, int amount)` | Set a contact-point cap from zero through 4095 and clear the old point count. |
 | `public static int BodyGetMaxContactsReported(RID body)` | Read the configured cap. |
 
 Setters replace the previous user delegate; null clears it. Typed generic userdata replaces the dynamic callback boundary without invocation-time boxing. These APIs accept scene or server body identities and reject Area/wrong/stale RIDs. Attached access uses the owning space thread outside native stepping. Detached bodies retain callbacks, constants, omission and caps; they have no live view. Freeing a body clears that registry state.
@@ -567,7 +567,7 @@ cycles with zero all-thread managed allocation. This does not establish native
 allocation, other platforms, full GPU completion or owner visual acceptance.
 [ADR 0070](../decisions/physics.md#adr-0070) owns the typed state adaptation.
 
-Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
+Contact limits prepare bounded point storage before fixed stepping. Every touching pair is scanned directly, retaining the deepest points without copying raw manifolds; no early pair cap hides later candidates. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
 
 ## Viewport world integration
 
