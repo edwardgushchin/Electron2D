@@ -158,34 +158,11 @@ public sealed partial class PhysicsServer
         return collider.SpaceRID;
     }
 
-    internal void BodySetTransformCore(RID body, Transform transform)
-    {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetTransform(transform);
-    }
-
     internal void AreaSetTransformCore(RID area, Transform transform)
     {
         ThrowIfDisposed(); var runtime = AreaRuntime(area); runtime.EnsureAccess(true); var owners = runtime.Owners;
         PhysicsServerCollider.ValidateTransform(transform);
         if (owners.Scene is { } scene) scene.GlobalTransform = transform; else owners.Server!.SetTransform(transform);
-    }
-
-    internal Transform BodyGetTransformCore(RID body)
-    {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.GetTransform();
-    }
-
-    internal void BodySetLinearVelocityCore(RID body, Vector2 velocity)
-    {
-        ThrowIfDisposed();
-        if (ResolveSceneObject(body) is StaticBody surface) { surface.ConstantLinearVelocity = velocity; return; }
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        collider.SetLinearVelocity(velocity);
     }
 
     internal void BodySetModeCore(RID body, BodyMode mode)

@@ -171,3 +171,10 @@ include configured virtual surface motion. StaticBody/AnimatableBody velocity
 writes project to their stored surface properties; a direct write replaces the
 corresponding total velocity component immediately. Contact collider velocities
 remain snapshots of the completed solve, including stationary surface motion.
+
+Typed PhysicsServer state operations now share the view's velocity/sleep mutation
+path. Explicit sleep clears dynamic velocity and suppresses the scene's automatic
+sleep event; native transitions still emit normally. Raw kinematic Transform writes
+queue the latest target after the initial pose, matching BodySetTransform; getter
+reads remain the current native pose. Numeric and solver-lock guards reject before
+changes. See [typed body state](PhysicsServer.md#body-state).

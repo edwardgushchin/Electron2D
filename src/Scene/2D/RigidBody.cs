@@ -181,19 +181,27 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
+    /// <remarks>Disabling automatic sleep wakes a dynamic body, including detached configuration.</remarks>
     /// <value>True by default.</value>
     public bool CanSleep
     {
         get { ThrowIfDisposed(); return _canSleep; }
-        set { EnsureMutable(); _canSleep = value; if (HasBackend) b2Body_EnableSleep(BackendID, value); }
+        set { EnsureMutable(); _canSleep = value; if (HasBackend) b2Body_EnableSleep(BackendID, value); else if (!value && !_freeze) _sleeping = false; }
     }
 
     /// <summary>Gets or sets whether the body is currently asleep.</summary>
+    /// <remarks>Explicit dynamic sleep clears velocity and suppresses the automatic sleep-change event.
+    /// This state survives reentry even when automatic sleep is disabled.</remarks>
     /// <value>False by default.</value>
     public bool Sleeping
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasBackend ? !b2Body_IsAwake(BackendID) : _sleeping; }
-        set { EnsureMutable(); _sleeping = value; _sleepChangePending = false; if (HasBackend) b2Body_SetAwake(BackendID, !value); }
+        set
+        {
+            EnsureMutable(); _sleeping = value; _sleepChangePending = false;
+            if (HasBackend) b2Body_SetAwake(BackendID, !value);
+            if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
+        }
     }
 
     /// <summary>Applies a finite force at the center of mass during the current physics step.</summary>

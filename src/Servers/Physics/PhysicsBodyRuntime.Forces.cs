@@ -72,11 +72,11 @@ internal sealed partial class PhysicsBodyRuntime
             return new(value.X * PhysicsSpace.UnitsPerMeter, value.Y * PhysicsSpace.UnitsPerMeter);
         }
         var owners = Owners;
-        return owners.Scene is RigidBody rigid ? rigid.LinearVelocity : owners.Server?.GetLinearVelocity() ?? Vector2.Zero;
+        return owners.Scene switch { RigidBody rigid => rigid.LinearVelocity, StaticBody surface => surface.ConstantLinearVelocity, not null => _surfaceLinear, _ => owners.Server!.GetLinearVelocity() };
     }
 
     internal float GetAngularVelocity() => Space is not null ? b2Body_GetAngularVelocity(BodyID) :
-        Owners.Scene is RigidBody rigid ? rigid.AngularVelocity : Owners.Server?.GetAngularVelocity() ?? 0;
+        Owners.Scene switch { RigidBody rigid => rigid.AngularVelocity, StaticBody surface => surface.ConstantAngularVelocity, not null => _surfaceAngular, _ => Owners.Server!.GetAngularVelocity() };
 
     internal void ApplyImpulse(Vector2 impulse, float moment)
     {
@@ -120,7 +120,7 @@ internal sealed partial class PhysicsBodyRuntime
     {
         if (!Dynamic) return;
         if (Space is not null) b2Body_SetAwake(BodyID, true);
-        else if (Owners.Scene is RigidBody rigid) rigid.Sleeping = false;
+        else SetSleeping(false);
     }
 
     internal Vector2 GetConstantForce() => Owners.Scene is RigidBody rigid ? rigid.ConstantForce : ConstantForce;

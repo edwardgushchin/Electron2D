@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-09-26
+Last updated: 2026-10-08
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -224,3 +224,9 @@ Typed PhysicsServer body parameters share GravityScale, LinearDamp/AngularDamp a
 Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
 
 Contact monitoring and direct-state values use the same solved-pair traversal. Snapshot collection may run on internal world workers; contact, integration and sync callbacks remain on the scene owner thread. The owner waits for every collector before any game callback can edit bodies or fixtures.
+
+Explicit dynamic Sleeping assignments clear stored velocity, including while
+detached. Disabling CanSleep wakes detached configuration. An explicitly sleeping
+body reenters asleep even with CanSleep false; server/direct-state setters share
+these rules. Existing freeze/disable velocity configuration remains distinct from
+actual native velocity. PhysicsServerStateTests verifies these lifecycle cases.

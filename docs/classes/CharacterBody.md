@@ -1,6 +1,6 @@
 # CharacterBody
 
-Last updated: 2026-10-06
+Last updated: 2026-10-08
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -96,3 +96,8 @@ Inherited `DisableMode.MakeStatic` temporarily replaces the native kinematic rol
 ## Typed server field policy
 
 PhysicsServer BodySetGravityScale changes the selected Area/world field reported by GetGravity and PhysicsDirectBodyState.TotalGravity together. The method does not integrate that field into user Velocity. Body damping values/modes retain their shared runtime policy while kinematic inverse dynamics stays disabled. [PhysicsBodyParameterTests](../../tests/Electron2D.Tests/PhysicsBodyParameterTests.cs) checks the non-rigid projection under [ADR 0076](../decisions/physics-mass.md#adr-0076).
+
+PhysicsServer linear/angular state is low-level contact velocity, independent of
+this body's desired movement Velocity. It supplies virtual surface motion beside
+actual manual target travel and survives removal/reentry. It is not an additional
+packed scene property. See [typed state](PhysicsServer.md#body-state).

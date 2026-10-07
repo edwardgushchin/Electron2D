@@ -912,8 +912,11 @@ public sealed partial class PhysicsServer
     public static RID AreaGetSpace(RID area) => Service.AreaGetSpaceCore(area);
 
     /// <summary>Changes a body's translation and rotation in scene units.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
+    /// <remarks>Server kinematic targets after the first pose take effect on the next nonzero active step.
+    /// Scene synchronization policy is retained. Moving a static support wakes touching bodies.</remarks>
+    /// <exception cref="ArgumentException">The pose is invalid or the RID is not a live body.</exception>
     public static void BodySetTransform(RID body, Transform transform) => Service.BodySetTransformCore(body, transform);
 
     /// <summary>Changes an Area's translation and rotation in scene units.</summary>
@@ -921,15 +924,57 @@ public sealed partial class PhysicsServer
     /// <param name="transform">Finite global pose with unit scale and zero skew.</param>
     public static void AreaSetTransform(RID area, Transform transform) => Service.AreaSetTransformCore(area, transform);
 
-    /// <summary>Returns the body's current solver transform.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <summary>Returns current scene presentation or the server body's current solver transform.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current scene-unit pose, including solved dynamic movement.</returns>
     public static Transform BodyGetTransform(RID body) => Service.BodyGetTransformCore(body);
 
-    /// <summary>Sets finite linear velocity, or constant surface velocity for a static body.</summary>
-    /// <param name="body">A live server body RID or StaticBody scene RID.</param>
+    /// <summary>Sets finite linear velocity, or virtual surface velocity for a static or kinematic body.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="velocity">Finite global scene units per second.</param>
     public static void BodySetLinearVelocity(RID body, Vector2 velocity) => Service.BodySetLinearVelocityCore(body, velocity);
+
+    /// <summary>Gets current linear contact velocity, including virtual surface and completed target motion.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <returns>Global scene units per second; detached bodies return retained configuration.</returns>
+    public static Vector2 BodyGetLinearVelocity(RID body) => Service.BodyGetLinearVelocityCore(body);
+
+    /// <summary>Sets finite angular velocity, or virtual surface rotation for a static or kinematic body.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <param name="velocity">Finite radians per second.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The velocity is nonfinite.</exception>
+    public static void BodySetAngularVelocity(RID body, float velocity) => Service.BodySetAngularVelocityCore(body, velocity);
+
+    /// <summary>Gets current angular contact velocity, including virtual surface and completed target motion.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <returns>Radians per second; detached bodies return retained configuration.</returns>
+    public static float BodyGetAngularVelocity(RID body) => Service.BodyGetAngularVelocityCore(body);
+
+    /// <summary>Sets dynamic sleep state; sleeping clears velocity and waking retains pending forces.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <param name="sleeping">True to sleep; false to wake. Static and kinematic roles ignore this assignment.</param>
+    public static void BodySetSleeping(RID body, bool sleeping) => Service.BodySetSleepingCore(body, sleeping);
+
+    /// <summary>Gets whether the current body is inactive in the solver.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <returns>The live or retained sleep state; static bodies are inactive.</returns>
+    public static bool BodyGetSleeping(RID body) => Service.BodyGetSleepingCore(body);
+
+    /// <summary>Sets automatic sleep permission, waking a dynamic body when disabled.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <param name="canSleep">Whether an idle dynamic body may sleep.</param>
+    public static void BodySetCanSleep(RID body, bool canSleep) => Service.BodySetCanSleepCore(body, canSleep);
+
+    /// <summary>Gets retained automatic sleep permission.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <returns>True by default; explicit sleep assignments remain available when false.</returns>
+    public static bool BodyGetCanSleep(RID body) => Service.BodyGetCanSleepCore(body);
+
+    /// <summary>Replaces linear velocity along the supplied axis, preserving its perpendicular component.</summary>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <param name="axisVelocity">Finite direction and magnitude in scene units per second; zero retains current velocity.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The input or resulting velocity is nonfinite.</exception>
+    public static void BodySetAxisVelocity(RID body, Vector2 axisVelocity) => Service.BodySetAxisVelocityCore(body, axisVelocity);
 
     /// <summary>Changes a body among static, kinematic and dynamic modes.</summary>
     /// <param name="body">A live server body RID.</param>

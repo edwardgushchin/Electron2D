@@ -24,6 +24,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_ACTIVITY") == "1") { PhysicsActivityTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES_HOST") == "1") { RenderingPrimitiveTests.RunHost(); return; }
@@ -713,6 +715,7 @@ AudioBusLayoutTests.Run();
 RigidBodyForceTests.Run();
 RigidBodyContactTests.Run();
 PhysicsBodyStateTests.Run();
+PhysicsServerStateTests.Run();
 ShapeOwnerTests.Run();
 ShapePairEventTests.Run();
 CollisionDisableModeTests.Run();

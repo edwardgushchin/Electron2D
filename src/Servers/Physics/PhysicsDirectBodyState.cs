@@ -76,17 +76,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     public float AngularVelocity
     {
         get => b2Body_GetAngularVelocity(Access());
-        set
-        {
-            var id = Access(); Finite(value); var owner = _runtime.Owners;
-            if (owner.Scene is StaticBody surface)
-            {
-                b2Body_SetAngularVelocity(id, 0);
-                surface.ConstantAngularVelocity = value;
-            }
-            else if (owner.Server is { Mode: PhysicsServer.BodyMode.Static } server) server.SetAngularVelocity(value);
-            else { b2Body_SetAwake(id, true); b2Body_SetAngularVelocity(id, value); }
-        }
+        set { Access(); _runtime.SetAngularVelocity(value); }
     }
 
     /// <summary>Gets or sets global-axis velocity in scene units per second; assignment wakes a dynamic body.</summary>
@@ -96,17 +86,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     public Vector2 LinearVelocity
     {
         get => ToScene(b2Body_GetLinearVelocity(Access()));
-        set
-        {
-            var id = Access(); Finite(value); var owner = _runtime.Owners;
-            if (owner.Scene is StaticBody surface)
-            {
-                b2Body_SetLinearVelocity(id, default);
-                surface.ConstantLinearVelocity = value;
-            }
-            else if (owner.Server is { Mode: PhysicsServer.BodyMode.Static } server) server.SetLinearVelocity(value);
-            else { b2Body_SetAwake(id, true); b2Body_SetLinearVelocity(id, Shape.ToBackend(value)); }
-        }
+        set { Access(); _runtime.SetLinearVelocity(value); }
     }
 
     /// <summary>Gets center-of-mass offset from the body origin along global axes, in scene units.</summary>
@@ -127,7 +107,8 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets whether the body is asleep; setting false wakes it.</summary>
     /// <value>Whether the body is asleep; setting false wakes it.</value>
-    public bool Sleeping { get { Access(); return _body.setIndex != (int)B2SolverSetType.b2_awakeSet; } set { b2Body_SetAwake(Access(), !value); } }
+    /// <remarks>Explicit sleep clears dynamic velocity. Static and kinematic roles ignore sleep assignments.</remarks>
+    public bool Sleeping { get { Access(); return _body.setIndex != (int)B2SolverSetType.b2_awakeSet; } set { Access(); _runtime.SetSleeping(value); } }
 
     /// <summary>Gets the last nonzero physics step in seconds; zero before the first step.</summary>
     /// <value>The last nonzero physics step in seconds; zero before the first step.</value>
@@ -155,7 +136,9 @@ public sealed class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets finite global body pose; assignment requires unit scale and zero skew.</summary>
     /// <value>Finite global body pose; assignment requires unit scale and zero skew.</value>
-    public Transform Transform { get { Access(); var pose = b2GetBodyTransformQuick(_world, _body); return new(b2Rot_GetAngle(pose.q), Vector2.One, 0, ToScene(pose.p)); } set { Access(); ValidateTransform(value); var owner = _runtime.Owners; if (owner.Scene is { } scene) { scene.GlobalTransform = value; scene.PrepareBackend(); } else owner.Server!.SetTransform(value); } }
+    /// <remarks>Raw kinematic transforms after their first pose queue a target for the next nonzero active step.
+    /// Scene bodies retain their own transform presentation policy.</remarks>
+    public Transform Transform { get { Access(); var pose = b2GetBodyTransformQuick(_world, _body); return new(b2Rot_GetAngle(pose.q), Vector2.One, 0, ToScene(pose.p)); } set { Access(); _runtime.SetTransform(value); } }
 
     /// <summary>Gets the persistent global force in scene units times kilograms per squared second.</summary>
     /// <returns>Gets the persistent global force in scene units times kilograms per squared second.</returns>
@@ -336,11 +319,6 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         var point = b2Body_GetPosition(id) + Shape.ToBackend(offset);
         if (!float.IsFinite(point.X) || !float.IsFinite(point.Y)) throw new ArgumentOutOfRangeException(nameof(offset));
         return point;
-    }
-    private static void ValidateTransform(Transform transform)
-    {
-        if (!transform.IsFinite() || !transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(transform.Skew))
-            throw new ArgumentException("A body pose requires finite translation, unit scale and zero skew.", nameof(transform));
     }
     internal void PrepareContacts(int limit)
     {

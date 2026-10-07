@@ -56,7 +56,7 @@ PhysicsServer.FreeRID(space);
 | `public static void BodySetSpace(RID body, RID space)` / `AreaSetSpace(RID area, RID space)` | Attach to a live space; empty RID detaches. |
 | `public static RID BodyGetSpace(RID body)` / `AreaGetSpace(RID area)` | Current space RID, or empty while detached. |
 | `public static void BodySetTransform(RID body, Transform transform)` / `AreaSetTransform(RID area, Transform transform)` | Set finite unit-scale, zero-skew pose. |
-| `public static Transform BodyGetTransform(RID body)` | Current solver pose, including dynamic movement. |
+| `public static Transform BodyGetTransform(RID body)` | Current scene presentation or raw solver pose. |
 | `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
 | `public static void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
 | `public static void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
@@ -79,7 +79,7 @@ PhysicsServer.FreeRID(space);
 <a id="body-state"></a>
 ### Body state and filters
 
-`BodySetMode` supports all four numeric mode values and rejects undefined input. Static, kinematic and rigid bodies share the Box2D world; RigidLinear locks rotation and clears angular velocity. Switching to Static or Kinematic clears linear and angular velocity while retaining the solved pose. The typed `BodySetTransform`, `BodySetLinearVelocity` and `BodyGetTransform` methods cover the corresponding transform/linear-velocity branches of the dynamic reference state API. A moving body's solved pose and velocity are captured before space detachment, preserving state when reattached. Body layer/mask and Area layer setters accept all 32 bits; direct queries match the layer independently of the collider's mask. Server-only Area mask writes remain [Blocked](../coverage/classes/PhysicsServer2D.md) until Area overlap monitoring or fields consume them. Other body states, forces, parameters, callbacks and Area field parameters retain separate coverage gaps.
+`BodySetMode` supports all four numeric mode values and rejects undefined input. Static, kinematic and rigid bodies share the Box2D world; RigidLinear locks rotation and clears angular velocity. Switching to Static or Kinematic clears linear and angular velocity while retaining the solved pose. All five state branches and axis velocity have typed scene/server operations in [Typed body state](#body-state). A moving body's solved pose and velocity are captured before space detachment, preserving state when reattached. Body layer/mask and Area layer setters accept all 32 bits; direct queries match the layer independently of the collider's mask. Server-only Area mask writes remain [Blocked](../coverage/classes/PhysicsServer2D.md) until Area overlap monitoring or fields consume them. Remaining body modes/identity/process operations retain their own coverage rows.
 
 `BodyTestMotion` prepares pending scene and server fixtures, then tests the supplied body's own shapes from a typed global pose. Reciprocal body filters, RID and managed-instance exclusions, one-way surfaces, recovery margin and initial overlap are applied. It returns false on a miss and updates an optional [PhysicsTestMotionResult](PhysicsTestMotionResult.md) with full travel and cleared contact fields. On a hit it reports contact identity, point, normal, depth, velocity, local/collider shape-owner indices and safe/unsafe fractions. It never changes the actual body pose. A detached body or wrong RID rejects; off-owner and in-step calls reject. [PhysicsTestMotionParameters](PhysicsTestMotionParameters.md) names the input. `CollideSeparationRay` enables non-sliding ray sweeps; sliding rays and recovery obey [ADR 0068](../decisions/physics.md#adr-0068).
 
@@ -493,18 +493,82 @@ PhysicsServer.FreeRID(space);
 
 [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks native motion/spring and pending-force behavior, inactive queries, defaults, callback/timer continuation, phase/thread/lifetime guards, callback failure and 64 warmed global/local cycles with skipped/active frames without managed allocation on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance remain unverified. [ADR 0089](../decisions/physics-activity.md#adr-0089) defines this profile. ProcessInfo counters remain a separate verification/integration slice.
 
-## Body-state completion dependency
+<a id="body-state"></a>
+## Typed body state
 
-The transform/linear-velocity state facade is still server-only and Partial. Full scene/server state parity needs typed angular velocity, sleep and can-sleep access, deferred kinematic transform targets and exact static surface velocity. The latter requires an actual normal/tangential contact-point velocity channel while pose stays fixed; native static bodies use zero dummy solver state, so storing values or tangentSpeed alone is insufficient. It enters the first stationary-contact solver integration under [ADR 0075](../decisions/physics.md#adr-0075), together with StaticBody constant surface velocities; no feature patch was added to vendored code.
+The five state capabilities have concrete typed getter/setter pairs for any live
+scene or server body RID. They share validation and state with direct views.
+Attached access requires the world's owner thread outside solver execution; a
+failed GPU world rejects further state access. Wrong-kind, empty and released
+RIDs throw `ArgumentException`; nonfinite velocity throws `ArgumentOutOfRangeException`
+and an invalid pose throws `ArgumentException`, before mutation. Scene parent
+transforms are respected through global coordinates. Detached bodies retain
+configuration without allocating a physics world.
+
+| Signature | Contract |
+| --- | --- |
+| `public static void BodySetTransform(RID body, Transform transform)` | Finite unit-scale, zero-skew global pose. |
+| `public static Transform BodyGetTransform(RID body)` | Current scene presentation or raw solver pose. |
+| `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Global scene units/s. |
+| `public static Vector2 BodyGetLinearVelocity(RID body)` | Live total velocity, or detached configuration. |
+| `public static void BodySetAngularVelocity(RID body, float velocity)` | Radians/s. |
+| `public static float BodyGetAngularVelocity(RID body)` | Live total angular velocity, or detached configuration. |
+| `public static void BodySetSleeping(RID body, bool sleeping)` | Explicit dynamic sleep/wakeup. |
+| `public static bool BodyGetSleeping(RID body)` | Current or detached sleep state. |
+| `public static void BodySetCanSleep(RID body, bool canSleep)` | Automatic sleep permission. |
+| `public static bool BodyGetCanSleep(RID body)` | Permission, true by default. |
+| `public static void BodySetAxisVelocity(RID body, Vector2 axisVelocity)` | Replace the component along the supplied axis; retain perpendicular velocity. |
+
+<a id="bodysettransform"></a><a id="bodygettransform"></a>
+Raw kinematic bodies initialize their first assigned pose immediately. Later
+assignments replace the pending target; a nonzero active step traverses its path
+and consumes it. Queries/getters retain the old pose until then. Zero steps,
+suspension and detach/reentry preserve an unconsumed target. Static and dynamic
+transforms apply immediately; moving a static support wakes touching bodies. Scene bodies retain their existing presentation:
+AnimatableBody can defer its displayed pose, while CharacterBody and frozen
+kinematic bodies preserve immediate query targets. All roles keep their existing
+unit-scale physics restriction.
+
+<a id="bodysetlinearvelocity"></a><a id="bodygetlinearvelocity"></a>
+<a id="bodysetangularvelocity"></a><a id="bodygetangularvelocity"></a>
+Velocity assignments wake dynamics, including explicit zero writes. Static and
+kinematic velocity supplies virtual surface motion; a kinematic target contributes
+actual travel velocity during its step, without integrating the virtual component
+into the pose. Getters and point queries include both. An assignment replaces the
+current component as well as its configured surface value. StaticBody properties
+are projected bidirectionally; RigidBody keeps its existing freeze/disable stored
+configuration. CharacterBody's desired movement `Velocity` is separate from its
+low-level contact velocity. Low-level character state and non-rigid sleep policy
+survive reentry but are not additional scene packing properties.
+
+<a id="bodysetsleeping"></a><a id="bodygetsleeping"></a>
+Explicit sleep affects dynamic roles, clears their velocities and retains pending
+forces until wakeup. Static and kinematic roles ignore sleep assignments; static
+bodies report inactive. Scene explicit sleep assignments suppress the automatic
+sleep-change event, as the scene property does. Automatic solver transitions keep
+their existing event path.
+
+<a id="bodysetcansleep"></a><a id="bodygetcansleep"></a>
+Automatic sleep permission survives detach/reentry. Setting it false wakes a
+dynamic body, including detached configuration. Explicit sleep remains possible
+while automatic sleep is disabled, and this state survives reattachment.
+
+<a id="bodysetaxisvelocity"></a>
+The finite vector's direction selects an axis and its magnitude selects the new
+component in scene units/s. Zero preserves velocity and follows the normal wakeup
+rule. Projection uses wider intermediate arithmetic; nonfinite results reject
+before state mutation. For example, `PhysicsServer.BodySetAxisVelocity(body.GetRID(),
+new Vector2(0, -240));` changes vertical speed while preserving horizontal speed.
+
+[PhysicsServerStateTests](../../tests/Electron2D.Tests/PhysicsServerStateTests.cs)
+checks real CPU/GPU response, scene/server/direct-state consistency, raw deferred
+targets, lifecycle, owner/phase/numeric rejection and 64 warmed state/read/solver
+cycles with zero all-thread managed allocation. This does not establish native
+allocation, other platforms, full GPU completion or owner visual acceptance.
+[ADR 0070](../decisions/physics.md#adr-0070) owns the typed state adaptation.
 
 Configured contact limits prepare retained raw-pair and point storage before fixed stepping. Every touching manifold contributes a point, so the reported-point cap also bounds the required raw-pair count. Rigid monitoring prepares its bounded pair/change collections at configuration time. Solver array compaction keeps the removed reference in the unused slot rather than constructing a replacement; active slots remain distinct. PhysicsSandbox profiles check collision churn and debug contact reads after warmup; native allocations remain outside the managed counter.
 
 ## Viewport world integration
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
-
-`BodySetLinearVelocity` also accepts a StaticBody scene RID and projects to
-`ConstantLinearVelocity`. Raw server static velocities affect contacts and point
-queries without moving the pose. Angular surface velocity is writable through
-an attached `PhysicsDirectBodyState`; wider typed server state operations retain
-their separate coverage gaps.

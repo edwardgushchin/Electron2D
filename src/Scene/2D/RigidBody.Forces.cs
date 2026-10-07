@@ -135,12 +135,7 @@ public partial class RigidBody
     public void SetAxisVelocity(Vector2 axisVelocity)
     {
         EnsureMutable();
-        if (!axisVelocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(axisVelocity));
-        var axis = axisVelocity.Normalized();
-        var velocity = LinearVelocity;
-        var result = velocity - axis * axis.Dot(velocity) + axisVelocity;
-        if (!result.IsFinite()) throw new ArgumentOutOfRangeException(nameof(axisVelocity));
-        LinearVelocity = result;
+        LinearVelocity = PhysicsBodyRuntime.ProjectAxisVelocity(LinearVelocity, axisVelocity);
         if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
     }
 

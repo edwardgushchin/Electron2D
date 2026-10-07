@@ -80,6 +80,7 @@ internal sealed partial class PhysicsSpace
                 runtime.ApplyResolvedFields(body.BackendID, gravity, linearDamp, angularDamp, _defaultGravity, delta);
             }
             runtime.ApplyBeforeStep(body.BackendID, null);
+            body.PrepareMotion(delta);
             captureCallbacks |= RequiresBodySnapshot(runtime, null);
             hasKinematicBodies |= body.Mode == PhysicsServer.BodyMode.Kinematic;
         }

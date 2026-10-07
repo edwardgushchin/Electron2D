@@ -182,3 +182,13 @@ character platform carry while the pose stays fixed; AnimatableBody combines it
 with actual target motion. [PhysicsSurfaceVelocityTests](../../tests/Electron2D.Tests/PhysicsSurfaceVelocityTests.cs)
 verifies configuration, scene/server lifecycle, state views and warmed allocation.
 This closes the stationary-surface prerequisite, not the wider completion boundary.
+
+## Typed scene/server body state
+
+PhysicsServer now shares transform, linear/angular velocity, sleeping, automatic
+sleep permission and axis velocity with scene bodies and direct views. Raw
+kinematic targets execute along a path on the next nonzero active step while
+virtual surface velocity stays separate. PhysicsServerStateTests exercises CPU/GPU
+state, reentry, wakeup, guards and warmed allocation. Remaining server identity,
+filter getters, process/shape type and backend registration operations are still
+separate gaps in the full completion boundary.

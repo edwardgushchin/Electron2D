@@ -279,8 +279,8 @@ internal static class PhysicsQueryTests
         PhysicsServer.BodySetLinearVelocity(body, new(0, 60));
         PhysicsServer.SpaceStep(space, 1d / 60);
         var kinematicPosition = PhysicsServer.BodyGetTransform(body).Origin.Y;
-        Check(kinematicPosition > movedPosition + 0.5f,
-            "A server kinematic body advances by its velocity and reports the solved pose.");
+        Check(MathF.Abs(kinematicPosition - movedPosition) < .001f,
+            "Kinematic constant velocity affects contacts without moving its target pose.");
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.RigidLinear);
         Check(PhysicsServer.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
             "RigidLinear remains an executable distinct mode with rotation locking.");

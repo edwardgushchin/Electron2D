@@ -1,6 +1,6 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-08
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -70,3 +70,14 @@ Shared [scene/server joint resources](physics-joints.md) use the existing physic
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
 
 Point, shape-intersection and shape-contact queries also accept caller-owned spans. Their bounded outputs share ordering, deduplication, filtering and units with the copied-array overloads; only full contact pairs are written. Scratch buffers and copied exclusions are retained across repeated calls. `PhysicsShapeQueryTests` checks active/miss zero managed allocation after preparation and all output boundary cases. Character slide getters have reusable `KinematicCollision` destination overloads under the same ownership rule.
+
+## Typed body state
+
+All five transform/linear/angular/sleep/can-sleep state branches and axis velocity
+now accept scene/server RIDs. Direct views reuse the same state paths. Raw kinematic
+targets defer after their initial pose and traverse the shared subdivided solver
+path; constant velocity affects contacts without moving the target. Sleep and
+pending targets survive reentry. PhysicsServerStateTests verifies real CPU/GPU
+motion, lifecycle, guards and 64 warmed state/read/step cycles with zero all-thread
+managed bytes. [The server reference](../classes/PhysicsServer.md#body-state)
+records units, errors, scene role policies and remaining verification limits.

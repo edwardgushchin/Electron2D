@@ -77,4 +77,16 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); return runtime.ContactLimit;
     }
+    internal void BodySetTransformCore(RID body, Transform transform) => ForceRuntime(body).SetTransform(transform);
+    internal Transform BodyGetTransformCore(RID body) => ForceRuntime(body).GetTransform();
+    internal void BodySetLinearVelocityCore(RID body, Vector2 velocity) => ForceRuntime(body).SetLinearVelocity(velocity);
+    internal Vector2 BodyGetLinearVelocityCore(RID body) => ForceRuntime(body).GetLinearVelocity();
+    internal void BodySetAngularVelocityCore(RID body, float velocity) => ForceRuntime(body).SetAngularVelocity(velocity);
+    internal float BodyGetAngularVelocityCore(RID body) => ForceRuntime(body).GetAngularVelocity();
+    internal void BodySetSleepingCore(RID body, bool sleeping) => ForceRuntime(body).SetSleeping(sleeping);
+    internal bool BodyGetSleepingCore(RID body) => ForceRuntime(body).GetSleeping();
+    internal void BodySetCanSleepCore(RID body, bool canSleep) => ForceRuntime(body).SetCanSleep(canSleep);
+    internal bool BodyGetCanSleepCore(RID body) => ForceRuntime(body).GetCanSleep();
+    internal void BodySetAxisVelocityCore(RID body, Vector2 axisVelocity) => ForceRuntime(body).SetAxisVelocity(axisVelocity);
+
 }

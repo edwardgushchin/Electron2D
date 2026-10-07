@@ -12,6 +12,7 @@ internal static partial class GPUPhysicsTests
         VerifyResidentConstraints(gpu);
         VerifyWarmHistory(gpu);
         PhysicsSurfaceVelocityTests.Run(true);
+        PhysicsServerStateTests.Run(true);
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyOwnedWorldFailure();

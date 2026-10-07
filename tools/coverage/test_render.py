@@ -277,7 +277,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 110, "Partial": 10, "Unimplemented": 44, "Blocked": 17, "Excluded": 34}
+                "Implemented": 113, "Partial": 8, "Unimplemented": 37, "Blocked": 17, "Excluded": 40}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -304,6 +304,8 @@ def main():
                for name in force_names)
     parameter_rows = [row for row in server_rows if "BodyParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
     assert len(parameter_rows) == 12 and all(" | Excluded | " in row for row in parameter_rows)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_set_state", "body_get_state", "body_set_axis_velocity"))
     assert " | Implemented | " in next(row for row in server_rows if "method body_reset_mass_properties(" in row)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method body_{action}_param(" in row)
                for action in ("set", "get"))

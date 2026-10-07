@@ -45,3 +45,7 @@ Membership preparation skips full monitor scans for uninstrumented additions to 
 Broad-phase pair queries retain their peak requested/overflow count between intervals. Dense query results therefore reuse the arena buffer after preparation instead of repeatedly allocating overflow pair objects when the number of moving proxies drops. PhysicsSandboxTests includes a 96-body overlapping query exceeding the original 16-pairs-per-proxy estimate.
 
 Movement events reserve the rounded whole-world body capacity during membership preparation. Later wake propagation increases the used event count without exact-size array growth each interval. The maximum sleeping-wall test checks that capacity before launch.
+
+State/query access also rejects a locked underlying solver before mutation. Raw
+server kinematic targets are prepared before common path subdivision and consumed
+after the completed interval. Scene and server state tests exercise this on CPU/GPU.

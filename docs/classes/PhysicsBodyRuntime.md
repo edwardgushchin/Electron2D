@@ -25,6 +25,7 @@ subclasses and PhysicsDirectBodyState.
 | Operation/state | Contract |
 | --- | --- |
 | `Owners`, `Space`, `BodyID` | Resolve the live scene/server owner and current native attachment. |
+| `GetTransform`/`SetTransform`, velocity/sleep pairs, `SetAxisVelocity`, `RestoreSceneState` | Shared typed state, static-support wakeup and role-specific retained configuration. |
 | `EnsureMutable`, `GetView` | Enforce the world access phase and reuse a generation-bound direct view. |
 | `ApplyMassProfile`, `SetMassProfile` | Share body shape/mass/center validation and scene projection. |
 | `ApplyBeforeStep`, pending/constant force and torque | Consume eligible pending forces once; preserve configured totals. |
@@ -45,3 +46,9 @@ carry, inherited target motion, owner/phase/lifecycle rejection, packing and war
 allocation. Existing mass/force/field/direct-state suites cover the other runtime
 profiles through their public APIs. Native allocation and foreign-device acceptance
 remain separate from the checked Linux/.NET 10/Vulkan behavior.
+
+The [typed state partial](../../src/Servers/Physics/PhysicsBodyRuntime.State.cs)
+shares transform, linear/angular velocity, sleep, automatic sleep policy and axis
+projection across scene/server owners and direct views. Non-rigid scene contact
+velocity is distinct from character movement input and restored at attachment.
+PhysicsServerStateTests covers CPU/GPU behavior and warmed allocation.

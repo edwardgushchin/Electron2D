@@ -200,3 +200,9 @@ stalled during SDL/GTK video reinitialization on this Wayland host; its harness 
 retains SDL for the full run, as the general GPU runner does. This does not establish
 unrestricted native video teardown/reinitialization support. Historical profile
 sizes/timings above describe their recorded binaries.
+
+Typed PhysicsServer transform/velocity/sleep state and axis operations share the
+CPU/GPU body runtime. PhysicsServerStateTests verifies raw kinematic target travel,
+scene/server/direct-state consistency, detach/reentry and owner/phase guards on the
+Vulkan solver path. Its 64 warmed state/read/step cycles allocate zero all-thread
+managed bytes; GPU completeness and foreign-device/native allocation remain open.

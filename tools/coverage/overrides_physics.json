@@ -593,17 +593,17 @@
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
-      "reason": "Typed transform branch of body_set_state; other BodyState branches remain incomplete."
+      "reason": "Typed selector branch of the complete transform/velocity/sleep state family (ADR 0070)."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed linear-velocity branch of body_set_state; other BodyState branches remain incomplete."
+      "reason": "Typed selector branch of the complete transform/velocity/sleep state family (ADR 0070)."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetTransform(Electron2D.RID)",
-      "reason": "Typed transform branch of body_get_state; other BodyState branches remain incomplete."
+      "reason": "Typed selector branch of the complete transform/velocity/sleep state family (ADR 0070)."
     },
     {
       "godot": "ConvexPolygonShape2D::method:set_point_cloud(PackedVector2Array:)",
@@ -1099,6 +1099,41 @@
       "godot": "CanvasItem::constant:NOTIFICATION_WORLD_2D_CHANGED",
       "electron2d": "constant:Electron2D.CanvasItem.NotificationWorldChanged()",
       "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap now supplies the real map runtime under ADR 0097."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularVelocity(Electron2D.RID,System.Single)",
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetSleeping(Electron2D.RID,System.Boolean)",
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetCanSleep(Electron2D.RID,System.Boolean)",
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearVelocity(Electron2D.RID)",
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularVelocity(Electron2D.RID)",
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetSleeping(Electron2D.RID)",
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCanSleep(Electron2D.RID)",
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
     }
   ],
   "extras": [
@@ -2517,8 +2552,8 @@
         "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
         "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)"
       ],
-      "state": "Partial",
-      "reason": "Typed transform/linear-velocity branches remain narrower than the full state contract. StaticBody linear velocity and scene/server direct-state surface velocities now use the CPU/GPU stationary contact channel (ADR 0075; PhysicsSurfaceVelocityTests). Full scene/server state parity still requires remaining typed angular/sleep/can-sleep pairs and exact deferred kinematic targets; the surface slice does not close those gaps."
+      "state": "Implemented",
+      "reason": "All five typed state branches execute for scene/server bodies: transform, linear/angular velocity, sleep and automatic sleep permission. Raw kinematic targets defer to a nonzero active step; virtual velocity stays separate. PhysicsServerStateTests covers CPU/GPU motion, lifecycle, wakeup, guards and warmed allocation (ADR 0070)."
     },
     {
       "godot": [
@@ -3228,6 +3263,25 @@
         "World2D::property:canvas"
       ],
       "reason": "World runtime combines stable canvas with lazy registered physics identity; independent/default/explicit shared viewport binding executes through existing kernels. Runtime duplicates retain identities without cloning solver state, default identities expire on scene teardown, retained distinct worlds step once, replacements move bodies/Areas/joints and deliver notification 36. Owner/capture/native/live-body callback guards and completion after observer errors are executable in WorldTests on managed and real native targets (ADRs 0004/0005/0028/0063). NavigationMap now supplies the real map runtime under ADR 0097."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_set_axis_velocity(RID:,Vector2:)"
+      ],
+      "state": "Implemented",
+      "reason": "Finite axis projection uses the shared scene/server velocity and wakeup path, preserving the perpendicular component and rejecting overflow before mutation; PhysicsServerStateTests verifies CPU/GPU behavior (ADR 0070)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:BodyState",
+        "PhysicsServer2D::enum_value:BodyState.BODY_STATE_TRANSFORM",
+        "PhysicsServer2D::enum_value:BodyState.BODY_STATE_LINEAR_VELOCITY",
+        "PhysicsServer2D::enum_value:BodyState.BODY_STATE_ANGULAR_VELOCITY",
+        "PhysicsServer2D::enum_value:BodyState.BODY_STATE_SLEEPING",
+        "PhysicsServer2D::enum_value:BodyState.BODY_STATE_CAN_SLEEP"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0001/0070: the Variant selector representation is replaced by all five concrete typed state getter/setter pairs. Only the selector enum/values are excluded; their complete capabilities execute and are verified by PhysicsServerStateTests."
     }
   ]
 }

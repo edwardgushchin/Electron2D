@@ -126,8 +126,9 @@ internal static class PhysicsActivityTests
                 PhysicsServer.SpaceSetActive(second, true); PhysicsServer.SpaceStep(second, 1d / 120);
                 _ = PhysicsServer.SpaceIsActive(first);
             }
-            Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-                "Warmed global/local switches, skipped intervals and active native frames allocate no managed bytes.");
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - before;
+            Check(bytes == 0,
+                $"Warmed global/local switches, skipped intervals and active native frames allocated {bytes} managed bytes.");
         }
         finally
         {

@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-05
+Last updated: 2026-10-08
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -66,3 +66,7 @@ Inherited `DisableMode` applies to every concrete body. Remove detaches native f
 `protected override void ValidateDisposal()` checks the scene phase and every active world referenced by a dependent server joint before beginning disposal. Rejected off-owner or in-step disposal leaves the body alive. This applies even after the body is detached while the other endpoint remains attached. Body departure suspends caller-owned connections before native destruction; final disposal clears their configured role. `GetCollisionExceptions()` includes deduplicated explicit and active collision-disabled joint targets, returning null for a server-only peer. Removing an explicit exception never removes a joint contribution. [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers these cases under [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
 [Indexed PhysicsServer geometry](PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
+
+PhysicsServer's typed state methods accept this body's RID and preserve its scene
+role. Attachment restores non-rigid contact velocity/sleep policy and explicitly
+requested dynamic sleep even when automatic sleep is disabled. See [typed state](PhysicsServer.md#body-state).

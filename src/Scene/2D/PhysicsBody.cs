@@ -83,7 +83,12 @@ public abstract class PhysicsBody : CollisionObject
         _bodyID = b2CreateBody(space.WorldID, definition);
         _space = space;
         _shapesDirty = true;
-        try { RebuildShapes(); if (PhysicsMadeStatic) OnMadeStatic(); }
+        try
+        {
+            RebuildShapes(); Runtime.RestoreSceneState();
+            if (!definition.isAwake && definition.type == B2BodyType.b2_dynamicBody) b2Body_SetAwake(_bodyID, false);
+            if (PhysicsMadeStatic) OnMadeStatic();
+        }
         catch { DetachBackend(); throw; }
     }
 
@@ -185,6 +190,7 @@ public abstract class PhysicsBody : CollisionObject
         if (PhysicsMadeStatic) OnMadeStatic();
         b2Body_SetType(BackendID, type);
         OnBodyTypeChanged();
+        Runtime.RestoreSceneState();
         MarkShapesDirty();
     }
 

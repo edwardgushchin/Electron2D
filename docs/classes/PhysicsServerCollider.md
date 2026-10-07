@@ -33,3 +33,15 @@ Static linear/angular velocity now feeds the shared stationary-surface channel.
 Attachment restores it; detach preserves configuration. A switch to Static or
 Kinematic clears velocity, while a switch to Rigid transfers configured velocity
 to real motion. PhysicsSurfaceVelocityTests checks the state and point-query path.
+
+## Body state and kinematic targets
+
+Linear/angular getters return live combined contact velocity while attached.
+Static/kinematic assignments configure virtual surface motion, separate from pose
+integration. The first kinematic transform initializes the pose; later writes keep
+only the latest target until a nonzero active step. PrepareMotion derives actual
+travel velocity; CompleteMotion consumes the target after solving. Idle motion is
+zeroed without reconstructing a decoded angle. Detach preserves a pending target.
+Explicit dynamic sleep clears velocity and survives detach/reentry alongside
+CanSleep; disabling automatic sleep wakes. PhysicsServerStateTests covers these
+paths on CPU/GPU, including real path contacts and zero warmed managed allocation.

@@ -137,6 +137,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureQueryAccess()
     {
         EnsureReleaseAccess();
+        if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);
     }
 
@@ -428,6 +429,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             StepKinematicPaths(delta, hasKinematicBodies);
             RecordStepPhase(3, ref profileMark);
             solverAdvanced = true;
+            foreach (var collider in _serverColliders) collider.CompleteMotion();
             foreach (var body in _bodies)
             {
                 try

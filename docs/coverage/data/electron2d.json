@@ -110080,6 +110080,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetAngularVelocity(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetAngularVelocity",
+    "signature": "public static System.Single BodyGetAngularVelocity(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetBounce(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -110096,6 +110115,25 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetCanSleep(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetCanSleep",
+    "signature": "public static System.Boolean BodyGetCanSleep(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -110270,6 +110308,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetLinearVelocity(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetLinearVelocity",
+    "signature": "public static Electron2D.Vector2 BodyGetLinearVelocity(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetMass(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -110391,6 +110448,25 @@
       }
     ],
     "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetSleeping(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetSleeping",
+    "signature": "public static System.Boolean BodyGetSleeping(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -110566,6 +110642,54 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodySetAngularVelocity(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetAngularVelocity",
+    "signature": "public static System.Void BodySetAngularVelocity(Electron2D.RID body, System.Single velocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetAxisVelocity(Electron2D.RID,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetAxisVelocity",
+    "signature": "public static System.Void BodySetAxisVelocity(Electron2D.RID body, Electron2D.Vector2 axisVelocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "axisVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodySetBounce(Electron2D.RID,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -110583,6 +110707,30 @@
       {
         "name": "bounce",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetCanSleep(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetCanSleep",
+    "signature": "public static System.Void BodySetCanSleep(Electron2D.RID body, System.Boolean canSleep)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "canSleep",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -111122,6 +111270,30 @@
       {
         "name": "transform",
         "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetSleeping(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetSleeping",
+    "signature": "public static System.Void BodySetSleeping(Electron2D.RID body, System.Boolean sleeping)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "sleeping",
+        "type": "System.Boolean",
         "default": null
       }
     ],
