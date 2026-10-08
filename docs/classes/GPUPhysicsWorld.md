@@ -4,21 +4,28 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, broad-phase tree traversal/built-in filters, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
 inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
 
-`FindBroadPhasePairs` packs the three current trees into threaded pre-order and
-executes moved-proxy fat-AABB queries on GPU. Node/query records occupy
-32/48 bytes; returned candidates are 4-byte proxy keys. Per-query retained capacities
+`FindBroadPhasePairs` maintains an independent GPU hierarchy from dirty proxy
+records. Morton keys, bitonic sorting and bottom-up bounds/type-mask reduction build
+and refit a complete binary heap. Stackless traversal executes fat-AABB queries.
+The CPU mirror supplies publication ranks, and cached Comparison/Span sorting
+preserves its pair order before user callbacks. No CPU topology/internal bounds
+are uploaded. Binding/capacity growth uploads all proxies; later updates are
+32-byte final proxy records. Topology edits or half-capacity accumulated updates
+trigger GPU spatial sorting. `TreeSnapshotCount`, `TreeRebuildCount`,
+`TreeRefitCount`, `TreeUpdatedProxies` and `TreeUploadBytes` report cumulative work. Node/query records occupy
+32/48 bytes; returned candidates are 4-byte shape IDs. Per-query retained capacities
 permit a single warmed submission. Overflow returns its full count and grows/retries
 the immutable query before publishing candidates to the owner-side user filter.
 GPU built-in checks include self/moved/existing-pair deduplication, same-body/sensor
@@ -28,7 +35,7 @@ CPU pair and custom-filter order is preserved, including deleted/reused proxy sl
 `BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch;
 `BroadPhaseCandidateTotal`, upload/readback byte totals and `BroadPhaseProfileMS`
 accumulate host timing and transfer accounting. No moved proxies means no submission.
-Tree maintenance, user callbacks and contact creation remain CPU. The GPU lookup
+CPU query/CCD tree mirrors, rank collection, user callbacks and contact creation remain CPU. The GPU lookup
 table is updated from unique dirty contact IDs. Owner-side lifecycle notifications
 are coalesced to final key values, then GPU removal/key replacement precedes atomic
 parallel insertion. A quarter-table change budget triggers GPU tombstone rehash;
@@ -46,7 +53,7 @@ warm-start reuse execute on GPU. Current contacts read the retained previous
 solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
 need no upload. The complete result is validated before reaching material,
 pre-solve and contact-transition processing in the managed world. Chain
-segments are rejected explicitly; tree maintenance, user filters/contact creation
+segments are rejected explicitly; CPU tree mirrors, user filters/contact creation
 and sensor queries still belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the

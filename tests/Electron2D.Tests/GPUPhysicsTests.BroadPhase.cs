@@ -17,10 +17,28 @@ internal static partial class GPUPhysicsTests
 
     private static void VerifyBroadPhase(GPUPhysicsWorld gpu)
     {
-        foreach (var count in new[] { 0, 1, 63, 64, 65, 257, 4097 })
+        VerifyTreeCategory();
+        foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 257, 4097 })
             VerifyBroadPhase(gpu, count, false);
         VerifyBroadPhase(gpu, 257, true);
-        Console.WriteLine("GPU tree/filter/resident-pair checks match CPU order: dispatch edges, filters/joints, late binding, contact ID reuse, GPU rehash, zero unchanged pair uploads and warmed managed bytes.");
+        Console.WriteLine("GPU tree build/refit and resident-pair checks match CPU order: sparse/dense trees, motion/rebuild, filters/joints, late binding, ID reuse, zero unchanged uploads and warmed managed bytes.");
+    }
+
+    internal static void VerifyTreeCategory()
+    {
+        var tree = B2DynamicTrees.b2DynamicTree_Create();
+        try
+        {
+            var changes = 0;
+            var proxy = B2DynamicTrees.b2DynamicTree_CreateProxy(tree, new B2AABB { lowerBound = new(-1, -1), upperBound = new(1, 1) }, 1, 37);
+            tree.proxyChanged = (id, topology) => { if (id != 37 || !topology) throw new Exception("Proxy category notification lost its leaf identity."); changes++; };
+            B2DynamicTrees.b2DynamicTree_SetCategoryBits(tree, proxy, 1UL << 63);
+            if (changes != 1 || B2DynamicTrees.b2DynamicTree_GetCategoryBits(tree, proxy) != 1UL << 63)
+                throw new Exception("Changing a category must accept an allocated leaf with a nonzero user ID.");
+        }
+        finally { B2DynamicTrees.b2DynamicTree_Destroy(tree); }
+        if (tree.proxyChanged is not null) throw new Exception("Destroying a tree must detach the proxy observer.");
+        Console.WriteLine("Dynamic-tree category leaf guard and observer lifetime passed.");
     }
 
     private static void VerifyBroadPhase(GPUPhysicsWorld gpu, int count, bool dense)
@@ -35,12 +53,13 @@ internal static partial class GPUPhysicsTests
         var filters = expectedFilters;
         var owner = Environment.CurrentManagedThreadId;
         var passes = 0;
+        var vetoAll = false;
         var jointID = new B2JointId();
         world.customFilterFcn = (a, b, _) =>
         {
             if (owner != Environment.CurrentManagedThreadId) throw new Exception("GPU pair filters left the owner thread.");
             filters.Add((a.index1, b.index1));
-            return (a.index1 + b.index1) % 7 != 0;
+            return !vetoAll && (a.index1 + b.index1) % 7 != 0;
         };
         world.findBroadPhasePairs = w =>
         {
@@ -82,16 +101,16 @@ internal static partial class GPUPhysicsTests
             for (var i = 0; i < count; i++)
             {
                 var bodyDef = b2DefaultBodyDef();
-                bodyDef.type = dense ? B2BodyType.b2_dynamicBody : (B2BodyType)(i % 3);
+                bodyDef.type = dense || count <= 2 ? B2BodyType.b2_dynamicBody : (B2BodyType)(i % 3);
                 bodyDef.position = dense ? new(0, 0) : count > 1000 ? new(i * 4, 0) : new(i % 8 * .4f, i / 8 * .4f);
                 var body = b2CreateBody(id, bodyDef); bodies.Add(body);
                 var shapeDef = b2DefaultShapeDef(); shapeDef.invokeContactCreation = true;
-                shapeDef.enableCustomFiltering = !dense; shapeDef.isSensor = !dense && i % 17 == 0;
-                shapeDef.filter.categoryBits = dense ? 1UL : i % 11 == 0 ? 0UL : 1UL << (i % 64);
+                shapeDef.enableCustomFiltering = !dense; shapeDef.isSensor = !dense && count > 2 && i % 17 == 0;
+                shapeDef.filter.categoryBits = dense || count <= 2 ? 1UL : i % 11 == 0 ? 0UL : 1UL << (i % 64);
                 shapeDef.filter.maskBits = dense || i % 5 == 0 ? ulong.MaxValue : 0xaaaaaaaaaaaaaaaaUL;
                 shapeDef.filter.groupIndex = dense ? 0 : i % 9 < 2 ? 3 : i % 9 < 4 ? -3 : 0;
                 shapes.Add(b2CreateCircleShape(body, shapeDef, new B2Circle { radius = .5f }));
-                if (!dense && i % 13 == 0)
+                if (!dense && count > 2 && i % 13 == 0)
                     shapes.Add(b2CreateCircleShape(body, shapeDef, new B2Circle { center = new(.1f, 0), radius = .4f }));
             }
             if (count > 8)
@@ -191,6 +210,8 @@ internal static partial class GPUPhysicsTests
             }
             var uploadedBefore = gpu.PairTableUploadBytes;
             var snapshotsBefore = gpu.PairTableSnapshotCount;
+            var treeUploadBefore = gpu.TreeUploadBytes;
+            var treeRefitsBefore = gpu.TreeRefitCount;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var tick = 0; tick < 16; tick++)
             {
@@ -201,6 +222,51 @@ internal static partial class GPUPhysicsTests
             if (bytes != 0) throw new Exception($"Warmed CPU/GPU pair oracle allocated {bytes} bytes ({count}/{dense}).");
             if (gpu.PairTableUploadBytes != uploadedBefore || gpu.PairTableSnapshotCount != snapshotsBefore)
                 throw new Exception("Unchanged contact topology must reuse the GPU pair table without uploads.");
+            if (gpu.TreeUploadBytes != treeUploadBefore || gpu.TreeRefitCount != treeRefitsBefore)
+                throw new Exception("Unchanged proxies must reuse the GPU tree without uploads or refitting.");
+            if (count == 65)
+            {
+                // Keep broad-phase candidates observable on every tick by vetoing
+                // their creation. Move a high-key proxy queried by lower-key bodies.
+                vetoAll = true;
+                for (var i = 0; i < world.contacts.count; i++)
+                    if (world.contacts.data[i].contactId >= 0) B2Contacts.b2DestroyContact(world, world.contacts.data[i], false);
+                void Move(int tick)
+                {
+                    b2Body_SetTransform(bodies[62], new(2, tick % 2 == 0 ? 0 : 3.2f), new(1, 0));
+                    foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                    b2UpdateBroadPhasePairs(world);
+                }
+                for (var tick = 0; tick < 32; tick++) Move(tick);
+                treeUploadBefore = gpu.TreeUploadBytes;
+                var treeSnapshots = gpu.TreeSnapshotCount; var treeRebuilds = gpu.TreeRebuildCount;
+                var treeUpdates = gpu.TreeUpdatedProxies;
+                before = GC.GetTotalAllocatedBytes(true);
+                for (var tick = 0; tick < 64; tick++) Move(tick);
+                bytes = GC.GetTotalAllocatedBytes(true) - before;
+                if (bytes != 0) throw new Exception($"Warmed GPU tree movement allocated {bytes} managed bytes.");
+                if (gpu.TreeSnapshotCount != treeSnapshots || gpu.TreeUpdatedProxies - treeUpdates != 64 ||
+                    gpu.TreeUploadBytes - treeUploadBefore != 64 * 32 || gpu.TreeRebuildCount <= treeRebuilds)
+                    throw new Exception("GPU refit/rebuild must consume one changed proxy per tick without a full snapshot.");
+
+                // The bullet lane enlarges the tree directly, bypassing broad-phase wrappers.
+                var movingShape = world.shapes.data[world.bodies.data[bodies[62].index1 - 1].headShapeId];
+                var tree = world.broadPhase.trees[(int)B2_PROXY_TYPE(movingShape.proxyKey)];
+                var proxy = B2_PROXY_ID(movingShape.proxyKey);
+                var bounds = tree.nodes[proxy].aabb;
+                bounds.lowerBound = new(bounds.lowerBound.X - 3, bounds.lowerBound.Y - 3);
+                bounds.upperBound = new(bounds.upperBound.X + 3, bounds.upperBound.Y + 3);
+                B2DynamicTrees.b2DynamicTree_EnlargeProxy(tree, proxy, bounds);
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+                var category = tree.nodes[proxy].categoryBits;
+                B2DynamicTrees.b2DynamicTree_SetCategoryBits(tree, proxy, 0);
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+                B2DynamicTrees.b2DynamicTree_SetCategoryBits(tree, proxy, category);
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+            }
             if (dense)
             {
                 var idA = world.contacts.data.Take(world.contacts.count).First(c => c.contactId >= 0 &&

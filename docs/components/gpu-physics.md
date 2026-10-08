@@ -21,13 +21,32 @@ and wheel constraints execute on GPU, including springs, motors and limits.
 These implement the current PinJoint and GrooveJoint backend constraint roles.
 The spring-joint force preflight/application still belongs to CPU world setup.
 
-Broad-phase AABB traversal now runs on GPU before manifold generation. The owner
-packs the current static/kinematic/dynamic trees as 32-byte threaded nodes and
-48-byte moved-proxy queries. Escape links preserve the existing child2-first
-visitation order without a shader stack limit. Dynamic queries visit kinematic,
-static and dynamic trees; other proxies visit only the dynamic tree. Fat bounds
-and zero-category pruning match the CPU search. The GPU emits real candidate
-proxy keys; it does not receive CPU-generated overlap pairs.
+Broad-phase search now uses an independent resident GPU hierarchy. The GPU orders
+proxy centers by a two-dimensional Morton key, bitonic-sorts key/shape-index pairs,
+and builds a complete binary heap by bottom-up AABB/type-mask reduction. Empty
+slots remain invisible; duplicate Morton keys use shape indices as a stable tie.
+Traversal uses implicit parent/child indices without a shader stack. The
+[Morton-order construction principle](https://developer.nvidia.com/blog/thinking-parallel-part-iii-tree-construction-gpu/)
+is a reference; this implementation uses a balanced heap, not that article's
+radix-tree topology or performance results.
+
+Only initial binding/capacity growth uploads all 32-byte proxies. Creation,
+destruction, movement, enlargement and category changes mark unique shape slots;
+subsequent batches upload their final records. Hooks live at the dynamic-tree
+proxy boundary, including the direct bullet-enlargement lane. GPU refitting updates
+leaf/internal bounds. Topology edits or accumulated updates reaching half the leaf
+capacity trigger a spatial rebuild entirely from resident proxies. Unchanged
+proxies need neither upload nor refit. Bitonic sorting is O(n log² n); its rebuild
+cost remains a measured optimization boundary.
+
+CPU trees remain as query/CCD mirrors and supply leaf publication ranks. The GPU
+tree receives no CPU topology or internal bounds. Before user filters and contact
+creation, validated candidate shape IDs are sorted by those ranks with a cached
+comparison over a Span. This preserves exact CPU pair/callback order despite GPU
+spatial rebuilds. Node/proxy records use 32 bytes, query records 48 bytes and
+returned candidate IDs 4 bytes. Tree snapshot/rebuild/refit/update/upload counters
+expose the work performed. Refitting is counted per batch, including batches that
+also rebuild. The CPU mirror/rank walk is not removed or claimed to be GPU work.
 
 Each query retains a power-of-two candidate capacity. A normal batch uses one
 submission/readback; overflow reports the full count and repeats the unchanged
@@ -37,15 +56,15 @@ self/moved-pair deduplication, existing-contact lookup, same-body and sensor vet
 64-bit category/mask and signed group filtering, and joint collision veto. The
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
 Joint filtering walks the smaller body adjacency list. Only user filters and
-ordered contact creation remain on the owner after readback; tree maintenance
-and the shared contact lifecycle remain managed. The GPU maintains its own
+ordered contact creation remain on the owner after readback; CPU query/CCD tree
+mirrors and the shared contact lifecycle remain managed. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
 Filter inputs use 48 bytes per shape and 32 bytes per joint. Shape records are
 packed in slot order; moved flags come directly from the move array rather than
-one hash lookup per shape. Tree, shape and joint snapshots are currently uploaded
-on each moving batch. The pair table itself is never uploaded: 4-byte GPU slots
+one hash lookup per shape. Shape and joint snapshots are currently uploaded
+on each moving batch; tree proxies use incremental uploads. The pair table itself is never uploaded: 4-byte GPU slots
 reference retained 8-byte contact keys. The initial world binding and capacity
 growth upload keys once; later batches upload only 16-byte changed-contact records.
 
@@ -120,7 +139,7 @@ managed preflight. Solved contact impulses publish directly to their manifolds,
 without a CPU SIMD preparation/store pass. Joint frames and coefficients publish
 with impulses for subsequent queries and finalization.
 
-The tree, solver and manifold callbacks run on the world owner. Tree maintenance,
+The tree, solver and manifold callbacks run on the world owner. CPU tree mirrors,
 user filtering/contact creation, sleep/CCD finalization and queries remain in the managed
 backend; large worlds retain CPU contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
@@ -237,7 +256,7 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU tree maintenance and contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: remove CPU tree mirrors/rank dependency, retain shape/joint metadata and implement GPU contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -383,3 +402,52 @@ Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-pairs
 Current shader SHA-256 values:
 `PhysicsPairTable.comp.spv` = `1a561f7e51416d87a41fbfc4993d041bac9db4f2df9da2d7ab1d54a73e7cb598`;
 `PhysicsBroadPhase.comp.spv` = `47a2914804786b51f7ff7f7d30e441af0b3ab958c6e640c8025c35184f813cdb`.
+
+Tree checks retain the existing CPU pair/custom-filter oracle through independent
+GPU builds/refits. They include empty, one/two-visible-proxy, sparse/dense and
+coincident-center layouts, shape-slot reuse, type masks, category/filter edits,
+teleport and CPU-only tree rebuild. Unchanged queries perform no tree upload or
+refit. A high-key dynamic proxy moves between disjoint regions while all user
+filters veto contact creation, keeping spatial candidates observable every tick;
+32 warmups precede 64 measured movement/refit steps. Those steps upload exactly
+2,048 bytes (64 changed 32-byte proxies), include a GPU spatial rebuild, take no
+full snapshot and allocate zero all-thread managed bytes. Direct tree enlargement
+also exercises the notification used by bullets. The first custom-IComparer sort
+allocated 2,048 bytes in sixteen warmed oracle passes; cached Comparison/Span sorting
+removed those allocations without weakening the budget or pair-order comparison.
+
+Maximum-Smash tree profiles keep the same sequential GPU A/CPU A/CPU B/GPU B
+comparison, 65,537 bodies, 32 warmup and 64 measured headless ticks. No builds,
+formatters or other tests ran concurrently.
+
+| Pair search hierarchy | Whole step mean | Step p95 | Pair stage mean | All-thread managed bytes |
+| --- | ---: | ---: | ---: | ---: |
+| Resident GPU tree A | 163.88 ms | 225.68 ms | 12.96 ms | 0 |
+| CPU A | 162.68 ms | 254.43 ms | 10.58 ms | 0 |
+| CPU B | 169.27 ms | 252.87 ms | 10.79 ms | 0 |
+| Resident GPU tree B | 166.30 ms | 258.60 ms | 12.91 ms | 0 |
+
+All four hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`,
+with the same awake-body progression. Each GPU run performed 16 spatial rebuilds
+and 64 refit batches from 1,204,915 changed proxies, uploading 38,557,280 tree
+bytes with zero full snapshots. Total broad-phase input fell from 551,134,208
+to 321,239,648 bytes; readback stayed 156,052,844 bytes and filtered candidates
+496,638. Pair-table residency is unchanged. Host phases A/B were packing/ranking
+5.46/5.43 ms, recording/uploads 0.54/0.53 ms, submit/fence/readback 3.50/3.56 ms,
+and result validation/order/user filtering 0.75/0.73 ms. Managed contact creation
+follows those phases. The independent GPU hierarchy removes full tree uploads;
+it does not establish a speedup over CPU search or sustained application FPS.
+CPU mirrors/ranking and full shape/joint metadata packing remain overhead.
+
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-tree-{a,b}.json`.
+Current shader SHA-256 values:
+`PhysicsTree.comp.spv` = `4dc874c03b9237e988f49a53ffe613e6ae83201066eb3746b1a9c3d24090a2ac`;
+`PhysicsBroadPhase.comp.spv` = `73a6e98e7b96780c0a1dff6552c25719b719647947b51138fe5ec6943e8362ea`.
+
+The native category setter's Debug guard previously tested child fields that alias
+leaf userData, rejecting valid nonzero shape IDs. The focused
+`ELECTRON2D_TEST_GPU_TREE_CATEGORY=1` Debug check reproduced that assertion and now
+passes with allocated-leaf validation; it also verifies observer detachment on
+tree destruction. The Release GPU oracle directly disables/restores a leaf's
+category after enlargement and compares complete pairs/callback order with CPU.

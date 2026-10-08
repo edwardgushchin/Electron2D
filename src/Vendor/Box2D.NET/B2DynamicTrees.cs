@@ -761,6 +761,7 @@ namespace Box2D.NET
             b2InsertLeaf(tree, proxyId, shouldRotate);
 
             tree.proxyCount += 1;
+            tree.proxyChanged?.Invoke((int)userData, true);
 
             return proxyId;
         }
@@ -771,11 +772,13 @@ namespace Box2D.NET
             B2_ASSERT(0 <= proxyId && proxyId < tree.nodeCapacity);
             B2_ASSERT(b2IsLeaf(tree.nodes[proxyId]));
 
+            int userIndex = (int)tree.nodes[proxyId].children.userData;
             b2RemoveLeaf(tree, proxyId);
             b2FreeNode(tree, proxyId);
 
             B2_ASSERT(tree.proxyCount > 0);
             tree.proxyCount -= 1;
+            tree.proxyChanged?.Invoke(userIndex, true);
         }
 
         /// Get the number of proxies created
@@ -800,6 +803,7 @@ namespace Box2D.NET
 
             bool shouldRotate = false;
             b2InsertLeaf(tree, proxyId, shouldRotate);
+            tree.proxyChanged?.Invoke((int)tree.nodes[proxyId].children.userData, false);
         }
 
         /// Enlarge a proxy and enlarge ancestors as necessary.
@@ -842,6 +846,7 @@ namespace Box2D.NET
                 nodes[parentIndex].flags |= (int)B2TreeNodeFlags.b2_enlargedNode;
                 parentIndex = nodes[parentIndex].pn.parent;
             }
+            tree.proxyChanged?.Invoke((int)nodes[proxyId].children.userData, false);
         }
 
         /// Modify the category bits on a proxy. This is an expensive operation.
@@ -849,9 +854,8 @@ namespace Box2D.NET
         {
             B2TreeNode[] nodes = tree.nodes;
 
-            B2_ASSERT(nodes[proxyId].children.child1 == B2_NULL_INDEX);
-            B2_ASSERT(nodes[proxyId].children.child2 == B2_NULL_INDEX);
-            B2_ASSERT((nodes[proxyId].flags & (ushort)B2TreeNodeFlags.b2_leafNode) == (ushort)B2TreeNodeFlags.b2_leafNode);
+            B2_ASSERT(0 <= proxyId && proxyId < tree.nodeCapacity);
+            B2_ASSERT(b2IsAllocated(nodes[proxyId]) && b2IsLeaf(nodes[proxyId]));
 
             nodes[proxyId].categoryBits = categoryBits;
 
@@ -868,6 +872,7 @@ namespace Box2D.NET
 
                 nodeIndex = node.pn.parent;
             }
+            tree.proxyChanged?.Invoke((int)tree.nodes[proxyId].children.userData, true);
         }
 
         /// Get the category bits on a proxy.

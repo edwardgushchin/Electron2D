@@ -27,6 +27,7 @@ namespace Box2D.NET
     /// It is placed here for performance reasons.
     internal class B2DynamicTree
     {
+        internal System.Action<int, bool> proxyChanged;
         /// The tree nodes
         public B2TreeNode[] nodes;
 
@@ -62,6 +63,7 @@ namespace Box2D.NET
 
         public void Clear()
         {
+            proxyChanged = null;
             nodes = null;
             root = 0;
             nodeCount = 0;

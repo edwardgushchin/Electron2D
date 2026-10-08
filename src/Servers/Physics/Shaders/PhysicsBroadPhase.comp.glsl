@@ -5,7 +5,7 @@
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsPairHash.inc.glsl"
 layout(local_size_x = 64) in;
-struct Node { vec4 bounds; int escape; int proxy; int hasCategory; int shape; };
+struct Node { vec4 bounds; int typeMask; int proxy; int hasCategory; int shape; };
 struct Query { vec4 bounds; int proxy; int offset; int count; int capacity; ivec4 shape; };
 struct Shape { uvec4 bits; ivec4 bodyGroupJoints; ivec4 flags; };
 struct Joint { ivec4 bodiesNext; ivec4 flags; };
@@ -73,21 +73,26 @@ void main()
     if (q.proxy != -1)
     {
         Shape shape = shapes[q.shape.x];
-        // Dynamic proxies query kinematic, static, then dynamic trees.
-        // All other types query only dynamic proxies.
-        int at = (q.proxy & 3) == 2 ? 0 : settings.y;
-        while (at < settings.z)
+        // A single GPU hierarchy contains all types; masks prune irrelevant subtrees.
+        int typeMask = (q.proxy & 3) == 2 ? 7 : 4;
+        int at = 1;
+        while (at != 0)
         {
             Node n = nodes[at];
             bool overlap = all(lessThanEqual(n.bounds.xy, q.bounds.zw)) &&
                            all(lessThanEqual(q.bounds.xy, n.bounds.zw));
-            if (n.hasCategory == 0 || !overlap) { at = n.escape; continue; }
-            if (n.proxy != -1 && acceptPair(q, shape, n))
+            if (n.hasCategory != 0 && (n.typeMask & typeMask) != 0 && overlap)
             {
-                if (count < q.capacity) candidates[q.offset + count] = n.proxy;
-                count++;
+                if (at < settings.y) { at *= 2; continue; }
+                if (acceptPair(q, shape, n))
+                {
+                    if (count < q.capacity) candidates[q.offset + count] = n.shape;
+                    count++;
+                }
             }
-            at++;
+            // Stackless left-first traversal of the implicit complete binary tree.
+            while (at > 1 && (at & 1) != 0) at /= 2;
+            at = at == 1 ? 0 : at + 1;
         }
     }
     queries[id].count = count;

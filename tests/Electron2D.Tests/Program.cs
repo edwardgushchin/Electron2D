@@ -30,6 +30,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_BROAD_PHASE") == "1") { GPUPhysicsTests.RunBroadPhase(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_TREE_CATEGORY") == "1") { GPUPhysicsTests.VerifyTreeCategory(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES_HOST") == "1") { RenderingPrimitiveTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PRIMITIVES") == "1") { RenderingPrimitiveTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE_HOST") == "1") { NavigationAvoidanceTests.RunHost(); return; }
