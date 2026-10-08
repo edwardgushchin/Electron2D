@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, integration, complete broad-phase pairs and narrow-phase contact points now execute internally; impulse response, public GPU-world selection and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response and warm history execute internally; joints, sleep, CCD, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -2643,7 +2643,7 @@
         "class:Shape2D"
       ],
       "state": "Partial",
-      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; complete independent GPU response and public ownership remain open. Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
+      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; internal GPU contact response and warm history execute; complete public GPU-world ownership/integration remain open. Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
     },
     {
       "godot": [

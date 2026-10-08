@@ -76,18 +76,6 @@ Manifold polygonCircle(Geometry a, vec2 center, float radiusB)
     }
     m.normal=normal; m.count=1; point(m,0,lerp2(ca,cb,0.5),separation,0); return m;
 }
-// Closest fractions on two nondegenerate segments, preserving scalar operation order.
-vec2 fractions(vec2 p1,vec2 q1,vec2 p2,vec2 q2)
-{
-    vec2 d1=q1-p1,d2=q2-p2,r=p1-p2;
-    float dd1=dot2(d1,d1),dd2=dot2(d2,d2),rd1=dot2(r,d1),rd2=dot2(r,d2),d12=dot2(d1,d2);
-    precise float denominator=dd1*dd2-d12*d12;
-    float f1=denominator!=0?clamp((d12*rd2-rd1*dd2)/denominator,0,1):0;
-    float f2=(d12*f1+rd2)/dd2;
-    if(f2<0) { f2=0; f1=clamp(-rd1/dd1,0,1); }
-    else if(f2>1) { f2=1; f1=clamp((d12-rd1)/dd1,0,1); }
-    return vec2(f1,f2);
-}
 vec3 capsuleAxis(vec2 p,vec2 q,vec2 reference,vec2 direction)
 {
     vec2 normal=vec2(-direction.y,direction.x);

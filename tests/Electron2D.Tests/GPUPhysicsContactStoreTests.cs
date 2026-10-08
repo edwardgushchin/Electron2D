@@ -59,6 +59,9 @@ internal static class GPUPhysicsContactStoreTests
         Check(store.ReadContacts(points) == 2 && features.SequenceEqual(points.Take(2).Select(p => (p.FeatureA, p.FeatureB)).Order()), "Translation preserves contact features.");
         store.SetShapePose(boxA, new(0.2f, Vector2.Zero));
         Check(store.ReadContacts(points) > 0, "Rotated local placement refreshes contact geometry.");
+        store.SetShapePose(boxA, Transform.Identity); store.SetPose(a, Vector2.Zero, 0); store.SetPose(b, new(8.25f, 12.25f), 0);
+        Check(store.ReadContacts(points, 0.5f) == 1 && MathF.Abs(points[0].Normal.Z - MathF.Sqrt(0.125f)) < 0.0001f,
+            "Separated polygon corners produce one speculative point with Euclidean separation.");
         box.Dispose(); Check(store.FindContacts() == 0, "Resource disposal removes resident contacts.");
         Console.WriteLine("Resident contacts: analytic primitives, speculative/sensor boundary, edits, identity, features and lifetime passed.");
     }
@@ -90,10 +93,12 @@ internal static class GPUPhysicsContactStoreTests
                     }
             var points = new Point[store.FindContacts()]; store.ReadContacts(points);
             var touched = new bool[expected.Count];
+            var features = new HashSet<(uint, uint, uint, uint, uint, uint)>();
             foreach (var point in points)
             {
                 Check(point.ShapeA % 2 == 0 && point.ShapeB == point.ShapeA + 1, "Separate test pairs never cross their cells.");
                 var index = (int)(point.ShapeA / 2); touched[index] = true;
+                Check(features.Add((point.ShapeA, point.ShapeB, point.FeatureA, point.FeatureB, point.PieceA, point.PieceB)), "Contact features uniquely identify each point for history lookup.");
                 Invariant(point, poses[index].A, poses[index].B, 0.001f);
             }
             for (var i = 0; i < expected.Count; i++) Check(expected[i] == touched[i], $"Pair {i} agrees with standalone collision region: expected={expected[i]}, actual={touched[i]}.");

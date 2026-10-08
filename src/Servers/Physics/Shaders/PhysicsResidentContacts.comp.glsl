@@ -3,7 +3,7 @@
 #include "PhysicsResidentBody.inc.glsl"
 #include "PhysicsResidentGeometry.inc.glsl"
 layout(local_size_x = 64) in;
-struct ContactPoint { uvec4 pair; uvec4 features; vec4 normal; vec4 anchors; };
+#include "PhysicsResidentContact.inc.glsl"
 layout(std430, set=0, binding=0) readonly buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set=0, binding=1) readonly buffer Vertices { vec2 vertices[]; };
 layout(std430, set=0, binding=2) readonly buffer Geometries { Geometry geometries[]; };
@@ -156,7 +156,17 @@ void ordinary(Hull a,Hull b,uvec2 pieces)
         float span=dot2(to-from,tangent);
         vec2 p=vertex(inc,incident),q=vertex(inc,(incident+1u)%inc.count);
         float fp=dot2(p-from,tangent),fq=dot2(q-from,tangent);
-        if(max(fp,fq)<0||min(fp,fq)>span)return;
+        if(max(fp,fq)<0||min(fp,fq)>span)
+        {
+            vec2 f=fractions(from,to,p,q),pa=lerp2(from,to,f.x),pb=lerp2(p,q,f.y),delta=pb-pa;
+            float distance=length(delta);if(distance-r.radius-inc.radius>contactLimit)return;
+            vec2 direction=distance>0?delta/distance:n;
+            uint fa=edgeFeature(r,axis.edge,pa),fb=edgeFeature(inc,incident,pb);
+            pa+=r.radius*direction;pb-=inc.radius*direction;
+            if(flip)emitPoint(pb,pa,-direction,uvec4(fb,fa,pieces));
+            else emitPoint(pa,pb,direction,uvec4(fa,fb,pieces));
+            return;
+        }
         vec2 cp,cq;clipSegment(p,q,fp,fq,span,cp,cq);
         facePoint(r,inc,cp,n,axis.edge,incident,flip,pieces);
         if(length(cq-cp)>tolerances.z)facePoint(r,inc,cq,n,axis.edge,incident,flip,pieces);

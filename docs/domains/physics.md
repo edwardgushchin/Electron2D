@@ -38,8 +38,9 @@ and settings now also sit outside vendor storage; PhysicsJointBackend owns curre
 constraint handles and CPU spring evaluation. A separate GPUPhysicsBodyStore now
 retains and integrates device body state, shared shape geometry, transformed bounds,
 complete broad-phase pairs and narrow-phase contact points without a CPU world or
-CPU spatial/contact mirror. Contact impulses/material response, constraints, sleep,
-CCD and public selection still need to be connected.
+CPU spatial/contact mirror. Contact impulse/material response, warm history and
+separate correction now execute on GPU. Joints, automatic mass-center profiles, sleep,
+CCD and public selection/publication still need to be connected.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

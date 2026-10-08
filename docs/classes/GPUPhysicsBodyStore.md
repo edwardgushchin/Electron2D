@@ -8,6 +8,7 @@ Last updated: 2026-10-08
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
+[solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
 [body kernel](../../src/Servers/Physics/Shaders/PhysicsResidentBodies.comp.glsl),
 [shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl),
 [contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl)
@@ -18,8 +19,9 @@ Last updated: 2026-10-08
 Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
 edits, integration, shared geometry, broad-phase pairs and narrow-phase contact
-points. It is not yet selectable through PhysicsServer and does not solve contact
-impulses/joints, sleep, CCD or network replay.
+points, material response, contact impulses and warm history. It is not yet
+selectable through PhysicsServer; joints, sleep, CCD, public state/event publication
+and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
 
 | Operation | Contract |
 | --- | --- |
@@ -27,6 +29,9 @@ impulses/joints, sleep, CCD or network replay.
 | `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes immediately; queue device removal. Reuse gets a fresh generation. |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
 | `Step` | Flush pending edits and integrate live bodies on GPU. Static poses stay fixed, kinematics ignore forces/gravity, rigid bodies use mass/inertia/gravity/signed damping, RigidLinear locks rotation. |
+| `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
+| `SolveContacts` | Solve current velocities and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
+| `SetShapeMaterial` | Journal finite signed friction/bounce using the existing rough/absorbent convention. |
 | `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities. |
 | `AddShape`, `RemoveShape` | Borrow a shared Shape resource, retain one GPU geometry record per resource and a generation-qualified attachment per shape slot. Body deletion invalidates attachments; resource disposal makes their bounds inactive. |
 | `SetShapePose`, `SetShapeFilter` | Coalesce unit-scale local placement and 32-bit layer/mask/sensor edits. |
@@ -76,5 +81,13 @@ invariants, speculative/sensor differences, mutable/disposed geometry, identity,
 feature stability, complete concave-piece output and failed-state rejection after
 nonfinite device intermediates. Moving grids verify every point against actual GPU
 poses outside the timed window; details and measured transfer costs are in the
-component report. Contact impulses/material response, warm history, joint vetoes,
-body exceptions and sensor/contact event publication remain unconnected.
+component report. Joint vetoes,
+body exceptions and sensor/contact event publication remain unconnected. Contact
+impulses/material response and warm history now execute through the solver component.
+
+GPUPhysicsSolverStoreTests covers analytic momentum/energy/inertia, signed materials,
+stationary linear/angular surfaces, directed-ray response, history reuse/invalidation/
+growth, separate correction, failed-state rejection, a ten-second eight-box stack and
+complete gravity-loaded 4,096/65,536-circle populations. SolverSubmissionCount,
+WarmStartedPointCount, SolverMS and SolverWaitMS expose actual work; full backend,
+networking and window performance remain open.

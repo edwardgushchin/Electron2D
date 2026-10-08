@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact response and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -248,7 +248,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -272,9 +272,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             if (commandBytes > 0) Upload(copy, _commands!, 4, commandBytes);
             if (requestBytes > 0) Upload(copy, _requests!, 4 + commandBytes, requestBytes);
             SDL.EndGPUCopyPass(copy);
-            var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, 0), Capacity = (uint)_highWater };
+            var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, positionCorrections ? 1 : 0), Capacity = (uint)_highWater };
             Dispatch(command, ref settings, 0, _pendingCount);
-            if (delta > 0) Dispatch(command, ref settings, 1, _highWater);
+            if (delta > 0) Dispatch(command, ref settings, motionStage, _highWater);
             Dispatch(command, ref settings, 2, requests.Length);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
@@ -318,8 +318,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)binding, 3);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident body compute");
         SDL.BindGPUComputePipeline(compute, _pipeline.DangerousGetHandle());
-        var inputs = stackalloc nint[2] { _commands!.DangerousGetHandle(), _requests!.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+        var inputs = stackalloc nint[3] { _commands!.DangerousGetHandle(), _requests!.DangerousGetHandle(), _positionCorrectionsGPU?.DangerousGetHandle() ?? _bodies!.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
         fixed (Settings* uniform = &settings) SDL.PushGPUComputeUniformData(command, 0, (nint)uniform, (uint)sizeof(Settings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1);
         SDL.EndGPUComputePass(compute);
@@ -345,6 +345,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

@@ -7,14 +7,15 @@ Last updated: 2026-10-08
 [GPUPhysicsBodyStore](../classes/GPUPhysicsBodyStore.md) is the first independent
 device-state component under [ADR 0054](../decisions/physics.md#adr-0054). It creates
 no CPU solver world. Body slots, generation changes, sparse edits, force/mass/gravity/
-damping integration, geometry edits, transformed bounds, broad-phase tree maintenance
+damping integration, geometry edits, transformed bounds, broad-phase tree maintenance,
 complete candidate pairs and narrow-phase contact points execute through offline GPU pipelines. Authored values and read results use scene units. The original
 [GPUPhysicsWorld stage host](../classes/GPUPhysicsWorld.md) remains separate.
 
-This component is not a complete physics backend. Contact impulse/material response,
-joint constraints, warm history, automatic sleep, CCD, scene/server selection and
-network snapshots remain absent. Step still integrates bodies; FindContacts is a
-separate explicit stage, not a complete collision-response step.
+The [contact response pipeline](gpu-contact-solver.md) now adds material/impulse
+solving, warm history and separate positional correction through Simulate. This
+component is not a complete physics backend: joints, automatic mass-center profiles,
+sleep, CCD, scene/server selection/publication and networking remain open. Step
+remains an integration-only control; FindContacts computes contact points.
 Its partial-pipeline timings cannot be compared with full CPU physics or reported
 as window FPS. These missing consumers must be connected to resident state before
 the independent GPU objective is satisfied.
@@ -88,7 +89,7 @@ The SPIR-V SHA-256 is
 
 Shape resources provide their borrowed scene-unit geometry. The device retains one
 32-byte descriptor per distinct resource, eight bytes per contour vertex and a
-48-byte attachment per shape slot. Circle/capsule radius, contour winding and separation-ray metadata
+64-byte attachment per shape slot, including material and integer edit revision. Circle/capsule radius, contour winding and separation-ray metadata
 are retained; rectangles use four corners, convex polygons retain the whole contour,
 and concave shapes retain all segment endpoints. No CPU fixture partition, dynamic
 tree, body pose array or publication rank is imported. CPU attachments retain authored
@@ -123,7 +124,7 @@ pairs nor advances bodies twice. Addressability/device memory limits fail explic
 | Spatial operation | Traffic / synchronization |
 | --- | --- |
 | Warm changed broad phase | 8-byte reset upload and 8-byte error/count readback; one fence wait, plus 32-byte tree settings or 48-byte geometry/pair settings per dispatched pass. No shape, vertex, body pose, proxy or pair transfer. |
-| Shape edit | 64-byte scatter command per changed attachment. |
+| Shape edit | 80-byte scatter command per changed attachment. |
 | Geometry edit | 48-byte descriptor command plus 16 bytes per changed vertex. |
 | Growth | Device-to-device copies of retained geometry/shape storage; counters include waits and copied bytes. |
 | Explicit pair inspection | 16 downloaded bytes per pair, expanded into caller-owned store-qualified handles; separate fence wait. |
@@ -197,16 +198,16 @@ accepted 0.5-unit short-segment/capsule-center fallback becomes a point/circle.
 Concave geometry remains hollow: all contributing piece points survive output
 capacity growth. Two concave shapes and two separation rays do not collide.
 Directed rays reject containment/back-facing hits, choose the nearest concave
-crossing and retain the accepted SlideOnSlope virtual-anchor/depth rule. These are
-manifolds only; dynamic ray impulses, materials, sleep and reports remain open.
+crossing and retain the accepted SlideOnSlope virtual-anchor/depth rule. The linked solver now executes directed impulse/material response; public ray
+integration, sleep and full reports remain open.
 
 Contact normals point from canonical shape A toward B. Signed separation is the
 projection of the B-minus-A anchor difference on that normal; penetration is
 negative. Local anchors are relative to each body's origin/orientation. A 64-byte
 point holds shape slots/generations, 32-bit vertex/edge features and piece indices,
 normal/separation/sensor role and two local anchors. These identities are local to
-the store. Portable snapshots, retained impulse history and geometry-edit history
-invalidation are not implemented by these records.
+the store. Portable snapshots are not implemented by these records. The solver now keeps
+separate versioned device impulse history, described in its linked report.
 
 Physical speculative margin is a nonnegative scene-unit distance. Broad phase
 expands each bound by half this amount; narrow phase retains separated points only
@@ -271,7 +272,7 @@ and `/tmp/electron2d-resident-contacts-gpu-suite.log`. This is still partial-pip
 evidence: no whole CPU-vs-GPU physics, window FPS, networking, native allocations or
 cross-platform acceptance follows from it.
 
-Current modified SPIR-V SHA-256:
+Contact-generation baseline at `87b7f9ce85ed5e817f149837108dc434bacc80af` SPIR-V SHA-256:
 
 - PhysicsCollide: `0301c25ded7990fc77a2a7b2c4e40a302992865bd73af78ba49033b26dd01ebd`.
 - PhysicsResidentShapes: `e95f0603dd16b117adc89370fb2d17bd7076e910415d45ea6bd8ad98ea93f53e`.

@@ -29,8 +29,9 @@ Narrow phase now consumes those pairs and produces complete device contact point
 for current shape families, including full contours, concave pieces and directed
 rays. The [resident-stage report](gpu-resident-bodies.md) records buffers, traffic,
 waits and 65,536-body verification. Bounds/tree/pairs/contacts require no CPU mirror.
-Impulse/material response, joints, sleep, CCD and public selection are not yet
-connected to that store; historical full-stage results below still refer
+A [resident contact solver](gpu-contact-solver.md) now executes impulses/material
+response, device warm history and separate pose correction. Joints, automatic
+mass-center profiles, sleep, CCD and public selection/publication remain unconnected; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 
 The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only

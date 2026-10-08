@@ -7,6 +7,7 @@ struct Command { uvec4 header; ResidentBody body; vec4 impulse; };
 struct Snapshot { vec4 pose; vec4 velocity; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
+layout(std430, set = 0, binding = 2) readonly buffer Corrections { vec4 corrections[]; };
 layout(std430, set = 1, binding = 0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Status { uint status; };
 layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
@@ -32,6 +33,8 @@ void main()
             b = bodies[index];
             if (b.flags.x != generation || b.flags.w == 0u) { fail(1u); return; }
         }
+        // A nonzero alive word also versions explicit pose/velocity edits for contact history.
+        if ((mask & 1u) == 0u && (((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
@@ -44,12 +47,12 @@ void main()
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
         bodies[index] = b;
     }
-    else if (control.x == 1u)
+    else if (control.x == 1u || control.x == 3u || control.x == 4u)
     {
         ResidentBody b = bodies[i];
         if (b.flags.w == 0u || b.flags.y == 0u) return;
         float dt = step.z;
-        if (b.flags.y >= 2u)
+        if (control.x != 4u && b.flags.y >= 2u)
         {
             b.velocity.xy *= max(0.0, 1.0 - dt * b.properties.z);
             b.velocity.z *= max(0.0, 1.0 - dt * b.properties.w);
@@ -57,11 +60,16 @@ void main()
             b.velocity.z += dt * b.force.z * b.properties.y;
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
-        b.pose.xy += dt * b.velocity.xy;
-        float angle = dt * b.velocity.z;
+        if (control.x != 3u)
+        {
+        vec3 motion = b.velocity.xyz;
+        if (control.x == 4u && step.w != 0) motion += corrections[i].xyz;
+        b.pose.xy += dt * motion.xy;
+        float angle = dt * motion.z;
         vec2 q = vec2(cos(angle), sin(angle));
         b.pose.zw = vec2(b.pose.z * q.x - b.pose.w * q.y, b.pose.w * q.x + b.pose.z * q.y);
         b.pose.zw *= inversesqrt(dot(b.pose.zw, b.pose.zw));
+        }
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
         bodies[i] = b;
     }

@@ -23,15 +23,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal BodyHandle Body;
         internal GeometryEntry? Geometry;
         internal Transform Pose;
-        internal uint Generation, Layer, Mask;
+        internal uint Generation, Layer, Mask, Revision;
         internal int NextFree, PreviousOnBody, NextOnBody;
         internal bool Alive, Sensor, Dirty;
+        internal float Friction, Bounce;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct GeometryData
     {
         internal uint Start, Count, Kind, Generation;
-        internal Float4 Parameters;
+        internal Vector3 Parameters;
+        internal uint Revision;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct GeometryEdit
@@ -46,6 +48,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal Float4 Pose;
         internal uint Body, BodyGeneration, Geometry, GeometryGeneration;
         internal uint Generation, Layer, Mask, Flags;
+        internal Vector2 Material;
+        internal uint Revision, Padding;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct ShapeEdit
@@ -82,10 +86,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal long PairCapacityRetries { get; private set; }
 
     internal ShapeHandle AddShape(BodyHandle body, Shape geometry, Transform? localPose = null,
-        uint layer = 1, uint mask = uint.MaxValue, bool sensor = false)
+        uint layer = 1, uint mask = uint.MaxValue, bool sensor = false, float friction = 1, float bounce = 0)
     {
         Validate(body); ArgumentNullException.ThrowIfNull(geometry);
         ObjectDisposedException.ThrowIf(geometry.IsDisposed, geometry);
+        ValidateMaterial(friction, bounce);
         var pose = localPose ?? Transform.Identity; ValidateShapePose(pose);
         var index = _shapeFree;
         if (index < 0)
@@ -96,6 +101,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         else _shapeFree = _shapeSlots[index].NextFree;
         ref var slot = ref _shapeSlots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true;
+        slot.Friction = friction; slot.Bounce = bounce;
         slot.Body = body; slot.Pose = pose; slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor;
         slot.Geometry = RetainGeometry(geometry);
         slot.PreviousOnBody = -1; slot.NextOnBody = _slots[body.Index].FirstShape;
@@ -133,6 +139,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor; MarkShape(shape.Index);
     }
 
+    internal void SetShapeMaterial(ShapeHandle shape, float friction, float bounce)
+    {
+        Validate(shape); ValidateMaterial(friction, bounce);
+        ref var slot = ref _shapeSlots[shape.Index];
+        if (slot.Friction == friction && slot.Bounce == bounce) return;
+        slot.Friction = friction; slot.Bounce = bounce; MarkShape(shape.Index);
+    }
+    private static void ValidateMaterial(float friction, float bounce)
+    {
+        if (!float.IsFinite(friction) || !float.IsFinite(bounce)) throw new ArgumentOutOfRangeException(nameof(friction));
+    }
+
     private void Validate(ShapeHandle shape)
     {
         EnsureAccess();
@@ -147,6 +165,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void MarkShape(int index)
     {
+        _shapeSlots[index].Revision++;
         if (!_shapeSlots[index].Dirty) { _dirtyShapes.Add(index); _shapeSlots[index].Dirty = true; }
         _shapeVersion++;
     }
@@ -255,7 +274,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     }
                     winding = area < 0 ? -1 : 1;
                 }
-                edit.Data.Parameters = new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, winding, 0);
+                edit.Data.Parameters = new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, winding);
+                edit.Data.Revision = unchecked((uint)source.GeometryRevision);
             }
             if (entry.Source is { } current) { entry.Revision = current.GeometryRevision; entry.Disposed = current.IsDisposed; }
             _geometryEdits[i] = edit;
@@ -276,7 +296,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     Generation = slot.Generation,
                     Layer = slot.Layer,
                     Mask = slot.Mask,
-                    Flags = 1u | (slot.Sensor ? 2u : 0u)
+                    Flags = 1u | (slot.Sensor ? 2u : 0u),
+                    Material = new(slot.Friction, slot.Bounce),
+                    Revision = slot.Revision
                 };
             _shapeEdits[i] = edit;
         }
