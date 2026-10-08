@@ -3,7 +3,7 @@
 #include "PhysicsResidentBody.inc.glsl"
 layout(local_size_x = 64) in;
 
-struct Command { uvec4 header; ResidentBody body; vec4 impulse; };
+struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; };
 struct Snapshot { vec4 pose; vec4 velocity; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
@@ -11,9 +11,11 @@ layout(std430, set = 0, binding = 2) readonly buffer Corrections { vec4 correcti
 layout(std430, set = 1, binding = 0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Status { uint status; };
 layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
+layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { vec4 step; uvec4 control; };
 
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
+vec2 rotate(vec2 q,vec2 p) {return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
 void fail(uint value) { atomicOr(status, value); }
 
 void main()
@@ -25,23 +27,24 @@ void main()
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
-        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 0, 0)); return; }
+        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 0, 0)); centers[index]=vec2(0); return; }
         ResidentBody b;
-        if ((mask & 1u) != 0u) b = c.body;
+        if ((mask & 1u) != 0u) { b = c.body; centers[index] = c.center.xy; }
         else
         {
             b = bodies[index];
             if (b.flags.x != generation || b.flags.w == 0u) { fail(1u); return; }
         }
-        // A nonzero alive word also versions explicit pose/velocity edits for contact history.
-        if ((mask & 1u) == 0u && (((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
+        // A nonzero alive word also versions explicit pose/velocity/mass edits for contact and joint history.
+        if ((mask & 1u) == 0u && (((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
+        if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
         if ((mask & 16u) != 0u && b.flags.y >= 2u)
         {
-            b.velocity.xy += c.impulse.xy * b.properties.x;
-            if ((b.flags.z & 4u) == 0u) b.velocity.z += c.impulse.z * b.properties.y;
+            b.velocity.xy += c.impulse.xy;
+            if ((b.flags.z & 4u) == 0u) b.velocity.z += c.impulse.z;
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
@@ -64,11 +67,12 @@ void main()
         {
         vec3 motion = b.velocity.xyz;
         if (control.x == 4u && step.w != 0) motion += corrections[i].xyz;
-        b.pose.xy += dt * motion.xy;
+        vec2 center = b.pose.xy + rotate(b.pose.zw,centers[i]) + dt * motion.xy;
         float angle = dt * motion.z;
         vec2 q = vec2(cos(angle), sin(angle));
         b.pose.zw = vec2(b.pose.z * q.x - b.pose.w * q.y, b.pose.w * q.x + b.pose.z * q.y);
         b.pose.zw *= inversesqrt(dot(b.pose.zw, b.pose.zw));
+        b.pose.xy = center - rotate(b.pose.zw,centers[i]);
         }
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
         bodies[i] = b;

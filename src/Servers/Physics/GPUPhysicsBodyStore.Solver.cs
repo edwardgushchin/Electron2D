@@ -35,6 +35,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!float.IsFinite(delta) || delta < 0 || !gravity.IsFinite() || substeps < 1) throw new ArgumentOutOfRangeException(nameof(delta));
         var h = delta / substeps;
         ValidateSolver(delta == 0 ? 1 : h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
+        PrepareMasses();
         if (_highWater == 0) return;
         if (delta == 0) { Step(0, default); return; }
         try
@@ -56,6 +57,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         EnsureAccess();
         ValidateSolver(delta, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
+        PrepareMasses();
         try
         {
             _hasPositionCorrections = false;
@@ -181,13 +183,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         }
         else
         {
-            pipeline = _solverPipeline!; inputCount = 3; outputCount = 8;
+            pipeline = _solverPipeline!; inputCount = 4; outputCount = 8;
             outputs[0] = new() { Buffer = _bodies!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _constraintsGPU!.DangerousGetHandle() };
             outputs[2] = new() { Buffer = _contactHeadsGPU!.DangerousGetHandle() }; outputs[3] = new() { Buffer = _spatialSummary!.DangerousGetHandle() };
             outputs[4] = new() { Buffer = _solverHistoryGPU!.DangerousGetHandle() }; outputs[5] = new() { Buffer = _solverHistoryTableGPU!.DangerousGetHandle() };
             outputs[6] = new() { Buffer = _positionCorrectionsGPU!.DangerousGetHandle() };
             outputs[7] = new() { Buffer = _constraintImpulsesGPU!.DangerousGetHandle() };
-            inputs[0] = _contactsGPU!.DangerousGetHandle(); inputs[1] = _shapesGPU!.DangerousGetHandle(); inputs[2] = _geometryGPU!.DangerousGetHandle();
+            inputs[0] = _contactsGPU!.DangerousGetHandle(); inputs[1] = _shapesGPU!.DangerousGetHandle(); inputs[2] = _geometryGPU!.DangerousGetHandle(); inputs[3] = _centers!.DangerousGetHandle();
         }
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, outputCount);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident solver compute");
@@ -215,8 +217,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 5);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident joint constraints");
         SDL.BindGPUComputePipeline(compute, _jointPreparePipeline.DangerousGetHandle());
-        var inputs = stackalloc nint[2] { _bodies!.DangerousGetHandle(), _jointsGPU!.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+        var inputs = stackalloc nint[3] { _bodies!.DangerousGetHandle(), _jointsGPU!.DangerousGetHandle(), _centers!.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
         settings.Stage = stage; settings.Count = (uint)_jointHighWater;
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SolverUniforms));
         SDL.DispatchGPUCompute(compute, (settings.Count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

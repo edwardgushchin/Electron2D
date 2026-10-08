@@ -57,7 +57,7 @@ internal static class GPUPhysicsBodyStoreTests
         var uploads = store.UploadBytes; var readbacks = store.ReadbackBytes;
         store.Read(handles.AsSpan(0, 1), state);
         Near(state[0].Position, new(42, 43), 0, "Sparse pose edit");
-        Check(store.UploadBytes - uploads == 4 + 112 + 16 && store.ReadbackBytes - readbacks == 4 + 32,
+        Check(store.UploadBytes - uploads == 4 + 128 + 16 && store.ReadbackBytes - readbacks == 4 + 32,
             "One edit and one requested body transfer only their command, handle, result and status.");
 
         var copies = store.DeviceCopyBytes;
@@ -132,7 +132,7 @@ internal static class GPUPhysicsBodyStoreTests
         for (var i = 0; i < count; i++)
             Near(snapshots[i].Position, new Vector2(i % 256, i / 256) + travel, 0.02f, "Every resident body advances without CPU publication");
         Array.Sort(timings);
-        Console.WriteLine($"Resident integration only: {count} bodies, {warmup} warmup, {samples} samples, p50={timings[samples / 2]:F4} ms, p95={timings[(int)(samples * 0.95)]:F4} ms, wait={measuredWait / samples:F4} ms/tick, {allocated} B/tick, 4 B buffer upload + 32 B uniforms + 4 B readback/tick; driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}; diagnostic full read={fullReadMS:F4} ms (outside step samples).");
+        Console.WriteLine($"Resident integration only: {count} bodies, {warmup} warmup, {samples} samples, p50={timings[samples / 2]:F4} ms, p95={timings[(int)(samples * 0.95)]:F4} ms, wait={measuredWait / samples:F4} ms/tick, {allocated} B/tick, 4 B buffer upload + 32 B uniforms + 4 B readback/tick; driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}; diagnostic full read={fullReadMS:F4} ms (outside step samples); authored body/command capacity={store.AuthoredBodyCapacityBytes} B.");
     }
 
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Check(actual.DistanceTo(expected) <= tolerance, message);

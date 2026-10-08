@@ -14,8 +14,9 @@ complete candidate pairs and narrow-phase contact points execute through offline
 The [contact response pipeline](gpu-contact-solver.md) now adds material/impulse
 solving, warm history and separate positional correction through Simulate. This
 component now also has [resident pin/groove/spring joints](gpu-resident-joints.md).
-It is not a complete physics backend: joint bias/softness/general caps, automatic mass-center profiles,
-sleep, CCD, scene/server selection/publication and networking remain open. Step
+It is not a complete physics backend: joint bias/softness/general caps,
+sleep, CCD, scene/server selection/publication and networking remain open. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
+geometry and center-aware device motion/constraint preparation. Step
 remains an integration-only control; FindContacts computes contact points.
 Its partial-pipeline timings cannot be compared with full CPU physics or reported
 as window FPS. These missing consumers must be connected to resident state before
@@ -26,17 +27,18 @@ the independent GPU objective is satisfied.
 | Storage/transfer | Purpose and current cost |
 | --- | --- |
 | Device bodies | 80 bytes per retained slot; authoritative pose, velocity, force, mass/damping and generation/role data. |
-| CPU slot metadata | 24-byte payload per slot for generation, free-list, pending-command routing and first-shape/joint identity; no live poses or velocities. |
-| Pending edit staging | 112 bytes per reserved command. At most one coalesced command per slot; entries are cleared after successful publication. Allocation follows capacity growth, not every frame. |
+| Device local centers | 8 bytes per retained slot; read during integration and constraint preparation, copied on growth. |
+| CPU slot metadata | 64-byte payload per slot for generation, free-list, pending-command routing, shape/joint identity, authored role/mass profile and resolved geometry; no live poses or velocities. |
+| Pending edit staging | 128 bytes per reserved command. At most one coalesced command per slot; entries are cleared after successful publication. Allocation follows capacity growth, not every frame. |
 | Growth | Copy prior body slots GPU-to-GPU; no body download/upload reconstruction. Record copied bytes and wait for resource replacement. |
 | Integration-only unchanged tick | 4-byte status reset upload, 32-byte compute uniform and 4-byte error-result download. No body-state traffic. |
 | Explicit selected read | 16-byte generation/store-qualified request and 32-byte pose/velocity result per requested body, plus status and dispatch uniforms. |
 | Per-tick fence wait | Required by this synchronous stage's finite-result/error publication contract. Its measured time is recorded separately from total submission/map/dispatch work. |
 
-At 65,536 slots, body payload is 5 MiB and retained CPU metadata/command payload is
-8.5 MiB; consumed command storage contains no live-state mirror. GPU command/request/
-result scratch payload totals 10 MiB plus the status word. Upload/download transfer
-capacity totals 10 MiB plus eight bytes. These are payload capacities, excluding
+At 65,536 slots, body/center payload is 5.5 MiB and retained CPU metadata/command payload is
+12 MiB; consumed command storage contains no live-state mirror. GPU command/request/
+result scratch payload totals 11 MiB plus the status word. Upload/download transfer
+capacity totals 11 MiB plus eight bytes. These are payload capacities, excluding
 object/driver overhead. Further asynchronous publication requires an explicit
 error/freshness contract, rather than silently removing the wait.
 

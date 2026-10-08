@@ -11,6 +11,7 @@ struct History { uvec4 pair; uvec4 features; uvec4 epochs; uvec4 geometry; vec4 
 layout(std430,set=0,binding=0) readonly buffer Points { ContactPoint points[]; };
 layout(std430,set=0,binding=1) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=2) readonly buffer Geometries { Geometry geometries[]; };
+layout(std430,set=0,binding=3) readonly buffer Centers { vec2 centers[]; };
 layout(std430,set=1,binding=0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=1,binding=1) buffer Constraints { Constraint constraints[]; };
 layout(std430,set=1,binding=2) buffer Heads { uvec2 heads[]; };
@@ -95,7 +96,7 @@ void main()
         if(a.flags.x!=sa.owner.y||b.flags.x!=sb.owner.y||a.flags.w==0u||b.flags.w==0u){fail();return;}
         vec2 ma=inverseMass(a),mb=inverseMass(b);
         if(ma.x+mb.x==0){constraints[i]=c;return;}
-        vec2 ra=rotate(a.pose.zw,p.anchors.xy),rb=rotate(b.pose.zw,p.anchors.zw),n=p.normal.xy,t=vec2(n.y,-n.x);
+        vec2 ra=rotate(a.pose.zw,p.anchors.xy-centers[ai]),rb=rotate(b.pose.zw,p.anchors.zw-centers[bi]),n=p.normal.xy,t=vec2(n.y,-n.x);
         float an=cross2(ra,n),bn=cross2(rb,n),at=cross2(ra,t),bt=cross2(rb,t);
         float kn=ma.x+mb.x+ma.y*an*an+mb.y*bn*bn,kt=ma.x+mb.x+ma.y*at*at+mb.y*bt*bt;
         vec2 material=mixSurfaceMaterial(abs(sa.material.xy),abs(sb.material.xy),flags(sa.material.xy),flags(sb.material.xy),80u);

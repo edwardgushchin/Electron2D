@@ -6,6 +6,7 @@
 layout(local_size_x=64) in;
 layout(std430,set=0,binding=0) readonly buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=0,binding=1) readonly buffer Joints { ResidentJoint joints[]; };
+layout(std430,set=0,binding=2) readonly buffer Centers { vec2 centers[]; };
 layout(std430,set=1,binding=0) buffer States { JointState states[]; };
 layout(std430,set=1,binding=1) buffer Constraints { Constraint constraints[]; };
 layout(std430,set=1,binding=2) buffer Impulses { ContactImpulse impulses[]; };
@@ -53,6 +54,7 @@ void main()
     if(a.flags.x!=j.identity.x||a.flags.w==0u||(j.ids.w!=none&&(b.flags.x!=j.identity.y||b.flags.w==0u))){fail();return;}
     vec2 ma=inverseMass(a),mb=inverseMass(b),ra=rotate(a.pose.zw,j.frameA.xy),rb=rotate(b.pose.zw,j.frameB.xy);
     vec2 d=b.pose.xy+rb-a.pose.xy-ra;
+    ra-=rotate(a.pose.zw,centers[j.ids.z]);rb-=rotate(b.pose.zw,j.ids.w==none?vec2(0):centers[j.ids.w]);
     if(control.x==0u)
     {
         if(j.ids.y!=2u)return;

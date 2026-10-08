@@ -23,7 +23,8 @@ AddJoint returns a store/slot/generation-qualified handle. JointDefinition conta
 authored engine frames and scalar settings, including collision policy. Coordinates
 are body-local scene units; a pin alone may use a default second handle for the
 fixed world, in which case FrameB is in world coordinates. No hidden body is needed.
-For a groove, FrameA.X is the guide direction. Frames are validated as finite unit-scale transforms, with local-anchor radius and
+For a groove, FrameA.X is the guide direction. Constraint moment arms use the [resolved local mass center](gpu-resident-mass.md),
+while sampled frames remain relative to the body origin. Frames are validated as finite unit-scale transforms, with local-anchor radius and
 guide/rest extents at most ten million scene units. Enabled pin angle limits stay
 inside ±0.99π. MotorMaxTorque uses N·m, converted once to kg·scene-unit²/s² (×10,000);
 angular speed is rad/s. Spring stiffness is kg/s² and axial damping kg/s.

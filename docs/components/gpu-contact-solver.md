@@ -13,11 +13,11 @@ measurements; those timings exclude the response workload measured here.
 This is an internal response pipeline, not a selectable public GPU backend.
 [Resident joints](gpu-resident-joints.md) now share its iteration loop; joint
 bias/softness/general caps,
-sleep, CCD, automatic/custom mass-center profiles, scene/server and direct-state
+sleep, CCD, scene/server and direct-state
 publication, complete frame impulse/event reports, one-way/body exceptions,
-world setting integration and networking remain open. The store currently takes
-resolved mass/inertia about its body origin; public automatic geometry/center policy
-still needs a backend adapter. No full CPU-vs-GPU or window-FPS acceptance is claimed.
+world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored
+geometry and uses center-relative moment arms; public-world integration still needs
+a backend adapter. No full CPU-vs-GPU or window-FPS acceptance is claimed.
 
 ## Solve and history
 
@@ -264,7 +264,7 @@ shader source-generation checks and scoped formatting execute separately.
 Public CPU/GPU comparison, complete joint settings, sleep/CCD, scene publication, network replay and
 real-window FPS remain outside this internal optimization.
 
-Current generated SPIR-V SHA-256 (untracked intermediate outputs):
+Iteration-layout SPIR-V SHA-256 before mass-profile integration (untracked outputs):
 
 - PhysicsResidentSolve: `b571e825415b248ec27130b4708a646673c31e58efa575607a4a7427cd99362e`.
 - PhysicsResidentUpdate: `3284e297de5fe6785c2860bbd6e8da533d24fc373c5b5ebf58176e6df4bf0b85`.

@@ -142,8 +142,9 @@ internal static class GPUPhysicsContactStoreTests
     private static void VerifyFailure()
     {
         using var store = new GPUPhysicsBodyStore();
-        using var capsule = new CapsuleShape { Radius = 1, Height = float.MaxValue / 4 };
-        store.AddShape(Add(store), capsule); store.AddShape(Add(store), capsule);
+        using var capsule = new CapsuleShape { Radius = 1, Height = 1e20f };
+        // Sensors avoid mass contribution; local native-unit extents remain finite, while device contact arithmetic overflows.
+        store.AddShape(Add(store), capsule, sensor: true); store.AddShape(Add(store), capsule, sensor: true);
         Reject<InvalidOperationException>(() => store.FindContacts());
         Reject<InvalidOperationException>(() => store.Step(0.01f, Vector2.Zero));
         Console.WriteLine("Nonfinite contact intermediates fail closed without CPU replay.");

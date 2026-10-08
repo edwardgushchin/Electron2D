@@ -27,7 +27,10 @@ resource identity to those arrays without keeping resources alive. Successful
 Points assignment replaces them; invalid input leaves both authored and compiled
 geometry intact. A duplicated resource owns copied authoring points and compiles
 independently on first use. Compiled data is not serialized and contains no owner
-reference. Structural authoring may allocate; warmed geometry reads reuse storage.
+reference. Local rectangle/polygon fixture rotations use ordinary sine/cosine, matching
+other shape families and shared mass authoring instead of an approximate angle
+helper. This preserves rotated centroids across detached/attached mass resolution.
+Structural authoring may allocate; warmed geometry reads reuse storage.
 
 Contour validation and the current minimum-size policy still compile CPU hulls
 during authoring, even without a world. This moves the existing compiler/cache out

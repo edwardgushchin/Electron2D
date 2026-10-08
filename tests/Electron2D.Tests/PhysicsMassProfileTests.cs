@@ -5,12 +5,42 @@ internal static class PhysicsMassProfileTests
     internal static void Run()
     {
         VerifyDeferredMassCompletion();
+        VerifyRotatedGeometry();
         VerifySceneProfile();
         VerifyServerProfile();
         VerifySegmentsAndEmptyBodies();
         VerifyStorageAndFailures();
         VerifyWarmChanges();
         Console.WriteLine("Rigid and server mass, custom center/inertia, restoration and allocation checks passed.");
+    }
+
+    private static void VerifyRotatedGeometry()
+    {
+        using var polygon = new ConvexPolygonShape { Points = [Vector2.Zero, new(20, 0), new(0, 30)] };
+        using var lines = new ConcavePolygonShape { Segments = [new(-10, 0), new(10, 0), new(10, 0), new(10, 30)] };
+        (Shape Shape, Vector2 Center, float Inertia)[] cases = [(polygon, new(20f / 3, 10), 3 * 1300f / 18), (lines, new(6, 9), 409)];
+        var space = PhysicsServer.SpaceCreate();
+        try
+        {
+            foreach (var sample in cases)
+            {
+                var body = PhysicsServer.BodyCreate();
+                try
+                {
+                    var pose = new Transform(0.3f, new(8, 11));
+                    PhysicsServer.BodySetMass(body, 3); PhysicsServer.BodyAddShape(body, sample.Shape.GetRID(), pose);
+                    PhysicsServer.BodyApplyCentralImpulse(body, new(1, 0));
+                    var center = pose * sample.Center;
+                    Check(PhysicsServer.BodyGetCenterOfMass(body).DistanceTo(center) < 0.001f && MathF.Abs(PhysicsServer.BodyGetInertia(body) - sample.Inertia) < 0.01f,
+                        "Detached rotated mass uses the authored unit basis and analytic polar moment.");
+                    PhysicsServer.BodySetSpace(body, space);
+                    Check(PhysicsServer.BodyGetCenterOfMass(body).DistanceTo(center) < 0.001f && MathF.Abs(PhysicsServer.BodyGetInertia(body) - sample.Inertia) < 0.01f,
+                        "Attached fixtures preserve the same rotated centroid and polar moment.");
+                }
+                finally { PhysicsServer.FreeRID(body); }
+            }
+        }
+        finally { PhysicsServer.FreeRID(space); }
     }
 
     private static void VerifyDeferredMassCompletion()

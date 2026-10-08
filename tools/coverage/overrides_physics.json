@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; complete joint bias/compliance/caps, sleep, CCD, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; complete joint bias/compliance/caps, sleep, CCD, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -3023,7 +3023,7 @@
         "PhysicsServer2D::method:body_reset_mass_properties(RID:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0073: one-kilogram normalized geometry mass, local custom/auto center and scene-unit explicit/automatic polar moment execute for scene/server profiles. PhysicsMassProfileTests verifies live geometry, parallel-axis values, inertia without shapes, center impulse, mode/reset/property-list failure, native extent refresh, freeze/disable restoration, detached entry, numeric/thread/phase rollback, storage and zero warmed managed allocations."
+      "reason": "ADR 0073: one-kilogram normalized geometry mass, local custom/auto center and scene-unit explicit/automatic polar moment execute for scene/server profiles. GPUPhysicsMassStoreTests additionally verifies shared authored-geometry profiles, center-aware resident integration/contact/joint response and warmed edits; public GPU-world integration remains open. Rotated detached/attached CPU profiles retain one authored basis. PhysicsMassProfileTests verifies live geometry, parallel-axis values, inertia without shapes, center impulse, mode/reset/property-list failure, native extent refresh, freeze/disable restoration, detached entry, numeric/thread/phase rollback, storage and zero warmed managed allocations."
     },
     {
       "godot": [

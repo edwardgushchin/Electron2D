@@ -13,7 +13,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal readonly record struct BodyHandle(int Index, uint Generation, long Owner);
     internal readonly record struct BodyDefinition(PhysicsServer.BodyMode Mode, Vector2 Position, float Rotation,
         Vector2 Velocity, float AngularVelocity, float Mass = 1, float Inertia = 0, float GravityScale = 1,
-        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0);
+        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Snapshot
@@ -35,7 +35,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal int Index;
         internal uint Generation, Mask, Padding;
         internal Body Body;
-        internal Float4 Impulse;
+        internal Float4 Center, Impulse;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct Settings
@@ -47,16 +47,19 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         internal uint Generation;
         internal int NextFree, Command, FirstShape, FirstJoint;
-        internal bool Alive;
+        internal PhysicsServer.BodyMode Mode;
+        internal MassProfile MassProfile;
+        internal PhysicsMass.Properties MassProperties;
+        internal bool Alive, MassDirty;
     }
 
-    private const uint Create = 1, Destroy = 2, Pose = 4, Velocity = 8, Impulse = 16, Force = 32;
+    private const uint Create = 1, Destroy = 2, Pose = 4, Velocity = 8, Impulse = 16, Force = 32, Mass = 64;
     private static long _nextIdentity;
     private readonly long _identity = Interlocked.Increment(ref _nextIdentity);
     private readonly GPUPhysicsDevice _context;
     private readonly RenderHandle _pipeline;
     private readonly int _owner = Environment.CurrentManagedThreadId;
-    private RenderHandle? _bodies, _commands, _requests, _results, _status, _upload, _download;
+    private RenderHandle? _bodies, _centers, _commands, _requests, _results, _status, _upload, _download;
     private Slot[] _slots = [];
     private Command[] _pending = [];
     private int _highWater, _free = -1, _pendingCount;
@@ -69,6 +72,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal long ReadbackBytes { get; private set; }
     internal long UniformBytes { get; private set; }
     internal long DeviceCopyBytes { get; private set; }
+    internal long AuthoredBodyCapacityBytes => (long)_slots.Length * sizeof(Slot) + (long)_pending.Length * sizeof(Command);
     internal long SubmissionCount { get; private set; }
     internal double WaitMS { get; private set; }
     private nint Device => _context.Device;
@@ -90,11 +94,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             !definition.ConstantForce.IsFinite() || !float.IsFinite(definition.ConstantTorque) ||
             !float.IsFinite(definition.GravityScale) || !float.IsFinite(definition.LinearDamp) || !float.IsFinite(definition.AngularDamp))
             throw new ArgumentOutOfRangeException(nameof(definition));
+        PhysicsMass.Validate(definition.Mass, definition.Inertia, definition.CenterOfMass);
         var index = _free;
         if (index < 0) { Reserve(_highWater + 1); index = _highWater++; }
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = -1; Count++;
+        slot.Mode = definition.Mode;
+        slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
+        slot.MassProperties = new(definition.Mass, definition.Inertia, definition.CenterOfMass ?? Vector2.Zero);
         ref var command = ref Edit(index);
         command = new() { Index = index, Generation = slot.Generation, Mask = Create };
         command.Body = new()
@@ -108,6 +116,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Locks = definition.Mode == PhysicsServer.BodyMode.RigidLinear ? 4u : 0u,
             Alive = 1
         };
+        command.Center = new(slot.MassProperties.Center.X, slot.MassProperties.Center.Y, 0, 0);
         return new(index, slot.Generation, _identity);
     }
 
@@ -144,8 +153,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         Validate(body);
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
+        PrepareMasses();
+        ref readonly var slot = ref _slots[body.Index];
+        var properties = slot.MassProperties;
+        var linearDelta = slot.Mode >= PhysicsServer.BodyMode.Rigid ? linear / properties.Mass : Vector2.Zero;
+        var angularDelta = slot.Mode == PhysicsServer.BodyMode.Rigid && properties.Inertia > 0 ? angular / properties.Inertia : 0;
         ref var command = ref Edit(body.Index);
-        var total = command.Impulse + new Float4(linear.X, linear.Y, angular, 0);
+        // Capture the authored mass at the call: later profile/geometry edits preserve earlier impulse effects.
+        var total = command.Impulse + new Float4(linearDelta.X, linearDelta.Y, angularDelta, 0);
         if (!Finite(total)) throw new ArgumentOutOfRangeException(nameof(linear));
         command.Impulse = total; command.Mask |= Impulse;
     }
@@ -162,6 +177,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         EnsureAccess();
         if (!float.IsFinite(delta) || delta < 0 || !gravity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(delta));
+        PrepareMasses();
         if (_highWater == 0 || delta == 0 && _pendingCount == 0) return;
         Submit(delta, gravity, default, default);
     }
@@ -172,6 +188,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (results.Length < bodies.Length) throw new ArgumentException("The state destination is too small.", nameof(results));
         foreach (var body in bodies) Validate(body);
         if (bodies.IsEmpty) return;
+        PrepareMasses();
         // A caller may request one body more than once; scratch capacity follows request count.
         Reserve(Math.Max(_highWater, bodies.Length));
         Submit(0, default, bodies, results);
@@ -212,10 +229,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (required <= _slots.Length) return;
         var capacity = checked((int)BitOperations.RoundUpToPowerOf2((uint)Math.Max(64, required)));
-        RenderHandle? bodies = null, commands = null, requests = null, results = null, status = null, upload = null, download = null;
+        RenderHandle? bodies = null, centers = null, commands = null, requests = null, results = null, status = null, upload = null, download = null;
         try
         {
             bodies = Buffer(checked((uint)(capacity * sizeof(Body))));
+            centers = Buffer(checked((uint)(capacity * sizeof(Vector2))));
             commands = Buffer(checked((uint)(capacity * sizeof(Command))));
             requests = Buffer(checked((uint)(capacity * sizeof(BodyHandle))));
             results = Buffer(checked((uint)(capacity * sizeof(Snapshot))));
@@ -236,17 +254,19 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
                     var bytes = checked((uint)(_highWater * sizeof(Body)));
                     if (bytes > 0) SDL.CopyGPUBufferToBuffer(copy, new() { Buffer = _bodies.DangerousGetHandle() },
                         new() { Buffer = bodies.DangerousGetHandle() }, bytes, false);
+                    SDL.CopyGPUBufferToBuffer(copy, new() { Buffer = _centers!.DangerousGetHandle() }, new() { Buffer = centers.DangerousGetHandle() }, checked((uint)(_highWater * sizeof(Vector2))), false);
                     SDL.EndGPUCopyPass(copy);
+                    bytes += checked((uint)(_highWater * sizeof(Vector2)));
                     _failed = true; Finish(ref command); _failed = false; DeviceCopyBytes += bytes;
                 }
                 finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
             }
             DisposeBuffers();
-            (_bodies, _commands, _requests, _results, _status, _upload, _download) = (bodies, commands, requests, results, status, upload, download);
-            bodies = commands = requests = results = status = upload = download = null;
+            (_bodies, _centers, _commands, _requests, _results, _status, _upload, _download) = (bodies, centers, commands, requests, results, status, upload, download);
+            bodies = centers = commands = requests = results = status = upload = download = null;
             _slots = slots; _pending = pending;
         }
-        finally { bodies?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
+        finally { bodies?.Dispose(); centers?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
     private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false)
@@ -312,11 +332,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (count == 0) return;
         settings.Stage = stage; settings.Count = (uint)count;
-        var binding = stackalloc SDL.GPUStorageBufferReadWriteBinding[3];
+        var binding = stackalloc SDL.GPUStorageBufferReadWriteBinding[4];
         binding[0] = new() { Buffer = _bodies!.DangerousGetHandle() };
         binding[1] = new() { Buffer = _status!.DangerousGetHandle() };
         binding[2] = new() { Buffer = _results!.DangerousGetHandle() };
-        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)binding, 3);
+        binding[3] = new() { Buffer = _centers!.DangerousGetHandle() };
+        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)binding, 4);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident body compute");
         SDL.BindGPUComputePipeline(compute, _pipeline.DangerousGetHandle());
         var inputs = stackalloc nint[3] { _commands!.DangerousGetHandle(), _requests!.DangerousGetHandle(), _positionCorrectionsGPU?.DangerousGetHandle() ?? _bodies!.DangerousGetHandle() };
@@ -341,7 +362,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     }
 
     private static bool Finite(Float4 value) => float.IsFinite(value.X) && float.IsFinite(value.Y) && float.IsFinite(value.Z) && float.IsFinite(value.W);
-    private void DisposeBuffers() { _bodies?.Dispose(); _commands?.Dispose(); _requests?.Dispose(); _results?.Dispose(); _status?.Dispose(); _upload?.Dispose(); _download?.Dispose(); }
+    private void DisposeBuffers() { _bodies?.Dispose(); _centers?.Dispose(); _commands?.Dispose(); _requests?.Dispose(); _results?.Dispose(); _status?.Dispose(); _upload?.Dispose(); _download?.Dispose(); }
     public void Dispose()
     {
         if (_disposed) return;

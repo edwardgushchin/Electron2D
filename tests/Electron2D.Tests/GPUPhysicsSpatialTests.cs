@@ -160,7 +160,7 @@ internal static class GPUPhysicsSpatialTests
         using var store = new GPUPhysicsBodyStore();
         using var shape = new CircleShape { Radius = float.MaxValue / 2 };
         var body = Add(store, new(float.MaxValue, 0));
-        store.AddShape(body, shape);
+        store.AddShape(body, shape, sensor: true);
         Reject<InvalidOperationException>(() => store.FindPairs());
         Reject<InvalidOperationException>(() => store.Step(0.01f, Vector2.Zero));
         Reject<InvalidOperationException>(() => store.AddShape(body, shape));

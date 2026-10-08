@@ -6,6 +6,7 @@ Last updated: 2026-10-08
 
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
+[mass](../../src/Servers/Physics/GPUPhysicsBodyStore.Mass.cs),
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
@@ -22,7 +23,7 @@ Last updated: 2026-10-08
 
 Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
-edits, integration, shared geometry, broad-phase pairs and narrow-phase contact
+edits, automatic/custom mass profiles, center-aware integration, shared geometry, broad-phase pairs and narrow-phase contact
 points, material response, contact impulses, pin/groove/spring solving and warm history. It is not yet
 selectable through PhysicsServer; joint bias/softness/general caps, sleep, CCD, public state/event publication
 and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
@@ -36,6 +37,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
 | `SolveConstraints` | Solve contacts, pins, grooves and springs together and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
 | `AddJoint`, `SetJoint`, `GetJointDefinition`, `RemoveJoint` | Own generation-safe device connections and authored settings, validated local frames and independent collision vetoes; endpoint removal unlinks dependent joints. See [resident joints](../components/gpu-resident-joints.md). |
+| `SetMassProfile`, `GetMassProfile`, `GetMassProperties` | Change/read authored kilograms, zero/explicit inertia and nullable auto/custom center; resolve geometry without moving origin/velocity. See [resident mass](../components/gpu-resident-mass.md). |
 | `SetShapeMaterial` | Journal finite signed friction/bounce using the existing rough/absorbent convention. |
 | `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities. |
 | `AddShape`, `RemoveShape` | Borrow a shared Shape resource, retain one GPU geometry record per resource and a generation-qualified attachment per shape slot. Body deletion invalidates attachments; resource disposal makes their bounds inactive. |
@@ -108,3 +110,9 @@ combined contact response, failed-state rejection and 4,096 warmed world pins.
 JointCount and JointUploadBytes expose authored population/traffic; no joint warm
 state is mirrored on the CPU. Its component report states the remaining public
 settings and integration limits.
+
+GPUPhysicsMassStoreTests compares all current shape mass profiles against public
+CPU getters and checks device motion/contact/joint lever arms at custom/automatic
+centers, profile/impulse order, resource revisions and zero-allocation warm edits.
+AuthoredBodyCapacityBytes measures only retained CPU body-slot/command payload.
+Local centers use a separate 8-byte device record and no hot full-state mirror.

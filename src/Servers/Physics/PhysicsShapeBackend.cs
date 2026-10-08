@@ -58,12 +58,12 @@ internal static class PhysicsShapeBackend
                 break;
             case Kind.Rectangle:
                 var box = b2MakeOffsetBox(geometry.B.X * PhysicsSpace.MetersPerUnit,
-                    geometry.B.Y * PhysicsSpace.MetersPerUnit, ToBackend(localPosition), b2MakeRot(localRotation));
+                    geometry.B.Y * PhysicsSpace.MetersPerUnit, ToBackend(localPosition), new B2Rot(MathF.Cos(localRotation), MathF.Sin(localRotation)));
                 fixtures.Add(b2CreatePolygonShape(bodyID, definition, box));
                 break;
             case Kind.ConvexPolygon:
                 var position = ToBackend(localPosition);
-                var rotation = b2MakeRot(localRotation);
+                var rotation = new B2Rot(MathF.Cos(localRotation), MathF.Sin(localRotation));
                 foreach (ref readonly var hull in GetHulls(shape, geometry.Points).AsSpan())
                     fixtures.Add(b2CreatePolygonShape(bodyID, definition, b2MakeOffsetPolygon(hull, position, rotation)));
                 break;

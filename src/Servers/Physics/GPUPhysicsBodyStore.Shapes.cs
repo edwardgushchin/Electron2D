@@ -15,8 +15,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal Shape? Source;
         internal int References, Start, Capacity;
         internal uint Generation;
-        internal ulong Revision;
-        internal bool Disposed, Dirty;
+        internal ulong Revision, MassRevision;
+        internal bool Disposed, Dirty, MassDisposed;
     }
     private struct ShapeSlot
     {
@@ -136,7 +136,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Validate(shape);
         ref var slot = ref _shapeSlots[shape.Index];
         if (slot.Layer == layer && slot.Mask == mask && slot.Sensor == sensor) return;
-        slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor; MarkShape(shape.Index);
+        var massChanged = slot.Sensor != sensor;
+        slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor; MarkShape(shape.Index, massChanged);
     }
 
     internal void SetShapeMaterial(ShapeHandle shape, float friction, float bounce)
@@ -144,7 +145,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Validate(shape); ValidateMaterial(friction, bounce);
         ref var slot = ref _shapeSlots[shape.Index];
         if (slot.Friction == friction && slot.Bounce == bounce) return;
-        slot.Friction = friction; slot.Bounce = bounce; MarkShape(shape.Index);
+        slot.Friction = friction; slot.Bounce = bounce; MarkShape(shape.Index, false);
     }
     private static void ValidateMaterial(float friction, float bounce)
     {
@@ -163,8 +164,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
             throw new ArgumentException("GPU shape placement requires a finite unit-scale pose.", nameof(pose));
     }
-    private void MarkShape(int index)
+    private void MarkShape(int index, bool massChanged = true)
     {
+        if (massChanged) MarkMass(_shapeSlots[index].Body.Index);
         _shapeSlots[index].Revision++;
         if (!_shapeSlots[index].Dirty) { _dirtyShapes.Add(index); _shapeSlots[index].Dirty = true; }
         _shapeVersion++;

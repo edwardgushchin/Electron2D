@@ -8,9 +8,40 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
+/// <summary>Resolves shared authored geometry into normalized mass, local center and polar inertia.</summary>
 internal static class PhysicsMass
 {
     internal const float InertiaScale = PhysicsSpace.MetersPerUnit * PhysicsSpace.MetersPerUnit;
+
+    internal readonly record struct Properties(float Mass, float Inertia, Vector2 Center);
+
+    /// <summary>Reusable authoring geometry scratch; it owns no physics world or solved body state.</summary>
+    internal sealed class Geometry
+    {
+        private readonly List<B2ShapeProxy> _solid = [], _all = [];
+        internal void Clear() { _solid.Clear(); _all.Clear(); }
+        internal void Append(Shape shape, Transform pose, bool sensor)
+        {
+            if (shape.IsDisposed) return;
+            var first = _all.Count;
+            AppendProxies(shape, pose, _all);
+            if (!sensor && shape is not SeparationRayShape)
+                for (var i = first; i < _all.Count; i++) _solid.Add(_all[i]);
+        }
+        internal Properties Calculate(float mass, float inertia, Vector2? center)
+        {
+            var data = PhysicsMass.Calculate(_solid, mass, inertia, center);
+            foreach (var proxy in _all)
+                for (var i = 0; i < proxy.count; i++)
+                {
+                    var offset = b2Sub(proxy.points[i], data.center);
+                    if (!float.IsFinite(b2Length(offset) + proxy.radius))
+                        throw new ArgumentOutOfRangeException(nameof(center), "Center-relative shape extents exceed the solver range.");
+                }
+            return new(mass, inertia > 0 ? inertia : data.rotationalInertia / InertiaScale,
+                new(data.center.X * PhysicsSpace.UnitsPerMeter, data.center.Y * PhysicsSpace.UnitsPerMeter));
+        }
+    }
 
     internal static void Validate(float mass, float inertia, Vector2? center)
     {
@@ -26,11 +57,16 @@ internal static class PhysicsMass
     internal static void AppendGeometry(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
     {
         if (shape.IsDisposed || shape is SeparationRayShape) return;
+        AppendProxies(shape, pose, proxies);
+    }
+
+    private static void AppendProxies(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
+    {
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
             throw new ArgumentException("Mass geometry requires finite unit-scale poses.", nameof(pose));
         var start = proxies.Count;
         PhysicsShapeBackend.AppendQueryProxies(shape, proxies);
-        var transform = new B2Transform(PhysicsShapeBackend.ToBackend(pose.Origin), b2MakeRot(pose.Rotation));
+        var transform = new B2Transform(PhysicsShapeBackend.ToBackend(pose.Origin), new B2Rot(MathF.Cos(pose.Rotation), MathF.Sin(pose.Rotation)));
         for (var index = start; index < proxies.Count; index++)
         {
             var proxy = proxies[index];
