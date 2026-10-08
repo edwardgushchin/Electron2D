@@ -36,8 +36,9 @@ query and mass compilation is isolated in PhysicsShapeBackend. Independent GPU
 ownership and public backend selection remain open. Joint identity, sampled frames
 and settings now also sit outside vendor storage; PhysicsJointBackend owns current
 constraint handles and CPU spring evaluation. A separate GPUPhysicsBodyStore now
-retains and integrates device body state without a CPU world; shapes, contacts,
-constraints, sleep, CCD and public selection still need to be connected.
+retains and integrates device body state, shared shape geometry, transformed bounds
+and complete broad-phase pairs without a CPU world or CPU spatial mirror. Exact
+contacts, constraints, sleep, CCD and public selection still need to be connected.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

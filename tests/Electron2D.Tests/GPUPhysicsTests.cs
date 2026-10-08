@@ -33,6 +33,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(true, finalizationFailure: true);
         VerifyOwnedWorldFailure();
         GPUPhysicsBodyStoreTests.Run();
+        GPUPhysicsSpatialTests.Run();
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
         Console.WriteLine($"GPU integration passed on {gpu.Driver}: forces, damping, locks, speed limits, rotations and dispatch boundaries.");

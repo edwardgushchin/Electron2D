@@ -6,8 +6,8 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body storage with sparse edits and explicit state reads; no CPU solver world.</summary>
-internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad phase and explicit reads; no CPU solver world.</summary>
+internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
     internal readonly record struct BodyHandle(int Index, uint Generation, long Owner);
@@ -46,7 +46,7 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
     private struct Slot
     {
         internal uint Generation;
-        internal int NextFree, Command;
+        internal int NextFree, Command, FirstShape;
         internal bool Alive;
     }
 
@@ -60,6 +60,7 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
     private Slot[] _slots = [];
     private Command[] _pending = [];
     private int _highWater, _free = -1, _pendingCount;
+    private long _bodyVersion;
     private bool _disposed, _failed;
     internal int Count { get; private set; }
     internal string Driver => _context.Driver;
@@ -93,7 +94,7 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
         if (index < 0) { Reserve(_highWater + 1); index = _highWater++; }
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
-        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; Count++;
+        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = -1; Count++;
         ref var command = ref Edit(index);
         command = new() { Index = index, Generation = slot.Generation, Mask = Create };
         command.Body = new()
@@ -113,6 +114,7 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
     internal void Remove(BodyHandle body)
     {
         Validate(body);
+        RemoveBodyShapes(body);
         ref var command = ref Edit(body.Index);
         command = new() { Index = body.Index, Generation = body.Generation, Mask = Destroy };
         ref var slot = ref _slots[body.Index];
@@ -293,6 +295,7 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
                 fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + 4, destination, outputBytes, outputBytes);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
+            if (delta > 0 || _pendingCount > 0) _bodyVersion++;
             for (var i = 0; i < _pendingCount; i++) _slots[_pending[i].Index].Command = -1;
             Array.Clear(_pending, 0, _pendingCount); _pendingCount = 0;
             _failed = false;
@@ -342,6 +345,6 @@ internal sealed unsafe class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

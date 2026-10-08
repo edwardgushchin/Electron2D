@@ -1,12 +1,13 @@
 #version 450
+#extension GL_GOOGLE_include_directive : require
+#include "PhysicsResidentBody.inc.glsl"
 layout(local_size_x = 64) in;
 
-struct Body { vec4 pose; vec4 velocity; vec4 force; vec4 properties; uvec4 flags; };
-struct Command { uvec4 header; Body body; vec4 impulse; };
+struct Command { uvec4 header; ResidentBody body; vec4 impulse; };
 struct Snapshot { vec4 pose; vec4 velocity; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
-layout(std430, set = 1, binding = 0) buffer Bodies { Body bodies[]; };
+layout(std430, set = 1, binding = 0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Status { uint status; };
 layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { vec4 step; uvec4 control; };
@@ -23,8 +24,8 @@ void main()
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
-        if ((mask & 2u) != 0u) { bodies[index] = Body(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 0, 0)); return; }
-        Body b;
+        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 0, 0)); return; }
+        ResidentBody b;
         if ((mask & 1u) != 0u) b = c.body;
         else
         {
@@ -45,7 +46,7 @@ void main()
     }
     else if (control.x == 1u)
     {
-        Body b = bodies[i];
+        ResidentBody b = bodies[i];
         if (b.flags.w == 0u || b.flags.y == 0u) return;
         float dt = step.z;
         if (b.flags.y >= 2u)
@@ -68,7 +69,7 @@ void main()
     {
         uvec4 request = requests[i];
         if (request.x >= control.z) { fail(1u); return; }
-        Body b = bodies[request.x];
+        ResidentBody b = bodies[request.x];
         if (b.flags.w == 0u || b.flags.x != request.y) { fail(1u); return; }
         results[i] = Snapshot(b.pose, b.velocity);
     }

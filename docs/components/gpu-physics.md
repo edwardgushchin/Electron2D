@@ -17,9 +17,10 @@ open for final window/performance acceptance. Local evidence:
 
 [GPUPhysicsBodyStore](../classes/GPUPhysicsBodyStore.md) now owns device body state
 without a Box2D world. Sparse edits, generation-safe reuse, GPU-to-GPU growth,
-force/gravity/damping integration and selected state reads execute. The
-[body-stage report](gpu-resident-bodies.md) records buffers, traffic, waits and
-65,536-body verification. Contacts, joints, sleep, CCD and public selection are
+force/gravity/damping integration and selected state reads execute. Shared geometry,
+GPU-derived bounds and complete candidate pairs now remain on the device as well.
+The [resident-stage report](gpu-resident-bodies.md) records buffers, traffic, waits
+and 65,536-body verification. Bounds/tree/pairs do not require a CPU mirror. Contacts, joints, sleep, CCD and public selection are
 not yet connected to that store; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 

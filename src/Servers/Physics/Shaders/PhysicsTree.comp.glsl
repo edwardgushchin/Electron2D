@@ -31,7 +31,7 @@ void main()
         Node n;
         bool present = p.data.x != -1 && p.data.z != 0;
         n.bounds = present ? p.bounds : vec4(3.402823466e38, 3.402823466e38, -3.402823466e38, -3.402823466e38);
-        n.typeMask = present ? (1 << (p.data.x & 3)) : 0;
+        n.typeMask = present ? ((1 << (p.data.x & 3)) | p.data.w) : 0;
         n.proxy = p.data.x; n.hasCategory = present ? 1 : 0; n.shape = p.data.y;
         nodes[settings.y + i] = n;
         return;
