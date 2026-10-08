@@ -1023,3 +1023,77 @@ remain targets for separate timing and parallelization. Artifacts: ignored
 An initial atomic-dirty-mark candidate measured 175.47 ms with the same transfer
 counts (`profile-Release-gpu-island-resident-a.json`); final slot-owned writes remove
 those unnecessary atomics without a demonstrated timing gain.
+
+
+## Parallel ordered contact lists (2026-10-08)
+
+Phase timing first measured graph preparation at 3.09 ms, command recording at
+0.15 ms, GPU submission/fence wait at 11.93 ms, readback decoding at 0.35 ms,
+validation at 5.66 ms and final publication at 0.19 ms per maximum-Smash step.
+The whole-step mean was 179.15 ms. Artifact: ignored
+`bin/physics-sandbox/profile-Release-gpu-island-phases-baseline.json`.
+
+Weighted union now records contact-list concatenation trees instead of serially
+splicing every contact. An initial island list is a leaf; a started-contact node
+prepends that contact to the old winner/loser subtrees. Actual winner and freed-ID
+order stay unchanged. Removal of other members commutes with this construction,
+so removals and their final-root counters execute in parallel after union.
+
+Bounded ping-pong pointer jumping resolves subtree followers and runs of removed
+contacts. Separate passes write next links, heads, inverse previous links and tails,
+then clear removed members. Every valid destination has one writer per pass,
+except explicitly atomic removal counters. Scratch extends the existing dirty
+buffer, retaining the same resource bindings. GPU error reads occur once per
+workgroup with a shared barrier, avoiding a contended atomic read per invocation.
+Compact output, validation before live publication and failure/no-replay handling
+remain in place. Empty-contact groups, static endpoints, joints and sleeping-set
+wake chains retain their original native lists and identities.
+
+The contact oracle adds complete removal of a dense 64-body group's contact list,
+alongside mixed removals and long prepend chains. Malformed internal island metadata
+must raise a GPU error before mirror publication, exercising the shared error gate.
+The complete GPU suite checks callbacks, failures, disposal, owner affinity and both
+rendering-device lifetimes. `IslandGraphProfileMS` reports cumulative host phases;
+submit/fence wait includes queue/transfer costs and is not a per-kernel GPU timestamp.
+
+The first ordered-tree candidate still read the shared error atomically in every
+invocation: 176.82 ms whole-step mean and 10.40 ms submit/wait, with the same state
+hash and zero managed bytes. Artifact: ignored
+`bin/physics-sandbox/profile-Release-gpu-island-rope-a.json`. The final version uses
+one atomic error read per workgroup. This candidate measured 179.27/176.46 ms
+whole steps and 10.15/10.14 ms submit/wait in two paired runs; CPU graph controls
+were 161.59/162.08 ms. Artifacts: ignored
+`profile-Release-{gpu,cpu}-island-parallel-final-{a,b}.json` under `bin/physics-sandbox/`.
+
+The final union loop additionally retains the current component root, contact head
+and count in registers across consecutive insertions. It flushes before any merge
+or component change, preserving intermediate winner/free-ID results. A root lookup
+can stop at that known live winner. The first cached-head probe measured 177.60 ms
+whole-step and 9.58 ms submit/wait (`profile-Release-gpu-island-cached-head-a.json`).
+Final paired results follow below.
+
+
+Final sequential Linux/Vulkan runs use 65,537 bodies, 32 warmup and 64 measured
+headless diagnostic steps. Order is GPU A/CPU A/CPU B/GPU B; no other build, test
+or formatter ran concurrently. The CPU graph control leaves other GPU stages on.
+
+| Graph mode | Whole-step mean | p95 | Graph submit/wait | Graph validation | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Parallel/cached GPU A | 178.51 ms | 246.25 ms | 9.32 ms | 5.77 ms | 0 / 0 |
+| CPU A | 164.03 ms | 264.81 ms | — | — | 0 / 0 |
+| CPU B | 162.62 ms | 233.18 ms | — | — | 0 / 0 |
+| Parallel/cached GPU B | 177.78 ms | 285.63 ms | 9.58 ms | 5.99 ms | 0 / 0 |
+
+GPU preparation remains 3.10/3.14 ms, recording 0.28/0.27 ms, decoding 0.32/0.32 ms
+and publication 0.18/0.17 ms. Compared with the earlier 11.93 ms submit/wait probe,
+this graph portion is lower, but the whole step still does not establish an
+application speedup or reach the CPU graph control. Further work remains in
+weighted union, full CPU validation/packing, coloring and the other backend stages.
+
+The GPU intervals still perform 405,412 membership changes and 35,134 merges with
+99,232,864 transfer bytes, zero snapshots/retries and zero warmed managed bytes.
+All four state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-cached-final-{a,b}.json`.
+These are impact-through-sleeping-wall measurements, not sustained all-awake,
+native-window FPS, cross-device or native-allocation acceptance.

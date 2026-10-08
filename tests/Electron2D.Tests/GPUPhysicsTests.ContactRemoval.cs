@@ -23,7 +23,7 @@ internal static partial class GPUPhysicsTests
         var expectedCalls = new List<(int, int, int, int, int, int)>(Math.Max(16, count * count));
         var actualCalls = new List<(int, int, int, int, int, int)>(expectedCalls.Capacity);
         B2Vec2 Position(int i, bool apart) => count == 257 ? new(2 * i, apart && i % 3 != 0 ? 20 : .7f) :
-            new(apart && (i % 3 != 0 || count == 1) ? 100 + 4 * i : (i % 4) * .1f, 0);
+            new(apart && (i % 3 != 0 || count is 1 or 64) ? 100 + 4 * i : (i % 4) * .1f, 0);
         B2WorldId Create(List<(int, int, int, int, int, int)> calls)
         {
             var def = b2DefaultWorldDef(); def.gravity = new(0, 0);

@@ -159,14 +159,41 @@ and `IslandGraphReadbackRetries` expose residency and actual scheduled transfers
 including spare compact-output capacity and retries. `IslandChangeCount`,
 `MergedIslandCount` and `IslandGraphTransferBytes` retain their cumulative meanings.
 No membership changes means no submission; pending journals wait for the next real
-batch. Ordered union/list edits remain serial on GPU, and the CPU still validates
-its full retained mirror. CPU/GPU split currently uses a separate input/output path
+batch. Weighted union and body/joint list splicing remain serial on GPU; contact
+list construction/removal now uses the parallel ordered-tree path described below.
+The CPU still validates its full retained mirror. CPU/GPU split currently uses a separate input/output path
 and journals its publication into this resident graph.
 
 Partial publication failure poisons the world; failed-world teardown detaches
 managed resources and releases raw storage in bulk without traversing incomplete
 lists or capturing uncommitted motion. Rebinding/disposal resets only this host's
 callbacks, and world reset clears the journal observer.
+
+Contact lists preserve order through a temporary concatenation tree. Each initial
+island list is a leaf; a started contact becomes the first element of a node whose
+children are the prior winner and loser lists. Weighted union still selects exactly
+the original winners and frees the same IDs. Consecutive insertions into the same
+component retain its root/head/count in registers, flushing before a real merge or
+component change. The root shortcut is valid only for that current live winner. Removing other contacts commutes with
+this list construction, so removal counters/marks run after union in parallel.
+Removal results carry the final surviving root; only link results require the
+intermediate merge winner for native publication.
+
+Ping-pong pointer jumping resolves subtree followers, then disjoint invocations
+connect original-list tails and inserted contacts. Another bounded pointer-jump
+sequence skips runs of removed contacts. Independent passes install surviving
+next links, group heads, inverse previous links and tails before clearing removed
+members. Head/previous/tail writes have one writer per destination; shared removal
+counters use atomics. Bounds are determined by actual batch links/removals, not a
+fixed iteration cap. Scratch reuses extra space in the retained dirty buffer;
+this adds no storage binding or per-frame managed allocation. The shared error
+flag is read atomically once per workgroup and broadcast through a barrier.
+
+`IslandGraphProfileMS` accumulates six host wall-time phases when internal physics
+profiling is enabled: preparation, command recording/upload, submit/fence wait,
+readback decoding, validation and final mirror publication. GPU wait includes queue
+and transfer time; it is not a hardware timestamp for one shader. Consuming native
+merge records in the contact-state loop is outside these six phases.
 
 `EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
 islands upload ordered body/contact/joint adjacency. GPU minimum-seed label

@@ -98,7 +98,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         _graphIslands.Reserve(Math.Max(1, world.islands.count)); _graphBodies.Reserve(Math.Max(1, world.bodies.count));
         _graphContacts.Reserve(Math.Max(1, world.contacts.count)); _graphJoints.Reserve(Math.Max(1, world.joints.count)); _graphStatus.Reserve(1);
         _graphKeys = checked(4 * Math.Max(world.islands.count, Math.Max(world.bodies.count, Math.Max(world.contacts.count, world.joints.count))));
-        ReserveGraphJournal(_graphKeys); _graphDirtyStorage.Reserve(Math.Max(1, _graphKeys)); _graphOutput.Reserve(8192);
+        ReserveGraphJournal(_graphKeys); _graphDirtyStorage.Reserve(checked(_graphKeys + 6 * (world.islands.count + _graphCount) + 2 * world.contacts.count)); _graphOutput.Reserve(8192);
         _graphUpdates.Reserve(Math.Max(1, _graphJournal.Count)); _graphUpdateCount = 0;
         if (_graphSnapshot)
         {

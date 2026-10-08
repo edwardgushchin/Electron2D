@@ -12,6 +12,7 @@ internal static partial class GPUPhysicsTests
         using var gpu = new GPUPhysicsWorld();
         VerifyContactRemovals(true);
         VerifyIslandGraphFailure();
+        VerifyGraphShaderFailure(gpu);
         foreach (var sleeping in new[] { false, true })
         {
             B2WorldId Create()
@@ -67,6 +68,27 @@ internal static partial class GPUPhysicsTests
         }
         Console.WriteLine("GPU island graph matches ordered CPU merges, removals, joint lists, sleeping-set wakeup, ID reuse and zero warmed allocations.");
     }
+    private static void VerifyGraphShaderFailure(GPUPhysicsWorld gpu)
+    {
+        var worldID = b2CreateWorld(b2DefaultWorldDef()); var world = b2GetWorldFromId(worldID);
+        try
+        {
+            var body = b2DefaultBodyDef(); body.type = B2BodyType.b2_dynamicBody;
+            var shape = b2DefaultShapeDef();
+            b2CreateCircleShape(b2CreateBody(worldID, body), shape, new B2Circle { radius = 1 });
+            b2CreateCircleShape(b2CreateBody(worldID, body), shape, new B2Circle { radius = 1 });
+            gpu.EnableIslandChanges(world); var begin = world.beginIslandChanges;
+            world.beginIslandChanges = w => { w.bodies.data[0].islandId = w.islands.count; begin(w); };
+            try { b2World_Step(worldID, 1f / 60, 4); throw new Exception("Malformed graph metadata reached publication."); }
+            catch (InvalidOperationException error) when (error.Message.StartsWith("GPU island graph error", StringComparison.Ordinal)) { }
+        }
+        finally
+        {
+            world.locked = false; foreach (var arena in world.arena.AsSpan()) arena.Abort();
+            b2DestroyWorld(worldID);
+        }
+    }
+
     private static void VerifyIslandGraphFailure()
     {
         using var shape = new CircleShape { Radius = 12 };

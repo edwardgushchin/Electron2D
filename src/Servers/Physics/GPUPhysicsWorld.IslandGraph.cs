@@ -37,12 +37,21 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private readonly Action<B2World> _beginIslandChanges, _finishIslandChanges;
     private readonly Func<B2World, B2Contact, bool, bool> _changeContactIsland;
     private B2World? _graphWorld;
-    private int _graphCount, _graphCursor;
+    private int _graphCount, _graphCursor, _graphRemovals;
     private bool _graphReady;
     private bool[] _graphExpectedContacts = [], _graphFreed = [];
     internal long IslandChangeCount { get; private set; }
     internal long MergedIslandCount { get; private set; }
     internal long IslandGraphTransferBytes { get; private set; }
+    internal readonly double[] IslandGraphProfileMS = new double[6];
+
+    private void RecordGraphProfile(int phase, ref long start)
+    {
+        if (!PhysicsSpace.ProfilingEnabled) return;
+        var now = System.Diagnostics.Stopwatch.GetTimestamp();
+        IslandGraphProfileMS[phase] += System.Diagnostics.Stopwatch.GetElapsedTime(start, now).TotalMilliseconds;
+        start = now;
+    }
 
     internal void EnableIslandChanges(B2World world)
     {
@@ -70,7 +79,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         EnsureOwner();
         if (_graphReady || !ReferenceEquals(world, _graphWorld)) throw new InvalidOperationException("The GPU island graph batch is not available.");
-        _graphCount = _graphCursor = 0;
+        var profile = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+        _graphCount = _graphCursor = _graphRemovals = 0;
         _graphChanges.Reserve(Math.Max(1, world.contacts.count));
         ref var bits = ref world.taskContexts.data[0].contactStateBitSet;
         for (var block = 0; block < bits.blockCount; block++)
@@ -82,6 +92,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 var c = world.contacts.data[id]; var flags = b2GetContactSim(world, c).simFlags;
                 var link = (flags & (uint)B2ContactSimFlags.b2_simDisjoint) == 0 && (flags & (uint)B2ContactSimFlags.b2_simStartedTouching) != 0;
                 if (!link && (c.islandId < 0 || (flags & (uint)(B2ContactSimFlags.b2_simDisjoint | B2ContactSimFlags.b2_simStoppedTouching)) == 0)) continue;
+                if (!link) _graphRemovals++;
                 _graphChanges.Data[_graphCount++] = new()
                 {
                     Contact = id,
@@ -94,13 +105,16 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 };
             }
         }
-        if (_graphCount == 0) return;
+        if (_graphCount == 0) { RecordGraphProfile(0, ref profile); return; }
         PrepareGraphResidency(world);
+        RecordGraphProfile(0, ref profile);
         DispatchIslandChanges(world);
+        profile = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         ValidateIslandChanges(world);
         b2Array_Reserve(ref world.islandIdPool.freeArray, checked(world.islandIdPool.freeArray.count + _graphStatus.Data[0].Merges));
         ClearGraphJournal();
         _graphReady = true;
+        RecordGraphProfile(4, ref profile);
     }
 
     private void DispatchIslandChanges(B2World world)
@@ -108,6 +122,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var first = true;
         while (true)
         {
+            var profile = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             var command = SDL.AcquireGPUCommandBuffer(Device); if (command == 0) throw Failure("acquire island graph commands");
             nint fence = 0;
             try
@@ -125,11 +140,25 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     else { _graphUpdates.Upload(copy, _graphUpdateCount); bytes = (long)_graphUpdateCount * sizeof(GraphUpdate); }
                     _graphChanges.Upload(copy, _graphCount); bytes += (long)_graphCount * sizeof(GraphChange); SDL.EndGPUCopyPass(copy);
                     IslandGraphUploadBytes += bytes; IslandGraphTransferBytes += bytes;
-                    GraphPass(command, world, 3, _graphKeys);
                     if (_graphUpdateCount != 0) GraphPass(command, world, 4, _graphUpdateCount);
+                    GraphPass(command, world, 3, _graphKeys);
                     GraphPass(command, world, 0, 1);
+                    GraphPass(command, world, 7, _graphCount);
+                    var follow = 0;
+                    for (var width = 1; width <= _graphCount - _graphRemovals; width *= 2)
+                    { GraphPass(command, world, 8, world.islands.count + _graphCount, follow); follow = 1 - follow; }
+                    GraphPass(command, world, 9, world.islands.count + _graphCount, follow);
+                    if (_graphRemovals != 0) GraphPass(command, world, 10, _graphCount);
                     GraphPass(command, world, 1, Math.Max(world.bodies.count, Math.Max(world.contacts.count, world.joints.count)));
                     GraphPass(command, world, 2, world.islands.count);
+                    GraphPass(command, world, 11, world.contacts.count);
+                    var skip = 0;
+                    for (var width = 1; width <= _graphRemovals; width *= 2)
+                    { GraphPass(command, world, 12, world.contacts.count, skip); skip = 1 - skip; }
+                    GraphPass(command, world, 13, world.contacts.count, skip);
+                    GraphPass(command, world, 14, world.islands.count, skip);
+                    GraphPass(command, world, 15, world.contacts.count);
+                    if (_graphRemovals != 0) GraphPass(command, world, 16, _graphCount);
                 }
                 else GraphPass(command, world, 6, 1); // Repack completed output; never execute a merge twice.
                 GraphPass(command, world, 5, _graphKeys);
@@ -138,9 +167,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 _graphChanges.Download(readback, _graphCount); _graphStatus.Download(readback, 1); SDL.EndGPUCopyPass(readback);
                 var bytesRead = (long)_graphOutput.Data.Length * sizeof(int) + (long)_graphCount * sizeof(GraphChange) + sizeof(GraphStatus);
                 IslandGraphReadbackBytes += bytesRead; IslandGraphTransferBytes += bytesRead;
+                RecordGraphProfile(1, ref profile);
                 var submitted = command; command = 0; fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
                 if (fence == 0) throw Failure("submit island graph changes");
                 Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for island graph changes");
+                RecordGraphProfile(2, ref profile);
                 _graphStatus.Read(1);
                 if (_graphStatus.Data[0].Error != 0) throw new InvalidOperationException($"GPU island graph error {_graphStatus.Data[0].Error}.");
                 var words = _graphStatus.Data[0].OutputWords;
@@ -148,9 +179,10 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 if (words < 0 || words > maximum) throw new InvalidOperationException("GPU graph output count is invalid.");
                 if (words > _graphOutput.Data.Length)
                 {
-                    _graphOutput.Reserve(words); IslandGraphReadbackRetries++; first = false; continue;
+                    _graphOutput.Reserve(words); IslandGraphReadbackRetries++; first = false; RecordGraphProfile(3, ref profile); continue;
                 }
                 _graphChanges.Read(_graphCount); ReadGraphOutput(world);
+                RecordGraphProfile(3, ref profile);
                 return;
             }
             finally
@@ -161,7 +193,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         }
     }
 
-    private void GraphPass(nint command, B2World world, int operation, int count)
+    private void GraphPass(nint command, B2World world, int operation, int count, int parity = -1)
     {
         Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[8];
         bindings[0] = new() { Buffer = _graphIslands.Handle }; bindings[1] = new() { Buffer = _graphBodies.Handle };
@@ -172,7 +204,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if (pass == 0) throw Failure("begin island graph pass");
         SDL.BindGPUComputePipeline(pass, _islandGraphPipeline.DangerousGetHandle());
         var update = _graphUpdates.Handle; SDL.BindGPUComputeStorageBuffers(pass, 0, (nint)(&update), 1);
-        var step = new GraphStep { Bodies = world.bodies.count, Contacts = world.contacts.count, Joints = world.joints.count, Islands = world.islands.count, Operation = operation, Changes = _graphCount, Updates = _graphUpdateCount, OutputCapacity = _graphOutput.Data.Length };
+        var step = new GraphStep { Bodies = world.bodies.count, Contacts = world.contacts.count, Joints = world.joints.count, Islands = world.islands.count, Operation = operation, Changes = _graphCount, Updates = parity >= 0 ? parity : _graphUpdateCount, OutputCapacity = _graphOutput.Data.Length };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&step), (uint)sizeof(GraphStep));
         SDL.DispatchGPUCompute(pass, checked((uint)(count + 63) / 64), 1, 1); SDL.EndGPUComputePass(pass); DispatchCount++;
     }
@@ -254,6 +286,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private void FinishIslandChanges(B2World world)
     {
         EnsureOwner(); if (!_graphReady) return;
+        var profile = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         if (!ReferenceEquals(world, _graphWorld) || _graphCursor != _graphCount) throw new InvalidOperationException("GPU island changes were not fully published.");
         foreach (var key in _graphResults)
         {
@@ -281,5 +314,6 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if (_graphSnapshot) IslandGraphSnapshotCount++;
         IslandChangeCount += _graphCount; MergedIslandCount += _graphStatus.Data[0].Merges;
         _graphReady = false;
+        RecordGraphProfile(5, ref profile);
     }
 }
