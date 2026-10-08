@@ -54,6 +54,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         world.generateManifolds = gpu.UpdateContacts;
         world.findBroadPhasePairs = gpu.FindBroadPhasePairs;
         gpu.EnableContactCreation(world);
+        gpu.EnableIslandSplitting(world);
         return gpu;
     }
     private Vector2 _defaultGravity;

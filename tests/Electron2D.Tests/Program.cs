@@ -29,6 +29,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_ACTIVITY") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_ISLANDS") == "1") { GPUPhysicsTests.VerifyIslandSplitting(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_REMOVAL") == "1") { GPUPhysicsTests.VerifyContactRemovals(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_CREATION") == "1") { GPUPhysicsTests.VerifyContactCreation(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CONTACT_UPDATES") == "1") { GPUPhysicsTests.VerifyContactUpdates(); return; }

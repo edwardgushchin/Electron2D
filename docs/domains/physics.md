@@ -68,7 +68,7 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)
 alongside the retained CPU compatibility backend. The internal compute host
-currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction and disjoint-contact removal, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, and contact/revolute/wheel preparation and solving; the public world still
+currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, and contact/revolute/wheel preparation and solving; the public world still
 selects CPU. [The implementation status](../components/gpu-physics.md) separates
 these executing stages from the required full GPU world and startup fallback.
 

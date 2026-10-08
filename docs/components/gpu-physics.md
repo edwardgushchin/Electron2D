@@ -59,7 +59,8 @@ Joint filtering walks the smaller body adjacency list. User filters remain on th
 owner after readback, followed by GPU contact identity allocation and initialization.
 Body/contact adjacency is built and retained on GPU; disjoint-contact unlink and ID
 release also execute there. CPU query/CCD trees, mirror/event publication, external
-authoring edits and graph/island mutation remain managed. The GPU maintains its own
+authoring edits, constraint coloring and island merging remain managed; disconnected
+island splitting executes on GPU. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
@@ -226,6 +227,28 @@ The input/manifold buffers bind read-only during solving. The first manifold
 readback and managed event processing still remain; this is partial
 residency, not elimination of the collision synchronization fence.
 
+Dirty awake islands now split through GPU connectivity discovery and list
+construction. The host packs their ordered raw adjacency, including non-touching
+contacts and disabled joints. GPU label propagation monotonically lowers each
+body's component seed, with pointer shortening between passes. Static endpoints
+belong to constraints but do not connect dynamic groups. Eligibility matches the
+shared contact/joint rules. A convergence check retries immutable input when
+necessary, bounded by the number of bodies; there is no CPU discovery fallback.
+Prefix sums reserve separate stack regions and components build their original
+DFS body/contact/joint ordering independently. Ordering remains serial within
+one component, an explicit performance limit for a large connected group.
+
+All output lists are checked for membership, cycles, bounds, reciprocal order,
+counts and complete coverage before any live mutation. The owner reserves mirror
+capacity, allocates new island IDs in the original seed order, imports all lists
+and frees the base ID last. Sleeping/clean islands do no GPU work. The solver
+routes GPU split callbacks through the owner; CPU worlds retain their worker task.
+Explicit body sleep uses the same split callback. Input/output storage and ID maps
+are retained; first use and topology growth remain outside warmed allocation claims.
+This does not move island merges, graph coloring, sleeping decisions or set
+transfers to GPU. `SplitIslandCount`, `SplitComponentCount` and
+`SplitConvergenceBatches` expose the work actually exercised.
+
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
@@ -360,7 +383,7 @@ Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
-move graph/island mutation to GPU, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+move constraint coloring and island merging to GPU, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -845,3 +868,46 @@ consistent whole-step speedup or 60 FPS. CPU graph/island work, query/CCD mirror
 packing and other readbacks remain; the fixture is an impact through a sleeping
 wall, not a steady all-awake or native-window FPS measurement.
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-remove-{a,b}.json`.
+
+## GPU disconnected-island splitting (2026-10-08)
+
+`ELECTRON2D_TEST_GPU_ISLANDS=1` compares CPU and GPU splits for 1/2/63/64/65/257/1,025
+bodies. Fixtures mix touching/non-touching static contacts, a kinematic member,
+disabled joints, revolute/wheel/filter joints, cycles and reordered seed lists.
+Breaking bridges produces up to 205 components; a separate 1,025-body case stays
+connected after a redundant constraint is removed. The oracle checks exact native
+island IDs/free-stack order, body/contact/joint lists, graph slots and solver sets,
+including explicit sleep/wake and a four-worker world's real scheduled split.
+Rebinding/disposal/world reset preserve hook ownership. The full GPU suite injects
+failure after island publication, then verifies replay rejection and disposal.
+
+After 24 warmup break/split/reconnect cycles, 16 measured cycles allocate zero
+managed bytes across all threads in every fixture. All splits converge in one
+submission. `ELECTRON2D_TEST_GPU_ISLANDS_PROFILE=1` records split-only wall time,
+including packing, device work, readback, validation and mirror publication:
+
+| Bodies | Resulting components | CPU split mean | GPU split mean | Managed bytes, all threads |
+| ---: | ---: | ---: | ---: | ---: |
+| 1 | 1 | 0.00012 ms | 0.09689 ms | 0 |
+| 65 | 13 | 0.00183 ms | 0.21534 ms | 0 |
+| 257 | 52 | 0.00743 ms | 0.27101 ms | 0 |
+| 1,025 | 205 | 0.03873 ms | 0.40951 ms | 0 |
+| 1,025 | 1 | 0.04763 ms | 1.88037 ms | 0 |
+
+This stage establishes GPU connectivity/list construction, not a speedup. The
+current host round trip dominates small islands and serial per-component DFS
+ordering limits large connected islands. Graph inputs are packed each split;
+the island graph is not yet resident. Artifact: ignored
+`bin/physics-sandbox/island-split-profile.json`.
+
+Sequential maximum-Smash GPU/CPU-split-control probes use 65,537 bodies, 32 warmup
+and 64 measured headless diagnostic steps. The control selects the original split
+with `ELECTRON2D_SANDBOX_PROFILE_CPU_SPLITS=1`; other GPU stages remain enabled.
+Whole-step means are 160.13/161.49 ms, with zero owner/all-thread managed allocation
+and the same state hash
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+The measured impact interval executes **zero splits**, so these numbers only check
+the existing path and cannot establish the new stage's performance. Artifacts:
+ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-split-a.json`.
+CPU island merging, graph coloring, sleeping/set transfer, CCD/query mirrors and
+public backend selection remain unfinished; this is not full-backend or FPS acceptance.

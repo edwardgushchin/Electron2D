@@ -4,12 +4,12 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, disconnected-island splitting, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
@@ -125,6 +125,27 @@ hooked contacts follows the callback so its deepest-point input is unchanged.
 mutation, event publication and the first manifold readback still remain managed. Chain
 segments are rejected explicitly; CPU tree mirrors, user filters, contact/body links
 and sensor queries still belong to the CPU path.
+
+`EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
+islands upload ordered body/contact/joint adjacency. GPU minimum-seed label
+propagation with pointer shortening finds components, excluding static bodies
+from connectivity and honoring contact/joint eligibility. Convergence is checked;
+unconverged immutable input retries within a body-count bound without CPU fallback.
+GPU prefix sums reserve disjoint stack regions, then each component builds its
+exact DFS body/contact/joint list. Independent components run in parallel; ordering
+within a single component is serial. This is an explicit large-component ceiling.
+
+The owner validates complete, bounded lists and membership before reserving native
+mirror capacity or changing live state. Existing island IDs are allocated in seed
+order, all lists are imported, and the old base ID is freed last. CPU no longer
+performs connectivity discovery for this path. Scheduled splits run on the owner
+instead of a solver worker; explicit sleep requests use the same callback. Clean
+or sleeping islands keep their existing no-op behavior. Island merges, constraint
+coloring, sleep decisions/transfer and query mirrors remain CPU work. Body/edge
+inputs occupy 16/32 bytes; member/group/status results use 16/48/16 bytes and
+uniforms 32 bytes. `SplitIslandCount`, `SplitComponentCount` and
+`SplitConvergenceBatches` count executed splits, resulting components and submissions.
+Buffers/maps retain capacity, but new larger topology can allocate during preparation.
 
 `Integrate` requires the live world owner. It packs awake states, submits the
 integration kernel, waits for the submission fence, verifies every returned

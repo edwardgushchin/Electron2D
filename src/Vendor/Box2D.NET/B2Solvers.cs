@@ -1660,9 +1660,17 @@ public enum b2SolverBlockType
                 object splitIslandTask = null;
                 if (world.splitIslandId != B2_NULL_INDEX)
                 {
-                    splitIslandTask = world.enqueueTaskFcn(SplitIslandTask, 1, 1, world, world.userTaskContext);
-                    world.taskCount += 1;
-                    world.activeTaskCount += splitIslandTask == null ? 0 : 1;
+                    if (world.splitIsland != null)
+                    {
+                        // Compute-device submission belongs to the world owner.
+                        SplitIslandTask(0, 1, 0, world);
+                    }
+                    else
+                    {
+                        splitIslandTask = world.enqueueTaskFcn(SplitIslandTask, 1, 1, world, world.userTaskContext);
+                        world.taskCount += 1;
+                        world.activeTaskCount += splitIslandTask == null ? 0 : 1;
+                    }
                 }
 
                 // Prepare body work blocks

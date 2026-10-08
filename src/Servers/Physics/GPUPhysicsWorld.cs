@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -47,6 +47,11 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _treePipeline = tree = CreatePipeline("PhysicsTree.comp.spv");
             _filterPipeline = filters = CreatePipeline("PhysicsFilters.comp.spv");
             _contactCreationPipeline = creation = CreatePipeline("PhysicsContactCreate.comp.spv");
+            _islandSplitPipeline = islands = CreatePipeline("PhysicsIslandSplit.comp.spv");
+            _splitBodyStorage = new(this); _splitContactStorage = new(this); _splitJointStorage = new(this);
+            _splitBodyResult = new(this); _splitContactResult = new(this); _splitJointResult = new(this);
+            _splitGroupStorage = new(this); _splitStackStorage = new(this); _splitScanStorage = new(this); _splitStatusStorage = new(this);
+            _splitIsland = SplitIsland;
             _contactSlotStorage = new(this); _contactFreeStorage = new(this); _contactScanStorage = new(this);
             _contactPoolStorage = new(this); _contactChangeStorage = new(this);
             _contactRequestStorage = new(this); _contactCreationStorage = new(this);
@@ -74,7 +79,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         }
         catch
         {
-            creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -198,6 +203,11 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachFilterTracking();
         DetachGeometryTracking();
         DetachContactPool();
+        if (_splitWorld is not null && _splitWorld.splitIsland == _splitIsland) _splitWorld.splitIsland = null!;
+        _splitWorld = null;
+        _splitBodyStorage.Dispose(); _splitContactStorage.Dispose(); _splitJointStorage.Dispose();
+        _splitBodyResult.Dispose(); _splitContactResult.Dispose(); _splitJointResult.Dispose();
+        _splitGroupStorage.Dispose(); _splitStackStorage.Dispose(); _splitScanStorage.Dispose(); _splitStatusStorage.Dispose(); _islandSplitPipeline.Dispose();
         _contactSlotStorage.Dispose(); _contactFreeStorage.Dispose(); _contactScanStorage.Dispose();
         _contactPoolStorage.Dispose(); _contactChangeStorage.Dispose();
         _contactRequestStorage.Dispose(); _contactCreationStorage.Dispose(); _contactCreationPipeline.Dispose();

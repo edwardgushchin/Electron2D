@@ -482,6 +482,11 @@ namespace Box2D.NET
             }
 
             b2ValidateIsland(world, baseId);
+            if (world.splitIsland != null)
+            {
+                world.splitIsland(world, baseId);
+                return;
+            }
 
             int bodyCount = baseIsland.bodyCount;
 
