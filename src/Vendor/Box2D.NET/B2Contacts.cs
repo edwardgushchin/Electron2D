@@ -149,6 +149,13 @@ namespace Box2D.NET
             }
         }
 
+        internal static bool b2GetContactOrder(B2ShapeType a, B2ShapeType b, out bool swap)
+        {
+            B2ContactRegister entry = s_registers[(int)a, (int)b];
+            swap = !entry.primary;
+            return entry.fcn != null;
+        }
+
         public static void b2CreateContact(B2World world, B2Shape shapeA, B2Shape shapeB)
         {
             B2ShapeType type1 = shapeA.type;
@@ -170,6 +177,23 @@ namespace Box2D.NET
                 return;
             }
 
+            b2CreateContactCore(world, shapeA, shapeB, null);
+        }
+
+        internal struct B2ContactCreation
+        {
+            internal int ID, SetIndex;
+            internal uint Generation, Flags, SimFlags;
+            internal float Friction, Restitution;
+            internal bool UseFriction, UseRestitution;
+        }
+
+        internal static void b2CreateContactPrepared(B2World world, B2Shape shapeA, B2Shape shapeB, in B2ContactCreation creation) =>
+            b2CreateContactCore(world, shapeA, shapeB, creation);
+
+        private static void b2CreateContactCore(B2World world, B2Shape shapeA, B2Shape shapeB, B2ContactCreation? prepared)
+        {
+            B2ContactCreation creation = prepared.GetValueOrDefault();
             B2Body bodyA = b2Array_Get(ref world.bodies, shapeA.bodyId);
             B2Body bodyB = b2Array_Get(ref world.bodies, shapeB.bodyId);
 
@@ -177,7 +201,8 @@ namespace Box2D.NET
             B2_ASSERT(bodyA.setIndex != (int)B2SolverSetType.b2_staticSet || bodyB.setIndex != (int)B2SolverSetType.b2_staticSet);
 
             int setIndex;
-            if (bodyA.setIndex == (int)B2SolverSetType.b2_awakeSet || bodyB.setIndex == (int)B2SolverSetType.b2_awakeSet)
+            if (prepared.HasValue) setIndex = creation.SetIndex;
+            else if (bodyA.setIndex == (int)B2SolverSetType.b2_awakeSet || bodyB.setIndex == (int)B2SolverSetType.b2_awakeSet)
             {
                 setIndex = (int)B2SolverSetType.b2_awakeSet;
             }
@@ -192,7 +217,9 @@ namespace Box2D.NET
             B2SolverSet set = b2Array_Get(ref world.solverSets, setIndex);
 
             // Create contact key and contact
-            int contactId = b2AllocId(world.contactIdPool);
+            int contactId;
+            if (prepared.HasValue) { contactId = creation.ID; b2ClaimId(world.contactIdPool, contactId); }
+            else contactId = b2AllocId(world.contactIdPool);
             if (contactId == world.contacts.count)
             {
                 b2Array_Add(ref world.contacts);
@@ -203,7 +230,7 @@ namespace Box2D.NET
 
             B2Contact contact = b2Array_Get(ref world.contacts, contactId);
             contact.contactId = contactId;
-            contact.generation += 1;
+            contact.generation = prepared.HasValue ? creation.Generation : unchecked(contact.generation + 1);
             contact.setIndex = setIndex;
             contact.colorIndex = B2_NULL_INDEX;
             contact.localIndex = set.contactSims.count;
@@ -213,11 +240,11 @@ namespace Box2D.NET
             contact.shapeIdA = shapeIdA;
             contact.shapeIdB = shapeIdB;
             //contact.isMarked = false;
-            contact.flags = 0;
+            contact.flags = prepared.HasValue ? creation.Flags : 0;
 
             B2_ASSERT(shapeA.sensorIndex == B2_NULL_INDEX && shapeB.sensorIndex == B2_NULL_INDEX);
 
-            if (shapeA.enableContactEvents || shapeB.enableContactEvents)
+            if (!prepared.HasValue && (shapeA.enableContactEvents || shapeB.enableContactEvents))
             {
                 contact.flags |= (uint)B2ContactFlags.b2_contactEnableContactEvents;
             }
@@ -267,6 +294,7 @@ namespace Box2D.NET
             // they will link islands and be moved into the constraint graph.
             ref B2ContactSim contactSim = ref b2Array_Add(ref set.contactSims);
             contactSim.contactId = contactId;
+            contactSim.generation = contact.generation;
 
 #if DEBUG
             contactSim.bodyIdA = shapeA.bodyId;
@@ -287,15 +315,15 @@ namespace Box2D.NET
             contactSim.generatedManifoldVersion = 0;
 
             // These also get updated in the narrow phase
-            contactSim.friction = world.frictionCallback(shapeA.material.friction, shapeA.material.userMaterialId,
-                shapeB.material.friction, shapeB.material.userMaterialId);
-            contactSim.restitution = world.restitutionCallback(shapeA.material.restitution, shapeA.material.userMaterialId,
-                shapeB.material.restitution, shapeB.material.userMaterialId);
+            contactSim.friction = prepared.HasValue && creation.UseFriction ? creation.Friction :
+                world.frictionCallback(shapeA.material.friction, shapeA.material.userMaterialId, shapeB.material.friction, shapeB.material.userMaterialId);
+            contactSim.restitution = prepared.HasValue && creation.UseRestitution ? creation.Restitution :
+                world.restitutionCallback(shapeA.material.restitution, shapeA.material.userMaterialId, shapeB.material.restitution, shapeB.material.userMaterialId);
 
             contactSim.tangentSpeed = 0.0f;
-            contactSim.simFlags = 0;
+            contactSim.simFlags = prepared.HasValue ? creation.SimFlags : 0;
 
-            if (shapeA.enablePreSolveEvents || shapeB.enablePreSolveEvents)
+            if (!prepared.HasValue && (shapeA.enablePreSolveEvents || shapeB.enablePreSolveEvents))
             {
                 contactSim.simFlags |= (uint)B2ContactSimFlags.b2_simEnablePreSolveEvents;
             }

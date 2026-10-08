@@ -16,8 +16,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     internal void UpdateContacts(B2StepContext context, int count)
     {
         var world = context.world;
-        var frictionMode = world.frictionCallback == b2DefaultFrictionCallback ? 1u : world.frictionCallback == PhysicsSpace.CombineFriction ? 2u : 0u;
-        var bounceMode = world.restitutionCallback == b2DefaultRestitutionCallback ? 1u : world.restitutionCallback == PhysicsSpace.CombineBounce ? 2u : 0u;
+        var (frictionMode, bounceMode) = MaterialModes(world);
         var options = 1u | (world.enableSpeculative ? 0u : 2u) | (world.preSolveFcn is null ? 0u : 4u) | (frictionMode << 3) | (bounceMode << 5);
         GenerateManifolds(context, count, options);
         if (frictionMode == 0 || bounceMode == 0)
@@ -37,6 +36,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
         }
         UpdatedContactCount += count;
         context.generatedContactsUpdated = true;
+    }
+
+    private static (uint Friction, uint Bounce) MaterialModes(B2World world)
+    {
+        var frictionMode = world.frictionCallback == b2DefaultFrictionCallback ? 1u : world.frictionCallback == PhysicsSpace.CombineFriction ? 2u : 0u;
+        var bounceMode = world.restitutionCallback == b2DefaultRestitutionCallback ? 1u : world.restitutionCallback == PhysicsSpace.CombineBounce ? 2u : 0u;
+        return (frictionMode, bounceMode);
     }
 
     private static bool NeedsOwnerContact(B2StepContext context, int index) => context.world.preSolveFcn is not null &&

@@ -55,9 +55,10 @@ contacts. There is no density cap or truncated-pair fallback. The GPU also appli
 self/moved-pair deduplication, existing-contact lookup, same-body and sensor veto,
 64-bit category/mask and signed group filtering, and joint collision veto. The
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
-Joint filtering walks the smaller body adjacency list. Only user filters and
-ordered contact creation remain on the owner after readback; CPU query/CCD tree
-mirrors and the shared contact lifecycle remain managed. The GPU maintains its own
+Joint filtering walks the smaller body adjacency list. User filters remain on the
+owner after readback, followed by GPU contact identity allocation and initialization.
+CPU query/CCD trees, body adjacency, graph/island mutation and contact destruction
+remain managed. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
@@ -98,8 +99,28 @@ unhooks the observer, and world reset clears it. CPU worlds have no observer.
 `PairTableUploadBytes` expose cumulative internal accounting. The internal
 cumulative `BroadPhaseProfileMS` measures host packing, command recording/uploads,
 submit/fence/readback, and result validation/user filtering/list publication.
-It excludes the later managed contact creation loop. Cumulative upload/readback
+It excludes the later contact creation submission and CPU mirror publication. Cumulative upload/readback
 bytes and candidate totals make transfer volume visible without per-frame logs.
+
+`CreateContacts` consumes the ordered pair list after user filtering. Its GPU
+prefix scan skips unsupported shape pairs without disturbing order, reserves IDs
+from a resident LIFO free stack or its next-ID counter, increments each slot's
+unsigned 32-bit generation, and initializes canonical shape/body identities,
+event flags, initial awake/disabled set and built-in mixed materials. The owner
+validates the complete batch before importing these identities into the CPU pool
+and publishing the common contact/body links. Custom material callbacks retain
+their original owner-thread position and order. CPU worlds keep native creation.
+
+The pool observes every external allocation/free in order; unlike the pair-key
+journal, these events cannot be coalesced. Ordinary frees append in parallel on
+GPU; rare mixed CPU allocations/frees replay serially. Initial binding, capacity
+growth or observer replacement snapshots the native pool and slot generations.
+Slots occupy 32 bytes, request/result records 64 bytes each, mutation records 48
+bytes and pool state 32 bytes. `CreatedContactCount`, `ContactPoolSnapshotCount`
+and `ContactPoolUploadBytes` are cumulative; the last counts pool snapshots and
+mutation uploads, excluding creation request/result transfers. World reset and
+host disposal detach only owned callbacks. A failed creation step poisons the
+world through the existing failure path without CPU replay.
 
 Contact geometry is generated on GPU for all nine registered pair families
 among circles, capsules, two-sided segments and convex polygons (up to eight
@@ -119,7 +140,11 @@ records resident. Movement and collision filters do not change these inputs. `Re
 report each batch, while `GeometryCacheResetCount` is cumulative. Pair poses still
 upload each batch: each pair occupies 64 bytes (including center offsets), its
 returned manifold 80 bytes and the mixed material 16 bytes. The owner waits for
-the collision fence and validates the batch before publication. The integrated
+the collision fence and validates the batch before publication. Integrated pairs
+reference resident contact slots by integer ID and generation; stale generations
+are rejected before geometry access. The isolated numeric entry can still pass
+shape IDs directly. Shape/pair identity headers now use integer fields without
+float conversion. The integrated
 GPU entry mixes native/default and Electron2D rough/absorbent materials, classifies
 contact transitions/hit flags, prunes optional speculative points and shifts
 anchors to centers of mass. Custom material and pre-solve callbacks remain on the
@@ -171,8 +196,8 @@ managed preflight. Solved contact impulses publish directly to their manifolds,
 without a CPU SIMD preparation/store pass. Joint frames and coefficients publish
 with impulses for subsequent queries and finalization.
 
-The tree, solver and manifold callbacks run on the world owner. CPU tree mirrors,
-user filtering/contact creation, sleep/CCD finalization and queries remain in the managed
+The tree, contact creation, solver and manifold callbacks run on the world owner. CPU tree mirrors,
+user callbacks, contact/body links, sleep/CCD finalization and queries remain in the managed
 backend; GPU contact kernels run through the owner, with retained workers publishing the CPU mirror; CPU worlds retain their contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
 ownership and rejects replay while permitting world disposal. This hybrid stage
@@ -288,7 +313,8 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: remove CPU tree mirrors/rank dependency, implement GPU contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: remove CPU tree mirrors/rank dependency, move contact/body adjacency,
+destruction and graph/island mutation to GPU, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -631,3 +657,53 @@ not elimination of the synchronization/readback boundary. The remaining roughly
 160 ms whole step does not meet 60 FPS; graph/island mutation, contact creation,
 queries/CCD, sleep and other full-backend requirements still remain.
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-final-{a,b}.json`.
+
+## GPU contact identities and creation (2026-10-08)
+
+`ELECTRON2D_TEST_GPU_CONTACT_CREATION=1` compares empty and populated worlds with
+mixed static/kinematic/dynamic bodies and all registered shape creation roles.
+It checks contact IDs, unsigned generation wrap, initial flags/set/material,
+body adjacency and exact custom-material callback order on the owner. Late
+attachment, repeated destroy/recreate, external CPU allocation/free sequences,
+observer loss, buffer growth and replacing/disposing GPU hosts are exercised.
+Sixteen measured churn cycles after 32 warmups allocate zero all-thread managed
+bytes and take no new pool snapshot. A stale generation is rejected by the GPU
+collision slot lookup; graph copies preserve simulation identity. Creation tests
+include chain identities without claiming chain manifold support. The full GPU
+suite injects failure after a completed creation batch and verifies failed-world
+query/replay rejection and disposal; ordinary CPU tests retain native creation.
+
+The test-only `ELECTRON2D_SANDBOX_PROFILE_CPU_CREATION=1` detaches creation and
+pool observers together. That control uses native creation and direct shape-ID
+collision input; all other GPU stages remain enabled. An earlier exploratory
+control only disabled creation, leaving serial import of native mutations into
+the GPU pool (`cpu-contact-create-a`); it is not the native-stage baseline.
+
+The first identity-packing candidate fetched every contact generation through
+the native contact-object table. A maximum-Smash probe cost 173.30 ms per step,
+including 87.51 ms collision, while the detached native-creation control cost
+157.97/74.16 ms. Simulations now carry their generation through graph copies,
+removing that additional random lookup without weakening slot-generation checks.
+The follow-up probe (`gpu-contact-identity-b`) returned 158.44 ms per step.
+
+Final sequential Linux/Vulkan maximum-Smash profiles use 65,537 bodies, 32
+warmup and 64 measured headless diagnostic steps, in GPU A/CPU A/CPU B/GPU B
+order. No build, formatter or other test runs concurrently:
+
+| Creation/identity mode | Whole-step mean | p95 | Pair stage mean | Collision mean | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| GPU A | 158.04 ms | 233.39 ms | 11.48 ms | 73.28 ms | 0 / 0 |
+| CPU A | 156.96 ms | 248.44 ms | 10.95 ms | 72.06 ms | 0 / 0 |
+| CPU B | 161.35 ms | 251.91 ms | 10.99 ms | 75.01 ms | 0 / 0 |
+| GPU B | 158.51 ms | 249.11 ms | 11.33 ms | 72.49 ms | 0 / 0 |
+
+Each GPU interval creates 496,638 contacts, takes zero pool snapshots and uploads
+21,196,176 pool-mutation bytes, plus 31,784,832 request bytes and the same number
+of result bytes (64 bytes per candidate each way). Pool status readbacks are
+additional. The CPU control reports zero pool/creation work. All four state hashes
+match `13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`, with
+the same 6,425→41,122 awake-body progression. These profiles do not demonstrate
+a sustained whole-step speedup or 60 FPS. CPU adjacency/graph/islands, query/CCD
+mirrors, per-step packing and readback remain. The interval captures an impact
+propagating through a sleeping wall, not a steady all-awake or native-window run.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-create-final-{a,b}.json`.

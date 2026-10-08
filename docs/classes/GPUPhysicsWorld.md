@@ -4,12 +4,12 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, GPU hierarchy construction/refit/traversal/built-in filters, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
@@ -44,7 +44,7 @@ CPU pair and custom-filter order is preserved, including deleted/reused proxy sl
 `BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch;
 `BroadPhaseCandidateTotal`, upload/readback byte totals and `BroadPhaseProfileMS`
 accumulate host timing and transfer accounting. No moved proxies means no submission.
-CPU query/CCD tree mirrors, rank collection, user callbacks and contact creation remain CPU. The GPU lookup
+CPU query/CCD tree mirrors, rank collection, user callbacks and contact/body adjacency publication remain CPU. The GPU lookup
 table is updated from unique dirty contact IDs. Owner-side lifecycle notifications
 are coalesced to final key values, then GPU removal/key replacement precedes atomic
 parallel insertion. A quarter-table change budget triggers GPU tombstone rehash;
@@ -53,6 +53,20 @@ validated after the fence before publishing candidates. Observer/source identity
 and disposal prevent stale-world reuse. `PairTableSnapshotCount`,
 `PairTableRebuildCount`, `PairTableUpdatedSlots` and `PairTableUploadBytes` report
 this residency. Ordinary CPU worlds do not register the change observer.
+
+`EnableContactCreation` installs an owner-thread creation callback and an ordered
+ID-pool mutation observer. `CreateContacts` uploads post-filter ordered pairs;
+GPU normalization, prefix sums and LIFO allocation produce contact IDs, unsigned
+generations, shape/body identities, initial set/event flags and built-in material
+values. The owner validates every result before claiming those IDs in the CPU
+mirror and publishing common adjacency/pair links. Custom material callbacks
+retain their original position and order. Full pool snapshots occur only after
+binding/observer changes or growth; ordinary frees append in parallel, while
+mixed external CPU allocation/free events replay serially. Slots/request/result/
+mutation/state records occupy 32/64/64/48/32 bytes. `CreatedContactCount` and
+`ContactPoolSnapshotCount` are cumulative; `ContactPoolUploadBytes` counts only
+pool snapshots/mutations, excluding request and result transfers. Disposal
+preserves another host's callbacks. CPU worlds retain native contact creation.
 
 `GenerateManifolds` keeps local shape geometry resident. Creation/destruction and
 primitive/material/hit-event edits invalidate a slot, and the first overlapping pair referencing it
@@ -65,7 +79,7 @@ slots. Disposal detaches only its own observer. `ResidentGeometryCount`,
 `GeometryCacheResetCount` is cumulative. Current pair transforms and fat-proxy
 overlap are still packed on CPU before generating all points in one submission. Its packed shape/pair/result records occupy 160/64/80
 bytes, plus a 32-byte history result. Shape records include surface material and
-hit-event inputs; the pair carries center-of-mass offsets. Feature matching and normal/tangent/rolling
+hit-event inputs; the pair carries center-of-mass offsets. Integer identity headers avoid float ID conversion. Simulations carry their generation through graph copies to avoid a separate native-contact lookup during packing. Integrated pairs address resident contact slots by ID/generation, with stale generations rejected before geometry reads; isolated numeric probes retain direct shape-ID input. Feature matching and normal/tangent/rolling
 warm-start reuse execute on GPU. Current contacts read the retained previous
 solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
 need no upload. The pure `GenerateManifolds` entry retains raw shape-relative
@@ -85,7 +99,7 @@ keep publication on the owner to preserve callback order. A veto clears touching
 hooked contacts follows the callback so its deepest-point input is unchanged.
 `UpdatedContactCount` accumulates complete contact updates. Contact graph/island
 mutation, event publication and the first manifold readback still remain managed. Chain
-segments are rejected explicitly; CPU tree mirrors, user filters/contact creation
+segments are rejected explicitly; CPU tree mirrors, user filters, contact/body links
 and sensor queries still belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the

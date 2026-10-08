@@ -11,6 +11,7 @@ namespace Box2D.NET
     internal class B2ContactSim
     {
         public int contactId;
+        internal uint generation;
 
 #if DEBUG
         public int bodyIdA;
@@ -55,6 +56,7 @@ namespace Box2D.NET
         public void CopyFrom(B2ContactSim other)
         {
             contactId = other.contactId;
+            generation = other.generation;
 
 #if DEBUG
             bodyIdA = other.bodyIdA;

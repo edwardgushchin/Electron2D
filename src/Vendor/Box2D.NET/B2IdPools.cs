@@ -46,12 +46,24 @@ namespace Box2D.NET
             if (count > 0)
             {
                 int id = b2Array_Pop(ref pool.freeArray);
+                pool.changed?.Invoke(id, true);
                 return id;
             }
 
             int nextId = pool.nextIndex;
             pool.nextIndex += 1;
+            pool.changed?.Invoke(nextId, true);
             return nextId;
+        }
+
+        internal static void b2ClaimId(B2IdPool pool, int id)
+        {
+            int count = pool.freeArray.count;
+            int expected = count > 0 ? pool.freeArray.data[count - 1] : pool.nextIndex;
+            if (id != expected) throw new System.InvalidOperationException("Prepared contact identity does not match the mirror pool.");
+            if (count > 0) b2Array_Pop(ref pool.freeArray);
+            else pool.nextIndex++;
+            pool.changed?.Invoke(id, true);
         }
 
         internal static void b2FreeId(B2IdPool pool, int id)
@@ -59,6 +71,7 @@ namespace Box2D.NET
             B2_ASSERT(pool.nextIndex > 0);
             B2_ASSERT(0 <= id && id < pool.nextIndex);
             b2Array_Push(ref pool.freeArray, id);
+            pool.changed?.Invoke(id, false);
         }
 
 #if DEBUG

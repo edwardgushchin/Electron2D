@@ -16,6 +16,7 @@ namespace Box2D.NET
         internal System.Action<B2StepContext> solveConstraints;
         internal System.Action<B2StepContext, int> generateManifolds;
         internal System.Action<B2World> findBroadPhasePairs;
+        internal System.Action<B2World> createBroadPhaseContacts;
         internal System.Action<int> contactPairChanged;
         internal System.Action<int> shapeFilterChanged;
         internal System.Action<int> shapeGeometryChanged;
@@ -172,6 +173,7 @@ namespace Box2D.NET
         public void Clear()
         {
             findBroadPhasePairs = null;
+            createBroadPhaseContacts = null;
             contactPairChanged = null;
             shapeFilterChanged = null;
             shapeGeometryChanged = null;

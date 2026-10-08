@@ -5,8 +5,8 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU hierarchy maintenance, integration, manifolds and constraints execute here;
-// CPU query/CCD mirrors, user filtering and shared contact creation remain managed.
+// GPU hierarchy/contact identity maintenance, integration, manifolds and constraints execute here;
+// CPU query/CCD mirrors, user callbacks, contact adjacency and graph mutation remain managed.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -46,6 +46,11 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _pairTablePipeline = pairTable = CreatePipeline("PhysicsPairTable.comp.spv");
             _treePipeline = tree = CreatePipeline("PhysicsTree.comp.spv");
             _filterPipeline = filters = CreatePipeline("PhysicsFilters.comp.spv");
+            _contactCreationPipeline = creation = CreatePipeline("PhysicsContactCreate.comp.spv");
+            _contactSlotStorage = new(this); _contactFreeStorage = new(this); _contactScanStorage = new(this);
+            _contactPoolStorage = new(this); _contactChangeStorage = new(this);
+            _contactRequestStorage = new(this); _contactCreationStorage = new(this);
+            _contactIDChanged = MarkContactIDChanged; _createContacts = CreateContacts;
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _historyStorage = new(this); _matchedStorage = new(this);
@@ -65,7 +70,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         }
         catch
         {
-            filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -188,6 +193,10 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachProxyTracking();
         DetachFilterTracking();
         DetachGeometryTracking();
+        DetachContactPool();
+        _contactSlotStorage.Dispose(); _contactFreeStorage.Dispose(); _contactScanStorage.Dispose();
+        _contactPoolStorage.Dispose(); _contactChangeStorage.Dispose();
+        _contactRequestStorage.Dispose(); _contactCreationStorage.Dispose(); _contactCreationPipeline.Dispose();
         _geometryUpdateStorage.Dispose(); _contactMaterialStorage.Dispose();
         _shapeFilterUpdateStorage.Dispose(); _jointFilterUpdateStorage.Dispose(); _filterPipeline.Dispose();
         _proxyStorage.Dispose(); _proxyUpdateStorage.Dispose(); _treeOrderStorage.Dispose(); _treePipeline.Dispose();

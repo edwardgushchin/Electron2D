@@ -53,6 +53,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         world.solveConstraints = gpu.Solve;
         world.generateManifolds = gpu.UpdateContacts;
         world.findBroadPhasePairs = gpu.FindBroadPhasePairs;
+        gpu.EnableContactCreation(world);
         return gpu;
     }
     private Vector2 _defaultGravity;

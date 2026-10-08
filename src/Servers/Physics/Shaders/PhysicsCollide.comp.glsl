@@ -4,9 +4,11 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsContact.inc.glsl"
+#include "PhysicsMaterial.inc.glsl"
+#include "PhysicsContactSlot.inc.glsl"
 layout(local_size_x = 64) in;
-struct Geometry { vec4 info; vec4 vertices[8]; vec4 material; };
-struct Pair { vec4 ids; vec4 poseA; vec4 poseB; vec4 offset; };
+struct Geometry { int typeFlags; float radius; int count; int id; vec4 vertices[8]; vec4 material; };
+struct Pair { ivec4 ids; vec4 poseA; vec4 poseB; vec4 offset; };
 struct Result { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 layout(std430, set = 1, binding = 0) buffer Shapes { Geometry shapes[]; };
 layout(std430, set = 1, binding = 1) buffer Pairs { Pair pairs[]; };
@@ -16,6 +18,7 @@ layout(std430, set = 1, binding = 4) buffer Materials { vec4 materials[]; };
 layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; };
 layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
 layout(std430, set = 0, binding = 2) readonly buffer GeometryUpdates { Geometry geometryUpdates[]; };
+layout(std430, set = 0, binding = 3) readonly buffer ContactSlots { ContactSlot contactSlots[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; };
 const float epsilon = 1.1920928955078125e-7;
 const float speculative = 0.02;
@@ -57,12 +60,12 @@ Manifold capsuleCircle(Geometry a, vec2 center, float radius)
     vec2 p1=a.vertices[0].xy, p2=a.vertices[1].xy, e=p2-p1;
     float s1=dot2(center-p1,e), s2=dot2(p2-center,e);
     vec2 p=s1<0?p1:(s2<0?p2:addScaled(p1,s1/dot2(e,e),e));
-    return singlePoint(p,center,a.info.y,radius);
+    return singlePoint(p,center,a.radius,radius);
 }
 Manifold polygonCircle(Geometry a, vec2 center, float radiusB)
 {
-    Manifold m=emptyManifold(); int count=int(a.info.z), edge=0;
-    float separation=-3.402823466e38, radiusA=a.info.y, radius=radiusA+radiusB;
+    Manifold m=emptyManifold(); int count=int(a.count), edge=0;
+    float separation=-3.402823466e38, radiusA=a.radius, radius=radiusA+radiusB;
     for(int i=0;i<count;i++)
     { float s=dot2(a.vertices[i].zw,center-a.vertices[i].xy); if(s>separation) { separation=s; edge=i; } }
     if(separation>radius+speculative) return m;
@@ -115,7 +118,7 @@ Manifold capsules(Geometry a,Geometry b,vec4 xf)
     Manifold m=emptyManifold(); vec2 p1=vec2(0),q1=a.vertices[1].xy-a.vertices[0].xy;
     vec2 p2=transform(xf,b.vertices[0].xy),q2=transform(xf,b.vertices[1].xy);
     vec2 f=fractions(p1,q1,p2,q2),closest1=addScaled(p1,f.x,q1-p1),closest2=addScaled(p2,f.y,q2-p2);
-    vec2 delta=closest2-closest1; float ds=dot2(delta,delta),ra=a.info.y,rb=b.info.y,radius=ra+rb;
+    vec2 delta=closest2-closest1; float ds=dot2(delta,delta),ra=a.radius,rb=b.radius,radius=ra+rb;
     if(ds>(radius+speculative)*(radius+speculative)) return m;
     float distance=sqrt(ds),l1=sqrt(dot2(q1,q1)),l2=sqrt(dot2(q2-p2,q2-p2));
     vec2 u1=(1/l1)*q1,u2=(1/l2)*(q2-p2);
@@ -149,9 +152,9 @@ Manifold capsules(Geometry a,Geometry b,vec4 xf)
 }
 Polygon polygon(Geometry g)
 {
-    Polygon p; p.count=int(g.info.z); p.radius=g.info.y;
+    Polygon p; p.count=int(g.count); p.radius=g.radius;
     for(int i=0;i<p.count;i++) { p.vertices[i]=g.vertices[i].xy; p.normals[i]=g.vertices[i].zw; }
-    if((int(g.info.x)&255)!=3)
+    if((int(g.typeFlags)&255)!=3)
     {
         p.count=2; vec2 axis=unit(p.vertices[1]-p.vertices[0]);
         p.normals[0]=vec2(axis.y,-axis.x); p.normals[1]=-p.normals[0];
@@ -218,7 +221,7 @@ void main()
     uint index=gl_GlobalInvocationID.x; if(index>=settings.x) return;
     if (settings.y == 1)
     {
-        Geometry g = geometryUpdates[index]; shapes[int(g.info.w)] = g; return;
+        Geometry g = geometryUpdates[index]; shapes[int(g.id)] = g; return;
     }
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     bool complete = (settings.z & 1u) != 0;
@@ -228,14 +231,28 @@ void main()
         if (complete) { r.normal.w = float(((previous | 2u) & ~1u) << 2); materials[index] = vec4(0); }
         results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return;
     }
-    Geometry a=shapes[int(pair.ids.x)],b=shapes[int(pair.ids.y)]; int ta=int(a.info.x)&255,tb=int(b.info.x)&255;
+    ivec2 shapeIDs = pair.ids.xy;
+    if ((settings.z & 128u) != 0)
+    {
+        if (pair.ids.x < 0 || uint(pair.ids.x) >= settings.w)
+        {
+            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0)); materials[index] = vec4(0); return;
+        }
+        ContactSlot slot = contactSlots[pair.ids.x];
+        shapeIDs = slot.shapeBody.xy;
+        if (slot.state.x != uint(pair.ids.y) || any(lessThan(shapeIDs,ivec2(0))) || any(greaterThanEqual(shapeIDs,ivec2(shapes.length()))))
+        {
+            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0)); materials[index] = vec4(0); return;
+        }
+    }
+    Geometry a=shapes[shapeIDs.x],b=shapes[shapeIDs.y]; int ta=a.typeFlags&255,tb=b.typeFlags&255;
     Manifold m; vec2 origin=vec2(0);
     if(tb==0)
     {
         vec2 center=transform(relativePose(pair.poseA,pair.poseB),b.vertices[0].xy);
-        if(ta==0) m=singlePoint(a.vertices[0].xy,center,a.info.y,b.info.y);
-        else if(ta==3) m=polygonCircle(a,center,b.info.y);
-        else m=capsuleCircle(a,center,b.info.y);
+        if(ta==0) m=singlePoint(a.vertices[0].xy,center,a.radius,b.radius);
+        else if(ta==3) m=polygonCircle(a,center,b.radius);
+        else m=capsuleCircle(a,center,b.radius);
     }
     else
     {
@@ -289,26 +306,14 @@ void main()
     }
     if (complete)
     {
-        uint modeF = (settings.z >> 3) & 3u, modeB = (settings.z >> 5) & 3u;
-        uint flagsA = uint(a.info.x) >> 8, flagsB = uint(b.info.x) >> 8;
-        precise float friction = 0, bounce = 0;
-        if (modeF == 1u) { precise float product = a.material.x*b.material.x; friction = sqrt(product); }
-        else if (modeF == 2u)
-            friction = abs(min((flagsA & 1u) != 0 ? -a.material.x : a.material.x,
-                               (flagsB & 1u) != 0 ? -b.material.x : b.material.x));
-        if (modeB == 1u) bounce = a.material.y > b.material.y ? a.material.y : b.material.y;
-        else if (modeB == 2u)
-        {
-            bounce = ((flagsA & 2u) != 0 ? -a.material.y : a.material.y) +
-                     ((flagsB & 2u) != 0 ? -b.material.y : b.material.y);
-            if (bounce < 0) bounce = 0; else if (bounce > 1) bounce = 1;
-        }
+        uint flagsA = uint(a.typeFlags) >> 8, flagsB = uint(b.typeFlags) >> 8;
+        vec2 mixed = mixSurfaceMaterial(a.material.xy, b.material.xy, flagsA, flagsB, settings.z);
         precise float rolling = 0;
         if (a.material.z > 0 || b.material.z > 0)
             rolling = (a.material.z > b.material.z ? a.material.z : b.material.z) *
-                      (a.info.y > b.info.y ? a.info.y : b.info.y);
+                      (a.radius > b.radius ? a.radius : b.radius);
         precise float tangent = a.material.w + b.material.w;
-        materials[index] = vec4(friction,bounce,rolling,tangent);
+        materials[index] = vec4(mixed,rolling,tangent);
         uint flags = previous;
         bool touching = m.count != 0, wasTouching = (previous & 1u) != 0;
         flags = touching ? flags | 1u : flags & ~1u;

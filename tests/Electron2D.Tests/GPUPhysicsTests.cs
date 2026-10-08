@@ -12,6 +12,7 @@ internal static partial class GPUPhysicsTests
         VerifyManifolds(gpu);
         VerifyGeometryResidency();
         VerifyContactUpdates();
+        VerifyContactCreation();
         VerifyResidentConstraints(gpu);
         VerifyWarmHistory(gpu);
         PhysicsSurfaceVelocityTests.Run(true);
@@ -20,6 +21,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyWorld(true, pairFailure: true);
+        VerifyWorld(true, creationFailure: true);
         VerifyOwnedWorldFailure();
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
@@ -105,7 +107,7 @@ internal static partial class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false)
+    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -139,7 +141,22 @@ internal static partial class GPUPhysicsTests
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            if (pairFailure)
+            if (creationFailure)
+            {
+                var native = B2Worlds.b2GetWorldFromId(world.WorldID);
+                for (var i = 0; i < native.contacts.count; i++)
+                    if (native.contacts.data[i].contactId >= 0) B2Contacts.b2DestroyContact(native, native.contacts.data[i], false);
+                for (var i = 0; i < native.shapes.count; i++)
+                    if (native.shapes.data[i].proxyKey != -1) B2BoardPhases.b2BufferMove(native.broadPhase, native.shapes.data[i].proxyKey);
+                native.createBroadPhaseContacts = w =>
+                {
+                    var before = gpu.CreatedContactCount;
+                    gpu.CreateContacts(w);
+                    if (gpu.CreatedContactCount == before) throw new Exception("The failure fixture must create GPU contacts.");
+                    throw new IOException("injected GPU contact creation failure");
+                };
+            }
+            else if (pairFailure)
             {
                 var native = B2Worlds.b2GetWorldFromId(world.WorldID);
                 native.findBroadPhasePairs = w => { gpu.FindBroadPhasePairs(w); throw new IOException("injected GPU pair failure"); };

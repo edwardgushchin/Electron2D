@@ -452,6 +452,9 @@ namespace Box2D.NET
 
             b2TracyCZoneNC(B2TracyCZone.create_contacts, "Create Contacts", B2HexColor.b2_colorCoral, true);
 
+            var createContacts = world.createBroadPhaseContacts;
+            createContacts?.Invoke(world);
+
             // Single-threaded work
             // - Clear move flags
             // - Create contacts in deterministic order
@@ -472,7 +475,7 @@ namespace Box2D.NET
                     B2Shape shapeA = b2Array_Get(ref world.shapes, shapeIdA);
                     B2Shape shapeB = b2Array_Get(ref world.shapes, shapeIdB);
 
-                    b2CreateContact(world, shapeA, shapeB);
+                    if (createContacts == null) b2CreateContact(world, shapeA, shapeB);
 
                     if (pair.heap)
                     {

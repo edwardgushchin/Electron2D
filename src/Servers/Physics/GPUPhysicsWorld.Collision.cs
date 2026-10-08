@@ -13,15 +13,15 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [InlineArray(8)]
     private struct Vertices { private Float4 _first; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct Geometry { internal Float4 Info; internal Vertices Vertices; internal Float4 Material; }
+    private struct Geometry { internal int TypeFlags; internal float Radius; internal int Count, ID; internal Vertices Vertices; internal Float4 Material; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct CollisionPair { internal Float4 IDs, PoseA, PoseB, Offset; }
+    private struct CollisionPair { internal int A, B, Flags, History; internal Float4 PoseA, PoseB, Offset; }
     [StructLayout(LayoutKind.Sequential)]
     private struct ManifoldResult { internal Float4 Normal, Anchor1, Point1, Anchor2, Point2; }
     [StructLayout(LayoutKind.Sequential)]
     private struct ContactHistory { internal Float4 Impulses, Features; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct CollisionStep { internal uint Count, Operation, Options, Padding; }
+    private struct CollisionStep { internal uint Count, Operation, Options, ContactLimit; }
 
     private readonly Storage<Geometry> _geometryStorage, _geometryUpdateStorage;
     private readonly Action<int> _geometryChanged;
@@ -59,6 +59,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
         ResidentGeometryCount = UploadedGeometryCount = 0;
         _preSolveContactCount = 0;
         if (count == 0) return;
+        var useContactSlots = ReferenceEquals(_contactTrackingWorld, world);
+        if (useContactSlots) { PrepareContactPool(world, 0); options |= 128; }
+        else _contactSlotStorage.Reserve(1);
         PrepareGeometryCache(world);
         _pairStorage.Reserve(world.contacts.capacity);
         _manifoldStorage.Reserve(world.contacts.capacity);
@@ -75,7 +78,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var contact = context.contacts[i];
             if ((options & 4) != 0 && (contact.simFlags & (uint)B2ContactSimFlags.b2_simEnablePreSolveEvents) != 0) _preSolveContactCount++;
             var a = world.shapes.data[contact.shapeIdA]; var b = world.shapes.data[contact.shapeIdB];
-            var pair = new CollisionPair { IDs = new(contact.shapeIdA, contact.shapeIdB, (contact.simFlags >> 16) << 1, -1) };
+            var pair = new CollisionPair
+            {
+                A = useContactSlots ? contact.contactId : contact.shapeIdA,
+                B = useContactSlots ? unchecked((int)contact.generation) : contact.shapeIdB,
+                Flags = (int)(contact.simFlags >> 16) << 1,
+                History = -1
+            };
             if (b2AABB_Overlaps(a.fatAABB, b.fatAABB))
             {
                 PackGeometry(a, contact.shapeIdA); PackGeometry(b, contact.shapeIdB);
@@ -87,7 +96,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 _centerOffsets[i] = new(offsetA.X, offsetA.Y, offsetB.X, offsetB.Y);
                 pair.PoseA = new(poseA.p.X, poseA.p.Y, poseA.q.c, poseA.q.s);
                 pair.PoseB = new(poseB.p.X, poseB.p.Y, poseB.q.c, poseB.q.s);
-                pair.IDs.Z += 1;
+                pair.Flags |= 1;
                 if ((options & 1) != 0)
                 {
                     pair.Offset = _centerOffsets[i];
@@ -95,7 +104,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 }
                 if (ReferenceEquals(_solvedWorld, world) && SolverSubmissionCount > 0 && contact.generatedManifoldVersion == -SolverSubmissionCount)
                 {
-                    pair.IDs.W = contact.generatedManifoldIndex; ResidentHistoryCount++;
+                    pair.History = contact.generatedManifoldIndex; ResidentHistoryCount++;
                 }
                 else if (contact.manifold.pointCount > 0 || contact.manifold.rollingImpulse != 0)
                 {
@@ -105,12 +114,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
                         Impulses = new(old.points[0].normalImpulse, old.points[0].tangentImpulse, old.points[1].normalImpulse, old.points[1].tangentImpulse),
                         Features = new(old.points[0].id, old.points[1].id, old.pointCount, old.rollingImpulse)
                     };
-                    pair.IDs.W = -UploadedHistoryCount++ - 2;
+                    pair.History = -UploadedHistoryCount++ - 2;
                 }
             }
             _pairStorage.Data[i] = pair;
         }
-        DispatchCollision(count, options);
+        DispatchCollision(world, count, options);
         // Reject invalid results before any manifold reaches the live world.
         for (var i = 0; i < count; i++)
         {
@@ -140,7 +149,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             context.contacts[i].generatedManifoldIndex = i;
         }
         for (var i = 0; i < UploadedGeometryCount; i++)
-            _geometryResident[(int)_geometryUpdateStorage.Data[i].Info.W] = true;
+            _geometryResident[_geometryUpdateStorage.Data[i].ID] = true;
         context.generatedManifolds = _manifolds;
         context.generatedManifoldOwner = this;
         _manifoldContext = context;
@@ -192,23 +201,25 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if (_geometryResident[index]) { ResidentGeometryCount++; return; }
         var g = new Geometry
         {
-            Info = new((int)shape.type | ((int)(shape.material.userMaterialId & 3) << 8) | (shape.enableHitEvents ? 1024 : 0), 0, 2, index),
+            TypeFlags = (int)shape.type | ((int)(shape.material.userMaterialId & 3) << 8) | (shape.enableHitEvents ? 1024 : 0),
+            Count = 2,
+            ID = index,
             Material = new(shape.material.friction, shape.material.restitution, shape.material.rollingResistance, shape.material.tangentSpeed)
         };
         switch (shape.type)
         {
             case B2ShapeType.b2_circleShape:
-                g.Info.Y = shape.us.circle.radius; g.Info.Z = 1;
+                g.Radius = shape.us.circle.radius; g.Count = 1;
                 g.Vertices[0] = new(shape.us.circle.center.X, shape.us.circle.center.Y, 0, 0); break;
             case B2ShapeType.b2_capsuleShape:
-                g.Info.Y = shape.us.capsule.radius;
+                g.Radius = shape.us.capsule.radius;
                 g.Vertices[0] = new(shape.us.capsule.center1.X, shape.us.capsule.center1.Y, 0, 0);
                 g.Vertices[1] = new(shape.us.capsule.center2.X, shape.us.capsule.center2.Y, 0, 0); break;
             case B2ShapeType.b2_segmentShape:
                 g.Vertices[0] = new(shape.us.segment.point1.X, shape.us.segment.point1.Y, 0, 0);
                 g.Vertices[1] = new(shape.us.segment.point2.X, shape.us.segment.point2.Y, 0, 0); break;
             case B2ShapeType.b2_polygonShape:
-                g.Info.Y = shape.us.polygon.radius; g.Info.Z = shape.us.polygon.count;
+                g.Radius = shape.us.polygon.radius; g.Count = shape.us.polygon.count;
                 for (var i = 0; i < shape.us.polygon.count; i++)
                 {
                     var p = shape.us.polygon.vertices[i]; var n = shape.us.polygon.normals[i];
@@ -219,7 +230,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         _geometryUpdateStorage.Data[UploadedGeometryCount++] = g;
     }
 
-    private void DispatchCollision(int pairCount, uint options)
+    private void DispatchCollision(B2World world, int pairCount, uint options)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw Failure("acquire collision commands");
@@ -228,15 +239,19 @@ internal sealed unsafe partial class GPUPhysicsWorld
         {
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the collision upload");
+            if ((options & 128) != 0) UploadContactPool(copy);
             _geometryUpdateStorage.Upload(copy, UploadedGeometryCount); _pairStorage.Upload(copy, pairCount);
             _historyStorage.Upload(copy, UploadedHistoryCount);
             SDL.EndGPUCopyPass(copy);
-            if (UploadedGeometryCount != 0) CollisionPass(command, UploadedGeometryCount, 1, options);
-            CollisionPass(command, pairCount, 0, options);
+            if ((options & 128) != 0) UpdateContactPool(command);
+            var contactLimit = (options & 128) != 0 ? (uint)world.contactIdPool.nextIndex : 0;
+            if (UploadedGeometryCount != 0) CollisionPass(command, UploadedGeometryCount, 1, options, contactLimit);
+            CollisionPass(command, pairCount, 0, options, contactLimit);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the manifold readback");
             _manifoldStorage.Download(copy, pairCount); _matchedStorage.Download(copy, pairCount);
             if ((options & 1) != 0) _contactMaterialStorage.Download(copy, pairCount);
+            if ((options & 128) != 0) _contactPoolStorage.Download(copy, 1);
             SDL.EndGPUCopyPass(copy);
             var submitted = command; command = 0;
             fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
@@ -244,6 +259,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for collision generation");
             _manifoldStorage.Read(pairCount); _matchedStorage.Read(pairCount);
             if ((options & 1) != 0) _contactMaterialStorage.Read(pairCount);
+            if ((options & 128) != 0)
+            {
+                _contactPoolStorage.Read(1);
+                ValidateContactPool(world.contactIdPool.nextIndex, world.contactIdPool.freeArray.count);
+                CommitContactPool(world);
+            }
             CollisionSubmissionCount++;
         }
         finally
@@ -253,7 +274,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         }
     }
 
-    private void CollisionPass(nint command, int count, uint operation, uint options)
+    private void CollisionPass(nint command, int count, uint operation, uint options, uint contactLimit)
     {
         Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[5];
         bindings[0] = new() { Buffer = _geometryStorage.Handle }; bindings[1] = new() { Buffer = _pairStorage.Handle };
@@ -262,9 +283,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 5);
         if (compute == 0) throw Failure("begin collision generation");
         SDL.BindGPUComputePipeline(compute, _collide.DangerousGetHandle());
-        var inputs = stackalloc nint[3] { _contactStorage.Handle, _historyStorage.Handle, _geometryUpdateStorage.Handle };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
-        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options };
+        var inputs = stackalloc nint[4] { _contactStorage.Handle, _historyStorage.Handle, _geometryUpdateStorage.Handle, _contactSlotStorage.Handle };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
+        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options, ContactLimit = contactLimit };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&uniform), (uint)sizeof(CollisionStep));
         SDL.DispatchGPUCompute(compute, checked((uint)(count + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute);
