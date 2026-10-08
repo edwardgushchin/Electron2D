@@ -1097,3 +1097,46 @@ All four state hashes remain
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-cached-final-{a,b}.json`.
 These are impact-through-sleeping-wall measurements, not sustained all-awake,
 native-window FPS, cross-device or native-allocation acceptance.
+
+## Packed host graph expectations (2026-10-08)
+
+Graph preparation and validation no longer dereference every backend contact/body/
+joint object. One byte per journal key retains independent CPU alive/linked flags.
+The initial snapshot and later authoring journal refresh them, ordered CPU contact
+operations change expected membership, and successful backend island release clears
+its alive flag. Readback cannot change these expectations. The retained dense graph
+still receives complete bounds, list-order, cycle, count and membership validation
+before publication; dead records claiming liveness are now explicitly rejected.
+No shader, transfer format or public API changes are involved.
+
+The contact-churn oracle continues to cover recycled IDs, authoring joint/body
+changes, CPU/GPU split publication, observer loss and capacity growth. Added fault
+injection corrupts dead body/joint/island records and live unlinked static-body
+records in the returned scratch mirror. Validation rejects them before live
+publication. The full GPU suite and default managed runner pass; warmed churn
+retains zero managed bytes and no graph snapshots/readback retries.
+
+Sequential Linux/Vulkan runs repeat the preceding 65,537-body headless workload
+with 32 warmup and 64 measured steps, in GPU A/CPU A/CPU B/GPU B order. The CPU
+control replaces only island-graph processing. Builds, tests and formatting do
+not run concurrently with these measurements.
+
+| Graph mode | Whole-step mean | p95 | Preparation | Validation | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| Packed flags GPU A | 174.12 ms | 270.13 ms | 1.82 ms | 4.21 ms | 0 / 0 |
+| CPU A | 160.23 ms | 249.84 ms | — | — | 0 / 0 |
+| CPU B | 160.36 ms | 242.30 ms | — | — | 0 / 0 |
+| Packed flags GPU B | 172.65 ms | 256.06 ms | 1.80 ms | 4.15 ms | 0 / 0 |
+
+Preparation plus validation is about 6.0 ms versus 8.9–9.1 ms in the preceding
+cached-list runs. Whole steps are lower too, but the CPU controls also improved;
+this is not evidence of an overall GPU advantage. GPU graph submit/wait remains
+9.01/9.15 ms and its complete host list traversal still costs CPU time.
+
+Both GPU intervals retain 405,412 membership changes, 35,134 merges and 99,232,864
+graph transfer bytes (52,704,224 upload, 46,528,640 readback), with zero snapshots
+or retries. All four state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-dense-flags-{a,b}.json`.
+The preceding sleeping-wall, native-window, cross-device and allocation boundaries
+continue to apply. Full GPU world completion remains a separate open requirement.

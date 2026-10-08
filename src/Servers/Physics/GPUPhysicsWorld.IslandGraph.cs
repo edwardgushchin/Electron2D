@@ -39,7 +39,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private B2World? _graphWorld;
     private int _graphCount, _graphCursor, _graphRemovals;
     private bool _graphReady;
-    private bool[] _graphExpectedContacts = [], _graphFreed = [];
+    private bool[] _graphFreed = [];
     internal long IslandChangeCount { get; private set; }
     internal long MergedIslandCount { get; private set; }
     internal long IslandGraphTransferBytes { get; private set; }
@@ -232,7 +232,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
         for (var i = 0; i < world.islands.count; i++)
         {
             var g = _graphIslands.Data[i];
-            if (world.islands.data[i].islandId < 0) continue;
+            if (_graphExpected[4 * i] == 0)
+            {
+                if (g.ID != -1) throw new InvalidOperationException("GPU island liveness differs.");
+                continue;
+            }
             if (g.ID != (_graphFreed[i] ? -1 : i) || g.Removed < 0 || (_graphFreed[i] ? g.Parent != -1 || g.BodyCount != 0 || g.ContactCount != 0 || g.JointCount != 0 : g.Parent != i || g.BodyCount <= 0))
                 throw new InvalidOperationException("GPU island descriptor differs.");
             if (_graphFreed[i]) continue;
@@ -241,19 +245,29 @@ internal sealed unsafe partial class GPUPhysicsWorld
             ValidateGraphList(g.JointHead, g.JointTail, g.JointCount, i, _graphJoints.Data, world.joints.count);
             bodies += g.BodyCount; contacts += g.ContactCount; joints += g.JointCount;
         }
-        for (var i = 0; i < world.bodies.count; i++)
-            if (world.bodies.data[i].id >= 0) { ValidateGraphMember(_graphBodies.Data[i], world.bodies.data[i].islandId >= 0, world.islands.count); if (_graphBodies.Data[i].Root >= 0) bodies--; }
-        for (var i = 0; i < world.contacts.count; i++)
-            if (world.contacts.data[i].contactId >= 0) { ValidateGraphMember(_graphContacts.Data[i], _graphExpectedContacts[i], world.islands.count); if (_graphContacts.Data[i].Root >= 0) contacts--; }
-        for (var i = 0; i < world.joints.count; i++)
-            if (world.joints.data[i].jointId >= 0) { ValidateGraphMember(_graphJoints.Data[i], world.joints.data[i].islandId >= 0, world.islands.count); if (_graphJoints.Data[i].Root >= 0) joints--; }
+        bodies -= ValidateGraphMembers(_graphBodies.Data, world.bodies.count, 1, world.islands.count);
+        contacts -= ValidateGraphMembers(_graphContacts.Data, world.contacts.count, 2, world.islands.count);
+        joints -= ValidateGraphMembers(_graphJoints.Data, world.joints.count, 3, world.islands.count);
         if (bodies != 0 || contacts != 0 || joints != 0) throw new InvalidOperationException("GPU island lists omitted or duplicated members.");
     }
 
-    private void ValidateGraphMember(SplitMember member, bool linked, int islands)
+    private int ValidateGraphMembers(SplitMember[] members, int count, int kind, int islands)
     {
-        if (member.Visited != 1 || (linked ? (uint)member.Root >= (uint)islands || _graphIslands.Data[member.Root].ID != member.Root || _graphFreed[member.Root] : member.Root != -1))
-            throw new InvalidOperationException("GPU island member belongs to an invalid component.");
+        var linked = 0;
+        for (var i = 0; i < count; i++)
+        {
+            var expected = _graphExpected[4 * i + kind]; var member = members[i];
+            if (member.Visited != (expected & GraphAlive)) throw new InvalidOperationException("GPU island member liveness differs.");
+            if (expected == 0) continue;
+            if ((expected & GraphLinked) != 0)
+            {
+                if ((uint)member.Root >= (uint)islands || _graphIslands.Data[member.Root].ID != member.Root || _graphFreed[member.Root])
+                    throw new InvalidOperationException("GPU island member belongs to an invalid component.");
+                linked++;
+            }
+            else if (member.Root != -1) throw new InvalidOperationException("GPU island member unexpectedly joined a component.");
+        }
+        return linked;
     }
 
     private static void ValidateGraphList(int head, int tail, int count, int root, SplitMember[] members, int limit)
@@ -278,7 +292,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var op = _graphChanges.Data[_graphCursor++];
         if (op.Contact != contact.contactId || op.Generation != contact.generation || op.Link != (link ? 1 : 0) || world.islands.data[op.Root].islandId != op.Root)
             throw new InvalidOperationException("GPU island publication contact differs.");
-        if (op.Freed >= 0) b2DestroyIsland(world, op.Freed);
+        if (op.Freed >= 0)
+        {
+            b2DestroyIsland(world, op.Freed);
+            _graphExpected[4 * op.Freed] = 0;
+        }
         if (!link) contact.islandId = contact.islandPrev = contact.islandNext = -1;
         return true;
     }

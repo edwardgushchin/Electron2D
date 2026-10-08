@@ -164,6 +164,16 @@ list construction/removal now uses the parallel ordered-tree path described belo
 The CPU still validates its full retained mirror. CPU/GPU split currently uses a separate input/output path
 and journals its publication into this resident graph.
 
+Validation uses independent packed CPU liveness/membership flags keyed by the
+same record IDs. Snapshots and authoring journals refresh those flags; ordered
+CPU contact operations change expected membership and successful backend island
+release clears liveness. GPU output never supplies the expectations used to
+validate itself. Preparation no longer scans all backend contact objects, and
+member validation reads dense flags/records instead of dereferencing every
+backend body, contact and joint. The complete list traversal, bounds, previous-link,
+cycle, count and membership checks remain. Dead records claiming to be alive and
+live unlinked members claiming an island are rejected before publication.
+
 Partial publication failure poisons the world; failed-world teardown detaches
 managed resources and releases raw storage in bulk without traversing incomplete
 lists or capturing uncommitted motion. Rebinding/disposal resets only this host's

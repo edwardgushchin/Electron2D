@@ -12,6 +12,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private readonly Action<int, int> _graphChanged;
     private readonly List<int> _graphJournal = [], _graphResults = [];
     private bool[] _graphDirty = [];
+    // Independent CPU expectations: GPU readback must never define its own validity.
+    private const byte GraphAlive = 1, GraphLinked = 2;
+    private byte[] _graphExpected = [];
     private int[] _graphSeen = [];
     private int _graphEpoch, _graphKeys, _graphUpdateCount;
     private B2IdPool? _residentGraph;
@@ -26,6 +29,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if (_graphDirty.Length >= count) return;
         var capacity = checked((int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(64, count)));
         Array.Resize(ref _graphDirty, capacity); Array.Resize(ref _graphSeen, capacity);
+        Array.Resize(ref _graphExpected, capacity);
         _graphJournal.EnsureCapacity(capacity); _graphResults.EnsureCapacity(capacity);
     }
 
@@ -52,6 +56,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if ((key & 3) == 0)
         {
             var g = world.islands.data[id];
+            _graphExpected[key] = g.islandId >= 0 ? GraphAlive : (byte)0;
             var value = new GraphIsland
             {
                 ID = g.islandId,
@@ -85,6 +90,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var j = world.joints.data[id]; member = new() { Root = j.islandId, Prev = j.islandPrev, Next = j.islandNext, Visited = j.jointId >= 0 ? 1 : 0 };
             _graphJoints.Data[id] = member;
         }
+        _graphExpected[key] = member.Visited == 0 ? (byte)0 : (byte)(GraphAlive | (member.Root >= 0 ? GraphLinked : 0));
         return new() { Parent = member.Root, ID = member.Prev, Removed = member.Next, Padding = member.Visited };
     }
 
@@ -110,11 +116,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
         else
             foreach (var key in _graphJournal)
                 _graphUpdates.Data[_graphUpdateCount++] = new() { Key = key, Value = CaptureGraphRecord(world, key) };
-        if (_graphExpectedContacts.Length < _graphContacts.Data.Length) Array.Resize(ref _graphExpectedContacts, _graphContacts.Data.Length);
         if (_graphFreed.Length < _graphIslands.Data.Length) Array.Resize(ref _graphFreed, _graphIslands.Data.Length);
         Array.Clear(_graphFreed);
-        for (var i = 0; i < world.contacts.count; i++) _graphExpectedContacts[i] = world.contacts.data[i].contactId >= 0 && world.contacts.data[i].islandId >= 0;
-        for (var i = 0; i < _graphCount; i++) _graphExpectedContacts[_graphChanges.Data[i].Contact] = _graphChanges.Data[i].Link != 0;
+        for (var i = 0; i < _graphCount; i++)
+        {
+            var op = _graphChanges.Data[i]; var key = 4 * op.Contact + 2;
+            _graphExpected[key] = (byte)((_graphExpected[key] & GraphAlive) | (op.Link != 0 ? GraphLinked : 0));
+        }
     }
 
     private void ReadGraphOutput(B2World world)

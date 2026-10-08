@@ -13,6 +13,7 @@ internal static partial class GPUPhysicsTests
         VerifyContactRemovals(true);
         VerifyIslandGraphFailure();
         VerifyGraphShaderFailure(gpu);
+        VerifyGraphReadbackLiveness(gpu);
         foreach (var sleeping in new[] { false, true })
         {
             B2WorldId Create()
@@ -86,6 +87,54 @@ internal static partial class GPUPhysicsTests
         {
             world.locked = false; foreach (var arena in world.arena.AsSpan()) arena.Abort();
             b2DestroyWorld(worldID);
+        }
+    }
+
+    private static void VerifyGraphReadbackLiveness(GPUPhysicsWorld gpu)
+    {
+        const System.Reflection.BindingFlags flags = System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic;
+        foreach (var (storageName, id, field, value, message) in new[]
+        {
+            ("_graphBodies", 3, "Visited", 1, "GPU island member liveness differs."),
+            ("_graphJoints", 0, "Visited", 1, "GPU island member liveness differs."),
+            ("_graphIslands", 3, "ID", 3, "GPU island liveness differs."),
+            ("_graphBodies", 4, "Visited", 0, "GPU island member liveness differs."),
+            ("_graphBodies", 4, "Root", 0, "GPU island member unexpectedly joined a component.")
+        })
+        {
+            var worldID = b2CreateWorld(b2DefaultWorldDef()); var world = b2GetWorldFromId(worldID);
+            try
+            {
+                var bd = b2DefaultBodyDef(); bd.type = B2BodyType.b2_dynamicBody;
+                var sd = b2DefaultShapeDef();
+                for (var i = 0; i < 4; i++)
+                {
+                    bd.position = new(1.99f * i, 0);
+                    b2CreateCircleShape(b2CreateBody(worldID, bd), sd, new B2Circle { radius = 1 });
+                }
+                b2CreateBody(worldID, b2DefaultBodyDef()); // A live static body belongs to no island.
+                b2DestroyBody(b2MakeBodyId(world, 3));
+                B2Joints.b2DestroyJoint(SplitJoint(worldID, b2MakeBodyId(world, 0), b2MakeBodyId(world, 1), 0), true);
+                gpu.EnableIslandChanges(world); var begin = world.beginIslandChanges;
+                world.beginIslandChanges = w =>
+                {
+                    begin(w);
+                    // Corrupt returned scratch, never the independent CPU expectations or live world.
+                    var storage = typeof(GPUPhysicsWorld).GetField(storageName, flags)!.GetValue(gpu)!;
+                    var data = (Array)storage.GetType().GetField("Data", flags)!.GetValue(storage)!;
+                    var record = data.GetValue(id)!; record.GetType().GetField(field, flags)!.SetValue(record, value); data.SetValue(record, id);
+                    Array.Clear((bool[])typeof(GPUPhysicsWorld).GetField("_graphFreed", flags)!.GetValue(gpu)!);
+                    typeof(GPUPhysicsWorld).GetMethod("ValidateIslandChanges", flags)!.Invoke(gpu, [w]);
+                    throw new Exception("Corrupted graph liveness reached publication.");
+                };
+                try { b2World_Step(worldID, 1f / 60, 4); throw new Exception("The readback fixture did not validate a graph batch."); }
+                catch (System.Reflection.TargetInvocationException e) when (e.InnerException is InvalidOperationException error && error.Message == message) { }
+            }
+            finally
+            {
+                world.locked = false; foreach (var arena in world.arena.AsSpan()) arena.Abort();
+                b2DestroyWorld(worldID);
+            }
         }
     }
 
