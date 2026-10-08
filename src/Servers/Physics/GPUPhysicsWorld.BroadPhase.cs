@@ -50,7 +50,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private readonly Storage<int> _treeCandidateStorage;
     private readonly Storage<BroadPhaseShape> _broadShapeStorage;
     private readonly Storage<BroadPhaseJoint> _broadJointStorage;
-    private readonly Storage<B2SetItem> _existingPairStorage;
+    private readonly Storage<uint> _existingPairStorage;
     private int[] _candidateCapacities = [];
     internal int BroadPhaseCandidateCount { get; private set; }
     internal int BroadPhaseRetryCount { get; private set; }
@@ -75,8 +75,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         _treeCandidateStorage.Reserve(1);
         _broadShapeStorage.Reserve(Math.Max(1, world.shapes.count));
         _broadJointStorage.Reserve(Math.Max(1, world.joints.count));
-        _existingPairStorage.Reserve(bp.pairSet.capacity);
-        bp.pairSet.items.AsSpan(0, bp.pairSet.capacity).CopyTo(_existingPairStorage.Data);
+        PreparePairTable(world);
         for (var i = 0; i < world.joints.count; i++)
         {
             var joint = world.joints.data[i];
@@ -134,7 +133,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             }
         }
 
-        var settings = new BroadPhaseStep { QueryCount = count, DynamicStart = dynamicStart, NodeCount = cursor, PairMask = bp.pairSet.capacity - 1 };
+        var settings = new BroadPhaseStep { QueryCount = count, DynamicStart = dynamicStart, NodeCount = cursor, PairMask = _existingPairStorage.Data.Length - 1 };
         var profilePacked = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var maxCount = bp.trees[0].proxyCount + bp.trees[1].proxyCount + bp.trees[2].proxyCount;
         while (true)
@@ -244,21 +243,22 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 _treeStorage.Upload(copy, settings.NodeCount);
                 _broadShapeStorage.Upload(copy, world.shapes.count);
                 _broadJointStorage.Upload(copy, world.joints.count);
-                _existingPairStorage.Upload(copy, settings.PairMask + 1);
+                UploadPairChanges(copy);
                 BroadPhaseUploadBytes += (long)settings.NodeCount * sizeof(TreeNode) + (long)world.shapes.count * sizeof(BroadPhaseShape) +
-                    (long)world.joints.count * sizeof(BroadPhaseJoint) + (long)(settings.PairMask + 1) * sizeof(B2SetItem);
+                    (long)world.joints.count * sizeof(BroadPhaseJoint);
             }
             _treeQueryStorage.Upload(copy, settings.QueryCount);
             BroadPhaseUploadBytes += (long)settings.QueryCount * sizeof(TreeQuery);
             SDL.EndGPUCopyPass(copy);
+            if (uploadTree) UpdatePairTable(command);
             Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
             bindings[0] = new() { Buffer = _treeQueryStorage.Handle };
             bindings[1] = new() { Buffer = _treeCandidateStorage.Handle };
             var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 2);
             if (compute == 0) throw Failure("begin broad-phase traversal");
             SDL.BindGPUComputePipeline(compute, _broadPhase.DangerousGetHandle());
-            nint* inputs = stackalloc nint[] { _treeStorage.Handle, _broadShapeStorage.Handle, _broadJointStorage.Handle, _existingPairStorage.Handle };
-            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
+            nint* inputs = stackalloc nint[] { _treeStorage.Handle, _broadShapeStorage.Handle, _broadJointStorage.Handle, _existingPairStorage.Handle, _pairKeyStorage.Handle };
+            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 5);
             fixed (BroadPhaseStep* uniform = &settings) SDL.PushGPUComputeUniformData(command, 0, (nint)uniform, (uint)sizeof(BroadPhaseStep));
             SDL.DispatchGPUCompute(compute, checked((uint)(settings.QueryCount + 63) / 64), 1, 1);
             SDL.EndGPUComputePass(compute);
@@ -266,6 +266,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (copy == 0) throw Failure("begin broad-phase readback");
             _treeQueryStorage.Download(copy, settings.QueryCount);
             _treeCandidateStorage.Download(copy, candidates);
+            _pairStatusStorage.Download(copy, 1);
             SDL.EndGPUCopyPass(copy);
             var profileRecorded = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             var submitted = command; command = 0;
@@ -274,7 +275,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
             Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for broad-phase traversal");
             _treeQueryStorage.Read(settings.QueryCount);
             _treeCandidateStorage.Read(candidates);
-            BroadPhaseReadbackBytes += (long)settings.QueryCount * sizeof(TreeQuery) + (long)candidates * sizeof(int);
+            _pairStatusStorage.Read(1);
+            if (_pairStatusStorage.Data[0] != 0)
+                throw new InvalidOperationException($"GPU pair-table maintenance failed: {_pairStatusStorage.Data[0]}.");
+            if (uploadTree) CommitPairTable(world);
+            BroadPhaseReadbackBytes += (long)settings.QueryCount * sizeof(TreeQuery) + (long)candidates * sizeof(int) + sizeof(uint);
             if (PhysicsSpace.ProfilingEnabled)
             {
                 BroadPhaseProfileMS[1] += System.Diagnostics.Stopwatch.GetElapsedTime(profileStart, profileRecorded).TotalMilliseconds;

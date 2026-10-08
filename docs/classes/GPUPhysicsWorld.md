@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
@@ -23,12 +23,20 @@ permit a single warmed submission. Overflow returns its full count and grows/ret
 the immutable query before publishing candidates to the owner-side user filter.
 GPU built-in checks include self/moved/existing-pair deduplication, same-body/sensor
 veto, 64-bit masks, signed groups and the smaller joint adjacency list. Pair-table
-hashing uses split 32-bit arithmetic. Shape/joint/table records use 48/32/8 bytes.
+hashing uses split 32-bit arithmetic. Shape/joint records use 48/32 bytes; resident table slots and contact keys use 4/8 bytes.
 CPU pair and custom-filter order is preserved, including deleted/reused proxy slots.
 `BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch;
 `BroadPhaseCandidateTotal`, upload/readback byte totals and `BroadPhaseProfileMS`
 accumulate host timing and transfer accounting. No moved proxies means no submission.
-Tree/pair-table maintenance, user callbacks and contact creation remain CPU.
+Tree maintenance, user callbacks and contact creation remain CPU. The GPU lookup
+table is updated from unique dirty contact IDs. Owner-side lifecycle notifications
+are coalesced to final key values, then GPU removal/key replacement precedes atomic
+parallel insertion. A quarter-table change budget triggers GPU tombstone rehash;
+full key snapshots are limited to binding/capacity changes. Four status bytes are
+validated after the fence before publishing candidates. Observer/source identity
+and disposal prevent stale-world reuse. `PairTableSnapshotCount`,
+`PairTableRebuildCount`, `PairTableUpdatedSlots` and `PairTableUploadBytes` report
+this residency. Ordinary CPU worlds do not register the change observer.
 
 `GenerateManifolds` packs geometry once per referenced shape, current pair
 transforms and fat-proxy overlap, then generates all contact points in one
@@ -38,7 +46,7 @@ warm-start reuse execute on GPU. Current contacts read the retained previous
 solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
 need no upload. The complete result is validated before reaching material,
 pre-solve and contact-transition processing in the managed world. Chain
-segments are rejected explicitly; tree/pair-table maintenance, user filters/contact creation
+segments are rejected explicitly; tree maintenance, user filters/contact creation
 and sensor queries still belong to the CPU path.
 
 `Integrate` requires the live world owner. It packs awake states, submits the

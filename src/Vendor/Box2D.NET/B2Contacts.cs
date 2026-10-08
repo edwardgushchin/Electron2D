@@ -261,6 +261,7 @@ namespace Box2D.NET
             // Add to pair set for fast lookup
             ulong pairKey = B2_SHAPE_PAIR_KEY(shapeIdA, shapeIdB);
             b2AddKey(ref world.broadPhase.pairSet, pairKey);
+            world.contactPairChanged?.Invoke(contactId);
 
             // Contacts are created as non-touching. Later if they are found to be touching
             // they will link islands and be moved into the constraint graph.
@@ -312,6 +313,7 @@ namespace Box2D.NET
             // Remove pair from set
             ulong pairKey = B2_SHAPE_PAIR_KEY(contact.shapeIdA, contact.shapeIdB);
             b2RemoveKey(ref world.broadPhase.pairSet, pairKey);
+            world.contactPairChanged?.Invoke(contact.contactId);
 
             ref B2ContactEdge edgeA = ref contact.edges[0];
             ref B2ContactEdge edgeB = ref contact.edges[1];

@@ -38,13 +38,34 @@ self/moved-pair deduplication, existing-contact lookup, same-body and sensor vet
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
 Joint filtering walks the smaller body adjacency list. Only user filters and
 ordered contact creation remain on the owner after readback; tree maintenance
-and the source pair table remain managed. Buffers and per-shape capacity hints
+and the shared contact lifecycle remain managed. The GPU maintains its own
+resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
-Filter inputs use 48 bytes per shape, 32 bytes per joint and 8 bytes per shared
-pair-table slot. Shape records are packed in slot order; moved flags come directly
-from the move array rather than one hash lookup per shape. Tree, shape, joint and
-pair-table snapshots are currently uploaded on each moving batch. The internal
+Filter inputs use 48 bytes per shape and 32 bytes per joint. Shape records are
+packed in slot order; moved flags come directly from the move array rather than
+one hash lookup per shape. Tree, shape and joint snapshots are currently uploaded
+on each moving batch. The pair table itself is never uploaded: 4-byte GPU slots
+reference retained 8-byte contact keys. The initial world binding and capacity
+growth upload keys once; later batches upload only 16-byte changed-contact records.
+
+Contact creation/destruction marks unique dirty contact IDs on the owner. The
+journal samples their final identities immediately before submission, so repeated
+reuse or create/destroy between queries cannot leave intermediate pairs behind.
+A GPU pass removes old slot identities and writes final keys; a separate pass
+inserts live keys using 32-bit atomic compare/exchange. Tombstones preserve probe
+chains. At most half the table is live; accumulated changes reaching a quarter of
+table capacity trigger a GPU clear/reinsert from resident keys. This avoids a
+full CPU snapshot and bounds tombstone accumulation. No 64-bit atomics or spinning
+entry locks are used. A 4-byte status readback validates bounded probe operations
+before any candidate publication. Failed submissions do not commit cache identity
+or clear the journal; the ordinary world failure path prohibits CPU replay.
+
+World/broad-phase identity, observer ownership and buffer capacity gate residency.
+Switching worlds or replacing the observer forces a fresh snapshot. Disposal
+unhooks the observer, and world reset clears it. CPU worlds have no observer.
+`PairTableSnapshotCount`, `PairTableRebuildCount`, `PairTableUpdatedSlots` and
+`PairTableUploadBytes` expose cumulative internal accounting. The internal
 cumulative `BroadPhaseProfileMS` measures host packing, command recording/uploads,
 submit/fence/readback, and result validation/user filtering/list publication.
 It excludes the later managed contact creation loop. Cumulative upload/readback
@@ -216,7 +237,7 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: GPU tree/pair-table maintenance and contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: GPU tree maintenance and contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -323,3 +344,42 @@ Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-filters-final-
 the initial packing evidence is `profile-Release-gpu-filters-a.json`. Current
 `PhysicsBroadPhase.comp.spv` SHA-256:
 `3fda139685616a94bdc828ee29022949877a74f62f0ce8d96faa1df36d3266d4`.
+
+Resident-pair tests include late attachment to an already populated CPU world,
+contact ID swaps with repeated intermediate reuse, bulk removal/recreation and
+GPU-only tombstone rebuild without another snapshot. Sixteen warmed unchanged
+query passes upload zero pair-table bytes. Sixty-four active two-slot churn passes
+after thirty-two warmups upload exactly 2,048 bytes (two 16-byte final updates per
+pass), with zero all-thread managed allocations. The full pair/custom-filter
+order still matches the CPU oracle; the existing GPU failure test verifies world
+poisoning and disposal after a completed pair query.
+
+Maximum-Smash residency profiles use the same sequential GPU A/CPU A/CPU B/GPU B
+comparison, 65,537 bodies, 32 warmup and 64 measured headless ticks. No builds,
+formatters or other tests ran concurrently.
+
+| Pair traversal/lookup | Whole step mean | Step p95 | Pair stage mean | All-thread managed bytes |
+| --- | ---: | ---: | ---: | ---: |
+| Resident GPU A | 161.13 ms | 245.10 ms | 12.30 ms | 0 |
+| CPU A | 165.62 ms | 257.18 ms | 10.71 ms | 0 |
+| CPU B | 165.22 ms | 258.76 ms | 11.07 ms | 0 |
+| Resident GPU B | 163.07 ms | 257.46 ms | 12.09 ms | 0 |
+
+All four state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`,
+with the same awake-body progression. Both GPU runs applied 938,070 final dirty
+slots using 15,009,120 upload bytes, zero full snapshots and four GPU table
+rebuilds. The old per-step table snapshots would upload 536,870,912 bytes for
+this workload; total broad-phase input fell from 1,072,996,000 to 551,134,208 bytes
+(48.64% less). Readback is 156,052,844 bytes including status, with the same
+496,638 candidates. GPU host phase means A/B were packing 5.05/4.69 ms,
+recording/uploads 0.74/0.63 ms, submit/fence/readback 2.96/3.23 ms, and result
+processing 0.87/0.78 ms. Managed contact creation follows those four phases.
+The pair stage remains slower than CPU; these short profiles do not establish
+sustained application FPS, foreign-device speed or native allocation totals.
+Tree/shape/joint uploads remain and are the next residency boundary.
+
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-pairs-{a,b}.json`.
+Current shader SHA-256 values:
+`PhysicsPairTable.comp.spv` = `1a561f7e51416d87a41fbfc4993d041bac9db4f2df9da2d7ab1d54a73e7cb598`;
+`PhysicsBroadPhase.comp.spv` = `47a2914804786b51f7ff7f7d30e441af0b3ab958c6e640c8025c35184f813cdb`.

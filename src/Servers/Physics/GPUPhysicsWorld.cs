@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -43,16 +43,19 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
             _collide = collide = CreatePipeline("PhysicsCollide.comp.spv");
             _broadPhase = broadPhase = CreatePipeline("PhysicsBroadPhase.comp.spv");
+            _pairTablePipeline = pairTable = CreatePipeline("PhysicsPairTable.comp.spv");
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _historyStorage = new(this); _matchedStorage = new(this);
             _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
             _treeStorage = new(this); _treeQueryStorage = new(this); _treeCandidateStorage = new(this);
             _broadShapeStorage = new(this); _broadJointStorage = new(this); _existingPairStorage = new(this);
+            _pairKeyStorage = new(this); _pairUpdateStorage = new(this); _pairStatusStorage = new(this);
+            _pairChanged = MarkPairChanged;
         }
         catch
         {
-            broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -171,6 +174,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         if (_disposed) return;
         EnsureOwner();
         _disposed = true; _manifoldContext = null; _solvedWorld = null;
+        DetachPairTracking();
+        _pairKeyStorage.Dispose(); _pairUpdateStorage.Dispose(); _pairStatusStorage.Dispose(); _pairTablePipeline.Dispose();
         _treeStorage.Dispose(); _treeQueryStorage.Dispose(); _treeCandidateStorage.Dispose(); _broadPhase.Dispose();
         _broadShapeStorage.Dispose(); _broadJointStorage.Dispose(); _existingPairStorage.Dispose();
         _historyStorage.Dispose(); _matchedStorage.Dispose();

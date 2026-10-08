@@ -20,7 +20,7 @@ internal static partial class GPUPhysicsTests
         foreach (var count in new[] { 0, 1, 63, 64, 65, 257, 4097 })
             VerifyBroadPhase(gpu, count, false);
         VerifyBroadPhase(gpu, 257, true);
-        Console.WriteLine("GPU tree traversal and built-in filtering match CPU pair/custom-filter order: dispatch edges, mixed proxies, dense overflow, masks/groups, joint edits, existing pairs, reuse and zero warmed managed bytes.");
+        Console.WriteLine("GPU tree/filter/resident-pair checks match CPU order: dispatch edges, filters/joints, late binding, contact ID reuse, GPU rehash, zero unchanged pair uploads and warmed managed bytes.");
     }
 
     private static void VerifyBroadPhase(GPUPhysicsWorld gpu, int count, bool dense)
@@ -106,6 +106,15 @@ internal static partial class GPUPhysicsTests
                     B2Joints.b2CreateRevoluteJoint(id, joint);
                 }
             }
+            if (count == 65 && !dense)
+            {
+                // The initial GPU table must include contacts created by a CPU world.
+                var oracle = world.findBroadPhasePairs;
+                world.findBroadPhasePairs = null!;
+                b2UpdateBroadPhasePairs(world);
+                world.findBroadPhasePairs = oracle;
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+            }
             b2UpdateBroadPhasePairs(world);
             if (count == 0 && (passes != 0 || gpu.BroadPhaseCandidateCount != 0))
                 throw new Exception("An empty world must not dispatch a pair query.");
@@ -140,6 +149,39 @@ internal static partial class GPUPhysicsTests
                 b2BroadPhase_RebuildTrees(world.broadPhase);
                 b2UpdateBroadPhasePairs(world);
             }
+            if (dense)
+            {
+                // Swap two live contact IDs, with repeated destroy/create before
+                // the next GPU query. The journal must publish only final keys.
+                B2Contact Find(int a, int b) => world.contacts.data.Take(world.contacts.count).First(c => c.contactId >= 0 &&
+                    ((c.shapeIdA == a && c.shapeIdB == b) || (c.shapeIdA == b && c.shapeIdB == a)));
+                var a = Find(0, 1); var b = Find(0, 2);
+                var idA = a.contactId; var idB = b.contactId;
+                for (var iteration = 0; iteration < 3; iteration++)
+                {
+                    B2Contacts.b2DestroyContact(world, Find(0, 1), false);
+                    B2Contacts.b2DestroyContact(world, Find(0, 2), false);
+                    B2Contacts.b2CreateContact(world, world.shapes.data[0], world.shapes.data[1]);
+                    B2Contacts.b2CreateContact(world, world.shapes.data[0], world.shapes.data[2]);
+                }
+                if (Find(0, 1).contactId != idB || Find(0, 2).contactId != idA)
+                    throw new Exception("The contact fixture did not recycle IDs across pair identities.");
+                foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                b2UpdateBroadPhasePairs(world);
+
+                var snapshots = gpu.PairTableSnapshotCount; var rebuilds = gpu.PairTableRebuildCount;
+                // Removing all contacts crosses the tombstone budget. Rebuild from
+                // resident keys, then recreate without uploading a full CPU snapshot.
+                for (var i = 0; i < world.contacts.count; i++)
+                    if (world.contacts.data[i].contactId >= 0) B2Contacts.b2DestroyContact(world, world.contacts.data[i], false);
+                for (var pass = 0; pass < 2; pass++)
+                {
+                    foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                    b2UpdateBroadPhasePairs(world);
+                }
+                if (gpu.PairTableSnapshotCount != snapshots || gpu.PairTableRebuildCount <= rebuilds)
+                    throw new Exception("Pair-table tombstones must rehash on GPU without a full snapshot.");
+            }
             // Retained capacities and unchanged topology, measured across all managed threads.
             for (var tick = 0; tick < 40; tick++)
             {
@@ -147,6 +189,8 @@ internal static partial class GPUPhysicsTests
                 b2UpdateBroadPhasePairs(world);
                 B2ArenaAllocators.b2GrowArena(world.arena);
             }
+            var uploadedBefore = gpu.PairTableUploadBytes;
+            var snapshotsBefore = gpu.PairTableSnapshotCount;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var tick = 0; tick < 16; tick++)
             {
@@ -155,6 +199,35 @@ internal static partial class GPUPhysicsTests
             }
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
             if (bytes != 0) throw new Exception($"Warmed CPU/GPU pair oracle allocated {bytes} bytes ({count}/{dense}).");
+            if (gpu.PairTableUploadBytes != uploadedBefore || gpu.PairTableSnapshotCount != snapshotsBefore)
+                throw new Exception("Unchanged contact topology must reuse the GPU pair table without uploads.");
+            if (dense)
+            {
+                var idA = world.contacts.data.Take(world.contacts.count).First(c => c.contactId >= 0 &&
+                    ((c.shapeIdA == 0 && c.shapeIdB == 1) || (c.shapeIdA == 1 && c.shapeIdB == 0))).contactId;
+                var idB = world.contacts.data.Take(world.contacts.count).First(c => c.contactId >= 0 &&
+                    ((c.shapeIdA == 0 && c.shapeIdB == 2) || (c.shapeIdA == 2 && c.shapeIdB == 0))).contactId;
+                void Churn(int tick)
+                {
+                    var first = tick % 2 == 0 ? idA : idB; var second = tick % 2 == 0 ? idB : idA;
+                    B2Contacts.b2DestroyContact(world, world.contacts.data[first], false);
+                    B2Contacts.b2DestroyContact(world, world.contacts.data[second], false);
+                    B2Contacts.b2CreateContact(world, world.shapes.data[0], world.shapes.data[1]);
+                    B2Contacts.b2CreateContact(world, world.shapes.data[0], world.shapes.data[2]);
+                    foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
+                    b2UpdateBroadPhasePairs(world);
+                }
+                for (var tick = 0; tick < 32; tick++) Churn(tick);
+                uploadedBefore = gpu.PairTableUploadBytes; snapshotsBefore = gpu.PairTableSnapshotCount;
+                var slotsBefore = gpu.PairTableUpdatedSlots;
+                before = GC.GetTotalAllocatedBytes(true);
+                for (var tick = 0; tick < 64; tick++) Churn(tick);
+                bytes = GC.GetTotalAllocatedBytes(true) - before;
+                if (bytes != 0) throw new Exception($"Warmed resident pair churn allocated {bytes} managed bytes.");
+                if (gpu.PairTableSnapshotCount != snapshotsBefore || gpu.PairTableUpdatedSlots - slotsBefore != 128 ||
+                    gpu.PairTableUploadBytes - uploadedBefore != 128 * 16)
+                    throw new Exception("Active pair churn must upload exactly two final 16-byte slot updates per tick.");
+            }
         }
         finally
         {

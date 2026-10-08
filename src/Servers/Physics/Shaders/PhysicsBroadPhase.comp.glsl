@@ -2,6 +2,8 @@
 // SPDX-FileCopyrightText: 2025 Ikpil Choi
 // SPDX-License-Identifier: MIT
 #version 450
+#extension GL_GOOGLE_include_directive : require
+#include "PhysicsPairHash.inc.glsl"
 layout(local_size_x = 64) in;
 struct Node { vec4 bounds; int escape; int proxy; int hasCategory; int shape; };
 struct Query { vec4 bounds; int proxy; int offset; int count; int capacity; ivec4 shape; };
@@ -10,33 +12,21 @@ struct Joint { ivec4 bodiesNext; ivec4 flags; };
 layout(std430, set = 0, binding = 0) readonly buffer Tree { Node nodes[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Shapes { Shape shapes[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Joints { Joint joints[]; };
-layout(std430, set = 0, binding = 3) readonly buffer ExistingPairs { uvec2 existing[]; };
+layout(std430, set = 0, binding = 3) readonly buffer ExistingPairs { uint existing[]; };
+layout(std430, set = 0, binding = 4) readonly buffer PairKeys { uvec2 pairKeys[]; };
 layout(std430, set = 1, binding = 0) buffer Queries { Query queries[]; };
 layout(std430, set = 1, binding = 1) buffer Candidates { int candidates[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; };
 
-// Split-word arithmetic preserves the shared table hash without shaderInt64.
-uvec2 multiply64(uvec2 v, uvec2 c)
-{
-    uint high, low;
-    umulExtended(v.x, c.x, high, low);
-    return uvec2(low, high + v.x*c.y + v.y*c.x);
-}
-uint pairHash(uvec2 key)
-{
-    key.x ^= key.y >> 1;
-    key = multiply64(key, uvec2(0xed558ccd, 0xff51afd7));
-    key.x ^= key.y >> 1;
-    key = multiply64(key, uvec2(0x1a85ec53, 0xc4ceb9fe));
-    return key.x ^ (key.y >> 1);
-}
 bool contactExists(int a, int b)
 {
     uvec2 key = uvec2(max(a,b), min(a,b));
     uint mask = uint(settings.w), slot = pairHash(key) & mask;
-    while (any(notEqual(existing[slot], uvec2(0))))
+    for (uint i = 0; i <= mask; i++)
     {
-        if (all(equal(existing[slot], key))) return true;
+        uint id = existing[slot];
+        if (id == 0) return false;
+        if (id != 0xffffffffu && all(equal(pairKeys[id - 1], key))) return true;
         slot = (slot + 1) & mask;
     }
     return false;
