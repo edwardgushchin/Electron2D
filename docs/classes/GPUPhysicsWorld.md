@@ -9,7 +9,7 @@ Last updated: 2026-10-08
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
@@ -63,10 +63,21 @@ mirror and publishing common adjacency/pair links. Custom material callbacks
 retain their original position and order. Full pool snapshots occur only after
 binding/observer changes or growth; ordinary frees append in parallel, while
 mixed external CPU allocation/free events replay serially. Slots/request/result/
-mutation/state records occupy 32/64/64/48/32 bytes. `CreatedContactCount` and
+mutation/state records occupy 32/64/80/48/32 bytes. `CreatedContactCount` and
 `ContactPoolSnapshotCount` are cumulative; `ContactPoolUploadBytes` counts only
 pool snapshots/mutations, excluding request and result transfers. Disposal
 preserves another host's callbacks. CPU worlds retain native contact creation.
+
+Creation also sorts endpoints by body ID/pair ordinal on GPU and computes next/
+previous links, insertion-time counts and final heads. A separate pass commits
+body heads/counts. The owner validates and publishes the ordered prefix, preserving
+callback-visible adjacency. Contact links and body records use 16 bytes each;
+CPU-origin link changes coalesce to 32-byte contact/body updates, including both
+neighbors on deletion. Binding/observer/capacity changes snapshot both stores.
+`ContactLinkUploadBytes` counts those uploads. The internal diagnostic
+`ValidateContactLinks` synchronizes pending changes and compares all GPU link/head/
+count records against the CPU mirror. Removal and graph/island changes still run
+on CPU; normal frames do not perform that complete diagnostic readback.
 
 `GenerateManifolds` keeps local shape geometry resident. Creation/destruction and
 primitive/material/hit-event edits invalidate a slot, and the first overlapping pair referencing it

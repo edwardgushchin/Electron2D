@@ -5,18 +5,38 @@
 #include "PhysicsMaterial.inc.glsl"
 layout(local_size_x = 64) in;
 struct Request { ivec4 a; ivec4 b; vec4 material; uvec4 flags; };
-struct Created { ContactSlot slot; vec4 material; ivec4 identity; };
+struct Created { ContactSlot slot; vec4 material; ivec4 identity; ivec4 links; };
+struct LinkUpdate { ivec4 identity; ivec4 value; };
+struct BodyLinks { int head; int count; int nextHead; int nextCount; };
 struct Change { ContactSlot slot; ivec4 command; };
 layout(std430, set = 0, binding = 0) readonly buffer Requests { Request requests[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Changes { Change changes[]; };
+layout(std430, set = 0, binding = 2) readonly buffer LinkUpdates { LinkUpdate linkUpdates[]; };
 layout(std430, set = 1, binding = 0) buffer Slots { ContactSlot slots[]; };
 layout(std430, set = 1, binding = 1) buffer FreeIDs { int freeIDs[]; };
 layout(std430, set = 1, binding = 2) buffer Pool { ivec4 pool; ivec4 basePool; };
 layout(std430, set = 1, binding = 3) buffer Results { Created created[]; };
 layout(std430, set = 1, binding = 4) buffer Scan { int scan[]; };
+layout(std430, set = 1, binding = 5) buffer Links { ivec4 links[]; };
+layout(std430, set = 1, binding = 6) buffer Bodies { BodyLinks bodies[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; ivec4 level; };
 // pool = next, free count, error, created count; basePool = allocation start.
 int rankType(int type) { return type == 2 ? 3 : type == 3 ? 2 : type; }
+ivec2 endpoint(int i) { return ivec2(scan[2*i],scan[2*i+1]); }
+void setEndpoint(int i, ivec2 value) { scan[2*i] = value.x; scan[2*i+1] = value.y; }
+bool greater(ivec2 a, ivec2 b) { return a.x > b.x || (a.x == b.x && a.y > b.y); }
+int edgeKey(int ordinal) { return 2*created[ordinal/2].identity.x + (ordinal&1); }
+shared ivec2 sortTile[64];
+void mergeTile(int width, int offset, int index, int local)
+{
+    for (; offset > 0; offset /= 2)
+    {
+        ivec2 a = sortTile[local], b = sortTile[local ^ offset];
+        bool takeMin = ((index & width) == 0) == ((local & offset) == 0);
+        if (takeMin ? greater(a,b) : greater(b,a)) a = b;
+        barrier(); sortTile[local] = a; barrier();
+    }
+}
 void main()
 {
     int index = int(gl_GlobalInvocationID.x), operation = settings.x, count = settings.y;
@@ -64,7 +84,7 @@ void main()
         scan[leaf + index] = 0;
         if (index >= count) return;
         Request r = requests[index];
-        Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0));
+        Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0),ivec4(-1,-1,0,0));
         int ta = rankType(r.a.z), tb = rankType(r.b.z);
         if (ta < 0 || ta > 4 || tb < 0 || tb > 4) { atomicMax(pool.z, 5); created[index] = result; return; }
         if (ta >= 3 && tb >= 3) { created[index] = result; return; }
@@ -94,6 +114,75 @@ void main()
         if (pool.x + accepted - reused > capacity) { pool.z = 6; return; }
         basePool = ivec4(pool.xy,0,0);
         pool.x += accepted - reused; pool.y -= reused; pool.w = accepted;
+        return;
+    }
+    if (operation == 7)
+    {
+        if (index >= count) return;
+        LinkUpdate update = linkUpdates[index]; int id = update.identity.x;
+        if (update.identity.y == 0) links[id] = update.value;
+        else { bodies[id].head = update.value.x; bodies[id].count = update.value.y; }
+        return;
+    }
+    if (operation == 8)
+    {
+        if (index >= 2*leaf) return;
+        int request = index/2, side = index&1;
+        int body = request < count && created[request].identity.x >= 0 ? created[request].slot.shapeBody[2+side] : 2147483647;
+        setEndpoint(index,ivec2(body,index));
+        return;
+    }
+    if (operation == 12)
+    {
+        int local = int(gl_LocalInvocationID.x);
+        sortTile[local] = index < count ? endpoint(index) : ivec2(2147483647);
+        barrier();
+        if (level.y == 0)
+            for (int width = 2; width <= min(64,count); width *= 2) mergeTile(width,width/2,index,local);
+        else mergeTile(level.y,32,index,local);
+        if (index < count) setEndpoint(index,sortTile[local]);
+        return;
+    }
+    if (operation == 9)
+    {
+        if (index >= count) return;
+        int other = index ^ level.x;
+        if (other <= index) return;
+        ivec2 a = endpoint(index), b = endpoint(other);
+        bool ascending = (index & level.y) == 0;
+        if (ascending ? greater(a,b) : greater(b,a)) { setEndpoint(index,b); setEndpoint(other,a); }
+        return;
+    }
+    if (operation == 10)
+    {
+        if (index >= count || atomicAdd(pool.z,0) != 0) return;
+        ivec2 e = endpoint(index); int body = e.x;
+        if (body == 2147483647) return;
+        if (body < 0 || body >= bodies.length()) { atomicMax(pool.z,8); return; }
+        // Each body segment preserves pair order. Binary search finds its rank
+        // without atomics whose order would depend on GPU scheduling.
+        int low = 0, high = index;
+        while (low < high) { int mid = low+(high-low)/2; if (endpoint(mid).x < body) low = mid+1; else high = mid; }
+        int ordinal = e.y, side = ordinal&1, id = created[ordinal/2].identity.x, key = 2*id+side;
+        int next = index > low ? edgeKey(endpoint(index-1).y) : bodies[body].head;
+        if (next < -1 || (next >= 0 && (next/2 >= pool.x || slots[next/2].shapeBody[2+(next&1)] != body)))
+        { atomicMax(pool.z,9); return; }
+        bool last = index+1 == count || endpoint(index+1).x != body;
+        int prev = last ? -1 : edgeKey(endpoint(index+1).y);
+        links[id][2*side] = prev; links[id][2*side+1] = next;
+        if (index == low && next >= 0) links[next/2][2*(next&1)] = key;
+        int total = bodies[body].count + index-low+1;
+        created[ordinal/2].links[side] = next;
+        created[ordinal/2].links[2+side] = total;
+        if (last) { bodies[body].nextHead = key; bodies[body].nextCount = total; }
+        return;
+    }
+    if (operation == 11)
+    {
+        if (index >= count || atomicAdd(pool.z,0) != 0) return;
+        int body = endpoint(index).x;
+        if (body == 2147483647 || (index+1 < count && endpoint(index+1).x == body)) return;
+        bodies[body].head = bodies[body].nextHead; bodies[body].count = bodies[body].nextCount;
         return;
     }
     if (index >= count || atomicAdd(pool.z, 0) != 0 || scan[leaf + index] == 0) return;

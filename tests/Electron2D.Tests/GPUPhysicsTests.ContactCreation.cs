@@ -15,32 +15,50 @@ internal static partial class GPUPhysicsTests
         using var gpu = new GPUPhysicsWorld();
         foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 257 })
             VerifyContactCreation(gpu, count, count == 65);
-        Console.WriteLine("GPU contact creation matches CPU identities, generations, body links, material callbacks, sleeping sets, mixed pool edits and warmed allocation.");
+        Console.WriteLine("GPU contact creation and resident adjacency match CPU identities, generations, callback-visible links, topology edits, sleeping sets, mixed pool edits and warmed allocation.");
     }
 
     private static void VerifyContactCreation(GPUPhysicsWorld gpu, int count, bool custom)
     {
         var owner = Environment.CurrentManagedThreadId;
-        var expectedCalls = new List<(int, ulong, ulong)>(Math.Max(16, count * count * 2));
-        var actualCalls = new List<(int, ulong, ulong)>(expectedCalls.Capacity);
-        B2WorldId Create(List<(int, ulong, ulong)> calls)
+        var expectedCalls = new List<(int, ulong, ulong, ulong)>(Math.Max(16, count * count * 2));
+        var actualCalls = new List<(int, ulong, ulong, ulong)>(expectedCalls.Capacity);
+        B2WorldId Create(List<(int, ulong, ulong, ulong)> calls)
         {
+            B2World? callbackWorld = null;
+            ulong Adjacency()
+            {
+                var w = callbackWorld!; ulong hash = 14695981039346656037;
+                for (var i = 0; i < w.bodies.count; i++)
+                {
+                    hash = unchecked((hash ^ (uint)w.bodies.data[i].headContactKey) * 1099511628211);
+                    hash = unchecked((hash ^ (uint)w.bodies.data[i].contactCount) * 1099511628211);
+                }
+                for (var i = 0; i < w.contacts.count; i++)
+                    if (w.contacts.data[i].contactId >= 0)
+                        for (var e = 0; e < 2; e++)
+                        {
+                            hash = unchecked((hash ^ (uint)w.contacts.data[i].edges[e].prevKey) * 1099511628211);
+                            hash = unchecked((hash ^ (uint)w.contacts.data[i].edges[e].nextKey) * 1099511628211);
+                        }
+                return hash;
+            }
             var definition = b2DefaultWorldDef();
             if (custom)
             {
                 definition.frictionCallback = (a, ma, b, mb) =>
                 {
                     if (Environment.CurrentManagedThreadId != owner) throw new Exception("Contact creation callbacks left the owner.");
-                    calls.Add((0, ma, mb)); return MathF.Abs(a - b) + .1f;
+                    calls.Add((0, ma, mb, Adjacency())); return MathF.Abs(a - b) + .1f;
                 };
-                definition.restitutionCallback = (a, ma, b, mb) => { calls.Add((1, ma, mb)); return .2f * (a + b); };
+                definition.restitutionCallback = (a, ma, b, mb) => { calls.Add((1, ma, mb, Adjacency())); return .2f * (a + b); };
             }
             else if (count % 2 == 0)
             {
                 definition.frictionCallback = PhysicsSpace.CombineFriction;
                 definition.restitutionCallback = PhysicsSpace.CombineBounce;
             }
-            var id = b2CreateWorld(definition);
+            var id = b2CreateWorld(definition); callbackWorld = b2GetWorldFromId(id);
             for (var i = 0; i < count; i++)
             {
                 var body = b2DefaultBodyDef(); body.type = count <= 2 ? B2BodyType.b2_dynamicBody : (B2BodyType)(i % 3);
@@ -104,7 +122,7 @@ internal static partial class GPUPhysicsTests
             for (var i = 0; i < world.contacts.count; i++)
                 if (world.contacts.data[i].contactId >= 0) b2DestroyContact(world, world.contacts.data[i], false);
         }
-        void Query() { Buffer(cpu); Buffer(actual); b2UpdateBroadPhasePairs(cpu); b2UpdateBroadPhasePairs(actual); Compare(); }
+        void Query() { Buffer(cpu); Buffer(actual); b2UpdateBroadPhasePairs(cpu); b2UpdateBroadPhasePairs(actual); Compare(); gpu.ValidateContactLinks(actual); }
         void Churn() { Destroy(cpu); Destroy(actual); Query(); }
         try
         {
@@ -117,6 +135,9 @@ internal static partial class GPUPhysicsTests
             if (count >= 63 && !sleeping) throw new Exception("The creation fixture must contain sleeping non-touching contacts.");
             for (var i = 0; i < 32; i++) { Churn(); B2ArenaAllocators.b2GrowArena(cpu.arena); B2ArenaAllocators.b2GrowArena(actual.arena); }
             var snapshots = gpu.ContactPoolSnapshotCount;
+            var linkBytes = gpu.ContactLinkUploadBytes;
+            Query();
+            if (gpu.ContactLinkUploadBytes != linkBytes) throw new Exception("Unchanged adjacency must stay resident without uploads.");
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 16; i++) Churn();
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
@@ -150,6 +171,25 @@ internal static partial class GPUPhysicsTests
                 sim.generation--;
                 gpu.GenerateManifolds(context, 1);
             }
+            if (count == 63)
+            {
+                // Remove adjacent old links, recycle a body ID, change topology without pool growth.
+                b2DestroyBody(b2MakeBodyId(cpu, 2)); b2DestroyBody(b2MakeBodyId(actual, 2));
+                var bd = b2DefaultBodyDef(); bd.type = B2BodyType.b2_dynamicBody;
+                var sd = b2DefaultShapeDef(); sd.invokeContactCreation = true;
+                b2CreateCircleShape(b2CreateBody(cpuID, bd), sd, new B2Circle { radius = 1 });
+                b2CreateCircleShape(b2CreateBody(gpuID, bd), sd, new B2Circle { radius = 1 });
+                Query();
+                b2Body_Disable(b2MakeBodyId(cpu, 5)); b2Body_Disable(b2MakeBodyId(actual, 5));
+                Query();
+                b2Body_Enable(b2MakeBodyId(cpu, 5)); b2Body_Enable(b2MakeBodyId(actual, 5));
+                Query();
+                b2Body_SetType(b2MakeBodyId(cpu, 5), B2BodyType.b2_staticBody);
+                b2Body_SetType(b2MakeBodyId(actual, 5), B2BodyType.b2_staticBody);
+                Query();
+                actual.contactLinksChanged = null!;
+                Destroy(cpu); Destroy(actual); Query();
+            }
             if (count == 65)
             {
                 // Force growth after an established resident pool.
@@ -168,19 +208,19 @@ internal static partial class GPUPhysicsTests
                 using (var other = new GPUPhysicsWorld())
                 {
                     other.EnableContactCreation(actual);
-                    var creator = actual.createBroadPhaseContacts; var observer = actual.contactIdPool.changed;
+                    var creator = actual.createBroadPhaseContacts; var observer = actual.contactIdPool.changed; var links = actual.contactLinksChanged;
                     gpu.Dispose();
-                    if (actual.createBroadPhaseContacts != creator || actual.contactIdPool.changed != observer)
+                    if (actual.createBroadPhaseContacts != creator || actual.contactIdPool.changed != observer || actual.contactLinksChanged != links)
                         throw new Exception("Disposal must preserve another host's contact creator and observer.");
                 }
-                if (actual.createBroadPhaseContacts is not null || actual.contactIdPool.changed is not null)
+                if (actual.createBroadPhaseContacts is not null || actual.contactIdPool.changed is not null || actual.contactLinksChanged is not null)
                     throw new Exception("The contact creator must detach on disposal.");
             }
         }
         finally
         {
             b2DestroyWorld(cpuID); b2DestroyWorld(gpuID);
-            if (actual.createBroadPhaseContacts is not null) throw new Exception("World teardown must clear the contact creator.");
+            if (actual.createBroadPhaseContacts is not null || actual.contactLinksChanged is not null) throw new Exception("World teardown must clear the contact creator.");
         }
     }
 }

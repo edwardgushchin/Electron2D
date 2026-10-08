@@ -182,7 +182,7 @@ namespace Box2D.NET
 
         internal struct B2ContactCreation
         {
-            internal int ID, SetIndex;
+            internal int ID, SetIndex, NextA, NextB, CountA, CountB;
             internal uint Generation, Flags, SimFlags;
             internal float Friction, Restitution;
             internal bool UseFriction, UseRestitution;
@@ -253,10 +253,10 @@ namespace Box2D.NET
             {
                 contact.edges[0].bodyId = shapeA.bodyId;
                 contact.edges[0].prevKey = B2_NULL_INDEX;
-                contact.edges[0].nextKey = bodyA.headContactKey;
+                contact.edges[0].nextKey = prepared.HasValue ? creation.NextA : bodyA.headContactKey;
 
                 int keyA = (contactId << 1) | 0;
-                int headContactKey = bodyA.headContactKey;
+                int headContactKey = contact.edges[0].nextKey;
                 if (headContactKey != B2_NULL_INDEX)
                 {
                     B2Contact headContact = b2Array_Get(ref world.contacts, headContactKey >> 1);
@@ -264,26 +264,28 @@ namespace Box2D.NET
                 }
 
                 bodyA.headContactKey = keyA;
-                bodyA.contactCount += 1;
+                bodyA.contactCount = prepared.HasValue ? creation.CountA : bodyA.contactCount + 1;
             }
 
             // Connect to body B
             {
                 contact.edges[1].bodyId = shapeB.bodyId;
                 contact.edges[1].prevKey = B2_NULL_INDEX;
-                contact.edges[1].nextKey = bodyB.headContactKey;
+                contact.edges[1].nextKey = prepared.HasValue ? creation.NextB : bodyB.headContactKey;
 
                 int keyB = (contactId << 1) | 1;
-                int headContactKey = bodyB.headContactKey;
-                if (bodyB.headContactKey != B2_NULL_INDEX)
+                int headContactKey = contact.edges[1].nextKey;
+                if (headContactKey != B2_NULL_INDEX)
                 {
                     B2Contact headContact = b2Array_Get(ref world.contacts, headContactKey >> 1);
                     headContact.edges[headContactKey & 1].prevKey = keyB;
                 }
 
                 bodyB.headContactKey = keyB;
-                bodyB.contactCount += 1;
+                bodyB.contactCount = prepared.HasValue ? creation.CountB : bodyB.contactCount + 1;
             }
+
+            world.contactLinksChanged?.Invoke(contact);
 
             // Add to pair set for fast lookup
             ulong pairKey = B2_SHAPE_PAIR_KEY(shapeIdA, shapeIdB);
@@ -425,6 +427,8 @@ namespace Box2D.NET
             }
 
             bodyB.contactCount -= 1;
+
+            world.contactLinksChanged?.Invoke(contact);
 
             // Remove contact from the array that owns it
             if (contact.islandId != B2_NULL_INDEX)

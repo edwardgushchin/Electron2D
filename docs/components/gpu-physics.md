@@ -57,8 +57,8 @@ self/moved-pair deduplication, existing-contact lookup, same-body and sensor vet
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
 Joint filtering walks the smaller body adjacency list. User filters remain on the
 owner after readback, followed by GPU contact identity allocation and initialization.
-CPU query/CCD trees, body adjacency, graph/island mutation and contact destruction
-remain managed. The GPU maintains its own
+New body/contact adjacency is computed and retained on GPU. CPU query/CCD trees,
+adjacency publication/removal, graph/island mutation and contact destruction remain managed. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
@@ -115,12 +115,36 @@ The pool observes every external allocation/free in order; unlike the pair-key
 journal, these events cannot be coalesced. Ordinary frees append in parallel on
 GPU; rare mixed CPU allocations/frees replay serially. Initial binding, capacity
 growth or observer replacement snapshots the native pool and slot generations.
-Slots occupy 32 bytes, request/result records 64 bytes each, mutation records 48
+Slots occupy 32 bytes, request/result records 64/80 bytes, mutation records 48
 bytes and pool state 32 bytes. `CreatedContactCount`, `ContactPoolSnapshotCount`
 and `ContactPoolUploadBytes` are cumulative; the last counts pool snapshots and
 mutation uploads, excluding creation request/result transfers. World reset and
 host disposal detach only owned callbacks. A failed creation step poisons the
 world through the existing failure path without CPU replay.
+
+New contact adjacency is constructed on GPU in the same creation submission.
+Endpoints are bitonic-sorted by body ID and original pair ordinal, preserving
+exact insertion order independently of GPU scheduling. Workgroups sort 64-entry
+tiles in shared memory and finish each global merge locally, reducing separate
+compute passes. Each endpoint resolves
+its predecessor/successor and insertion-time count; the final head/count is
+committed in a separate pass so readers cannot race the update. The scan buffer
+is reused as endpoint-sort scratch after ID allocation. Bitonic sorting is
+O(n log² n); binary search of each body segment adds O(log n) work per endpoint.
+
+Resident contact links and body head/count records occupy 16 bytes each. The
+owner imports GPU next links/counts in original pair order, so custom material
+callbacks see the same intermediate adjacency as the CPU path. The complete
+result is checked against ordered scratch heads/counts before live publication.
+An optional contact-link observer journals external CPU creation/removal and
+both neighboring edges; repeated changes coalesce by contact/body identity.
+Warm batches upload only final 32-byte dirty records, with no full adjacency
+snapshot. Binding/observer/capacity changes restore the snapshot. This retains
+GPU adjacency while CPU-driven removal and graph/island mutation remain shared.
+`ContactLinkUploadBytes` counts snapshots and delta payloads separately from the
+ID-pool counter. `ValidateContactLinks` is an internal diagnostic that synchronizes
+pending changes and reads the complete GPU lists back for exact mirror comparison;
+it is exercised by tests, not the normal frame path.
 
 Contact geometry is generated on GPU for all nine registered pair families
 among circles, capsules, two-sided segments and convex polygons (up to eight
@@ -313,8 +337,8 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: remove CPU tree mirrors/rank dependency, move contact/body adjacency,
-destruction and graph/island mutation to GPU, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
+move destruction and graph/island mutation to GPU, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -707,3 +731,46 @@ a sustained whole-step speedup or 60 FPS. CPU adjacency/graph/islands, query/CCD
 mirrors, per-step packing and readback remain. The interval captures an impact
 propagating through a sleeping wall, not a steady all-awake or native-window run.
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-create-final-{a,b}.json`.
+
+## GPU contact adjacency (2026-10-08)
+
+The creation oracle now reads back every retained GPU contact link and body
+head/count after each topology edit. Custom material callbacks hash the complete
+intermediate body/contact adjacency, verifying the ordered prefix they observe.
+Body deletion/ID reuse, disable/enable/type changes and loss of the link observer
+are included alongside the existing contact-ID churn and lifetime cases. Unchanged
+queries upload zero link bytes; 16 warmed churn/diagnostic cycles allocate zero
+all-thread managed bytes. Full CPU/GPU stepping, queries, callback order and
+failed-interval disposal remain required and separate from this direct oracle.
+
+The initial implementation submitted every bitonic stage separately. Sequential
+maximum-Smash probes (`{gpu,cpu}-contact-links-{a,b}`) measured GPU pair stages at
+14.41/14.71 ms versus the native-creation control at 10.72/11.14 ms. GPU whole steps
+were 161.59/165.36 ms versus 159.83/158.86 ms. This version was replaced by 64-entry
+shared-memory tile sorts and local merge tails; global cross-tile comparisons
+retain separate barriers and exact ordering. Both versions use the existing
+scan storage as scratch rather than adding a separate sort buffer.
+
+Final sequential Linux/Vulkan profiles use the same 65,537-body scene, 32 warmup
+and 64 measured headless diagnostic steps, with no concurrent build/test/formatter.
+The CPU-creation control disables contact allocation/adjacency and their observers;
+all other GPU stages remain enabled:
+
+| Creation/adjacency mode | Whole-step mean | p95 | Pair stage mean | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: |
+| GPU A | 163.94 ms | 260.42 ms | 13.91 ms | 0 / 0 |
+| CPU A | 158.60 ms | 253.84 ms | 10.97 ms | 0 / 0 |
+| CPU B | 158.10 ms | 253.21 ms | 10.71 ms | 0 / 0 |
+| GPU B | 163.27 ms | 256.06 ms | 13.69 ms | 0 / 0 |
+
+Each GPU interval creates 496,638 contacts and uploads 73,049,984 bytes of dirty
+adjacency records without a full pool/adjacency snapshot. Request records remain
+64 bytes; creation results now use 80 bytes including two next links and two
+insertion-time counts. Both controls report zero adjacency upload. All four
+state hashes remain `13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`,
+with 6,425→41,122 awake bodies and zero managed allocation. The GPU creation/adjacency
+stage still costs more than CPU creation in this hybrid world. Smaller dispatch
+batches do not establish a whole-step speedup or 60 FPS. CPU-driven deletion,
+graph/islands, query/CCD mirrors, packing and readback remain; this is neither a
+steady all-awake workload nor native-window FPS acceptance.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-links-final-{a,b}.json`.

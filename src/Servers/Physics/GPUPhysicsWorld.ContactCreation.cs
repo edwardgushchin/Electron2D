@@ -31,6 +31,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal ContactSlot Slot;
         internal Float4 Material;
         internal int ID, Padding1, Padding2, Padding3;
+        internal int NextA, NextB, CountA, CountB;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -53,6 +54,23 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal int Operation, Count, Capacity, LeafBase;
         internal int Offset, Width, Options, Padding;
     }
+
+    [StructLayout(LayoutKind.Sequential)]
+    private struct ContactLinks { internal int PrevA, NextA, PrevB, NextB; }
+    [StructLayout(LayoutKind.Sequential)]
+    private struct BodyLinks { internal int Head, Count, NextHead, NextCount; }
+    [StructLayout(LayoutKind.Sequential)]
+    private struct LinkUpdate { internal int ID, Kind, Padding1, Padding2, A, B, C, D; }
+    private readonly Storage<ContactLinks> _contactLinkStorage;
+    private readonly Storage<BodyLinks> _bodyLinkStorage;
+    private readonly Storage<LinkUpdate> _linkUpdateStorage;
+    private readonly Action<B2Contact> _contactLinksChanged;
+    private readonly List<int> _linkChanges = [];
+    private bool[] _contactLinkDirty = [], _bodyLinkDirty = [];
+    private bool _publishingContactLinks;
+    private int _linkUpdateCount, _linkValidationVersion;
+    private int[] _linkValidationStamps = [];
+    internal long ContactLinkUploadBytes { get; private set; }
 
     private readonly Storage<ContactSlot> _contactSlotStorage;
     private readonly Storage<int> _contactFreeStorage, _contactScanStorage;
@@ -84,6 +102,68 @@ internal sealed unsafe partial class GPUPhysicsWorld
         DetachContactPool();
     }
 
+    private void ReserveLinkJournal()
+    {
+        var world = _contactTrackingWorld!;
+        var contacts = Math.Max(world.contacts.capacity, _contactSlotStorage.Data.Length);
+        var bodies = Math.Max(world.bodies.capacity, _bodyLinkStorage.Data.Length);
+        if (_contactLinkDirty.Length < contacts) Array.Resize(ref _contactLinkDirty, contacts);
+        if (_bodyLinkDirty.Length < bodies)
+        {
+            Array.Resize(ref _bodyLinkDirty, bodies);
+            Array.Resize(ref _linkValidationStamps, bodies);
+        }
+        _linkChanges.EnsureCapacity(_contactLinkDirty.Length + _bodyLinkDirty.Length);
+    }
+
+    private void MarkContactLinksChanged(B2Contact contact)
+    {
+        if (_publishingContactLinks) return;
+        ReserveLinkJournal();
+        MarkLink(contact.contactId, false);
+        for (var i = 0; i < 2; i++)
+        {
+            ref var edge = ref contact.edges[i];
+            MarkLink(edge.bodyId, true);
+            if (edge.prevKey >= 0) MarkLink(edge.prevKey >> 1, false);
+            if (edge.nextKey >= 0) MarkLink(edge.nextKey >> 1, false);
+        }
+    }
+
+    private void MarkLink(int id, bool body)
+    {
+        var dirty = body ? _bodyLinkDirty : _contactLinkDirty;
+        if (dirty[id]) return;
+        dirty[id] = true;
+        _linkChanges.Add(body ? -id - 1 : id + 1);
+    }
+
+    private static ContactLinks CaptureContactLinks(B2World world, int id)
+    {
+        var c = world.contacts.data[id];
+        return c.contactId == id ? new() { PrevA = c.edges[0].prevKey, NextA = c.edges[0].nextKey, PrevB = c.edges[1].prevKey, NextB = c.edges[1].nextKey }
+            : new() { PrevA = -1, NextA = -1, PrevB = -1, NextB = -1 };
+    }
+
+    private static BodyLinks CaptureBodyLinks(B2World world, int id)
+    {
+        var body = world.bodies.data[id];
+        return body.id == id ? new() { Head = body.headContactKey, Count = body.contactCount } : new() { Head = -1 };
+    }
+
+    private void ValidateCreatedLink(B2World world, int body, int key, int next, int count)
+    {
+        ref var value = ref _bodyLinkStorage.Data[body];
+        if (_linkValidationStamps[body] != _linkValidationVersion)
+        {
+            _linkValidationStamps[body] = _linkValidationVersion;
+            value = CaptureBodyLinks(world, body);
+        }
+        if (next != value.Head || count != value.Count + 1)
+            throw new InvalidOperationException("GPU contact links differ from ordered body adjacency.");
+        value.Head = key; value.Count = count;
+    }
+
     private void MarkContactIDChanged(int id, bool allocated)
     {
         if (allocated && id == _claimedContactID) { _claimedContactID = -1; return; }
@@ -95,12 +175,17 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         _contactIDChanges.Clear();
         _onlyContactFrees = true;
+        foreach (var key in _linkChanges)
+            if (key > 0) _contactLinkDirty[key - 1] = false; else _bodyLinkDirty[-key - 1] = false;
+        _linkChanges.Clear();
     }
 
     private void DetachContactPool()
     {
         if (_contactTrackingPool is not null && _contactTrackingPool.changed == _contactIDChanged) _contactTrackingPool.changed = null!;
         if (_contactTrackingWorld is not null && _contactTrackingWorld.createBroadPhaseContacts == _createContacts) _contactTrackingWorld.createBroadPhaseContacts = null!;
+        if (_contactTrackingWorld is not null && _contactTrackingWorld.contactLinksChanged == _contactLinksChanged)
+            _contactTrackingWorld.contactLinksChanged = null!;
         _contactTrackingWorld = null; _contactTrackingPool = _residentContactPool = null;
         ClearContactChanges();
     }
@@ -108,12 +193,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private void TrackContactPool(B2World world)
     {
         if (ReferenceEquals(_contactTrackingWorld, world) && ReferenceEquals(_contactTrackingPool, world.contactIdPool) &&
-            world.contactIdPool.changed == _contactIDChanged) return;
+            world.contactIdPool.changed == _contactIDChanged && world.contactLinksChanged == _contactLinksChanged) return;
         var ownsCreator = world.createBroadPhaseContacts == _createContacts;
         DetachContactPool();
         if (ownsCreator) world.createBroadPhaseContacts = _createContacts;
         _contactTrackingWorld = world; _contactTrackingPool = world.contactIdPool;
         world.contactIdPool.changed = _contactIDChanged;
+        world.contactLinksChanged = _contactLinksChanged;
     }
 
     private static ContactSlot CaptureContactSlot(B2World world, int id)
@@ -138,9 +224,14 @@ internal sealed unsafe partial class GPUPhysicsWorld
         TrackContactPool(world);
         var pool = world.contactIdPool;
         var capacity = Math.Max(world.contacts.capacity, checked(pool.nextIndex + Math.Max(0, requests - pool.freeArray.count)));
-        _resetContactPool = !ReferenceEquals(_residentContactPool, pool) || capacity > _contactSlotStorage.Data.Length;
+        _resetContactPool = !ReferenceEquals(_residentContactPool, pool) || capacity > _contactSlotStorage.Data.Length || world.bodies.capacity > _bodyLinkStorage.Data.Length;
         _residentContactPool = null;
         _contactSlotStorage.Reserve(Math.Max(1, capacity));
+        _contactLinkStorage.Reserve(_contactSlotStorage.Data.Length);
+        _bodyLinkStorage.Reserve(Math.Max(1, world.bodies.capacity));
+        ReserveLinkJournal();
+        _linkUpdateStorage.Reserve(_contactLinkDirty.Length + _bodyLinkDirty.Length);
+        _linkUpdateCount = _resetContactPool ? 0 : _linkChanges.Count;
         _contactFreeStorage.Reserve(_contactSlotStorage.Data.Length);
         _contactPoolStorage.Reserve(1);
         _contactChangeStorage.Reserve(Math.Max(_contactSlotStorage.Data.Length, _contactIDChanges.Count));
@@ -148,12 +239,16 @@ internal sealed unsafe partial class GPUPhysicsWorld
         _contactLeafBase = checked((int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(1, requests)));
         _contactRequestStorage.Reserve(Math.Max(1, requests));
         _contactCreationStorage.Reserve(_contactRequestStorage.Data.Length);
-        _contactScanStorage.Reserve(checked(2 * _contactLeafBase));
+        _contactScanStorage.Reserve(checked(4 * _contactLeafBase));
         _contactChangeCount = _resetContactPool ? 0 : _contactIDChanges.Count;
         if (_resetContactPool)
         {
             _contactSlotStorage.Data.AsSpan().Clear();
             for (var i = 0; i < world.contacts.count; i++) _contactSlotStorage.Data[i] = CaptureContactSlot(world, i);
+            _contactLinkStorage.Data.AsSpan().Fill(new() { PrevA = -1, NextA = -1, PrevB = -1, NextB = -1 });
+            for (var i = 0; i < world.contacts.count; i++) _contactLinkStorage.Data[i] = CaptureContactLinks(world, i);
+            _bodyLinkStorage.Data.AsSpan().Fill(new() { Head = -1 });
+            for (var i = 0; i < world.bodies.count; i++) _bodyLinkStorage.Data[i] = CaptureBodyLinks(world, i);
             pool.freeArray.data.AsSpan(0, pool.freeArray.count).CopyTo(_contactFreeStorage.Data);
             _contactPoolStorage.Data[0] = new() { Next = pool.nextIndex, FreeCount = pool.freeArray.count };
         }
@@ -164,6 +259,20 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 var change = _contactIDChanges[i]; var id = change > 0 ? change - 1 : -change - 1;
                 _contactChangeStorage.Data[i] = new() { ID = id, Allocated = change > 0 ? 1 : 0, Slot = CaptureContactSlot(world, id) };
             }
+            for (var i = 0; i < _linkUpdateCount; i++)
+            {
+                var key = _linkChanges[i];
+                if (key > 0)
+                {
+                    var value = CaptureContactLinks(world, key - 1);
+                    _linkUpdateStorage.Data[i] = new() { ID = key - 1, A = value.PrevA, B = value.NextA, C = value.PrevB, D = value.NextB };
+                }
+                else
+                {
+                    var value = CaptureBodyLinks(world, -key - 1);
+                    _linkUpdateStorage.Data[i] = new() { ID = -key - 1, Kind = 1, A = value.Head, B = value.Count };
+                }
+            }
         }
     }
 
@@ -172,6 +281,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
         if (_resetContactPool)
         {
             _contactSlotStorage.Upload(copy, _contactSlotStorage.Data.Length);
+            _contactLinkStorage.Upload(copy, _contactLinkStorage.Data.Length);
+            _bodyLinkStorage.Upload(copy, _bodyLinkStorage.Data.Length);
+            ContactLinkUploadBytes += (long)(_contactLinkStorage.Data.Length + _bodyLinkStorage.Data.Length) * 16;
             _contactFreeStorage.Upload(copy, _contactPoolStorage.Data[0].FreeCount);
             _contactPoolStorage.Upload(copy, 1);
             ContactPoolUploadBytes += (long)_contactSlotStorage.Data.Length * sizeof(ContactSlot) +
@@ -180,12 +292,15 @@ internal sealed unsafe partial class GPUPhysicsWorld
         else
         {
             _contactChangeStorage.Upload(copy, _contactChangeCount);
+            _linkUpdateStorage.Upload(copy, _linkUpdateCount);
+            ContactLinkUploadBytes += (long)_linkUpdateCount * sizeof(LinkUpdate);
             ContactPoolUploadBytes += (long)_contactChangeCount * sizeof(ContactPoolChange);
         }
     }
 
     private void UpdateContactPool(nint command)
     {
+        if (_linkUpdateCount != 0) ContactCreationPass(command, 7, _linkUpdateCount);
         if (_contactChangeCount == 0) return;
         if (_onlyContactFrees)
         {
@@ -244,6 +359,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         DispatchContactCreation(count, (int)((friction << 3) | (bounce << 5)));
 
         // Validate the entire GPU allocation before callbacks or mirror mutation.
+        if (_linkValidationVersion == int.MaxValue) { Array.Clear(_linkValidationStamps); _linkValidationVersion = 0; }
+        _linkValidationVersion++;
         var accepted = 0; var pool = world.contactIdPool;
         var next = pool.nextIndex; var free = pool.freeArray.count;
         for (var i = 0; i < count; i++)
@@ -264,12 +381,15 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 slot.Flags != (((request.FlagsA | request.FlagsB) & 1) != 0 ? 4u : 0u) ||
                 slot.SimFlags != (((request.FlagsA | request.FlagsB) & 2) != 0 ? 0x200000u : 0u) || !Finite(result.Material))
                 throw new InvalidOperationException("GPU contact creation returned an invalid identity or initialization record.");
+            ValidateCreatedLink(world, slot.BodyA, 2 * id, result.NextA, result.CountA);
+            ValidateCreatedLink(world, slot.BodyB, 2 * id + 1, result.NextB, result.CountB);
             accepted++;
         }
         ValidateContactPool(checked(next + Math.Max(0, accepted - free)), Math.Max(0, free - accepted));
         if (_contactPoolStorage.Data[0].Created != accepted) throw new InvalidOperationException("GPU contact creation count differs.");
         try
         {
+            _publishingContactLinks = true;
             for (var i = 0; i < count; i++)
             {
                 var result = _contactCreationStorage.Data[i];
@@ -285,7 +405,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     Friction = result.Material.X,
                     Restitution = result.Material.Y,
                     UseFriction = friction != 0,
-                    UseRestitution = bounce != 0
+                    UseRestitution = bounce != 0,
+                    NextA = result.NextA,
+                    NextB = result.NextB,
+                    CountA = result.CountA,
+                    CountB = result.CountB
                 };
                 _claimedContactID = result.ID;
                 b2CreateContactPrepared(world, world.shapes.data[slot.ShapeA], world.shapes.data[slot.ShapeB], in creation);
@@ -294,7 +418,51 @@ internal sealed unsafe partial class GPUPhysicsWorld
             CommitContactPool(world);
             CreatedContactCount += accepted;
         }
-        finally { _claimedContactID = -1; }
+        finally { _claimedContactID = -1; _publishingContactLinks = false; }
+    }
+
+    internal void ValidateContactLinks(B2World world)
+    {
+        EnsureOwner();
+        PrepareContactPool(world, 0);
+        var command = SDL.AcquireGPUCommandBuffer(Device);
+        if (command == 0) throw Failure("acquire contact topology validation");
+        nint fence = 0;
+        try
+        {
+            var copy = SDL.BeginGPUCopyPass(command);
+            if (copy == 0) throw Failure("begin contact topology upload");
+            UploadContactPool(copy); SDL.EndGPUCopyPass(copy);
+            UpdateContactPool(command);
+            copy = SDL.BeginGPUCopyPass(command);
+            if (copy == 0) throw Failure("begin contact topology readback");
+            _contactLinkStorage.Download(copy, world.contacts.count); _bodyLinkStorage.Download(copy, world.bodies.count);
+            _contactPoolStorage.Download(copy, 1); SDL.EndGPUCopyPass(copy);
+            var submitted = command; command = 0;
+            fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
+            if (fence == 0) throw Failure("submit contact topology validation");
+            Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for contact topology");
+            _contactLinkStorage.Read(world.contacts.count); _bodyLinkStorage.Read(world.bodies.count); _contactPoolStorage.Read(1);
+            ValidateContactPool(world.contactIdPool.nextIndex, world.contactIdPool.freeArray.count);
+            for (var i = 0; i < world.contacts.count; i++)
+            {
+                var expected = CaptureContactLinks(world, i); var actual = _contactLinkStorage.Data[i];
+                if (expected.PrevA != actual.PrevA || expected.NextA != actual.NextA || expected.PrevB != actual.PrevB || expected.NextB != actual.NextB)
+                    throw new InvalidOperationException($"GPU contact topology differs at contact {i}.");
+            }
+            for (var i = 0; i < world.bodies.count; i++)
+            {
+                var expected = CaptureBodyLinks(world, i); var actual = _bodyLinkStorage.Data[i];
+                if (expected.Head != actual.Head || expected.Count != actual.Count)
+                    throw new InvalidOperationException($"GPU contact topology differs at body {i}.");
+            }
+            CommitContactPool(world);
+        }
+        finally
+        {
+            if (command != 0) SDL.CancelGPUCommandBuffer(command);
+            if (fence != 0) SDL.ReleaseGPUFence(Device, fence);
+        }
     }
 
     private void DispatchContactCreation(int count, int options)
@@ -314,6 +482,18 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 ContactCreationPass(command, 4, count, offset: width, width: width, dispatch: width);
             ContactCreationPass(command, 5, count, dispatch: 1);
             ContactCreationPass(command, 6, count);
+            var endpoints = 2 * _contactLeafBase;
+            ContactCreationPass(command, 8, count, dispatch: endpoints);
+            // ponytail: reuse deterministic O(n log² n) bitonic ordering; use a segmented radix sort if creation dominates.
+            ContactCreationPass(command, 12, endpoints);
+            for (var width = 128; width <= endpoints; width *= 2)
+            {
+                for (var offset = width / 2; offset >= 64; offset /= 2)
+                    ContactCreationPass(command, 9, endpoints, offset: offset, width: width);
+                ContactCreationPass(command, 12, endpoints, width: width);
+            }
+            ContactCreationPass(command, 10, endpoints);
+            ContactCreationPass(command, 11, endpoints);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin contact creation readback");
             _contactCreationStorage.Download(copy, count); _contactPoolStorage.Download(copy, 1);
@@ -333,15 +513,16 @@ internal sealed unsafe partial class GPUPhysicsWorld
 
     private void ContactCreationPass(nint command, int operation, int count, int offset = 0, int width = 0, int options = 0, int dispatch = 0)
     {
-        Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[5];
+        Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[7];
         bindings[0] = new() { Buffer = _contactSlotStorage.Handle }; bindings[1] = new() { Buffer = _contactFreeStorage.Handle };
         bindings[2] = new() { Buffer = _contactPoolStorage.Handle }; bindings[3] = new() { Buffer = _contactCreationStorage.Handle };
         bindings[4] = new() { Buffer = _contactScanStorage.Handle };
-        var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 5);
+        bindings[5] = new() { Buffer = _contactLinkStorage.Handle }; bindings[6] = new() { Buffer = _bodyLinkStorage.Handle };
+        var compute = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 7);
         if (compute == 0) throw Failure("begin contact identity maintenance");
         SDL.BindGPUComputePipeline(compute, _contactCreationPipeline.DangerousGetHandle());
-        var inputs = stackalloc nint[2] { _contactRequestStorage.Handle, _contactChangeStorage.Handle };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+        var inputs = stackalloc nint[3] { _contactRequestStorage.Handle, _contactChangeStorage.Handle, _linkUpdateStorage.Handle };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 3);
         var step = new ContactCreationStep { Operation = operation, Count = count, Capacity = _contactSlotStorage.Data.Length, LeafBase = _contactLeafBase, Offset = offset, Width = width, Options = options };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&step), (uint)sizeof(ContactCreationStep));
         SDL.DispatchGPUCompute(compute, checked((uint)((dispatch == 0 ? count : dispatch) + 63) / 64), 1, 1);
