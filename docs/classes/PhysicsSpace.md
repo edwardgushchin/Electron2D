@@ -18,7 +18,7 @@ One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owne
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `EnsureWorldBindingChange()`, `EnsureWorldRelease()` | Binding changes reject a failed GPU world; releasing its last resource still permits cleanup. Both preserve owner/solver/live-body-callback guards. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |
-| `EnableGPUIntegration()`, `EnableGPUSolver()` | Internal development entries for numeric integration, GPU tree construction/refit/traversal/built-in resident pair filters/resident contact lookup, GPU contact identity allocation/initialization, adjacency construction and disjoint-contact removal and disconnected-island splitting, resident shape geometry/manifold generation, complete GPU contact updates and constraint preparation/solving. GPU callbacks run on the owner; generated geometry and feature-matched warm-start state remain on GPU for constraint preparation, while retained workers publish ordinary contact mirrors and custom material/pre-solve callbacks plus graph/events remain on the owner. CPU query/CCD tree mirrors, publication ranking, user callbacks, mirror/event publication, external authoring removal, graph coloring/island merges and sleep/CCD remain CPU; chain manifolds are not yet supported by the GPU entry. |
+| `EnableGPUIntegration()`, `EnableGPUSolver()` | Internal development entries for numeric integration, GPU tree construction/refit/traversal/built-in resident pair filters/resident contact lookup, GPU contact identity allocation/initialization, adjacency construction and disjoint-contact removal and contact-driven island merging/unlinking and disconnected-island splitting, resident shape geometry/manifold generation, complete GPU contact updates and constraint preparation/solving. GPU callbacks run on the owner; generated geometry and feature-matched warm-start state remain on GPU for constraint preparation, while retained workers publish ordinary contact mirrors and custom material/pre-solve callbacks plus graph/events remain on the owner. CPU query/CCD tree mirrors, publication ranking, user callbacks, mirror/event publication, external authoring removal, graph coloring/authoring island changes and sleep/CCD remain CPU; chain manifolds are not yet supported by the GPU entry. |
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `GetJointWorldBody()` | Hidden shape-free world anchor for single-body server pin. |
@@ -64,3 +64,9 @@ zero. All accumulation precedes worker snapshot collection and public callbacks.
 PhysicsContactImpulseTests checks momentum, raw/scene roles, shared pairs, sleeping
 frames and zero warmed allocation on CPU/GPU. Unseen larger topology can grow the
 retained map; it is not an unlimited preallocated contact store.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

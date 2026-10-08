@@ -16,7 +16,11 @@ public sealed partial class SceneTree
         return _physicsWorld is { IsDisposed: false } current ? current : _physicsWorld = new(runtime);
     }
     private PhysicsSpace PhysicsSpaceFor(CanvasItem item) { var runtime = item.GetWorld()!.Runtime; BindWorld(runtime); return runtime.Space; }
-    internal void EnsurePhysicsParticipationChange() { foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureQueryAccess(); }
+    internal void EnsurePhysicsParticipationChange(bool releasing = false)
+    {
+        foreach (var runtime in _physicsWorlds)
+            if (releasing) runtime.ExistingSpace?.EnsureReleaseAccess(); else runtime.ExistingSpace?.EnsureQueryAccess();
+    }
     internal void EnsureWorldBindingChange() { foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureWorldBindingChange(); }
     internal string ResolveSpatialAudioBus(CanvasItem item, Vector2 position, uint areaMask, string requestedBus)
     { EnsureOwnerThread(); return areaMask == 0 ? requestedBus : item.GetWorld()?.Runtime.ExistingSpace?.FindAudioBusOverride(position, areaMask) ?? requestedBus; }

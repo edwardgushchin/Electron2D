@@ -59,8 +59,8 @@ Joint filtering walks the smaller body adjacency list. User filters remain on th
 owner after readback, followed by GPU contact identity allocation and initialization.
 Body/contact adjacency is built and retained on GPU; disjoint-contact unlink and ID
 release also execute there. CPU query/CCD trees, mirror/event publication, external
-authoring edits, constraint coloring and island merging remain managed; disconnected
-island splitting executes on GPU. The GPU maintains its own
+authoring edits and constraint coloring remain managed; contact-driven island merging/unlinking
+and disconnected-island splitting execute on GPU. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
@@ -201,7 +201,7 @@ the hook. Retained workers copy body metadata and GPU results into the CPU mirro
 and per-worker contact bitsets; their ordered union is unchanged. Hooked contacts
 publish on the owner after workers join, and custom material callbacks keep all
 publication on the owner. The step-scoped completion marker skips the CPU collision-update task;
-contact graph/island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
+constraint coloring, authoring island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
 execute in the collision shader. It reads the previous completed GPU solver
 buffer directly when that contact's source is current; cold or older sources
 upload a compact 32-byte history record. Empty histories need no upload.
@@ -245,8 +245,9 @@ and frees the base ID last. Sleeping/clean islands do no GPU work. The solver
 routes GPU split callbacks through the owner; CPU worlds retain their worker task.
 Explicit body sleep uses the same split callback. Input/output storage and ID maps
 are retained; first use and topology growth remain outside warmed allocation claims.
-This does not move island merges, graph coloring, sleeping decisions or set
-transfers to GPU. `SplitIslandCount`, `SplitComponentCount` and
+The split stage does not move graph coloring, sleeping decisions or set
+transfers to GPU. Contact-driven merges now use the batch stage described below;
+authoring merges remain CPU work. `SplitIslandCount`, `SplitComponentCount` and
 `SplitConvergenceBatches` expose the work actually exercised.
 
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
@@ -383,7 +384,7 @@ Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
-move constraint coloring and island merging to GPU, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+move constraint coloring and authoring island changes to GPU, retain the island graph without full snapshots, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -911,3 +912,55 @@ the existing path and cannot establish the new stage's performance. Artifacts:
 ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-split-a.json`.
 CPU island merging, graph coloring, sleeping/set transfer, CCD/query mirrors and
 public backend selection remain unfinished; this is not full-backend or FPS acceptance.
+
+
+## GPU contact-driven island graph (2026-10-08)
+
+The internal GPU world now batches all contact-driven island membership changes
+after custom material/pre-solve callbacks and before contact-state publication.
+A GPU weighted union preserves the larger-island winner, endpoint-A ties, exact
+list concatenation and ordered contact insertion/removal. It records only merge
+parents during the ordered pass; a parallel pass remaps body/contact/joint IDs.
+This eliminates per-merge traversal of every smaller-island member. It uses one
+submission with two compute passes, rather than one device wait per new contact.
+
+The host checks the full returned graph before live changes. The original contact
+loop still wakes sleeping sets and frees each removed island ID at its original
+point, preserving solver-set swap indices and ID-pool order. The final lists are
+imported before solver validation. User callbacks see only completed state;
+internal graph publication remains owner-thread-only. CPU worlds and authoring
+joint/body changes retain their existing immediate graph path. There is no GPU
+failure fallback or replay. Hook ownership survives rebind/dispose/world reset.
+
+A partial merge failure can leave native membership pointing at a freed island.
+Failed-world release now invalidates managed views and detaches body/area/joint
+owners without traversing raw graph links or capturing partially advanced motion.
+The space releases the remaining backend storage in bulk. Release guards preserve
+owner/stepping restrictions while queries, mutation and replay remain rejected.
+
+`ELECTRON2D_TEST_GPU_ISLAND_GRAPH=1` extends the existing contact churn oracle to
+check every island descriptor, list, member identity, free-ID order, graph slot and
+solver-set index. Repeated removal/split/reconnection forces actual merges after
+warmup. Separate fixtures check unequal joint islands, sleeping-set wake chains,
+stopped-touching contacts that remain alive, callback ownership and partial-merge
+teardown. The full GPU suite also injects failure after completed graph publication.
+
+The current graph still crosses the host boundary as a complete snapshot per
+nonempty batch. Ordered union/list edits are serial on GPU. Initial sequential
+Linux/Vulkan maximum-Smash runs use 65,537 bodies, 32 warmup and 64 measured headless
+diagnostic steps with no concurrent build/test/formatter. The test-only control
+`ELECTRON2D_SANDBOX_PROFILE_CPU_ISLAND_GRAPH=1` retains other GPU stages:
+
+| Island graph | Whole-step mean | p95 | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: |
+| GPU | 179.16 ms | 249.15 ms | 0 / 0 |
+| CPU control | 161.82 ms | 220.33 ms | 0 / 0 |
+
+The GPU interval performs 405,412 membership changes and 35,134 merges, transferring
+1,432,956,032 graph bytes across both directions. Both state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+This implementation is slower than the CPU graph control; retained resident graph
+storage and parallel ordering remain necessary optimization work. Artifacts:
+ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-graph-a.json`.
+These checks establish this executing stage, not full GPU backend completion,
+steady all-awake frame rate, other devices or native-window acceptance.

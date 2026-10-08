@@ -55,6 +55,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         world.findBroadPhasePairs = gpu.FindBroadPhasePairs;
         gpu.EnableContactCreation(world);
         gpu.EnableIslandSplitting(world);
+        gpu.EnableIslandChanges(world);
         return gpu;
     }
     private Vector2 _defaultGravity;
@@ -128,6 +129,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
+    internal bool HasBackendFailure => _gpuFailure is not null;
 
     internal void EnsureReleaseAccess()
     {
@@ -290,14 +292,15 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
-        PhysicsServer.Service.EnsureJointBodyMembershipChange(body.PhysicsRID);
+        EnsureReleaseAccess();
+        PhysicsServer.Service.EnsureJointBodyMembershipChange(body.PhysicsRID, releasing: true);
         if (_bodies.Count > 0 && ReferenceEquals(_bodies[^1], body)) _bodies.RemoveAt(_bodies.Count - 1);
         else if (!_bodies.Remove(body)) return;
         foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(body.PhysicsRID);
         foreach (var joint in _joints) joint.BodyLeaving(body);
         if (body is RigidBody departing) { _contactBodies.Remove(departing); departing.CaptureBackendSleep(); }
         body.DetachBackend();
-        PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
+        if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
         if (body is RigidBody removed) removed.ClearContactState();
         foreach (var rigid in _contactBodies) rigid.ForgetContact(body, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
@@ -330,7 +333,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void Remove(Joint joint)
     {
         if (_disposed) return;
-        EnsureQueryAccess();
+        EnsureReleaseAccess();
         if (_joints.Remove(joint)) joint.DetachBackend();
     }
 
@@ -363,7 +366,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
-        if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID);
+        if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID, releasing: true);
         if (_serverColliders.Count != 0 && ReferenceEquals(_serverColliders[^1], collider))
             _serverColliders.RemoveAt(_serverColliders.Count - 1);
         else if (!_serverColliders.Remove(collider)) return;
@@ -372,7 +375,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
         ForgetAreaMonitors(collider.RID);
         collider.DetachBackend();
-        if (!collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
+        if (!HasBackendFailure && !collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
         DispatchEvents();
     }
 

@@ -230,3 +230,9 @@ detached. Disabling CanSleep wakes detached configuration. An explicitly sleepin
 body reenters asleep even with CanSleep false; server/direct-state setters share
 these rules. Existing freeze/disable velocity configuration remains distinct from
 actual native velocity. PhysicsServerStateTests verifies these lifecycle cases.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

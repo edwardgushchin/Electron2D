@@ -239,8 +239,8 @@ public abstract class Joint : Entity
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping.</exception>
     protected override void ValidateDisposal()
     {
-        _space?.EnsureQueryAccess();
-        Runtime.EnsureAccess();
+        _space?.EnsureReleaseAccess();
+        Runtime.EnsureAccess(releasing: true);
         base.ValidateDisposal();
     }
 

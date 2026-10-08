@@ -1011,7 +1011,9 @@ public sealed partial class PhysicsServer
     /// <summary>Frees a server-owned space, collider, shape or joint RID.</summary>
     /// <param name="rid">A live caller-owned server resource identity.</param>
     /// <remarks>Scene-owned spaces, collision objects and joints are released by their scene owners.
-    /// Freeing a body clears dependent joint connections before removing its identity.</remarks>
+    /// Freeing a body clears dependent joint connections before removing its identity.
+    /// After a backend failure, colliders and joints can still be released; their raw storage is reclaimed
+    /// with the failed space without traversing partially published simulation graphs.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
     /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped.</exception>
     public static void FreeRID(RID rid) => Service.FreeRIDCore(rid);

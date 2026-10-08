@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-03
+Last updated: 2026-10-08
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -170,3 +170,9 @@ PhysicsServer's ten concrete Area field getter/setter pairs accept this node's R
 [Indexed PhysicsServer geometry](PhysicsServer.md#shape-slots) now shares the scene/server logical slots, effective local poses and native fixture/query path under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). Raw replacement/pose/disabled/one-way edits do not rewrite child configuration; group/child edits reclaim corresponding overrides. Shape free/replacement follows shared RID/view ownership and related-world phase guards. Effective poses also feed mass geometry. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies real geometry, body/Area lifetime and one-way contacts/motion on Linux/.NET 10.
 
 Scene/server membership and monitor configuration prepare object/pair/change storage from the existing fixture inventory. Body creation also prepares dormant solver-set identities and buffers, so first sleep after a long run can reuse them. Prepared graph storage is four contacts per rounded body-capacity slot; unusual denser topologies can exceed that tested budget and are outside the sandbox measurement. Cache capacity grows during explicit construction/configuration and remains owned by the world until disposal.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

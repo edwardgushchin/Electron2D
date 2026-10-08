@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -960,3 +960,9 @@ Viewport World replacement also rebinds direct Entity-parent NavigationAgent map
 The positive physics boundary prepares scene agent/obstacle positions and source submissions, solves/publishes shared ORCA velocities and dispatches callbacks before physics calculations. Topology observer failure is collected without skipping this independent avoidance lane; all callback failures remain aggregated by the frame. Paused parents/obstacles and foreign-bound maps are excluded.
 
 Pause/process-mode notifications update NavigationAgent pause state immediately. NavigationObstacle detaches runtime map membership while paused and restores the prior membership on resume; source map selection remains separate.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

@@ -10,14 +10,14 @@ using static Box2D.NET.B2Worlds;
 
 internal static partial class GPUPhysicsTests
 {
-    internal static void VerifyContactRemovals()
+    internal static void VerifyContactRemovals(bool islandChanges = false)
     {
         using var gpu = new GPUPhysicsWorld();
-        foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 129, 257 }) VerifyContactRemovals(gpu, count);
+        foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 129, 257 }) VerifyContactRemovals(gpu, count, islandChanges);
         Console.WriteLine("GPU contact removal preserves body links, free-ID order, graph slots, begin/end events, callback-visible topology and warmed allocation.");
     }
 
-    private static void VerifyContactRemovals(GPUPhysicsWorld gpu, int count)
+    private static void VerifyContactRemovals(GPUPhysicsWorld gpu, int count, bool islandChanges)
     {
         var owner = Environment.CurrentManagedThreadId;
         var expectedCalls = new List<(int, int, int, int, int, int)>(Math.Max(16, count * count));
@@ -54,6 +54,7 @@ internal static partial class GPUPhysicsTests
         var cpu = b2GetWorldFromId(cpuID); var actual = b2GetWorldFromId(gpuID);
         var cpuContext = new B2StepContext { world = cpu }; var gpuContext = new B2StepContext { world = actual };
         gpu.EnableContactCreation(actual); actual.generateManifolds = gpu.UpdateContacts;
+        if (islandChanges) { gpu.EnableIslandChanges(actual); gpu.EnableIslandSplitting(actual); }
         void Move(B2World w, bool apart)
         {
             for (var i = 0; i < count; i++) b2Body_SetTransform(b2MakeBodyId(w, i + 1), Position(i, apart), new(1, 0));
@@ -101,20 +102,33 @@ internal static partial class GPUPhysicsTests
             for (var i = 0; i < expectedCalls.Count; i++) if (expectedCalls[i] != actualCalls[i]) throw new Exception("Callbacks saw different pre-removal topology.");
             expectedCalls.Clear(); actualCalls.Clear();
             gpu.ValidateContactLinks(actual);
+            CompareIslands(cpu, actual);
         }
-        void Frame(bool apart) { Move(cpu, apart); Move(actual, apart); Collide(cpu, cpuContext); Collide(actual, gpuContext); Compare(); }
+        void Frame(bool apart)
+        {
+            Move(cpu, apart); Move(actual, apart); Collide(cpu, cpuContext); Collide(actual, gpuContext); Compare();
+            if (islandChanges && apart && count > 0)
+            {
+                // Force disconnected components back apart so every cycle must merge again.
+                B2Islands.b2SplitIsland(cpu, cpu.bodies.data[1].islandId);
+                B2Islands.b2SplitIsland(actual, actual.bodies.data[1].islandId);
+                B2ArenaAllocators.b2GrowArena(cpu.arena); Compare();
+            }
+        }
         try
         {
             Frame(false);
             for (var i = 0; i < 32; i++) { Frame(true); Frame(false); }
             var snapshots = gpu.ContactPoolSnapshotCount; var links = gpu.ContactLinkUploadBytes; var poolBytes = gpu.ContactPoolUploadBytes;
-            var removed = gpu.RemovedContactCount;
+            var removed = gpu.RemovedContactCount; var changes = gpu.IslandChangeCount; var merges = gpu.MergedIslandCount;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 16; i++) { Frame(true); Frame(false); }
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
             if (bytes != 0 || gpu.ContactPoolSnapshotCount != snapshots || gpu.ContactLinkUploadBytes != links || gpu.ContactPoolUploadBytes != poolBytes)
                 throw new Exception($"Warmed GPU removal allocated {bytes} bytes or reuploaded retained contact topology.");
             if (count >= 1 && gpu.RemovedContactCount == removed) throw new Exception("The fixture must remove contacts on GPU.");
+            if (islandChanges && count > 0 && (gpu.IslandChangeCount == changes || count is > 1 and < 257 && gpu.MergedIslandCount == merges))
+                throw new Exception("The island fixture must change membership and merge on GPU.");
             // External CPU destruction remains coherent with the resident GPU graph.
             if (count > 2)
             {
@@ -131,6 +145,7 @@ internal static partial class GPUPhysicsTests
             b2DestroyWorld(cpuID); b2DestroyWorld(gpuID);
             if (cpu.integrateBodyStage is not null || cpu.solveConstraints is not null || actual.generateManifolds is not null ||
                 actual.destroyDisjointContact is not null || actual.finishContactRemovals is not null ||
+                actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null ||
                 cpu.reusableStepContext.states is not null || actual.reusableStepContext.generatedManifoldOwner is not null)
                 throw new Exception("World reset must detach every GPU stage callback.");
         }

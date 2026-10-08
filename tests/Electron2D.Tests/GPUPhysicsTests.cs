@@ -13,7 +13,7 @@ internal static partial class GPUPhysicsTests
         VerifyGeometryResidency();
         VerifyContactUpdates();
         VerifyContactCreation();
-        VerifyContactRemovals();
+        VerifyIslandGraph();
         VerifyIslandSplitting();
         VerifyResidentConstraints(gpu);
         VerifyWarmHistory(gpu);
@@ -26,6 +26,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(true, creationFailure: true);
         VerifyWorld(true, removalFailure: true);
         VerifyWorld(true, splitFailure: true);
+        VerifyWorld(true, islandFailure: true);
         VerifyOwnedWorldFailure();
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
@@ -111,7 +112,7 @@ internal static partial class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false, bool removalFailure = false, bool splitFailure = false)
+    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false, bool removalFailure = false, bool splitFailure = false, bool islandFailure = false)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -145,7 +146,20 @@ internal static partial class GPUPhysicsTests
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            if (splitFailure)
+            if (islandFailure)
+            {
+                var native = B2Worlds.b2GetWorldFromId(world.WorldID);
+                var existing = native.contacts.data.First(c => c.contactId >= 0 && c.islandId >= 0);
+                native.shapes.data[existing.shapeIdB].fatAABB = new() { lowerBound = new(100, 100), upperBound = new(101, 101) };
+                var publish = native.finishIslandChanges;
+                native.finishIslandChanges = w =>
+                {
+                    var before = gpu.IslandChangeCount; publish(w);
+                    if (gpu.IslandChangeCount == before) throw new Exception("The failure fixture must publish GPU island changes.");
+                    throw new IOException("injected GPU island graph publication failure");
+                };
+            }
+            else if (splitFailure)
             {
                 var native = B2Worlds.b2GetWorldFromId(world.WorldID);
                 var body = native.bodies.data.First(b => b.id >= 0 && b.type == B2BodyType.b2_dynamicBody);

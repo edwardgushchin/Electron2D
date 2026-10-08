@@ -96,12 +96,12 @@ public abstract class PhysicsBody : CollisionObject
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         if (_space is null) return;
-        if (this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody)
+        if (!_space.HasBackendFailure && this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody)
         {
             var world = b2GetWorldFromId(_space.WorldID);
             rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, _bodyID));
         }
-        b2DestroyBody(_bodyID);
+        if (!_space.HasBackendFailure) b2DestroyBody(_bodyID);
         _backendShapes.Clear();
         _appliedShapeRevisions.Clear();
         _space = null;
@@ -314,8 +314,8 @@ public abstract class PhysicsBody : CollisionObject
     /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping.</exception>
     protected override void ValidateDisposal()
     {
-        Tree?.EnsurePhysicsParticipationChange();
-        PhysicsServer.Service.EnsureJointBodyMembershipChange(PhysicsRID);
+        Tree?.EnsurePhysicsParticipationChange(releasing: true);
+        PhysicsServer.Service.EnsureJointBodyMembershipChange(PhysicsRID, releasing: true);
         base.ValidateDisposal();
     }
 

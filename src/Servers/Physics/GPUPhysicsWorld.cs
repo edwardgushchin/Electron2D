@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 namespace Electron2D;
 
 // GPU hierarchy/contact identity maintenance, integration, manifolds and constraints execute here;
-// CPU query/CCD mirrors, user callbacks, mirror/event publication and graph mutation remain managed.
+// CPU query/CCD mirrors, user callbacks, mirror/event publication, authoring topology and constraint coloring remain managed.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline, _islandGraphPipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null, islandGraph = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -52,6 +52,10 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _splitBodyResult = new(this); _splitContactResult = new(this); _splitJointResult = new(this);
             _splitGroupStorage = new(this); _splitStackStorage = new(this); _splitScanStorage = new(this); _splitStatusStorage = new(this);
             _splitIsland = SplitIsland;
+            _islandGraphPipeline = islandGraph = CreatePipeline("PhysicsIslandGraph.comp.spv");
+            _graphIslands = new(this); _graphBodies = new(this); _graphContacts = new(this); _graphJoints = new(this);
+            _graphChanges = new(this); _graphStatus = new(this);
+            _beginIslandChanges = BeginIslandChanges; _changeContactIsland = ChangeContactIsland; _finishIslandChanges = FinishIslandChanges;
             _contactSlotStorage = new(this); _contactFreeStorage = new(this); _contactScanStorage = new(this);
             _contactPoolStorage = new(this); _contactChangeStorage = new(this);
             _contactRequestStorage = new(this); _contactCreationStorage = new(this);
@@ -79,7 +83,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         }
         catch
         {
-            islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            islandGraph?.Dispose(); islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -203,6 +207,9 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachFilterTracking();
         DetachGeometryTracking();
         DetachContactPool();
+        DetachIslandChanges();
+        _graphIslands.Dispose(); _graphBodies.Dispose(); _graphContacts.Dispose(); _graphJoints.Dispose();
+        _graphChanges.Dispose(); _graphStatus.Dispose(); _islandGraphPipeline.Dispose();
         if (_splitWorld is not null && _splitWorld.splitIsland == _splitIsland) _splitWorld.splitIsland = null!;
         _splitWorld = null;
         _splitBodyStorage.Dispose(); _splitContactStorage.Dispose(); _splitJointStorage.Dispose();

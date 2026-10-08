@@ -618,6 +618,8 @@ namespace Box2D.NET
 
             int endEventArrayIndex = world.endEventArrayIndex;
 
+            world.beginIslandChanges?.Invoke(world);
+
             B2Shape[] shapes = world.shapes.data;
             ushort worldId = world.worldId;
 
@@ -732,6 +734,7 @@ namespace Box2D.NET
             }
 
             finishContactRemovals?.Invoke(world);
+            world.finishIslandChanges?.Invoke(world);
             b2ValidateSolverSets(world);
             b2ValidateContacts(world);
 

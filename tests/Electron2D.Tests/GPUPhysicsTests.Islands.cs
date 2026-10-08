@@ -25,6 +25,44 @@ internal static partial class GPUPhysicsTests
         Console.WriteLine("GPU island splitting matches CPU components, DFS lists, ID reuse, static/disabled edges, sleep/wake and owner scheduling with zero warmed bytes.");
     }
 
+    private static void CompareIslands(B2World cpu, B2World actual)
+    {
+        if (cpu.islandIdPool.nextIndex != actual.islandIdPool.nextIndex || cpu.islandIdPool.freeArray.count != actual.islandIdPool.freeArray.count)
+            throw new Exception("Island pool counts differ.");
+        for (var i = 0; i < cpu.islandIdPool.freeArray.count; i++)
+            if (cpu.islandIdPool.freeArray.data[i] != actual.islandIdPool.freeArray.data[i]) throw new Exception("Island free-ID order differs.");
+        for (var i = 0; i < cpu.islands.count; i++)
+        {
+            var a = cpu.islands.data[i]; var b = actual.islands.data[i];
+            if (a.islandId != b.islandId || a.setIndex != b.setIndex || a.localIndex != b.localIndex) throw new Exception("Island identity/set differs.");
+            if (a.islandId < 0) continue;
+            if (a.headBody != b.headBody || a.tailBody != b.tailBody || a.bodyCount != b.bodyCount ||
+                a.headContact != b.headContact || a.tailContact != b.tailContact || a.contactCount != b.contactCount ||
+                a.headJoint != b.headJoint || a.tailJoint != b.tailJoint || a.jointCount != b.jointCount || a.constraintRemoveCount != b.constraintRemoveCount)
+                throw new Exception($"Island list/count differs at {i}.");
+        }
+        for (var i = 0; i < cpu.bodies.count; i++)
+        {
+            var a = cpu.bodies.data[i]; var b = actual.bodies.data[i];
+            if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex)
+                throw new Exception("Island body order differs.");
+        }
+        for (var i = 0; i < cpu.contacts.count; i++)
+        {
+            var a = cpu.contacts.data[i]; var b = actual.contacts.data[i];
+            if (a.contactId < 0) continue;
+            if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex || a.colorIndex != b.colorIndex)
+                throw new Exception("Island contact order differs.");
+        }
+        for (var i = 0; i < cpu.joints.count; i++)
+        {
+            var a = cpu.joints.data[i]; var b = actual.joints.data[i];
+            if (a.jointId < 0) continue;
+            if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex || a.colorIndex != b.colorIndex)
+                throw new Exception("Island joint order differs.");
+        }
+    }
+
     private static B2JointId SplitJoint(B2WorldId world, B2BodyId a, B2BodyId b, int kind)
     {
         var definition = b2DefaultJointDef(); definition.bodyIdA = a; definition.bodyIdB = b; definition.collideConnected = true;
@@ -77,43 +115,7 @@ internal static partial class GPUPhysicsTests
         var c = Create(cpuScheduler); var g = Create(gpuScheduler);
         var cpu = b2GetWorldFromId(c.ID); var actual = b2GetWorldFromId(g.ID);
         gpu.EnableIslandSplitting(actual);
-        void Compare()
-        {
-            if (cpu.islandIdPool.nextIndex != actual.islandIdPool.nextIndex || cpu.islandIdPool.freeArray.count != actual.islandIdPool.freeArray.count)
-                throw new Exception("Island pool counts differ.");
-            for (var i = 0; i < cpu.islandIdPool.freeArray.count; i++)
-                if (cpu.islandIdPool.freeArray.data[i] != actual.islandIdPool.freeArray.data[i]) throw new Exception("Island free-ID order differs.");
-            for (var i = 0; i < cpu.islands.count; i++)
-            {
-                var a = cpu.islands.data[i]; var b = actual.islands.data[i];
-                if (a.islandId != b.islandId || a.setIndex != b.setIndex || a.localIndex != b.localIndex) throw new Exception("Island identity/set differs.");
-                if (a.islandId < 0) continue;
-                if (a.headBody != b.headBody || a.tailBody != b.tailBody || a.bodyCount != b.bodyCount ||
-                    a.headContact != b.headContact || a.tailContact != b.tailContact || a.contactCount != b.contactCount ||
-                    a.headJoint != b.headJoint || a.tailJoint != b.tailJoint || a.jointCount != b.jointCount || a.constraintRemoveCount != b.constraintRemoveCount)
-                    throw new Exception($"Island list/count differs at {i}/{count}.");
-            }
-            for (var i = 0; i < cpu.bodies.count; i++)
-            {
-                var a = cpu.bodies.data[i]; var b = actual.bodies.data[i];
-                if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex)
-                    throw new Exception("Island body order differs.");
-            }
-            for (var i = 0; i < cpu.contacts.count; i++)
-            {
-                var a = cpu.contacts.data[i]; var b = actual.contacts.data[i];
-                if (a.contactId < 0) continue;
-                if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex || a.colorIndex != b.colorIndex)
-                    throw new Exception("Island contact order differs.");
-            }
-            for (var i = 0; i < cpu.joints.count; i++)
-            {
-                var a = cpu.joints.data[i]; var b = actual.joints.data[i];
-                if (a.jointId < 0) continue;
-                if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex || a.colorIndex != b.colorIndex)
-                    throw new Exception("Island joint order differs.");
-            }
-        }
+        void Compare() => CompareIslands(cpu, actual);
         void Break()
         {
             for (var i = 4; !connected && i < c.Bridges.Length; i += 5) { b2DestroyJoint(c.Bridges[i], true); b2DestroyJoint(g.Bridges[i], true); }

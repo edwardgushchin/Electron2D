@@ -572,3 +572,9 @@ Contact limits prepare bounded point storage before fixed stepping. Every touchi
 ## Viewport world integration
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

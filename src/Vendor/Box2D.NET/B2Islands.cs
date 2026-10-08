@@ -298,6 +298,8 @@ namespace Box2D.NET
                 b2WakeSolverSet(world, bodyA.setIndex);
             }
 
+            if (world.changeContactIsland?.Invoke(world, contact, true) == true) return;
+
             int islandIdA = bodyA.islandId;
             int islandIdB = bodyB.islandId;
 
@@ -317,6 +319,7 @@ namespace Box2D.NET
         // This is called when a contact no longer has contact points or when a contact is destroyed.
         internal static void b2UnlinkContact(B2World world, B2Contact contact)
         {
+            if (world.changeContactIsland?.Invoke(world, contact, false) == true) return;
             B2_ASSERT(contact.islandId != B2_NULL_INDEX);
 
             // remove from island

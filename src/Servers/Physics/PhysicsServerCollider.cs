@@ -87,8 +87,11 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         if (IsArea) PhysicsServer.Service.FindAreaRuntime(RID)?.Reset();
         PhysicsServer.Service.InvalidateBodyView(RID);
         if (_space is null) return;
-        CaptureMotion();
-        b2DestroyBody(_bodyID);
+        if (!_space.HasBackendFailure)
+        {
+            CaptureMotion();
+            b2DestroyBody(_bodyID);
+        }
         _backendShapes.Clear();
         _space = null;
         SpaceRID = default;

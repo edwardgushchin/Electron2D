@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-09-30
+Last updated: 2026-10-08
 
 **Inherits:** System.Object · **Declaration:** `internal sealed partial class PhysicsJointRuntime`
 
@@ -38,3 +38,9 @@ Spring force uses world anchors, rotational leverage, Hooke impulse and exponent
 ## Verification and limits
 
 Scene pin/groove/spring tests and [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) cover shared native response, settings, pending/replacement worlds, owner/phase/lifetime rejection, collision contribution accounting and zero managed bytes across 64 warmed active server spring frames on Linux/.NET 10. Native allocations, broader stability/performance, other platforms and owner visual acceptance remain unverified. [ADR 0087](../decisions/physics-joints.md#adr-0087) defines ownership; ADRs 0084–0086 define the kernels.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

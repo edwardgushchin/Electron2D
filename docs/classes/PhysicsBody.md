@@ -70,3 +70,9 @@ Inherited `DisableMode` applies to every concrete body. Remove detaches native f
 PhysicsServer's typed state methods accept this body's RID and preserve its scene
 role. Attachment restores non-rigid contact velocity/sleep policy and explicitly
 requested dynamic sleep even when automatic sleep is disabled. See [typed state](PhysicsServer.md#body-state).
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

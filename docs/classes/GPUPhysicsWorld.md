@@ -4,12 +4,12 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, disconnected-island splitting, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, contact-driven island merging/unlinking and disconnected-island splitting, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
@@ -76,7 +76,7 @@ CPU-origin link changes coalesce to 32-byte contact/body updates, including both
 neighbors on deletion. Binding/observer/capacity changes snapshot both stores.
 `ContactLinkUploadBytes` counts those uploads. The internal diagnostic
 `ValidateContactLinks` synchronizes pending changes and compares all GPU link/head/
-count records against the CPU mirror. External authoring removal and graph/island changes still run
+count records against the CPU mirror. External authoring removal and its graph/island changes still run
 on CPU; normal frames do not perform that complete diagnostic readback.
 
 The complete collision entry also removes disjoint contacts on GPU within its
@@ -121,10 +121,31 @@ Built-in contacts without pre-solve hooks publish in parallel; hooked contacts
 publish on the owner after workers join. Worlds using custom material callbacks
 keep publication on the owner to preserve callback order. A veto clears touching/hit/start state and rolling history; optional pruning for
 hooked contacts follows the callback so its deepest-point input is unchanged.
-`UpdatedContactCount` accumulates complete contact updates. Contact graph/island
-mutation, event publication and the first manifold readback still remain managed. Chain
+`UpdatedContactCount` accumulates complete contact updates. Constraint coloring, authoring island changes, event publication and the first manifold readback still remain managed. Chain
 segments are rejected explicitly; CPU tree mirrors, user filters, contact/body links
 and sensor queries still belong to the CPU path.
+
+`EnableIslandChanges` batches the ordered contact-state changes after material/pre-solve
+callbacks finish. GPU weighted union keeps the original larger-island winner and
+endpoint-A tie break, concatenates body/contact/joint lists and applies contact
+insertions/removals in contact-ID order. A second pass resolves every member's final
+root in parallel. Merges do not walk the smaller island's entire member lists.
+The owner validates identities, list bounds/order/counts and membership before
+publication. During the original contact loop, sleeping sets wake at the original
+points and removed island IDs are freed in the original order. Completed lists
+publish before solver validation; no game callback observes the intermediate graph.
+Authoring changes outside collision retain their immediate CPU path.
+
+The batch currently uploads and reads the complete graph snapshot, using retained
+64-byte island, 16-byte member, 32-byte operation and 16-byte status records, with
+32-byte uniforms. Ordered union/list edits remain serial on GPU; remapping is
+parallel. These are explicit transfer/ordering limits, not resident graph storage.
+`IslandChangeCount`, `MergedIslandCount` and `IslandGraphTransferBytes` count actual
+operations, merges and both transfer directions. No membership changes means no
+submission. Partial publication failure poisons the world; failed-world teardown
+detaches managed resources and releases raw storage in bulk, without walking an
+incomplete graph or capturing uncommitted motion. Rebinding/disposal resets only
+this host's callbacks.
 
 `EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
 islands upload ordered body/contact/joint adjacency. GPU minimum-seed label
@@ -140,7 +161,7 @@ mirror capacity or changing live state. Existing island IDs are allocated in see
 order, all lists are imported, and the old base ID is freed last. CPU no longer
 performs connectivity discovery for this path. Scheduled splits run on the owner
 instead of a solver worker; explicit sleep requests use the same callback. Clean
-or sleeping islands keep their existing no-op behavior. Island merges, constraint
+or sleeping islands keep their existing no-op behavior. Authoring island merges, constraint
 coloring, sleep decisions/transfer and query mirrors remain CPU work. Body/edge
 inputs occupy 16/32 bytes; member/group/status results use 16/48/16 bytes and
 uniforms 32 bytes. `SplitIslandCount`, `SplitComponentCount` and

@@ -21,6 +21,8 @@ namespace Box2D.NET
         internal System.Action<B2World, B2Contact> destroyDisjointContact;
         internal System.Action<B2World> finishContactRemovals;
         internal System.Action<B2World, int> splitIsland;
+        internal System.Action<B2World> beginIslandChanges, finishIslandChanges;
+        internal System.Func<B2World, B2Contact, bool, bool> changeContactIsland;
         internal System.Action<int> contactPairChanged;
         internal System.Action<int> shapeFilterChanged;
         internal System.Action<int> shapeGeometryChanged;
@@ -186,6 +188,8 @@ namespace Box2D.NET
             destroyDisjointContact = null;
             finishContactRemovals = null;
             splitIsland = null;
+            beginIslandChanges = finishIslandChanges = null;
+            changeContactIsland = null;
             contactPairChanged = null;
             shapeFilterChanged = null;
             shapeGeometryChanged = null;

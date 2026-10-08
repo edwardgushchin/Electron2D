@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-09-30
+Last updated: 2026-10-08
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 **Inherited By:** [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md), [DampedSpringJoint](DampedSpringJoint.md)
@@ -74,3 +74,9 @@ The scene owner thread owns attached mutation and queries. Property writes rejec
 [PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs), [GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) and [DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) cover three concrete joint roles, path changes, body exit/reentry, active collision changes, packing, thread/phase rejection and invalid-geometry recovery. [The physics joint decisions](../decisions/physics-joints.md) define those roles.
 
 [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) verifies RID projection, server overrides, shared settings and phase/lifetime rollback under [ADR 0087](../decisions/physics-joints.md#adr-0087).
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

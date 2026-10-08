@@ -216,7 +216,7 @@ public sealed partial class Area : CollisionObject
     {
         PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.Reset();
         if (_space is null) return;
-        b2DestroyBody(_bodyID);
+        if (!_space.HasBackendFailure) b2DestroyBody(_bodyID);
         _backendShapes.Clear();
         _appliedShapeRevisions.Clear();
         _space = null;

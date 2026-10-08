@@ -240,8 +240,8 @@ public sealed partial class PhysicsServer
         }
         else if (collider is not null)
         {
-            EnsureColliderSpaceAccessible(collider);
-            if (!collider.IsArea) EnsureJointBodyMembershipChange(rid);
+            if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).EnsureReleaseAccess();
+            if (!collider.IsArea) EnsureJointBodyMembershipChange(rid, releasing: true);
             try { if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider); }
             finally
             {
@@ -257,7 +257,7 @@ public sealed partial class PhysicsServer
         }
         else if (joint is not null)
         {
-            joint.EnsureAccess(); joint.Clear();
+            joint.EnsureAccess(releasing: true); joint.Clear();
             lock (_registryGate) _jointRuntimes.Remove(rid);
         }
         else if (shape is not null)

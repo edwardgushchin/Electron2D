@@ -45,3 +45,9 @@ zeroed without reconstructing a decoded angle. Detach preserves a pending target
 Explicit dynamic sleep clears velocity and survives detach/reentry alongside
 CanSleep; disabling automatic sleep wakes. PhysicsServerStateTests covers these
 paths on CPU/GPU, including real path contacts and zero warmed managed allocation.
+
+After an internally enabled GPU backend fails, body/area/joint teardown preserves
+owner/stepping guards but skips individual raw graph destruction and partial-motion
+capture. Managed bindings/views are released; the failed space reclaims raw storage
+in bulk. Queries and further simulation remain rejected. See the
+[GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).

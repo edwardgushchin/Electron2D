@@ -130,11 +130,11 @@ public sealed partial class PhysicsServer
                 }
     }
 
-    internal void EnsureJointBodyMembershipChange(RID body)
+    internal void EnsureJointBodyMembershipChange(RID body, bool releasing = false)
     {
         lock (_registryGate)
             foreach (var runtime in _jointRuntimes.Values)
-                if (runtime.BodyA == body || runtime.BodyB == body) runtime.EnsureAccess();
+                if (runtime.BodyA == body || runtime.BodyB == body) runtime.EnsureAccess(releasing);
     }
 
     internal void ClearJointsForBody(RID body)

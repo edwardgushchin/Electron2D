@@ -37,8 +37,15 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal float SpringAutomaticLength { get; set; } = 50;
     internal float EffectiveSpringRestLength => SpringAutomaticRest ? MathF.Abs(SpringAutomaticLength) : SpringRestLength;
 
-    internal void EnsureAccess()
+    internal void EnsureAccess(bool releasing = false)
     {
+        if (releasing)
+        {
+            Space?.EnsureReleaseAccess();
+            if (BodyA.IsValid()) BodySpace(BodyA)?.EnsureReleaseAccess();
+            if (BodyB.IsValid()) BodySpace(BodyB)?.EnsureReleaseAccess();
+            return;
+        }
         Space?.EnsureQueryAccess();
         if (BodyA.IsValid()) BodySpace(BodyA)?.EnsureQueryAccess();
         if (BodyB.IsValid()) BodySpace(BodyB)?.EnsureQueryAccess();
@@ -183,7 +190,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         if (BackendID.index1 != 0)
         {
             if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
-            b2DestroyJoint(BackendID, wakeAttached: true);
+            if (Space?.HasBackendFailure != true) b2DestroyJoint(BackendID, wakeAttached: true);
         }
         BackendID = default; BodyAID = BodyBID = default;
     }
