@@ -21,7 +21,7 @@ internal static partial class GPUPhysicsTests
         foreach (var count in new[] { 0, 1, 2, 63, 64, 65, 257, 4097 })
             VerifyBroadPhase(gpu, count, false);
         VerifyBroadPhase(gpu, 257, true);
-        Console.WriteLine("GPU tree build/refit and resident-pair checks match CPU order: sparse/dense trees, motion/rebuild, filters/joints, late binding, ID reuse, zero unchanged uploads and warmed managed bytes.");
+        Console.WriteLine("GPU tree, resident pairs and filter journals match CPU order: sparse/dense trees, motion/rebuild, filters/joints, late binding, ID reuse, zero unchanged uploads and warmed managed bytes.");
     }
 
     internal static void VerifyTreeCategory()
@@ -212,6 +212,7 @@ internal static partial class GPUPhysicsTests
             var snapshotsBefore = gpu.PairTableSnapshotCount;
             var treeUploadBefore = gpu.TreeUploadBytes;
             var treeRefitsBefore = gpu.TreeRefitCount;
+            var filterUploadBefore = gpu.FilterUploadBytes;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var tick = 0; tick < 16; tick++)
             {
@@ -224,6 +225,8 @@ internal static partial class GPUPhysicsTests
                 throw new Exception("Unchanged contact topology must reuse the GPU pair table without uploads.");
             if (gpu.TreeUploadBytes != treeUploadBefore || gpu.TreeRefitCount != treeRefitsBefore)
                 throw new Exception("Unchanged proxies must reuse the GPU tree without uploads or refitting.");
+            if (gpu.FilterUploadBytes != filterUploadBefore)
+                throw new Exception("Unchanged filters and joints must remain resident without uploads.");
             if (count == 65)
             {
                 // Keep broad-phase candidates observable on every tick by vetoing
@@ -249,6 +252,9 @@ internal static partial class GPUPhysicsTests
                     gpu.TreeUploadBytes - treeUploadBefore != 64 * 32 || gpu.TreeRebuildCount <= treeRebuilds)
                     throw new Exception("GPU refit/rebuild must consume one changed proxy per tick without a full snapshot.");
 
+                if (gpu.FilterUploadBytes != filterUploadBefore)
+                    throw new Exception("Moving bodies must not reupload stable shape/joint metadata.");
+
                 // The bullet lane enlarges the tree directly, bypassing broad-phase wrappers.
                 var movingShape = world.shapes.data[world.bodies.data[bodies[62].index1 - 1].headShapeId];
                 var tree = world.broadPhase.trees[(int)B2_PROXY_TYPE(movingShape.proxyKey)];
@@ -266,6 +272,106 @@ internal static partial class GPUPhysicsTests
                 B2DynamicTrees.b2DynamicTree_SetCategoryBits(tree, proxy, category);
                 foreach (var shape in shapes) b2BufferMove(world.broadPhase, world.shapes.data[shape.index1 - 1].proxyKey);
                 b2UpdateBroadPhasePairs(world);
+            }
+            if (count == 65)
+            {
+                void Flush()
+                {
+                    foreach (var shape in shapes)
+                    {
+                        var key = world.shapes.data[shape.index1 - 1].proxyKey;
+                        if (key != -1) b2BufferMove(world.broadPhase, key);
+                    }
+                    b2UpdateBroadPhasePairs(world);
+                }
+                // Mask/group-only changes do not recreate proxies. Repeated edits
+                // before a query must upload the final value exactly once.
+                void Refilter(int tick)
+                {
+                    var value = b2Shape_GetFilter(shapes[2]);
+                    value.maskBits = 0; value.groupIndex = -3;
+                    b2Shape_SetFilter(shapes[2], value);
+                    value.maskBits = tick % 2 == 0 ? ulong.MaxValue : 0xaaaaaaaaaaaaaaaaUL;
+                    value.groupIndex = tick % 2 == 0 ? 3 : 0;
+                    b2Shape_SetFilter(shapes[2], value);
+                    Flush();
+                }
+                for (var tick = 0; tick < 32; tick++) Refilter(tick);
+                var snapshots = gpu.FilterSnapshotCount;
+                var updates = gpu.FilterUpdatedShapes;
+                filterUploadBefore = gpu.FilterUploadBytes;
+                before = GC.GetTotalAllocatedBytes(true);
+                for (var tick = 0; tick < 64; tick++) Refilter(tick);
+                bytes = GC.GetTotalAllocatedBytes(true) - before;
+                if (bytes != 0 || gpu.FilterSnapshotCount != snapshots || gpu.FilterUpdatedShapes - updates != 64 ||
+                    gpu.FilterUploadBytes - filterUploadBefore != 64 * 48)
+                    throw new Exception($"Refiltering must upload one final shape per tick with zero warmed bytes (allocated {bytes}).");
+
+                // Disabled shapes still receive edits and become valid on enable.
+                b2Body_Disable(bodies[1]);
+                var disabled = b2Shape_GetFilter(shapes[2]); disabled.groupIndex = -7;
+                b2Shape_SetFilter(shapes[2], disabled); Flush();
+                b2Body_Enable(bodies[1]); Flush();
+                b2Body_SetType(bodies[1], B2BodyType.b2_dynamicBody); Flush();
+
+                // Reused slots must take the new sensor flag and body identity.
+                var removed = shapes[^1];
+                b2DestroyShape(removed, true); shapes.RemoveAt(shapes.Count - 1);
+                Flush();
+                var shapeDef = b2DefaultShapeDef(); shapeDef.invokeContactCreation = true;
+                shapeDef.isSensor = true;
+                var sensor = b2CreateCircleShape(bodies[2], shapeDef, new B2Circle { radius = .9f }); shapes.Add(sensor);
+                if (sensor.index1 != removed.index1) throw new Exception("Sensor fixture must reuse the destroyed shape ID.");
+                Flush();
+                b2DestroyShape(sensor, true); shapes.RemoveAt(shapes.Count - 1);
+                shapeDef.isSensor = false;
+                shapes.Add(b2CreateCircleShape(bodies[5], shapeDef, new B2Circle { radius = .9f })); Flush();
+
+                b2Body_SetTransform(bodies[5], new(.8f, 0), new(1, 0));
+                b2Body_SetTransform(bodies[8], new(.8f, 0), new(1, 0));
+                var joint = B2Joints.b2DefaultRevoluteJointDef();
+                joint.@base.bodyIdA = bodies[2]; joint.@base.bodyIdB = bodies[5];
+                var middle = B2Joints.b2CreateRevoluteJoint(id, joint);
+                joint.@base.bodyIdB = bodies[7];
+                var head = B2Joints.b2CreateRevoluteJoint(id, joint); Flush();
+                B2Joints.b2DestroyJoint(middle, true); Flush();
+                joint.@base.bodyIdA = bodies[5]; joint.@base.bodyIdB = bodies[8];
+                var recycled = B2Joints.b2CreateRevoluteJoint(id, joint);
+                if (recycled.index1 != middle.index1) throw new Exception("Joint fixture must reuse the removed ID.");
+                Flush();
+                void ToggleJoint(int tick)
+                {
+                    B2Joints.b2Joint_SetCollideConnected(recycled, tick % 2 == 0);
+                    Flush();
+                }
+                for (var tick = 0; tick < 32; tick++) ToggleJoint(tick);
+                snapshots = gpu.FilterSnapshotCount; filterUploadBefore = gpu.FilterUploadBytes;
+                var jointsBefore = gpu.FilterUpdatedJoints;
+                updates = gpu.FilterUpdatedShapes;
+                var endpointShapes = world.bodies.data[bodies[5].index1 - 1].shapeCount + world.bodies.data[bodies[8].index1 - 1].shapeCount;
+                before = GC.GetTotalAllocatedBytes(true);
+                for (var tick = 0; tick < 64; tick++) ToggleJoint(tick);
+                bytes = GC.GetTotalAllocatedBytes(true) - before;
+                if (bytes != 0 || gpu.FilterSnapshotCount != snapshots || gpu.FilterUpdatedJoints - jointsBefore != 64 ||
+                    gpu.FilterUpdatedShapes - updates != 64 * endpointShapes || gpu.FilterUploadBytes - filterUploadBefore != 64 * (32 + 48 * endpointShapes))
+                    throw new Exception($"Joint edits must update only their adjacency metadata with zero warmed bytes (allocated {bytes}).");
+                B2Joints.b2DestroyJoint(head, true); Flush();
+                b2DestroyBody(bodies[5]);
+                shapes.RemoveAll(shape => !b2Shape_IsValid(shape)); Flush();
+
+                // Growth, lost observers and epoch wrap must replace the complete
+                // snapshot rather than trusting previously retained markers.
+                snapshots = gpu.FilterSnapshotCount;
+                for (var i = 0; i < 130; i++)
+                    shapes.Add(b2CreateCircleShape(bodies[2], shapeDef, new B2Circle { center = new(100 + i * 2, 0), radius = .5f }));
+                Flush();
+                if (gpu.FilterSnapshotCount != snapshots + 1) throw new Exception("Filter buffer growth must restore all live records.");
+                world.shapeFilterChanged = null!;
+                Refilter(0);
+                if (gpu.FilterSnapshotCount != snapshots + 2) throw new Exception("Lost filter observers require a new snapshot.");
+                typeof(GPUPhysicsWorld).GetField("_filterEpoch", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(gpu, -1);
+                Flush();
+                if (gpu.FilterSnapshotCount != snapshots + 3) throw new Exception("Moved epoch wrap must reset stale markers.");
             }
             if (dense)
             {
@@ -299,6 +405,8 @@ internal static partial class GPUPhysicsTests
         {
             world.findBroadPhasePairs = null!;
             b2DestroyWorld(id);
+            if (world.shapeFilterChanged is not null || world.jointFilterChanged is not null)
+                throw new Exception("Destroying a world must detach its filter observers.");
         }
     }
 }

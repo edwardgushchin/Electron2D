@@ -61,10 +61,21 @@ mirrors and the shared contact lifecycle remain managed. The GPU maintains its o
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
-Filter inputs use 48 bytes per shape and 32 bytes per joint. Shape records are
-packed in slot order; moved flags come directly from the move array rather than
-one hash lookup per shape. Shape and joint snapshots are currently uploaded
-on each moving batch; tree proxies use incremental uploads. The pair table itself is never uploaded: 4-byte GPU slots
+Filter inputs use 48 bytes per shape and 32 bytes per joint and stay resident.
+Owner-side shape creation/destruction/filter edits and joint creation/destruction/
+collision-policy edits journal unique slot IDs. Removing a joint also journals its
+predecessors whose next links change and the attached bodies' shape records, which
+cache adjacency head/count. Packing samples final values, so intermediate edits and
+ID reuse cannot leave stale records. Disabled shapes are included. Binding changes,
+lost observers, buffer growth and moved-epoch wrap require a full snapshot; warm
+batches upload only changed records. GPU scatter applies these records before a
+separate pass marks moved shapes from the existing query buffer with the current
+epoch. Pure movement does not upload stable filters or joints, and the retry uses
+the same epoch. `FilterSnapshotCount`, `FilterUpdatedShapes`, `FilterUpdatedJoints`
+and `FilterUploadBytes` report this boundary. This retains broad-phase metadata;
+per-step manifold geometry and solver-joint inputs are still separate uploads.
+
+The pair table itself is never uploaded: 4-byte GPU slots
 reference retained 8-byte contact keys. The initial world binding and capacity
 growth upload keys once; later batches upload only 16-byte changed-contact records.
 
@@ -256,7 +267,7 @@ not support a whole-frame zero-allocation claim.
 Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
-Remaining work: remove CPU tree mirrors/rank dependency, retain shape/joint metadata and implement GPU contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
+Remaining work: remove CPU tree mirrors/rank dependency, implement GPU contact creation, chain manifolds, GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -396,7 +407,7 @@ recording/uploads 0.74/0.63 ms, submit/fence/readback 2.96/3.23 ms, and result
 processing 0.87/0.78 ms. Managed contact creation follows those four phases.
 The pair stage remains slower than CPU; these short profiles do not establish
 sustained application FPS, foreign-device speed or native allocation totals.
-Tree/shape/joint uploads remain and are the next residency boundary.
+At that stage, tree/shape/joint uploads remained the next residency boundary.
 
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-pairs-{a,b}.json`.
 Current shader SHA-256 values:
@@ -438,12 +449,12 @@ to 321,239,648 bytes; readback stayed 156,052,844 bytes and filtered candidates
 and result validation/order/user filtering 0.75/0.73 ms. Managed contact creation
 follows those phases. The independent GPU hierarchy removes full tree uploads;
 it does not establish a speedup over CPU search or sustained application FPS.
-CPU mirrors/ranking and full shape/joint metadata packing remain overhead.
+At that stage, CPU mirrors/ranking and full shape/joint metadata packing remained overhead.
 
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-tree-{a,b}.json`.
 Current shader SHA-256 values:
 `PhysicsTree.comp.spv` = `4dc874c03b9237e988f49a53ffe613e6ae83201066eb3746b1a9c3d24090a2ac`;
-`PhysicsBroadPhase.comp.spv` = `73a6e98e7b96780c0a1dff6552c25719b719647947b51138fe5ec6943e8362ea`.
+`PhysicsBroadPhase.comp.spv` = `3f2d02c640faa6bf2b2806199bbcbfb6dcddd7f23332f1b1ab926d5bb3e446e6`.
 
 The native category setter's Debug guard previously tested child fields that alias
 leaf userData, rejecting valid nonzero shape IDs. The focused
@@ -451,3 +462,45 @@ leaf userData, rejecting valid nonzero shape IDs. The focused
 passes with allocated-leaf validation; it also verifies observer detachment on
 tree destruction. The Release GPU oracle directly disables/restores a leaf's
 category after enlargement and compares complete pairs/callback order with CPU.
+
+
+## Resident broad-phase filters (2026-10-08)
+
+The focused GPU/CPU exact-order oracle covers incremental mask/group edits without
+proxy recreation, sensor/body slot reuse, disabled edits and reenable, body type
+changes, joint creation, middle-link deletion, recycled joint IDs, live collision
+policy toggles, body destruction, capacity growth, lost observers and moved-epoch
+wrap. Existing sparse/dense/high-bit filters, mixed body types and overflow retries
+remain covered. Unchanged and moving batches upload zero filter bytes. After 32
+warm ticks, 64 refilter ticks upload exactly 64 final 48-byte shapes (3,072 bytes);
+64 joint policy edits upload one final 32-byte joint and only endpoint shape
+metadata per tick. Both intervals allocate zero managed bytes across all threads.
+World destruction clears both observers. The full GPU suite and injected failed
+broad-phase interval preserve world failure/teardown behavior.
+
+`PhysicsFilters.comp.spv` SHA-256:
+`bd2eedb21a4340463b560a9aee35f5ff0bff1e328afc49f66b6fc20c8e194f12`.
+
+Sequential Linux/Vulkan headless runs used the same 65,537-body Smash fixture,
+32 warm and 64 measured steps, with no builds/tests overlapping measurement.
+Only pair traversal changes between modes; manifolds and solving remain GPU:
+
+| Mode | Whole step mean | Step p95 | Pair stage mean | All-thread managed bytes |
+| --- | --- | --- | --- | --- |
+| GPU pairs A | 160.63 ms | 242.38 ms | 10.39 ms | 0 |
+| CPU pairs A | 164.90 ms | 256.78 ms | 10.80 ms | 0 |
+| CPU pairs B | 164.58 ms | 257.02 ms | 10.82 ms | 0 |
+| GPU pairs B | 160.74 ms | 251.80 ms | 10.17 ms | 0 |
+
+All four runs retain state SHA-256
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+The awake population grows from 6,425 to 41,122 during impact propagation; this is
+not a steady all-awake interval. Both GPU runs have zero filter snapshots, changed
+records and filter upload bytes. Total broad-phase input falls from the preceding
+resident-tree profile's 321,239,648 to 119,897,696 bytes (62.68% less); readback
+remains 156,052,844 bytes and candidates 496,638. Pair/tree delta counts are unchanged.
+Host packing/ranking averages 3.54/3.51 ms, versus the preceding 5.46/5.43 ms.
+This removes the full filter scan/upload; the complete step remains about 161 ms
+and does not meet 60 FPS. CPU contact transitions, geometry/constraint input packing,
+readback, queries/CCD and publication ranking still remain in the developing backend.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-filters-{a,b}.json`.

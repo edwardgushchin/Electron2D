@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
@@ -31,6 +31,15 @@ the immutable query before publishing candidates to the owner-side user filter.
 GPU built-in checks include self/moved/existing-pair deduplication, same-body/sensor
 veto, 64-bit masks, signed groups and the smaller joint adjacency list. Pair-table
 hashing uses split 32-bit arithmetic. Shape/joint records use 48/32 bytes; resident table slots and contact keys use 4/8 bytes.
+Shape/joint metadata stays resident. Shape and joint lifecycle/filter observers
+coalesce final dirty records, including predecessor links and endpoint shape
+adjacency after joint deletion. A GPU scatter pass updates those records, then a
+separate pass marks moved shapes from existing queries with the current epoch.
+Movement alone uploads no stable filter metadata. Binding/capacity/observer changes
+or epoch wrap require a snapshot; retries retain the same epoch.
+`FilterSnapshotCount`, `FilterUpdatedShapes`, `FilterUpdatedJoints` and
+`FilterUploadBytes` expose that work. These records are separate from manifold
+geometry and solver-joint inputs, which still upload per step.
 CPU pair and custom-filter order is preserved, including deleted/reused proxy slots.
 `BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch;
 `BroadPhaseCandidateTotal`, upload/readback byte totals and `BroadPhaseProfileMS`

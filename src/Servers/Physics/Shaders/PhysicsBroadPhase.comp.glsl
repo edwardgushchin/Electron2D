@@ -16,7 +16,7 @@ layout(std430, set = 0, binding = 3) readonly buffer ExistingPairs { uint existi
 layout(std430, set = 0, binding = 4) readonly buffer PairKeys { uvec2 pairKeys[]; };
 layout(std430, set = 1, binding = 0) buffer Queries { Query queries[]; };
 layout(std430, set = 1, binding = 1) buffer Candidates { int candidates[]; };
-layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; };
+layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; ivec4 batch; };
 
 bool contactExists(int a, int b)
 {
@@ -35,7 +35,7 @@ bool acceptPair(Query q, Shape a, Node n)
 {
     if (n.proxy == q.proxy) return false;
     Shape b = shapes[n.shape];
-    bool otherMoved = (b.flags.x & 2) != 0;
+    bool otherMoved = b.flags.y == batch.x;
     if ((q.proxy & 3) == 2)
     {
         if ((n.proxy & 3) == 2 && n.proxy < q.proxy && otherMoved) return false;

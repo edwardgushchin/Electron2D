@@ -195,6 +195,7 @@ namespace Box2D.NET
             }
 
             b2ValidateSolverSets(world);
+            world.shapeFilterChanged?.Invoke(shapeId);
 
             return shape;
         }
@@ -357,6 +358,7 @@ namespace Box2D.NET
             // Return shape to free list.
             b2FreeId(world.shapeIdPool, shapeId);
             shape.id = B2_NULL_INDEX;
+            world.shapeFilterChanged?.Invoke(shapeId);
 
             b2ValidateSolverSets(world);
         }
@@ -1326,6 +1328,7 @@ namespace Box2D.NET
             bool destroyProxy = filter.categoryBits != shape.filter.categoryBits;
 
             shape.filter = filter;
+            world.shapeFilterChanged?.Invoke(shape.id);
 
             // need to wake bodies because a filter change may destroy contacts
             bool wakeBodies = true;

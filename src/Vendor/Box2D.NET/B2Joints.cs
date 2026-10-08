@@ -391,6 +391,7 @@ namespace Box2D.NET
 
             b2ValidateSolverSets(world);
 
+            world.jointFilterChanged?.Invoke(jointId);
             return new B2JointPair(joint, jointSim);
         }
 
@@ -657,6 +658,7 @@ namespace Box2D.NET
                 B2Joint prevJoint = b2Array_Get(ref world.joints, edgeA.prevKey >> 1);
                 ref B2JointEdge prevEdge = ref prevJoint.edges[edgeA.prevKey & 1];
                 prevEdge.nextKey = edgeA.nextKey;
+                world.jointFilterChanged?.Invoke(edgeA.prevKey >> 1);
             }
 
             if (edgeA.nextKey != B2_NULL_INDEX)
@@ -680,6 +682,7 @@ namespace Box2D.NET
                 B2Joint prevJoint = b2Array_Get(ref world.joints, edgeB.prevKey >> 1);
                 ref B2JointEdge prevEdge = ref prevJoint.edges[edgeB.prevKey & 1];
                 prevEdge.nextKey = edgeB.nextKey;
+                world.jointFilterChanged?.Invoke(edgeB.prevKey >> 1);
             }
 
             if (edgeB.nextKey != B2_NULL_INDEX)
@@ -729,6 +732,8 @@ namespace Box2D.NET
                     movedJoint.localIndex = localIndex;
                 }
             }
+
+            world.jointFilterChanged?.Invoke(jointId);
 
             // Free joint and id (preserve joint generation)
             joint.setIndex = B2_NULL_INDEX;
@@ -845,6 +850,7 @@ namespace Box2D.NET
             }
 
             joint.collideConnected = shouldCollide;
+            world.jointFilterChanged?.Invoke(joint.jointId);
 
             B2Body bodyA = b2Array_Get(ref world.bodies, joint.edges[0].bodyId);
             B2Body bodyB = b2Array_Get(ref world.bodies, joint.edges[1].bodyId);

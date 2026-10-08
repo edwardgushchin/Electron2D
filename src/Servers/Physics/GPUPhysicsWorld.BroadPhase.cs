@@ -29,20 +29,21 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         internal uint CategoryLow, CategoryHigh, MaskLow, MaskHigh;
         internal int BodyIndex, GroupIndex, JointHead, JointCount;
-        internal int Flags, Padding1, Padding2, Padding3;
+        internal int Flags, MovedEpoch, ID, Padding;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct BroadPhaseJoint
     {
         internal int BodyA, BodyB, NextA, NextB;
-        internal int CollideConnected, Padding1, Padding2, Padding3;
+        internal int CollideConnected, ID, Padding2, Padding3;
     }
 
     [StructLayout(LayoutKind.Sequential)]
     private struct BroadPhaseStep
     {
         internal int QueryCount, LeafBase, NodeCount, PairMask;
+        internal int Epoch, Padding1, Padding2, Padding3;
     }
 
     private readonly Storage<TreeNode> _treeStorage;
@@ -72,41 +73,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         PrepareTree(world);
         _treeQueryStorage.Reserve(count);
         _treeCandidateStorage.Reserve(1);
-        _broadShapeStorage.Reserve(Math.Max(1, world.shapes.count));
-        _broadJointStorage.Reserve(Math.Max(1, world.joints.count));
         PreparePairTable(world);
-        for (var i = 0; i < world.joints.count; i++)
-        {
-            var joint = world.joints.data[i];
-            _broadJointStorage.Data[i] = new()
-            {
-                BodyA = joint.edges[0].bodyId,
-                BodyB = joint.edges[1].bodyId,
-                NextA = joint.edges[0].nextKey,
-                NextB = joint.edges[1].nextKey,
-                CollideConnected = joint.collideConnected ? 1 : 0
-            };
-        }
-        // Pack by shape slot, not tree visitation: body/filter records are reused
-        // by every query, while moved flags can be marked directly from moveArray.
-        for (var i = 0; i < world.shapes.count; i++)
-        {
-            var shape = world.shapes.data[i];
-            if (shape.proxyKey == -1) continue;
-            var body = world.bodies.data[shape.bodyId];
-            _broadShapeStorage.Data[i] = new()
-            {
-                CategoryLow = (uint)shape.filter.categoryBits,
-                CategoryHigh = (uint)(shape.filter.categoryBits >> 32),
-                MaskLow = (uint)shape.filter.maskBits,
-                MaskHigh = (uint)(shape.filter.maskBits >> 32),
-                BodyIndex = shape.bodyId,
-                GroupIndex = shape.filter.groupIndex,
-                JointHead = body.headJointKey,
-                JointCount = body.jointCount,
-                Flags = shape.sensorIndex != -1 ? 1 : 0
-            };
-        }
+        PrepareFilters(world);
         if (_candidateCapacities.Length < world.shapes.count)
             Array.Resize(ref _candidateCapacities, checked((int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)world.shapes.count)));
 
@@ -124,13 +92,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             {
                 _treeQueryStorage.Data[i].Bounds = Bounds(b2DynamicTree_GetAABB(bp.trees[(int)B2_PROXY_TYPE(key)], B2_PROXY_ID(key)));
                 var shape = b2BroadPhase_GetShapeIndex(bp, key);
-                _broadShapeStorage.Data[shape].Flags |= 2;
                 _treeQueryStorage.Data[i].ShapeIndex = shape;
                 _treeQueryStorage.Data[i].Capacity = Math.Max(16, _candidateCapacities[shape]);
             }
         }
 
-        var settings = new BroadPhaseStep { QueryCount = count, LeafBase = _proxyStorage.Data.Length, NodeCount = _treeStorage.Data.Length, PairMask = _existingPairStorage.Data.Length - 1 };
+        var settings = new BroadPhaseStep { QueryCount = count, LeafBase = _proxyStorage.Data.Length, NodeCount = _treeStorage.Data.Length, PairMask = _existingPairStorage.Data.Length - 1, Epoch = _filterEpoch };
         var profilePacked = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var maxCount = bp.trees[0].proxyCount + bp.trees[1].proxyCount + bp.trees[2].proxyCount;
         while (true)
@@ -235,17 +202,15 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (uploadTree)
             {
                 UploadTreeChanges(copy);
-                _broadShapeStorage.Upload(copy, world.shapes.count);
-                _broadJointStorage.Upload(copy, world.joints.count);
+                UploadFilterChanges(copy);
                 UploadPairChanges(copy);
-                BroadPhaseUploadBytes += (long)world.shapes.count * sizeof(BroadPhaseShape) +
-                    (long)world.joints.count * sizeof(BroadPhaseJoint);
             }
             _treeQueryStorage.Upload(copy, settings.QueryCount);
             BroadPhaseUploadBytes += (long)settings.QueryCount * sizeof(TreeQuery);
             SDL.EndGPUCopyPass(copy);
             if (uploadTree) UpdatePairTable(command);
             if (uploadTree) UpdateTree(command);
+            if (uploadTree) UpdateFilters(command, settings.QueryCount);
             Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
             bindings[0] = new() { Buffer = _treeQueryStorage.Handle };
             bindings[1] = new() { Buffer = _treeCandidateStorage.Handle };
@@ -273,7 +238,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             _pairStatusStorage.Read(1);
             if (_pairStatusStorage.Data[0] != 0)
                 throw new InvalidOperationException($"GPU pair-table maintenance failed: {_pairStatusStorage.Data[0]}.");
-            if (uploadTree) { CommitPairTable(world); CommitTree(world); }
+            if (uploadTree) { CommitPairTable(world); CommitTree(world); CommitFilters(world); }
             BroadPhaseReadbackBytes += (long)settings.QueryCount * sizeof(TreeQuery) + (long)candidates * sizeof(int) + sizeof(uint);
             if (PhysicsSpace.ProfilingEnabled)
             {
