@@ -57,7 +57,7 @@ internal static class GPUPhysicsBodyStoreTests
         var uploads = store.UploadBytes; var readbacks = store.ReadbackBytes;
         store.Read(handles.AsSpan(0, 1), state);
         Near(state[0].Position, new(42, 43), 0, "Sparse pose edit");
-        Check(store.UploadBytes - uploads == 4 + 128 + 16 && store.ReadbackBytes - readbacks == 4 + 32,
+        Check(store.UploadBytes - uploads == 8 + 128 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
             "One edit and one requested body transfer only their command, handle, result and status.");
 
         var copies = store.DeviceCopyBytes;
@@ -117,12 +117,12 @@ internal static class GPUPhysicsBodyStoreTests
         allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
         var measuredWait = store.WaitMS - wait;
         Check(allocated == 0, "Warmed resident body steps allocate zero managed bytes.");
-        Check(store.UploadBytes - upload == 4 * samples && store.ReadbackBytes - readback == 4 * samples && store.UniformBytes - uniforms == 32 * samples,
-            "Resident steps exchange a four-byte status reset/result and 32 uniform bytes, not poses or velocities.");
+        Check(store.UploadBytes - upload == 8 * samples && store.ReadbackBytes - readback == 8 * samples && store.UniformBytes - uniforms == 32 * samples,
+            "Resident steps exchange a eight-byte status reset/result and 32 uniform bytes, not poses or velocities.");
         var snapshots = new GPUPhysicsBodyStore.Snapshot[count];
         readback = store.ReadbackBytes; upload = store.UploadBytes;
         store.Read(handles.AsSpan(0, 2), snapshots);
-        Check(store.ReadbackBytes - readback == 4 + 2 * 32 && store.UploadBytes - upload == 4 + 2 * 16,
+        Check(store.ReadbackBytes - readback == 8 + 2 * 48 && store.UploadBytes - upload == 8 + 2 * 16,
             "Explicit readback downloads only the requested two bodies.");
         var travel = new Vector2(0.25f, 0.5f) * ((warmup + samples) / 120f);
         // Diagnostic full read is outside the measured step window and validates every dispatched body.
@@ -132,7 +132,7 @@ internal static class GPUPhysicsBodyStoreTests
         for (var i = 0; i < count; i++)
             Near(snapshots[i].Position, new Vector2(i % 256, i / 256) + travel, 0.02f, "Every resident body advances without CPU publication");
         Array.Sort(timings);
-        Console.WriteLine($"Resident integration only: {count} bodies, {warmup} warmup, {samples} samples, p50={timings[samples / 2]:F4} ms, p95={timings[(int)(samples * 0.95)]:F4} ms, wait={measuredWait / samples:F4} ms/tick, {allocated} B/tick, 4 B buffer upload + 32 B uniforms + 4 B readback/tick; driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}; diagnostic full read={fullReadMS:F4} ms (outside step samples); authored body/command capacity={store.AuthoredBodyCapacityBytes} B.");
+        Console.WriteLine($"Resident integration only: {count} bodies, {warmup} warmup, {samples} samples, p50={timings[samples / 2]:F4} ms, p95={timings[(int)(samples * 0.95)]:F4} ms, wait={measuredWait / samples:F4} ms/tick, {allocated} B/tick, 8 B buffer upload + 32 B uniforms + 8 B readback/tick; driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}; diagnostic full read={fullReadMS:F4} ms (outside step samples); authored body/command capacity={store.AuthoredBodyCapacityBytes} B.");
     }
 
     private static void Near(Vector2 actual, Vector2 expected, float tolerance, string message) => Check(actual.DistanceTo(expected) <= tolerance, message);

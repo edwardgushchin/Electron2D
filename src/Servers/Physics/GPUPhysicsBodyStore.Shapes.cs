@@ -166,6 +166,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void MarkShape(int index, bool massChanged = true)
     {
+        Wake(_shapeSlots[index].Body.Index, true);
         if (massChanged) MarkMass(_shapeSlots[index].Body.Index);
         _shapeSlots[index].Revision++;
         if (!_shapeSlots[index].Dirty) { _dirtyShapes.Add(index); _shapeSlots[index].Dirty = true; }

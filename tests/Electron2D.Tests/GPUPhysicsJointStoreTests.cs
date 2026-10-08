@@ -11,7 +11,7 @@ internal static class GPUPhysicsJointStoreTests
         VerifyPin(); VerifyGroove(); VerifySpring(); VerifyLifecycle(); VerifyContactsAndFailure(); VerifyPopulation();
     }
     private static Store.BodyHandle Body(Store store, Vector2 position = default, Vector2 velocity = default, float mass = 1, float inertia = 1, Mode mode = Mode.Rigid, float angular = 0) =>
-        store.Add(new(mode, position, 0, velocity, angular, mass, inertia));
+        store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CanSleep: false));
     private static void VerifyPin()
     {
         using var store = new Store();

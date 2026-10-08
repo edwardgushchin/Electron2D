@@ -14,7 +14,7 @@ GetMassProperties resolves pending geometry and returns kilograms, scene-unit po
 inertia and local center without a GPU readback.
 
 This is an internal GPU component. Public backend selection, live body-mode/freeze
-adapters, sleep, CCD, complete queries/events and network snapshots/replay remain
+adapters, CCD, complete queries/events and network snapshots/replay remain
 open. Existing public CPU mass operations continue through their current adapter.
 The feature is not evidence of a complete selectable GPU world or window FPS.
 
@@ -82,7 +82,7 @@ step. No solved velocity is copied to CPU for these operations.
 | Device local center | 8 bytes per slot; integration and contact/joint preparation read it. Growth copies it GPU-to-GPU. |
 | CPU body slot | 64 bytes: identity/attachment/edit routing, authored role/profile and resolved immutable geometry values. No live pose or velocity. |
 | Pending body command | 128 bytes, including optional mass/center updates and captured impulse delta. Consumed entries are cleared. |
-| Body state result | 32 bytes pose/velocity, unchanged; only explicitly requested bodies are downloaded. |
+| Body state result | 48 bytes pose/velocity/sleep under the subsequent [resident sleep stage](gpu-resident-sleep.md); only explicitly requested bodies are downloaded. |
 
 At 65,536 slots, bodies plus centers use 5.5 MiB. Authored body/command array payload
 is 12 MiB, measured by AuthoredBodyCapacityBytes; it excludes object headers, shape
@@ -129,7 +129,7 @@ integration/contact populations and 4,096-pin regression also retain zero warmed
 allocation. Native allocator totals and foreign devices/platforms remain unmeasured.
 
 
-## Measured scope
+## Measured scope before the sleep stage
 
 Linux/.NET 10.0.1, Vulkan, RTX 3090 Ti, 2026-10-08. The active-edit test reports
 **0 B managed**, **0.1049 ms mean** per edit+step+explicit-read, **152 B upload**

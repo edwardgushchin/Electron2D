@@ -6,19 +6,23 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response, connected sleep/wake and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
     internal readonly record struct BodyHandle(int Index, uint Generation, long Owner);
     internal readonly record struct BodyDefinition(PhysicsServer.BodyMode Mode, Vector2 Position, float Rotation,
         Vector2 Velocity, float AngularVelocity, float Mass = 1, float Inertia = 0, float GravityScale = 1,
-        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null);
+        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null, bool CanSleep = true, bool Sleeping = false);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Snapshot
     {
         internal Float4 Pose, Velocity;
+        internal float SleepTime;
+        internal uint SleepFlags, Padding1, Padding2;
+        internal readonly bool Sleeping => (SleepFlags & 16) != 0;
+        internal readonly bool CanSleep => (SleepFlags & 8) == 0;
         internal readonly Vector2 Position => new(Pose.X, Pose.Y);
         internal readonly float Rotation => MathF.Atan2(Pose.W, Pose.Z);
     }
@@ -50,7 +54,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal PhysicsServer.BodyMode Mode;
         internal MassProfile MassProfile;
         internal PhysicsMass.Properties MassProperties;
-        internal bool Alive, MassDirty;
+        internal bool Alive, MassDirty, CanSleep;
     }
 
     private const uint Create = 1, Destroy = 2, Pose = 4, Velocity = 8, Impulse = 16, Force = 32, Mass = 64;
@@ -100,7 +104,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = -1; Count++;
-        slot.Mode = definition.Mode;
+        slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep;
         slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
         slot.MassProperties = new(definition.Mass, definition.Inertia, definition.CenterOfMass ?? Vector2.Zero);
         ref var command = ref Edit(index);
@@ -113,7 +117,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Properties = new(1 / definition.Mass, definition.Inertia > 0 ? 1 / definition.Inertia : 0, definition.LinearDamp, definition.AngularDamp),
             Generation = slot.Generation,
             Mode = (uint)definition.Mode,
-            Locks = definition.Mode == PhysicsServer.BodyMode.RigidLinear ? 4u : 0u,
+            Locks = (definition.Mode == PhysicsServer.BodyMode.RigidLinear ? 4u : 0u) | (definition.CanSleep ? 0u : 8u) |
+                (definition.Sleeping && definition.Mode >= PhysicsServer.BodyMode.Rigid ? 16u : 0u),
             Alive = 1
         };
         command.Center = new(slot.MassProperties.Center.X, slot.MassProperties.Center.Y, 0, 0);
@@ -135,8 +140,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         Validate(body);
         if (!position.IsFinite() || !float.IsFinite(rotation)) throw new ArgumentOutOfRangeException(nameof(position));
-        ref var command = ref Edit(body.Index); command.Mask |= Pose;
+        ref var command = ref Edit(body.Index); command.Mask |= Pose | 1024;
         command.Body.Pose = new(position.X, position.Y, MathF.Cos(rotation), MathF.Sin(rotation));
+        Wake(body.Index);
     }
 
     internal void SetVelocity(BodyHandle body, Vector2 linear, float angular)
@@ -147,6 +153,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         command.Body.Velocity = new(linear.X, linear.Y, angular, 0);
         // A later explicit velocity assignment supersedes earlier queued impulses.
         command.Impulse = default; command.Mask &= ~Impulse;
+        Wake(body.Index);
     }
 
     internal void ApplyImpulse(BodyHandle body, Vector2 linear, float angular = 0)
@@ -163,6 +170,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         var total = command.Impulse + new Float4(linearDelta.X, linearDelta.Y, angularDelta, 0);
         if (!Finite(total)) throw new ArgumentOutOfRangeException(nameof(linear));
         command.Impulse = total; command.Mask |= Impulse;
+        if (linear != Vector2.Zero || angular != 0) Wake(body.Index);
     }
 
     internal void SetConstantForce(BodyHandle body, Vector2 linear, float angular = 0)
@@ -171,6 +179,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
         ref var command = ref Edit(body.Index); command.Mask |= Force;
         command.Body.Force = new(linear.X, linear.Y, angular, command.Body.Force.W);
+        Wake(body.Index);
     }
 
     internal void Step(float delta, Vector2 gravity)
@@ -237,9 +246,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             commands = Buffer(checked((uint)(capacity * sizeof(Command))));
             requests = Buffer(checked((uint)(capacity * sizeof(BodyHandle))));
             results = Buffer(checked((uint)(capacity * sizeof(Snapshot))));
-            status = Buffer(4);
-            upload = Transfer(checked((uint)(4 + capacity * (sizeof(Command) + sizeof(BodyHandle)))), SDL.GPUTransferBufferUsage.Upload);
-            download = Transfer(checked((uint)(4 + capacity * sizeof(Snapshot))), SDL.GPUTransferBufferUsage.Download);
+            status = Buffer(8);
+            upload = Transfer(checked((uint)(8 + capacity * (sizeof(Command) + sizeof(BodyHandle)))), SDL.GPUTransferBufferUsage.Upload);
+            download = Transfer(checked((uint)(8 + capacity * sizeof(Snapshot))), SDL.GPUTransferBufferUsage.Download);
             var slots = new Slot[capacity]; var pending = new Command[capacity];
             Array.Copy(_slots, slots, _slots.Length); Array.Copy(_pending, pending, _pendingCount);
             for (var i = _slots.Length; i < capacity; i++) slots[i].Command = -1;
@@ -282,38 +291,40 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident edits");
             try
             {
-                *(uint*)mapped = 0;
-                fixed (Command* source = _pending) System.Buffer.MemoryCopy(source, (byte*)mapped + 4, commandBytes, commandBytes);
-                fixed (BodyHandle* source = requests) System.Buffer.MemoryCopy(source, (byte*)mapped + 4 + commandBytes, requestBytes, requestBytes);
+                *(ulong*)mapped = 0;
+                fixed (Command* source = _pending) System.Buffer.MemoryCopy(source, (byte*)mapped + 8, commandBytes, commandBytes);
+                fixed (BodyHandle* source = requests) System.Buffer.MemoryCopy(source, (byte*)mapped + 8 + commandBytes, requestBytes, requestBytes);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _upload.DangerousGetHandle()); }
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident edits");
-            Upload(copy, _status!, 0, 4);
-            if (commandBytes > 0) Upload(copy, _commands!, 4, commandBytes);
-            if (requestBytes > 0) Upload(copy, _requests!, 4 + commandBytes, requestBytes);
+            Upload(copy, _status!, 0, 8);
+            if (commandBytes > 0) Upload(copy, _commands!, 8, commandBytes);
+            if (requestBytes > 0) Upload(copy, _requests!, 8 + commandBytes, requestBytes);
             SDL.EndGPUCopyPass(copy);
             var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, positionCorrections ? 1 : 0), Capacity = (uint)_highWater };
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0) Dispatch(command, ref settings, motionStage, _highWater);
+            if (delta > 0 && motionStage == 4) FinishSleep(command, delta);
             Dispatch(command, ref settings, 2, requests.Length);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 4 }, new() { TransferBuffer = _download!.DangerousGetHandle() });
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _download!.DangerousGetHandle() });
             if (outputBytes > 0) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _results!.DangerousGetHandle(), Size = outputBytes },
-                new() { TransferBuffer = _download.DangerousGetHandle(), Offset = 4 });
+                new() { TransferBuffer = _download.DangerousGetHandle(), Offset = 8 });
             SDL.EndGPUCopyPass(copy);
             // A submitted interval may have mutated device state. Any later error invalidates the store.
             _failed = true;
             Finish(ref command);
-            UploadBytes += 4 + commandBytes + requestBytes; ReadbackBytes += 4 + outputBytes;
+            UploadBytes += 8 + commandBytes + requestBytes; ReadbackBytes += 8 + outputBytes;
             UniformBytes += sizeof(Settings) * ((_pendingCount > 0 ? 1 : 0) + (delta > 0 ? 1 : 0) + (requests.Length > 0 ? 1 : 0));
             mapped = SDL.MapGPUTransferBuffer(Device, _download.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident results");
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU resident body work returned invalid state.");
-                fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + 4, destination, outputBytes, outputBytes);
+                if (delta > 0 && motionStage == 4) ActiveSimulationBodyCount = checked((int)((uint*)mapped)[1]);
+                fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + 8, destination, outputBytes, outputBytes);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
             if (delta > 0 || _pendingCount > 0) _bodyVersion++;
@@ -367,6 +378,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeJoints(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeJoints(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

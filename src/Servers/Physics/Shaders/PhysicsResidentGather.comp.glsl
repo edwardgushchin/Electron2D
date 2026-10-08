@@ -15,7 +15,7 @@ void fail(){atomicOr(status.x,1u);}
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y||status.x!=0u)return;
-    ResidentBody b=bodies[i];if(b.flags.w==0u||b.flags.y<2u)return;
+    ResidentBody b=bodies[i];if(b.flags.w==0u||b.flags.y<2u||(b.flags.z&16u)!=0u)return;
     uvec2 list=heads[i];uint at=list.x;vec3 total=vec3(0),correction=vec3(0);
     for(uint visited=0u;visited<list.y;visited++)
     {

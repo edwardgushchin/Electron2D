@@ -7,6 +7,7 @@ Last updated: 2026-10-08
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
 [mass](../../src/Servers/Physics/GPUPhysicsBodyStore.Mass.cs),
+[sleep](../../src/Servers/Physics/GPUPhysicsBodyStore.Sleep.cs),
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
@@ -25,7 +26,7 @@ Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
 edits, automatic/custom mass profiles, center-aware integration, shared geometry, broad-phase pairs and narrow-phase contact
 points, material response, contact impulses, pin/groove/spring solving and warm history. It is not yet
-selectable through PhysicsServer; joint bias/softness/general caps, sleep, CCD, public state/event publication
+selectable through PhysicsServer; joint bias/softness/general caps, CCD, public state/event publication
 and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
 
 | Operation | Contract |
@@ -39,6 +40,8 @@ and network replay remain open. See [resident contact response](../components/gp
 | `AddJoint`, `SetJoint`, `GetJointDefinition`, `RemoveJoint` | Own generation-safe device connections and authored settings, validated local frames and independent collision vetoes; endpoint removal unlinks dependent joints. See [resident joints](../components/gpu-resident-joints.md). |
 | `SetMassProfile`, `GetMassProfile`, `GetMassProperties` | Change/read authored kilograms, zero/explicit inertia and nullable auto/custom center; resolve geometry without moving origin/velocity. See [resident mass](../components/gpu-resident-mass.md). |
 | `SetShapeMaterial` | Journal finite signed friction/bounce using the existing rough/absorbent convention. |
+| `SetSleeping`, `SetCanSleep`, `GetCanSleep`, `SetSleepSettings`, `GetSleepSettings` | Device dynamic sleep policy, ordered explicit sleep/wake and connected automatic sleep; see [resident sleep](../components/gpu-resident-sleep.md). |
+| `ActiveSimulationBodyCount` | Last completed simulation count of awake dynamics and moving nondynamic surfaces. Version-checked zero enables an unchanged idle-world skip. |
 | `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities. |
 | `AddShape`, `RemoveShape` | Borrow a shared Shape resource, retain one GPU geometry record per resource and a generation-qualified attachment per shape slot. Body deletion invalidates attachments; resource disposal makes their bounds inactive. |
 | `SetShapePose`, `SetShapeFilter` | Coalesce unit-scale local placement and 32-bit layer/mask/sensor edits. |
@@ -116,3 +119,5 @@ CPU getters and checks device motion/contact/joint lever arms at custom/automati
 centers, profile/impulse order, resource revisions and zero-allocation warm edits.
 AuthoredBodyCapacityBytes measures only retained CPU body-slot/command payload.
 Local centers use a separate 8-byte device record and no hot full-state mirror.
+
+GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime in 48 bytes. It is internal state publication, not public event delivery.

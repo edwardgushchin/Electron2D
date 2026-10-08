@@ -4,7 +4,7 @@
 layout(local_size_x = 64) in;
 
 struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; };
-struct Snapshot { vec4 pose; vec4 velocity; };
+struct Snapshot { vec4 pose; vec4 velocity; float clock; uint flags; uvec2 padding; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Corrections { vec4 corrections[]; };
@@ -27,7 +27,7 @@ void main()
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
-        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 0, 0)); centers[index]=vec2(0); return; }
+        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 32, 0)); centers[index]=vec2(0); return; }
         ResidentBody b;
         if ((mask & 1u) != 0u) { b = c.body; centers[index] = c.center.xy; }
         else
@@ -41,6 +41,11 @@ void main()
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
+        if ((mask & 1024u) != 0u) b.flags.z|=32u;
+        if ((mask & 512u) != 0u) b.flags.z=(b.flags.z&~8u)|c.header.w;
+        if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
+        if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
+        if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);
         if ((mask & 16u) != 0u && b.flags.y >= 2u)
         {
             b.velocity.xy += c.impulse.xy;
@@ -53,14 +58,11 @@ void main()
     else if (control.x == 1u || control.x == 3u || control.x == 4u)
     {
         ResidentBody b = bodies[i];
-        if (b.flags.w == 0u || b.flags.y == 0u) return;
+        if (b.flags.w == 0u || b.flags.y == 0u || (b.flags.z&16u)!=0u) return;
         float dt = step.z;
         if (control.x != 4u && b.flags.y >= 2u)
         {
-            b.velocity.xy *= max(0.0, 1.0 - dt * b.properties.z);
-            b.velocity.z *= max(0.0, 1.0 - dt * b.properties.w);
-            b.velocity.xy += dt * (step.xy * b.force.w + b.force.xy * b.properties.x);
-            b.velocity.z += dt * b.force.z * b.properties.y;
+            bodyForces(b,dt,step.xy);
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (control.x != 3u)
@@ -83,6 +85,6 @@ void main()
         if (request.x >= control.z) { fail(1u); return; }
         ResidentBody b = bodies[request.x];
         if (b.flags.w == 0u || b.flags.x != request.y) { fail(1u); return; }
-        results[i] = Snapshot(b.pose, b.velocity);
+        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz,0), b.velocity.w, b.flags.z, uvec2(0));
     }
 }

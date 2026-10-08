@@ -13,7 +13,7 @@ measurements; those timings exclude the response workload measured here.
 This is an internal response pipeline, not a selectable public GPU backend.
 [Resident joints](gpu-resident-joints.md) now share its iteration loop; joint
 bias/softness/general caps,
-sleep, CCD, scene/server and direct-state
+CCD, scene/server and direct-state
 publication, complete frame impulse/event reports, one-way/body exceptions,
 world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored
 geometry and uses center-relative moment arms; public-world integration still needs
@@ -269,3 +269,5 @@ Iteration-layout SPIR-V SHA-256 before mass-profile integration (untracked outpu
 - PhysicsResidentSolve: `b571e825415b248ec27130b4708a646673c31e58efa575607a4a7427cd99362e`.
 - PhysicsResidentUpdate: `3284e297de5fe6785c2860bbd6e8da533d24fc373c5b5ebf58176e6df4bf0b85`.
 - PhysicsResidentGather: `49a15a674bcda51d4d1e0a6000ef44c228bdfe553a11238312c0ad05974ce58d`.
+
+[Resident sleep](gpu-resident-sleep.md) now supplies dynamic component sleep/wake. Historical timings/traffic above predate its graph passes and 8-byte body status. Current active benchmark bodies explicitly disable automatic sleep; no smaller awake population is substituted.

@@ -240,3 +240,5 @@ The outer frame combines internal kinematic intervals, suppresses stale sleeping
 impulses, and applies the same bounded deepest-point selection to direct state and
 RigidBody monitoring. PhysicsContactImpulseTests checks momentum and allocation;
 virtual tile identities remain separate from this completed reporting behavior.
+
+Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Public backend selection, sleep-event publication, CCD and network replay remain open.

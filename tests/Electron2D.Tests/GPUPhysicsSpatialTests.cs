@@ -196,7 +196,7 @@ internal static class GPUPhysicsSpatialTests
         var waitMS = (store.WaitMS - wait) / samples;
         Check(allocated == 0, "Resident integration and broad phase allocate zero warmed managed bytes.");
         Check(store.GeometryUploadBytes == geometry && store.ShapeUploadBytes == shapes, "Unchanged geometry and shape attachments never reupload during moving simulation.");
-        Check(store.UploadBytes - upload == 12 * samples && store.ReadbackBytes - readback == 12 * samples,
+        Check(store.UploadBytes - upload == 16 * samples && store.ReadbackBytes - readback == 16 * samples,
             "Integration plus broad phase only exchanges status/count, with no poses, bounds or pair downloads.");
         var uniformPerTick = (store.UniformBytes - uniforms) / (double)samples;
         var pairs = new Pair[expectedPairs];
@@ -211,7 +211,7 @@ internal static class GPUPhysicsSpatialTests
             Check(pair.A.Index < pair.B.Index && x <= 1 && y <= 1 && unique.Add(pair), "Every grid neighbor pair is canonical, adjacent and unique.");
         }
         Array.Sort(times);
-        Console.WriteLine($"Resident integration+broad phase only: {count} bodies/shapes, {expectedPairs} pairs, {warmup} warmup, {samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, wait={waitMS:F4} ms/tick, {allocated} B/tick; 12 B buffer upload + {uniformPerTick:F0} B mean uniforms + 12 B readback/tick; geometry uploads/tick=0, pair uploads/downloads/tick=0; explicit pair read={readMS:F4} ms (outside samples), driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}.");
+        Console.WriteLine($"Resident integration+broad phase only: {count} bodies/shapes, {expectedPairs} pairs, {warmup} warmup, {samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, wait={waitMS:F4} ms/tick, {allocated} B/tick; 16 B buffer upload + {uniformPerTick:F0} B mean uniforms + 16 B readback/tick; geometry uploads/tick=0, pair uploads/downloads/tick=0; explicit pair read={readMS:F4} ms (outside samples), driver={store.Driver}, device={store.DeviceName}, runtime={Environment.Version}.");
         foreach (var body in bodies) store.Remove(body);
         Check(store.FindPairs() == 0 && store.Count == 0 && store.ShapeCount == 0, "Full grid retirement removes body attachments and pairs.");
     }

@@ -34,6 +34,7 @@ internal static partial class GPUPhysicsTests
         VerifyOwnedWorldFailure();
         GPUPhysicsBodyStoreTests.Run();
         GPUPhysicsMassStoreTests.Run();
+        GPUPhysicsSleepStoreTests.Run();
         GPUPhysicsSpatialTests.Run();
         GPUPhysicsContactStoreTests.Run();
         GPUPhysicsSolverStoreTests.Run();

@@ -19,7 +19,7 @@ internal static class GPUPhysicsSolverStoreTests
     }
     private static Body Add(GPUPhysicsBodyStore store, Vector2 position = default, Vector2 velocity = default,
         Mode mode = Mode.Rigid, float mass = 1, float inertia = 0, float angular = 0) =>
-        store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CenterOfMass: Vector2.Zero));
+        store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CenterOfMass: Vector2.Zero, CanSleep: false));
 
     private static void VerifyImpact()
     {

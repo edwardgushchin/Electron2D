@@ -18,7 +18,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ref var slot = ref _slots[body.Index];
         if (slot.MassProfile == profile) return;
         var resolved = CalculateMass(body.Index, profile);
-        slot.MassProfile = profile; ApplyMass(body.Index, resolved);
+        slot.MassProfile = profile; Wake(body.Index, true); ApplyMass(body.Index, resolved);
     }
     private PhysicsMass.Properties CalculateMass(int body, in MassProfile profile)
     {
@@ -42,7 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             {
                 ref readonly var shape = ref _shapeSlots[i];
                 if (shape.Alive && shape.Geometry is { Source: { } source } geometry &&
-                    (source.GeometryRevision != geometry.MassRevision || source.IsDisposed != geometry.MassDisposed)) MarkMass(shape.Body.Index);
+                    (source.GeometryRevision != geometry.MassRevision || source.IsDisposed != geometry.MassDisposed)) { MarkMass(shape.Body.Index); Wake(shape.Body.Index, true); }
             }
             foreach (var geometry in _geometryEntries)
                 if (geometry.Source is { } source) { geometry.MassRevision = source.GeometryRevision; geometry.MassDisposed = source.IsDisposed; }

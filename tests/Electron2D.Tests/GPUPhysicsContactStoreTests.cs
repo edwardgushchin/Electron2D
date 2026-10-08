@@ -172,7 +172,7 @@ internal static class GPUPhysicsContactStoreTests
             Check(store.FindContacts() == 2 * expectedPairs, "Grid contact count"); times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
         }
         allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; var waitMS = (store.WaitMS - wait) / samples;
-        Check(allocated == 0 && store.UploadBytes - upload == 20 * samples && store.ReadbackBytes - readback == 20 * samples,
+        Check(allocated == 0 && store.UploadBytes - upload == 24 * samples && store.ReadbackBytes - readback == 24 * samples,
             "Resident integration/broad/narrow stages exchange status only and allocate zero warmed managed bytes.");
         Check(store.GeometryUploadBytes == geometry && store.ShapeUploadBytes == shapes, "Moving contacts need no geometry/pose/pair/contact uploads.");
         var uniformBytes = (store.UniformBytes - uniforms) / (double)samples;
@@ -198,7 +198,7 @@ internal static class GPUPhysicsContactStoreTests
             minDepth = MathF.Min(minDepth, -point.Normal.Z); maxDepth = MathF.Max(maxDepth, -point.Normal.Z);
         }
         Array.Sort(times);
-        Console.WriteLine($"Resident integration+broad+narrow only: {count} bodies, {expectedPairs} pairs, {points.Length} points, {warmup} warmup, {samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, p99={times[(int)(samples * 0.99)]:F4} ms, wait={waitMS:F4} ms/tick, {allocated} B/tick; 20 B upload + {uniformBytes:F0} B mean uniforms + 20 B readback/tick; contact read first/warm={readMS:F4}/{warmReadMS:F4} ms, diagnostic pose read first/warm={poseReadMS:F4}/{warmPoseReadMS:F4} ms, depth range={minDepth:F6}..{maxDepth:F6} (outside samples); {store.Driver}, {store.DeviceName}, .NET {Environment.Version}.");
+        Console.WriteLine($"Resident integration+broad+narrow only: {count} bodies, {expectedPairs} pairs, {points.Length} points, {warmup} warmup, {samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, p99={times[(int)(samples * 0.99)]:F4} ms, wait={waitMS:F4} ms/tick, {allocated} B/tick; 24 B upload + {uniformBytes:F0} B mean uniforms + 24 B readback/tick; contact read first/warm={readMS:F4}/{warmReadMS:F4} ms, diagnostic pose read first/warm={poseReadMS:F4}/{warmPoseReadMS:F4} ms, depth range={minDepth:F6}..{maxDepth:F6} (outside samples); {store.Driver}, {store.DeviceName}, .NET {Environment.Version}.");
     }
     private static void Invariant(Point point, Transform a, Transform b, float tolerance)
     {

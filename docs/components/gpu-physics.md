@@ -34,7 +34,7 @@ response, device warm history and separate pose correction. Its update/gather
 kernels use separate hot impulse storage and precomputed contact Jacobians; the
 linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. [Resident joints](gpu-resident-joints.md) add independent
 pin/groove/spring response, persistent history and collision vetoes. Shared [mass profiles](gpu-resident-mass.md) now supply automatic/custom centers
-and moments to device motion and constraints. Complete joint settings, sleep, CCD and public selection/publication remain unconnected; historical full-stage results below still refer
+and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. Complete joint settings, CCD and public selection/publication remain unconnected; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 
 The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only

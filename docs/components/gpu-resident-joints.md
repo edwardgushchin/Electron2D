@@ -12,7 +12,7 @@ joint solver or evolving joint-state mirror participates. This extends the
 internal backend component, not a selectable PhysicsServer implementation.
 
 Scene/server RID adapters, per-joint bias, pin-anchor softness, general force and
-correction caps, sleep/wake islands, CCD, full queries/events, portable checkpoints
+correction caps, CCD, full queries/events, portable checkpoints
 and network replay remain open. The current substep correction factor and speed
 limit are shared solver inputs, not implementations of the missing public joint
 settings. Existing public CPU joints and their settings are unchanged.
@@ -89,7 +89,7 @@ joint preparation time. SolverMS and WaitMS retain their whole-submission scopes
 | Warm state | 48 bytes per retained joint slot, preserved during device growth. |
 | Collision veto table | 4 bytes per hash slot; power-of-two capacity at least twice joint high-water count. |
 | Solver rows | Up to five × (64 + 32) bytes per joint high-water slot, sharing contact buffers and body adjacency. |
-| Unchanged no-shape joint tick | Four substeps, each transferring body-force status 4, solver status 8 and pose status 4 bytes in each direction: 64 bytes per tick. Twelve publication waits. |
+| Unchanged no-shape joint tick | Four substeps, each transferring body-force status 8, solver status 8 and pose status 8 bytes in each direction: 96 bytes per tick. Twelve publication waits. |
 
 Explicit body snapshots are read only for requested consumers; the tests read the
 complete population after their timing/allocation window. Worlds with colliders
@@ -161,3 +161,5 @@ Evidence: `/tmp/electron2d-resident-joints-bounds-gpu.log` (final suite) and
 Shader binaries are generated/validated during the build and remain untracked.
 Other devices/platforms, native allocator totals and owner visual acceptance are
 not established by this Linux compute run.
+
+Resident joints now participate in [GPU sleep components](gpu-resident-sleep.md). The measurements above predate sleep; current regression populations explicitly set CanSleep=false, preserving the all-awake workload.

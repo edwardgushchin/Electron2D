@@ -76,6 +76,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Validate(joint); ValidateJointDefinition(definition);
         ref var slot = ref _jointSlots[joint.Index];
         if (slot.Definition == definition) return;
+        WakeJoint(slot.Definition);
         UnlinkJoint(joint.Index, slot.Definition.BodyA.Index);
         if (slot.Definition.BodyB != default) UnlinkJoint(joint.Index, slot.Definition.BodyB.Index);
         if (slot.Definition.Type == PhysicsServer.JointType.DampedSpring) _springJointCount--;
@@ -89,6 +90,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal void RemoveJoint(JointHandle joint)
     {
         Validate(joint); ref var slot = ref _jointSlots[joint.Index];
+        WakeJoint(slot.Definition);
         UnlinkJoint(joint.Index, slot.Definition.BodyA.Index);
         if (slot.Definition.BodyB != default) UnlinkJoint(joint.Index, slot.Definition.BodyB.Index);
         slot.Alive = false; slot.NextFree = _jointFree; _jointFree = joint.Index;
@@ -136,8 +138,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         while (_slots[body.Index].FirstJoint is var index && index >= 0)
             RemoveJoint(new(index, _jointSlots[index].Generation, _identity));
     }
+    private void WakeJoint(in JointDefinition definition)
+    {
+        Wake(definition.BodyA.Index, true);
+        if (definition.BodyB != default) Wake(definition.BodyB.Index, true);
+    }
     private void MarkJoint(int index)
     {
+        WakeJoint(_jointSlots[index].Definition);
         if (!_jointSlots[index].Dirty) { _jointSlots[index].Dirty = true; _dirtyJoints.Add(index); }
         _pairBodyVersion = -1;
     }

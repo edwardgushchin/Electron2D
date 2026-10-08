@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; complete joint bias/compliance/caps, sleep, CCD, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; complete joint bias/compliance/caps, CCD, public sleep-event publication, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
