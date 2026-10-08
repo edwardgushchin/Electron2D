@@ -22,6 +22,14 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<Joint> _joints = [];
     private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
     private B2BodyId _jointWorldBody;
+    internal float ConstraintDefaultBias { get; private set; }
+    internal void SetConstraintDefaultBias(float value)
+    {
+        EnsureQueryAccess(); PhysicsJointRuntime.ValidateBias(value);
+        if (ConstraintDefaultBias == value) return;
+        ConstraintDefaultBias = value;
+        foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
+    }
     private readonly List<Area> _areas = [];
     private readonly List<PhysicsServerCollider> _serverColliders = [];
     private readonly List<(PhysicsAreaFields Fields, uint Mask, IReadOnlyList<B2ShapeId> Shapes, Transform Transform)> _fieldAreas = [];
@@ -78,6 +86,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal PhysicsSpace()
     {
         var settings = ProjectSettings.Service;
+        ConstraintDefaultBias = settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultConstraintBias);
         DefaultAreaFields = new(settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravity),
             settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravityVector))
         {

@@ -7,6 +7,8 @@ public sealed class PinJoint : Joint
 {
     private static readonly PropertyDescriptor[] PinProperties =
     [
+        new PropertyDescriptor<PinJoint, float>(nameof(Softness), joint => joint.Softness,
+            (joint, value) => joint.Softness = value, _ => 0f, stored: true),
         new PropertyDescriptor<PinJoint, bool>(nameof(AngularLimitEnabled), joint => joint.AngularLimitEnabled,
             (joint, value) => joint.AngularLimitEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<PinJoint, float>(nameof(AngularLimitLower), joint => joint.AngularLimitLower,
@@ -23,6 +25,16 @@ public sealed class PinJoint : Joint
 
     /// <summary>Creates a detached pin joint with no active limit or motor.</summary>
     public PinJoint() : base(PhysicsServer.JointType.Pin) { }
+
+    /// <summary>Gets or sets linear anchor compliance in inverse-kilogram units.</summary>
+    /// <value>A finite nonnegative value; zero keeps a rigid anchor. Larger values allow more relative anchor velocity.</value>
+    /// <remarks>This changes the linear effective mass and impulse feedback, not an angular spring. Live edits preserve sampled anchors, wake connected bodies and clear old joint impulses.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
+    public float Softness
+    {
+        get { ThrowIfDisposed(); return Runtime.PinSoftness; }
+        set { EnsureJointChange(); Runtime.SetPinSoftness(value); }
+    }
 
     /// <summary>Gets or sets whether the relative angle is limited.</summary>
     /// <value>False by default; enabled limits are measured from the attachment angle.</value>

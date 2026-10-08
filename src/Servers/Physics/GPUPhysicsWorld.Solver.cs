@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [StructLayout(LayoutKind.Sequential)]
     private struct Joint
     {
-        internal Float4 IDs, Mass, FrameA, FrameB, Geometry, Soft, Spring, Motor, Impulses, Limits, PoseA, PoseB;
+        internal Float4 IDs, Mass, FrameA, FrameB, Geometry, Soft, Spring, Motor, Impulses, Limits, PoseA, PoseB, PolicyBias, PolicyForce;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct SolverStep
@@ -224,12 +224,14 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private static Joint PackJoint(B2StepContext context, B2JointSim j)
     {
         if (j.type == B2JointType.b2_filterJoint)
-            return new() { Mass = new(j.invMassA, j.invMassB, j.invIA, j.invIB), Soft = new(j.constraintHertz, j.constraintDampingRatio, 0, 0) };
+            return new() { Mass = new(j.invMassA, j.invMassB, j.invIA, j.invIB), Soft = new(j.constraintHertz, j.constraintDampingRatio, 0, 0), PolicyBias = new(j.correctionBias, j.maxLinearBias, j.maxAngularBias, j.linearSoftness) };
         var world = context.world; var a = world.bodies.data[j.bodyIdA]; var b = world.bodies.data[j.bodyIdB];
         var sa = B2Bodies.b2GetBodySim(world, a); var sb = B2Bodies.b2GetBodySim(world, b);
         var p = new Joint
         {
             Mass = new(sa.invMass, sb.invMass, sa.invInertia, sb.invInertia),
+            PolicyBias = new(j.correctionBias, j.maxLinearBias, j.maxAngularBias, j.linearSoftness),
+            PolicyForce = new(j.maxLinearForce, j.maxAngularForce, 0, 0),
             Soft = new(j.constraintHertz, j.constraintDampingRatio, 0, 0),
             FrameA = new(j.localFrameA.p.X, j.localFrameA.p.Y, j.localFrameA.q.c, j.localFrameA.q.s),
             FrameB = new(j.localFrameB.p.X, j.localFrameB.p.Y, j.localFrameB.q.c, j.localFrameB.q.s),

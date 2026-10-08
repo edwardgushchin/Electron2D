@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Physical skeletal integration
 
@@ -25,9 +25,9 @@ One scene unit is 0.01 backend meters. Pin angle and motor speed use radians and
 
 ## Current implementation and limits
 
-The spring adapter samples local anchors through backend transforms and uses a native filter joint for island/collision ownership. Before each native interval it evaluates Hooke impulse and effective-mass axial exponential drag, then applies equal opposite impulses at the anchor points. All spring responses preflight before any are applied in that interval. Pure damping with zero stiffness is supported; Length does not cap stretch and zero RestLength uses its magnitude. Kinematic subdivision durations prevent multiplying the spring force by the number of native calls. Static/frozen bodies remain immovable, relaxed sleepers stay asleep, and nonzero impulses wake dynamic endpoints. This slice uses existing native body APIs and changes no vendored source.
+The spring adapter samples local anchors through backend transforms and uses a native filter joint for island/collision ownership. Before each native interval it evaluates Hooke impulse and effective-mass axial exponential drag, then applies equal opposite impulses at the anchor points. All spring responses preflight before any are applied in that interval. Pure damping with zero stiffness is supported; Length does not cap stretch and zero RestLength uses its magnitude. Kinematic subdivision durations prevent multiplying the spring force by the number of native calls. Static/frozen bodies remain immovable, relaxed sleepers stay asleep, and nonzero impulses wake dynamic endpoints. The initial spring slice used existing native body APIs; the current [solver-policy integration](physics-joint-policies.md) also updates native pin/groove kernels and caps the combined spring impulse.
 
-The Joint base, PinJoint, GrooveJoint and DampedSpringJoint provide executable scene connections. Stable joint RIDs and raw server creation now execute through the shared runtime. Positional bias, maximum correction speed/force and linear pin-anchor softness remain blocked by exact solver mappings. Joint debug drawing awaits a scene debug-canvas flag and draw pass. See [Joint2D](../coverage/classes/Joint2D.md), [PinJoint2D](../coverage/classes/PinJoint2D.md), [DampedSpringJoint2D](../coverage/classes/DampedSpringJoint2D.md) and [GrooveJoint2D](../coverage/classes/GrooveJoint2D.md) coverage.
+The Joint base, PinJoint, GrooveJoint and DampedSpringJoint provide executable scene connections. Stable joint RIDs and raw server creation now execute through the shared runtime. Positional bias, maximum correction speed/force and linear pin-anchor softness now execute through the [shared public policy](physics-joint-policies.md). Joint debug drawing awaits a scene debug-canvas flag and draw pass. See [Joint2D](../coverage/classes/Joint2D.md), [PinJoint2D](../coverage/classes/PinJoint2D.md), [DampedSpringJoint2D](../coverage/classes/DampedSpringJoint2D.md) and [GrooveJoint2D](../coverage/classes/GrooveJoint2D.md) coverage.
 
 [PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs), [GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) and [DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) check actual solver motion, live settings, lifecycle, packing, invalid-state recovery and warmed zero managed allocation on Linux/.NET 10. Both static-state allocation fixes are tracked in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). Native allocation, other platforms and owner acceptance remain unverified. [ADR 0084](../decisions/physics-joints.md#adr-0084) and [ADR 0085](../decisions/physics-joints.md#adr-0085) define the constraint slices; [ADR 0086](../decisions/physics-joints.md#adr-0086) defines spring forces.
 
@@ -35,20 +35,18 @@ The Joint base, PinJoint, GrooveJoint and DampedSpringJoint provide executable s
 
 [PhysicsServer](../classes/PhysicsServer.md#joints) creates caller-owned empty/replaceable identities and exposes typed scalar settings. [PhysicsJointRuntime](../classes/PhysicsJointRuntime.md) shares the actual scene pin/groove/spring kernels and world list; [PhysicsServer.JointType](../classes/PhysicsServer.JointType.md) reports the configured role even while pending. Scene GetRID is stable and borrowed. Raw server configuration accepts scene/server body RIDs; a one-body pin uses a hidden shape-free world anchor. Two-body connections suspend on detach/foreign membership and reconnect with preserved local frames and fresh native IDs; endpoint free clears the role, and world free retains caller configuration. Scene raw geometry overrides persist until scene edits/reentry reclaim them.
 
-Active disabled-joint pair contributions are independent of each other and explicit exceptions, affect contacts and motion tests, and deduplicate in snapshots. Dependent body membership/disposal validates related world ownership/phases before mutation. [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) checks native server response, scene sharing, lifecycle, failure recovery, pair accounting and 64 warmed active typed-setting/spring frames without managed allocation under [ADR 0087](../decisions/physics-joints.md#adr-0087). No vendor changes are made by this integration; native allocations, other platforms and owner acceptance remain unverified.
+Active disabled-joint pair contributions are independent of each other and explicit exceptions, affect contacts and motion tests, and deduplicate in snapshots. Dependent body membership/disposal validates related world ownership/phases before mutation. [PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) checks native server response, scene sharing, lifecycle, failure recovery, pair accounting and 64 warmed active typed-setting/spring frames without managed allocation under [ADR 0087](../decisions/physics-joints.md#adr-0087). The initial RID integration made no vendor changes; the current policy slice extends native joint kernels. native allocations, other platforms and owner acceptance remain unverified.
 
 The backend extraction passes the 31-suite collider CPU group and full current GPU
 stage-host suite. PhysicsServerJointTests runs the same rotated/off-center pin and
 world-replacement assertions on both paths, including motor/limits and rejection
 of invalid replacement. Each world runs 120 steps at 1/120 s; one scene unit of
 anchor error and 0.05 rad beyond the configured angle limit allow the existing
-solver tolerances. This preserves current behavior; independent GPU joint ownership,
-device spring evaluation, missing settings and network replay remain open.
+solver tolerances. Independent GPU joint ownership and spring evaluation execute internally; independent public-world integration and network replay remain open.
 
 ## Independent GPU foundation
 
 [GPUPhysicsBodyStore](gpu-resident-joints.md) now retains device joint configuration
 and warm history, solves pins/grooves together with contacts and applies Hooke/axial
 spring impulses on GPU. Joint collision vetoes are device-resident. This internal
-path does not yet replace the scene/server CPU attachment; public bias, compliance,
-general caps, sleep/CCD and network replay remain open.
+path does not yet replace the scene/server CPU attachment. Public CPU bias/compliance/caps and the stage GPU equivalents now execute; independent public sleep/CCD/event integration and network replay remain open.

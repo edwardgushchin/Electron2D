@@ -1320,11 +1320,51 @@ namespace Box2D.NET
             return @base.torqueThreshold;
         }
 
+        internal static float b2JointImpulseLimit(float force, float h) =>
+            force == float.MaxValue ? float.MaxValue : (float)Math.Min(float.MaxValue, (double)force * h);
+
+        internal static B2Vec2 b2ClampJointVector(B2Vec2 value, float limit)
+        {
+            if (limit == float.MaxValue) return value;
+            double length = Math.Sqrt((double)value.X * value.X + (double)value.Y * value.Y);
+            return length > limit ? new B2Vec2((float)(value.X * (limit / length)), (float)(value.Y * (limit / length))) : value;
+        }
+
+        internal static void b2LimitRevoluteImpulses(B2JointSim joint, float h, out B2Vec2 linearChange, out float angularChange)
+        {
+            ref B2RevoluteJoint pin = ref joint.uj.revoluteJoint;
+            B2Vec2 before = pin.linearImpulse;
+            pin.linearImpulse = b2ClampJointVector(before, b2JointImpulseLimit(joint.maxLinearForce, h));
+            linearChange = b2Sub(pin.linearImpulse, before);
+            float total = pin.springImpulse + pin.motorImpulse + pin.lowerImpulse - pin.upperImpulse;
+            float limit = b2JointImpulseLimit(joint.maxAngularForce, h);
+            float scale = MathF.Abs(total) > limit ? limit / MathF.Abs(total) : 1.0f;
+            pin.springImpulse *= scale; pin.motorImpulse *= scale; pin.lowerImpulse *= scale; pin.upperImpulse *= scale;
+            angularChange = (scale - 1.0f) * total;
+        }
+
+        internal static void b2LimitWheelImpulses(B2JointSim joint, float h, out float axisChange, out float perpendicularChange, out float angularChange)
+        {
+            ref B2WheelJoint wheel = ref joint.uj.wheelJoint;
+            float axial = wheel.springImpulse + wheel.lowerImpulse - wheel.upperImpulse;
+            B2Vec2 before = new B2Vec2(axial, wheel.perpImpulse);
+            B2Vec2 after = b2ClampJointVector(before, b2JointImpulseLimit(joint.maxLinearForce, h));
+            float scale = axial != 0.0f ? after.X / axial : 1.0f;
+            wheel.springImpulse *= scale; wheel.lowerImpulse *= scale; wheel.upperImpulse *= scale;
+            axisChange = after.X - axial;
+            perpendicularChange = after.Y - wheel.perpImpulse; wheel.perpImpulse = after.Y;
+            float limit = b2JointImpulseLimit(joint.maxAngularForce, h), previous = wheel.motorImpulse;
+            wheel.motorImpulse = b2ClampFloat(previous, -limit, limit);
+            angularChange = wheel.motorImpulse - previous;
+        }
+
         internal static void b2PrepareJoint(B2JointSim joint, B2StepContext context)
         {
             // Clamp joint hertz based on the time step to reduce jitter.
             float hertz = b2MinFloat(joint.constraintHertz, 0.25f * context.inv_h);
-            joint.constraintSoftness = b2MakeSoft(hertz, joint.constraintDampingRatio, context.h);
+            joint.constraintSoftness = joint.correctionBias >= 0.0f
+                ? new B2Softness(joint.correctionBias * context.inv_h, 1.0f, 0.0f)
+                : b2MakeSoft(hertz, joint.constraintDampingRatio, context.h);
 
             switch (joint.type)
             {

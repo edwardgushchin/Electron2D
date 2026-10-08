@@ -3,7 +3,7 @@
 - Upstream: https://github.com/ikpil/Box2D.NET
 - Release tag: `3.1.654`
 - Commit: `5efc96def866edbb4e5a9368d84de5bf8c2dcaca`
-- Imported: all 233 C# files from `src/Box2D.NET/`, with the upstream MIT [`LICENSE`](LICENSE)
+- Imported: all 233 C# files from `src/Box2D.NET/`, with the upstream MIT [`LICENSE`](../../../licence/Box2D.NET-LICENSE.txt)
 - Assembly: source is compiled into `Electron2D.dll`; no separate managed package is shipped
 
 Local boundary and compiler adaptations:
@@ -60,5 +60,7 @@ Local boundary and compiler adaptations:
 29. Optional begin/select/finish constraint-color callbacks bracket the contact-state loop. The GPU batch predicts ordered touching-contact changes and collision-triggered sleeping-set wakes, assigning colors to the waking contacts/joints before the triggering contact. Shared contact/joint insertion consumes prepared colors and updates ordinary body bitsets instead of searching on CPU; removal consumes the corresponding prepared operation before its unchanged swap-removal. Without an active batch, both use the original CPU greedy assignment, now shared to remove duplicated contact logic. World reset clears all callbacks. The GPU host validates color bounds, occupancy and publication identity/generation/order; partial failure has no CPU replay. Full bitset snapshots and serial GPU assignment remain measured limits; authoring coloring and solver-set transfer remain on CPU.
 
 30. An optional finalizeBodyStates owner callback exposes validated 64-byte final body records from the GPU solver before finalization workers start. Workers import pose, locked velocities, sleep time and fast/awake/split flags while retaining move events, force/delta clearing, CCD, shape bounds and island/set publication. The CPU numeric branch keeps its original arithmetic and thresholds. The callback consumes one prepared step; the context borrows its record array only until the worker join, with a finally/reset clearing it. World reset clears the callback. The GPU numeric pass is recorded in the existing solver submission after restitution, without a second fence or solved-body upload. Numeric oracle, live CCD/events, ownership, malformed output and failed-world teardown checks cover the path.
+
+31. Optional per-joint correction fraction, linear anchor softness and linear/angular force/correction caps are retained in B2JointSim and copied/reset with solver-set storage. Engine pin/groove profiles use bias/h; raw native joints retain the existing frequency profile. Warm-start and completed solve clamp accumulated vector/pure-angular impulses to force times substep duration; wheel endpoint/perpendicular correction shares a vector-speed cap. Nonzero pin softness augments the linear effective-mass matrix and accumulated-impulse feedback, with a double intermediate matrix solve. The engine spring preflight caps its combined elastic/damping impulse separately. Public policy tests exercise CPU and the stage GPU mirror, settings/lifecycle, kinematic subdivisions and warmed allocation.
 
 The library remains an internal backend. Electron2D public signatures use only Electron2D-owned types. Review every upstream update against this pinned version, license, internalization and integration tests before replacing these files.

@@ -27,7 +27,7 @@ Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
 edits, automatic/custom mass profiles, center-aware integration, shared geometry, broad-phase pairs and narrow-phase contact
 points, material response, contact impulses, pin/groove/spring solving and warm history. It is not yet
-selectable through PhysicsServer; CPU/public joint policy integration, public state/event publication
+selectable through PhysicsServer; independent GPU public joint integration, public state/event publication
 and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
 
 | Operation | Contract |
@@ -128,5 +128,5 @@ GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after s
 
 GPUPhysicsJointPolicyTests checks internal per-joint bias, vector correction/force
 caps, inverse-mass pin softness, shared physical/correction budgets, original
-substep budgeting through CCD, rejected edits and warmed allocation. The CPU and
-public scene/server policy families remain open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).
+substep budgeting through CCD, rejected edits and warmed allocation. The independent GPU
+public-world adapter remains open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).

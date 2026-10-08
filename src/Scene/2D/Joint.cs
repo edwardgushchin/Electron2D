@@ -12,6 +12,12 @@ public abstract class Joint : Entity
             (joint, value) => joint.NodeA = value, _ => string.Empty, stored: true),
         new PropertyDescriptor<Joint, string>(nameof(NodeB), joint => joint.NodeB,
             (joint, value) => joint.NodeB = value, _ => string.Empty, stored: true),
+        new PropertyDescriptor<Joint, float>(nameof(Bias), joint => joint.Bias,
+            (joint, value) => joint.Bias = value, _ => 0f, stored: true),
+        new PropertyDescriptor<Joint, float>(nameof(MaxBias), joint => joint.MaxBias,
+            (joint, value) => joint.MaxBias = value, _ => float.MaxValue, stored: true),
+        new PropertyDescriptor<Joint, float>(nameof(MaxForce), joint => joint.MaxForce,
+            (joint, value) => joint.MaxForce = value, _ => float.MaxValue, stored: true),
         new PropertyDescriptor<Joint, bool>(nameof(DisableCollision), joint => joint.DisableCollision,
             (joint, value) => joint.DisableCollision = value, _ => true, stored: true)
     ];
@@ -31,6 +37,36 @@ public abstract class Joint : Entity
     internal PhysicsJointRuntime Runtime { get; }
     internal PhysicsSpace? AttachmentSpace => _space;
     internal bool HasServerOverride => _serverOverride;
+
+    /// <summary>Gets or sets the fraction of positional joint error requested for correction per substep.</summary>
+    /// <value>A finite value from zero to one. Zero inherits the space constraint bias, initially 0.2.</value>
+    /// <remarks>Pin and groove use this for anchor and limit recovery. Springs use their force coefficients and have no positional recovery rows. Live changes wake connected bodies; sampled anchors remain unchanged.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the finite zero-to-one range.</exception>
+    public float Bias
+    {
+        get { ThrowIfDisposed(); return Runtime.Bias; }
+        set { EnsureJointChange(); Runtime.SetBias(value); }
+    }
+
+    /// <summary>Gets or sets the maximum positional correction speed.</summary>
+    /// <value>A finite nonnegative cap in scene units per second for linear correction and radians per second for angular stops; defaults to <see cref="float.MaxValue"/>.</value>
+    /// <remarks>The vector cap is additionally bounded by the world's 200-unit correction guard. Zero disables positional recovery while preserving velocity constraints. Springs have no positional recovery rows. This projects the shared server setting and is stored in packed scenes.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
+    public float MaxBias
+    {
+        get { ThrowIfDisposed(); return Runtime.MaxBias; }
+        set { EnsureJointChange(); Runtime.SetMaxBias(value); }
+    }
+
+    /// <summary>Gets or sets the joint's per-second impulse budget.</summary>
+    /// <value>A finite nonnegative scalar, or the default <see cref="float.MaxValue"/> for no cap.</value>
+    /// <remarks>Linear impulse uses kilograms times scene units per second, and the separate pure-angular channel uses kilograms times squared scene units per second. Each substep permits this value times its duration in each channel. All linear axes share a vector budget. Springs cap their combined elastic and damping impulse. The pin motor torque limit remains an additional cap. Live edits wake connected bodies and clear old impulses. This projects the shared server setting and is stored in packed scenes.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
+    public float MaxForce
+    {
+        get { ThrowIfDisposed(); return Runtime.MaxForce; }
+        set { EnsureJointChange(); Runtime.SetMaxForce(value); }
+    }
 
     /// <summary>Gets the stable physics server identity of this scene joint.</summary>
     /// <returns>A nonempty RID unchanged by connection rebuilds, clear or tree reentry.</returns>

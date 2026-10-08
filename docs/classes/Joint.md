@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 **Inherited By:** [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md), [DampedSpringJoint](DampedSpringJoint.md)
@@ -22,7 +22,7 @@ depending on a backend ID; public RID identity remains stable.
 
 The base spatial role for constraints between two distinct [PhysicsBody](PhysicsBody.md) nodes. `NodeA` and `NodeB` use the existing string node-path syntax and resolve from the joint in its scene tree. The joint stores configuration while detached. After both endpoints belong to the same active physics world, its concrete subclass creates a solver constraint. Invalid paths, non-body nodes, duplicate endpoints or bodies outside the same world leave it unconfigured and produce warnings. It reconnects after a body reenters, and the old constraint is removed before a body or the joint exits. The global anchor is sampled when the connection is made; moving the joint node alone does not retune an existing constraint. The node itself draws no geometry.
 
-`Joint` is an engine-owned abstract base; applications instantiate [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md) or [DampedSpringJoint](DampedSpringJoint.md). `GetRID()` exposes the stable scene-owned physics identity; per-joint positional bias is not yet exposed. See [coverage](../coverage/classes/Joint2D.md) for exact dependency triggers.
+`Joint` is an engine-owned abstract base; applications instantiate [PinJoint](PinJoint.md), [GrooveJoint](GrooveJoint.md) or [DampedSpringJoint](DampedSpringJoint.md). `GetRID()` exposes the stable scene-owned physics identity; Bias, correction speed and force budget are shared with PhysicsServer and stored in PackedScene. See [joint policies](../components/physics-joint-policies.md) for equations and backend scope.
 
 ## Example
 
@@ -40,6 +40,9 @@ The snippet assumes `root` is a Node, the two named bodies are or will be its ch
 | `private protected Joint(PhysicsServer.JointType type)` | — | Creates a detached base for engine-owned concrete joints. |
 | `public string NodeA { get; set; }` | `""` | Path from this node to the first body. |
 | `public string NodeB { get; set; }` | `""` | Path from this node to the second body. |
+| `public float Bias { get; set; }` | `0` | Fraction of positional error per substep; zero inherits the space default. |
+| `public float MaxBias { get; set; }` | `float.MaxValue` | Vector linear/angular correction-speed cap. |
+| `public float MaxForce { get; set; }` | `float.MaxValue` | Shared linear and separate pure-angular force/impulse budget. |
 | `public bool DisableCollision { get; set; }` | `true` | Suppress mutual body contacts while joined. |
 | `public RID GetRID()` | — | Stable scene-owned identity until disposal; FreeRID rejects it. |
 | `protected override void ValidateDisposal()` | — | Check scene/dependent world ownership before beginning disposal. |
@@ -53,6 +56,14 @@ The snippet assumes `root` is a Node, the two named bodies are or will be its ch
 ### `NodeA` and `NodeB`
 
 An empty string leaves the joint unconfigured; `null` rejects before mutation. Paths use [Node](Node.md) resolution, including relative `..` and active absolute paths. Both endpoints must be distinct PhysicsBody nodes in the joint's scene world. Changes take effect before the next nonzero fixed step. A later body entry can satisfy a previously unresolved path. These properties are stored by PackedScene and retain their text through detach/reentry.
+
+### `Bias`, `MaxBias`, `MaxForce`
+
+Bias is finite in [0,1]. Zero inherits the space default, initially the captured project value 0.2. A nonzero value requests that fraction of positional error per substep. MaxBias is finite nonnegative speed: the linear vector uses scene units/s, angular stops use rad/s, additionally bounded by the current world guard of 200. Zero preserves velocity constraints but disables positional recovery. Springs have no positional recovery rows, so these two values do not alter their force-law coefficients.
+
+MaxForce is finite nonnegative, with float.MaxValue meaning unlimited. Each substep permits MaxForce times its duration: a shared linear vector budget in kg·scene-unit/s and a separate pure-angular budget in kg·scene-unit²/s. Springs cap their combined elastic/drag impulse. The pin motor retains its separate N·m cap. See [the solver policy](../components/physics-joint-policies.md) for coupled rows and the distinct CPU/GPU correction methods.
+
+All three values share the scene's server RID, survive packing and general joint clear/replacement, and preserve sampled anchors. Valid live edits wake connected bodies and clear old impulses. Invalid scalar values, off-owner mutation and solver-owned access reject before configuration changes.
 
 ### `DisableCollision`
 

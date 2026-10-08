@@ -35,7 +35,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1
     PhysicsAreaMonitorTests.Run(); PhysicsAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(); CollisionDisableModeTests.Run();
     PhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(); PhysicsMotionTests.Run(); ShapeCollisionTests.Run();
     PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run();
-    PhysicsBodyStateTests.Run(); PhysicsServerJointTests.Run(); WorldTests.Run();
+    PhysicsBodyStateTests.Run(); PhysicsServerJointTests.Run(); PhysicsJointPolicyTests.Run(); WorldTests.Run();
     AnimatableBodyTests.Run(); CharacterBodyTests.Run(); RigidFreezeModeTests.Run(); PhysicalBoneTests.Run();
     Console.WriteLine("Shared collider backend passed: bodies/areas, geometry, materials, mass, views, joints, worlds, motion modes and physical bones.");
     return;
@@ -44,6 +44,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_IMPULSES") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_ACTIVITY") == "1") { PhysicsActivityTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_POLICIES") == "1") { PhysicsJointPolicyTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run(); PhysicsServerJointTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_JOINTS") == "1") { GPUPhysicsJointStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SOLVER") == "1") { GPUPhysicsSolverStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS") == "1") { GPUPhysicsContactStoreTests.Run(); return; }
@@ -623,6 +624,7 @@ PinJointTests.Run();
 GrooveJointTests.Run();
 DampedSpringJointTests.Run();
 PhysicsServerJointTests.Run();
+PhysicsJointPolicyTests.Run();
 PhysicsServerShapeSlotTests.Run();
 PhysicsActivityTests.Run();
 CapsuleShapeTests.Run();

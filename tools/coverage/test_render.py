@@ -40,7 +40,10 @@ def check_physics_report(pages):
             if state in {"Partial", "Blocked", "Unimplemented"}:
                 expected[declaration["id"]] = state
     assert dict(actual) == expected, "Physics ledger must retain every open row from the class classifier"
-    assert "Joint2D::property:bias" in expected
+    assert "Joint2D::property:bias" not in expected
+    assert "PinJoint2D::property:softness" not in expected
+    assert "RigidBody2D::property:continuous_cd" in expected
+    assert "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)" in expected
     assert "StaticBody2D::property:constant_angular_velocity" not in expected
 
 
@@ -314,7 +317,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 113, "Partial": 8, "Unimplemented": 37, "Blocked": 17, "Excluded": 40}
+                "Implemented": 117, "Partial": 8, "Unimplemented": 34, "Blocked": 10, "Excluded": 46}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -395,18 +398,19 @@ def main():
     joint_rows = pages[CLASS_PAGES / "Joint2D.md"].splitlines()
     pin_rows = pages[CLASS_PAGES / "PinJoint2D.md"].splitlines()
     assert " | Implemented | " in next(row for row in joint_rows if row.startswith("| [`method get_rid()"))
-    assert " | Blocked | " in next(row for row in joint_rows if row.startswith("| [`property float bias"))
+    assert " | Implemented | " in next(row for row in joint_rows if row.startswith("| [`property float bias"))
     server_joint_rows = pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
     for name, state in (("joint_create", "Implemented"), ("joint_clear", "Implemented"),
                         ("joint_make_pin", "Implemented"), ("joint_make_groove", "Implemented"),
                         ("joint_make_damped_spring", "Implemented"), ("joint_get_type", "Implemented"),
-                        ("pin_joint_get_param", "Partial"), ("pin_joint_set_param", "Partial"),
+                        ("pin_joint_get_param", "Implemented"), ("pin_joint_set_param", "Implemented"),
                         ("pin_joint_get_flag", "Implemented"), ("pin_joint_set_flag", "Implemented"),
                         ("damped_spring_joint_get_param", "Implemented"), ("damped_spring_joint_set_param", "Implemented"),
-                        ("joint_get_param", "Blocked"), ("joint_set_param", "Blocked")):
+                        ("joint_get_param", "Implemented"), ("joint_set_param", "Implemented"),
+                        ("space_get_param", "Partial"), ("space_set_param", "Partial")):
         assert f" | {state} | " in next(row for row in server_joint_rows if row.startswith(f"| [`method {name}("))
-    assert " | Blocked | " in next(row for row in server_joint_rows if row.startswith("| [`enum_value PIN_JOINT_SOFTNESS"))
-    assert " | Blocked | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))
+    assert " | Excluded | " in next(row for row in server_joint_rows if row.startswith("| [`enum_value PIN_JOINT_SOFTNESS"))
+    assert " | Implemented | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))
     groove_rows = pages[CLASS_PAGES / "GrooveJoint2D.md"].splitlines()
     assert " | Partial | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))
     assert all(" | Implemented | " in next(row for row in groove_rows if row.startswith(f"| [`property float {name}"))

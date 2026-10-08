@@ -1,6 +1,6 @@
 # ProjectSettingsRegistry
 
-Last updated: 2026-10-06
+Last updated: 2026-10-09
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -865,3 +865,5 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 The built-in basic AudioBusesDefaultBusLayout setting defines the optional bus archive. Independent registries author its value; the runtime registry supplies Engine startup. See [ProjectSettings](ProjectSettings.md#default-audio-bus-layout).
 
 Six permanent input/ui_filedialog definitions participate in the ordinary builtin loading and typed input-action validation: delete, up_one_level, refresh, show_hidden, find and focus_path. See the [file-dialog component](../components/file-dialogs.md) for its exercised flow and limits.
+
+The built-in physics catalog also registers Physics2DDefaultConstraintBias (physics/2d/solver/default_constraint_bias), finite [0,1], default 0.2; spaces sample its feature-resolved value at construction. See [ProjectSettings](ProjectSettings.md#physics2ddefaultconstraintbias).

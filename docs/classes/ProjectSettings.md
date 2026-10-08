@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -54,6 +54,7 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<float> Physics2DDefaultGravity { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravity) | Default 2D gravity strength, 980 scene units/s². |
 | [`public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravityvector) | Default 2D gravity direction, (0, 1) without normalization. |
 | [`public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultlineardamp) | Default 2D linear damping, 0.1/s. |
+| [`public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; }`](#physics2ddefaultconstraintbias) | Default joint positional correction fraction, 0.2. |
 | [`public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultangulardamp) | Default 2D angular damping, 1/s. |
 | [`public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`](#p-electron2d-projectsettings-maxphysicsstepsperframe) | Defines the maximum fixed-step callbacks processed during one frame. |
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
@@ -1331,3 +1332,8 @@ Graph controls consume the permanent `InputUIGraphDuplicate`, `InputUIGraphDelet
 | `public static ProjectSetting<InputActionSettings> InputUIGraphDelete { get; }` | Delete |
 | `public static ProjectSetting<InputActionSettings> InputUIGraphFollowLeft { get; }` | Alt+Left on macOS; CommandOrControl+Left elsewhere |
 | `public static ProjectSetting<InputActionSettings> InputUIGraphFollowRight { get; }` | Alt+Right on macOS; CommandOrControl+Right elsewhere |
+
+
+### `Physics2DDefaultConstraintBias`
+
+`public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; }` exposes physics/2d/solver/default_constraint_bias, initial 0.2, accepting only finite [0,1]. Each new physics space samples its current feature override. Existing spaces retain their captured value; PhysicsServer.SpaceSetConstraintDefaultBias changes one live space. Joint.Bias=0 inherits that space value. The registry includes the setting as a built-in key and preserves it through project settings storage.

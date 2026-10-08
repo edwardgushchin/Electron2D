@@ -1134,6 +1134,61 @@
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCanSleep(Electron2D.RID)",
       "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetBias(Electron2D.RID)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxBias(Electron2D.RID)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxForce(Electron2D.RID)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxForce(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetSoftness(Electron2D.RID)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetSoftness(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetConstraintDefaultBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/default_constraint_bias",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DDefaultConstraintBias()",
+      "reason": "Typed project default is sampled with feature overrides at space creation; the zero-bias joint inherits the current space value (ADR 0087)."
     }
   ],
   "extras": [
@@ -1900,6 +1955,14 @@
       "electron2d": "method:Electron2D.World.ValidateDisposal()",
       "reason": "Rejects off-thread/locked final physics runtime destruction before disposal state begins changing.",
       "adr": "ADRs 0014/0028/0063"
+    },
+    {
+      "electron2d": "property:Electron2D.Joint.MaxBias()",
+      "reason": "ADR 0087: serializable scene projection of the existing general server joint parameter, sharing the same RID/runtime value; required to retain server-authored configuration through PackedScene."
+    },
+    {
+      "electron2d": "property:Electron2D.Joint.MaxForce()",
+      "reason": "ADR 0087: serializable scene projection of the existing general server joint parameter, sharing the same RID/runtime value; required to retain server-authored configuration through PackedScene."
     }
   ],
   "statusGroups": [
@@ -1915,7 +1978,7 @@
         "class:DampedSpringJoint2D"
       ],
       "state": "Partial",
-      "reason": "Anchor Hooke force, effective-mass axial drag and native filter-joint ownership execute under ADR 0086; inherited Joint bias remains Blocked and physics debug drawing still needs the scene debug-canvas flag/pass."
+      "reason": "Anchor Hooke force and axial drag, general force cap and shared scene/server lifetime execute under ADRs 0086/0087. Springs have no positional recovery rows. Physics debug drawing remains missing."
     },
     {
       "godot": [
@@ -1932,7 +1995,7 @@
         "class:GrooveJoint2D"
       ],
       "state": "Partial",
-      "reason": "Finite body-A guide and freely rotating body-B slider execute under ADR 0085; inherited Joint bias remains Blocked, and physics debug drawing still requires a scene debug-canvas flag and draw pass."
+      "reason": "Finite guide, free rotation and shared bias/vector correction/force caps execute under ADRs 0085/0087; physics debug drawing remains missing."
     },
     {
       "godot": [
@@ -1948,7 +2011,7 @@
         "class:PinJoint2D"
       ],
       "state": "Partial",
-      "reason": "Scene-owned pin constraints, path resolution, collision policy, angular limits and motor execute under ADR 0084; Stable shared RID executes under ADR 0087; positional bias and pin-anchor softness retain exact blocked solver prerequisites."
+      "reason": "Scene/server joint identity, anchors, limits/motor and complete bias/softness/force/correction policies execute under ADR 0087; physics debug drawing still needs the scene debug-canvas flag/pass."
     },
     {
       "godot": [
@@ -2528,7 +2591,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; internal joint bias/compliance/force/correction policies now execute; CPU/public joint-policy integration, public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; internal joint bias/compliance/force/correction policies now execute; common public CPU joint policies now execute and the stage-hosted GPU path honors them; public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -2620,15 +2683,15 @@
       "godot": [
         "Joint2D::property:bias"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: CPU positional correction bias and shared scene/server adapters. Independent GPU per-joint bias now executes internally; this does not close the public family. Missing Box2D parameters do not constrain internal solver changes (ADRs 0054/0087)."
+      "state": "Implemented",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
     },
     {
       "godot": [
         "PinJoint2D::property:softness"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: implement positional pin-anchor compliance on CPU and GPU; angular spring stiffness does not supply this degree of freedom. Internal solver changes are permitted (ADR 0054)."
+      "state": "Implemented",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
     },
     {
       "godot": [
@@ -3171,8 +3234,8 @@
         "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
         "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)"
       ],
-      "state": "Partial",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype. Typed lower/upper/target-velocity pairs execute; the softness branch remains Blocked on a verified linear anchor compliance kernel."
+      "state": "Implemented",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
     },
     {
       "godot": [
@@ -3196,19 +3259,17 @@
         "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_BIAS",
         "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_MAX_FORCE",
         "PhysicsServer2D::enum:JointParam",
-        "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_MAX_BIAS",
-        "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
-        "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
+        "PhysicsServer2D::enum_value:JointParam.JOINT_PARAM_MAX_BIAS"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: CPU per-joint positional correction bias, correction-speed and joint force/impulse caps with complete public scene/server adapters (ADR 0087). Independent GPU policies now execute with vector limits, shared physical/correction budgets and original-substep CCD accounting. General parameter operations enter the complete common slice; a motor-only cap is insufficient."
+      "state": "Excluded",
+      "reason": "ADR 0087: the untyped JointParam selector/container is replaced by all three concrete getter/setter pairs; Bias, MaxBias and MaxForce behavior executes."
     },
     {
       "godot": [
         "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_SOFTNESS"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: CPU linear pin-anchor compliance and shared PinJoint.Softness/typed server adapters (ADRs 0084/0087). Independent GPU linear compliance now executes internally; angular spring compliance remains a different capability."
+      "state": "Excluded",
+      "reason": "ADR 0087: the softness selector is representation only. PinJoint.Softness and typed PinJointGetSoftness/SetSoftness execute the capability; angular spring coefficients are separate."
     },
     {
       "godot": [
@@ -3282,6 +3343,36 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0001/0070: the Variant selector representation is replaced by all five concrete typed state getter/setter pairs. Only the selector enum/values are excluded; their complete capabilities execute and are verified by PhysicsServerStateTests."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+        "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/default_constraint_bias"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite [0,1] project setting defaults to 0.2, samples feature overrides at space creation and preserves existing spaces; PhysicsJointPolicyTests exercises the public setting and inherited/explicit joint behavior."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+        "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
+      ],
+      "state": "Partial",
+      "reason": "SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias execute the joint correction fraction with validation, owner/phase guards and inherited-joint waking. Other applicable sleep/contact/iteration space parameters remain open and enter their owning solver-policy slices."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONSTRAINT_DEFAULT_BIAS"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0087: the numeric selector is represented by typed SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias; the actual correction behavior executes."
     }
   ]
 }

@@ -39,7 +39,7 @@ response, device warm history and separate pose correction. Its update/gather
 kernels use separate hot impulse storage and precomputed contact Jacobians; the
 linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. [Resident joints](gpu-resident-joints.md) add independent
 pin/groove/spring response, persistent history and collision vetoes. Shared [mass profiles](gpu-resident-mass.md) now supply automatic/custom centers
-and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. [Resident CCD](gpu-resident-ccd.md) now executes ray/full-shape trajectory checks and impact intervals internally. [Resident joint policies](gpu-resident-joints.md#joint-solver-policies) now execute bias, linear anchor softness and force/correction caps. CPU/public joint adapters and public selection/publication remain unconnected; historical full-stage results below still refer
+and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. [Resident CCD](gpu-resident-ccd.md) now executes ray/full-shape trajectory checks and impact intervals internally. [Resident joint policies](gpu-resident-joints.md#joint-solver-policies) now execute bias, linear anchor softness and force/correction caps. Public CPU/stage-GPU joint policies now execute; independent public selection/publication remain unconnected; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 
 The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only
@@ -1331,3 +1331,5 @@ The numerical transfer is verified; these timings do not establish an applicatio
 speedup. Shape bounds, CCD and publication still dominate the remaining CPU
 transform phase. Native allocation accounting, sustained all-awake/native-window
 FPS, foreign devices and full GPU-world completion remain separate requirements.
+
+The stage solver now transfers 224-byte joint packets carrying [bias, softness and force/correction caps](physics-joint-policies.md). Common public assertions exercise those policies on CPU and this stage host; historical timings above retain their original packet sizes.

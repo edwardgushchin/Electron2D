@@ -65,6 +65,7 @@ public sealed partial class PhysicsServer
                 if (!weak.TryGetTarget(out var scene) || scene.IsDisposed)
                     throw new ArgumentException("The scene joint owner is no longer alive.", nameof(rid));
                 scene.Tree?.EnsureOwnerThread();
+                scene.AttachmentSpace?.EnsureQueryAccess();
             }
         }
         runtime.EnsureAccess();
@@ -143,6 +144,23 @@ public sealed partial class PhysicsServer
             foreach (var runtime in _jointRuntimes.Values)
                 if (runtime.BodyA == body || runtime.BodyB == body) runtime.Clear();
     }
+    internal float JointGetBiasCore(RID joint) => GetJoint(joint).Bias;
+    internal void JointSetBiasCore(RID joint, float value) => GetJoint(joint).SetBias(value);
+    internal float JointGetMaxBiasCore(RID joint) => GetJoint(joint).MaxBias;
+    internal void JointSetMaxBiasCore(RID joint, float value) => GetJoint(joint).SetMaxBias(value);
+    internal float JointGetMaxForceCore(RID joint) => GetJoint(joint).MaxForce;
+    internal void JointSetMaxForceCore(RID joint, float value) => GetJoint(joint).SetMaxForce(value);
+    internal float PinJointGetSoftnessCore(RID joint) => GetJoint(joint, JointType.Pin).PinSoftness;
+    internal void PinJointSetSoftnessCore(RID joint, float value) => GetJoint(joint, JointType.Pin).SetPinSoftness(value);
+    internal float SpaceGetConstraintDefaultBiasCore(RID space)
+    {
+        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ConstraintDefaultBias;
+    }
+    internal void SpaceSetConstraintDefaultBiasCore(RID space, float value)
+    {
+        ThrowIfDisposed(); GetSceneSpace(space).SetConstraintDefaultBias(value);
+    }
+
     internal bool PinJointGetAngularLimitEnabledCore(RID joint) => GetJoint(joint, JointType.Pin).PinLimitEnabled;
 
     internal void PinJointSetAngularLimitEnabledCore(RID joint, bool value) => GetJoint(joint, JointType.Pin).SetPinLimitEnabled(value);

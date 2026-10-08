@@ -111658,6 +111658,63 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.JointGetBias(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointGetBias",
+    "signature": "public static System.Single JointGetBias(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointGetMaxBias(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointGetMaxBias",
+    "signature": "public static System.Single JointGetMaxBias(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointGetMaxForce(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointGetMaxForce",
+    "signature": "public static System.Single JointGetMaxForce(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.JointGetType(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -111813,6 +111870,78 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.JointSetBias(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointSetBias",
+    "signature": "public static System.Void JointSetBias(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointSetMaxBias(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointSetMaxBias",
+    "signature": "public static System.Void JointSetMaxBias(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.JointSetMaxForce(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "JointSetMaxForce",
+    "signature": "public static System.Void JointSetMaxForce(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitEnabled(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -111913,6 +112042,25 @@
     "declaringType": "Electron2D.PhysicsServer",
     "name": "PinJointGetMotorTargetVelocity",
     "signature": "public static System.Single PinJointGetMotorTargetVelocity(Electron2D.RID joint)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.PinJointGetSoftness(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointGetSoftness",
+    "signature": "public static System.Single PinJointGetSoftness(Electron2D.RID joint)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -112071,6 +112219,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.PinJointSetSoftness(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "PinJointSetSoftness",
+    "signature": "public static System.Void PinJointSetSoftness(Electron2D.RID joint, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "joint",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.RectangleShapeCreate()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -112185,6 +112357,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetConstraintDefaultBias",
+    "signature": "public static System.Single SpaceGetConstraintDefaultBias(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceGetDirectState(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -112240,6 +112431,30 @@
       {
         "name": "active",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetConstraintDefaultBias(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetConstraintDefaultBias",
+    "signature": "public static System.Void SpaceSetConstraintDefaultBias(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -175155,6 +175370,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.Joint.Bias()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "Bias",
+    "signature": "public System.Single Bias { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Joint.DisableCollision()",
     "kind": "property",
     "declaringType": "Electron2D.Joint",
@@ -175165,6 +175393,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Joint.MaxBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "MaxBias",
+    "signature": "public System.Single MaxBias { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Joint.MaxForce()",
+    "kind": "property",
+    "declaringType": "Electron2D.Joint",
+    "name": "MaxForce",
+    "signature": "public System.Single MaxForce { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {
@@ -179822,6 +180076,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PinJoint.Softness()",
+    "kind": "property",
+    "declaringType": "Electron2D.PinJoint",
+    "name": "Softness",
+    "signature": "public System.Single Softness { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.Polygon.Color()",
     "kind": "property",
     "declaringType": "Electron2D.Polygon",
@@ -181257,6 +181524,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "Physics2DDefaultAngularDamp",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultAngularDamp { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultConstraintBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultConstraintBias",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultConstraintBias { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

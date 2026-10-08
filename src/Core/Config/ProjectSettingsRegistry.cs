@@ -66,6 +66,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(Physics2DDefaultGravityVector, isBasic: true);
         RegisterInternal(Physics2DDefaultLinearDamp, isBasic: false);
         RegisterInternal(Physics2DDefaultAngularDamp, isBasic: false);
+        RegisterInternal(Physics2DDefaultConstraintBias, isBasic: false);
         RegisterInternal(MaxPhysicsStepsPerFrame, isBasic: false);
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
@@ -1150,6 +1151,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, Physics2DDefaultGravityVector) ||
         ReferenceEquals(setting, Physics2DDefaultLinearDamp) ||
         ReferenceEquals(setting, Physics2DDefaultAngularDamp) ||
+        ReferenceEquals(setting, Physics2DDefaultConstraintBias) ||
         ReferenceEquals(setting, MaxPhysicsStepsPerFrame) ||
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||

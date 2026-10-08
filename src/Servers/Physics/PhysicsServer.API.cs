@@ -481,6 +481,86 @@ public sealed partial class PhysicsServer
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
     public static void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default) => Service.JointMakeDampedSpringCore(joint, anchorA, anchorB, bodyA, bodyB);
 
+    /// <summary>Gets the positional correction fraction.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <returns>A finite zero-to-one value; zero inherits the space default.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static float JointGetBias(RID joint) => Service.JointGetBiasCore(joint);
+
+    /// <summary>Sets the positional correction fraction.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <param name="value">A finite zero-to-one value; zero inherits the space default.</param>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. General settings survive clear and concrete-role replacement.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static void JointSetBias(RID joint, float value) => Service.JointSetBiasCore(joint, value);
+
+    /// <summary>Gets the positional correction speed cap.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <returns>Nonnegative scene units/s for linear correction and radians/s for angular stops; float.MaxValue by default, additionally bounded by the world correction guard.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static float JointGetMaxBias(RID joint) => Service.JointGetMaxBiasCore(joint);
+
+    /// <summary>Sets the positional correction speed cap.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <param name="value">Nonnegative scene units/s for linear correction and radians/s for angular stops; float.MaxValue by default, additionally bounded by the world correction guard.</param>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. All linear axes share a vector cap; springs have no positional recovery rows. General settings survive clear and concrete-role replacement.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static void JointSetMaxBias(RID joint, float value) => Service.JointSetMaxBiasCore(joint, value);
+
+    /// <summary>Gets the per-second impulse budget.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <returns>Nonnegative; float.MaxValue means unlimited. Linear and pure-angular channels use scene-unit and squared-scene-unit force units respectively.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static float JointGetMaxForce(RID joint) => Service.JointGetMaxForceCore(joint);
+
+    /// <summary>Sets the per-second impulse budget.</summary>
+    /// <param name="joint">A live joint RID, including an unconfigured joint.</param>
+    /// <param name="value">Nonnegative; float.MaxValue means unlimited. Linear and pure-angular channels use scene-unit and squared-scene-unit force units respectively.</param>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. Each substep permits the value times its duration; all linear axes share a vector budget. Springs cap their combined elastic and damping impulse. MotorMaxTorque remains an additional cap. General settings survive clear and concrete-role replacement.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static void JointSetMaxForce(RID joint, float value) => Service.JointSetMaxForceCore(joint, value);
+
+    /// <summary>Gets the linear anchor compliance.</summary>
+    /// <param name="joint">A live pin RID or unconfigured scene PinJoint RID.</param>
+    /// <returns>Finite nonnegative inverse-kilogram softness, zero by default.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static float PinJointGetSoftness(RID joint) => Service.PinJointGetSoftnessCore(joint);
+
+    /// <summary>Sets the linear anchor compliance.</summary>
+    /// <param name="joint">A live pin RID or unconfigured scene PinJoint RID.</param>
+    /// <param name="value">Finite nonnegative inverse-kilogram softness, zero by default.</param>
+    /// <remarks>Preserves sampled anchors and identity, wakes connected bodies and clears old impulses. This affects linear anchors, not an angular spring. A raw concrete-role replacement resets pin-specific softness.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static void PinJointSetSoftness(RID joint, float value) => Service.PinJointSetSoftnessCore(joint, value);
+
+    /// <summary>Gets the joint positional correction fraction.</summary>
+    /// <param name="space">A live space RID.</param>
+    /// <returns>A finite fraction from zero to one; initially sampled from ProjectSettings.Physics2DDefaultConstraintBias.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static float SpaceGetConstraintDefaultBias(RID space) => Service.SpaceGetConstraintDefaultBiasCore(space);
+
+    /// <summary>Sets the joint positional correction fraction.</summary>
+    /// <param name="space">A live space RID.</param>
+    /// <param name="value">A finite fraction from zero to one; initially sampled from ProjectSettings.Physics2DDefaultConstraintBias.</param>
+    /// <remarks>Updates and wakes zero-bias joints. Explicit nonzero joint bias is preserved; contact-separation bias is separate.</remarks>
+    /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    public static void SpaceSetConstraintDefaultBias(RID space, float value) => Service.SpaceSetConstraintDefaultBiasCore(space, value);
+
     /// <summary>Returns whether the relative angle is limited.</summary>
     /// <param name="joint">A live Pin joint RID.</param>
     /// <returns>Whether the relative angle is limited.</returns>

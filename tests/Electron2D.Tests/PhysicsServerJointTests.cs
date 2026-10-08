@@ -386,6 +386,10 @@ internal static class PhysicsServerJointTests
             {
                 Reject<InvalidOperationException>(() => PhysicsServer.JointClear(joint));
                 Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(joint));
+                Reject<InvalidOperationException>(() => PhysicsServer.JointSetBias(joint, 0.5f));
+                Reject<InvalidOperationException>(() => PhysicsServer.JointSetMaxForce(joint, 0));
+                Reject<InvalidOperationException>(() => PhysicsServer.PinJointSetSoftness(emptySceneJoint.GetRID(), 2));
+                Reject<InvalidOperationException>(() => emptySceneJoint.MaxBias = 0);
                 Reject<InvalidOperationException>(body.Dispose);
                 Reject<InvalidOperationException>(emptySceneJoint.Dispose);
                 rejected = true;

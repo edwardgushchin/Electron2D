@@ -18,6 +18,10 @@ internal sealed class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsS
     internal float LowerTranslation { get; private set; }
     internal float UpperTranslation { get; private set; }
     internal bool DisableCollision { get; private set; } = true;
+    internal float Bias { get; private set; }
+    internal float MaxBias { get; private set; } = float.MaxValue;
+    internal float MaxForce { get; private set; } = float.MaxValue;
+    internal float PinSoftness { get; private set; }
     internal bool PinLimitEnabled { get; private set; }
     internal float PinLimitLower { get; private set; }
     internal float PinLimitUpper { get; private set; }
@@ -96,7 +100,7 @@ internal sealed class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsS
         if (!preserve)
         {
             PinLimitEnabled = PinMotorEnabled = false;
-            PinLimitLower = PinLimitUpper = PinMotorVelocity = 0;
+            PinLimitLower = PinLimitUpper = PinMotorVelocity = PinSoftness = 0;
             PinMotorMaxTorque = 10;
             SpringRestLength = rest; SpringAutomaticRest = false;
             SpringStiffness = 20; SpringDamping = 1.5f;
@@ -166,6 +170,14 @@ internal sealed class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsS
         if (BodyA.IsValid()) MarkBodyDirty(BodyA);
         if (BodyB.IsValid()) MarkBodyDirty(BodyB);
     }
+
+    internal void SetBias(float value) { ValidateBias(value); if (Bias == value) return; Bias = value; ApplySolverPolicy(); }
+    internal void SetMaxBias(float value) { Coefficient(value); if (MaxBias == value) return; MaxBias = value; ApplySolverPolicy(); }
+    internal void SetMaxForce(float value) { Coefficient(value); if (MaxForce == value) return; MaxForce = value; ApplySolverPolicy(); }
+    internal void SetPinSoftness(float value) { Coefficient(value); if (PinSoftness == value) return; PinSoftness = value; ApplySolverPolicy(); }
+    internal void ApplySolverPolicy() { if (HasBackend) Backend.ApplySolverPolicy(this); }
+    internal static void ValidateBias(float value)
+    { if (!float.IsFinite(value) || value < 0 || value > 1) throw new ArgumentOutOfRangeException(nameof(value)); }
 
     internal void SetPinLimitEnabled(bool value)
     {

@@ -200,6 +200,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; } =
         new("physics/2d/default_angular_damp", 1f, float.IsFinite);
 
+    /// <summary>Defines the positional correction fraction inherited by joints whose bias is zero.</summary>
+    /// <value>physics/2d/solver/default_constraint_bias; defaults to 0.2 and accepts finite values from zero to one. Sampled when a physics space is created.</value>
+    public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; } =
+        new("physics/2d/solver/default_constraint_bias", 0.2f, value => float.IsFinite(value) && value >= 0 && value <= 1);
+
     /// <summary>Defines the maximum fixed-step callbacks processed during one frame.</summary>
     public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; } =
         new("physics/common/max_physics_steps_per_frame", 8, value => value > 0);

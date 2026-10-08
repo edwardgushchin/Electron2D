@@ -37,6 +37,11 @@ internal sealed partial class PhysicsJointBackend
         var elastic = (rest - distance) * settings.SpringStiffness * delta;
         var decay = Math.Exp(-(double)settings.SpringDamping * delta * inverse);
         var total = elastic * decay - speed * (1 - decay) / inverse;
+        if (settings.MaxForce < float.MaxValue)
+        {
+            var limit = (double)settings.MaxForce * PhysicsSpace.MetersPerUnit * delta;
+            total = Math.Clamp(total, -limit, limit);
+        }
         var impulse = new B2Vec2((float)(nx * total), (float)(ny * total));
         if (!float.IsFinite(impulse.X) || !float.IsFinite(impulse.Y))
             throw new InvalidOperationException("Spring impulse exceeds the finite physics range.");

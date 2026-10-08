@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -400,7 +400,7 @@ Make validates geometry and every local anchor radius through ten million scene 
 
 Detached caller-owned connections retain sampled local frames and connect once both bodies share an active world; temporary departure or cross-world membership suspends them. Reentry uses fresh native IDs. Endpoint free clears dependents; world free leaves live resources detached and configured. Scene GetRID is borrowed and stable until node disposal; raw same-role server make/clear persists until scene geometry/path/name edits or reentry reclaim it. Scalar edits are bidirectional without replacing the public static node. No joint owns or frees endpoint bodies.
 
-[PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers all three actual server responses, world pin, bidirectional settings, clear/replacement, defaults, lifecycle/failure/phase/thread rollback, independent exceptions and 64 warmed active typed-setting/spring frames with zero managed allocation on Linux/.NET 10. Native allocations, broad-scene stability/performance, other platforms and owner visual acceptance remain unverified. General joint positional bias/correction speed/force caps, linear pin softness and scene debug drawing remain exact coverage gaps; angular spring tuning does not supply them.
+[PhysicsServerJointTests](../../tests/Electron2D.Tests/PhysicsServerJointTests.cs) covers all three actual server responses, world pin, bidirectional settings, clear/replacement, defaults, lifecycle/failure/phase/thread rollback, independent exceptions and 64 warmed active typed-setting/spring frames with zero managed allocation on Linux/.NET 10. Native allocations, broad-scene stability/performance, other platforms and owner visual acceptance remain unverified. The [joint policy family](../components/physics-joint-policies.md) now executes positional bias/correction speed/force caps and linear pin softness. Scene physics debug drawing and independent GPU-world selection remain open.
 
 <a id="shape-slots"></a>
 ## Indexed body and Area geometry
@@ -578,3 +578,33 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+
+## Joint policy accessors
+
+| Signature | Contract |
+| --- | --- |
+| `public static float JointGetBias(RID joint)` | Stored [0,1] fraction, default zero/inherit. |
+| `public static void JointSetBias(RID joint, float value)` | Change positional recovery fraction; zero uses the space default. |
+| `public static float JointGetMaxBias(RID joint)` | Stored correction-speed cap, default float.MaxValue. |
+| `public static void JointSetMaxBias(RID joint, float value)` | Finite nonnegative vector linear speed / angular-stop speed cap. |
+| `public static float JointGetMaxForce(RID joint)` | Stored per-second impulse budget, default float.MaxValue/unlimited. |
+| `public static void JointSetMaxForce(RID joint, float value)` | Finite nonnegative force budget shared by the joint's linear axes, separately by pure-angular rows. |
+| `public static float PinJointGetSoftness(RID joint)` | Linear anchor compliance in inverse-kilogram units, default zero. |
+| `public static void PinJointSetSoftness(RID joint, float value)` | Finite nonnegative linear compliance; zero keeps the rigid anchor. |
+| `public static float SpaceGetConstraintDefaultBias(RID space)` | Captured or overridden joint correction default. |
+| `public static void SpaceSetConstraintDefaultBias(RID space, float value)` | Finite [0,1]; updates and wakes zero-bias joints in the space. |
+
+### General joint policy pairs
+
+Getters return the shared scene/server authored value. Setters preserve local frames and RID, wake connected bodies and clear old joint impulses. General values are valid on Empty resources and survive clear/replacement. Joint.Bias/MaxBias/MaxForce are serializable scene projections. Invalid input rejects before mutation. MaxBias limits linear vector scene-unit/s and angular rad/s, also bounded by the current world guard of 200; springs have no positional rows. MaxForce limits force times substep duration in kg·scene-unit/s and a separate kg·scene-unit²/s angular channel; the N·m motor cap remains additional. See [Joint](Joint.md#bias-maxbias-maxforce) and [the equations](../components/physics-joint-policies.md).
+
+### Pin softness pair
+
+Accepts a configured pin or an unconfigured scene PinJoint RID. Other roles reject. Softness is linear inverse-mass compliance, not angular spring tuning. Live edits preserve anchors and clear/wake like the general policy; raw role replacement resets the pin-specific value. PackedScene preserves PinJoint.Softness.
+
+### Space correction default pair
+
+The constructor captures ProjectSettings.Physics2DDefaultConstraintBias with feature overrides, initially 0.2. Replacing it changes only joints with zero authored Bias; explicit nonzero values remain effective. This is a joint recovery parameter, not contact-separation bias. Other applicable space parameters retain their separate pending coverage.
+
+All access checks resource identity and related world ownership/phase, including an endpoint-free scene joint's attachment space. ArgumentException reports stale/wrong resources or concrete roles; ArgumentOutOfRangeException reports invalid numbers; InvalidOperationException reports solver-owned or off-owner access. PhysicsJointPolicyTests exercises both CPU and the internally enabled stage GPU path; independent GPU public-world integration remains open.

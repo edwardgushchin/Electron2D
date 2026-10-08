@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
@@ -59,3 +59,8 @@ and motor after a common rigid transform and world replacement on both CPU and t
 GPU prototype. Invalid replacement preserves settings and the working connection.
 This common public-response check does not depend on vendor handle values or graph
 ordering; old CPU handle checks remain supplementary lifecycle diagnostics.
+
+
+## Solver policies
+
+Bias (default zero), MaxBias/MaxForce (default float.MaxValue) are common authored values. SetBias/SetMaxBias/SetMaxForce validate before mutation; ApplySolverPolicy updates an attached backend without reanchoring. PinSoftness defaults zero, is nonnegative inverse-mass compliance, and is changed through SetPinSoftness. General policy survives Clear and raw concrete replacement; the pin-specific value resets on replacement. Scene descriptors serialize the same shared values. See [joint policies](../components/physics-joint-policies.md) for units, wake/history behavior and tests.

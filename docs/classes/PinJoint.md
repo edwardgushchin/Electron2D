@@ -1,6 +1,6 @@
 # PinJoint
 
-Last updated: 2026-09-30
+Last updated: 2026-10-09
 
 **Inherits:** [Joint](Joint.md), Entity, CanvasItem, Node, ElectronObject
 
@@ -14,7 +14,7 @@ Authored PinJoint children of PhysicalBone use the existing native solver. Auto 
 
 ## Description
 
-A revolute constraint: two body-local anchor points meet at this node's global origin, while the bodies may rotate relative to one another. The angle is zero at the time of attachment, so limits and motor speed describe subsequent relative rotation. [Joint](Joint.md) owns path resolution, collision policy and backend lifetime. An empty body or joint geometry without two valid attached bodies creates no constraint. The pin's linear anchor is rigid; adjustable positional softness is not yet available.
+A revolute constraint: two body-local anchor points meet at this node's global origin, while the bodies may rotate relative to one another. The angle is zero at the time of attachment, so limits and motor speed describe subsequent relative rotation. [Joint](Joint.md) owns path resolution, collision policy and backend lifetime. An empty body or joint geometry without two valid attached bodies creates no constraint. The linear anchor is rigid at Softness=0; larger finite softness permits relative anchor motion without changing angular spring coefficients.
 
 ## Example
 
@@ -36,6 +36,7 @@ The snippet assumes `root` has distinct PhysicsBody children named `Frame` and `
 | Member | Default | Contract |
 | --- | --- | --- |
 | `public PinJoint()` | — | Detached, unconnected pin. |
+| `public float Softness { get; set; }` | `0` | Finite nonnegative linear anchor compliance in inverse-kilogram units. |
 | `public bool AngularLimitEnabled { get; set; }` | `false` | Apply the relative-angle interval. |
 | `public float AngularLimitLower { get; set; }` | `0` | Lower angle in radians. |
 | `public float AngularLimitUpper { get; set; }` | `0` | Upper angle in radians. |
@@ -46,6 +47,10 @@ The snippet assumes `root` has distinct PhysicsBody children named `Frame` and `
 | `protected override Func<Node> CreateSceneInstanceFactory()` | — | Restore the exact PinJoint role from PackedScene. |
 
 ## Property descriptions
+
+### `Softness`
+
+Adds a nonnegative inverse-mass diagonal to the linear anchor equations and an accumulated-impulse feedback term. Zero keeps a rigid anchor; higher values permit more flex. Live changes preserve anchors, wake bodies and clear old impulses. Negative/nonfinite input rejects before mutation. The value is shared with PhysicsServer.PinJointGetSoftness/SetSoftness and is packed. Raw concrete-role replacement resets it; detach/reattachment preserves it.
 
 ### `AngularLimitEnabled`, `AngularLimitLower`, `AngularLimitUpper`
 
@@ -59,6 +64,6 @@ The motor drives body B relative to body A at the requested finite radians per s
 
 All pin properties and inherited Joint paths/collision policy are stored in PackedScene. Joint entry after its body siblings, body reentry and path updates rebuild the backend constraint without replacing the public node. Moving the joint node after attachment does not change the connected body-local anchors. The scene tree owns cleanup. Attached writes require the owner thread and cannot run during the solver step.
 
-[PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs) verifies a gravity pendulum, motor/limit response, live torque changes, connected-body contacts, path and body lifecycle, packing, invalid input and 64 warmed active fixed steps with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Positional bias and pin-anchor softness remain [exact coverage gaps](../coverage/classes/PinJoint2D.md) under [ADR 0084](../decisions/physics-joints.md#adr-0084).
+[PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs) verifies a gravity pendulum, motor/limit response, live torque changes, connected-body contacts, path and body lifecycle, packing, invalid input and 64 warmed active fixed steps with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Bias/softness and general force/correction limits now execute through the [public policy family](../components/physics-joint-policies.md); physics debug drawing remains open.
 
 The inherited stable RID and shared server settings are described by [Joint.GetRID](Joint.md) and [PhysicsServer joint methods](PhysicsServer.md#joints), under [ADR 0087](../decisions/physics-joints.md#adr-0087).

@@ -66,6 +66,35 @@ internal sealed partial class PhysicsJointBackend
         }
         if (!IsAttached) throw new InvalidOperationException("The physics backend did not create the joint.");
         _space = space;
+        ApplySolverPolicy(settings);
+    }
+
+    internal void ApplySolverPolicy(PhysicsJointRuntime settings)
+    {
+        var world = B2Worlds.b2GetWorld(ID.world0);
+        var joint = b2GetJointSim(world, b2GetJointFullId(world, ID));
+        var bias = settings.Bias == 0 ? _space!.ConstraintDefaultBias : settings.Bias;
+        var linearBias = MathF.Min(settings.MaxBias, 200) * PhysicsSpace.MetersPerUnit;
+        var angularBias = MathF.Min(settings.MaxBias, 200);
+        var linearForce = settings.MaxForce == float.MaxValue ? float.MaxValue : settings.MaxForce * PhysicsSpace.MetersPerUnit;
+        var angularForce = settings.MaxForce == float.MaxValue ? float.MaxValue : settings.MaxForce * (PhysicsSpace.MetersPerUnit * PhysicsSpace.MetersPerUnit);
+        var softness = settings.Type == PhysicsServer.JointType.Pin ? settings.PinSoftness : 0;
+        if (joint.correctionBias == bias && joint.maxLinearBias == linearBias && joint.maxAngularBias == angularBias &&
+            joint.maxLinearForce == linearForce && joint.maxAngularForce == angularForce && joint.linearSoftness == softness) return;
+        b2Joint_WakeBodies(ID);
+        joint = b2GetJointSim(world, b2GetJointFullId(world, ID));
+        joint.correctionBias = bias; joint.maxLinearBias = linearBias; joint.maxAngularBias = angularBias;
+        joint.maxLinearForce = linearForce; joint.maxAngularForce = angularForce; joint.linearSoftness = softness;
+        if (settings.Type == PhysicsServer.JointType.Pin)
+        {
+            ref var pin = ref joint.uj.revoluteJoint;
+            pin.linearImpulse = default; pin.springImpulse = pin.motorImpulse = pin.lowerImpulse = pin.upperImpulse = 0;
+        }
+        else if (settings.Type == PhysicsServer.JointType.Groove)
+        {
+            ref var groove = ref joint.uj.wheelJoint;
+            groove.perpImpulse = groove.springImpulse = groove.motorImpulse = groove.lowerImpulse = groove.upperImpulse = 0;
+        }
     }
 
     internal void Detach()

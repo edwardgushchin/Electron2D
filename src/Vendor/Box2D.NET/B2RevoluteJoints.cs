@@ -283,6 +283,7 @@ namespace Box2D.NET
             // Static-body branches only read this shared identity state.
             B2BodyState dummyState = b2_identityBodyState;
 
+            b2LimitRevoluteImpulses(@base, context.h, out _, out _);
             ref readonly B2RevoluteJoint joint = ref @base.uj.revoluteJoint;
             B2BodyState stateA = joint.indexA == B2_NULL_INDEX ? dummyState : context.states[joint.indexA];
             B2BodyState stateB = joint.indexB == B2_NULL_INDEX ? dummyState : context.states[joint.indexB];
@@ -383,7 +384,7 @@ namespace Box2D.NET
                     }
                     else if (useBias)
                     {
-                        bias = @base.constraintSoftness.biasRate * C;
+                        bias = b2ClampFloat(@base.constraintSoftness.biasRate * C, -@base.maxAngularBias, @base.maxAngularBias);
                         massScale = @base.constraintSoftness.massScale;
                         impulseScale = @base.constraintSoftness.impulseScale;
                     }
@@ -413,7 +414,7 @@ namespace Box2D.NET
                     }
                     else if (useBias)
                     {
-                        bias = @base.constraintSoftness.biasRate * C;
+                        bias = b2ClampFloat(@base.constraintSoftness.biasRate * C, -@base.maxAngularBias, @base.maxAngularBias);
                         massScale = @base.constraintSoftness.massScale;
                         impulseScale = @base.constraintSoftness.impulseScale;
                     }
@@ -453,7 +454,7 @@ namespace Box2D.NET
                     B2Vec2 dcB = stateB.deltaPosition;
 
                     B2Vec2 separation = b2Add(b2Add(b2Sub(dcB, dcA), b2Sub(rB, rA)), joint.deltaCenter);
-                    bias = b2MulSV(@base.constraintSoftness.biasRate, separation);
+                    bias = b2ClampJointVector(b2MulSV(@base.constraintSoftness.biasRate, separation), @base.maxLinearBias);
                     massScale = @base.constraintSoftness.massScale;
                     impulseScale = @base.constraintSoftness.impulseScale;
                 }
@@ -463,7 +464,17 @@ namespace Box2D.NET
                 K.cy.X = -rA.Y * rA.X * iA - rB.Y * rB.X * iB;
                 K.cx.Y = K.cy.X;
                 K.cy.Y = mA + mB + rA.X * rA.X * iA + rB.X * rB.X * iB;
-                B2Vec2 b = b2Solve22(K, b2Add(Cdot, bias));
+                B2Vec2 b;
+                if (@base.linearSoftness > 0.0f)
+                {
+                    double softness = @base.linearSoftness;
+                    double xx = K.cx.X + softness, xy = K.cy.X, yy = K.cy.Y + softness;
+                    double x = (double)Cdot.X + bias.X + softness * joint.linearImpulse.X;
+                    double y = (double)Cdot.Y + bias.Y + softness * joint.linearImpulse.Y;
+                    double determinant = xx * yy - xy * xy;
+                    b = determinant != 0.0 ? new B2Vec2((float)((yy * x - xy * y) / determinant), (float)((xx * y - xy * x) / determinant)) : b2Vec2_zero;
+                }
+                else b = b2Solve22(K, b2Add(Cdot, bias));
 
                 B2Vec2 impulse;
                 impulse.X = -massScale * b.X - impulseScale * joint.linearImpulse.X;
@@ -476,6 +487,13 @@ namespace Box2D.NET
                 vB = b2MulAdd(vB, mB, impulse);
                 wB += iB * b2Cross(rB, impulse);
             }
+
+            b2LimitRevoluteImpulses(@base, context.h, out B2Vec2 linearChange, out float angularChange);
+            B2Vec2 currentRA = b2RotateVector(stateA.deltaRotation, joint.frameA.p);
+            B2Vec2 currentRB = b2RotateVector(stateB.deltaRotation, joint.frameB.p);
+            vA = b2MulSub(vA, mA, linearChange); vB = b2MulAdd(vB, mB, linearChange);
+            wA -= iA * (b2Cross(currentRA, linearChange) + angularChange);
+            wB += iB * (b2Cross(currentRB, linearChange) + angularChange);
 
             if (0 != (stateA.flags & (uint)B2BodyFlags.b2_dynamicFlag))
             {

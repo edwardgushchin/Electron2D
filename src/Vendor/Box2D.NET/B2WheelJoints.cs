@@ -281,6 +281,7 @@ namespace Box2D.NET
             // Static-body branches only read this shared identity state.
             B2BodyState dummyState = b2_identityBodyState;
 
+            b2LimitWheelImpulses(@base, context.h, out _, out _, out _);
             ref readonly B2WheelJoint joint = ref @base.uj.wheelJoint;
 
             B2BodyState stateA = joint.indexA == B2_NULL_INDEX ? dummyState : context.states[joint.indexA];
@@ -350,6 +351,12 @@ namespace Box2D.NET
             B2Vec2 axisA = b2RotateVector(joint.frameA.q, new B2Vec2(1.0f, 0.0f));
             axisA = b2RotateVector(stateA.deltaRotation, axisA);
             float translation = b2Dot(axisA, d);
+            B2Vec2 limitedBias = b2Vec2_zero;
+            if (useBias && @base.maxLinearBias < float.MaxValue)
+            {
+                float error = joint.enableLimit ? translation - b2ClampFloat(translation, joint.lowerTranslation, joint.upperTranslation) : 0.0f;
+                limitedBias = b2ClampJointVector(new B2Vec2(@base.constraintSoftness.biasRate * b2Dot(b2LeftPerp(axisA), d), @base.constraintSoftness.biasRate * error), @base.maxLinearBias);
+            }
 
             float a1 = b2Cross(b2Add(d, rA), axisA);
             float a2 = b2Cross(rB, axisA);
@@ -407,7 +414,7 @@ namespace Box2D.NET
                     }
                     else if (useBias)
                     {
-                        bias = @base.constraintSoftness.biasRate * C;
+                        bias = @base.maxLinearBias < float.MaxValue ? limitedBias.Y : @base.constraintSoftness.biasRate * C;
                         massScale = @base.constraintSoftness.massScale;
                         impulseScale = @base.constraintSoftness.impulseScale;
                     }
@@ -445,7 +452,7 @@ namespace Box2D.NET
                     }
                     else if (useBias)
                     {
-                        bias = @base.constraintSoftness.biasRate * C;
+                        bias = @base.maxLinearBias < float.MaxValue ? -limitedBias.Y : @base.constraintSoftness.biasRate * C;
                         massScale = @base.constraintSoftness.massScale;
                         impulseScale = @base.constraintSoftness.impulseScale;
                     }
@@ -479,7 +486,7 @@ namespace Box2D.NET
                 if (useBias)
                 {
                     float C = b2Dot(perpA, d);
-                    bias = @base.constraintSoftness.biasRate * C;
+                    bias = @base.maxLinearBias < float.MaxValue ? limitedBias.X : @base.constraintSoftness.biasRate * C;
                     massScale = @base.constraintSoftness.massScale;
                     impulseScale = @base.constraintSoftness.impulseScale;
                 }
@@ -500,6 +507,13 @@ namespace Box2D.NET
                 vB = b2MulAdd(vB, mB, P);
                 wB += iB * LB;
             }
+
+            b2LimitWheelImpulses(@base, context.h, out float axisChange, out float perpendicularChange, out float angularChange);
+            B2Vec2 perpendicular = b2LeftPerp(axisA);
+            B2Vec2 linearChange = b2Add(b2MulSV(axisChange, axisA), b2MulSV(perpendicularChange, perpendicular));
+            vA = b2MulSub(vA, mA, linearChange); vB = b2MulAdd(vB, mB, linearChange);
+            wA -= iA * (axisChange * a1 + perpendicularChange * b2Cross(b2Add(d, rA), perpendicular) + angularChange);
+            wB += iB * (axisChange * a2 + perpendicularChange * b2Cross(rB, perpendicular) + angularChange);
 
             if (0 != (stateA.flags & (uint)B2BodyFlags.b2_dynamicFlag))
             {

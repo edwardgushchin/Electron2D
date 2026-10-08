@@ -27,6 +27,12 @@ namespace Box2D.NET
 
         public B2Softness constraintSoftness;
 
+        // Optional engine joint policy; negative bias retains the native frequency profile.
+        public float correctionBias = -1.0f;
+        public float maxLinearBias = float.MaxValue, maxAngularBias = float.MaxValue;
+        public float maxLinearForce = float.MaxValue, maxAngularForce = float.MaxValue;
+        public float linearSoftness;
+
         public float forceThreshold;
         public float torqueThreshold;
         
@@ -48,6 +54,9 @@ namespace Box2D.NET
             constraintHertz = 0.0f;
             constraintDampingRatio = 0.0f;
             constraintSoftness = new B2Softness();
+            correctionBias = -1.0f;
+            maxLinearBias = maxAngularBias = maxLinearForce = maxAngularForce = float.MaxValue;
+            linearSoftness = 0.0f;
             forceThreshold = 0;
             torqueThreshold = 0;
             uj = new B2JointUnion();
@@ -68,6 +77,12 @@ namespace Box2D.NET
             constraintHertz = other.constraintHertz;
             constraintDampingRatio = other.constraintDampingRatio;
             constraintSoftness = other.constraintSoftness;
+            correctionBias = other.correctionBias;
+            maxLinearBias = other.maxLinearBias;
+            maxAngularBias = other.maxAngularBias;
+            maxLinearForce = other.maxLinearForce;
+            maxAngularForce = other.maxAngularForce;
+            linearSoftness = other.linearSoftness;
             forceThreshold = other.forceThreshold;
             torqueThreshold = other.torqueThreshold;
             uj = other.uj;

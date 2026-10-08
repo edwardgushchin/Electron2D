@@ -1,6 +1,6 @@
 # PhysicsJointBackend
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Declaration:** `internal sealed partial class PhysicsJointBackend`
 
@@ -22,13 +22,14 @@ settings remain with the runtime, independently of attachment generations.
 | `Attach` | Compile engine frames/settings into revolute, wheel or filter definitions and acquire one active joint handle. |
 | `IsAttached` | Report whether the current constraint exists without exposing its vendor identity to scene classes. |
 | `Detach` | Destroy the joint with endpoint wakeup, or skip backend destruction after world failure; clear all handles, frame/impulse state and the space reference. |
+| `ApplySolverPolicy` | Resolve inherited bias, convert linear/angular limits to backend units, wake and reacquire transferred records, update policy and clear old impulses. |
 | Pin/collision/groove setters | Update live solver settings without resampling the stored anchors; groove distances convert from scene units here. |
 | `PrepareSolverStep`, `ValidateSolverStep`, `ApplySolverStep` | Evaluate the existing Hooke/axial-drag impulse, preflight cumulative world motion, then apply equal opposite anchor impulses. |
 
 The world still prepares every spring before validating every spring and applying
 any impulse. This preserves numeric rejection without partially applying earlier
 springs. These stages remain CPU operations even in the current GPU stage-host
-experiment. Independent GPU spring execution and joint ownership remain open.
+experiment. Independent [resident GPU joints](../components/gpu-resident-joints.md) execute separately; their public-world adapter remains open.
 
 Frame publication preserves the sampled rotation basis instead of decoding and
 rebuilding angles at every reattachment. Engine frames remain in scene units;
@@ -45,3 +46,5 @@ anchors, motor/limits, world replacement and rejected reconfiguration. It steps
 each world 120 times at 1/120 s; anchor error must remain below one scene unit and
 the motor angle within the configured limit plus 0.05 rad solver tolerance.
 This is not independent GPU acceptance or a new throughput measurement.
+
+The [public joint policies](../components/physics-joint-policies.md) now include bias, pin linear softness and common force/correction caps. Native joint copy/clear and GPU stage packets preserve the policy; spring preflight caps the combined impulse before validating all resulting velocities.

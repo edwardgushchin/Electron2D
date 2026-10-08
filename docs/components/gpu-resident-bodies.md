@@ -14,7 +14,7 @@ complete candidate pairs and narrow-phase contact points execute through offline
 The [contact response pipeline](gpu-contact-solver.md) now adds material/impulse
 solving, warm history and separate positional correction through Simulate. This
 component now also has [resident pin/groove/spring joints](gpu-resident-joints.md).
-It is not a complete physics backend: CPU/public joint-policy adapters,
+It is not a complete physics backend: independent GPU public joint adapters,
 scene/server selection/publication and networking remain open. [Resident CCD](gpu-resident-ccd.md) now executes internally. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
 geometry and center-aware device motion/constraint preparation. [Connected sleep/wake](gpu-resident-sleep.md) now executes on GPU. Step
 remains an integration-only control; FindContacts computes contact points.

@@ -12,10 +12,7 @@ joint solver or evolving joint-state mirror participates. This extends the
 internal backend component, not a selectable PhysicsServer implementation.
 
 Per-joint bias, pin-anchor softness and general impulse/correction caps now execute
-in this internal component. Their CPU implementation and scene/server adapters,
-full queries/events, portable checkpoints and network replay remain open. Existing
-public CPU joints and their settings are unchanged; no public coverage row is
-closed by this internal solver work.
+in this internal component. Their [CPU implementation and shared public parameters](physics-joint-policies.md) now execute, including the stage GPU host. Independent public-world adapters, full queries/events, portable checkpoints and network replay remain open.
 
 ## Ownership and authoring
 
@@ -142,7 +139,7 @@ at the violated one. The analytic bias check caught that pre-existing defect; bo
 groove and pin angular stops now share the corrected rule.
 
 These semantics follow the accepted policy boundary in [ADR 0087](../decisions/physics-joints.md#adr-0087).
-The current CPU/native and public projections remain required work.
+The CPU/native and common scene/server projections now execute as documented in [joint policies](physics-joint-policies.md); independent public-world integration remains open.
 
 ## Verification
 
@@ -258,8 +255,7 @@ Evidence is in `/tmp/electron2d-joint-policy-final-scoped.log`. The full GPU sui
 also passed in `/tmp/electron2d-joint-policy-final-gpu.log`, including both renderer
 lifetimes; the final scoped rerun followed a dispatch-only optimization that skips
 unnecessary limit passes for spring-only worlds and added real policy-edit allocation
-checks. No public CPU behavior changed and no new CPU/public joint policy claim is
-made. Release/source-native builds, runtime/touched-test formatting, compiled API
+checks. That internal-stage run made no public CPU change; the subsequent [public policy integration](physics-joint-policies.md) now supplies CPU and stage-GPU scene/server parameters. Release/source-native builds, runtime/touched-test formatting, compiled API
 coverage, shader delivery checks and wiki generation/check passed. The API remains
 11,275 declarations with zero unmapped; the shader publish probe contains 26 generated
 resources. Generated files remain untracked. Current generated SPIR-V SHA-256:
