@@ -51,7 +51,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var world = b2GetWorldFromId(_worldID);
         world.integrateBodyStage = null!;
         world.solveConstraints = gpu.Solve;
-        world.generateManifolds = gpu.GenerateManifolds;
+        world.generateManifolds = gpu.UpdateContacts;
         world.findBroadPhasePairs = gpu.FindBroadPhasePairs;
         return gpu;
     }
@@ -816,11 +816,11 @@ internal sealed partial class PhysicsSpace : IDisposable
             (bounce < 0 ? AbsorbentMaterial : 0);
     }
 
-    private static float CombineFriction(float a, ulong aFlags, float b, ulong bFlags) =>
+    internal static float CombineFriction(float a, ulong aFlags, float b, ulong bFlags) =>
         MathF.Abs(MathF.Min((aFlags & RoughMaterial) != 0 ? -a : a,
             (bFlags & RoughMaterial) != 0 ? -b : b));
 
-    private static float CombineBounce(float a, ulong aFlags, float b, ulong bFlags) =>
+    internal static float CombineBounce(float a, ulong aFlags, float b, ulong bFlags) =>
         Math.Clamp(((aFlags & AbsorbentMaterial) != 0 ? -a : a) +
             ((bFlags & AbsorbentMaterial) != 0 ? -b : b), 0f, 1f);
 }

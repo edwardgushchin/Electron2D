@@ -1962,6 +1962,7 @@ namespace Box2D.NET
             {
                 B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
                 shape.enableHitEvents = flag;
+                world.shapeGeometryChanged?.Invoke(shape.id);
                 shapeId = shape.nextShapeId;
             }
         }

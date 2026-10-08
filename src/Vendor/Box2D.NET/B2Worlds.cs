@@ -581,19 +581,24 @@ namespace Box2D.NET
                 b2SetBitCountAndClear(ref world.taskContexts.data[i].contactStateBitSet, contactIdCapacity);
             }
 
-            // Task should take at least 40us on a 4GHz CPU (10K cycles)
+            context.generatedContactsUpdated = false;
             world.generateManifolds?.Invoke(context, contactCount);
-            int minRange = 64;
-            object userCollideTask = world.enqueueTaskFcn(b2CollideTask, contactCount, minRange, context, world.userTaskContext);
-            world.taskCount += 1;
-            if (userCollideTask != null)
+            if (!context.generatedContactsUpdated)
             {
-                world.finishTaskFcn(userCollideTask, world.userTaskContext);
+                // Task should take at least 40us on a 4GHz CPU (10K cycles)
+                int minRange = 64;
+                object userCollideTask = world.enqueueTaskFcn(b2CollideTask, contactCount, minRange, context, world.userTaskContext);
+                world.taskCount += 1;
+                if (userCollideTask != null)
+                {
+                    world.finishTaskFcn(userCollideTask, world.userTaskContext);
+                }
             }
 
             b2FreeArenaItem(world.arena, contactSims);
             context.contacts = null;
             context.generatedManifolds = null;
+            context.generatedContactsUpdated = false;
             contactSims = null;
 
             // Serially update contact state

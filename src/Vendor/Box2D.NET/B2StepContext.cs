@@ -27,6 +27,7 @@ namespace Box2D.NET
             joints = default;
             contacts = default;
             generatedManifolds = null;
+            generatedContactsUpdated = false;
             generatedManifoldOwner = null;
             simdContactConstraints = default;
             activeColorCount = workerCount = 0;
@@ -84,6 +85,7 @@ namespace Box2D.NET
         // to constraint graph colors
         public ArraySegment<B2ContactSim> contacts;
         internal B2Manifold[] generatedManifolds;
+        internal bool generatedContactsUpdated;
         // Survives collision scratch cleanup, but not step reset or solver consumption.
         internal object generatedManifoldOwner;
 

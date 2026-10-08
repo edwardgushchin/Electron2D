@@ -5,13 +5,14 @@
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsContact.inc.glsl"
 layout(local_size_x = 64) in;
-struct Geometry { vec4 info; vec4 vertices[8]; };
-struct Pair { vec4 ids; vec4 poseA; vec4 poseB; };
+struct Geometry { vec4 info; vec4 vertices[8]; vec4 material; };
+struct Pair { vec4 ids; vec4 poseA; vec4 poseB; vec4 offset; };
 struct Result { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 layout(std430, set = 1, binding = 0) buffer Shapes { Geometry shapes[]; };
 layout(std430, set = 1, binding = 1) buffer Pairs { Pair pairs[]; };
 layout(std430, set = 1, binding = 2) buffer Results { Result results[]; };
 layout(std430, set = 1, binding = 3) buffer Matched { ContactHistory matched[]; };
+layout(std430, set = 1, binding = 4) buffer Materials { vec4 materials[]; };
 layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; };
 layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
 layout(std430, set = 0, binding = 2) readonly buffer GeometryUpdates { Geometry geometryUpdates[]; };
@@ -150,7 +151,7 @@ Polygon polygon(Geometry g)
 {
     Polygon p; p.count=int(g.info.z); p.radius=g.info.y;
     for(int i=0;i<p.count;i++) { p.vertices[i]=g.vertices[i].xy; p.normals[i]=g.vertices[i].zw; }
-    if(int(g.info.x)!=3)
+    if((int(g.info.x)&255)!=3)
     {
         p.count=2; vec2 axis=unit(p.vertices[1]-p.vertices[0]);
         p.normals[0]=vec2(axis.y,-axis.x); p.normals[1]=-p.normals[0];
@@ -220,8 +221,14 @@ void main()
         Geometry g = geometryUpdates[index]; shapes[int(g.info.w)] = g; return;
     }
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
-    if(pair.ids.z==0) { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return; }
-    Geometry a=shapes[int(pair.ids.x)],b=shapes[int(pair.ids.y)]; int ta=int(a.info.x),tb=int(b.info.x);
+    bool complete = (settings.z & 1u) != 0;
+    uint previous = uint(pair.ids.z) >> 1;
+    if ((uint(pair.ids.z) & 1u) == 0)
+    {
+        if (complete) { r.normal.w = float(((previous | 2u) & ~1u) << 2); materials[index] = vec4(0); }
+        results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return;
+    }
+    Geometry a=shapes[int(pair.ids.x)],b=shapes[int(pair.ids.y)]; int ta=int(a.info.x)&255,tb=int(b.info.x)&255;
     Manifold m; vec2 origin=vec2(0);
     if(tb==0)
     {
@@ -235,6 +242,17 @@ void main()
         origin=a.vertices[0].xy; vec4 shifted=pair.poseA; shifted.xy+=rotate(shifted.zw,origin);
         vec4 xf=relativePose(shifted,pair.poseB);
         if(ta!=3&&tb!=3) m=capsules(a,b,xf); else m=polygons(a,b,xf);
+    }
+    // Pre-solve callbacks must see the original deepest point. Their optional
+    // pruning is deferred to the callback lane; ordinary contacts finish here.
+    bool callback = (settings.z & 4u) != 0 && (previous & 32u) != 0;
+    if (complete && (settings.z & 2u) != 0 && !callback && m.count == 2)
+    {
+        if (m.separation[0] > 1.5*slop)
+        {
+            m.anchors[0]=m.anchors[1]; m.separation[0]=m.separation[1]; m.ids[0]=m.ids[1]; m.count=1;
+        }
+        else if (m.separation[1] > 1.5*slop) m.count=1;
     }
     if(m.count>0)
     {
@@ -268,6 +286,38 @@ void main()
             r.normal.w += float(1<<i);
             break;
         }
+    }
+    if (complete)
+    {
+        uint modeF = (settings.z >> 3) & 3u, modeB = (settings.z >> 5) & 3u;
+        uint flagsA = uint(a.info.x) >> 8, flagsB = uint(b.info.x) >> 8;
+        precise float friction = 0, bounce = 0;
+        if (modeF == 1u) { precise float product = a.material.x*b.material.x; friction = sqrt(product); }
+        else if (modeF == 2u)
+            friction = abs(min((flagsA & 1u) != 0 ? -a.material.x : a.material.x,
+                               (flagsB & 1u) != 0 ? -b.material.x : b.material.x));
+        if (modeB == 1u) bounce = a.material.y > b.material.y ? a.material.y : b.material.y;
+        else if (modeB == 2u)
+        {
+            bounce = ((flagsA & 2u) != 0 ? -a.material.y : a.material.y) +
+                     ((flagsB & 2u) != 0 ? -b.material.y : b.material.y);
+            if (bounce < 0) bounce = 0; else if (bounce > 1) bounce = 1;
+        }
+        precise float rolling = 0;
+        if (a.material.z > 0 || b.material.z > 0)
+            rolling = (a.material.z > b.material.z ? a.material.z : b.material.z) *
+                      (a.info.y > b.info.y ? a.info.y : b.info.y);
+        precise float tangent = a.material.w + b.material.w;
+        materials[index] = vec4(friction,bounce,rolling,tangent);
+        uint flags = previous;
+        bool touching = m.count != 0, wasTouching = (previous & 1u) != 0;
+        flags = touching ? flags | 1u : flags & ~1u;
+        flags = touching && ((flagsA | flagsB) & 4u) != 0 ? flags | 16u : flags & ~16u;
+        if (touching && !wasTouching) flags |= 4u;
+        else if (!touching && wasTouching) flags |= 8u;
+        r.normal.w += float(flags << 2);
+        if (m.count > 0) { r.anchor1.xy -= pair.offset.xy; r.point1.xy -= pair.offset.zw; }
+        if (m.count > 1) { r.anchor2.xy -= pair.offset.xy; r.point2.xy -= pair.offset.zw; }
     }
     results[index]=r; matched[index]=warm;
 }

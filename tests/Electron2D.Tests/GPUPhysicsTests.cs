@@ -11,6 +11,7 @@ internal static partial class GPUPhysicsTests
         VerifyConstraints(gpu);
         VerifyManifolds(gpu);
         VerifyGeometryResidency();
+        VerifyContactUpdates();
         VerifyResidentConstraints(gpu);
         VerifyWarmHistory(gpu);
         PhysicsSurfaceVelocityTests.Run(true);
@@ -133,7 +134,7 @@ internal static partial class GPUPhysicsTests
             using var view = PhysicsServer.BodyGetDirectState(gpuBody)!;
             if (gpu.DispatchCount == 0 || callbacks == 0 || view.GetContactCount() == 0)
                 throw new InvalidOperationException("The ordinary physics world must execute GPU kernels, callbacks and contact capture.");
-            if (solver && gpu.CollisionSubmissionCount == 0)
+            if (solver && (gpu.CollisionSubmissionCount == 0 || gpu.UpdatedContactCount == 0))
                 throw new InvalidOperationException("The GPU world must generate live contact manifolds.");
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
@@ -145,7 +146,7 @@ internal static partial class GPUPhysicsTests
                 for (var i = 0; i < native.shapes.count; i++)
                     if (native.shapes.data[i].proxyKey != -1) B2BoardPhases.b2BufferMove(native.broadPhase, native.shapes.data[i].proxyKey);
             }
-            else if (collisionFailure) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).generateManifolds = (_, _) => throw new IOException("injected GPU collision failure");
+            else if (collisionFailure) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).generateManifolds = (context, count) => { gpu.UpdateContacts(context, count); throw new IOException("injected GPU collision failure"); };
             else if (solver) Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).solveConstraints = _ => throw new IOException("injected GPU failure");
             else Box2D.NET.B2Worlds.b2GetWorldFromId(world.WorldID).integrateBodyStage = (_, _) => throw new IOException("injected GPU failure");
             PhysicsServer.BodySetLinearVelocity(gpuBody, new(10, 0));

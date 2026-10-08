@@ -1181,6 +1181,7 @@ namespace Box2D.NET
 
             B2Shape shape = b2GetShape(world, shapeId);
             shape.material.friction = friction;
+            world.shapeGeometryChanged?.Invoke(shape.id);
         }
 
         public static float b2Shape_GetFriction(B2ShapeId shapeId)
@@ -1203,6 +1204,7 @@ namespace Box2D.NET
 
             B2Shape shape = b2GetShape(world, shapeId);
             shape.material.restitution = restitution;
+            world.shapeGeometryChanged?.Invoke(shape.id);
         }
 
         public static float b2Shape_GetRestitution(B2ShapeId shapeId)
@@ -1224,6 +1226,7 @@ namespace Box2D.NET
 
             B2Shape shape = b2GetShape(world, shapeId);
             shape.material.userMaterialId = material;
+            world.shapeGeometryChanged?.Invoke(shape.id);
         }
 
         /// Get the user material identifier
@@ -1248,6 +1251,7 @@ namespace Box2D.NET
             B2World world = b2GetWorld(shapeId.world0);
             B2Shape shape = b2GetShape(world, shapeId);
             shape.material = surfaceMaterial;
+            world.shapeGeometryChanged?.Invoke(shape.id);
         }
 
         public static B2Filter b2Shape_GetFilter(B2ShapeId shapeId)
@@ -1410,6 +1414,7 @@ namespace Box2D.NET
 
             B2Shape shape = b2GetShape(world, shapeId);
             shape.enableHitEvents = flag;
+            world.shapeGeometryChanged?.Invoke(shape.id);
         }
 
         internal static bool b2Shape_AreHitEventsEnabled(B2ShapeId shapeId)
@@ -1598,6 +1603,7 @@ namespace Box2D.NET
                     int shapeId = chainShape.shapeIndices[i];
                     B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
                     shape.material = material;
+                    world.shapeGeometryChanged?.Invoke(shape.id);
                 }
             }
             else
@@ -1605,6 +1611,7 @@ namespace Box2D.NET
                 int shapeId = chainShape.shapeIndices[materialIndex];
                 B2Shape shape = b2Array_Get(ref world.shapes, shapeId);
                 shape.material = material;
+                world.shapeGeometryChanged?.Invoke(shape.id);
             }
         }
 

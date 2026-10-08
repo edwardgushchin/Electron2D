@@ -456,6 +456,36 @@ namespace Box2D.NET
 
         // Update the contact manifold and touching status.
         // Note: do not assume the shape AABBs are overlapping or are valid.
+        internal static bool b2InvokePreSolve(B2World world, B2ContactSim contactSim, B2Shape shapeA, B2Shape shapeB)
+        {
+            if (world.preSolveFcn == null || (contactSim.simFlags & (uint)B2ContactSimFlags.b2_simEnablePreSolveEvents) == 0)
+                return true;
+            ref B2Manifold manifold = ref contactSim.manifold;
+            float bestSeparation = manifold.points[0].separation;
+            B2Vec2 bestPoint = manifold.points[0].point;
+            for (int i = 1; i < manifold.pointCount; ++i)
+            {
+                if (manifold.points[i].separation < bestSeparation)
+                {
+                    bestSeparation = manifold.points[i].separation;
+                    bestPoint = manifold.points[i].point;
+                }
+            }
+            return world.preSolveFcn(new B2ShapeId(shapeA.id + 1, world.worldId, shapeA.generation),
+                new B2ShapeId(shapeB.id + 1, world.worldId, shapeB.generation), bestPoint, manifold.normal, world.preSolveContext);
+        }
+
+        internal static void b2PruneSpeculativePoints(ref B2Manifold manifold)
+        {
+            if (manifold.pointCount != 2) return;
+            if (manifold.points[0].separation > 1.5f * B2_LINEAR_SLOP)
+            {
+                manifold.points[0] = manifold.points[1];
+                manifold.pointCount = 1;
+            }
+            else if (manifold.points[1].separation > 1.5f * B2_LINEAR_SLOP) manifold.pointCount = 1;
+        }
+
         internal static bool b2UpdateContact(B2World world, B2ContactSim contactSim, B2Shape shapeA, in B2Transform transformA, B2Vec2 centerOffsetA,
             B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB, B2Manifold[] generatedManifolds = null, int generatedIndex = 0)
         {
@@ -492,51 +522,16 @@ namespace Box2D.NET
             int pointCount = contactSim.manifold.pointCount;
             bool touching = pointCount > 0;
 
-            if (touching && world.preSolveFcn != null && (contactSim.simFlags & (uint)B2ContactSimFlags.b2_simEnablePreSolveEvents) != 0)
+            if (touching && !b2InvokePreSolve(world, contactSim, shapeA, shapeB))
             {
-                B2ShapeId shapeIdA = new B2ShapeId(shapeA.id + 1, world.worldId, shapeA.generation);
-                B2ShapeId shapeIdB = new B2ShapeId(shapeB.id + 1, world.worldId, shapeB.generation);
-
-                ref B2Manifold manifold = ref contactSim.manifold;
-                float bestSeparation = manifold.points[0].separation;
-                B2Vec2 bestPoint = manifold.points[0].point;
-
-                // Get deepest point
-                for (int i = 1; i < manifold.pointCount; ++i)
-                {
-                    float separation = manifold.points[i].separation;
-                    if (separation < bestSeparation)
-                    {
-                        bestSeparation = separation;
-                        bestPoint = manifold.points[i].point;
-                    }
-                }
-
-                // this call assumes thread safety
-                touching = world.preSolveFcn(shapeIdA, shapeIdB, bestPoint, manifold.normal, world.preSolveContext);
-                if (touching == false)
-                {
-                    // disable contact
-                    pointCount = 0;
-                    manifold.pointCount = 0;
-                }
+                touching = false;
+                pointCount = 0;
+                contactSim.manifold.pointCount = 0;
             }
 
-            // This flag is for testing
-            if (world.enableSpeculative == false && pointCount == 2)
-            {
-                if (contactSim.manifold.points[0].separation > 1.5f * B2_LINEAR_SLOP)
-                {
-                    contactSim.manifold.points[0] = contactSim.manifold.points[1];
-                    contactSim.manifold.pointCount = 1;
-                }
-                else if (contactSim.manifold.points[0].separation > 1.5f * B2_LINEAR_SLOP)
-                {
-                    contactSim.manifold.pointCount = 1;
-                }
-
-                pointCount = contactSim.manifold.pointCount;
-            }
+            // This flag is for testing.
+            if (!world.enableSpeculative) b2PruneSpeculativePoints(ref contactSim.manifold);
+            pointCount = contactSim.manifold.pointCount;
 
             if (touching && (shapeA.enableHitEvents || shapeB.enableHitEvents))
             {

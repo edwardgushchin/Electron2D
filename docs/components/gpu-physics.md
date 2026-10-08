@@ -106,27 +106,37 @@ among circles, capsules, two-sided segments and convex polygons (up to eight
 vertices, including rounded polygons). SAT, edge clipping and vertex contacts
 preserve feature IDs and the speculative distance used for warm starting.
 Chain segments are explicitly unsupported by this development entry. Geometry
-records stay resident by shape ID rather than being duplicated per contact (144
-bytes). Shape creation/destruction and circle/capsule/segment/polygon edits
+records stay resident by shape ID rather than being duplicated per contact (160
+bytes, including surface material). Shape creation/destruction, primitive,
+material and per-shape/per-body hit-event edits
 invalidate that slot. Geometry is packed lazily on the first overlapping pair
 that references an invalid slot; unused/sleeping geometry needs no upload.
 A scatter pass in the existing collision pipeline installs only changed records
 before the manifold pass, within one submission/fence. Repeated references and
 intermediate edits coalesce to one final record. World/observer changes and
 buffer growth invalidate all cached slots; failed batches do not mark pending
-records resident. Movement, materials and collision filters do not change local
-geometry. `ResidentGeometryCount`, `UploadedGeometryCount` and `GeometryUploadBytes`
+records resident. Movement and collision filters do not change these inputs. `ResidentGeometryCount`, `UploadedGeometryCount` and `GeometryUploadBytes`
 report each batch, while `GeometryCacheResetCount` is cumulative. Pair poses still
-upload each batch: each pair occupies 48 bytes and its returned manifold 80 bytes. The owner waits
-for the collision fence and validates the batch before publication. Material
-mixing, pre-solve filtering and contact transitions still use the common managed
-world path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
+upload each batch: each pair occupies 64 bytes (including center offsets), its
+returned manifold 80 bytes and the mixed material 16 bytes. The owner waits for
+the collision fence and validates the batch before publication. The integrated
+GPU entry mixes native/default and Electron2D rough/absorbent materials, classifies
+contact transitions/hit flags, prunes optional speculative points and shifts
+anchors to centers of mass. Custom material and pre-solve callbacks remain on the
+owner, preserving per-contact callback order and veto behavior. Contacts requiring
+a pre-solve callback retain the original deepest point; optional pruning follows
+the hook. Retained workers copy body metadata and GPU results into the CPU mirror
+and per-worker contact bitsets; their ordered union is unchanged. Hooked contacts
+publish on the owner after workers join, and custom material callbacks keep all
+publication on the owner. The step-scoped completion marker skips the CPU collision-update task;
+contact graph/island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
 execute in the collision shader. It reads the previous completed GPU solver
 buffer directly when that contact's source is current; cold or older sources
 upload a compact 32-byte history record. Empty histories need no upload.
 The matched 32-byte result remains on GPU for preparation and is also read back
-for the existing managed contact snapshot. Shared contact processing shifts
-anchors and applies pre-solve veto without repeating feature matching. A veto
+for the existing managed contact snapshot. Integrated GPU contacts already have
+mass-relative anchors; the pure numeric entry retains raw anchors for CPU update
+comparisons. Owner-side pre-solve veto does not repeat feature matching. A veto
 clears rolling state, preventing a later contact from reviving stale impulses.
 
 The generated manifold buffer now remains available to constraint preparation.
@@ -134,8 +144,9 @@ Each contact carries a source version and slot through graph copies: positive
 versions address generated geometry, negative versions address a completed solve.
 World identity and the latest submission prevent using an overwritten solver buffer;
 the owner/step marker prevents cross-world or old-step reuse. Feature IDs resolve
-point reordering or pruning directly on GPU. Center-of-mass offsets are captured at the
-collision pose. The solver uploads a 128-byte input (body indices/masses,
+point reordering or pruning directly on GPU. Center-of-mass offsets are captured
+at the collision pose; complete GPU updates pass zero offsets to preparation
+because the collision kernel already applied them. The solver uploads a 128-byte input (body indices/masses,
 materials, retained impulses, source, offsets and surface velocities) instead of retransmitting the
 working contact geometry. Missing provenance or an explicit internal geometry replacement uses a separate
 80-byte override; this includes sleeping contacts awakened after collision
@@ -162,7 +173,7 @@ with impulses for subsequent queries and finalization.
 
 The tree, solver and manifold callbacks run on the world owner. CPU tree mirrors,
 user filtering/contact creation, sleep/CCD finalization and queries remain in the managed
-backend; large worlds retain CPU contact-update workers. There is no production
+backend; GPU contact kernels run through the owner, with retained workers publishing the CPU mirror; CPU worlds retain their contact-update workers. There is no production
 backend selector yet. A GPU failure drains pending CPU tasks, releases scratch
 ownership and rejects replay while permitting world disposal. This hybrid stage
 is not the completed GPU backend.
@@ -558,3 +569,65 @@ not a demonstrated whole-step speedup or 60 FPS. Contact lifecycle, pose/constra
 packing, readback, query/CCD mirrors and the remaining complete-backend obligations
 are unchanged. Artifacts: ignored
 `bin/physics-sandbox/profile-Release-gpu-geometry-{resident,upload}-{a,b}.json`.
+
+
+## GPU contact updates (2026-10-08)
+
+The complete collision callback now computes ordinary contact updates on GPU and
+publishes their CPU query/graph mirror through retained workers. User material and pre-solve
+callbacks remain CPU code. Existing event bitset order, island linking, graph
+coloring and solver-set changes remain shared; this stage does not move the entire
+contact lifecycle to GPU or remove its readback. `GenerateManifolds` remains the
+pure numeric entry and the test-only CPU contact-update control.
+
+`ELECTRON2D_TEST_GPU_CONTACT_UPDATES=1` compares 129 contacts directly with
+`b2CollideTask` across default/rough-absorbent/custom materials, speculative modes,
+pre-solve allow/veto, hit flags and previous touching states. It compares flags,
+change bits, geometry, persistence/impulses, body caches, materials and callback
+identity/order/deepest-point inputs. Live friction, restitution, full material,
+user material and shape/body hit-event edits are checked. After 32 warm edits,
+64 measured batches allocate zero managed bytes across all four worker threads
+and the owner, including per-worker change-bit union and owner-only callbacks.
+The expanded matrix caught an unmasked polygon-type check after adding material
+flags to the shape header; all geometry type reads now mask those flags.
+The CPU test-only speculative pruning also had a duplicated first-point condition;
+it now tests the second separation, with a direct regression and GPU parity checks.
+
+`PhysicsCollide.comp.spv` SHA-256 for this stage:
+`d87c2e694f57320b0acab6a6c6887c02ce76adc729ccf0da6070c884d69bc617`.
+
+The first candidate published every GPU result serially on the owner. Maximum
+Smash profiles (`{gpu,cpu}-contact-updates-{a,b}`) exposed a regression: GPU whole
+steps averaged 184.01/184.81 ms versus CPU-contact control 165.13/162.25 ms; the
+collision stage was 93.60/93.58 ms versus 76.97/76.02 ms. Those results rejected
+serial publication for ordinary contacts. The final path restores the existing
+worker scheduler for copies/bitsets while keeping contact arithmetic on GPU and
+custom callbacks on the owner. The initial parallel-publication check
+`gpu-contact-publication-a` returned 160.14 ms/step, 74.55 ms collision, zero managed
+bytes and the same state hash; the complete final comparison follows below.
+
+The final sequential comparison uses the same 65,537-body Smash impact interval,
+32 warm and 64 measured steps on Linux/Vulkan, with no concurrent builds/tests.
+`ELECTRON2D_SANDBOX_PROFILE_CPU_CONTACTS=1` keeps GPU geometry/solving but switches
+contact updates to the original CPU task within the same binary:
+
+| Mode | Whole step mean | Step p95 | Collision stage mean | All-thread managed bytes |
+| --- | --- | --- | --- | --- |
+| GPU updates A | 161.79 ms | 234.18 ms | 74.60 ms | 0 |
+| CPU updates A | 164.33 ms | 234.19 ms | 77.12 ms | 0 |
+| CPU updates B | 160.24 ms | 235.54 ms | 75.62 ms | 0 |
+| GPU updates B | 159.12 ms | 233.80 ms | 74.51 ms | 0 |
+
+Each GPU run updates 12,078,146 contacts on GPU; the CPU control reports zero.
+All four runs retain state SHA-256
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`,
+awake counts 6,425 through 41,122 and zero owner/all-thread managed allocation.
+Geometry/material input is 5,726,080 bytes (35,788 records at the new 160-byte
+stride). A 64-byte pair now carries center offsets, and complete GPU updates
+read back another 16-byte material vector per contact. Normal-word spare bits
+carry the six contact state flags alongside two persistence bits without growing
+the manifold result. This is executable GPU contact arithmetic with a CPU mirror,
+not elimination of the synchronization/readback boundary. The remaining roughly
+160 ms whole step does not meet 60 FPS; graph/island mutation, contact creation,
+queries/CCD, sleep and other full-backend requirements still remain.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-final-{a,b}.json`.

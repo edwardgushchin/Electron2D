@@ -129,14 +129,15 @@ internal static partial class GPUPhysicsTests
             var referenced = B2MathFunction.b2AABB_Overlaps(a.fatAABB, b.fatAABB) ? 2 : 0;
             if (gpu.ResidentGeometryCount + gpu.UploadedGeometryCount != referenced)
                 throw new Exception("Geometry accounting must count each referenced slot once.");
-            if (gpu.UploadedGeometryCount != uploads || gpu.GeometryUploadBytes != uploads * 144L)
+            if (gpu.UploadedGeometryCount != uploads || gpu.GeometryUploadBytes != uploads * 160L)
                 throw new Exception($"Geometry upload count differs: expected {uploads}, got {gpu.UploadedGeometryCount}.");
         }
         try
         {
             Check(2); Check(0); // Three pairs share the same two geometry slots.
             b2Body_SetTransform(bodyA, new(.1f, 0), new(1, 0)); Check(0);
-            b2Shape_SetFriction(shapeA, .7f); b2Shape_SetFilter(shapeA, new B2Filter { categoryBits = 8, maskBits = ulong.MaxValue }); Check(0);
+            b2Shape_SetFriction(shapeA, .7f); Check(1);
+            b2Shape_SetFilter(shapeA, new B2Filter { categoryBits = 8, maskBits = ulong.MaxValue }); Check(0);
             b2Shape_SetCircle(shapeA, new B2Circle { center = new(.2f, -.1f), radius = 1.1f }); Check(1);
             b2Shape_SetCapsule(shapeA, new B2Capsule(new(-.7f, 0), new(.7f, 0), .5f)); Check(1);
             b2Shape_SetCapsule(shapeA, new B2Capsule(new(0, 0), new(0, 0), .5f)); Check(0); // Rejected degenerate edit.
