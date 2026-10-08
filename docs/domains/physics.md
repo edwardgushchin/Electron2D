@@ -77,6 +77,11 @@ replacement of the current CPU world or completion of the independent GPU path.
 
 Scene bodies, Areas and raw server colliders now share PhysicsColliderBackend body/fixture ownership. It centralizes creation, filtering/material/tag setup, transform validation and failure-aware destruction; current execution still uses Box2D. This is a further extraction step, not independent GPU completion.
 
+Initial body configuration and scene motion roles now use engine values and
+PhysicsServer.BodyMode. The shared collider adapter owns vendor definition/unit
+conversion. Tests cover static/kinematic/dynamic roles, rotation locks, freeze,
+disabled participation, CharacterBody and physical-bone activation/reentry.
+
 ## Verification and limits
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)

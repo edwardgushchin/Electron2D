@@ -24,7 +24,8 @@ resources are borrowed during rebuild and are never disposed here.
 
 | Operation | Contract |
 | --- | --- |
-| `Attach` | Create one backend body using the prepared definition, then commit space ownership. Reject a second attachment. |
+| `Attach` | Accept scene-unit pose and PhysicsBodyConfiguration; convert units/build the vendor definition internally, create the body and commit space ownership. Reject a second attachment. |
+| `HasMotionMode`, `SetMotionMode` | Compare/change the existing engine body mode through the backend; motion matching is independent of angular locking. |
 | `Detach` | Destroy the body and its fixtures, clear IDs and space, retain list capacity. If the world has failed, skip backend calls and leave final backend cleanup to world disposal. |
 | `RebuildShapes` | Validate all active slot transforms before removing existing fixtures; preserve disabled/disposed-slot indexing and append the current active geometry. |
 | `Shapes`, `BodyID`, `Space` | Internal borrowed backend state; shape IDs can change on rebuild, body IDs on reattachment. Public RID identity is independent. |
@@ -47,7 +48,7 @@ dependencies recorded by the [physics audit](../components/physics-contract-audi
 
 `ELECTRON2D_TEST_COLLIDER_BACKEND=1` runs the existing body/Area, shape-family,
 polygon/one-way/owner, material/mass, server-slot, monitoring/fields, disable-mode,
-body-view, joint and World tests together. They cover real solver/query results,
+body-view, joint, World, platform/character/freeze and physical-bone tests together. They cover real solver/query results,
 identity, reentry, malformed-transform recovery, borrowed lifetime and their
 existing warmed allocation checks. The GPU suite exercises the current stage
 host and failed-step/world teardown. Neither suite establishes a standalone GPU

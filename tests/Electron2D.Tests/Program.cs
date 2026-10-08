@@ -26,13 +26,16 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 NativeLibraryTests.Run();
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1")
 {
+    // Child hosts use their own specific entry points.
+    Environment.SetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND", null);
     PhysicsBodyTests.Run(); AreaTests.Run();
     CapsuleShapeTests.Run(); SegmentShapeTests.Run(); ConvexPolygonShapeTests.Run(); ConcavePolygonShapeTests.Run();
     SeparationRayShapeTests.Run(); CollisionPolygonTests.Run(); OneWayCollisionTests.Run(); ShapeOwnerTests.Run();
     PhysicsMaterialTests.Run(); PhysicsMassProfileTests.Run(); PhysicsServerShapeSlotTests.Run();
     PhysicsAreaMonitorTests.Run(); PhysicsServerAreaFieldTests.Run(); CollisionDisableModeTests.Run();
     PhysicsBodyStateTests.Run(); PhysicsServerJointTests.Run(); WorldTests.Run();
-    Console.WriteLine("Shared collider backend passed: scene/server bodies and areas, geometry, filters, materials, mass, views, joints and world lifetime.");
+    AnimatableBodyTests.Run(); CharacterBodyTests.Run(); RigidFreezeModeTests.Run(); PhysicalBoneTests.Run();
+    Console.WriteLine("Shared collider backend passed: bodies/areas, geometry, materials, mass, views, joints, worlds, motion modes and physical bones.");
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_IMPULSES") == "1") { PhysicsContactImpulseTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }

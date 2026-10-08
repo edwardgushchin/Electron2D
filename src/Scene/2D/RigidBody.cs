@@ -1,7 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2Shapes;
-using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
@@ -248,26 +247,18 @@ public partial class RigidBody : PhysicsBody
     internal override bool MovesWithSimulation => !_freeze || FrozenKinematic;
     internal override Vector2 EffectiveGravity => _effectiveGravity;
 
-    internal override B2BodyType RequestedBodyType => !_freeze ? B2BodyType.b2_dynamicBody :
-        _freezeMode == RigidFreezeMode.Kinematic ? B2BodyType.b2_kinematicBody : B2BodyType.b2_staticBody;
+    internal override PhysicsServer.BodyMode RequestedBodyMode => !_freeze ? PhysicsServer.BodyMode.Rigid :
+        _freezeMode == RigidFreezeMode.Kinematic ? PhysicsServer.BodyMode.Kinematic : PhysicsServer.BodyMode.Static;
 
-    internal override B2BodyDef CreateBodyDefinition()
+    internal override PhysicsBodyConfiguration CreateBodyConfiguration()
     {
         _fieldsInitialized = false;
         _frozenSolverPose = GlobalTransform;
         _frozenQueryPoseApplied = false;
         _frozenNativePose = new B2Transform(Shape.ToBackend(_frozenSolverPose.Origin), B2MathFunction.b2MakeRot(_frozenSolverPose.Rotation));
-        var definition = b2DefaultBodyDef();
-        definition.type = RequestedBodyType;
-        definition.linearVelocity = FrozenKinematic ? default : Shape.ToBackend(_linearVelocity);
-        definition.angularVelocity = FrozenKinematic ? 0 : _angularVelocity;
-        definition.linearDamping = 0;
-        definition.angularDamping = 0;
-        definition.gravityScale = _customIntegrator ? 0 : _gravityScale;
-        definition.enableSleep = _canSleep;
-        definition.isAwake = !_sleeping;
-        definition.motionLocks.angularZ = !_freeze && _lockRotation;
-        return definition;
+        return new(RequestedBodyMode, FrozenKinematic ? default : _linearVelocity,
+            FrozenKinematic ? 0 : _angularVelocity, _customIntegrator ? 0 : _gravityScale,
+            _canSleep, _sleeping, !_freeze && _lockRotation);
     }
 
     internal override void OnShapesRebuilt() => ApplyMass(_mass);

@@ -15,7 +15,7 @@ internal sealed partial class PhysicsBodyRuntime
         {
             if (Space is not null) return b2Body_GetType(BodyID) == B2BodyType.b2_dynamicBody;
             var owners = Owners;
-            return owners.Scene?.RequestedBodyType == B2BodyType.b2_dynamicBody ||
+            return owners.Scene?.RequestedBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ||
                 owners.Server?.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         }
     }

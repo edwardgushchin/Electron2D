@@ -160,7 +160,7 @@ public partial class RigidBody
     internal void CaptureBackendSleep()
     {
         if (Space?.HasBackendFailure == true) return;
-        if (b2Body_GetType(BackendID) == B2BodyType.b2_staticBody) return;
+        if (Backend.HasMotionMode(PhysicsServer.BodyMode.Static)) return;
         _sleeping = !b2Body_IsAwake(BackendID);
         _sleepChangePending = false;
     }

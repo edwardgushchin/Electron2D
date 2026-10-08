@@ -1,7 +1,5 @@
-using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
@@ -192,13 +190,9 @@ public sealed partial class Area : CollisionObject
     {
         if (Space is not null) throw new InvalidOperationException("An area already belongs to a physics world.");
         ValidatePhysicsTransform();
-        var definition = b2DefaultBodyDef();
-        definition.type = B2BodyType.b2_staticBody;
         _lastPosition = GlobalPosition;
         _lastRotation = GlobalRotation;
-        definition.position = Shape.ToBackend(_lastPosition);
-        definition.rotation = b2MakeRot(_lastRotation);
-        Backend.Attach(space, definition);
+        Backend.Attach(space, _lastPosition, _lastRotation, new(PhysicsServer.BodyMode.Static));
         _shapesDirty = true;
         try { RebuildShapes(); }
         catch { DetachBackend(); throw; }

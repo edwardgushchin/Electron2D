@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 /// <summary>A rigid physics body that follows or simulates one scene bone under a skeleton.</summary>
@@ -98,7 +96,7 @@ public class PhysicalBone : RigidBody
         if (joint.GlobalPosition != GlobalPosition) joint.GlobalPosition = GlobalPosition;
     }
     internal override bool CollisionResponseEnabled => _active;
-    internal override B2BodyType RequestedBodyType => _active ? base.RequestedBodyType : B2BodyType.b2_staticBody;
+    internal override PhysicsServer.BodyMode RequestedBodyMode => _active ? base.RequestedBodyMode : PhysicsServer.BodyMode.Static;
     internal override bool MovesWithSimulation => _active && base.MovesWithSimulation;
     internal override void OnTreeMembershipChanged(bool entering)
     { base.OnTreeMembershipChanged(entering); _rig = null; _bone = null; _joint = null; _pathRevision = _jointRevision = ulong.MaxValue; if (!entering) _active = false; }

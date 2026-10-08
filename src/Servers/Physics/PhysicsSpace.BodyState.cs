@@ -68,7 +68,7 @@ internal sealed partial class PhysicsSpace
             if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
             else if (body is CharacterBody character) character.PrepareMotion(delta);
             else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
-            hasKinematicBodies |= body.RequestedBodyType == B2BodyType.b2_kinematicBody && !body.PhysicsMadeStatic;
+            hasKinematicBodies |= body.RequestedBodyMode == PhysicsServer.BodyMode.Kinematic && !body.PhysicsMadeStatic;
         }
         foreach (var body in _serverColliders)
         {

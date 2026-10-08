@@ -62,23 +62,17 @@ public abstract class PhysicsBody : CollisionObject
         if (Space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
         var transform = GlobalTransform;
         ValidatePhysicsTransform(transform);
-        var definition = CreateBodyDefinition();
+        var configuration = CreateBodyConfiguration();
         if (PhysicsMadeStatic)
-        {
-            definition.type = B2BodyType.b2_staticBody;
-            definition.linearVelocity = default;
-            definition.angularVelocity = 0;
-        }
+            configuration = configuration with { Mode = PhysicsServer.BodyMode.Static, LinearVelocity = default, AngularVelocity = 0 };
         _lastPosition = transform.Origin;
         _lastRotation = _validatedRotation;
-        definition.position = Shape.ToBackend(_lastPosition);
-        definition.rotation = b2MakeRot(_lastRotation);
-        Backend.Attach(space, definition);
+        Backend.Attach(space, _lastPosition, _lastRotation, configuration);
         _shapesDirty = true;
         try
         {
             RebuildShapes(); Runtime.RestoreSceneState();
-            if (!definition.isAwake && definition.type == B2BodyType.b2_dynamicBody) b2Body_SetAwake(BackendID, false);
+            if (configuration.Sleeping && configuration.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) b2Body_SetAwake(BackendID, false);
             if (PhysicsMadeStatic) OnMadeStatic();
         }
         catch { DetachBackend(); throw; }
@@ -88,7 +82,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         if (Space is null) return;
-        if (!Space.HasBackendFailure && this is RigidBody rigid && b2Body_GetType(BackendID) == B2BodyType.b2_dynamicBody)
+        if (!Space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
         {
             var world = b2GetWorldFromId(Space.WorldID);
             rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, BackendID));
@@ -162,7 +156,7 @@ public abstract class PhysicsBody : CollisionObject
         OnBackendAdvanced(world, backendBody);
     }
 
-    internal abstract B2BodyType RequestedBodyType { get; }
+    internal abstract PhysicsServer.BodyMode RequestedBodyMode { get; }
     internal virtual void OnMadeStatic() { }
     internal virtual void OnBodyTypeChanged() { }
 
@@ -175,16 +169,16 @@ public abstract class PhysicsBody : CollisionObject
             return;
         }
         if (!HasBackend) { Tree?.RegisterPhysicsBody(this); return; }
-        var type = PhysicsMadeStatic ? B2BodyType.b2_staticBody : RequestedBodyType;
-        if (b2Body_GetType(BackendID) == type) return;
+        var mode = PhysicsMadeStatic ? PhysicsServer.BodyMode.Static : RequestedBodyMode;
+        if (Backend.HasMotionMode(mode)) return;
         if (PhysicsMadeStatic) OnMadeStatic();
-        b2Body_SetType(BackendID, type);
+        Backend.SetMotionMode(mode);
         OnBodyTypeChanged();
         Runtime.RestoreSceneState();
         MarkShapesDirty();
     }
 
-    internal abstract B2BodyDef CreateBodyDefinition();
+    internal virtual PhysicsBodyConfiguration CreateBodyConfiguration() => new(RequestedBodyMode);
     internal abstract bool MovesWithSimulation { get; }
     internal virtual void OnBackendAdvanced(B2World world, B2Body body) { }
     internal virtual void OnShapesRebuilt() => PhysicsServer.Service.BodyRuntime(PhysicsRID).ApplyMassProfile();

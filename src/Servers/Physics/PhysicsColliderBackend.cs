@@ -15,12 +15,35 @@ internal sealed class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwne
     internal B2BodyId BodyID { get; private set; }
     internal IReadOnlyList<B2ShapeId> Shapes => _shapes;
 
-    internal void Attach(PhysicsSpace space, in B2BodyDef definition)
+    internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
     {
         if (Space is not null) throw new InvalidOperationException("A collider already belongs to a physics world.");
+        var definition = b2DefaultBodyDef();
+        definition.type = BodyType(configuration.Mode);
+        definition.position = Shape.ToBackend(position);
+        definition.rotation = B2MathFunction.b2MakeRot(rotation);
+        definition.linearVelocity = Shape.ToBackend(configuration.LinearVelocity);
+        definition.angularVelocity = configuration.AngularVelocity;
+        definition.gravityScale = configuration.GravityScale;
+        definition.enableSleep = configuration.CanSleep;
+        definition.isAwake = !configuration.Sleeping;
+        definition.motionLocks.angularZ = configuration.LockRotation || configuration.Mode == PhysicsServer.BodyMode.RigidLinear;
         BodyID = b2CreateBody(space.WorldID, definition);
         Space = space;
     }
+
+    // Motion-role matching intentionally ignores rotation locks; callers retain
+    // their own lock/freeze restoration policy when changing the role.
+    internal bool HasMotionMode(PhysicsServer.BodyMode mode) => b2Body_GetType(BodyID) == BodyType(mode);
+    internal void SetMotionMode(PhysicsServer.BodyMode mode) => b2Body_SetType(BodyID, BodyType(mode));
+
+    private static B2BodyType BodyType(PhysicsServer.BodyMode mode) => mode switch
+    {
+        PhysicsServer.BodyMode.Static => B2BodyType.b2_staticBody,
+        PhysicsServer.BodyMode.Kinematic => B2BodyType.b2_kinematicBody,
+        PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear => B2BodyType.b2_dynamicBody,
+        _ => throw new ArgumentOutOfRangeException(nameof(mode))
+    };
 
     internal void Detach()
     {

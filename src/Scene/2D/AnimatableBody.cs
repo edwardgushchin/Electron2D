@@ -50,7 +50,7 @@ public sealed class AnimatableBody : StaticBody
         }
     }
 
-    internal override B2BodyType RequestedBodyType => B2BodyType.b2_kinematicBody;
+    internal override PhysicsServer.BodyMode RequestedBodyMode => PhysicsServer.BodyMode.Kinematic;
 
     internal override void ApplySceneTransform(Vector2 position, float rotation) { }
 

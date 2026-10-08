@@ -12,6 +12,12 @@ Last updated: 2026-10-08
 
 PhysicsBody, Area and server-created colliders now share [PhysicsColliderBackend](../classes/PhysicsColliderBackend.md) for body/fixture creation, rebuild and destruction. Logical slot ownership and public RIDs remain with their existing owners. The component still uses the CPU backend; it consolidates ownership for further backend extraction.
 
+[PhysicsBodyConfiguration](../classes/PhysicsBodyConfiguration.md) carries initial
+velocity/gravity/sleep/lock policy in engine units. Scene/server creation and
+scene motion-role dispatch use PhysicsServer.BodyMode; vendor body definitions
+and mode conversion reside in the collider adapter. Live solver state and query
+operations still require further extraction before independent GPU execution.
+
 ## Fixed-step flow
 
 Direct CollisionPolygon children join the same body fixture owner list as borrowed CollisionShape children. Their solid convex pieces or hollow closed edges use the body's filters, material and mass policy, and their one-way body-contact setting uses the same world pre-solve callback.

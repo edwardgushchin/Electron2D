@@ -1,7 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
@@ -250,14 +249,7 @@ public partial class CharacterBody : PhysicsBody
 
     internal override bool MovesWithSimulation => false;
 
-    internal override B2BodyType RequestedBodyType => B2BodyType.b2_kinematicBody;
-
-    internal override B2BodyDef CreateBodyDefinition()
-    {
-        var definition = b2DefaultBodyDef();
-        definition.type = RequestedBodyType;
-        return definition;
-    }
+    internal override PhysicsServer.BodyMode RequestedBodyMode => PhysicsServer.BodyMode.Kinematic;
 
     internal override void ApplySceneTransform(Vector2 position, float rotation)
     {

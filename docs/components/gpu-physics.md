@@ -2,6 +2,17 @@
 
 Last updated: 2026-10-08
 
+## Native verification observation (2026-10-08)
+
+During body-configuration extraction, the full GPU suite passed its physics and
+failed-world checks, then one run aborted in GLib during the window/device-lifetime
+stage with an impossible allocation request. An unchanged-binary retry passed the
+entire suite, including both renderer modes. The cause is unresolved; a retry is
+not evidence that repeated native window lifetime is stable. Keep this observation
+open for final window/performance acceptance. Local evidence:
+`/tmp/electron2d-body-configuration-gpu-native-failure.log` and
+`/tmp/electron2d-body-configuration-gpu.log`.
+
 ## Architecture boundary after the contract audit
 
 The [2026-10-08 audit](physics-contract-audit.md) distinguishes the current
