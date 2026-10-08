@@ -75,6 +75,8 @@ validation; backend reads, unit conversion and contact traversal reside in
 PhysicsBodyRuntime. This is the first extraction from public consumers, not a
 replacement of the current CPU world or completion of the independent GPU path.
 
+Scene bodies, Areas and raw server colliders now share PhysicsColliderBackend body/fixture ownership. It centralizes creation, filtering/material/tag setup, transform validation and failure-aware destruction; current execution still uses Box2D. This is a further extraction step, not independent GPU completion.
+
 ## Verification and limits
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)

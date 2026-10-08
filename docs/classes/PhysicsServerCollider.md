@@ -6,6 +6,8 @@ Last updated: 2026-10-08
 
 **Source:** [PhysicsServerCollider.cs](../../src/Servers/Physics/PhysicsServerCollider.cs) · **Component:** [Physics server and queries](../components/physics-queries.md)
 
+Body/fixture IDs and current-space ownership now reside in [PhysicsColliderBackend](PhysicsColliderBackend.md). The server collider retains authored shape slots, body mode, motion/field policy and public RID routing. Scene bodies and Areas use the same creation/rebuild/destruction implementation.
+
 ## Description and runtime flow
 
 Caller-owned body/Area configuration with indexed shape entry, local pose, disabled and body one-way fields. Getter/replacement/clear operate on logical slots; native tags retain logical indices across compound fixtures. Same-value writes are inert, real edits rebuild the one native world body and mass profile. Typed scene slots use their existing CollisionObject owner store instead of this class.

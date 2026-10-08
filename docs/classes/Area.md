@@ -8,6 +8,8 @@ Last updated: 2026-10-08
 - **Declaration:** `public sealed partial class Area : CollisionObject`
 - **Component:** [Physics areas](../components/physics-areas.md)
 
+The shared [PhysicsColliderBackend](PhysicsColliderBackend.md) owns its massless sensor body and fixture IDs. Area retains authored slots, overlap tracking, fields and events; rebuild uses the same logical tag/filter path as scene and server bodies.
+
 ## Description
 
 A nonresponding 2D sensor region. Direct [CollisionShape](CollisionShape.md) children supply borrowed circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry. A child's one-way setting is retained for scene state but cannot filter this area's sensor overlaps. After each nonzero fixed physics step, the area records overlapping `PhysicsBody` and other `Area` nodes; moving a node or editing a filter does not immediately change the snapshot. Events are delivered after body synchronization and before physics timers and tweens. The area's `CollisionMask` tests the other object's `CollisionLayer`; the other object's mask can be zero. Other areas also need `Monitorable=true` to be reported. The area can monitor even when its own `Monitorable` is false. Independently, gravity and damping fields affect overlapping RigidBody dynamics, while gravity also feeds CharacterBody's inherited `GetGravity()` query before the solver step. A shaped area can also reroute a spatial audio source whose `AreaMask` intersects its collision layer; monitoring flags do not gate that point query.

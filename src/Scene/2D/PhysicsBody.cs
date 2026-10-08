@@ -1,8 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Shapes;
-using static Box2D.NET.B2Types;
 using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
@@ -10,11 +8,7 @@ namespace Electron2D;
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
 public abstract class PhysicsBody : CollisionObject
 {
-    private WeakReference<CollisionObject>? _fixtureOwner;
-    private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
-    private PhysicsSpace? _space;
-    private B2BodyId _bodyID;
     private Vector2 _lastPosition;
     private float _lastRotation;
     private Transform _validatedTransform = Transform.Identity;
@@ -30,13 +24,12 @@ public abstract class PhysicsBody : CollisionObject
 
     private PhysicsBodyRuntime? _runtime;
     internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(PhysicsRID);
-    internal B2BodyId BackendID => _bodyID;
-    internal PhysicsSpace? Space => _space;
-    internal bool HasBackend => _space is not null;
+    internal B2BodyId BackendID => Backend.BodyID;
+    internal PhysicsSpace? Space => Backend.Space;
+    internal bool HasBackend => Space is not null;
     internal virtual bool CollisionResponseEnabled => true;
     internal uint EffectiveCollisionLayer => CollisionResponseEnabled ? CollisionLayer : 0;
     internal uint EffectiveCollisionMask => CollisionResponseEnabled ? CollisionMask : 0;
-    internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
 
     internal ElectronObject? GetShapeNode(int index) => GetShapeOwnerObject(index);
 
@@ -66,7 +59,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal void AttachBackend(PhysicsSpace space)
     {
-        if (_space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
+        if (Space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
         var transform = GlobalTransform;
         ValidatePhysicsTransform(transform);
         var definition = CreateBodyDefinition();
@@ -80,13 +73,12 @@ public abstract class PhysicsBody : CollisionObject
         _lastRotation = _validatedRotation;
         definition.position = Shape.ToBackend(_lastPosition);
         definition.rotation = b2MakeRot(_lastRotation);
-        _bodyID = b2CreateBody(space.WorldID, definition);
-        _space = space;
+        Backend.Attach(space, definition);
         _shapesDirty = true;
         try
         {
             RebuildShapes(); Runtime.RestoreSceneState();
-            if (!definition.isAwake && definition.type == B2BodyType.b2_dynamicBody) b2Body_SetAwake(_bodyID, false);
+            if (!definition.isAwake && definition.type == B2BodyType.b2_dynamicBody) b2Body_SetAwake(BackendID, false);
             if (PhysicsMadeStatic) OnMadeStatic();
         }
         catch { DetachBackend(); throw; }
@@ -95,22 +87,20 @@ public abstract class PhysicsBody : CollisionObject
     internal void DetachBackend()
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
-        if (_space is null) return;
-        if (!_space.HasBackendFailure && this is RigidBody rigid && b2Body_GetType(_bodyID) == B2BodyType.b2_dynamicBody)
+        if (Space is null) return;
+        if (!Space.HasBackendFailure && this is RigidBody rigid && b2Body_GetType(BackendID) == B2BodyType.b2_dynamicBody)
         {
-            var world = b2GetWorldFromId(_space.WorldID);
-            rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, _bodyID));
+            var world = b2GetWorldFromId(Space.WorldID);
+            rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, BackendID));
         }
-        if (!_space.HasBackendFailure) b2DestroyBody(_bodyID);
-        _backendShapes.Clear();
+        Backend.Detach();
         _appliedShapeRevisions.Clear();
-        _space = null;
         _shapesDirty = true;
     }
 
     internal void PrepareBackend()
     {
-        if (_space is null) return;
+        if (Space is null) return;
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;
         if (!_shapesDirty && geometryEpoch == _preparedGeometryEpoch && transform == _preparedTransform &&
@@ -144,13 +134,13 @@ public abstract class PhysicsBody : CollisionObject
     }
 
     internal virtual void ApplySceneTransform(Vector2 position, float rotation) =>
-        b2Body_SetTransform(_bodyID, Shape.ToBackend(position), b2MakeRot(rotation));
+        b2Body_SetTransform(BackendID, Shape.ToBackend(position), b2MakeRot(rotation));
 
     internal void CompleteBackend(B2World? world = null)
     {
-        if (_space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
-        world ??= b2GetWorldFromId(_space.WorldID);
-        var backendBody = b2GetBodyFullId(world, _bodyID);
+        if (Space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
+        world ??= b2GetWorldFromId(Space.WorldID);
+        var backendBody = b2GetBodyFullId(world, BackendID);
         var backendTransform = b2GetBodyTransformQuick(world, backendBody);
         var position = backendTransform.p;
         var rotation = backendTransform.q;
@@ -324,7 +314,7 @@ public abstract class PhysicsBody : CollisionObject
     {
         if (disposing)
         {
-            _space?.Remove(this);
+            Space?.Remove(this);
             if (_materialOverride is { } material)
             {
                 material.Changed -= OnMaterialChanged;
@@ -337,33 +327,9 @@ public abstract class PhysicsBody : CollisionObject
 
     private void RebuildShapes()
     {
-        foreach (var node in ShapeSlots)
-        {
-            if (!node.Active) continue;
-            if (!node.Transform.IsFinite() || !node.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Transform.Skew))
-                throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
-        }
-
-        foreach (var id in _backendShapes) b2DestroyShape(id, updateBodyMass: false);
-        _backendShapes.Clear();
-
-        var definition = b2DefaultShapeDef();
-        definition.updateBodyMass = false;
-        definition.filter.categoryBits = EffectiveCollisionLayer;
-        definition.filter.maskBits = EffectiveCollisionMask;
-        definition.density = MovesWithSimulation ? 1f : 0f;
         var runtime = PhysicsServer.Service.BodyRuntime(PhysicsRID);
-        PhysicsSpace.SetMaterial(ref definition, runtime.GetFriction(), runtime.GetBounce());
-        for (var index = 0; index < ShapeSlots.Count; index++)
-        {
-            var node = ShapeSlots[index];
-            if (!node.Active) continue;
-            var contact = node.OneWay;
-            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, contact) { SceneOwner = _fixtureOwner ??= new(this) });
-            definition.enablePreSolveEvents = contact is not null ||
-                PhysicsServer.Service.HasBodyCollisionExceptions(GetRID());
-            node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
-        }
+        Backend.RebuildShapes(ShapeSlots, EffectiveCollisionLayer, EffectiveCollisionMask, false,
+            MovesWithSimulation ? 1f : 0f, runtime.GetFriction(), runtime.GetBounce());
 
         OnShapesRebuilt();
         _appliedShapeRevisions.Clear();

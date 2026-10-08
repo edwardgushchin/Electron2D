@@ -24,6 +24,17 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 }
 
 NativeLibraryTests.Run();
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1")
+{
+    PhysicsBodyTests.Run(); AreaTests.Run();
+    CapsuleShapeTests.Run(); SegmentShapeTests.Run(); ConvexPolygonShapeTests.Run(); ConcavePolygonShapeTests.Run();
+    SeparationRayShapeTests.Run(); CollisionPolygonTests.Run(); OneWayCollisionTests.Run(); ShapeOwnerTests.Run();
+    PhysicsMaterialTests.Run(); PhysicsMassProfileTests.Run(); PhysicsServerShapeSlotTests.Run();
+    PhysicsAreaMonitorTests.Run(); PhysicsServerAreaFieldTests.Run(); CollisionDisableModeTests.Run();
+    PhysicsBodyStateTests.Run(); PhysicsServerJointTests.Run(); WorldTests.Run();
+    Console.WriteLine("Shared collider backend passed: scene/server bodies and areas, geometry, filters, materials, mass, views, joints and world lifetime.");
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_IMPULSES") == "1") { PhysicsContactImpulseTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_ACTIVITY") == "1") { PhysicsActivityTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }

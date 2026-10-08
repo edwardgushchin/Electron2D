@@ -10,6 +10,8 @@ Last updated: 2026-10-08
 
 [`CollisionObject`](../classes/CollisionObject.md) owns 32-bit layer/mask filtering. [`PhysicsBody`](../classes/PhysicsBody.md) owns direct CollisionShape children, backend body lifetime and typed motion queries; [`KinematicCollision`](../classes/KinematicCollision.md) carries motion contacts. [`StaticBody`](../classes/StaticBody.md) constrains movement; [`AnimatableBody`](../classes/AnimatableBody.md) inherits it and moves manually with kinematic contact velocity; [`CharacterBody`](../classes/CharacterBody.md) derives directly from PhysicsBody and performs grounded or floating slide motion; [`RigidBody`](../classes/RigidBody.md) responds to gravity, contacts, velocity and impulses. Concrete bodies borrow [`PhysicsMaterial`](../classes/PhysicsMaterial.md) where applicable. The hierarchy preserves the reference intermediate roles above Entity.
 
+PhysicsBody, Area and server-created colliders now share [PhysicsColliderBackend](../classes/PhysicsColliderBackend.md) for body/fixture creation, rebuild and destruction. Logical slot ownership and public RIDs remain with their existing owners. The component still uses the CPU backend; it consolidates ownership for further backend extraction.
+
 ## Fixed-step flow
 
 Direct CollisionPolygon children join the same body fixture owner list as borrowed CollisionShape children. Their solid convex pieces or hollow closed edges use the body's filters, material and mass policy, and their one-way body-contact setting uses the same world pre-solve callback.

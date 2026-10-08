@@ -22,7 +22,13 @@ public abstract partial class CollisionObject : Entity
     internal RID PhysicsRID => _rid;
 
     /// <summary>Creates an object in collision layer one with mask one.</summary>
-    protected CollisionObject() => _rid = PhysicsServer.Service.RegisterSceneObject(this);
+    protected CollisionObject()
+    {
+        _rid = PhysicsServer.Service.RegisterSceneObject(this);
+        Backend = new(_rid, this);
+    }
+
+    internal PhysicsColliderBackend Backend { get; }
 
     /// <summary>Gets the stable server identity of this collision object.</summary>
     /// <returns>A nonempty RID unchanged by fixture rebuilds or scene attachment.</returns>
@@ -117,7 +123,7 @@ public abstract partial class CollisionObject : Entity
 
     internal virtual void OnCollisionFilterChanged() { }
 
-    internal abstract IReadOnlyList<B2ShapeId> BackendShapes { get; }
+    internal IReadOnlyList<B2ShapeId> BackendShapes => Backend.Shapes;
     internal abstract void MarkShapesDirty();
 
     /// <inheritdoc />

@@ -1,6 +1,6 @@
 # PhysicsBody2D API coverage
 
-Last updated: 2026-09-26
+Last updated: 2026-10-08
 
 Godot source: [doc/classes/PhysicsBody2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,7 +10,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class PhysicsBody2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) | [`public abstract class Electron2D.PhysicsBody`](../../classes/PhysicsBody.md) | Partial | First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page. |
+| [`class PhysicsBody2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) | [`public abstract class Electron2D.PhysicsBody`](../../classes/PhysicsBody.md) | Partial | Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Existing body/shape/owner/disable/lifetime tests verify that consolidation; independent GPU ownership and remaining own members stay open (ADR 0054). |
 | [`method add_collision_exception_with(Node body) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) | [`public System.Void AddCollisionExceptionWith(Electron2D.PhysicsBody body)`](../../classes/PhysicsBody.md) | Implemented | Unilateral RID exception lists suppress body pairs from solver contacts and motion tests in either direction; live toggles rebuild fixture contacts, scene enumeration keeps insertion order and server-only null slots (ADR 0063, PhysicsCollisionExceptionTests). |
 | [`method get_collision_exceptions() -> PhysicsBody2D[]`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) | [`public Electron2D.PhysicsBody[] GetCollisionExceptions()`](../../classes/PhysicsBody.md) | Implemented | Unilateral RID exception lists suppress body pairs from solver contacts and motion tests in either direction; live toggles rebuild fixture contacts, scene enumeration keeps insertion order and server-only null slots (ADR 0063, PhysicsCollisionExceptionTests). |
 | [`method get_gravity() -> Vector2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/PhysicsBody2D.xml) | [`public Electron2D.Vector2 GetGravity()`](../../classes/PhysicsBody.md) | Implemented | RigidBody and CharacterBody report resolved world/Area gravity after a fixed step; StaticBody and detached bodies return zero (ADRs 0056 and 0063, PhysicsAreaFieldTests and CharacterBodyTests). |

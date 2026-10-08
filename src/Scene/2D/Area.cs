@@ -1,7 +1,6 @@
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Shapes;
 using static Box2D.NET.B2Types;
 
 namespace Electron2D;
@@ -23,8 +22,6 @@ public sealed partial class Area : CollisionObject
             (area, value) => area.AudioBusName = value, _ => "Master", stored: true)
     ];
 
-    private WeakReference<CollisionObject>? _fixtureOwner;
-    private readonly List<B2ShapeId> _backendShapes = [];
     private readonly List<ulong> _appliedShapeRevisions = [];
     private HashSet<CollisionObject> _overlaps = new(ReferenceEqualityComparer.Instance);
     private HashSet<CollisionObject> _nextOverlaps = new(ReferenceEqualityComparer.Instance);
@@ -54,9 +51,7 @@ public sealed partial class Area : CollisionObject
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _audioBusName; }
         set { EnsureMutable(); ArgumentNullException.ThrowIfNull(value); _audioBusName = value; }
     }
-    private PhysicsSpace? _space;
-    internal PhysicsSpace? Space => _space;
-    private B2BodyId _bodyID;
+    internal PhysicsSpace? Space => Backend.Space;
     private Vector2 _lastPosition;
     private float _lastRotation;
     private volatile bool _shapesDirty = true;
@@ -190,14 +185,12 @@ public sealed partial class Area : CollisionObject
         return body is PhysicsBody other && _overlaps.Contains(other);
     }
 
-    internal override IReadOnlyList<B2ShapeId> BackendShapes => _backendShapes;
-
     internal override void MarkShapesDirty() => _shapesDirty = true;
     internal override void OnCollisionFilterChanged() => MarkShapesDirty();
 
     internal void AttachBackend(PhysicsSpace space)
     {
-        if (_space is not null) throw new InvalidOperationException("An area already belongs to a physics world.");
+        if (Space is not null) throw new InvalidOperationException("An area already belongs to a physics world.");
         ValidatePhysicsTransform();
         var definition = b2DefaultBodyDef();
         definition.type = B2BodyType.b2_staticBody;
@@ -205,8 +198,7 @@ public sealed partial class Area : CollisionObject
         _lastRotation = GlobalRotation;
         definition.position = Shape.ToBackend(_lastPosition);
         definition.rotation = b2MakeRot(_lastRotation);
-        _bodyID = b2CreateBody(space.WorldID, definition);
-        _space = space;
+        Backend.Attach(space, definition);
         _shapesDirty = true;
         try { RebuildShapes(); }
         catch { DetachBackend(); throw; }
@@ -215,17 +207,15 @@ public sealed partial class Area : CollisionObject
     internal void DetachBackend()
     {
         PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.Reset();
-        if (_space is null) return;
-        if (!_space.HasBackendFailure) b2DestroyBody(_bodyID);
-        _backendShapes.Clear();
+        if (Space is null) return;
+        Backend.Detach();
         _appliedShapeRevisions.Clear();
-        _space = null;
         _shapesDirty = true;
     }
 
     internal void PrepareBackend()
     {
-        if (_space is null) return;
+        if (Space is null) return;
         ValidatePhysicsTransform();
         if (!_shapesDirty)
             for (var index = 0; index < ShapeSlots.Count; index++)
@@ -235,7 +225,7 @@ public sealed partial class Area : CollisionObject
         var rotation = GlobalRotation;
         if (position != _lastPosition || rotation != _lastRotation)
         {
-            b2Body_SetTransform(_bodyID, Shape.ToBackend(position), b2MakeRot(rotation));
+            b2Body_SetTransform(Backend.BodyID, Shape.ToBackend(position), b2MakeRot(rotation));
             _lastPosition = position;
             _lastRotation = rotation;
         }
@@ -318,9 +308,9 @@ public sealed partial class Area : CollisionObject
         if (!IsInsideTree) return;
         if (PhysicsRemoved)
         {
-            if (_space is not null) Tree?.UnregisterPhysicsArea(this);
+            if (Space is not null) Tree?.UnregisterPhysicsArea(this);
         }
-        else if (_space is null) Tree?.RegisterPhysicsArea(this);
+        else if (Space is null) Tree?.RegisterPhysicsArea(this);
     }
 
     /// <inheritdoc />
@@ -342,7 +332,7 @@ public sealed partial class Area : CollisionObject
     {
         if (disposing)
         {
-            _space?.Remove(this);
+            Space?.Remove(this);
             ClearOverlaps();
         }
         base.Dispose(disposing);
@@ -350,27 +340,7 @@ public sealed partial class Area : CollisionObject
 
     private void RebuildShapes()
     {
-        foreach (var node in ShapeSlots)
-        {
-            if (!node.Active) continue;
-            if (!node.Transform.IsFinite() || !node.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(node.Transform.Skew))
-                throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
-        }
-
-        foreach (var id in _backendShapes) b2DestroyShape(id, updateBodyMass: false);
-        _backendShapes.Clear();
-        var definition = b2DefaultShapeDef();
-        definition.filter.categoryBits = CollisionLayer;
-        definition.filter.maskBits = CollisionMask;
-        definition.density = 0;
-        definition.isSensor = true;
-        for (var index = 0; index < ShapeSlots.Count; index++)
-        {
-            var node = ShapeSlots[index];
-            if (!node.Active) continue;
-            definition.userData = new B2UserData(new PhysicsFixtureTag(GetRID(), index, null) { SceneOwner = _fixtureOwner ??= new(this) });
-            node.Shape.AppendToBody(_bodyID, node.Transform.Origin, node.Transform.Rotation, definition, _backendShapes);
-        }
+        Backend.RebuildShapes(ShapeSlots, CollisionLayer, CollisionMask, true, 0);
         _appliedShapeRevisions.Clear();
         foreach (var node in ShapeSlots) _appliedShapeRevisions.Add(node.Revision);
         _shapesDirty = false;

@@ -2710,7 +2710,7 @@
         "class:CollisionObject2D"
       ],
       "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Existing body/shape/owner/disable/lifetime tests verify that consolidation; independent GPU ownership and remaining own members stay open (ADR 0054)."
     },
     {
       "godot": [
@@ -2729,7 +2729,7 @@
         "class:PhysicsBody2D"
       ],
       "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Existing body/shape/owner/disable/lifetime tests verify that consolidation; independent GPU ownership and remaining own members stay open (ADR 0054)."
     },
     {
       "godot": [
@@ -2743,7 +2743,7 @@
         "class:RigidBody2D"
       ],
       "state": "Partial",
-      "reason": "First Box2D.NET scene-body profile executes collision geometry, fixed-step gravity, impulses, masks and lifetime; remaining own members retain operation-specific gaps on this page."
+      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Existing body/shape/owner/disable/lifetime tests verify that consolidation; independent GPU ownership and remaining own members stay open (ADR 0054)."
     },
     {
       "godot": [
