@@ -11,8 +11,8 @@ ELECTRON2D_TEST_GPU_SMASH=1 dotnet run --project tests/Electron2D.Tests -c Relea
 ```
 
 This opens a dedicated 1152×800 Smash window, initially paused with 9,600 fragments.
-Press **Launch block** or **B** to start. The regular PhysicsSandbox example still
-uses its existing public physics path; this developer host does not add a public
+Press **Launch block** or **B** to start. The regular PhysicsSandbox executable is now a separate water playground using
+public CPU/GPU liquid algorithms and the public rigid-body space; this developer host does not add a public
 backend selector or route through the older Box2D-hosted GPU experiment.
 
 The preview requires an SDL GPU compute/render device. Initialization failures
@@ -47,7 +47,7 @@ friction and bounce apply when launching/rebuilding, as the inspector headings s
 
 ## Execution and publication boundary
 
-`GPUPhysicsSmashPreview` is test-only. It owns `GPUPhysicsBodyStore` directly and
+`GPUPhysicsSmashPreview` is test-only and owns its palette/layout helpers independently of the water example. It owns `GPUPhysicsBodyStore` directly and
 uses the ordinary engine window, input routing, fixed callbacks and MultiMesh drawing.
 The body store owns the authoritative body poses, broad/narrow phase, contacts and
 constraint response. In zero gravity, fragments start asleep and wake through the

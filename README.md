@@ -101,7 +101,7 @@ For macOS, use the [application bundle](examples/CharacterMovement/README.md#mac
 
 [Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
-Explore the physics engine with [PhysicsSandbox](examples/PhysicsSandbox/README.md): eleven interactive scenes, a scene dropdown and collider/contact debugging in a 1152×800 desktop window.
+[PhysicsSandbox](examples/PhysicsSandbox/README.md) is a resizable water playground: 65,536 particles, CPU/GPU liquid comparison, and a draggable duck and sailboat. It uses public compute, physics, input and rendering APIs with a soft pastel palette.
 
 ```bash
 dotnet run --project examples/PhysicsSandbox -c Release

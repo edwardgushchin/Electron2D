@@ -40,6 +40,7 @@ public static partial class ResourceFileTypes
         RegisterResource("FontVariation", CreateFontVariation);
         RegisterResource("Script", CreateScript);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
+        RegisterResource("RDShaderSPIRV", CreateRDShaderSPIRV);
         RegisterResource("ColorPalette", CreateColorPalette);
         RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
         RegisterResource("CodeHighlighter", CreateCodeHighlighter);
@@ -97,6 +98,7 @@ public static partial class ResourceFileTypes
     private static PackedScene CreatePackedScene() => new();
     private static FontVariation CreateFontVariation() => new();
     private static Script CreateScript() => new();
+    private static RDShaderSPIRV CreateRDShaderSPIRV() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();
     private static ColorPalette CreateColorPalette() => new();
     private static Sprite CreateSprite() => new();

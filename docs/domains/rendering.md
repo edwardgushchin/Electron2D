@@ -1,6 +1,6 @@
 # Rendering domain
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
@@ -206,3 +206,7 @@ The executable [multiline editing component](../components/multiline-editing.md)
 ## Executable viewport worlds
 
 [The world contract](../components/worlds.md) combines canvas and physics ownership, default/shared/explicit viewport binding, transition notification and real native pixel verification. NavigationMap retains its separate navigation-backend trigger.
+
+## Local application compute
+
+[Local compute](../components/local-compute.md) now supplies the applicable RenderingDevice buffer/compute-list API, independent of canvas selection. Runtime-owned native handles stay internal; consumers load compiled modules through RDShaderSPIRV and bind typed RDUniform descriptors. The water playground executes the same application liquid model on CPU or through this device API. Broader device graphics/texture APIs remain separate gaps.

@@ -552,11 +552,14 @@ def main():
                                   if line.startswith("| [`method compress("))
     assert " | Excluded | " in next(line for line in byte_array.splitlines()
                                    if line.startswith("| [`method decode_var("))
-    for name in ("RenderingDevice", "FramebufferCacheRD", "BoxMesh", "RefCounted",
-                 "GDScriptLanguageProtocol", "EditorNode3DGizmo"):
-        assert " | Excluded | " in class_rows[name]
-        assert all(" | Excluded | " in line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines()
-                   if line.startswith("| [`")), f"Excluded class has a blocked member: {name}"
+    assert " | Partial | " in class_rows["RenderingDevice"]
+    assert " | Blocked | " in class_rows["FramebufferCacheRD"]
+    for name in ("BoxMesh", "RefCounted", "GDScriptLanguageProtocol", "EditorNode3DGizmo",
+                 "LightmapperRD", "RDAccelerationStructureGeometry", "RDAccelerationStructureInstance",
+                 "RDHitGroup", "RenderDataRD", "RenderSceneBuffersRD", "RenderSceneDataRD",
+                 "Texture3DRD", "TextureCubemapRD", "TextureCubemapArrayRD"):
+        rows = [line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines() if line.startswith("| [`")]
+        assert rows and all(" | Excluded | " in line for line in rows), f"Excluded class has a blocked member: {name}"
     assert not any("first SDL3 GPU 2D rendering slice" in content for content in pages.values())
     for name in ("CurveTexture", "CurveXYZTexture"):
         rows = [line for line in pages[CLASS_PAGES / f"{name}.md"].splitlines() if line.startswith("| [`")]

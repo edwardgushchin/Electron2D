@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "device", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -205,9 +205,13 @@ def reason_for_type(item, lookup):
         return "Excluded", "Base64 and UTF-8 conversion use System.Convert and System.Text; Variant serialization is excluded by ADR 0001. No engine-owned wrapper is needed."
     if name.startswith("GDScript") or name == "@GDScript":
         return "Excluded", "GDScript runtime and tooling are outside the typed C# contract (ADR 0001)."
+    if name in {"LightmapperRD", "RDAccelerationStructureGeometry", "RDAccelerationStructureInstance",
+                "RDHitGroup", "RenderDataRD", "RenderSceneBuffersRD", "RenderSceneDataRD",
+                "Texture3DRD", "TextureCubemapRD", "TextureCubemapArrayRD"}:
+        return "Excluded", "Three-dimensional scene rendering, volume/cubemap textures and ray tracing remain outside the 2D product boundary (ADR 0028)."
     if (name.startswith("RD") or name.startswith("UniformSetCacheRD")
             or name.endswith("RD") or name == "RenderingDevice"):
-        return "Excluded", "Direct rendering-device public types conflict with the backend-neutral 2D API decision (ADR 0028)."
+        return "Blocked", "Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary."
     three_d_only = {
         "BoxMesh", "CapsuleMesh", "CompositorEffect", "CompressedCubemap",
         "CompressedCubemapArray", "CubemapArray", "CylinderMesh", "EditorNode3DGizmo",

@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1065,3 +1065,7 @@ Generic parameter operations require `T : unmanaged` and the reflected element c
 ## Viewport world integration
 
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
+
+## Local compute device creation
+
+`public static RenderingDevice CreateLocalRenderingDevice()` creates a caller-owned [local compute device](RenderingDevice.md) without requiring an active canvas renderer. It establishes native compute capability and owner-thread lifetime, and propagates initialization errors. The caller disposes the device and its RID graph. This factory does not change the active renderer or select a physics backend. See [local compute](../components/local-compute.md) for buffers, shaders, lists and verification.

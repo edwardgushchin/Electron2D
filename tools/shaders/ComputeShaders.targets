@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DComputePython Condition="'$(Electron2DComputePython)' == ''">python3</Electron2DComputePython>
+  </PropertyGroup>
+  <Target Name="CompileElectron2DComputeShaders" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true' and '@(Electron2DComputeShader)' != ''">
+    <Exec Command="&quot;$(Electron2DComputePython)&quot; -B &quot;$(MSBuildThisFileDirectory)compile_compute.py&quot; --source &quot;%(Electron2DComputeShader.FullPath)&quot; --output &quot;$(IntermediateOutputPath)compute/%(Electron2DComputeShader.Filename).spv&quot;" />
+    <ItemGroup>
+      <_ApplicationComputeShader Include="@(Electron2DComputeShader->'$(IntermediateOutputPath)compute/%(Filename).spv')" />
+      <EmbeddedResource Include="%(_ApplicationComputeShader.Identity)" LogicalName="Electron2D.Compute.%(_ApplicationComputeShader.Filename)%(_ApplicationComputeShader.Extension)" />
+      <FileWrites Include="$(IntermediateOutputPath)compute/*" />
+    </ItemGroup>
+  </Target>
+</Project>

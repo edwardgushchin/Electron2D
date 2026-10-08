@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using System.Globalization;
 using Electron2D;
-using Electron2D.Examples.PhysicsSandbox;
 using Path = System.IO.Path;
 using Body = Electron2D.GPUPhysicsBodyStore.BodyHandle;
 using State = Electron2D.GPUPhysicsBodyStore.Snapshot;
@@ -44,8 +43,8 @@ internal static class GPUPhysicsSmashPreview
 
     private sealed class PreviewWindow : Window
     {
-        private const float Scale = PhysicsScene.SmashScale;
-        private static readonly Rect2 Field = SandboxWindow.Playfield;
+        private const float Scale = PreviewStyle.SmashScale;
+        private static readonly Rect2 Field = new(24, 156, 836, 536);
         private readonly Font _font, _bold;
         private readonly List<Resource> _resources = [];
         private readonly Entity _visual, _hud;
@@ -74,9 +73,9 @@ internal static class GPUPhysicsSmashPreview
         internal PreviewWindow(Font regular, Font bold, int count, bool smoke)
         {
             _font = regular; _bold = bold; _smoke = smoke;
-            _thumb = Thumb(PhysicsScene.Ink); _thumbHover = Thumb(PhysicsScene.Pink);
+            _thumb = Thumb(PreviewStyle.Ink); _thumbHover = Thumb(PreviewStyle.Pink);
             Name = "GPUPhysicsSmash"; Title = "PhysicsSandbox — Smash · GPU preview";
-            Size = MinSize = MaxSize = SandboxWindow.ClientSize; Unresizable = true;
+            Size = MinSize = MaxSize = new(1152, 800); Unresizable = true;
             ProcessEnabled = PhysicsProcessEnabled = InputEnabled = UnhandledInputEnabled = true;
             var clip = new Control { Name = "Playfield", Position = Field.Position, Size = Field.Size, ClipContents = true, MouseFilter = MouseFilter.Ignore };
             _visual = new Entity { Name = "Fragments" }; clip.AddChild(_visual); AddChild(clip);
@@ -107,7 +106,7 @@ internal static class GPUPhysicsSmashPreview
             FocusExited += () => _grab = -1;
             Ready += _ =>
             {
-                RenderingServer.SetDefaultClearColor(PhysicsScene.Paper);
+                RenderingServer.SetDefaultClearColor(PreviewStyle.Paper);
                 Rebuild(false);
                 _device = _world!.DeviceName;
                 Console.WriteLine($"GPU Smash: independent device world, {_bodies.Length - 1} fragments, {_world.Driver}, {_device}");
@@ -213,11 +212,11 @@ internal static class GPUPhysicsSmashPreview
                 if (!state.Position.IsFinite() || !float.IsFinite(state.Velocity.X) || !float.IsFinite(state.Velocity.Y) || !float.IsFinite(state.Velocity.Z) || !float.IsFinite(state.Pose.Z) || !float.IsFinite(state.Pose.W))
                     throw new InvalidOperationException("GPU Smash produced nonfinite state.");
                 var size = i == 0 ? 64 : _pieceSize / Scale / .85f + .5f;
-                var color = PhysicsScene.SmashSleepingColor;
+                var color = PreviewStyle.SmashSleepingColor;
                 var motionSize = i == 0 ? 64 * Scale : _pieceSize;
                 var speed = new Vector2(state.Velocity.X, state.Velocity.Y).Length() + MathF.Abs(state.Velocity.Z) * motionSize * .7071068f;
-                if (speed > .01f) color = speed / 60 > motionSize * .25f ? PhysicsScene.Apricot : PhysicsScene.Pink;
-                if (i == 0 && speed <= .01f) color = PhysicsScene.Pink;
+                if (speed > .01f) color = speed / 60 > motionSize * .25f ? PreviewStyle.Apricot : PreviewStyle.Pink;
+                if (i == 0 && speed <= .01f) color = PreviewStyle.Pink;
                 var data = _instances.AsSpan(i * 12, 12);
                 data[0] = state.Pose.Z * size; data[1] = -state.Pose.W * size; data[2] = 0; data[3] = state.Pose.X / Scale;
                 data[4] = state.Pose.W * size; data[5] = state.Pose.Z * size; data[6] = 0; data[7] = state.Pose.Y / Scale;
@@ -285,57 +284,57 @@ internal static class GPUPhysicsSmashPreview
             ref readonly var state = ref _states[_selected];
             var size = _selected == 0 ? 64 : _pieceSize / Scale;
             canvas.DrawSetTransform(state.Position / Scale, state.Rotation);
-            canvas.DrawRect(new(-size / 2 - 2, -size / 2 - 2, size + 4, size + 4), PhysicsScene.Pink, false, 1.5f);
+            canvas.DrawRect(new(-size / 2 - 2, -size / 2 - 2, size + 4, size + 4), PreviewStyle.Pink, false, 1.5f);
             canvas.DrawSetTransformMatrix(Transform.Identity);
         }
         private void DrawHUD(CanvasItem canvas)
         {
             Span<char> text = stackalloc char[128];
             int length;
-            canvas.DrawString(_bold, new(24, 36), "Electron2D", fontSize: 21, modulate: PhysicsScene.Ink);
-            canvas.DrawString(_font, new(174, 35), "PhysicsSandbox", fontSize: 18, modulate: PhysicsScene.Muted);
-            canvas.DrawLine(new(24, 48), new(1128, 48), PhysicsScene.Border);
-            canvas.DrawString(_bold, new(24, 92), "Smash", fontSize: 24, modulate: PhysicsScene.Ink);
-            canvas.DrawString(_font, new(116, 91), "GPU · preview", fontSize: 16, modulate: PhysicsScene.Pink);
-            canvas.DrawString(_font, new(24, 140), "Launch a heavy block into a solid wall. Every fragment is a real GPU rigid body.", fontSize: 15, modulate: PhysicsScene.Muted);
-            canvas.DrawRect(Field, PhysicsScene.Border, false);
-            canvas.DrawRect(new(880, 156, 248, 536), PhysicsScene.Surface);
-            canvas.DrawString(_bold, new(896, 188), "WORLD · live", fontSize: 14, modulate: PhysicsScene.Blush);
-            canvas.DrawString(_bold, new(896, 318), "IMPACT · apply on launch", fontSize: 14, modulate: PhysicsScene.Pink);
-            canvas.DrawString(_bold, new(896, 448), "WALL · apply on rebuild", fontSize: 14, modulate: PhysicsScene.Apricot);
+            canvas.DrawString(_bold, new(24, 36), "Electron2D", fontSize: 21, modulate: PreviewStyle.Ink);
+            canvas.DrawString(_font, new(174, 35), "PhysicsSandbox", fontSize: 18, modulate: PreviewStyle.Muted);
+            canvas.DrawLine(new(24, 48), new(1128, 48), PreviewStyle.Border);
+            canvas.DrawString(_bold, new(24, 92), "Smash", fontSize: 24, modulate: PreviewStyle.Ink);
+            canvas.DrawString(_font, new(116, 91), "GPU · preview", fontSize: 16, modulate: PreviewStyle.Pink);
+            canvas.DrawString(_font, new(24, 140), "Launch a heavy block into a solid wall. Every fragment is a real GPU rigid body.", fontSize: 15, modulate: PreviewStyle.Muted);
+            canvas.DrawRect(Field, PreviewStyle.Border, false);
+            canvas.DrawRect(new(880, 156, 248, 536), PreviewStyle.Surface);
+            canvas.DrawString(_bold, new(896, 188), "WORLD · live", fontSize: 14, modulate: PreviewStyle.Blush);
+            canvas.DrawString(_bold, new(896, 318), "IMPACT · apply on launch", fontSize: 14, modulate: PreviewStyle.Pink);
+            canvas.DrawString(_bold, new(896, 448), "WALL · apply on rebuild", fontSize: 14, modulate: PreviewStyle.Apricot);
             text.TryWrite(CultureInfo.InvariantCulture, $"{Engine.FramesPerSecond:0} FPS", out length);
-            Readout(canvas, new(894, 87), text[..length], 24, PhysicsScene.Ink);
+            Readout(canvas, new(894, 87), text[..length], 24, PreviewStyle.Ink);
             text.TryWrite(CultureInfo.InvariantCulture, $"Step {_physicsMS:0.00} ms", out length);
-            Readout(canvas, new(894, 109), text[..length], 13, PhysicsScene.Muted);
+            Readout(canvas, new(894, 109), text[..length], 13, PreviewStyle.Muted);
             text.TryWrite(CultureInfo.InvariantCulture, $"Read {_readMS:0.00} ms · {_readBytes / 1024.0:0} KiB", out length);
-            Readout(canvas, new(894, 132), text[..length], 13, PhysicsScene.Muted);
+            Readout(canvas, new(894, 132), text[..length], 13, PreviewStyle.Muted);
             text.TryWrite(CultureInfo.InvariantCulture, $"{_bodies.Length - 1} fragments · {_moved} moved · {_ticks} ticks", out length);
-            Readout(canvas, new(24, 678), text[..length], 13, PhysicsScene.Muted);
-            canvas.DrawString(_font, new(894, 735), _paused ? "PAUSED" : "RUNNING", fontSize: 15, modulate: PhysicsScene.Blush);
-            canvas.DrawString(_font, new(24, 779), "B launch · N shockwave · F rebuild · P pause · . step · drag to grab · right click to kick", fontSize: 13, modulate: PhysicsScene.Muted);
+            Readout(canvas, new(24, 678), text[..length], 13, PreviewStyle.Muted);
+            canvas.DrawString(_font, new(894, 735), _paused ? "PAUSED" : "RUNNING", fontSize: 15, modulate: PreviewStyle.Blush);
+            canvas.DrawString(_font, new(24, 779), "B launch · N shockwave · F rebuild · P pause · . step · drag to grab · right click to kick", fontSize: 13, modulate: PreviewStyle.Muted);
             if (_selected >= 0)
             {
                 text.TryWrite(CultureInfo.InvariantCulture, $"{(_selected == 0 ? "Block" : "Fragment")} #{_selected}", out length);
-                Readout(canvas, new(894, 760), text[..length], 13, PhysicsScene.Ink);
+                Readout(canvas, new(894, 760), text[..length], 13, PreviewStyle.Ink);
             }
-            else canvas.DrawString(_font, new(894, 760), "Click a body to select", fontSize: 13, modulate: PhysicsScene.Muted);
+            else canvas.DrawString(_font, new(894, 760), "Click a body to select", fontSize: 13, modulate: PreviewStyle.Muted);
         }
         private void Readout(CanvasItem canvas, Vector2 position, ReadOnlySpan<char> text, int size, Color color) =>
-            PhysicsScene.DrawReadout(canvas, _font, position, text, size, color);
+            PreviewStyle.DrawReadout(canvas, _font, position, text, size, color);
 
         private StyleBoxFlat Style(Color color, bool accent = false)
         {
-            var style = Own(new StyleBoxFlat { BGColor = color, BorderColor = accent ? PhysicsScene.Pink : PhysicsScene.Border });
+            var style = Own(new StyleBoxFlat { BGColor = color, BorderColor = accent ? PreviewStyle.Pink : PreviewStyle.Border });
             style.SetCornerRadiusAll(8); style.SetBorderWidthAll(accent ? 2 : 1); return style;
         }
         private Button Button(string text, Vector2 position, float width, Action action, bool primary = false)
         {
             var button = new Button(text) { Name = "Button" + GetChildCount(), Position = position, Size = new(width, 44) };
             button.AddThemeFontOverride("font", _font); button.AddThemeFontSizeOverride("font_size", 15);
-            button.AddThemeColorOverride("font_color", PhysicsScene.Ink); button.AddThemeColorOverride("font_hover_color", PhysicsScene.Ink);
-            button.AddThemeColorOverride("font_pressed_color", PhysicsScene.Ink); button.AddThemeColorOverride("font_focus_color", PhysicsScene.Ink);
-            button.AddThemeStyleBoxOverride("normal", Style(primary ? PhysicsScene.Berry : PhysicsScene.Surface, primary));
-            button.AddThemeStyleBoxOverride("hover", Style(PhysicsScene.Hover)); button.AddThemeStyleBoxOverride("pressed", Style(PhysicsScene.Pressed, true));
+            button.AddThemeColorOverride("font_color", PreviewStyle.Ink); button.AddThemeColorOverride("font_hover_color", PreviewStyle.Ink);
+            button.AddThemeColorOverride("font_pressed_color", PreviewStyle.Ink); button.AddThemeColorOverride("font_focus_color", PreviewStyle.Ink);
+            button.AddThemeStyleBoxOverride("normal", Style(primary ? PreviewStyle.Berry : PreviewStyle.Surface, primary));
+            button.AddThemeStyleBoxOverride("hover", Style(PreviewStyle.Hover)); button.AddThemeStyleBoxOverride("pressed", Style(PreviewStyle.Pressed, true));
             button.AddThemeStyleBoxOverride("focus", Style(Colors.Transparent, true));
             button.Pressed += () => { action(); button.ReleaseFocus(); };
             AddChild(button); return button;
@@ -350,12 +349,12 @@ internal static class GPUPhysicsSmashPreview
         private void Parameter(int index, string name, double min, double max, double step, double value, float y)
         {
             var label = new Label(name) { Name = "Label" + index, Position = new(896, y), MouseFilter = MouseFilter.Ignore };
-            label.AddThemeFontOverride("font", _font); label.AddThemeFontSizeOverride("font_size", 13); label.AddThemeColorOverride("font_color", PhysicsScene.Ink);
+            label.AddThemeFontOverride("font", _font); label.AddThemeFontSizeOverride("font_size", 13); label.AddThemeColorOverride("font_color", PreviewStyle.Ink);
             AddChild(label);
             var slider = _sliders[index] = new HSlider { Name = "Parameter" + index, Position = new(896, y + 19), Size = new(216, 28), MinValue = min, MaxValue = max, Step = step, Value = value };
-            var track = Style(PhysicsScene.Border); track.SetBorderWidthAll(0); track.SetCornerRadiusAll(2); track.ContentMarginTop = track.ContentMarginBottom = 2;
+            var track = Style(PreviewStyle.Border); track.SetBorderWidthAll(0); track.SetCornerRadiusAll(2); track.ContentMarginTop = track.ContentMarginBottom = 2;
             slider.AddThemeStyleBoxOverride("slider", track);
-            var fill = Style(index < 2 ? PhysicsScene.Blush : index < 4 ? PhysicsScene.Pink : PhysicsScene.Apricot);
+            var fill = Style(index < 2 ? PreviewStyle.Blush : index < 4 ? PreviewStyle.Pink : PreviewStyle.Apricot);
             fill.SetBorderWidthAll(0); fill.SetCornerRadiusAll(2); fill.ContentMarginTop = fill.ContentMarginBottom = 2;
             slider.AddThemeStyleBoxOverride("grabber_area", fill); slider.AddThemeStyleBoxOverride("grabber_area_highlight", fill);
             slider.AddThemeIconOverride("grabber", _thumb); slider.AddThemeIconOverride("grabber_highlight", _thumbHover);
@@ -370,7 +369,7 @@ internal static class GPUPhysicsSmashPreview
                 slider.Value.TryFormat(buffer, out var length, format, CultureInfo.InvariantCulture);
                 var unit = index switch { 0 => " u/s²", 1 => "×", 2 => " u/s", 3 or 5 => " kg", _ => "" };
                 unit.AsSpan().CopyTo(buffer[length..]); length += unit.Length;
-                PhysicsScene.DrawReadout(c, _font, new(1010, y + 12), buffer[..length], 12, PhysicsScene.Blush);
+                PreviewStyle.DrawReadout(c, _font, new(1010, y + 12), buffer[..length], 12, PreviewStyle.Blush);
             };
             slider.ValueChanged += _ => readout.QueueRedraw(); AddChild(readout);
         }
@@ -468,4 +467,24 @@ internal static class GPUPhysicsSmashPreview
             if (disposing) { foreach (var shape in _boundaries) shape.Dispose(); foreach (var resource in _resources) resource.Dispose(); }
         }
     }
+}
+
+internal static class PreviewStyle
+{
+    internal static readonly Color Paper = Color.FromHTML("#25192B");
+    internal static readonly Color Ink = Color.FromHTML("#F9F3EE");
+    internal static readonly Color Muted = Color.FromHTML("#C2A6C8");
+    internal static readonly Color Border = Color.FromHTML("#6D506D");
+    internal static readonly Color Surface = Color.FromHTML("#322338");
+    internal static readonly Color Hover = Color.FromHTML("#443049");
+    internal static readonly Color Pressed = Color.FromHTML("#A93B71");
+    internal static readonly Color Contour = Color.FromHTML("#583149");
+    internal static readonly Color Blush = Color.FromHTML("#FCCCDD");
+    internal static readonly Color Pink = Color.FromHTML("#FD9ECA");
+    internal static readonly Color Berry = Color.FromHTML("#A93B71");
+    internal static readonly Color Apricot = Color.FromHTML("#F09776");
+    internal const float SmashScale = 20;
+    internal static readonly Color SmashSleepingColor = Muted.Lerp(Paper, .4f);
+    internal static void DrawReadout(CanvasItem canvas, Font font, Vector2 position, ReadOnlySpan<char> text, int size, Color color)
+    { foreach (var character in text) position.X += font.DrawChar(canvas, position.Round(), character, size, color); }
 }

@@ -1,6 +1,6 @@
 # MultiMesh
 
-Last updated: 2026-10-04
+Last updated: 2026-10-09
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MultiMesh` · **Source:** [MultiMesh.cs](../../src/Scene/Resources/MultiMesh.cs).
 

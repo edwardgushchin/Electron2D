@@ -35,7 +35,7 @@ internal static class MultiMeshRenderingTests
             Task.Run(() => Reject<InvalidOperationException>(() => RenderingServer.MultiMeshGetInstanceCount(owned))).GetAwaiter().GetResult();
             window.AddChild(new RIDNode(owned));
             window.AddChild(new TailNode(mesh));
-            var group = new CanvasGroup { Position = new(160, 0) };
+            var group = new CanvasGroup { Position = new(160, 0), SelfModulate = new(1, 1, 1, .5f) };
             group.AddChild(new MultiMeshInstance { MultiMesh = resource }); window.AddChild(group);
             RenderingServer.FramePostDraw += () =>
             {
@@ -44,11 +44,12 @@ internal static class MultiMeshRenderingTests
                 {
                     var flags = System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance;
                     var instances = (List<CanvasInstance>)typeof(RenderingServer).GetField("_instances", flags)!.GetValue(renderer)!;
-                    Check(instances.Count == (method == "gpu" ? 3 : 0), "Ordinary resources use the hardware stream; the canvas group retains expanded geometry.");
+                    Check(instances.Count == (method == "gpu" ? 5 : 0), "Ordinary and grouped resources use the hardware stream; compatibility expands both.");
                     Pixel(frame, window, 115, 15, Colors.Yellow); Pixel(frame, window, 145, 15, Colors.Blue);
-                    Pixel(frame, window, 175, 15, Colors.Red);
-                    Pixel(frame, window, 15, 15, Colors.Red); Pixel(frame, window, 45, 15, Colors.Green); Pixel(frame, window, 75, 15, Colors.Blue); resource.SetInstanceTransform2D(1, new Transform(0, new(40, 40))); resource.SetInstanceColor(0, Colors.Green); }
-                else if (phase == 1) { Pixel(frame, window, 15, 15, Colors.Green); Pixel(frame, window, 45, 15, Colors.Black); Pixel(frame, window, 45, 45, Colors.Green); resource.VisibleInstanceCount = 1; }
+                    Pixel(frame, window, 175, 15, new(.5f, 0, 0));
+                    Pixel(frame, window, 15, 15, Colors.Red); Pixel(frame, window, 45, 15, Colors.Green); Pixel(frame, window, 75, 15, Colors.Blue); resource.SetInstanceTransform2D(1, new Transform(0, new(40, 40))); resource.SetInstanceColor(0, Colors.Green);
+                }
+                else if (phase == 1) { Pixel(frame, window, 175, 15, Colors.Green * new Color(.5f, .5f, .5f, 1)); Pixel(frame, window, 205, 15, Colors.Black); Pixel(frame, window, 205, 45, Colors.Green * new Color(.5f, .5f, .5f, 1)); Pixel(frame, window, 15, 15, Colors.Green); Pixel(frame, window, 45, 15, Colors.Black); Pixel(frame, window, 45, 45, Colors.Green); resource.VisibleInstanceCount = 1; }
                 else if (phase == 2) { Pixel(frame, window, 45, 45, Colors.Black); resource.VisibleInstanceCount = -1; RenderingServer.MultiMeshSetVisibleInstances(owned, 0); }
                 else if (phase == 3)
                 {

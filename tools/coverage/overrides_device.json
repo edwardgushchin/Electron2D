@@ -1,0 +1,449 @@
+{
+  "mappings": [
+    {
+      "godot": "class:RDShaderSPIRV",
+      "electron2d": "T:Electron2D.RDShaderSPIRV",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "class:RDUniform",
+      "electron2d": "T:Electron2D.RDUniform",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "class:RenderingDevice",
+      "electron2d": "T:Electron2D.RenderingDevice",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::enum:ShaderStage",
+      "electron2d": "T:Electron2D.RenderingDevice.ShaderStage",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::enum:UniformType",
+      "electron2d": "T:Electron2D.RenderingDevice.UniformType",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Compute()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.Image()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.ImageBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_INPUT_ATTACHMENT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.InputAttachment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.Sampler()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.SamplerWithTexture()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.SamplerWithTextureBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.StorageBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER_DYNAMIC",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.StorageBufferDynamic()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.Texture()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.TextureBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.UniformBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER_DYNAMIC",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.UniformType.UniformBufferDynamic()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::method:get_stage_bytecode(int:RenderingDevice.ShaderStage)",
+      "electron2d": "method:Electron2D.RDShaderSPIRV.GetStageBytecode(Electron2D.RenderingDevice.ShaderStage)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RDShaderSPIRV::method:get_stage_compile_error(int:RenderingDevice.ShaderStage)",
+      "electron2d": "method:Electron2D.RDShaderSPIRV.GetStageCompileError(Electron2D.RenderingDevice.ShaderStage)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RDShaderSPIRV::method:set_stage_bytecode(int:RenderingDevice.ShaderStage,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RDShaderSPIRV.SetStageBytecode(Electron2D.RenderingDevice.ShaderStage,System.Byte[])",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
+      "electron2d": "method:Electron2D.RDShaderSPIRV.SetStageCompileError(Electron2D.RenderingDevice.ShaderStage,System.String)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RDUniform::method:add_id(RID:)",
+      "electron2d": "method:Electron2D.RDUniform.AddID(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDUniform::method:clear_ids()",
+      "electron2d": "method:Electron2D.RDUniform.ClearIDs()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDUniform::method:get_ids()",
+      "electron2d": "method:Electron2D.RDUniform.GetIDs()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_get_data(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferGetData(Electron2D.RID,System.Span<System.Byte>,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_get_data(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferGetData(Electron2D.RID,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_update(RID:,int:,int:,PackedByteArray:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferUpdate(Electron2D.RID,System.UInt32,System.UInt32,System.ReadOnlySpan<System.Byte>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_add_barrier(int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListAddBarrier(System.Int64)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_begin()",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListBegin()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_bind_compute_pipeline(int:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListBindComputePipeline(System.Int64,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_bind_uniform_set(int:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListBindUniformSet(System.Int64,Electron2D.RID,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListDispatch(System.Int64,System.UInt32,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_end()",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListEnd()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_pipeline_create(RID:,RDPipelineSpecializationConstant[]:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputePipelineCreate(Electron2D.RID)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_pipeline_is_valid(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputePipelineIsValid(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:free_rid(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FreeRID(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:get_device_name()",
+      "electron2d": "method:Electron2D.RenderingDevice.GetDeviceName()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV,System.String)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
+      "electron2d": "method:Electron2D.RenderingDevice.StorageBufferCreate(System.UInt32,System.ReadOnlySpan<System.Byte>)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::method:submit()",
+      "electron2d": "method:Electron2D.RenderingDevice.Submit()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:sync()",
+      "electron2d": "method:Electron2D.RenderingDevice.Sync()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:uniform_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)",
+      "electron2d": "method:Electron2D.RenderingDevice.UniformBufferCreate(System.UInt32,System.ReadOnlySpan<System.Byte>)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform>,Electron2D.RID,System.UInt32)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+    },
+    {
+      "godot": "RenderingDevice::method:uniform_set_is_valid(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.UniformSetIsValid(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:create_local_rendering_device()",
+      "electron2d": "method:Electron2D.RenderingServer.CreateLocalRenderingDevice()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:bytecode_compute",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.BytecodeCompute()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:compile_error_compute",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.CompileErrorCompute()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDUniform::property:binding",
+      "electron2d": "property:Electron2D.RDUniform.Binding()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RDUniform::property:uniform_type",
+      "electron2d": "property:Electron2D.RDUniform.UniformType()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.RDShaderSPIRV..ctor()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDUniform..ctor()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderSPIRV.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderSPIRV.CreateDuplicateInstance()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RDShaderSPIRV.GetPropertyDescriptors()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RDUniform.GetPropertyDescriptors()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.Dispose(System.Boolean)",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.ValidateDisposal()",
+      "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Excluded",
+      "reason": "Three-dimensional ray-tracing and acceleration-structure pipelines are outside the 2D product boundary (ADRs 0004/0028); no implementation trigger.",
+      "godot": [
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_LOW_MEMORY_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_NO_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FLIP_FACING_BIT",
+        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT",
+        "RenderingDevice::enum_value:Features.SUPPORTS_RAYTRACING_PIPELINE",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN_BIT",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_ACCELERATION_STRUCTURE",
+        "RenderingDevice::method:blas_build(RID:)",
+        "RenderingDevice::method:blas_create(RDAccelerationStructureGeometry[]:,int:RenderingDevice.AccelerationStructureFlagBits)",
+        "RenderingDevice::method:raytracing_list_begin()",
+        "RenderingDevice::method:raytracing_list_bind_raytracing_pipeline(int:,RID:)",
+        "RenderingDevice::method:raytracing_list_bind_uniform_set(int:,RID:,int:)",
+        "RenderingDevice::method:raytracing_list_end()",
+        "RenderingDevice::method:raytracing_list_set_push_constant(int:,PackedByteArray:,int:)",
+        "RenderingDevice::method:raytracing_list_trace_rays(int:,int:,RID:,int:,int:,int:)",
+        "RenderingDevice::method:raytracing_pipeline_create(RDPipelineShader[]:,RDPipelineShader[]:,RDHitGroup[]:,int:)",
+        "RenderingDevice::method:raytracing_pipeline_is_valid(RID:)",
+        "RenderingDevice::method:tlas_build(RID:,RDAccelerationStructureInstance[]:)",
+        "RenderingDevice::method:tlas_create(int:,int:RenderingDevice.AccelerationStructureFlagBits)"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches.",
+      "godot": [
+        "class:RDShaderSPIRV",
+        "class:RenderingDevice",
+        "RenderingDevice::enum:ShaderStage",
+        "RenderingDevice::enum:UniformType",
+        "RDShaderSPIRV::method:get_stage_bytecode(int:RenderingDevice.ShaderStage)",
+        "RDShaderSPIRV::method:get_stage_compile_error(int:RenderingDevice.ShaderStage)",
+        "RDShaderSPIRV::method:set_stage_bytecode(int:RenderingDevice.ShaderStage,PackedByteArray:)",
+        "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
+        "RenderingDevice::method:compute_pipeline_create(RID:,RDPipelineSpecializationConstant[]:)",
+        "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
+        "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
+        "RenderingDevice::method:uniform_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)",
+        "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified.",
+      "godot": [
+        "class:RDUniform",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_INPUT_ATTACHMENT",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_SAMPLER_WITH_TEXTURE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_STORAGE_BUFFER_DYNAMIC",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_TEXTURE_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_UNIFORM_BUFFER_DYNAMIC",
+        "RDUniform::method:add_id(RID:)",
+        "RDUniform::method:clear_ids()",
+        "RDUniform::method:get_ids()",
+        "RenderingDevice::method:buffer_get_data(RID:,int:,int:)",
+        "RenderingDevice::method:buffer_update(RID:,int:,int:,PackedByteArray:)",
+        "RenderingDevice::method:compute_list_add_barrier(int:)",
+        "RenderingDevice::method:compute_list_begin()",
+        "RenderingDevice::method:compute_list_bind_compute_pipeline(int:,RID:)",
+        "RenderingDevice::method:compute_list_bind_uniform_set(int:,RID:,int:)",
+        "RenderingDevice::method:compute_list_dispatch(int:,int:,int:,int:)",
+        "RenderingDevice::method:compute_list_end()",
+        "RenderingDevice::method:compute_pipeline_is_valid(RID:)",
+        "RenderingDevice::method:free_rid(RID:)",
+        "RenderingDevice::method:get_device_name()",
+        "RenderingDevice::method:submit()",
+        "RenderingDevice::method:sync()",
+        "RenderingDevice::method:uniform_set_is_valid(RID:)",
+        "RenderingServer::method:create_local_rendering_device()",
+        "RDShaderSPIRV::property:bytecode_compute",
+        "RDShaderSPIRV::property:compile_error_compute",
+        "RDUniform::property:binding",
+        "RDUniform::property:uniform_type"
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 # Canvas rendering
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -475,3 +475,5 @@ SubViewportContainerTests verifies typed defaults/packing/invalid writes, size p
 ## Default world canvas ownership
 
 [World integration](worlds.md) replaces independent viewport-owned default canvases with the canvas of each selected runtime World. Independent defaults preserve existing target isolation; assigning the same World shares canvas content, while each viewport keeps its own view transform. Old attachments are disconnected during replacement, and same-field CanvasTransform assignments republish native view overrides. Owned/layer graph identities retain their own lifetime.
+
+Eligible MultiMesh triangle children retain hardware instancing inside CanvasGroup. Composition uses transformed instance bounds and excludes untransformed base vertices from the group region; opacity still applies once to the composed surface. Canvas masks retain expanded geometry. MultiMeshRenderingTests verifies grouped translated/live instances, opacity pixels and actual stream selection on GPU and compatibility.

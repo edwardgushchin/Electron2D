@@ -134,7 +134,7 @@ Standalone Shape methods, other shape resources, kinematic bodies, area audio in
 
 ## Interactive example
 
-[PhysicsSandbox](../../examples/PhysicsSandbox/README.md) now exercises the implemented gameplay mechanisms in eleven interactive desktop stories. Its public-API consumer owns the editor-sized window, scene dropdown, pause/step/reset and optional collider/contact observations; the [capability map](../components/physics-sandbox.md) records which story demonstrates each mechanism. The example adds no server/debug/capture API and does not close unrelated incomplete coverage rows.
+[PhysicsSandbox](../../examples/PhysicsSandbox/README.md) is a single resizable water playground. Its public-API consumer solves particle density constraints on selectable CPU/GPU paths, and exchanges impulses with a duck and boat in the public CPU rigid-body space. The [simulation contract](../components/physics-sandbox.md) records units, ownership and numerical limits. The former story selector and inspectors are removed; this example does not close runtime API coverage rows.
 
 ## Decisions
 
@@ -193,7 +193,7 @@ Server-only connections share the scene joint kernels and body-local anchors thr
 
 [Physics world activity](../classes/PhysicsServer.md#activity) is now independent of scene scheduling under [ADR 0089](../decisions/physics-activity.md#adr-0089). SceneTree activates its lazily created world; explicit SpaceCreate defaults inactive and requires SpaceSetActive(true). Global/local false skips simulation, force consumption and solver callbacks without clearing native state or accumulating elapsed time. Queries/configuration/cleanup and scene callbacks/timers continue. [PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks the profile and warmed allocation on Linux/.NET 10.
 
-Prepared point/shape/contact query destinations and character slide snapshots can be reused without copied output allocation. Rigid contact limits prepare monitoring storage. Solver contact compaction and sleep/wake transitions reuse cached backend buffers; caches are released with their world. The PhysicsSandbox native performance gate checks owner-thread managed allocations with UI and debug drawing. Native/GPU allocation is not measured by that gate.
+Prepared point/shape/contact query destinations and character slide snapshots can be reused without copied output allocation. Rigid contact limits prepare monitoring storage. Solver contact compaction and sleep/wake transitions reuse cached backend buffers; caches are released with their world. The retired multi-story sandbox measured owner-thread allocations with UI and debug drawing; those historical results do not measure the current water example. Native/GPU allocation was outside that gate.
 
 ## Backend throughput
 
@@ -208,7 +208,7 @@ reading current previous-solve slots or compact cold histories. Managed material
 callbacks, contact transitions and the CPU contact mirror still require readback. Geometry overrides cover contacts awakened after collision collection;
 see [GPU physics](../components/gpu-physics.md) for transfer and conformance evidence.
 
-The sandbox Smash workload covers a large sleeping fragment wall using public scene bodies. Shared solver sets prepare whole-world capacities; dormant slots start small and retain island-specific high-water storage. New larger topologies require warmup before the measured interval. The 65,536-fragment regression checks linear dormant storage and finite real contact simulation; prepared sleep/wake and the native owner-thread profile enforce the measured allocation boundary. See [PhysicsSandbox](../components/physics-sandbox.md) and [its performance report](../components/physics-sandbox-performance.md).
+The former sandbox Smash workload measured a large sleeping fragment wall. Its [performance report](../components/physics-sandbox-performance.md) remains historical evidence. The independent [GPU Smash developer preview](../components/gpu-smash-preview.md) remains test-only and has no dependency on the new water example. Solver storage regressions are retained in PhysicsSolverStorageTests.
 
 ## Executable viewport worlds
 

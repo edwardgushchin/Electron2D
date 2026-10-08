@@ -93,9 +93,12 @@ public sealed partial class RenderingServer
                 _batches.Add(new(0, 0, null, Operation: CanvasOperation.Copy, Region: PixelRegion(rect, pixels, GetClip(copy, pixels))));
             }
             var startBatch = _batches.Count;
+            _appendedInstanceBounds = null;
             AppendOrderedCanvas(item, pixels);
             if (active is not null)
             {
+                if (_appendedInstanceBounds is { } instanceBounds)
+                    notifierBounds = notifierBounds is { } previous ? previous.Merge(instanceBounds) : instanceBounds;
                 for (var i = Math.Max(begin + 1, startBatch - 1); i < _batches.Count; i++)
                     if (_batches[i].Material?.Program.UsesScreenTexture == true)
                         throw new NotSupportedException("A group child cannot sample its active writable screen backbuffer.");
@@ -110,8 +113,14 @@ public sealed partial class RenderingServer
     }
     private Rect2? VertexBounds(int first, int end, Rect2? initial)
     {
-        for (var i = first; i < end; i++)
-        { var p = _vertices[i].Position; initial = initial is { } rect ? rect.Expand(p) : new Rect2(p, Vector2.Zero); }
+        foreach (var batch in _batches)
+        {
+            // Instance base vertices are local geometry; their transformed bounds were accumulated during publication.
+            if (batch.InstanceCount > 0) continue;
+            var stop = Math.Min(end, batch.First + batch.Count);
+            for (var i = Math.Max(first, batch.First); i < stop; i++)
+            { var p = _vertices[i].Position; initial = initial is { } rect ? rect.Expand(p) : new Rect2(p, Vector2.Zero); }
+        }
         return initial;
     }
     private static Rect2 GrowFinite(Rect2 rect, float margin)

@@ -10,5 +10,5 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class Texture3DRD`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Texture3DRD.xml) | — | Excluded | Direct rendering-device public types conflict with the backend-neutral 2D API decision (ADR 0028). |
-| [`property RID texture_rd_rid`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Texture3DRD.xml) | — | Excluded | Direct rendering-device public types conflict with the backend-neutral 2D API decision (ADR 0028). |
+| [`class Texture3DRD`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Texture3DRD.xml) | — | Excluded | Three-dimensional scene rendering, volume/cubemap textures and ray tracing remain outside the 2D product boundary (ADR 0028). |
+| [`property RID texture_rd_rid`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Texture3DRD.xml) | — | Excluded | Three-dimensional scene rendering, volume/cubemap textures and ray tracing remain outside the 2D product boundary (ADR 0028). |

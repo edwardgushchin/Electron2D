@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
-    <Compile Include="../../examples/PhysicsSandbox/SandboxWindow.cs;../../examples/PhysicsSandbox/PhysicsScene.cs;../../examples/PhysicsSandbox/PhysicsScene.Stories.cs;../../examples/PhysicsSandbox/PhysicsScene.Games.cs;../../examples/PhysicsSandbox/PhysicsScene.Smash.cs;../../examples/PhysicsSandbox/SandboxWindow.Parameters.cs" Link="Examples/%(Filename)%(Extension)" />
+    <Compile Include="../../examples/PhysicsSandbox/WaterWindow.cs;../../examples/PhysicsSandbox/WaterSimulation.cs;../../examples/PhysicsSandbox/WaterSimulation.GPU.cs" Link="Examples/%(Filename)%(Extension)" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
     <Compile Include="../../examples/CharacterMovement/CharacterMovementScene.cs" Link="Examples/CharacterMovementScene.cs" />
     <Compile Include="../../examples/CharacterMovement/Player.cs" Link="Examples/Player.cs" />
@@ -36,4 +36,7 @@
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf;Fixtures/Fonts/*.ttc" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
+  <ItemGroup><Electron2DComputeShader Include="Shaders/LocalCompute.comp.glsl;Shaders/LocalComputeHLSL.comp.hlsl" /></ItemGroup>
+  <Import Project="../../tools/shaders/ComputeShaders.targets" />
+  <ItemGroup><Electron2DComputeShader Include="../../examples/PhysicsSandbox/Water.comp.glsl" /></ItemGroup>
 </Project>

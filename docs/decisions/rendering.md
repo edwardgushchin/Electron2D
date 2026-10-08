@@ -1,6 +1,6 @@
 # Electron2D rendering decisions
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 
 Public process-wide service operations delegate statically to retained objects under [ADR 0095](singleton-services.md#adr-0095). Owning lifetime, threading and native resource contracts below continue to apply.
@@ -49,6 +49,7 @@ The pinned SDL GPU API has no browser backend. A standalone Chrome probe rendere
 - The SDL_Renderer fallback may select an OpenGL or OpenGL ES driver. This does not itself expose a window-associated GL/EGL/GLX context through the public API; the first executable fallback slice must audit those identities individually under [ADR 0042](display.md#adr-0042).
 - SDL_Renderer fallback will not pretend to support arbitrary shaders. Shader-dependent resources or operations must be rejected explicitly before drawing when the active backend lacks the required capability; ignoring a shader, silently changing the effect, or reporting false success is prohibited.
 - The public Electron2D rendering API will be backend-neutral and typed. It must expose the active backend and relevant capabilities without exposing SDL-owned handles or types. A project or host that requires shaders must be able to reject fallback during startup.
+- Provide the applicable reference `RenderingDevice` compute API for user-owned simulations: local device lifetime, SPIR-V compute shaders, storage/uniform buffers, uniform sets, compute lists, dispatch/barriers, submission/synchronization and explicit readback. This user-requested compute slice supersedes the blanket exclusion of RenderingDevice and its compute resource family. Backend-neutral means no SDL handles/types are exposed; it does not prohibit explicit portable compute. Keep application-specific liquid models in consumers, with CPU and GPU implementations, rather than introducing an engine-only fluid API. Graphics-device draw/framebuffer/texture operations and their resource families remain separately unimplemented with their actual integration prerequisites; three-dimensional/ray-tracing operations remain outside the product boundary. Local compute resources are device-owned RID identities, owner-thread accessed and disposed before the device. Unsupported compute capability must fail explicitly, and a consumer may offer a separately identified CPU algorithm.
 - Shared baseline operations must retain their documented visible semantics on both backends, subject to explicit capability and precision limits. Exact output, performance, advanced blend behavior, and shader support must not be claimed equivalent without backend-specific verification.
 - Fallback is a rendering-initialization policy, not a promise of live backend migration. Runtime switching and recovery after graphics-device loss are deferred until their real lifecycle can be implemented and tested.
 - Native resources remain internal and are deterministically released through `SafeHandle`-based ownership. Engine-owned render-frame hot paths have zero managed and engine-owned native allocations after preparation under ADR 0014; backend-internal allocations require separate measurement.
