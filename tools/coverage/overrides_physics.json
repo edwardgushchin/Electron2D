@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; complete joint bias/compliance/caps, public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; internal joint bias/compliance/force/correction policies now execute; CPU/public joint-policy integration, public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -2621,7 +2621,7 @@
         "Joint2D::property:bias"
       ],
       "state": "Blocked",
-      "reason": "Trigger: implement and verify positional correction bias in both CPU and independent GPU joint solvers. Missing Box2D parameters do not constrain internal solver changes (ADR 0054)."
+      "reason": "Trigger: CPU positional correction bias and shared scene/server adapters. Independent GPU per-joint bias now executes internally; this does not close the public family. Missing Box2D parameters do not constrain internal solver changes (ADRs 0054/0087)."
     },
     {
       "godot": [
@@ -3201,14 +3201,14 @@
         "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
       ],
       "state": "Blocked",
-      "reason": "Trigger: verified per-joint positional correction bias, maximum correction speed and maximum joint impulse/force mappings in the native solver (ADR 0087). General parameter operations enter the first complete correction/cap slice; angular springs or a motor torque cap do not supply those three semantics."
+      "reason": "Trigger: CPU per-joint positional correction bias, correction-speed and joint force/impulse caps with complete public scene/server adapters (ADR 0087). Independent GPU policies now execute with vector limits, shared physical/correction budgets and original-substep CCD accounting. General parameter operations enter the complete common slice; a motor-only cap is insufficient."
     },
     {
       "godot": [
         "PhysicsServer2D::enum_value:PinJointParam.PIN_JOINT_SOFTNESS"
       ],
       "state": "Blocked",
-      "reason": "Trigger: verified linear pin-anchor compliance in the native revolute solver (ADRs 0084/0087). Enters the first anchor-compliance slice with PinJoint.Softness and the remaining typed server parameter branch; angular spring compliance is a different capability."
+      "reason": "Trigger: CPU linear pin-anchor compliance and shared PinJoint.Softness/typed server adapters (ADRs 0084/0087). Independent GPU linear compliance now executes internally; angular spring compliance remains a different capability."
     },
     {
       "godot": [

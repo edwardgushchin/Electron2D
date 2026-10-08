@@ -7,6 +7,7 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     internal readonly record struct JointHandle(int Index, uint Generation, long Owner);
+    /// <summary>Authored local frames and policies; general force/correction limits use scene units and pin softness uses inverse mass.</summary>
     internal readonly record struct JointDefinition(PhysicsServer.JointType Type, BodyHandle BodyA, BodyHandle BodyB, Transform FrameA, Transform FrameB)
     {
         internal bool DisableCollision { get; init; } = true;
@@ -21,6 +22,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal float RestLength { get; init; } = 50;
         internal float Stiffness { get; init; } = 20;
         internal float Damping { get; init; } = 1;
+        internal float Bias { get; init; }
+        internal float MaxBias { get; init; } = float.MaxValue;
+        internal float MaxForce { get; init; } = float.MaxValue;
+        internal float Softness { get; init; }
     }
     private struct JointSlot
     {
@@ -34,7 +39,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         internal uint Generation, Type, A, B;
         internal uint GenerationA, GenerationB, Flags, Padding;
-        internal Float4 FrameA, FrameB, Limits, MotorSpring, Policy;
+        internal Float4 FrameA, FrameB, Limits, MotorSpring, Policy, SolverPolicy;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct JointEdit { internal uint Index, Padding1, Padding2, Padding3; internal JointData Value; }
@@ -43,12 +48,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private JointSlot[] _jointSlots = [];
     private JointEdit[] _jointEdits = [];
     private readonly List<int> _dirtyJoints = [];
-    private int _jointHighWater, _jointFree = -1, _springJointCount;
+    private int _jointHighWater, _jointFree = -1, _springJointCount, _limitedJointCount;
     private RenderHandle? _jointsGPU, _jointStatesGPU, _jointEditsGPU, _jointFiltersGPU, _jointEditPipeline, _jointPreparePipeline;
     private int _jointCapacity, _jointStateCapacity, _jointEditCapacity, _jointFilterCapacity;
     internal int JointCount { get; private set; }
     internal long JointUploadBytes { get; private set; }
     private const int JointRows = 5;
+    private static bool NeedsJointImpulseProjection(in JointDefinition d) => d.Type != PhysicsServer.JointType.DampedSpring && d.MaxForce < float.MaxValue;
 
     internal JointHandle AddJoint(in JointDefinition definition)
     {
@@ -65,6 +71,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         LinkJoint(index, definition.BodyA.Index);
         if (definition.BodyB != default) LinkJoint(index, definition.BodyB.Index);
         JointCount++; if (definition.Type == PhysicsServer.JointType.DampedSpring) _springJointCount++;
+        if (NeedsJointImpulseProjection(definition)) _limitedJointCount++;
         MarkJoint(index);
         return new(index, slot.Generation, _identity);
     }
@@ -81,6 +88,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (slot.Definition.BodyB != default) UnlinkJoint(joint.Index, slot.Definition.BodyB.Index);
         if (slot.Definition.Type == PhysicsServer.JointType.DampedSpring) _springJointCount--;
         if (definition.Type == PhysicsServer.JointType.DampedSpring) _springJointCount++;
+        if (NeedsJointImpulseProjection(slot.Definition)) _limitedJointCount--;
+        if (NeedsJointImpulseProjection(definition)) _limitedJointCount++;
         slot.Definition = definition;
         LinkJoint(joint.Index, definition.BodyA.Index);
         if (definition.BodyB != default) LinkJoint(joint.Index, definition.BodyB.Index);
@@ -95,6 +104,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (slot.Definition.BodyB != default) UnlinkJoint(joint.Index, slot.Definition.BodyB.Index);
         slot.Alive = false; slot.NextFree = _jointFree; _jointFree = joint.Index;
         JointCount--; if (slot.Definition.Type == PhysicsServer.JointType.DampedSpring) _springJointCount--;
+        if (NeedsJointImpulseProjection(slot.Definition)) _limitedJointCount--;
         MarkJoint(joint.Index);
     }
 
@@ -115,7 +125,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             PhysicsJointRuntime.ValidateExtent(value);
         if (!float.IsFinite(d.LowerAngle) || !float.IsFinite(d.UpperAngle) || d.LimitEnabled && (d.LowerAngle < -0.99f * MathF.PI || d.UpperAngle > 0.99f * MathF.PI || d.LowerAngle > d.UpperAngle) ||
             d.LowerTranslation > d.UpperTranslation || !float.IsFinite(d.MotorVelocity) || !float.IsFinite(d.MotorMaxTorque * 10_000) || d.MotorMaxTorque < 0 ||
-            d.RestLength < 0 || !float.IsFinite(d.Stiffness) || d.Stiffness < 0 || !float.IsFinite(d.Damping) || d.Damping < 0)
+            d.RestLength < 0 || !float.IsFinite(d.Stiffness) || d.Stiffness < 0 || !float.IsFinite(d.Damping) || d.Damping < 0 ||
+            !float.IsFinite(d.Bias) || d.Bias < 0 || d.Bias > 1 || !float.IsFinite(d.MaxBias) || d.MaxBias < 0 ||
+            !float.IsFinite(d.MaxForce) || d.MaxForce < 0 || !float.IsFinite(d.Softness) || d.Softness < 0)
             throw new ArgumentOutOfRangeException(nameof(d));
     }
     private ref int JointNext(int index, int body) => ref (_jointSlots[index].Definition.BodyA.Index == body ? ref _jointSlots[index].NextA : ref _jointSlots[index].NextB);
@@ -155,7 +167,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         try
         {
             Grow(ref _jointsGPU, ref _jointCapacity, _jointHighWater, sizeof(JointData), true);
-            Grow(ref _jointStatesGPU, ref _jointStateCapacity, _jointHighWater, 48, true);
+            Grow(ref _jointStatesGPU, ref _jointStateCapacity, _jointHighWater, 64, true);
             Grow(ref _jointFiltersGPU, ref _jointFilterCapacity, checked(2 * _jointHighWater), 4, false);
             Grow(ref _jointEditsGPU, ref _jointEditCapacity, _dirtyJoints.Count, sizeof(JointEdit), false);
             if (_jointEdits.Length < _dirtyJoints.Count) Array.Resize(ref _jointEdits, Capacity(_dirtyJoints.Count));
@@ -178,7 +190,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                         FrameB = new(d.FrameB.Origin.X, d.FrameB.Origin.Y, d.FrameB.X.X, d.FrameB.X.Y),
                         Limits = new(d.LowerTranslation, d.UpperTranslation, d.LowerAngle, d.UpperAngle),
                         MotorSpring = new(d.MotorVelocity, d.MotorMaxTorque * 10_000, d.RestLength, d.Stiffness),
-                        Policy = new(d.Damping, 0, 0, 0)
+                        Policy = new(d.Damping, 0, 0, 0),
+                        SolverPolicy = new(d.Bias, d.MaxBias, d.MaxForce, d.Softness)
                     }
                 };
             }

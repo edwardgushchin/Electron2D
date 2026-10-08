@@ -8,7 +8,7 @@ internal static class GPUPhysicsJointStoreTests
 {
     internal static void Run()
     {
-        VerifyPin(); VerifyGroove(); VerifySpring(); VerifyLifecycle(); VerifyContactsAndFailure(); VerifyPopulation();
+        VerifyPin(); VerifyGroove(); VerifySpring(); VerifyLifecycle(); VerifyContactsAndFailure(); GPUPhysicsJointPolicyTests.Run(); VerifyPopulation(false); VerifyPopulation(true);
     }
     private static Store.BodyHandle Body(Store store, Vector2 position = default, Vector2 velocity = default, float mass = 1, float inertia = 1, Mode mode = Mode.Rigid, float angular = 0) =>
         store.Add(new(mode, position, 0, velocity, angular, mass, inertia, CanSleep: false));
@@ -167,7 +167,7 @@ internal static class GPUPhysicsJointStoreTests
         }
         Console.WriteLine("Resident joints: coupled spring/groove/contact support, final removal and failed-world rejection passed.");
     }
-    private static void VerifyPopulation()
+    private static void VerifyPopulation(bool limited)
     {
         const int count = 4096, warmup = 128, samples = 128;
         using var store = new Store();
@@ -177,7 +177,8 @@ internal static class GPUPhysicsJointStoreTests
         {
             var origin = new Vector2(i % 64 * 40, i / 64 * 40);
             bodies[i] = Body(store, origin + new Vector2(10, 0), inertia: 20);
-            joints[i] = store.AddJoint(new(Kind.Pin, bodies[i], default, new Transform(0, new(-10, 0)), new Transform(0, origin)));
+            joints[i] = store.AddJoint(new(Kind.Pin, bodies[i], default, new Transform(0, new(-10, 0)), new Transform(0, origin))
+            { Bias = limited ? 0.3f : 0, MaxBias = limited ? 100 : float.MaxValue, MaxForce = limited ? 5000 : float.MaxValue, Softness = limited ? 0.001f : 0 });
         }
         for (var i = 0; i < warmup; i++) store.Simulate(1f / 120, new(0, 980));
         var times = new double[samples]; var edits = store.JointUploadBytes; var upload = store.UploadBytes; var download = store.ReadbackBytes; var uniforms = store.UniformBytes; var wait = store.WaitMS;
@@ -202,7 +203,7 @@ internal static class GPUPhysicsJointStoreTests
         }
         Check(maxError < 0.3f, "Every independent device pin retains its world anchor.");
         Array.Sort(times);
-        Console.WriteLine($"Resident joints: {count} pins, {warmup} warmup/{samples} samples, 4 substeps/16 iterations; p50={times[samples / 2]:F4}, p95={times[(int)(samples * 0.95)]:F4}, p99={times[(int)(samples * 0.99)]:F4}, wait={waitPerTick:F4} ms, {allocated} managed B/tick, upload={uploadPerTick}, readback={downloadPerTick}, uniforms={uniformPerTick} B/tick, max anchor error={maxError:F5}; {store.Driver}, {store.DeviceName}.");
+        Console.WriteLine($"Resident joints: {count} pins, limited={limited}, {warmup} warmup/{samples} samples, 4 substeps/16 iterations; p50={times[samples / 2]:F4}, p95={times[(int)(samples * 0.95)]:F4}, p99={times[(int)(samples * 0.99)]:F4}, wait={waitPerTick:F4} ms, {allocated} managed B/tick, upload={uploadPerTick}, readback={downloadPerTick}, uniforms={uniformPerTick} B/tick, max anchor error={maxError:F5}; {store.Driver}, {store.DeviceName}.");
     }
     private static void Near(float value, float expected, float tolerance, string message) => Check(MathF.Abs(value - expected) <= tolerance, $"{message}: {value} vs {expected}");
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }

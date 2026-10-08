@@ -4,7 +4,7 @@ struct Constraint
     uvec4 bodies; // Body A/B and incident next links A/B.
     vec4 normal; // Normal xy and cross(lever, normal) for A/B.
     vec4 tangent; // Friction, row mode (contact/bilateral/physical-only) and cross(lever, tangent) for A/B; tangent=(ny,-nx).
-    vec4 parameters; // Normal/tangent effective mass, physical/correction target speeds.
+    vec4 parameters; // Normal effective mass, tangent effective mass (joint softness), physical/correction target speeds.
 };
 struct ContactImpulse
 {

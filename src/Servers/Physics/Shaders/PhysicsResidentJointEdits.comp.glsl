@@ -16,7 +16,7 @@ void main()
     if(work.x==0u)
     {
         Edit e=edits[i];if(e.target.x>=work.z){atomicOr(status.x,1u);return;}
-        joints[e.target.x]=e.value;states[e.target.x]=JointState(uvec4(0),vec4(0),vec4(0));return;
+        joints[e.target.x]=e.value;states[e.target.x]=JointState(uvec4(0),vec4(0),vec4(0),vec4(0));return;
     }
     if(work.x==1u){filters[i]=0xffffffffu;return;}
     ResidentJoint j=joints[i];

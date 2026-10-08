@@ -11,8 +11,8 @@ mirror. [The earlier stage report](gpu-resident-bodies.md) retains body/broad/na
 measurements; those timings exclude the response workload measured here.
 
 This is an internal response pipeline, not a selectable public GPU backend.
-[Resident joints](gpu-resident-joints.md) now share its iteration loop; joint
-bias/softness/general caps,
+[Resident joints](gpu-resident-joints.md) now share its iteration loop;
+CPU/public joint policy integration,
 scene/server and direct-state
 publication, complete frame impulse/event reports, one-way/body exceptions,
 world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored

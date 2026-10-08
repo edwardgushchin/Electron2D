@@ -6,5 +6,6 @@ struct ResidentJoint
     vec4 limits; // Translation lower/upper, angle lower/upper.
     vec4 motorSpring; // Motor speed, scene-unit torque cap, rest length, stiffness.
     vec4 policy; // Axial damping; remaining fields reserved.
+    vec4 solverPolicy; // Bias (zero inherits), correction speed cap, force cap, pin anchor softness.
 };
-struct JointState { uvec4 epochs; vec4 first; vec4 last; }; // Five row impulses and previous dt.
+struct JointState { uvec4 epochs; vec4 first; vec4 last; vec4 budget; }; // Five row impulses, previous dt; substep cap and spent linear/angular impulse.

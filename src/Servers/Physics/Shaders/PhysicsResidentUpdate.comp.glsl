@@ -24,7 +24,8 @@ void main()
     vec2 relative=b.velocity.xy-a.velocity.xy,n=c.normal.xy,t=vec2(n.y,-n.x);
     float vn=dot2(relative,n)+b.velocity.z*c.normal.w-a.velocity.z*c.normal.z;
     float vt=dot2(relative,t)+b.velocity.z*c.tangent.w-a.velocity.z*c.tangent.z;
-    float pn=p.physical.x+c.parameters.x*(c.parameters.z-vn);
+    float softness=joint?c.parameters.y:0;
+    float pn=p.physical.x+c.parameters.x*(c.parameters.z-vn-softness*p.physical.x);
     if(!finite4(vec4(vn,vt,pn,0))){fail();return;}
     pn=joint?clamp(pn,p.correction.z,p.correction.w):max(0,pn);
     float limit=joint?0:c.tangent.x*pn;
@@ -35,7 +36,7 @@ void main()
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);
     vec3 ca=corrections[c.bodies.x].xyz,cb=c.bodies.y==none?vec3(0):corrections[c.bodies.y].xyz;
     float correctionSpeed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;
-    float nextCorrection=p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed);
+    float nextCorrection=p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed-softness*p.correction.x);
     if(c.tangent.y!=2&&!finite4(vec4(correctionSpeed,nextCorrection,0,0))){fail();return;}
     nextCorrection=joint?clamp(nextCorrection,p.correction.z,p.correction.w):max(0,nextCorrection);
     if(c.tangent.y==2)nextCorrection=0;

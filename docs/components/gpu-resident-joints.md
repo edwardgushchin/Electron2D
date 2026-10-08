@@ -11,11 +11,11 @@ joint solver or evolving joint-state mirror participates. This extends the
 [resident contact solver](gpu-contact-solver.md) under ADR 0054; it is still an
 internal backend component, not a selectable PhysicsServer implementation.
 
-Scene/server RID adapters, per-joint bias, pin-anchor softness, general force and
-correction caps, full queries/events, portable checkpoints
-and network replay remain open. The current substep correction factor and speed
-limit are shared solver inputs, not implementations of the missing public joint
-settings. Existing public CPU joints and their settings are unchanged.
+Per-joint bias, pin-anchor softness and general impulse/correction caps now execute
+in this internal component. Their CPU implementation and scene/server adapters,
+full queries/events, portable checkpoints and network replay remain open. Existing
+public CPU joints and their settings are unchanged; no public coverage row is
+closed by this internal solver work.
 
 ## Ownership and authoring
 
@@ -72,8 +72,9 @@ applying the batch; a later execution failure invalidates the whole store withou
 CPU replay. Spring-only prepasses are skipped when no authored spring exists.
 
 After spring forces, pin/groove warm impulses and contacts share the ordinary
-iteration loop. A 48-byte per-joint history record retains five scalar impulses,
-prior substep duration and endpoint edit/generation epochs. Warm impulses scale by
+iteration loop. A 64-byte per-joint history record retains five scalar impulses,
+prior substep duration, endpoint edit/generation epochs and the current substep's
+impulse budget. Warm impulses scale by
 duration and respect current bounds. Pose/velocity edits invalidate affected
 endpoint history; joint changes reset the record. These are local device records,
 not portable server snapshots. Joint warm state requires no readback. The seven optional contact-pass timers
@@ -84,9 +85,9 @@ joint preparation time. SolverMS and WaitMS retain their whole-submission scopes
 
 | Payload | Size / purpose |
 | --- | --- |
-| Authored device joint | 112 bytes: generation/type/endpoints, endpoint generations and flags, local frames, limits, motor and spring values. |
-| Scatter edit | 128 bytes per changed slot, plus an 8-byte batch status reset/readback. |
-| Warm state | 48 bytes per retained joint slot, preserved during device growth. |
+| Authored device joint | 128 bytes: generation/type/endpoints, endpoint generations and flags, local frames, limits, motor/spring values and solver policy. |
+| Scatter edit | 144 bytes per changed slot, plus an 8-byte batch status reset/readback. |
+| Warm state and budget | 64 bytes per retained joint slot, preserved during device growth. |
 | Collision veto table | 4 bytes per hash slot; power-of-two capacity at least twice joint high-water count. |
 | Solver rows | Up to five × (64 + 32) bytes per joint high-water slot, sharing contact buffers and body adjacency. |
 | Unchanged no-shape joint tick | Four substeps, each transferring body-force status 8, solver status 8 and pose status 8 bytes in each direction: 96 bytes per tick. Twelve publication waits. |
@@ -98,6 +99,50 @@ bytes and waits are counted separately. Spatial uniforms are now 64 bytes,
 including joint filter bounds; prior component timings used the older layout.
 Native driver allocations and asynchronous publication are not inferred from these
 payload counts.
+
+## Joint solver policies
+
+The internal JointDefinition carries these values. All reject nonfinite or
+negative input before replacing the old definition; Bias also rejects values
+above one. A real change wakes both endpoint components and clears only that
+joint's history and budget. Reused slots start with the new definition.
+
+| Value | Default | Executing meaning |
+| --- | --- | --- |
+| Bias | 0 | Zero uses Simulate/SolveConstraints correctionFactor. Otherwise the value is the fraction of anchor/limit error requested for correction in one scheduled substep. |
+| MaxBias | float.MaxValue | Maximum positional correction speed, also bounded by the shared maxCorrectionSpeed guard. Linear anchor/groove correction uses vector length in scene units/s; angular stops use rad/s. Zero suppresses positional recovery while retaining physical velocity constraints. |
+| MaxForce | float.MaxValue | Unlimited sentinel, or a per-second budget: linear kg·scene-unit/s² and a separate pure-angular kg·scene-unit²/s² channel use the same authored scalar. The budget for a scheduled substep is MaxForce times its duration. MotorMaxTorque remains the additional N·m motor-only cap. |
+| Softness | 0 | Pin linear-anchor compliance in inverse-kilogram units. Each effective inverse mass gains softness, and the iteration subtracts softness times accumulated impulse. Zero retains the rigid anchor. It does not create an angular spring or affect groove/spring roles. |
+
+Pin and groove keep physical velocity and position correction separate. The sum
+of the lengths of their accumulated linear physical and positional impulses must
+fit one linear budget; the sum of the absolute accumulated pure-angular physical
+and positional impulses fits the separate angular budget. This is a conservative
+bound, so two correction channels cannot independently spend the full allowance.
+Groove projects its perpendicular/endpoint rows together; pin projects both anchor
+axes together. Limits are not per-axis, per-iteration or per-row force allowances.
+
+Projection runs on GPU after warm-start preparation and each Jacobi update, before
+body gather. It rescales accumulated values and adjusts the delta by the same
+change, so replacing an old warm impulse does not add an extra impulse. The pass
+is absent when no authored pin/groove has a finite limit. Spring Hooke and axial drag
+share one clamped impulse in their existing prepass. Springs have no positional
+recovery rows: Bias and MaxBias do not alter the force-law coefficients.
+
+Extra CCD impact solves use the unspent budget from the original scheduled
+substep. Completed solves accumulate spent magnitudes on the device; new scheduled
+substeps reset the allowance using their own duration. This prevents impact count
+or solver iteration count from multiplying force. A standalone SolveConstraints
+call starts its own interval. No budget state is read back or mirrored on CPU.
+
+An inactive endpoint or angular stop remains a speculative physical constraint,
+but supplies no position-correction row. Previously both stops attempted to keep
+zero correction velocity, so a distant, satisfied stop partly cancelled recovery
+at the violated one. The analytic bias check caught that pre-existing defect; both
+groove and pin angular stops now share the corrected rule.
+
+These semantics follow the accepted policy boundary in [ADR 0087](../decisions/physics-joints.md#adr-0087).
+The current CPU/native and public projections remain required work.
 
 ## Verification
 
@@ -133,7 +178,7 @@ CPU/GPU comparison, sleep/CCD performance, window FPS or arbitrary long-chain
 convergence. The existing degree-damped solver retains that convergence limit.
 
 
-## Measured run
+## Historical measured run, 2026-10-08
 
 Linux/.NET 10.0.1, Vulkan, NVIDIA GeForce RTX 3090 Ti, 2026-10-08, the population
 and timing window above: p50 **1.3928 ms**, p95 **1.7782 ms**, p99 **2.8448 ms**;
@@ -165,3 +210,59 @@ not established by this Linux compute run.
 Resident joints now participate in [GPU sleep components](gpu-resident-sleep.md). The measurements above predate sleep; current regression populations explicitly set CanSleep=false, preserving the all-awake workload.
 
 CCD impact intervals reuse pin/groove/contact solving but do not reapply the scheduled spring impulse or motor torque budget. Unrelated spring and motor analytic checks cover that cadence in GPUPhysicsCCDStoreTests.
+
+
+## Policy verification, 2026-10-09
+
+GPUPhysicsJointPolicyTests now runs inside the joint/full GPU suites. Analytic
+one-substep checks cover inherited/explicit bias, diagonal vector speed limits,
+zero correction, active versus inactive angular stops, unequal-mass soft pin
+response with warm history, free rotation, 32/96-iteration force caps, zero force
+after a live edit, spring and pure-damper caps, general versus motor torque caps,
+shared physical/correction allowance and one/four-substep budgets. An unrelated
+real 3000-unit/s CCD impact verifies that the pin retains only its original
+substep allowance. Invalid configuration preserves its previous definition; slot
+reuse resets all policies. A 128-warmup/128-sample loop alternates real joint policy
+and body-velocity edits while checking zero owner-thread managed allocation.
+
+For isolated bias/softness/force equations the error allowance is 0.0002 in the
+asserted scene position, scene velocity or radian channel after 64 iterations;
+this allows float rounding and residual Jacobi convergence. Finite vector-force
+projection at 32/96 iterations allows 0.002 scene unit/s, combined impulse budget
+0.001 kg·scene-unit/s, and the 0.02-s CCD budget check 0.0005 scene unit/s. Identity,
+rollback and allocation assertions remain exact. Public API/event/network tests
+are not replaced by these internal checks.
+
+The mass-population check additionally repeats the same 4,096 moving pins with
+Bias=0.3, MaxBias=100, MaxForce=5000 and Softness=0.001. It retains the identical
+population, gravity, 128/128 warmup/sampling and final all-body read. The default
+profile runs no limit-projection dispatch; the finite profile adds one before
+warm gather and one after each of sixteen updates, per substep. Both retain
+96 B upload and readback per tick each, with no authored joint upload in the
+unchanged timing window. Uniform traffic is 12,288 versus 16,640 B/tick; this
+extra work does not add a fence or state readback.
+
+Final dedicated run on Vulkan / NVIDIA GeForce RTX 3090 Ti / .NET 10.0.1:
+
+| Profile, 4,096 pins | p50 / p95 / p99, ms | Mean fence wait, ms/tick | Managed B/tick | Maximum anchor error, scene units |
+| --- | --- | --- | --- | --- |
+| Default policies | 1.8183 / 2.8654 / 3.6338 | 1.1023 | 0 | 0.00858 |
+| Finite limits and softness | 2.3407 / 3.1062 / 4.4058 | 1.3873 | 0 | 0.00606 |
+
+Desktop load was not controlled; repeated runs varied substantially. These are
+recorded internal-path latency distributions, not a speedup claim, a full CPU/GPU
+comparison or window FPS. Final explicit body reads remain outside the sample.
+Native allocator totals and other devices are unverified.
+
+Evidence is in `/tmp/electron2d-joint-policy-final-scoped.log`. The full GPU suite
+also passed in `/tmp/electron2d-joint-policy-final-gpu.log`, including both renderer
+lifetimes; the final scoped rerun followed a dispatch-only optimization that skips
+unnecessary limit passes for spring-only worlds and added real policy-edit allocation
+checks. No public CPU behavior changed and no new CPU/public joint policy claim is
+made. Release/source-native builds, runtime/touched-test formatting, compiled API
+coverage, shader delivery checks and wiki generation/check passed. The API remains
+11,275 declarations with zero unmapped; the shader publish probe contains 26 generated
+resources. Generated files remain untracked. Current generated SPIR-V SHA-256:
+
+- Joints: `538ef810426fcaa28e109e974c2e01f55d0e5699c5a05335861e581c31d0fb0e`.
+- Update: `fef2402bbd6595be715db3671feaaf3d19197c272046ef0cb6fc8a9927ed98b2`.

@@ -145,10 +145,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             }
             SolverPass(ref command, settings, 1, ContactPointCount);
             if (JointCount > 0) JointPass(command, settings, 1);
+            if (_limitedJointCount > 0) JointPass(command, settings, 3);
             if (_previousPointCount > 0 || JointCount > 0) { SolverPass(ref command, settings, 3, _highWater); }
             for (var iteration = 0; settings.Points > 0 && iteration < iterations; iteration++)
             {
                 SolverPass(ref command, settings, 2, (int)settings.Points);
+                if (_limitedJointCount > 0) JointPass(command, settings, 3);
                 SolverPass(ref command, settings, 3, _highWater);
             }
             if (JointCount > 0) JointPass(command, settings, 2);
