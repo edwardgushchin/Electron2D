@@ -1,4 +1,4 @@
-# Resident GPU body and geometry state
+# Resident GPU physics stages
 
 Last updated: 2026-10-08
 
@@ -8,12 +8,14 @@ Last updated: 2026-10-08
 device-state component under [ADR 0054](../decisions/physics.md#adr-0054). It creates
 no CPU solver world. Body slots, generation changes, sparse edits, force/mass/gravity/
 damping integration, geometry edits, transformed bounds, broad-phase tree maintenance
-and complete candidate pairs execute through offline GPU pipelines. Authored values and read results use scene units. The original
+complete candidate pairs and narrow-phase contact points execute through offline GPU pipelines. Authored values and read results use scene units. The original
 [GPUPhysicsWorld stage host](../classes/GPUPhysicsWorld.md) remains separate.
 
-This component is not a complete physics backend. Exact contacts, constraints,
-automatic sleep, CCD, scene/server selection and network snapshots remain absent.
-Its integration-only or integration-plus-broad-phase timings cannot be compared with full CPU physics or reported
+This component is not a complete physics backend. Contact impulse/material response,
+joint constraints, warm history, automatic sleep, CCD, scene/server selection and
+network snapshots remain absent. Step still integrates bodies; FindContacts is a
+separate explicit stage, not a complete collision-response step.
+Its partial-pipeline timings cannot be compared with full CPU physics or reported
 as window FPS. These missing consumers must be connected to resident state before
 the independent GPU objective is satisfied.
 
@@ -86,7 +88,7 @@ The SPIR-V SHA-256 is
 
 Shape resources provide their borrowed scene-unit geometry. The device retains one
 32-byte descriptor per distinct resource, eight bytes per contour vertex and a
-48-byte attachment per shape slot. Circle/capsule radius and separation-ray metadata
+48-byte attachment per shape slot. Circle/capsule radius, contour winding and separation-ray metadata
 are retained; rectangles use four corners, convex polygons retain the whole contour,
 and concave shapes retain all segment endpoints. No CPU fixture partition, dynamic
 tree, body pose array or publication rank is imported. CPU attachments retain authored
@@ -109,8 +111,8 @@ and is an explicit optimization boundary. Each query traverses without a shader
 stack, emits only canonical a<b pairs and rejects same-body pairs. Ordinary body
 pairs require a dynamic member and reciprocal masks; sensor candidates use the
 sensor's directional mask, including static/kinematic and zero-layer sensors.
-Touching bounds count as candidates. Exact geometry, joint vetoes, body exceptions
-and contact/overlap events belong to later stages and are not implied here.
+Touching bounds count as candidates. Exact geometry is handled by the narrow phase below; joint vetoes, body exceptions
+and contact/overlap event publication remain later stages.
 
 Pairs remain in a GPU buffer (16 bytes per pair: slot IDs and generations). A global
 atomic count can serialize dense worlds; per-query counts/prefix scan are a candidate
@@ -120,14 +122,14 @@ pairs nor advances bodies twice. Addressability/device memory limits fail explic
 
 | Spatial operation | Traffic / synchronization |
 | --- | --- |
-| Warm changed broad phase | 8-byte reset upload and 8-byte error/count readback; one fence wait, plus 32 bytes of uniforms per dispatched pass. No shape, vertex, body pose, proxy or pair transfer. |
+| Warm changed broad phase | 8-byte reset upload and 8-byte error/count readback; one fence wait, plus 32-byte tree settings or 48-byte geometry/pair settings per dispatched pass. No shape, vertex, body pose, proxy or pair transfer. |
 | Shape edit | 64-byte scatter command per changed attachment. |
 | Geometry edit | 48-byte descriptor command plus 16 bytes per changed vertex. |
 | Growth | Device-to-device copies of retained geometry/shape storage; counters include waits and copied bytes. |
 | Explicit pair inspection | 16 downloaded bytes per pair, expanded into caller-owned store-qualified handles; separate fence wait. |
 | Explicit bound inspection | One 32-byte proxy read; separate fence wait. |
 
-Current integration and broad phase use separate synchronous submissions. The first
+Integration and broad phase use separate synchronous submissions. The first
 wait enforces body-step error publication; the second publishes exact pair count and
 failure/capacity status. No complete state validation readback occurs on a warm tick.
 Combining submissions or delaying publication needs the connected solver's error and
@@ -154,7 +156,8 @@ Only the owner thread's managed allocations are measured. Full physics response,
 window FPS, CPU comparisons, networking, native allocations and other platforms
 remain unverified by this workload.
 
-Measured on Linux/.NET 10.0.1, Vulkan, NVIDIA GeForce RTX 3090 Ti, 2026-10-08:
+Broad-phase baseline at `4cf94f3c6ba733f498864dbbdc81dd8d9fca99e5`,
+Linux/.NET 10.0.1, Vulkan, NVIDIA GeForce RTX 3090 Ti, 2026-10-08:
 
 | Run / body count | Tick p50 | Tick p95 | Mean fence wait | Diagnostic full pair read |
 | --- | ---: | ---: | ---: | ---: |
@@ -171,11 +174,108 @@ respectively, outside samples. Logs are `/tmp/electron2d-resident-shapes-final.l
 and `/tmp/electron2d-resident-shapes-gpu-suite.log`. The full suite also rechecks
 legacy tree/filter/contact/joint kernels and both renderer lifetimes.
 
-Current SPIR-V SHA-256 digests (body arithmetic is unchanged by its shared include):
+Broad-phase baseline SPIR-V SHA-256 digests (before margin uniforms/narrow phase):
 
 - PhysicsResidentBodies: `962fb89abc612ef58e50e0acba2def47832f93f87f0ccfa5b7927ec79025da0c`.
 - PhysicsResidentShapes: `29bb408276278fbd39ace2544f77e2a6d0a35a31253bb06c98a20d29ed7b6845`.
 - PhysicsTree: `ee4fd8bfad41c0ca3c8291da56c5bd5384c0ec4ad872bfe6686e8e0b8c473c50`.
+
+## Resident narrow phase
+
+FindContacts consumes resident candidate pairs and computes ordinary convex contacts,
+hollow concave-piece contacts and directed ray contacts on the GPU. No CPU shape-pair
+packet or pose upload is needed. A shared geometry include keeps shape descriptors
+consistent, and the original stage-hosted collision kernel shares its existing math
+and segment clipping through PhysicsCollisionMath.inc.glsl. Its fixed-eight-vertex
+geometry path is not imposed on the independent backend.
+
+The independent kernel scans separating face and rounded-corner axes over the full
+contour, clips incident edges, and emits up to two points per ordinary convex piece
+pair. Contour size is bounded by device storage, not a fixed local shader array.
+Clockwise/counterclockwise contours retain their authored vertex identities. The
+accepted 0.5-unit short-segment/capsule-center fallback becomes a point/circle.
+Concave geometry remains hollow: all contributing piece points survive output
+capacity growth. Two concave shapes and two separation rays do not collide.
+Directed rays reject containment/back-facing hits, choose the nearest concave
+crossing and retain the accepted SlideOnSlope virtual-anchor/depth rule. These are
+manifolds only; dynamic ray impulses, materials, sleep and reports remain open.
+
+Contact normals point from canonical shape A toward B. Signed separation is the
+projection of the B-minus-A anchor difference on that normal; penetration is
+negative. Local anchors are relative to each body's origin/orientation. A 64-byte
+point holds shape slots/generations, 32-bit vertex/edge features and piece indices,
+normal/separation/sensor role and two local anchors. These identities are local to
+the store. Portable snapshots, retained impulse history and geometry-edit history
+invalidation are not implemented by these records.
+
+Physical speculative margin is a nonnegative scene-unit distance. Broad phase
+expands each bound by half this amount; narrow phase retains separated points only
+within it. Directed rays extend along their axis. Sensors always require exact
+intersection, irrespective of the physical margin. Cached pairs/contacts invalidate
+on body, attachment, source geometry and margin changes. Nonfinite bounds or contact
+intermediates reject the store with no CPU replay. The nonfinite regression caught
+an initially silent invalid intermediate; explicit shader guards now reject it.
+
+The axis scan has quadratic cost in the current pair’s contour vertex counts and a global output counter may
+serialize very dense contact batches. Those remain measured optimization boundaries.
+Contact arrays retain peak power-of-two capacity. Overflow reports the complete
+point count and retries only the immutable narrow phase, never body integration.
+There is no sixteen-point reporting cap inside this solver-stage storage.
+
+| Contact operation | Traffic / synchronization |
+| --- | --- |
+| Warm narrow phase | 8-byte reset upload, 32-byte settings and 8-byte count/error readback; one fence wait. Contact points stay on GPU. |
+| Integration + broad + narrow | Three publication waits; 20 status/count bytes uploaded and downloaded per tick, plus pass uniforms. No pose, geometry, pair or contact traffic. |
+| Explicit contact inspection | 64 bytes downloaded per point into caller-owned storage; separate allocation/copy/fence cost, outside normal ticks. |
+
+Run `ELECTRON2D_TEST_GPU_RESIDENT_CONTACTS=1 dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`
+after a Release source-native test build. The full GPU suite includes this target.
+Analytic circles/box faces verify signed depth and boundary anchors within 0.00001
+scene units; directed anchors use 0.0001. A seeded set of 1,620 rotated cases covers
+all seven families, both polygon windings and both ray modes, comparing contact
+presence to standalone resource collision regions. Random-case reconstructed world
+anchors allow 0.001 units for float rotation/translation near coordinates −12–3,264;
+normal-length tolerance is 0.0001. A 200-piece concave test forces capacity recovery
+and verifies all piece identities. Edits, retirement, disposal, sensor/speculative
+rules, stable translated features and actual nonfinite-device failure also execute.
+
+The same 64×64 / 256×256 grids above generate 32,004 / 521,220 contact points.
+Warmup is 384 ticks, followed by 256 sampled ticks at 1/120 s. Every point's depth
+is checked analytically against actual device body poses within 0.0001 units after
+the timed window. The initial fixed-0.2-depth assumption failed because accumulated
+float integration changes neighbor spacing across exponent boundaries; observed
+depths are 0.199542–0.200916 and 0.192676–0.209766. The corrected check preserves
+contact accuracy rather than expanding its tolerance. Contact/pose diagnostic reads
+are separately timed twice: first use (including transfer-buffer growth/page first
+touch where applicable), then reuse of the same buffers and destination arrays. Both
+are single diagnostic timings, not latency distributions. These reads are excluded
+from managed-allocation/tick samples.
+
+Measured on Linux/.NET 10.0.1, Vulkan, NVIDIA GeForce RTX 3090 Ti, 2026-10-08:
+
+| Run / bodies | Tick p50 | Tick p95 | Tick p99 | Mean wait | Contact read first / warm | Pose read first / warm |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| Dedicated / 4,096 | 0.2551 ms | 0.5643 ms | 0.7997 ms | 0.2049 ms | 0.9632 / 0.6093 ms | 0.7537 / 0.1113 ms |
+| Dedicated / 65,536 | 0.5305 ms | 1.0969 ms | 1.3174 ms | 0.4839 ms | 18.2608 / 10.6991 ms | 0.9885 / 0.8236 ms |
+| Full GPU suite / 4,096 | 0.2488 ms | 0.5234 ms | 0.8124 ms | 0.1995 ms | 1.1332 / 0.7031 ms | 0.1934 / 0.0935 ms |
+| Full GPU suite / 65,536 | 0.5253 ms | 1.1082 ms | 1.3110 ms | 0.4782 ms | 19.2539 / 10.4956 ms | 1.2394 / 0.9306 ms |
+
+Each run reports zero warmed owner-thread managed bytes per tick. Uniform payload
+averages 668 / 858 bytes per tick, including periodic tree sorts. Explicit contact
+reads download 2,048,256 / 33,358,080 bytes; diagnostic pose reads additionally upload
+16 bytes and download 32 bytes per body plus status/uniforms. These full reads are
+test-only consumers, not a proposed per-tick API requirement or CPU mirror. The
+large measured readback cost is why the next constraint stage must consume the
+resident contact buffer directly. Logs: `/tmp/electron2d-resident-contacts-test.log`
+and `/tmp/electron2d-resident-contacts-gpu-suite.log`. This is still partial-pipeline
+evidence: no whole CPU-vs-GPU physics, window FPS, networking, native allocations or
+cross-platform acceptance follows from it.
+
+Current modified SPIR-V SHA-256:
+
+- PhysicsCollide: `0301c25ded7990fc77a2a7b2c4e40a302992865bd73af78ba49033b26dd01ebd`.
+- PhysicsResidentShapes: `e95f0603dd16b117adc89370fb2d17bd7076e910415d45ea6bd8ad98ea93f53e`.
+- PhysicsResidentContacts: `e05711ef8609708cc869e6d2668ba0ffd8964d2c0fe8247f8faa9b7d9d5cb9db`.
 
 ## Native lifecycle observation
 

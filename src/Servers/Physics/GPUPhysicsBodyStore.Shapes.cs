@@ -244,7 +244,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     _vertexEdits[_vertexEditCount++] = new() { Index = entry.Start + v, Position = point };
                 }
                 edit.Data.Start = (uint)entry.Start; edit.Data.Count = (uint)count; edit.Data.Kind = (uint)geometry.Kind;
-                edit.Data.Parameters = new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, 0, 0);
+                var winding = 1f;
+                if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon)
+                {
+                    double area = 0;
+                    for (var v = 0; v < count; v++)
+                    {
+                        var a = geometry.Points[v]; var b = geometry.Points[(v + 1) % count];
+                        area += (double)a.X * b.Y - (double)a.Y * b.X;
+                    }
+                    winding = area < 0 ? -1 : 1;
+                }
+                edit.Data.Parameters = new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, winding, 0);
             }
             if (entry.Source is { } current) { entry.Revision = current.GeometryRevision; entry.Disposed = current.IsDisposed; }
             _geometryEdits[i] = edit;

@@ -19,7 +19,7 @@ view in scene units. Resources hold authored values; [PhysicsShapeBackend](Physi
 owns current CPU fixture/query compilation and the weak compiled polygon cache.
 Standalone collisions consume the same source geometry without copying contours.
 GPUPhysicsBodyStore borrows that view for persistent device geometry and broad-phase
-bounds/pairs; revisions and disposal invalidate its shared geometry records.
+bounds/pairs/contacts; revisions and disposal invalidate its shared geometry records.
 This extraction preserves the public resource contract and does not add a second
 implemented backend or custom-shape registration.
 

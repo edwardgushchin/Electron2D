@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad phase and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -345,6 +345,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

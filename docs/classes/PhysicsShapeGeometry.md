@@ -23,8 +23,10 @@ built-in-only shape implementation boundary; public extension support remains op
 [PhysicsShapeBackend](PhysicsShapeBackend.md) compiles the view for CPU fixtures,
 mass geometry and world-query proxies. PhysicsShapeCollision also consumes it
 directly for standalone resource collisions, retaining the full convex contour
-instead of backend partitions. That collision kernel still has internal backend
-numeric/proxy dependencies. This view does not implement an independent GPU world.
+instead of backend partitions. That CPU collision kernel still has internal backend
+numeric/proxy dependencies. GPUPhysicsBodyStore consumes the same source for
+resident geometry, broad-phase bounds and narrow-phase contact points without
+a CPU solver world or fixture-size contour partition. This view does not implement an independent GPU world.
 
 ## Verification
 

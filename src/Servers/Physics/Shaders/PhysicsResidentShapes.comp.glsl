@@ -2,8 +2,7 @@
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsResidentBody.inc.glsl"
 layout(local_size_x = 64) in;
-struct Geometry { uvec4 data; vec4 parameters; };
-struct Shape { vec4 pose; uvec4 owner; uvec4 policy; };
+#include "PhysicsResidentGeometry.inc.glsl"
 struct VertexEdit { uvec2 target; vec2 point; };
 struct GeometryEdit { uvec4 target; Geometry value; };
 struct ShapeEdit { uvec4 target; Shape value; };
@@ -20,7 +19,7 @@ layout(std430, set=1, binding=2) buffer Shapes { Shape shapes[]; };
 layout(std430, set=1, binding=3) buffer Proxies { Proxy proxies[]; };
 layout(std430, set=1, binding=4) buffer Summary { uvec2 summary; };
 layout(std430, set=1, binding=5) buffer Pairs { uvec4 pairs[]; };
-layout(std140, set=2, binding=0) uniform Settings { uvec4 work; uvec4 counts; };
+layout(std140, set=2, binding=0) uniform Settings { uvec4 work; uvec4 counts; vec4 tolerances; };
 vec2 rotatePoint(vec2 p, vec2 q) { return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y); }
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
 void fail(uint flag) { atomicOr(summary.x,flag); }
@@ -60,7 +59,7 @@ void main()
             vec2 world=b.pose.xy+rotatePoint(local,b.pose.zw);
             lower=min(lower,world);upper=max(upper,world);
         }
-        p.bounds=vec4(lower-vec2(g.parameters.x),upper+vec2(g.parameters.x));
+        p.bounds=vec4(lower-vec2(g.parameters.x+0.5*tolerances.x),upper+vec2(g.parameters.x+0.5*tolerances.x));
         if (!finite4(p.bounds) || !finite4(vec4(p.bounds.zw-p.bounds.xy,0,0))) {fail(2u);proxies[i]=p;return;}
         p.data=ivec4(b.flags.y>=2u?2:int(b.flags.y),int(i),1,(s.policy.w&2u)!=0u?8:0);
         proxies[i]=p;return;

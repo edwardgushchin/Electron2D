@@ -7,17 +7,19 @@ Last updated: 2026-10-08
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
+[contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [body kernel](../../src/Servers/Physics/Shaders/PhysicsResidentBodies.comp.glsl),
-[shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl)
+[shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl),
+[contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl)
 **Component:** [Resident GPU body state](../components/gpu-resident-bodies.md)
 
 ## Responsibility
 
 Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
-edits, integration, shared geometry and broad-phase pair generation. It is not yet
-selectable through PhysicsServer and does not perform exact contacts, joints, sleep,
-CCD or network replay.
+edits, integration, shared geometry, broad-phase pairs and narrow-phase contact
+points. It is not yet selectable through PhysicsServer and does not solve contact
+impulses/joints, sleep, CCD or network replay.
 
 | Operation | Contract |
 | --- | --- |
@@ -28,8 +30,10 @@ CCD or network replay.
 | `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities. |
 | `AddShape`, `RemoveShape` | Borrow a shared Shape resource, retain one GPU geometry record per resource and a generation-qualified attachment per shape slot. Body deletion invalidates attachments; resource disposal makes their bounds inactive. |
 | `SetShapePose`, `SetShapeFilter` | Coalesce unit-scale local placement and 32-bit layer/mask/sensor edits. |
-| `FindPairs` | Flush authored edits without advancing time; derive bounds from device poses, refit/sort the device tree and retain complete canonical shape pairs on GPU. Return only count/error status. Reuse unchanged results; grow/retry an immutable batch on overflow. |
+| `FindPairs` | Flush authored edits without advancing time; derive bounds from device poses, refit/sort the device tree and retain complete canonical shape pairs on GPU. Return only count/error status. An optional nonnegative scene-unit margin expands both bounds by half the margin. Reuse unchanged results; grow/retry an immutable batch on overflow. |
 | `ReadPairs`, `ReadShapeBounds` | Explicit diagnostic read into caller-owned pair storage or one nullable bound. Pair order is unspecified; generations and store identity are retained. |
+| `FindContacts` | Derive complete contact points from resident pairs, shapes and bodies. Retain normal, signed separation, local anchors and features on GPU; return only count/error. Physical contacts use the optional margin, sensors require exact overlap. Output capacity recovery repeats no integration. |
+| `ReadContacts` | Explicitly copy 64-byte point records into caller-owned storage. Point order is unspecified; records contain local store slot/generation identities, not portable network IDs. |
 | `Dispose` | Release buffers, pipeline and device reference on the owner thread, including after failure. |
 
 Handles contain slot, generation and store identity. Stale, foreign, removed and
@@ -39,7 +43,7 @@ fails, body reads and mutations reject until disposal. Diagnostic counters remai
 readable. There is no CPU recalculation.
 
 CPU arrays retain identity/attachment metadata, borrowed authored resources and pending
-commands; consumed commands are cleared. No evolving CPU bounds/tree/pair array is retained. Capacity growth copies evolved state GPU-to-GPU. Native/managed scratch
+commands; consumed commands are cleared. No evolving CPU bounds/tree/pair/contact array is retained. Capacity growth copies evolved state GPU-to-GPU. Native/managed scratch
 capacity is retained for zero-allocation warmed work. Reads can also grow scratch
 capacity; duplicate requests preserve caller order.
 
@@ -48,7 +52,8 @@ compute settings, `ReadbackBytes` downloaded payloads, `DeviceCopyBytes` growth
 copies, and `WaitMS` the cumulative fence wait. These exclude driver protocol and
 native allocator overhead. GeometryUploadBytes and ShapeUploadBytes distinguish
 resource and attachment edits; BroadPhaseSubmissionCount and PairCapacityRetries
-expose query/recovery work. See the component page for measured scope and limits.
+expose query/recovery work. ContactPointCount, ContactSubmissionCount and
+ContactCapacityRetries report the narrow-phase boundary. See the component page for measured scope and limits.
 
 ## Verification
 
@@ -64,5 +69,12 @@ reuse, growth, invalid device bounds and complete unordered pairs. A dense 96-bo
 case forces pair storage recovery; 36 randomized worlds compare masks, sensors and
 roles with a brute-force AABB oracle across refits and resorting. Moving grids of
 4,096 and 65,536 bodies check every neighbor pair outside the warmed measurement.
-This is conservative broad phase only: concave/ray response, joint vetoes, explicit
-body exceptions and exact sensor/contact events still require subsequent stages.
+GPUPhysicsContactStoreTests additionally checks 1,620 rotated pair cases against
+resource collision regions across all seven current geometry families, both polygon
+windings and both directed-ray slope modes. It checks local-anchor/normal/depth
+invariants, speculative/sensor differences, mutable/disposed geometry, identity,
+feature stability, complete concave-piece output and failed-state rejection after
+nonfinite device intermediates. Moving grids verify every point against actual GPU
+poses outside the timed window; details and measured transfer costs are in the
+component report. Contact impulses/material response, warm history, joint vetoes,
+body exceptions and sensor/contact event publication remain unconnected.

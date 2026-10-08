@@ -11,6 +11,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         internal uint Stage, Count, Bodies, Shapes;
         internal uint Leaves, Geometry, Vertices, Pairs;
+        internal Float4 Tolerances;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct TreeSettings
@@ -28,13 +29,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int _vertexCapacity, _geometryCapacity, _shapeCapacity, _proxyCapacity, _nodeCapacity, _orderCapacity, _pairCapacity;
     private int _vertexEditCapacity, _geometryEditCapacity, _shapeEditCapacity, _spatialUploadBytes, _spatialDownloadBytes;
     private int _refitsSinceSort;
+    private float _pairMargin;
 
-    internal int FindPairs()
+    internal int FindPairs(float margin = 0)
     {
         EnsureAccess();
+        if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
         if (_shapeHighWater == 0) return 0;
         Step(0, default);
-        if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch) return PairCount;
+        if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch && _pairMargin == margin) return PairCount;
+        _pairBodyVersion = -1; _pairMargin = margin;
         PrepareGeometry(); EnsureSpatial();
         var retry = false;
         while (true)
@@ -233,7 +237,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Leaves = (uint)_shapeCapacity,
             Geometry = (uint)_geometryEntries.Count,
             Vertices = (uint)_vertexCapacity,
-            Pairs = (uint)_pairCapacity
+            Pairs = (uint)_pairCapacity,
+            Tolerances = new(_pairMargin, 0, 0, 0)
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SpatialSettings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
