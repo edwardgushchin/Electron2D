@@ -1,6 +1,6 @@
 # GPU physics implementation status
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 Built-in compute bytecode is generated from the versioned GLSL/include sources at
 runtime build time and embedded from `obj/`; generated `.spv` files are no longer
@@ -39,7 +39,7 @@ response, device warm history and separate pose correction. Its update/gather
 kernels use separate hot impulse storage and precomputed contact Jacobians; the
 linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. [Resident joints](gpu-resident-joints.md) add independent
 pin/groove/spring response, persistent history and collision vetoes. Shared [mass profiles](gpu-resident-mass.md) now supply automatic/custom centers
-and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. Complete joint settings, CCD and public selection/publication remain unconnected; historical full-stage results below still refer
+and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. [Resident CCD](gpu-resident-ccd.md) now executes ray/full-shape trajectory checks and impact intervals internally. Complete joint settings and public selection/publication remain unconnected; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 
 The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only

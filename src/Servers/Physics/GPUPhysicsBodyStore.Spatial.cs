@@ -30,16 +30,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int _vertexCapacity, _geometryCapacity, _shapeCapacity, _proxyCapacity, _nodeCapacity, _orderCapacity, _pairCapacity;
     private int _vertexEditCapacity, _geometryEditCapacity, _shapeEditCapacity, _spatialUploadBytes, _spatialDownloadBytes;
     private int _refitsSinceSort;
-    private float _pairMargin;
+    private float _pairMargin, _pairSweepDelta;
+    private bool _pairSweepCorrections;
 
-    internal int FindPairs(float margin = 0)
+    internal int FindPairs(float margin = 0, float sweepDelta = 0, bool sweepCorrections = false)
     {
         EnsureAccess();
         if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
+        if (!float.IsFinite(sweepDelta) || sweepDelta < 0) throw new ArgumentOutOfRangeException(nameof(sweepDelta));
         if (_shapeHighWater == 0) return 0;
         Step(0, default); FlushJoints();
-        if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch && _pairMargin == margin) return PairCount;
-        _pairBodyVersion = -1; _pairMargin = margin;
+        if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch && _pairMargin == margin && _pairSweepDelta == sweepDelta && _pairSweepCorrections == sweepCorrections) return PairCount;
+        _pairBodyVersion = -1; _pairMargin = margin; _pairSweepDelta = sweepDelta; _pairSweepCorrections = sweepCorrections;
         PrepareGeometry(); EnsureSpatial();
         var retry = false;
         while (true)
@@ -76,9 +78,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         return count;
     }
 
-    internal Rect2? ReadShapeBounds(ShapeHandle shape)
+    internal Rect2? ReadShapeBounds(ShapeHandle shape, float sweepDelta = 0)
     {
-        Validate(shape); FindPairs();
+        Validate(shape); FindPairs(sweepDelta: sweepDelta);
         DownloadSpatial(_proxiesGPU!, checked((uint)(shape.Index * sizeof(ProxyData))), (uint)sizeof(ProxyData));
         var mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload!.DangerousGetHandle(), false);
         if (mapped == 0) { _failed = true; throw GPUPhysicsDevice.Failure("map resident bounds"); }
@@ -220,15 +222,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int SpatialPass(nint command, uint stage, int count)
     {
         if (count == 0) return 0;
-        var bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[6];
+        var bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[7];
         bindings[0] = new() { Buffer = _verticesGPU!.DangerousGetHandle() }; bindings[1] = new() { Buffer = _geometryGPU!.DangerousGetHandle() };
         bindings[2] = new() { Buffer = _shapesGPU!.DangerousGetHandle() }; bindings[3] = new() { Buffer = _proxiesGPU!.DangerousGetHandle() };
         bindings[4] = new() { Buffer = _spatialSummary!.DangerousGetHandle() }; bindings[5] = new() { Buffer = _pairsGPU!.DangerousGetHandle() };
-        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)bindings, 6);
+        bindings[6] = new() { Buffer = _centers!.DangerousGetHandle() };
+        var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)bindings, 7);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident spatial compute");
         SDL.BindGPUComputePipeline(compute, _spatialPipeline!.DangerousGetHandle());
-        var inputs = stackalloc nint[7] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle(), _jointsGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), _jointFiltersGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 7);
+        var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle(), _jointsGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), _jointFiltersGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), (_positionCorrectionsGPU ?? _shapeEditsGPU!).DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
         var settings = new SpatialSettings
         {
             Stage = stage,
@@ -239,7 +242,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Geometry = (uint)_geometryEntries.Count,
             Vertices = (uint)_vertexCapacity,
             Pairs = (uint)_pairCapacity,
-            Tolerances = new(_pairMargin, 0, 0, 0),
+            Tolerances = new(_pairMargin, _pairSweepDelta, _pairSweepCorrections ? 1 : 0, 0),
             JointFilters = JointCount > 0 ? (uint)_jointFilterCapacity : 0,
             Joints = (uint)_jointHighWater
         };

@@ -17,6 +17,8 @@ layout(std430, set=0, binding=3) readonly buffer ShapeEdits { ShapeEdit shapeEdi
 layout(std430, set=0, binding=4) readonly buffer Nodes { Node nodes[]; };
 layout(std430, set=0, binding=5) readonly buffer Joints { ResidentJoint joints[]; };
 layout(std430, set=0, binding=6) readonly buffer Filters { uint filters[]; };
+layout(std430, set=1, binding=6) buffer Centers { vec2 centers[]; };
+layout(std430, set=0, binding=7) readonly buffer Corrections { vec4 corrections[]; };
 layout(std430, set=1, binding=0) buffer Vertices { vec2 vertices[]; };
 layout(std430, set=1, binding=1) buffer Geometries { Geometry geometries[]; };
 layout(std430, set=1, binding=2) buffer Shapes { Shape shapes[]; };
@@ -71,14 +73,24 @@ void main()
         ResidentBody b=bodies[s.owner.x]; Geometry g=geometries[s.owner.z];
         if (b.flags.w==0u || b.flags.x!=s.owner.y || g.data.w!=s.owner.w || g.data.y==0u) {proxies[i]=p;return;}
         if (g.data.x>counts.z || g.data.y>counts.z-g.data.x) {fail(1u);proxies[i]=p;return;}
-        vec2 lower=vec2(3.402823466e38), upper=-lower;
+        vec2 lower=vec2(3.402823466e38), upper=-lower;float sweepRadius=0;
         for(uint v=0u;v<g.data.y;v++)
         {
             vec2 local=s.pose.xy+rotatePoint(vertices[g.data.x+v],s.pose.zw);
             vec2 world=b.pose.xy+rotatePoint(local,b.pose.zw);
             lower=min(lower,world);upper=max(upper,world);
+            if(tolerances.y>0)sweepRadius=max(sweepRadius,length(local-centers[s.owner.x])+g.parameters.x);
         }
         p.bounds=vec4(lower-vec2(g.parameters.x+0.5*tolerances.x),upper+vec2(g.parameters.x+0.5*tolerances.x));
+        if(tolerances.y>0&&b.flags.y!=0u&&(b.flags.z&16u)==0u)
+        {
+            vec3 motion=b.velocity.xyz;
+            if(tolerances.z!=0)motion+=corrections[s.owner.x].xyz;
+            vec2 shift=tolerances.y*motion.xy;float turn=tolerances.y*motion.z;
+            float pad=2*sweepRadius*sin(0.5*min(abs(turn),3.141592653589793));
+            if(!finite4(vec4(shift,turn,pad))){fail(2u);proxies[i]=p;return;}
+            p.bounds=vec4(p.bounds.xy+min(shift,vec2(0))-pad,p.bounds.zw+max(shift,vec2(0))+pad);
+        }
         if (!finite4(p.bounds) || !finite4(vec4(p.bounds.zw-p.bounds.xy,0,0))) {fail(2u);proxies[i]=p;return;}
         p.data=ivec4(b.flags.y>=2u?2:int(b.flags.y),int(i),1,(s.policy.w&2u)!=0u?8:0);
         proxies[i]=p;return;

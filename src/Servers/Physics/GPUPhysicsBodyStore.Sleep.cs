@@ -42,7 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (_slots[body.Index].CanSleep == value) return;
         _slots[body.Index].CanSleep = value;
         ref var command = ref Edit(body.Index); command.Mask |= 512;
-        command.Padding = value ? 0u : 8u;
+        command.Padding = (command.Padding & ~8u) | (value ? 0u : 8u);
         if (!value) Wake(body.Index);
     }
     internal void SetSleeping(BodyHandle body, bool value)

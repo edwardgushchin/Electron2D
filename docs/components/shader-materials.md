@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Built-in shader delivery
 
@@ -271,3 +271,5 @@ SPIRV-Cross reflection imports now resolve the already packaged runtime-director
 The native program RID host passed on Linux Wayland GPU for both HLSL and GLSL fixtures and hardware compatibility for built-in materials, with explicit programmable-material rejection and cleanup. Six state phases follow four initial mapping/visibility warm-up frames. Each host checks 2000 prepared RID parameter updates/array reads with zero managed allocation; resource-only checks cover 2000 array copies. This measures those operations, not whole-frame allocation. The GPU snapshot is written only when `ELECTRON2D_PROGRAM_SNAPSHOT` supplies a path; validation includes exact RGB/alpha, inherited owned bindings and fixed blend/source republishing. Other platforms and human visual acceptance remain unverified.
 
 The two GPU captures at state phase two were visually inspected and are byte-identical: SHA-256 `df8742ab7b78f83be64f605ed6fdfe2edd47f6e609561349280acd455b8718c7`. They show the half-red inherited material, restored red default sampler and republished white source material. Captures remain local ignored verification artifacts.
+
+Internal compute creation validates reflected native binding budgets before entering the native pipeline factory: eight readonly/write buffers and textures per class, sixteen samplers and four uniforms. Resident CCD testing exposed the need for this guard; the negative nine-read-buffer probe rejects before device creation. See [GPU continuous collision](gpu-resident-ccd.md).

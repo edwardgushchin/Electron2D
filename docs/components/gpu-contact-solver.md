@@ -1,6 +1,6 @@
 # Resident GPU contact response
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Executing boundary
 
@@ -13,7 +13,7 @@ measurements; those timings exclude the response workload measured here.
 This is an internal response pipeline, not a selectable public GPU backend.
 [Resident joints](gpu-resident-joints.md) now share its iteration loop; joint
 bias/softness/general caps,
-CCD, scene/server and direct-state
+scene/server and direct-state
 publication, complete frame impulse/event reports, one-way/body exceptions,
 world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored
 geometry and uses center-relative moment arms; public-world integration still needs
@@ -271,3 +271,5 @@ Iteration-layout SPIR-V SHA-256 before mass-profile integration (untracked outpu
 - PhysicsResidentGather: `49a15a674bcda51d4d1e0a6000ef44c228bdfe553a11238312c0ad05974ce58d`.
 
 [Resident sleep](gpu-resident-sleep.md) now supplies dynamic component sleep/wake. Historical timings/traffic above predate its graph passes and 8-byte body status. Current active benchmark bodies explicitly disable automatic sleep; no smaller awake population is substituted.
+
+[Resident continuous collision](gpu-resident-ccd.md) now reuses this solver at impact intervals. Initial force/spring/motor duration is not replayed; CCD restitution uses a bounded contact skin, while ordinary non-CCD restitution keeps its original boundary. Public transient contact/event accumulation remains an adapter obligation.

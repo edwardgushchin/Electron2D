@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Physical skeletal integration
 
@@ -241,4 +241,4 @@ impulses, and applies the same bounded deepest-point selection to direct state a
 RigidBody monitoring. PhysicsContactImpulseTests checks momentum and allocation;
 virtual tile identities remain separate from this completed reporting behavior.
 
-Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Public backend selection, sleep-event publication, CCD and network replay remain open.
+Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Internal [GPU CCD](../components/gpu-resident-ccd.md) now executes per-body ray/full-shape sweeps and impact intervals. Public backend selection, CCD adapters, sleep/contact-event publication and network replay remain open.

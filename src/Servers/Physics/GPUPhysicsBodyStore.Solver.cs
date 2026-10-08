@@ -12,7 +12,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         internal uint Stage, Count, Bodies, Points;
         internal Float4 Time, Policy;
-        internal uint HistoryCapacity, PreviousPoints, ContactPoints, Joints;
+        internal uint HistoryCapacity, PreviousPoints, ContactPoints, Flags;
     }
     private RenderHandle? _solverPipeline, _solverUpdatePipeline, _solverGatherPipeline, _constraintsGPU, _constraintImpulsesGPU, _contactHeadsGPU, _solverHistoryGPU, _solverHistoryTableGPU, _positionCorrectionsGPU;
     private int _constraintCapacity, _constraintImpulseCapacity, _contactHeadCapacity, _solverHistoryCapacity, _solverHistoryTableCapacity, _previousPointCount, _positionCorrectionCapacity;
@@ -49,7 +49,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             {
                 Submit(h, gravity, default, default, 3);
                 SolveConstraintsCore(h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, gravity);
-                Submit(h, default, default, default, 4, _hasPositionCorrections);
+                if (_ccdBodyCount > 0 && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
+                else Submit(h, default, default, default, 4, _hasPositionCorrections);
                 _hasPositionCorrections = false;
             }
             _sleepBodyVersion = _bodyVersion; _sleepShapeVersion = _shapeVersion; _sleepGeometryEpoch = Shape.GeometryEpoch;
@@ -63,11 +64,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         SolveConstraintsCore(delta, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, null);
 
     private void SolveConstraintsCore(float delta, int iterations, float margin, float allowedPenetration, float correctionFactor,
-        float maxCorrectionSpeed, float bounceThreshold, Vector2? stepGravity)
+        float maxCorrectionSpeed, float bounceThreshold, Vector2? stepGravity, bool externalForces = true, float contactThreshold = 0)
     {
         EnsureAccess();
         ValidateSolver(delta, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
-        RememberSleepSolver(iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
+        if (externalForces) RememberSleepSolver(iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
         PrepareMasses();
         try
         {
@@ -96,11 +97,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Bodies = (uint)_highWater,
                 Points = (uint)constraintCount,
                 Time = new(delta, 1 / delta, correctionFactor, maxCorrectionSpeed),
-                Policy = new(allowedPenetration, bounceThreshold, _previousSolveDelta > 0 ? delta / _previousSolveDelta : 0, 0),
+                Policy = new(allowedPenetration, bounceThreshold, _previousSolveDelta > 0 ? delta / _previousSolveDelta : 0, MathF.Max(contactThreshold, _ccdBodyCount > 0 ? 4 * CCDTolerance : 0)),
                 HistoryCapacity = (uint)_solverHistoryTableCapacity,
                 PreviousPoints = (uint)_previousPointCount,
                 ContactPoints = (uint)ContactPointCount,
-                Joints = (uint)_jointHighWater
+                Flags = externalForces ? 0u : 1u
             }, iterations, previousTableCapacity != _solverHistoryTableCapacity, stepGravity);
             _previousPointCount = ContactPointCount; _previousSolveDelta = delta; _hasPositionCorrections = true;
             _bodyVersion++;
@@ -130,23 +131,22 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin solver reset");
             UploadSpatial(copy, _spatialSummary!, 0, 8); SDL.EndGPUCopyPass(copy);
             PrepareSleep(command, settings.Time.X, stepGravity);
-            var passes = 0;
             if (rebuildHistory && _previousPointCount > 0)
             {
                 SolverPass(ref command, settings, 5, _solverHistoryTableCapacity);
-                SolverPass(ref command, settings, 6, _previousPointCount); passes += 2;
+                SolverPass(ref command, settings, 6, _previousPointCount);
             }
-            SolverPass(ref command, settings, 0, _highWater); passes++;
-            if (_springJointCount > 0)
+            SolverPass(ref command, settings, 0, _highWater);
+            if (_springJointCount > 0 && settings.Flags == 0)
             {
                 JointPass(command, settings, 0);
                 SolverPass(ref command, settings, 3, _highWater);
-                SolverPass(ref command, settings, 0, _highWater); passes += 2;
+                SolverPass(ref command, settings, 0, _highWater);
             }
-            SolverPass(ref command, settings, 1, ContactPointCount); if (ContactPointCount > 0) passes++;
+            SolverPass(ref command, settings, 1, ContactPointCount);
             if (JointCount > 0) JointPass(command, settings, 1);
-            if (_previousPointCount > 0 || JointCount > 0) { SolverPass(ref command, settings, 3, _highWater); passes++; }
-            for (var iteration = 0; iteration < iterations; iteration++)
+            if (_previousPointCount > 0 || JointCount > 0) { SolverPass(ref command, settings, 3, _highWater); }
+            for (var iteration = 0; settings.Points > 0 && iteration < iterations; iteration++)
             {
                 SolverPass(ref command, settings, 2, (int)settings.Points);
                 SolverPass(ref command, settings, 3, _highWater);
@@ -154,12 +154,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (JointCount > 0) JointPass(command, settings, 2);
             SolverPass(ref command, settings, 4, ContactPointCount);
             SolverPass(ref command, settings, 5, _solverHistoryTableCapacity);
-            SolverPass(ref command, settings, 6, ContactPointCount); passes += ContactPointCount > 0 ? 3 : 1;
+            SolverPass(ref command, settings, 6, ContactPointCount);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin solver result");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
-            UploadBytes += 8; ReadbackBytes += 8; UniformBytes += sizeof(SolverUniforms) * (passes + 2L * iterations); SolverSubmissionCount++;
+            UploadBytes += 8; ReadbackBytes += 8; SolverSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map solver result");
             try
@@ -211,6 +211,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         settings.Stage = stage; settings.Count = (uint)count;
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SolverUniforms));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
+        UniformBytes += sizeof(SolverUniforms);
         if (ProfileSolverPasses)
         {
             Finish(ref command);

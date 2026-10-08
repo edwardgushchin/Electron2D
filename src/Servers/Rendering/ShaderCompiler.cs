@@ -32,6 +32,10 @@ internal static unsafe class ShaderCompiler
             try
             {
                 var metadata = Marshal.PtrToStructure<ShaderCross.ComputePipelineMetadata>(reflection);
+                if (metadata.NumReadOnlyStorageBuffers > 8 || metadata.NumReadWriteStorageBuffers > 8 ||
+                    metadata.NumReadOnlyStorageTextures > 8 || metadata.NumReadWriteStorageTextures > 8 ||
+                    metadata.NumSamplers > 16 || metadata.NumUniformBuffers > 4)
+                    throw new NotSupportedException("Compute resources exceed the native pipeline binding limits.");
                 var info = new ShaderCross.SPIRVInfo
                 {
                     ByteCode = (nint)pointer,

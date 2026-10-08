@@ -42,7 +42,8 @@ void main()
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
         if ((mask & 1024u) != 0u) b.flags.z|=32u;
-        if ((mask & 512u) != 0u) b.flags.z=(b.flags.z&~8u)|c.header.w;
+        if ((mask & 2048u) != 0u) b.flags.z=(b.flags.z&~768u)|(c.header.w&768u);
+        if ((mask & 512u) != 0u) b.flags.z=(b.flags.z&~8u)|(c.header.w&8u);
         if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
         if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
         if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);

@@ -1,6 +1,6 @@
 # Resident GPU sleep and wake
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Executing boundary
 
@@ -21,7 +21,7 @@ island sleep. SolveConstraints propagates wake without advancing poses or timers
 
 This implements the resident stage required by [ADR 0054](../decisions/physics.md#adr-0054).
 Public backend selection, scene/server ownership/publication, sleep callbacks,
-complete queries/events, CCD and network checkpoints/replay remain open. The
+complete queries/events and network checkpoints/replay remain open. The
 current public CPU world and its callback contract are unchanged. Internal selected
 snapshots are not event delivery or a portable replay format.
 
@@ -86,7 +86,7 @@ this internal component; this optimization does not authorize skipping them.
 
 At 65,536 body slots the graph adds 1 MiB. Edge storage follows the retained
 power-of-two contact/joint high-water capacity. Authored body metadata/command
-payload stays 12 MiB; body/center payload stays 5.5 MiB. Body command/request/result
+payload is now 12.25 MiB with the subsequent CCD policy field; body/center payload stays 5.5 MiB. Body command/request/result
 scratch and transfer capacities are now 12 MiB plus status (GPU 8 B, transfers 16 B).
 These totals exclude all other geometry/solver/history buffers and driver overhead.
 
@@ -170,3 +170,5 @@ An intermediate full runner stopped on its obsolete 12-byte broad-phase traffic
 assertion after the body status grew to 8 bytes. The assertions now require the
 actual 16-byte integration+broad and 24-byte integration+broad+narrow transfers;
 the following full run passes without dropping either status or activity data.
+
+[Resident CCD](gpu-resident-ccd.md) retains one sleep-age update per scheduled substep across its internal impact intervals. Its mode edit wakes the affected body and invalidates the inactive-world guard through the ordinary command/version path.

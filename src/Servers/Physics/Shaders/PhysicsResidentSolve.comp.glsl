@@ -94,6 +94,9 @@ void main()
         if(sa.policy.x!=p.pair.z||sb.policy.x!=p.pair.w||ai>=control.z||bi>=control.z){fail();return;}
         ResidentBody a=bodies[ai],b=bodies[bi];
         if(a.flags.x!=sa.owner.y||b.flags.x!=sb.owner.y||a.flags.w==0u||b.flags.w==0u){fail();return;}
+        bool continuous=(a.flags.y>=2u&&(a.flags.z&768u)!=0u)||(b.flags.y>=2u&&(b.flags.z&768u)!=0u);
+        float contactThreshold=continuous?policy.w:0;
+        if(p.normal.z>contactThreshold&&continuous){constraints[i]=c;return;}
         vec2 ma=inverseMass(a),mb=inverseMass(b);
         if(ma.x+mb.x==0){constraints[i]=c;return;}
         vec2 ra=rotate(a.pose.zw,p.anchors.xy-centers[ai]),rb=rotate(b.pose.zw,p.anchors.zw-centers[bi]),n=p.normal.xy,t=vec2(n.y,-n.x);
@@ -103,7 +106,7 @@ void main()
         float vn=dot2(velocity(b,rb)-velocity(a,ra),n);
         float target=p.normal.z>0?-p.normal.z*time.y:0;
         float correction=min(time.w,time.z*max(-p.normal.z-policy.x,0)*time.y);
-        if(p.normal.z<=0&&vn< -policy.y)target=max(target,-material.y*vn);
+        if(p.normal.z<=contactThreshold&&vn< -policy.y)target=max(target,-material.y*vn);
         c.normal=vec4(n,an,bn);c.tangent=vec4(material.x,0,at,bt);
         c.parameters=vec4(kn>0?1/kn:0,kt>0?1/kt:0,target,correction);
         vec2 warm=previousImpulse(p,sa,sb,material.x);vec4 impulse=vec4(warm,warm);

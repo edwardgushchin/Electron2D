@@ -1,6 +1,6 @@
 # Resident GPU joints
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Executing boundary
 
@@ -12,7 +12,7 @@ joint solver or evolving joint-state mirror participates. This extends the
 internal backend component, not a selectable PhysicsServer implementation.
 
 Scene/server RID adapters, per-joint bias, pin-anchor softness, general force and
-correction caps, CCD, full queries/events, portable checkpoints
+correction caps, full queries/events, portable checkpoints
 and network replay remain open. The current substep correction factor and speed
 limit are shared solver inputs, not implementations of the missing public joint
 settings. Existing public CPU joints and their settings are unchanged.
@@ -163,3 +163,5 @@ Other devices/platforms, native allocator totals and owner visual acceptance are
 not established by this Linux compute run.
 
 Resident joints now participate in [GPU sleep components](gpu-resident-sleep.md). The measurements above predate sleep; current regression populations explicitly set CanSleep=false, preserving the all-awake workload.
+
+CCD impact intervals reuse pin/groove/contact solving but do not reapply the scheduled spring impulse or motor torque budget. Unrelated spring and motor analytic checks cover that cadence in GPUPhysicsCCDStoreTests.

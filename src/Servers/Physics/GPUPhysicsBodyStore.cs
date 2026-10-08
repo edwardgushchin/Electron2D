@@ -6,14 +6,14 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response, connected sleep/wake and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
     internal readonly record struct BodyHandle(int Index, uint Generation, long Owner);
     internal readonly record struct BodyDefinition(PhysicsServer.BodyMode Mode, Vector2 Position, float Rotation,
         Vector2 Velocity, float AngularVelocity, float Mass = 1, float Inertia = 0, float GravityScale = 1,
-        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null, bool CanSleep = true, bool Sleeping = false);
+        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null, bool CanSleep = true, bool Sleeping = false, CCDMode ContinuousMode = CCDMode.Disabled);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Snapshot
@@ -23,6 +23,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal uint SleepFlags, Padding1, Padding2;
         internal readonly bool Sleeping => (SleepFlags & 16) != 0;
         internal readonly bool CanSleep => (SleepFlags & 8) == 0;
+        internal readonly CCDMode ContinuousMode => (CCDMode)((SleepFlags >> 8) & 3);
         internal readonly Vector2 Position => new(Pose.X, Pose.Y);
         internal readonly float Rotation => MathF.Atan2(Pose.W, Pose.Z);
     }
@@ -52,6 +53,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal uint Generation;
         internal int NextFree, Command, FirstShape, FirstJoint;
         internal PhysicsServer.BodyMode Mode;
+        internal CCDMode CCDMode;
         internal MassProfile MassProfile;
         internal PhysicsMass.Properties MassProperties;
         internal bool Alive, MassDirty, CanSleep;
@@ -91,7 +93,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal BodyHandle Add(in BodyDefinition definition)
     {
         EnsureAccess();
-        if (!Enum.IsDefined(definition.Mode) || !definition.Position.IsFinite() || !definition.Velocity.IsFinite() ||
+        if (!Enum.IsDefined(definition.Mode) || !Enum.IsDefined(definition.ContinuousMode) || !definition.Position.IsFinite() || !definition.Velocity.IsFinite() ||
             !float.IsFinite(definition.Rotation) || !float.IsFinite(definition.AngularVelocity) ||
             !float.IsFinite(definition.Mass) || definition.Mass <= 0 || !float.IsFinite(1 / definition.Mass) ||
             !float.IsFinite(definition.Inertia) || definition.Inertia < 0 || definition.Inertia > 0 && !float.IsFinite(1 / definition.Inertia) ||
@@ -104,7 +106,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = -1; Count++;
-        slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep;
+        slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep; slot.CCDMode = definition.ContinuousMode;
+        if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount++;
         slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
         slot.MassProperties = new(definition.Mass, definition.Inertia, definition.CenterOfMass ?? Vector2.Zero);
         ref var command = ref Edit(index);
@@ -118,7 +121,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Generation = slot.Generation,
             Mode = (uint)definition.Mode,
             Locks = (definition.Mode == PhysicsServer.BodyMode.RigidLinear ? 4u : 0u) | (definition.CanSleep ? 0u : 8u) |
-                (definition.Sleeping && definition.Mode >= PhysicsServer.BodyMode.Rigid ? 16u : 0u),
+                (definition.Sleeping && definition.Mode >= PhysicsServer.BodyMode.Rigid ? 16u : 0u) | ((uint)definition.ContinuousMode << 8),
             Alive = 1
         };
         command.Center = new(slot.MassProperties.Center.X, slot.MassProperties.Center.Y, 0, 0);
@@ -133,6 +136,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         ref var command = ref Edit(body.Index);
         command = new() { Index = body.Index, Generation = body.Generation, Mask = Destroy };
         ref var slot = ref _slots[body.Index];
+        if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount--;
         slot.Alive = false; slot.NextFree = _free; _free = body.Index; Count--;
     }
 
@@ -278,7 +282,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); centers?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -305,7 +309,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, positionCorrections ? 1 : 0), Capacity = (uint)_highWater };
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0) Dispatch(command, ref settings, motionStage, _highWater);
-            if (delta > 0 && motionStage == 4) FinishSleep(command, delta);
+            if (motionStage == 4 && (sleepDelta ?? delta) > 0) FinishSleep(command, sleepDelta ?? delta);
             Dispatch(command, ref settings, 2, requests.Length);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
@@ -323,7 +327,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU resident body work returned invalid state.");
-                if (delta > 0 && motionStage == 4) ActiveSimulationBodyCount = checked((int)((uint*)mapped)[1]);
+                if (motionStage == 4 && (sleepDelta ?? delta) > 0) ActiveSimulationBodyCount = checked((int)((uint*)mapped)[1]);
                 fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + 8, destination, outputBytes, outputBytes);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
@@ -378,6 +382,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeJoints(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; complete joint bias/compliance/caps, CCD, public sleep-event publication, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; complete joint bias/compliance/caps, public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -3251,7 +3251,7 @@
         "RigidBody2D::property:continuous_cd"
       ],
       "state": "Blocked",
-      "reason": "Trigger: distinct per-body Disabled/CastRay/CastShape integration, with ray-versus-full-shape sweeps and preservation of other bodies' native CCD policy (ADR 0054). Box2D bullet alone cannot represent the three branches. These values/properties/server methods enter the first complete per-body CCD slice; world activation does not implement them."
+      "reason": "Trigger: complete CPU per-body Disabled/CastRay/CastShape implementation and public scene/server/backend adapters, preserving other bodies' policy and interval contact/event semantics (ADR 0054). Independent resident GPU ray/full-shape sweeps, rotational geometry and impact intervals now execute internally. A Box2D bullet or global continuous switch cannot represent the three public branches; the public family enters the complete integrated slice."
     },
     {
       "state": "Implemented",

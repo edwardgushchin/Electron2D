@@ -88,7 +88,7 @@ void main()
                 emitRow(base+2u+row,j,ma,mb,vec2(0),sign,sign,-max(gap,0)*time.y,min(time.w,time.z*max(-gap,0)*time.y),vec2(0,maximum),savedImpulse(old,2u+row,ratio),false);
             }
         }
-        if((j.identity.z&2u)!=0u&&j.motorSpring.y>0)
+        if((history.w&1u)==0u&&(j.identity.z&2u)!=0u&&j.motorSpring.y>0)
         {
             float cap=j.motorSpring.y*time.x;
             emitRow(base+4u,j,ma,mb,vec2(0),1,1,j.motorSpring.x,0,vec2(-cap,cap),savedImpulse(old,4u,ratio),true);
