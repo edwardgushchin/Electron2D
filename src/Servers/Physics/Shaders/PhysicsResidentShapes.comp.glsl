@@ -1,7 +1,6 @@
 #version 450
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsResidentBody.inc.glsl"
-#include "PhysicsResidentJoint.inc.glsl"
 #include "PhysicsPairHash.inc.glsl"
 layout(local_size_x = 64) in;
 #include "PhysicsResidentGeometry.inc.glsl"
@@ -15,7 +14,7 @@ layout(std430, set=0, binding=1) readonly buffer VertexEdits { VertexEdit vertex
 layout(std430, set=0, binding=2) readonly buffer GeometryEdits { GeometryEdit geometryEdits[]; };
 layout(std430, set=0, binding=3) readonly buffer ShapeEdits { ShapeEdit shapeEdits[]; };
 layout(std430, set=0, binding=4) readonly buffer Nodes { Node nodes[]; };
-layout(std430, set=0, binding=5) readonly buffer Joints { ResidentJoint joints[]; };
+layout(std430, set=0, binding=5) readonly buffer FilterPairs { uvec4 filterPairs[]; };
 layout(std430, set=0, binding=6) readonly buffer Filters { uint filters[]; };
 layout(std430, set=1, binding=6) buffer Centers { vec2 centers[]; };
 layout(std430, set=0, binding=7) readonly buffer Corrections { vec4 corrections[]; };
@@ -25,22 +24,23 @@ layout(std430, set=1, binding=2) buffer Shapes { Shape shapes[]; };
 layout(std430, set=1, binding=3) buffer Proxies { Proxy proxies[]; };
 layout(std430, set=1, binding=4) buffer Summary { uvec2 summary; };
 layout(std430, set=1, binding=5) buffer Pairs { uvec4 pairs[]; };
-layout(std140, set=2, binding=0) uniform Settings { uvec4 work; uvec4 counts; vec4 tolerances; uvec4 jointInfo; };
+layout(std140, set=2, binding=0) uniform Settings { uvec4 work; uvec4 counts; vec4 tolerances; uvec4 filterInfo; };
 vec2 rotatePoint(vec2 p, vec2 q) { return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y); }
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
 void fail(uint flag) { atomicOr(summary.x,flag); }
 
-bool connected(uint a,uint b)
+bool excepted(uint a,uint b)
 {
-    if(jointInfo.x==0u)return false;
-    uvec2 pair=uvec2(min(a,b),max(a,b));uint at=pairHash(pair)&(jointInfo.x-1u);
-    for(uint probe=0u;probe<jointInfo.x;probe++)
+    if(filterInfo.x==0u)return false;
+    uvec2 pair=uvec2(min(a,b),max(a,b));
+    uvec4 identity=uvec4(pair,bodies[pair.x].flags.x,bodies[pair.y].flags.x);
+    uint at=pairHash(pair)&(filterInfo.x-1u);
+    for(uint probe=0u;probe<filterInfo.x;probe++)
     {
         uint slot=filters[at];if(slot==0xffffffffu)return false;
-        if(slot>=jointInfo.y){fail(8u);return true;}
-        uvec2 other=joints[slot].ids.zw;
-        if(pair==uvec2(min(other.x,other.y),max(other.x,other.y)))return true;
-        at=(at+1u)&(jointInfo.x-1u);
+        if(slot>=filterInfo.y){fail(8u);return true;}
+        if(identity==filterPairs[slot])return true;
+        at=(at+1u)&(filterInfo.x-1u);
     }
     fail(8u);return true;
 }
@@ -52,7 +52,7 @@ bool accept(uint aIndex, uint bIndex)
     bool sensorA=(a.policy.w&2u)!=0u, sensorB=(b.policy.w&2u)!=0u;
     if (sensorA || sensorB)
         return (sensorA && (a.policy.z&b.policy.y)!=0u) || (sensorB && (b.policy.z&a.policy.y)!=0u);
-    if (connected(a.owner.x,b.owner.x)) return false;
+    if (excepted(a.owner.x,b.owner.x)) return false;
     if (bodies[a.owner.x].flags.y<2u && bodies[b.owner.x].flags.y<2u) return false;
     return (a.policy.z&b.policy.y)!=0u && (b.policy.z&a.policy.y)!=0u;
 }

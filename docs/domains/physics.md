@@ -107,7 +107,9 @@ The independent GPUPhysicsBodyStore now has a [contact response path](../compone
 with persistent history, compact contact Jacobians, separate iterated impulses
 and specialized update/gather kernels. [Device joints](../components/gpu-resident-joints.md)
 now share that solve loop and retain pin/groove/spring settings, warm impulses and
-collision vetoes without a CPU solver. [Mass profiles](../components/gpu-resident-mass.md)
+collision vetoes without a CPU solver. [Explicit directed body exceptions](../components/gpu-resident-exceptions.md)
+now use the same device table for discrete and continuous collisions; live-body
+removal cleans incident edges without scanning all authored exceptions. [Mass profiles](../components/gpu-resident-mass.md)
 now reuse shared authored-geometry normalization and supply center-aware GPU motion
 and constraint preparation. Its stability/allocation/population checks
 and opt-in fenced diagnostics do not establish public-backend or window-FPS acceptance.

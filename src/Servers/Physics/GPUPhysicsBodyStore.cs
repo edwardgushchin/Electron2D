@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, directed collision filtering, contact/joint response, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -51,7 +51,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     private struct Slot
     {
         internal uint Generation;
-        internal int NextFree, Command, FirstShape, FirstJoint;
+        internal int NextFree, Command, FirstShape, FirstJoint, FirstException;
         internal PhysicsServer.BodyMode Mode;
         internal CCDMode CCDMode;
         internal MassProfile MassProfile;
@@ -105,7 +105,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (index < 0) { Reserve(_highWater + 1); index = _highWater++; }
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
-        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = -1; Count++;
+        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = slot.FirstException = -1; Count++;
         slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep; slot.CCDMode = definition.ContinuousMode;
         if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount++;
         slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
@@ -132,6 +132,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         Validate(body);
         RemoveBodyJoints(body);
+        RemoveBodyExceptions(body);
         RemoveBodyShapes(body);
         ref var command = ref Edit(body.Index);
         command = new() { Index = body.Index, Generation = body.Generation, Mask = Destroy };

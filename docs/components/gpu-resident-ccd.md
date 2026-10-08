@@ -106,10 +106,10 @@ contact/event snapshot.
 ## Storage, transfer and native limits
 
 The hot device body remains 80 B; CCD mode fits existing flag bits. Commands remain
-128 B and selected snapshots 48 B. CPU slots are now 68 B, retaining one authored
-enum in addition
+128 B and selected snapshots 48 B. CPU slots are now 72 B, retaining the authored CCD
+enum and an incident-exception list head in addition
 to their prior configuration; there is no evolving body/trajectory mirror. At
-65,536 slots the CPU slot/command payload is 12.25 MiB, measured by
+65,536 slots the CPU slot/command payload is 12.5 MiB, measured by
 AuthoredBodyCapacityBytes.
 Swept bounds and candidate pairs reuse existing retained device buffers. Each
 nonempty TOI query adds an 8-B status/fraction reset and 8-B result readback at one
@@ -211,3 +211,7 @@ bytecode:
 | PhysicsResidentCCD | `d98c0e8aa4547623cc57a2f7dab04979a96fb557e4cc95bdc77dee601c880e1a` |
 | PhysicsResidentShapes | `791ccf5a16f9f95561ed66039691eb953e381e58359411e612b544b6f322158f` |
 | PhysicsResidentContacts | `d5ac16e41b1a6a4024995edb031160ffe4715cc69311a3321629116f9ef92d3f` |
+
+[Explicit body exceptions](gpu-resident-exceptions.md) now share the device pair
+filter with joint vetoes. Both ray and shape CCD skip vetoed obstacles and recover
+collision response after removal; no separate CCD-only exception list is kept.

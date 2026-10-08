@@ -12,7 +12,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Stage, Count, Bodies, Shapes;
         internal uint Leaves, Geometry, Vertices, Pairs;
         internal Float4 Tolerances;
-        internal uint JointFilters, Joints, Padding1, Padding2;
+        internal uint CollisionFilters, FilterPairs, Padding1, Padding2;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct TreeSettings
@@ -230,7 +230,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)bindings, 7);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident spatial compute");
         SDL.BindGPUComputePipeline(compute, _spatialPipeline!.DangerousGetHandle());
-        var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle(), _jointsGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), _jointFiltersGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), (_positionCorrectionsGPU ?? _shapeEditsGPU!).DangerousGetHandle() };
+        var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle(), _filterPairsGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), _jointFiltersGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), (_positionCorrectionsGPU ?? _shapeEditsGPU!).DangerousGetHandle() };
         SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
         var settings = new SpatialSettings
         {
@@ -243,8 +243,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Vertices = (uint)_vertexCapacity,
             Pairs = (uint)_pairCapacity,
             Tolerances = new(_pairMargin, _pairSweepDelta, _pairSweepCorrections ? 1 : 0, 0),
-            JointFilters = JointCount > 0 ? (uint)_jointFilterCapacity : 0,
-            Joints = (uint)_jointHighWater
+            CollisionFilters = JointCount > 0 || CollisionExceptionCount > 0 ? (uint)_jointFilterCapacity : 0,
+            FilterPairs = (uint)(_jointHighWater + _exceptionHighWater)
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SpatialSettings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

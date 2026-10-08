@@ -13,6 +13,7 @@ Last updated: 2026-10-09
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
 [joints](../../src/Servers/Physics/GPUPhysicsBodyStore.Joints.cs),
+[collision exceptions](../../src/Servers/Physics/GPUPhysicsBodyStore.Exceptions.cs),
 [body kernel](../../src/Servers/Physics/Shaders/PhysicsResidentBodies.comp.glsl),
 [shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl),
 [contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl),
@@ -33,12 +34,14 @@ and network replay remain open. See [resident contact response](../components/gp
 | Operation | Contract |
 | --- | --- |
 | `Add(BodyDefinition)` | Validate finite authored values, allocate a generation-qualified slot and queue its initial device record. |
-| `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes and joints immediately; queue device removal. Reuse gets a fresh generation. |
+| `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes, joints and live exception edges immediately; queue device removal. Reuse gets a fresh generation. |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
 | `Step` | Flush pending edits and integrate live bodies on GPU. Static poses stay fixed, kinematics ignore forces/gravity, rigid bodies use mass/inertia/gravity/signed damping, RigidLinear locks rotation. |
 | `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
 | `SolveConstraints` | Solve contacts, pins, grooves and springs together and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
 | `AddJoint`, `SetJoint`, `GetJointDefinition`, `RemoveJoint` | Own generation-safe device connections and authored settings, validated local frames, per-joint bias/softness/force/correction policies and independent collision vetoes; endpoint removal unlinks dependent joints. See [resident joints](../components/gpu-resident-joints.md). |
+| `SetCollisionException`, `HasCollisionException` | Retain directed live-body exceptions; either direction vetoes solid pairs. Joint contributions remain independent and sensors retain directional masks. Endpoint removal unlinks incoming/outgoing edges; see [resident exceptions](../components/gpu-resident-exceptions.md). |
+| `ExceptionUploadBytes`, `FilterSubmissionCount`, `FilterMS`, `FilterWaitMS` | Sparse exception bytes, combined joint/exception update batches, their total time and included fence waits. Unchanged filters stay resident. |
 | `SetMassProfile`, `GetMassProfile`, `GetMassProperties` | Change/read authored kilograms, zero/explicit inertia and nullable auto/custom center; resolve geometry without moving origin/velocity. See [resident mass](../components/gpu-resident-mass.md). |
 | `SetShapeMaterial` | Journal finite signed friction/bounce using the existing rough/absorbent convention. |
 | `SetSleeping`, `SetCanSleep`, `GetCanSleep`, `SetSleepSettings`, `GetSleepSettings` | Device dynamic sleep policy, ordered explicit sleep/wake and connected automatic sleep; see [resident sleep](../components/gpu-resident-sleep.md). |
@@ -99,8 +102,8 @@ invariants, speculative/sensor differences, mutable/disposed geometry, identity,
 feature stability, complete concave-piece output and failed-state rejection after
 nonfinite device intermediates. Moving grids verify every point against actual GPU
 poses outside the timed window; details and measured transfer costs are in the
-component report. Joint collision vetoes now execute on the device;
-explicit body exceptions and sensor/contact event publication remain unconnected. Contact
+component report. Joint collision vetoes and explicit live-body exceptions now execute on the device;
+public GPU exception projection and sensor/contact event publication remain unconnected. Contact
 impulses/material response and warm history now execute through the solver component.
 
 GPUPhysicsSolverStoreTests covers analytic momentum/energy/inertia, signed materials,
@@ -130,3 +133,8 @@ GPUPhysicsJointPolicyTests checks internal per-joint bias, vector correction/for
 caps, inverse-mass pin softness, shared physical/correction budgets, original
 substep budgeting through CCD, rejected edits and warmed allocation. The independent GPU
 public-world adapter remains open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).
+
+GPUPhysicsExceptionStoreTests verifies directed and joint contributions, sensor policy,
+endpoint reuse, connected wakeup, contact-history retirement and both CCD modes.
+Its 8,192-body/4,096-entry workload checks complete filtered populations and
+128 warmed live-edit ticks with zero managed allocations; see the exception report.

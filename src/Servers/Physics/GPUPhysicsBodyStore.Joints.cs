@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using SDL3;
 using Float4 = System.Numerics.Vector4;
@@ -44,7 +45,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     [StructLayout(LayoutKind.Sequential)]
     private struct JointEdit { internal uint Index, Padding1, Padding2, Padding3; internal JointData Value; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct JointEditSettings { internal uint Stage, Count, Joints, Capacity; }
+    private struct JointEditSettings
+    {
+        internal uint Stage, Count, Joints, Capacity;
+        internal uint Exceptions, Padding1, Padding2, Padding3;
+    }
     private JointSlot[] _jointSlots = [];
     private JointEdit[] _jointEdits = [];
     private readonly List<int> _dirtyJoints = [];
@@ -163,13 +168,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void FlushJoints()
     {
-        if (_dirtyJoints.Count == 0) return;
+        if (_dirtyJoints.Count == 0 && _dirtyExceptions.Count == 0) return;
+        var start = Stopwatch.GetTimestamp(); var wait = WaitMS;
         try
         {
-            Grow(ref _jointsGPU, ref _jointCapacity, _jointHighWater, sizeof(JointData), true);
-            Grow(ref _jointStatesGPU, ref _jointStateCapacity, _jointHighWater, 64, true);
-            Grow(ref _jointFiltersGPU, ref _jointFilterCapacity, checked(2 * _jointHighWater), 4, false);
-            Grow(ref _jointEditsGPU, ref _jointEditCapacity, _dirtyJoints.Count, sizeof(JointEdit), false);
+            Grow(ref _jointsGPU, ref _jointCapacity, Math.Max(1, _jointHighWater), sizeof(JointData), true);
+            Grow(ref _jointStatesGPU, ref _jointStateCapacity, Math.Max(1, _jointHighWater), 64, true);
+            Grow(ref _jointFiltersGPU, ref _jointFilterCapacity, checked(2 * (_jointHighWater + _exceptionHighWater)), 4, false);
+            Grow(ref _jointEditsGPU, ref _jointEditCapacity, Math.Max(1, _dirtyJoints.Count), sizeof(JointEdit), false);
             if (_jointEdits.Length < _dirtyJoints.Count) Array.Resize(ref _jointEdits, Capacity(_dirtyJoints.Count));
             for (var i = 0; i < _dirtyJoints.Count; i++)
             {
@@ -195,11 +201,23 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     }
                 };
             }
+            Grow(ref _exceptionsGPU, ref _exceptionCapacity, Math.Max(1, _exceptionHighWater), sizeof(PairData), true);
+            Grow(ref _exceptionEditsGPU, ref _exceptionEditCapacity, Math.Max(1, _dirtyExceptions.Count), sizeof(ExceptionEdit), false);
+            Grow(ref _filterPairsGPU, ref _filterPairCapacity, _jointHighWater + _exceptionHighWater, sizeof(PairData), false);
+            if (_exceptionEdits.Length < _dirtyExceptions.Count) Array.Resize(ref _exceptionEdits, Capacity(_dirtyExceptions.Count));
+            for (var i = 0; i < _dirtyExceptions.Count; i++)
+            {
+                var index = _dirtyExceptions[i]; ref var slot = ref _exceptionSlots[index];
+                _exceptionEdits[i] = new() { Index = (uint)index, Pair = slot.Alive ? slot.Pair : new() { A = uint.MaxValue, B = uint.MaxValue } };
+            }
             UploadJoints();
+            foreach (var index in _dirtyExceptions) _exceptionSlots[index].Dirty = false;
+            _dirtyExceptions.Clear();
             foreach (var index in _dirtyJoints) _jointSlots[index].Dirty = false;
             Array.Clear(_jointEdits, 0, _dirtyJoints.Count); _dirtyJoints.Clear();
         }
         catch { _failed = true; throw; }
+        finally { FilterMS += Stopwatch.GetElapsedTime(start).TotalMilliseconds; FilterWaitMS += WaitMS - wait; }
     }
 
     private void UploadJoints()
@@ -207,7 +225,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         _jointEditPipeline ??= _context.CreatePipeline("PhysicsResidentJointEdits.comp.spv");
         _spatialSummary ??= Buffer(8);
         var bytes = checked(_dirtyJoints.Count * sizeof(JointEdit));
-        GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, checked(8 + bytes), SDL.GPUTransferBufferUsage.Upload);
+        var exceptionBytes = checked(_dirtyExceptions.Count * sizeof(ExceptionEdit));
+        GrowTransfer(ref _spatialUpload, ref _spatialUploadBytes, checked(8 + bytes + exceptionBytes), SDL.GPUTransferBufferUsage.Upload);
         GrowTransfer(ref _spatialDownload, ref _spatialDownloadBytes, 8, SDL.GPUTransferBufferUsage.Download);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident joint edits");
@@ -217,27 +236,36 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident joint edits");
             *(ulong*)mapped = 0;
             fixed (JointEdit* source = _jointEdits) System.Buffer.MemoryCopy(source, (void*)(mapped + 8), bytes, bytes);
+            fixed (ExceptionEdit* source = _exceptionEdits) System.Buffer.MemoryCopy(source, (void*)(mapped + 8 + bytes), exceptionBytes, exceptionBytes);
             SDL.UnmapGPUTransferBuffer(Device, _spatialUpload.DangerousGetHandle());
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident joint upload");
-            UploadSpatial(copy, _spatialSummary, 0, 8); UploadSpatial(copy, _jointEditsGPU!, 8, (uint)bytes); SDL.EndGPUCopyPass(copy);
-            var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[4];
-            for (uint stage = 0; stage < 3; stage++)
+            UploadSpatial(copy, _spatialSummary, 0, 8);
+            if (bytes > 0) UploadSpatial(copy, _jointEditsGPU!, 8, (uint)bytes);
+            if (exceptionBytes > 0) UploadSpatial(copy, _exceptionEditsGPU!, (uint)(8 + bytes), (uint)exceptionBytes);
+            SDL.EndGPUCopyPass(copy);
+            var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[6];
+            var inputs = stackalloc nint[2] { _jointEditsGPU!.DangerousGetHandle(), _exceptionEditsGPU!.DangerousGetHandle() };
+            for (uint stage = 0; stage < 4; stage++)
             {
+                var count = stage switch { 0 => _dirtyJoints.Count, 1 => _dirtyExceptions.Count, 2 => _jointFilterCapacity, _ => _jointHighWater + _exceptionHighWater };
+                if (count == 0) continue;
                 outputs[0] = new() { Buffer = _jointsGPU!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _jointStatesGPU!.DangerousGetHandle() };
                 outputs[2] = new() { Buffer = _jointFiltersGPU!.DangerousGetHandle() }; outputs[3] = new() { Buffer = _spatialSummary.DangerousGetHandle() };
-                var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 4);
-                if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident joint edits");
+                outputs[4] = new() { Buffer = _exceptionsGPU!.DangerousGetHandle() }; outputs[5] = new() { Buffer = _filterPairsGPU!.DangerousGetHandle() };
+                var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 6);
+                if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident joint and exception edits");
                 SDL.BindGPUComputePipeline(compute, _jointEditPipeline.DangerousGetHandle());
-                var input = _jointEditsGPU!.DangerousGetHandle(); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)(&input), 1);
-                var settings = new JointEditSettings { Stage = stage, Count = (uint)(stage == 0 ? _dirtyJoints.Count : stage == 1 ? _jointFilterCapacity : _jointHighWater), Joints = (uint)_jointHighWater, Capacity = (uint)_jointFilterCapacity };
+                SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+                var settings = new JointEditSettings { Stage = stage, Count = (uint)count, Joints = (uint)_jointHighWater, Capacity = (uint)_jointFilterCapacity, Exceptions = (uint)_exceptionHighWater };
                 SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(JointEditSettings));
                 SDL.DispatchGPUCompute(compute, (settings.Count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
+                UniformBytes += sizeof(JointEditSettings);
             }
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident joint status");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() }); SDL.EndGPUCopyPass(copy);
-            Finish(ref command); UploadBytes += bytes + 8; JointUploadBytes += bytes; ReadbackBytes += 8; UniformBytes += 3 * sizeof(JointEditSettings);
+            Finish(ref command); UploadBytes += bytes + exceptionBytes + 8; JointUploadBytes += bytes; ExceptionUploadBytes += exceptionBytes; ReadbackBytes += 8; FilterSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident joint status");
             try { if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU joint edits returned invalid identities or filter storage."); }
@@ -245,5 +273,5 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
     }
-    private void DisposeJoints() { _jointsGPU?.Dispose(); _jointStatesGPU?.Dispose(); _jointEditsGPU?.Dispose(); _jointFiltersGPU?.Dispose(); _jointEditPipeline?.Dispose(); _jointPreparePipeline?.Dispose(); }
+    private void DisposeJoints() { _jointsGPU?.Dispose(); _jointStatesGPU?.Dispose(); _jointEditsGPU?.Dispose(); _jointFiltersGPU?.Dispose(); _jointEditPipeline?.Dispose(); _jointPreparePipeline?.Dispose(); DisposeExceptions(); }
 }

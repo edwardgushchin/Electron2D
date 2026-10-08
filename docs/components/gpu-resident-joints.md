@@ -38,7 +38,7 @@ rules are the body store's existing rules.
 Pending changes coalesce by slot. A device scatter updates configuration and resets
 changed warm records. Device-to-device growth preserves other configuration and
 history. A GPU hash table stores canonical collision-disabled body pairs; cold
-changes rebuild it from live device joints. Several joints may veto the same pair,
+changes rebuild it from live device joints and sparse [explicit body exceptions](gpu-resident-exceptions.md). Several joints or directed exception entries may veto the same pair,
 and removing/toggling one cannot remove another's contribution. Broad phase checks
 this table for physical body pairs; sensor monitoring retains its separate policy.
 Unchanged simulation does not upload authored joint records or rebuild the table.
@@ -85,7 +85,7 @@ joint preparation time. SolverMS and WaitMS retain their whole-submission scopes
 | Authored device joint | 128 bytes: generation/type/endpoints, endpoint generations and flags, local frames, limits, motor/spring values and solver policy. |
 | Scatter edit | 144 bytes per changed slot, plus an 8-byte batch status reset/readback. |
 | Warm state and budget | 64 bytes per retained joint slot, preserved during device growth. |
-| Collision veto table | 4 bytes per hash slot; power-of-two capacity at least twice joint high-water count. |
+| Collision veto table | 4 bytes per hash slot; power-of-two capacity at least twice combined joint/exception high-water count. Canonical source records use 16 bytes per retained contribution; explicit records additionally retain their 16-byte directed authored value on device. |
 | Solver rows | Up to five × (64 + 32) bytes per joint high-water slot, sharing contact buffers and body adjacency. |
 | Unchanged no-shape joint tick | Four substeps, each transferring body-force status 8, solver status 8 and pose status 8 bytes in each direction: 96 bytes per tick. Twelve publication waits. |
 
@@ -93,7 +93,7 @@ Explicit body snapshots are read only for requested consumers; the tests read th
 complete population after their timing/allocation window. Worlds with colliders
 retain the broad/narrow summary traffic documented in the contact report. Uniform
 bytes and waits are counted separately. Spatial uniforms are now 64 bytes,
-including joint filter bounds; prior component timings used the older layout.
+including combined collision-filter bounds; prior component timings used the older layout.
 Native driver allocations and asynchronous publication are not inferred from these
 payload counts.
 
