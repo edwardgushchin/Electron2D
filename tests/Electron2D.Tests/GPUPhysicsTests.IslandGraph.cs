@@ -14,6 +14,8 @@ internal static partial class GPUPhysicsTests
         VerifyIslandGraphFailure();
         VerifyGraphShaderFailure(gpu);
         VerifyGraphReadbackLiveness(gpu);
+        VerifyConstraintColorWake(gpu);
+        VerifyConstraintColorFailure(gpu);
         foreach (var sleeping in new[] { false, true })
         {
             B2WorldId Create()
@@ -36,7 +38,7 @@ internal static partial class GPUPhysicsTests
                 return world;
             }
             var c = Create(); var g = Create(); var cpu = b2GetWorldFromId(c); var actual = b2GetWorldFromId(g);
-            gpu.EnableIslandChanges(actual); gpu.EnableIslandSplitting(actual);
+            gpu.EnableIslandChanges(actual); gpu.EnableIslandSplitting(actual); gpu.EnableConstraintColors(actual);
             void Step() { b2World_Step(c, 1f / 60, 4); b2World_Step(g, 1f / 60, 4); CompareIslands(cpu, actual); }
             try
             {
@@ -58,11 +60,14 @@ internal static partial class GPUPhysicsTests
                 b2Body_SetAwake(last, true); b2Body_SetAwake(other, true); CompareIslands(cpu, actual);
                 using (var replacement = new GPUPhysicsWorld())
                 {
-                    replacement.EnableIslandChanges(actual); var callback = actual.beginIslandChanges; var observer = actual.islandGraphChanged;
-                    gpu.EnableIslandChanges(cpu);
+                    replacement.EnableIslandChanges(actual); replacement.EnableConstraintColors(actual);
+                    var coloring = actual.selectConstraintColor; var callback = actual.beginIslandChanges; var observer = actual.islandGraphChanged;
+                    gpu.EnableIslandChanges(cpu); gpu.EnableConstraintColors(cpu);
+                    if (actual.selectConstraintColor != coloring) throw new Exception("Color rebinding replaced another host callback.");
                     if (actual.beginIslandChanges != callback || actual.islandGraphChanged != observer) throw new Exception("Graph rebinding replaced another host's callback.");
                 }
-                if (actual.islandGraphChanged is not null || actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null)
+                if (actual.beginConstraintColors is not null || actual.finishConstraintColors is not null || actual.selectConstraintColor is not null ||
+                    actual.islandGraphChanged is not null || actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null)
                     throw new Exception("Graph disposal retained a callback.");
             }
             finally { b2DestroyWorld(c); b2DestroyWorld(g); }

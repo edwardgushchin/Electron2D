@@ -618,6 +618,7 @@ namespace Box2D.NET
 
             int endEventArrayIndex = world.endEventArrayIndex;
 
+            world.beginConstraintColors?.Invoke(world);
             world.beginIslandChanges?.Invoke(world);
 
             B2Shape[] shapes = world.shapes.data;
@@ -735,6 +736,7 @@ namespace Box2D.NET
 
             finishContactRemovals?.Invoke(world);
             world.finishIslandChanges?.Invoke(world);
+            world.finishConstraintColors?.Invoke(world);
             b2ValidateSolverSets(world);
             b2ValidateContacts(world);
 

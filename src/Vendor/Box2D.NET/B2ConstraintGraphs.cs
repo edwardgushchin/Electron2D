@@ -107,57 +107,7 @@ namespace Box2D.NET
             B2BodyType typeB = bodyB.type;
             B2_ASSERT(typeA == B2BodyType.b2_dynamicBody || typeB == B2BodyType.b2_dynamicBody);
 
-#if B2_FORCE_OVERFLOW
-            if (typeA == B2BodyType.b2_dynamicBody && typeB == B2BodyType.b2_dynamicBody)
-            {
-                // Dynamic constraint colors cannot encroach on colors reserved for static constraints
-                for (int i = 0; i < B2_DYNAMIC_COLOR_COUNT; ++i)
-                {
-                    ref B2GraphColor color = ref graph.colors[i];
-                    if (b2GetBit(ref color.bodySet, bodyIdA) || b2GetBit(ref color.bodySet, bodyIdB))
-                    {
-                        continue;
-                    }
-
-                    b2SetBitGrow(ref color.bodySet, bodyIdA);
-                    b2SetBitGrow(ref color.bodySet, bodyIdB);
-                    colorIndex = i;
-                    break;
-                }
-            }
-            else if (typeA == B2BodyType.b2_dynamicBody)
-            {
-                // Static constraint colors build from the end to get higher priority than dyn-dyn constraints
-                for (int i = B2_OVERFLOW_INDEX - 1; i >= 1; --i)
-                {
-                    ref B2GraphColor color = ref graph.colors[i];
-                    if (b2GetBit(ref color.bodySet, bodyIdA))
-                    {
-                        continue;
-                    }
-
-                    b2SetBitGrow(ref color.bodySet, bodyIdA);
-                    colorIndex = i;
-                    break;
-                }
-            }
-            else if (typeB == B2BodyType.b2_dynamicBody)
-            {
-                // Static constraint colors build from the end to get higher priority than dyn-dyn constraints
-                for (int i = B2_OVERFLOW_INDEX - 1; i >= 1; --i)
-                {
-                    ref B2GraphColor color = ref graph.colors[i];
-                    if (b2GetBit(ref color.bodySet, bodyIdB))
-                    {
-                        continue;
-                    }
-
-                    b2SetBitGrow(ref color.bodySet, bodyIdB);
-                    colorIndex = i;
-                    break;
-                }
-            }
-#endif
+            colorIndex = b2SelectConstraintColor(world, 0, contact.contactId, bodyIdA, bodyIdB, typeA, typeB);
 
             ref B2GraphColor color0 = ref graph.colors[colorIndex];
             contact.colorIndex = colorIndex;
@@ -215,6 +165,8 @@ namespace Box2D.NET
             B2_ASSERT(0 <= colorIndex && colorIndex < B2_GRAPH_COLOR_COUNT);
             ref B2GraphColor color = ref graph.colors[colorIndex];
 
+            world.selectConstraintColor?.Invoke(world, 0, color.contactSims.data[localIndex].contactId, bodyIdA, bodyIdB, colorIndex);
+
             if (colorIndex != B2_OVERFLOW_INDEX)
             {
                 // This might clear a bit for a kinematic or static body, but this has no effect
@@ -236,6 +188,19 @@ namespace Box2D.NET
                 B2_ASSERT(movedContact.localIndex == movedIndex);
                 movedContact.localIndex = localIndex;
             }
+        }
+
+        private static int b2SelectConstraintColor(B2World world, int kind, int id, int bodyIdA, int bodyIdB, B2BodyType typeA, B2BodyType typeB)
+        {
+            int selected = world.selectConstraintColor?.Invoke(world, kind, id, bodyIdA, bodyIdB, B2_NULL_INDEX) ?? B2_NULL_INDEX;
+            if (selected == B2_NULL_INDEX) return b2AssignJointColor(ref world.constraintGraph, bodyIdA, bodyIdB, typeA, typeB);
+            if (selected != B2_OVERFLOW_INDEX)
+            {
+                ref B2GraphColor color = ref world.constraintGraph.colors[selected];
+                if (typeA == B2BodyType.b2_dynamicBody) b2SetBitGrow(ref color.bodySet, bodyIdA);
+                if (typeB == B2BodyType.b2_dynamicBody) b2SetBitGrow(ref color.bodySet, bodyIdB);
+            }
+            return selected;
         }
 
         static int b2AssignJointColor(ref B2ConstraintGraph graph, int bodyIdA, int bodyIdB, B2BodyType typeA, B2BodyType typeB)
@@ -305,7 +270,7 @@ namespace Box2D.NET
             B2Body bodyA = b2Array_Get(ref world.bodies, bodyIdA);
             B2Body bodyB = b2Array_Get(ref world.bodies, bodyIdB);
 
-            int colorIndex = b2AssignJointColor(ref graph, bodyIdA, bodyIdB, bodyA.type, bodyB.type);
+            int colorIndex = b2SelectConstraintColor(world, 1, joint.jointId, bodyIdA, bodyIdB, bodyA.type, bodyB.type);
 
             ref B2JointSim jointSim = ref b2Array_Add(ref graph.colors[colorIndex].jointSims);
             //memset( jointSim, 0, sizeof( b2JointSim ) );
@@ -329,6 +294,8 @@ namespace Box2D.NET
 
             B2_ASSERT(0 <= colorIndex && colorIndex < B2_GRAPH_COLOR_COUNT);
             ref B2GraphColor color = ref graph.colors[colorIndex];
+
+            world.selectConstraintColor?.Invoke(world, 1, color.jointSims.data[localIndex].jointId, bodyIdA, bodyIdB, colorIndex);
 
             if (colorIndex != B2_OVERFLOW_INDEX)
             {

@@ -59,7 +59,7 @@ Joint filtering walks the smaller body adjacency list. User filters remain on th
 owner after readback, followed by GPU contact identity allocation and initialization.
 Body/contact adjacency is built and retained on GPU; disjoint-contact unlink and ID
 release also execute there. CPU query/CCD trees, mirror/event publication, external
-authoring edits and constraint coloring remain managed; contact-driven island merging/unlinking
+authoring edits and their constraint coloring remain managed; contact-driven island merging/unlinking
 and disconnected-island splitting execute on GPU. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
@@ -201,7 +201,7 @@ the hook. Retained workers copy body metadata and GPU results into the CPU mirro
 and per-worker contact bitsets; their ordered union is unchanged. Hooked contacts
 publish on the owner after workers join, and custom material callbacks keep all
 publication on the owner. The step-scoped completion marker skips the CPU collision-update task;
-constraint coloring, authoring island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
+authoring constraint coloring, authoring island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
 execute in the collision shader. It reads the previous completed GPU solver
 buffer directly when that contact's source is current; cold or older sources
 upload a compact 32-byte history record. Empty histories need no upload.
@@ -384,7 +384,7 @@ Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
-move constraint coloring and authoring island changes to GPU, remove full CPU graph-validation scans and the separate split transfers, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+move authoring constraint coloring and island changes to GPU, remove full CPU graph-validation scans and the separate split transfers, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -1140,3 +1140,68 @@ or retries. All four state hashes remain
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-dense-flags-{a,b}.json`.
 The preceding sleeping-wall, native-window, cross-device and allocation boundaries
 continue to apply. Full GPU world completion remains a separate open requirement.
+
+## Collision-batch GPU constraint coloring (2026-10-08)
+
+The GPU entry now selects constraint colors for the ordered collision-state batch.
+Preparation anticipates sleeping-set wakes, adding their touching contacts and
+joints in original set order before each triggering contact. The normal insertion/
+removal paths consume generation-checked results, keep existing simulation-array
+order and update the CPU occupancy mirror. Immediate authoring coloring, sleep
+decisions and set transfer remain CPU operations. Ordinary CPU worlds use the
+unchanged greedy policy through one shared contact/joint helper.
+
+The shader first transposes the uploaded per-color body bitsets into one occupied-
+color mask per body in parallel. A serial ordered pass reads endpoint masks and
+selects the first free low/high bit according to the existing dynamic/static
+priority, or uses overflow. Scratch shares the same buffer; no extra binding or
+transfer is needed. The current 24-color layout fits in one 32-bit mask. A future
+larger layout fails explicitly. Parallel assignment remains open work.
+
+Each nonempty batch performs one submission with 32-byte input operations and
+four-byte returned colors plus one error word. Body bitsets currently upload every
+batch. CPU validation checks bounds, color policy, independent occupancy transitions
+and final publication identity/order; the finish hook checks complete consumption
+and final bitsets. Empty mutation batches skip compute. Capacity persists for all
+current constraints, avoiding growth merely because a larger subset changes.
+
+The churn oracle now compares every contact/joint slot and complete color bitsets,
+including static/kinematic endpoints, authoring changes, ID reuse, dense overflow
+and allocation intervals. A sleeping star wakes 30 joints plus existing touching
+contacts and reaches overflow; unchanged contacts then require no extra submission.
+Malformed shader input and invalid returned colors fail before graph publication.
+A mid-publication failure checks poisoned-world no-replay and cleanup. Replacement
+callback ownership, rebind/dispose and world reset are covered by the same suite.
+
+The first shader searched each color's body bitset serially. It measured 7.69/7.49 ms
+for dispatch/readback and 175.25/177.06 ms whole steps versus 171.21/171.95 ms for
+CPU-color controls. This candidate is superseded by the mask-transpose shader.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-constraint-colors-{a,b}.json`.
+
+Final sequential Linux/Vulkan runs use the same 65,537-body headless Smash workload,
+32 warmup and 64 measured steps, ordered GPU A/CPU A/CPU B/GPU B. No build, test or
+formatter ran concurrently. The CPU control disables only coloring hooks; other
+GPU stages stay enabled (`ELECTRON2D_SANDBOX_PROFILE_CPU_COLORS=1`).
+
+| Coloring | Whole-step mean | p95 | Preparation | Dispatch/readback | Validation | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| GPU masks A | 177.21 ms | 246.97 ms | 1.59 ms | 3.73 ms | 0.060 ms | 0 / 0 |
+| CPU A | 174.72 ms | 248.06 ms | — | — | — | 0 / 0 |
+| CPU B | 172.92 ms | 274.27 ms | — | — | — | 0 / 0 |
+| GPU masks B | 176.92 ms | 267.48 ms | 1.66 ms | 3.62 ms | 0.060 ms | 0 / 0 |
+
+GPU dispatch/readback cost is lower than the serial-search candidate, but complete
+steps remain slower than CPU coloring. These data establish executable GPU work
+and exact state equivalence, not an application speedup. The measured phases are
+host wall times, not GPU kernel timestamps; final mirror updates/bitset comparison
+are outside the three coloring phase timers.
+
+Each final GPU interval colors/removes 405,412 constraints in 64 submissions,
+transferring 26,659,600 bytes. All eight candidate/final state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`;
+owner/all-thread managed allocation is zero. Final artifacts: ignored
+`bin/physics-sandbox/profile-Release-{gpu,cpu}-constraint-color-masks-{a,b}.json`.
+The final SPIR-V rebuild matches SHA-256
+`3e7aa26d09a41a77b196002df95b3d7026e1315f9d8f0111f4dcd4d74ddfb348`.
+Sleeping-wall/native-window/cross-platform/native-allocation limits still apply;
+public backend selection and full GPU-world completion remain open.

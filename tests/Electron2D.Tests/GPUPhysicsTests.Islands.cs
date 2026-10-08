@@ -61,6 +61,18 @@ internal static partial class GPUPhysicsTests
             if (a.islandId != b.islandId || a.islandPrev != b.islandPrev || a.islandNext != b.islandNext || a.setIndex != b.setIndex || a.localIndex != b.localIndex || a.colorIndex != b.colorIndex)
                 throw new Exception("Island joint order differs.");
         }
+        for (var i = 0; i < B2Constants.B2_GRAPH_COLOR_COUNT; i++)
+        {
+            var a = cpu.constraintGraph.colors[i]; var b = actual.constraintGraph.colors[i];
+            if (a.contactSims.count != b.contactSims.count || a.jointSims.count != b.jointSims.count || a.bodySet.blockCount != b.bodySet.blockCount ||
+                !a.bodySet.bits.AsSpan(0, a.bodySet.blockCount).SequenceEqual(b.bodySet.bits.AsSpan(0, b.bodySet.blockCount)))
+                throw new Exception("Constraint color occupancy/counts differ.");
+            for (var j = 0; j < a.contactSims.count; j++)
+                if (a.contactSims.data[j].contactId != b.contactSims.data[j].contactId || a.contactSims.data[j].generation != b.contactSims.data[j].generation)
+                    throw new Exception("Constraint contact order differs.");
+            for (var j = 0; j < a.jointSims.count; j++)
+                if (a.jointSims.data[j].jointId != b.jointSims.data[j].jointId) throw new Exception("Constraint joint order differs.");
+        }
     }
 
     private static B2JointId SplitJoint(B2WorldId world, B2BodyId a, B2BodyId b, int kind)

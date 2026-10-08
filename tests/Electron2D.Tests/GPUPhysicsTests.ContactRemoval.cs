@@ -54,7 +54,7 @@ internal static partial class GPUPhysicsTests
         var cpu = b2GetWorldFromId(cpuID); var actual = b2GetWorldFromId(gpuID);
         var cpuContext = new B2StepContext { world = cpu }; var gpuContext = new B2StepContext { world = actual };
         gpu.EnableContactCreation(actual); actual.generateManifolds = gpu.UpdateContacts;
-        if (islandChanges) { gpu.EnableIslandChanges(actual); gpu.EnableIslandSplitting(actual); }
+        if (islandChanges) { gpu.EnableIslandChanges(actual); gpu.EnableIslandSplitting(actual); gpu.EnableConstraintColors(actual); }
         void Move(B2World w, bool apart)
         {
             for (var i = 0; i < count; i++) b2Body_SetTransform(b2MakeBodyId(w, i + 1), Position(i, apart), new(1, 0));
@@ -122,6 +122,7 @@ internal static partial class GPUPhysicsTests
             for (var i = 0; i < 32; i++) { Frame(true); Frame(false); }
             var snapshots = gpu.ContactPoolSnapshotCount; var links = gpu.ContactLinkUploadBytes; var poolBytes = gpu.ContactPoolUploadBytes;
             var removed = gpu.RemovedContactCount; var changes = gpu.IslandChangeCount; var merges = gpu.MergedIslandCount;
+            var colorChanges = gpu.ConstraintColorChangeCount;
             var graphSnapshots = gpu.IslandGraphSnapshotCount; var graphRetries = gpu.IslandGraphReadbackRetries;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 16; i++) { Frame(true); Frame(false); }
@@ -133,6 +134,7 @@ internal static partial class GPUPhysicsTests
             if (count >= 1 && gpu.RemovedContactCount == removed) throw new Exception("The fixture must remove contacts on GPU.");
             if (islandChanges && count > 0 && (gpu.IslandChangeCount == changes || count is > 1 and < 257 && gpu.MergedIslandCount == merges))
                 throw new Exception("The island fixture must change membership and merge on GPU.");
+            if (islandChanges && count > 0 && gpu.ConstraintColorChangeCount == colorChanges) throw new Exception("The churn fixture must color constraints on GPU.");
             // External CPU destruction remains coherent with the resident GPU graph.
             if (count > 2)
             {
@@ -178,6 +180,7 @@ internal static partial class GPUPhysicsTests
             b2DestroyWorld(cpuID); b2DestroyWorld(gpuID);
             if (cpu.integrateBodyStage is not null || cpu.solveConstraints is not null || actual.generateManifolds is not null ||
                 actual.destroyDisjointContact is not null || actual.finishContactRemovals is not null ||
+                actual.beginConstraintColors is not null || actual.finishConstraintColors is not null || actual.selectConstraintColor is not null ||
                 actual.islandGraphChanged is not null || actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null ||
                 cpu.reusableStepContext.states is not null || actual.reusableStepContext.generatedManifoldOwner is not null)
                 throw new Exception("World reset must detach every GPU stage callback.");

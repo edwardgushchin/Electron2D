@@ -121,7 +121,7 @@ Built-in contacts without pre-solve hooks publish in parallel; hooked contacts
 publish on the owner after workers join. Worlds using custom material callbacks
 keep publication on the owner to preserve callback order. A veto clears touching/hit/start state and rolling history; optional pruning for
 hooked contacts follows the callback so its deepest-point input is unchanged.
-`UpdatedContactCount` accumulates complete contact updates. Constraint coloring, authoring island changes, event publication and the first manifold readback still remain managed. Chain
+`UpdatedContactCount` accumulates complete contact updates. Authoring constraint coloring, authoring island changes, event publication and the first manifold readback still remain managed. Chain
 segments are rejected explicitly; CPU tree mirrors, user filters, contact/body links
 and sensor queries still belong to the CPU path.
 
@@ -204,6 +204,38 @@ profiling is enabled: preparation, command recording/upload, submit/fence wait,
 readback decoding, validation and final mirror publication. GPU wait includes queue
 and transfer time; it is not a hardware timestamp for one shader. Consuming native
 merge records in the contact-state loop is outside these six phases.
+
+`EnableConstraintColors` batches coloring operations before the collision-state
+loop. It walks ordered contact changes and anticipates each sleeping-set wake once,
+inserting that set's existing touching contacts then joints before the triggering
+contact. GPU passes consume the current packed body-occupancy bitsets and
+32-byte identity/generation/endpoint/type/old-color operations. Dynamic pairs
+search low colors upward; single-dynamic constraints search high colors downward;
+exhausted colors use overflow. A parallel pass first transposes color bitsets into
+one 32-bit occupied-color mask per body; ordered assignment then reads at most two
+masks and finds the lowest/highest free bit instead of scanning every color.
+The scratch suffix shares the existing mask buffer. Limits follow the configured
+backend constants (currently 24 colors including overflow, up to 32 supported).
+The ordered greedy kernel is currently serial, with one submission per nonempty
+batch. Empty batches do not dispatch. Immediate authoring edits retain CPU coloring.
+
+Four-byte color results plus an error word return to the owner. Validation checks
+color bounds/policy and evolves independent CPU occupancy to reject conflicting
+assignments/removals before publication. The ordinary contact/joint insertion
+paths consume only matching ID/generation/endpoint operations, update the CPU
+bitset mirror and preserve original array insertion/swap-removal order. The finish
+hook requires complete consumption and matching final occupancy. Partial failure
+poisons the world without replay; reset and disposal detach owned callbacks.
+Buffers retain capacity across batches, including result capacity for all current
+constraints rather than just the most recent changed subset.
+
+`ConstraintColorSubmissionCount`, `ConstraintColorChangeCount` and
+`ConstraintColorTransferBytes` count completed submissions, consumed operations and
+scheduled input/result bytes. `ConstraintColorProfileMS` accumulates preparation,
+dispatch/readback and pre-publication validation for nonempty batches. Immediate
+publication and final bitset comparison are outside those phase timers. Current
+bitsets upload each batch; authoring/sleep transfers and GPU coloring parallelism
+remain open work.
 
 `EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
 islands upload ordered body/contact/joint adjacency. GPU minimum-seed label

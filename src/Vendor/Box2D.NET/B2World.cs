@@ -24,6 +24,9 @@ namespace Box2D.NET
         internal System.Action<B2World> beginIslandChanges, finishIslandChanges;
         // Record kinds: island, body, contact, joint. Captured after the authoring operation completes.
         internal System.Action<int, int> islandGraphChanged;
+        internal System.Action<B2World> beginConstraintColors, finishConstraintColors;
+        // Negative color requests assignment; nonnegative color consumes a removal.
+        internal System.Func<B2World, int, int, int, int, int, int> selectConstraintColor;
         internal System.Func<B2World, B2Contact, bool, bool> changeContactIsland;
         internal System.Action<int> contactPairChanged;
         internal System.Action<int> shapeFilterChanged;
@@ -192,6 +195,8 @@ namespace Box2D.NET
             splitIsland = null;
             beginIslandChanges = finishIslandChanges = null;
             islandGraphChanged = null;
+            beginConstraintColors = finishConstraintColors = null;
+            selectConstraintColor = null;
             changeContactIsland = null;
             contactPairChanged = null;
             shapeFilterChanged = null;
