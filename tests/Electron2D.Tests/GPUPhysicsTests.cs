@@ -13,6 +13,7 @@ internal static partial class GPUPhysicsTests
         VerifyGeometryResidency();
         VerifyContactUpdates();
         VerifyContactCreation();
+        VerifyContactRemovals();
         VerifyResidentConstraints(gpu);
         VerifyWarmHistory(gpu);
         PhysicsSurfaceVelocityTests.Run(true);
@@ -22,6 +23,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(true, true);
         VerifyWorld(true, pairFailure: true);
         VerifyWorld(true, creationFailure: true);
+        VerifyWorld(true, removalFailure: true);
         VerifyOwnedWorldFailure();
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
@@ -107,7 +109,7 @@ internal static partial class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false)
+    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false, bool removalFailure = false)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -141,7 +143,15 @@ internal static partial class GPUPhysicsTests
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            if (creationFailure)
+            if (removalFailure)
+            {
+                var native = B2Worlds.b2GetWorldFromId(world.WorldID);
+                var existing = native.contacts.data.First(c => c.contactId >= 0);
+                native.shapes.data[existing.shapeIdB].fatAABB = new() { lowerBound = new(100, 100), upperBound = new(101, 101) };
+                var publish = native.destroyDisjointContact;
+                native.destroyDisjointContact = (w, c) => { publish(w, c); throw new IOException("injected GPU removal publication failure"); };
+            }
+            else if (creationFailure)
             {
                 var native = B2Worlds.b2GetWorldFromId(world.WorldID);
                 for (var i = 0; i < native.contacts.count; i++)

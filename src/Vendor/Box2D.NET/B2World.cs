@@ -18,6 +18,8 @@ namespace Box2D.NET
         internal System.Action<B2World> findBroadPhasePairs;
         internal System.Action<B2World> createBroadPhaseContacts;
         internal System.Action<B2Contact> contactLinksChanged;
+        internal System.Action<B2World, B2Contact> destroyDisjointContact;
+        internal System.Action<B2World> finishContactRemovals;
         internal System.Action<int> contactPairChanged;
         internal System.Action<int> shapeFilterChanged;
         internal System.Action<int> shapeGeometryChanged;
@@ -173,9 +175,15 @@ namespace Box2D.NET
 
         public void Clear()
         {
+            reusableStepContext.Reset();
+            integrateBodyStage = null;
+            solveConstraints = null;
+            generateManifolds = null;
             findBroadPhasePairs = null;
             createBroadPhaseContacts = null;
             contactLinksChanged = null;
+            destroyDisjointContact = null;
+            finishContactRemovals = null;
             contactPairChanged = null;
             shapeFilterChanged = null;
             shapeGeometryChanged = null;

@@ -4,12 +4,12 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
 The developing GPU-world host currently executes velocity and delta-pose
-integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
+integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
@@ -76,8 +76,21 @@ CPU-origin link changes coalesce to 32-byte contact/body updates, including both
 neighbors on deletion. Binding/observer/capacity changes snapshot both stores.
 `ContactLinkUploadBytes` counts those uploads. The internal diagnostic
 `ValidateContactLinks` synchronizes pending changes and compares all GPU link/head/
-count records against the CPU mirror. Removal and graph/island changes still run
+count records against the CPU mirror. External authoring removal and graph/island changes still run
 on CPU; normal frames do not perform that complete diagnostic readback.
+
+The complete collision entry also removes disjoint contacts on GPU within its
+existing submission/fence. Ascending-ID compaction and body endpoint sorting
+preserve the CPU deletion order. Each body unlinks its selected edges in sequence;
+independent bodies run in parallel. Slot generations survive free-list append.
+Forty-eight-byte removal records retain every intermediate link/head/count prefix.
+The owner validates the batch and publishes each removal among the original
+state changes; the common mirror path preserves events and graph/island updates.
+A completion hook verifies all records and pool counts. Own free/link notifications
+are suppressed because the GPU already holds their results. External CPU authoring
+edits still use journals. The numeric manifold-only entry remains non-destructive.
+`RemovedContactCount` and `ContactRemovalReadbackBytes` are cumulative. A partial
+publication failure poisons the world without replay and leaves disposal available.
 
 `GenerateManifolds` keeps local shape geometry resident. Creation/destruction and
 primitive/material/hit-event edits invalidate a slot, and the first overlapping pair referencing it

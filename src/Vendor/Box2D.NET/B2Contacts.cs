@@ -338,8 +338,37 @@ namespace Box2D.NET
         // - a body changes type from dynamic to kinematic or static
         // - a shape is destroyed
         // - contact filtering is modified
-        public static void b2DestroyContact(B2World world, B2Contact contact, bool wakeBodies)
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        internal struct B2ContactRemoval
         {
+            internal int ID;
+            internal uint Generation;
+            internal int BodyA, BodyB;
+            internal int PrevA, NextA, HeadA, CountA;
+            internal int PrevB, NextB, HeadB, CountB;
+        }
+
+        internal static void b2DestroyContactPrepared(B2World world, B2Contact contact, in B2ContactRemoval removal)
+        {
+            B2Body a = world.bodies.data[contact.edges[0].bodyId];
+            B2Body b = world.bodies.data[contact.edges[1].bodyId];
+            if (contact.contactId != removal.ID || contact.generation != removal.Generation ||
+                a.id != removal.BodyA || b.id != removal.BodyB ||
+                contact.edges[0].prevKey != removal.PrevA || contact.edges[0].nextKey != removal.NextA ||
+                contact.edges[1].prevKey != removal.PrevB || contact.edges[1].nextKey != removal.NextB ||
+                removal.HeadA != (a.headContactKey == 2 * removal.ID ? removal.NextA : a.headContactKey) ||
+                removal.HeadB != (b.headContactKey == 2 * removal.ID + 1 ? removal.NextB : b.headContactKey) ||
+                removal.CountA != a.contactCount - 1 || removal.CountB != b.contactCount - 1)
+                throw new System.InvalidOperationException("Prepared contact removal differs from the ordered mirror.");
+            b2DestroyContactCore(world, contact, false, removal);
+        }
+
+        public static void b2DestroyContact(B2World world, B2Contact contact, bool wakeBodies) =>
+            b2DestroyContactCore(world, contact, wakeBodies, null);
+
+        private static void b2DestroyContactCore(B2World world, B2Contact contact, bool wakeBodies, B2ContactRemoval? prepared)
+        {
+            B2ContactRemoval removal = prepared.GetValueOrDefault();
             // Remove pair from set
             ulong pairKey = B2_SHAPE_PAIR_KEY(contact.shapeIdA, contact.shapeIdB);
             b2RemoveKey(ref world.broadPhase.pairSet, pairKey);
@@ -380,6 +409,12 @@ namespace Box2D.NET
                 b2Array_Push(ref world.contactEndEvents[world.endEventArrayIndex], @event);
             }
 
+            // Prepared links retain the exact prefix observed by subsequent graph updates.
+            if (prepared.HasValue)
+            {
+                edgeA.prevKey = removal.PrevA; edgeA.nextKey = removal.NextA;
+                edgeB.prevKey = removal.PrevB; edgeB.nextKey = removal.NextB;
+            }
             // Remove from body A
             if (edgeA.prevKey != B2_NULL_INDEX)
             {
@@ -398,12 +433,13 @@ namespace Box2D.NET
             int contactId = contact.contactId;
 
             int edgeKeyA = (contactId << 1) | 0;
-            if (bodyA.headContactKey == edgeKeyA)
+            if (prepared.HasValue) bodyA.headContactKey = removal.HeadA;
+            else if (bodyA.headContactKey == edgeKeyA)
             {
                 bodyA.headContactKey = edgeA.nextKey;
             }
 
-            bodyA.contactCount -= 1;
+            bodyA.contactCount = prepared.HasValue ? removal.CountA : bodyA.contactCount - 1;
 
             // Remove from body B
             if (edgeB.prevKey != B2_NULL_INDEX)
@@ -421,12 +457,13 @@ namespace Box2D.NET
             }
 
             int edgeKeyB = (contactId << 1) | 1;
-            if (bodyB.headContactKey == edgeKeyB)
+            if (prepared.HasValue) bodyB.headContactKey = removal.HeadB;
+            else if (bodyB.headContactKey == edgeKeyB)
             {
                 bodyB.headContactKey = edgeB.nextKey;
             }
 
-            bodyB.contactCount -= 1;
+            bodyB.contactCount = prepared.HasValue ? removal.CountB : bodyB.contactCount - 1;
 
             world.contactLinksChanged?.Invoke(contact);
 

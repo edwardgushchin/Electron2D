@@ -47,6 +47,11 @@ internal static partial class PhysicsSandboxTests
                 gpu = gpuSpace.EnableGPUSolver();
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_CREATION") == "1")
                     gpu.DisableContactCreation();
+                if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_REMOVAL") == "1")
+                {
+                    var profileWorld = Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID);
+                    profileWorld.destroyDisjointContact = null!; profileWorld.finishContactRemovals = null!;
+                }
                 var cpuContacts = Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_CONTACTS") == "1";
                 if (cpuContacts) Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID).generateManifolds = gpu.GenerateManifolds;
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_PAIRS") == "1")
@@ -101,6 +106,8 @@ internal static partial class PhysicsSandboxTests
             var contactPoolSnapshotStart = gpu?.ContactPoolSnapshotCount ?? 0;
             var contactPoolUploadStart = gpu?.ContactPoolUploadBytes ?? 0;
             var contactLinkUploadStart = gpu?.ContactLinkUploadBytes ?? 0;
+            var removedStart = gpu?.RemovedContactCount ?? 0;
+            var removalReadbackStart = gpu?.ContactRemovalReadbackBytes ?? 0;
             var allocated = GC.GetAllocatedBytesForCurrentThread();
             var allThreadsAllocated = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++)
@@ -149,7 +156,9 @@ internal static partial class PhysicsSandboxTests
             var contactPoolSnapshots = (gpu?.ContactPoolSnapshotCount ?? 0) - contactPoolSnapshotStart;
             var contactPoolUploadBytes = (gpu?.ContactPoolUploadBytes ?? 0) - contactPoolUploadStart;
             var contactLinkUploadBytes = (gpu?.ContactLinkUploadBytes ?? 0) - contactLinkUploadStart;
-            physics.Add(new { contactLinkUploadBytes, createdContacts, contactPoolSnapshots, contactPoolUploadBytes, updatedContacts, geometryCacheResets, residentGeometry, uploadedGeometry, geometryUploadBytes, filterSnapshots, filterUpdatedShapes, filterUpdatedJoints, filterUploadBytes, treeSnapshots, treeRebuilds, treeRefits, treeUpdatedProxies, treeUploadBytes, pairTableSnapshots, pairTableRebuilds, pairTableUpdatedSlots, pairTableUploadBytes, broadPhaseMS, broadPhaseUploadBytes, broadPhaseReadbackBytes, broadPhaseCandidates, scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
+            var removedContacts = (gpu?.RemovedContactCount ?? 0) - removedStart;
+            var removalReadbackBytes = (gpu?.ContactRemovalReadbackBytes ?? 0) - removalReadbackStart;
+            physics.Add(new { removedContacts, removalReadbackBytes, contactLinkUploadBytes, createdContacts, contactPoolSnapshots, contactPoolUploadBytes, updatedContacts, geometryCacheResets, residentGeometry, uploadedGeometry, geometryUploadBytes, filterSnapshots, filterUpdatedShapes, filterUpdatedJoints, filterUploadBytes, treeSnapshots, treeRebuilds, treeRefits, treeUpdatedProxies, treeUploadBytes, pairTableSnapshots, pairTableRebuilds, pairTableUpdatedSlots, pairTableUploadBytes, broadPhaseMS, broadPhaseUploadBytes, broadPhaseReadbackBytes, broadPhaseCandidates, scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
         }
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_HEADLESS") == "1")
         {

@@ -7,11 +7,14 @@ layout(local_size_x = 64) in;
 struct Request { ivec4 a; ivec4 b; vec4 material; uvec4 flags; };
 struct Created { ContactSlot slot; vec4 material; ivec4 identity; ivec4 links; };
 struct LinkUpdate { ivec4 identity; ivec4 value; };
+struct CollisionPair { ivec4 ids; vec4 poseA; vec4 poseB; vec4 offset; };
+struct Removed { ivec4 identity; ivec4 a; ivec4 b; };
 struct BodyLinks { int head; int count; int nextHead; int nextCount; };
 struct Change { ContactSlot slot; ivec4 command; };
 layout(std430, set = 0, binding = 0) readonly buffer Requests { Request requests[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Changes { Change changes[]; };
 layout(std430, set = 0, binding = 2) readonly buffer LinkUpdates { LinkUpdate linkUpdates[]; };
+layout(std430, set = 0, binding = 3) readonly buffer CollisionPairs { CollisionPair pairs[]; };
 layout(std430, set = 1, binding = 0) buffer Slots { ContactSlot slots[]; };
 layout(std430, set = 1, binding = 1) buffer FreeIDs { int freeIDs[]; };
 layout(std430, set = 1, binding = 2) buffer Pool { ivec4 pool; ivec4 basePool; };
@@ -19,13 +22,25 @@ layout(std430, set = 1, binding = 3) buffer Results { Created created[]; };
 layout(std430, set = 1, binding = 4) buffer Scan { int scan[]; };
 layout(std430, set = 1, binding = 5) buffer Links { ivec4 links[]; };
 layout(std430, set = 1, binding = 6) buffer Bodies { BodyLinks bodies[]; };
+layout(std430, set = 1, binding = 7) buffer Removals { Removed removed[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { ivec4 settings; ivec4 level; };
-// pool = next, free count, error, created count; basePool = allocation start.
+// pool = next, free count, error, operation count; basePool = allocation start.
 int rankType(int type) { return type == 2 ? 3 : type == 3 ? 2 : type; }
 ivec2 endpoint(int i) { return ivec2(scan[2*i],scan[2*i+1]); }
 void setEndpoint(int i, ivec2 value) { scan[2*i] = value.x; scan[2*i+1] = value.y; }
 bool greater(ivec2 a, ivec2 b) { return a.x > b.x || (a.x == b.x && a.y > b.y); }
 int edgeKey(int ordinal) { return 2*created[ordinal/2].identity.x + (ordinal&1); }
+int scanPrefix(int index)
+{
+    int prefix = 0;
+    for (int node = settings.w + index; node > 1; node /= 2)
+        if ((node & 1) != 0) prefix += scan[node-1];
+    return prefix;
+}
+bool ownsEdge(int key, int body)
+{
+    return key >= 0 && key/2 < pool.x && slots[key/2].shapeBody[2+(key&1)] == body;
+}
 shared ivec2 sortTile[64];
 void mergeTile(int width, int offset, int index, int local)
 {
@@ -185,12 +200,84 @@ void main()
         bodies[body].head = bodies[body].nextHead; bodies[body].count = bodies[body].nextCount;
         return;
     }
+    if (operation == 13)
+    {
+        if (index >= count) return;
+        ivec4 pair = pairs[index].ids;
+        if ((pair.z & 1) != 0) return;
+        if (pair.x < 0 || pair.x >= pool.x || slots[pair.x].state.x != uint(pair.y) || slots[pair.x].shapeBody.x < 0)
+        { atomicMax(pool.z,10); return; }
+        slots[pair.x].state.y |= 0x80000000u;
+        return;
+    }
+    if (operation == 14)
+    {
+        if (index >= leaf) return;
+        scan[leaf+index] = index < count && (slots[index].state.y & 0x80000000u) != 0 ? 1 : 0;
+        return;
+    }
+    if (operation == 15)
+    {
+        if (index != 0 || pool.z != 0) return;
+        if (scan[1] != count || pool.y + count > capacity) { pool.z = 11; return; }
+        basePool = ivec4(pool.xy,0,0); pool.y += count; pool.w = count;
+        return;
+    }
+    if (operation == 16)
+    {
+        if (index >= count || atomicAdd(pool.z,0) != 0 || scan[leaf+index] == 0) return;
+        ContactSlot slot = slots[index];
+        removed[scanPrefix(index)] = Removed(ivec4(index,int(slot.state.x),slot.shapeBody.zw),ivec4(-1),ivec4(-1));
+        return;
+    }
+    if (operation == 17)
+    {
+        if (index >= 2*leaf) return;
+        int request = index/2, side = index&1;
+        int body = request < count ? removed[request].identity[2+side] : 2147483647;
+        setEndpoint(index,ivec2(body,index));
+        return;
+    }
+    if (operation == 18)
+    {
+        if (index >= count || atomicAdd(pool.z,0) != 0) return;
+        int body = endpoint(index).x;
+        if (body == 2147483647 || (index > 0 && endpoint(index-1).x == body)) return;
+        if (body < 0 || body >= bodies.length()) { atomicMax(pool.z,12); return; }
+        // ponytail: removals within one body run serially to preserve every
+        // publication prefix; parallelize high-degree bodies if this dominates.
+        for (int cursor = index; cursor < count && endpoint(cursor).x == body; cursor++)
+        {
+            int ordinal = endpoint(cursor).y, request = ordinal/2, side = ordinal&1;
+            int id = removed[request].identity.x, key = 2*id+side;
+            int prev = links[id][2*side], next = links[id][2*side+1];
+            if ((prev == -1 ? bodies[body].head != key : !ownsEdge(prev,body) || links[prev/2][2*(prev&1)+1] != key) ||
+                (next != -1 && (!ownsEdge(next,body) || links[next/2][2*(next&1)] != key)) || bodies[body].count <= 0)
+            { atomicMax(pool.z,13); return; }
+            int head = bodies[body].head == key ? next : bodies[body].head;
+            int remaining = bodies[body].count - 1;
+            if (side == 0) removed[request].a = ivec4(prev,next,head,remaining);
+            else removed[request].b = ivec4(prev,next,head,remaining);
+            if (prev >= 0) links[prev/2][2*(prev&1)+1] = next;
+            if (next >= 0) links[next/2][2*(next&1)] = prev;
+            links[id][2*side] = -1; links[id][2*side+1] = -1;
+            bodies[body].head = head; bodies[body].count = remaining;
+        }
+        return;
+    }
+    if (operation == 19)
+    {
+        if (index >= count || atomicAdd(pool.z,0) != 0) return;
+        int id = removed[index].identity.x;
+        freeIDs[basePool.y+index] = id;
+        slots[id].shapeBody = ivec4(-1); slots[id].state.y &= 0x7fffffffu;
+        links[id] = ivec4(-1);
+        return;
+    }
     if (index >= count || atomicAdd(pool.z, 0) != 0 || scan[leaf + index] == 0) return;
     // ponytail: each allocation walks O(log n) scan ancestors; use a workgroup
     // prefix scan if this part dominates creation cost.
-    int prefix = 0;
-    for (int node = leaf + index; node > 1; node /= 2)
-        if ((node & 1) != 0) prefix += scan[node-1];
+    int prefix = scanPrefix(index);
     int id = prefix < basePool.y ? freeIDs[basePool.y-prefix-1] : basePool.x+prefix-basePool.y;
     if (id < 0 || id >= capacity) { atomicMax(pool.z, 7); return; }
     Created result = created[index];

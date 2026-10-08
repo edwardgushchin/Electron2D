@@ -58,10 +58,14 @@ internal sealed unsafe partial class GPUPhysicsWorld
         ResidentHistoryCount = UploadedHistoryCount = 0;
         ResidentGeometryCount = UploadedGeometryCount = 0;
         _preSolveContactCount = 0;
+        if (_removalsReady) throw new InvalidOperationException("GPU removals must be published before the next collision batch.");
+        _removalCount = 0;
         if (count == 0) return;
         var useContactSlots = ReferenceEquals(_contactTrackingWorld, world);
         if (useContactSlots) { PrepareContactPool(world, 0); options |= 128; }
         else _contactSlotStorage.Reserve(1);
+        var removeContacts = useContactSlots && (options & 1) != 0 && world.destroyDisjointContact is not null && world.finishContactRemovals is not null;
+        if (removeContacts) BeginContactRemovals();
         PrepareGeometryCache(world);
         _pairStorage.Reserve(world.contacts.capacity);
         _manifoldStorage.Reserve(world.contacts.capacity);
@@ -117,6 +121,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     pair.History = -UploadedHistoryCount++ - 2;
                 }
             }
+            if (removeContacts && (pair.Flags & 1) == 0) { _removalStamps[contact.contactId] = _removalVersion; _removalCount++; }
             _pairStorage.Data[i] = pair;
         }
         DispatchCollision(world, count, options);
@@ -247,11 +252,17 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var contactLimit = (options & 128) != 0 ? (uint)world.contactIdPool.nextIndex : 0;
             if (UploadedGeometryCount != 0) CollisionPass(command, UploadedGeometryCount, 1, options, contactLimit);
             CollisionPass(command, pairCount, 0, options, contactLimit);
+            RecordContactRemovals(command, world, pairCount);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the manifold readback");
             _manifoldStorage.Download(copy, pairCount); _matchedStorage.Download(copy, pairCount);
             if ((options & 1) != 0) _contactMaterialStorage.Download(copy, pairCount);
             if ((options & 128) != 0) _contactPoolStorage.Download(copy, 1);
+            if (_removalCount != 0)
+            {
+                _contactRemovalStorage.Download(copy, _removalCount);
+                ContactRemovalReadbackBytes += (long)_removalCount * sizeof(B2Contacts.B2ContactRemoval);
+            }
             SDL.EndGPUCopyPass(copy);
             var submitted = command; command = 0;
             fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
@@ -262,7 +273,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if ((options & 128) != 0)
             {
                 _contactPoolStorage.Read(1);
-                ValidateContactPool(world.contactIdPool.nextIndex, world.contactIdPool.freeArray.count);
+                ValidateContactPool(world.contactIdPool.nextIndex, world.contactIdPool.freeArray.count + _removalCount);
+                ReadContactRemovals(world);
                 CommitContactPool(world);
             }
             CollisionSubmissionCount++;

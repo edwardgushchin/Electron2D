@@ -595,6 +595,8 @@ namespace Box2D.NET
                 }
             }
 
+            var destroyDisjointContact = context.generatedContactsUpdated ? world.destroyDisjointContact : null;
+            var finishContactRemovals = destroyDisjointContact != null ? world.finishContactRemovals : null;
             b2FreeArenaItem(world.arena, contactSims);
             context.contacts = null;
             context.generatedManifolds = null;
@@ -664,7 +666,8 @@ namespace Box2D.NET
                     if (0 != (simFlags & (uint)B2ContactSimFlags.b2_simDisjoint))
                     {
                         // Bounding boxes no longer overlap
-                        b2DestroyContact(world, contact, false);
+                        if (destroyDisjointContact != null) destroyDisjointContact(world, contact);
+                        else b2DestroyContact(world, contact, false);
                         contact = null;
                         contactSim = null;
                     }
@@ -728,6 +731,7 @@ namespace Box2D.NET
                 }
             }
 
+            finishContactRemovals?.Invoke(world);
             b2ValidateSolverSets(world);
             b2ValidateContacts(world);
 

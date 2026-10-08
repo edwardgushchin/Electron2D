@@ -1,3 +1,3 @@
 // SPDX-License-Identifier: MIT
-// Shape/body identities plus generation and immutable creation policy.
+// Shape/body identities, generation, initial policy and a transient removal marker.
 struct ContactSlot { ivec4 shapeBody; uvec4 state; };

@@ -57,8 +57,9 @@ self/moved-pair deduplication, existing-contact lookup, same-body and sensor vet
 shared pair hash uses split 32-bit arithmetic, so this does not require shaderInt64.
 Joint filtering walks the smaller body adjacency list. User filters remain on the
 owner after readback, followed by GPU contact identity allocation and initialization.
-New body/contact adjacency is computed and retained on GPU. CPU query/CCD trees,
-adjacency publication/removal, graph/island mutation and contact destruction remain managed. The GPU maintains its own
+Body/contact adjacency is built and retained on GPU; disjoint-contact unlink and ID
+release also execute there. CPU query/CCD trees, mirror/event publication, external
+authoring edits and graph/island mutation remain managed. The GPU maintains its own
 resident lookup table for those contacts. Buffers and per-shape capacity hints
 retain their peak size; new topology/capacity can allocate outside warmed checks.
 
@@ -140,11 +141,32 @@ An optional contact-link observer journals external CPU creation/removal and
 both neighboring edges; repeated changes coalesce by contact/body identity.
 Warm batches upload only final 32-byte dirty records, with no full adjacency
 snapshot. Binding/observer/capacity changes restore the snapshot. This retains
-GPU adjacency while CPU-driven removal and graph/island mutation remain shared.
+GPU adjacency while external authoring removal and graph/island mutation remain shared.
 `ContactLinkUploadBytes` counts snapshots and delta payloads separately from the
 ID-pool counter. `ValidateContactLinks` is an internal diagnostic that synchronizes
 pending changes and reads the complete GPU lists back for exact mirror comparison;
 it is exercised by tests, not the normal frame path.
+
+Disjoint contacts are removed in the existing collision command buffer, after
+manifold generation and before the same readback fence. The GPU marks selected
+slots, compacts them in ascending contact-ID order, and reuses endpoint sorting
+to group removals by body. Bodies run in parallel; each body's removals execute
+in ID order, preserving every intermediate previous/next/head/count state. This
+serial lane per body is an explicit high-degree-body performance limit. The GPU
+updates resident adjacency, invalidates slots without changing their generations
+and appends freed IDs in the same order as the CPU pool.
+
+Each removed contact returns a 48-byte identity/two-endpoint record. The owner
+validates batch membership, generations, ordering and bounds before publication,
+then imports each record at its original position among contact state changes.
+The shared publication path checks the exact current prefix and retains event,
+island/graph and wake behavior. A completion callback verifies that the entire
+batch was consumed and pool counts agree. GPU-origin free/link notifications do
+not reupload their already-resident results. External body/shape/filter/joint edits
+continue through the CPU authoring path and its delta journals. The pure numeric
+manifold entry does not remove contacts. `RemovedContactCount` and
+`ContactRemovalReadbackBytes` expose cumulative accounting. Failure rejects replay;
+publication failure still permits disposal of the CPU mirror and GPU resources.
 
 Contact geometry is generated on GPU for all nine registered pair families
 among circles, capsules, two-sided segments and convex polygons (up to eight
@@ -338,7 +360,7 @@ Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
-move destruction and graph/island mutation to GPU, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+move graph/island mutation to GPU, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -774,3 +796,52 @@ batches do not establish a whole-step speedup or 60 FPS. CPU-driven deletion,
 graph/islands, query/CCD mirrors, packing and readback remain; this is neither a
 steady all-awake workload nor native-window FPS acceptance.
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-links-final-{a,b}.json`.
+
+## GPU disjoint-contact removal (2026-10-08)
+
+`ELECTRON2D_TEST_GPU_CONTACT_REMOVAL=1` compares worlds with 0/1/2/63/64/65/129/257
+dynamic bodies plus a static collider. Dense clusters and a high-degree static
+surface repeatedly separate and reconnect, exercising sparse/recycled contact
+IDs and adjacent removals in both directions. The oracle checks all body links,
+pool free-ID order/generations, graph slots/island membership, begin/end event
+order, pre-solve callback-visible topology and the complete retained GPU adjacency
+readback. Sixteen separation/reconnection cycles after 32 warmups allocate zero
+all-thread managed bytes and perform zero pool or adjacency uploads/snapshots.
+External CPU body destruction remains covered through its journal path.
+
+The full GPU suite additionally injects failure after the first removal is
+published to the CPU mirror. Replay is rejected and disposal succeeds. Running
+this oracle before fresh CPU/integration worlds exposed a pre-existing reset
+bug: raw world Clear left integration, solver and manifold callbacks attached.
+They now reset alongside every other GPU hook and the retained step context,
+which also releases body arrays and the GPU-owner reference; explicit sibling-hook lifetime
+checks and the complete suite verify world-slot reuse without a disposed host.
+
+The test-only `ELECTRON2D_SANDBOX_PROFILE_CPU_REMOVAL=1` keeps GPU creation,
+adjacency, manifolds/contact updates and solving while selecting the original
+CPU disjoint-removal path and its mirror journals. This isolates the new removal
+stage; it is not a public backend or failure-fallback selector.
+
+Final sequential Linux/Vulkan maximum-Smash runs use 65,537 bodies, 32 warmup
+and 64 measured headless diagnostic steps. No build, formatter or other test
+runs concurrently; order is GPU A/CPU A/CPU B/GPU B:
+
+| Removal mode | Whole-step mean | p95 | Collision mean | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: |
+| GPU A | 163.27 ms | 258.41 ms | 74.85 ms | 0 / 0 |
+| CPU A | 167.39 ms | 262.63 ms | 76.50 ms | 0 / 0 |
+| CPU B | 163.03 ms | 257.63 ms | 74.05 ms | 0 / 0 |
+| GPU B | 165.07 ms | 268.28 ms | 76.80 ms | 0 / 0 |
+
+Each GPU interval removes 443,964 contacts and reads back 21,310,272 removal bytes.
+Pool and adjacency delta uploads are both zero, with no snapshot. The CPU control
+reports zero GPU removals and uploads 21,196,176 pool bytes plus 73,049,984 adjacency
+bytes. CPU journals upload on the following collision, so transfer intervals do
+not count exactly the same boundary contacts as current-step removal counters.
+All four state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`, with the same
+6,425→41,122 awake-body progression. Lower transfer volume does not establish a
+consistent whole-step speedup or 60 FPS. CPU graph/island work, query/CCD mirrors,
+packing and other readbacks remain; the fixture is an impact through a sleeping
+wall, not a steady all-awake or native-window FPS measurement.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-contact-remove-{a,b}.json`.

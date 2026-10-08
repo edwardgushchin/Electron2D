@@ -208,19 +208,19 @@ internal static partial class GPUPhysicsTests
                 using (var other = new GPUPhysicsWorld())
                 {
                     other.EnableContactCreation(actual);
-                    var creator = actual.createBroadPhaseContacts; var observer = actual.contactIdPool.changed; var links = actual.contactLinksChanged;
+                    var creator = actual.createBroadPhaseContacts; var observer = actual.contactIdPool.changed; var links = actual.contactLinksChanged; var removal = actual.destroyDisjointContact; var finish = actual.finishContactRemovals;
                     gpu.Dispose();
-                    if (actual.createBroadPhaseContacts != creator || actual.contactIdPool.changed != observer || actual.contactLinksChanged != links)
+                    if (actual.createBroadPhaseContacts != creator || actual.contactIdPool.changed != observer || actual.contactLinksChanged != links || actual.destroyDisjointContact != removal || actual.finishContactRemovals != finish)
                         throw new Exception("Disposal must preserve another host's contact creator and observer.");
                 }
-                if (actual.createBroadPhaseContacts is not null || actual.contactIdPool.changed is not null || actual.contactLinksChanged is not null)
+                if (actual.createBroadPhaseContacts is not null || actual.contactIdPool.changed is not null || actual.contactLinksChanged is not null || actual.destroyDisjointContact is not null || actual.finishContactRemovals is not null)
                     throw new Exception("The contact creator must detach on disposal.");
             }
         }
         finally
         {
             b2DestroyWorld(cpuID); b2DestroyWorld(gpuID);
-            if (actual.createBroadPhaseContacts is not null || actual.contactLinksChanged is not null) throw new Exception("World teardown must clear the contact creator.");
+            if (actual.createBroadPhaseContacts is not null || actual.contactLinksChanged is not null || actual.destroyDisjointContact is not null || actual.finishContactRemovals is not null) throw new Exception("World teardown must clear the contact creator.");
         }
     }
 }

@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 namespace Electron2D;
 
 // GPU hierarchy/contact identity maintenance, integration, manifolds and constraints execute here;
-// CPU query/CCD mirrors, user callbacks, adjacency publication/removal and graph mutation remain managed.
+// CPU query/CCD mirrors, user callbacks, mirror/event publication and graph mutation remain managed.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -52,6 +52,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _contactRequestStorage = new(this); _contactCreationStorage = new(this);
             _contactIDChanged = MarkContactIDChanged; _createContacts = CreateContacts;
             _contactLinksChanged = MarkContactLinksChanged;
+            _contactRemovalStorage = new(this);
+            _destroyDisjointContact = PublishContactRemoval; _finishContactRemovals = FinishContactRemovals;
             _contactLinkStorage = new(this); _bodyLinkStorage = new(this); _linkUpdateStorage = new(this);
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
@@ -199,6 +201,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         _contactSlotStorage.Dispose(); _contactFreeStorage.Dispose(); _contactScanStorage.Dispose();
         _contactPoolStorage.Dispose(); _contactChangeStorage.Dispose();
         _contactRequestStorage.Dispose(); _contactCreationStorage.Dispose(); _contactCreationPipeline.Dispose();
+        _contactRemovalStorage.Dispose();
         _contactLinkStorage.Dispose(); _bodyLinkStorage.Dispose(); _linkUpdateStorage.Dispose();
         _geometryUpdateStorage.Dispose(); _contactMaterialStorage.Dispose();
         _shapeFilterUpdateStorage.Dispose(); _jointFilterUpdateStorage.Dispose(); _filterPipeline.Dispose();
