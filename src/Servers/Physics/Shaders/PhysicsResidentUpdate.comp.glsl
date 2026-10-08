@@ -17,22 +17,30 @@ void main()
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
     Constraint c=constraints[i];if(c.bodies.x==none)return;
     ContactImpulse p=impulses[i];
-    ResidentBody a=bodies[c.bodies.x],b=bodies[c.bodies.y];
+    ResidentBody a=bodies[c.bodies.x],b=c.bodies.y==none?worldBody():bodies[c.bodies.y];
+    bool joint=c.tangent.y!=0;
+    // A stationary surface can move contact points, but not the pin/guide's fixed anchor.
+    if(joint){if(a.flags.y==0u)a.velocity=vec4(0);if(b.flags.y==0u)b.velocity=vec4(0);}
     vec2 relative=b.velocity.xy-a.velocity.xy,n=c.normal.xy,t=vec2(n.y,-n.x);
     float vn=dot2(relative,n)+b.velocity.z*c.normal.w-a.velocity.z*c.normal.z;
     float vt=dot2(relative,t)+b.velocity.z*c.tangent.w-a.velocity.z*c.tangent.z;
-    float pn=max(0,p.physical.x+c.parameters.x*(c.parameters.z-vn));
-    float limit=c.tangent.x*pn;
+    float pn=p.physical.x+c.parameters.x*(c.parameters.z-vn);
+    if(!finite4(vec4(vn,vt,pn,0))){fail();return;}
+    pn=joint?clamp(pn,p.correction.z,p.correction.w):max(0,pn);
+    float limit=joint?0:c.tangent.x*pn;
     float pt=clamp(p.physical.y-c.parameters.y*vt,-limit,limit);
     uint degree=max(inverseMass(a).x>0?heads[c.bodies.x].y:0u,inverseMass(b).x>0?heads[c.bodies.y].y:0u);
     // ponytail: degree-damped Jacobi avoids graph coloring; convergence in tall stacks is the measured ceiling.
     float weight=1.0/float(max(degree,1u));
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);
-    vec3 ca=corrections[c.bodies.x].xyz,cb=corrections[c.bodies.y].xyz;
+    vec3 ca=corrections[c.bodies.x].xyz,cb=c.bodies.y==none?vec3(0):corrections[c.bodies.y].xyz;
     float correctionSpeed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;
-    float nextCorrection=max(0,p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed));
+    float nextCorrection=p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed);
+    if(c.tangent.y!=2&&!finite4(vec4(correctionSpeed,nextCorrection,0,0))){fail();return;}
+    nextCorrection=joint?clamp(nextCorrection,p.correction.z,p.correction.w):max(0,nextCorrection);
+    if(c.tangent.y==2)nextCorrection=0;
     float correctionDelta=weight*(nextCorrection-p.correction.x);
-    p.correction=vec4(p.correction.x+correctionDelta,correctionDelta,0,0);
+    p.correction.xy=vec2(p.correction.x+correctionDelta,correctionDelta);
     p.physical=vec4(p.physical.xy+delta,delta);
     if(!finite4(p.physical)||!finite4(p.correction)){fail();return;}
     impulses[i]=p;return;

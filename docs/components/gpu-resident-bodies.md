@@ -13,7 +13,8 @@ complete candidate pairs and narrow-phase contact points execute through offline
 
 The [contact response pipeline](gpu-contact-solver.md) now adds material/impulse
 solving, warm history and separate positional correction through Simulate. This
-component is not a complete physics backend: joints, automatic mass-center profiles,
+component now also has [resident pin/groove/spring joints](gpu-resident-joints.md).
+It is not a complete physics backend: joint bias/softness/general caps, automatic mass-center profiles,
 sleep, CCD, scene/server selection/publication and networking remain open. Step
 remains an integration-only control; FindContacts computes contact points.
 Its partial-pipeline timings cannot be compared with full CPU physics or reported
@@ -25,7 +26,7 @@ the independent GPU objective is satisfied.
 | Storage/transfer | Purpose and current cost |
 | --- | --- |
 | Device bodies | 80 bytes per retained slot; authoritative pose, velocity, force, mass/damping and generation/role data. |
-| CPU slot metadata | 20-byte payload per slot for generation, free-list, pending-command routing and first-shape identity; no live poses or velocities. |
+| CPU slot metadata | 24-byte payload per slot for generation, free-list, pending-command routing and first-shape/joint identity; no live poses or velocities. |
 | Pending edit staging | 112 bytes per reserved command. At most one coalesced command per slot; entries are cleared after successful publication. Allocation follows capacity growth, not every frame. |
 | Growth | Copy prior body slots GPU-to-GPU; no body download/upload reconstruction. Record copied bytes and wait for resource replacement. |
 | Integration-only unchanged tick | 4-byte status reset upload, 32-byte compute uniform and 4-byte error-result download. No body-state traffic. |
@@ -33,7 +34,7 @@ the independent GPU objective is satisfied.
 | Per-tick fence wait | Required by this synchronous stage's finite-result/error publication contract. Its measured time is recorded separately from total submission/map/dispatch work. |
 
 At 65,536 slots, body payload is 5 MiB and retained CPU metadata/command payload is
-8.25 MiB; consumed command storage contains no live-state mirror. GPU command/request/
+8.5 MiB; consumed command storage contains no live-state mirror. GPU command/request/
 result scratch payload totals 10 MiB plus the status word. Upload/download transfer
 capacity totals 10 MiB plus eight bytes. These are payload capacities, excluding
 object/driver overhead. Further asynchronous publication requires an explicit

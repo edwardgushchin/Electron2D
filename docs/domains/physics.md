@@ -105,7 +105,9 @@ selects CPU. [The implementation status](../components/gpu-physics.md) separates
 these executing stages from the required full GPU world and startup fallback.
 The independent GPUPhysicsBodyStore now has a [contact response path](../components/gpu-contact-solver.md)
 with persistent history, compact contact Jacobians, separate iterated impulses
-and specialized update/gather kernels. Its stability/allocation/population checks
+and specialized update/gather kernels. [Device joints](../components/gpu-resident-joints.md)
+now share that solve loop and retain pin/groove/spring settings, warm impulses and
+collision vetoes without a CPU solver. Its stability/allocation/population checks
 and opt-in fenced diagnostics do not establish public-backend or window-FPS acceptance.
 
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape RID/resource selection, live edits, swept overlap, safe/unsafe motion, manifold contact pairs, rest velocity, compound and hollow geometry, filters, off-owner rejection and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.

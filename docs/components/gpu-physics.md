@@ -32,7 +32,9 @@ waits and 65,536-body verification. Bounds/tree/pairs/contacts require no CPU mi
 A [resident contact solver](gpu-contact-solver.md) now executes impulses/material
 response, device warm history and separate pose correction. Its update/gather
 kernels use separate hot impulse storage and precomputed contact Jacobians; the
-linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. Joints, automatic
+linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. [Resident joints](gpu-resident-joints.md) add independent
+pin/groove/spring response, persistent history and collision vetoes. Complete joint
+settings, automatic
 mass-center profiles, sleep, CCD and public selection/publication remain unconnected; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 

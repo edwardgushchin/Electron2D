@@ -12,6 +12,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Stage, Count, Bodies, Shapes;
         internal uint Leaves, Geometry, Vertices, Pairs;
         internal Float4 Tolerances;
+        internal uint JointFilters, Joints, Padding1, Padding2;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct TreeSettings
@@ -36,7 +37,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         EnsureAccess();
         if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
         if (_shapeHighWater == 0) return 0;
-        Step(0, default);
+        Step(0, default); FlushJoints();
         if (_pairBodyVersion == _bodyVersion && _pairShapeVersion == _shapeVersion && _spatialEpoch == Shape.GeometryEpoch && _pairMargin == margin) return PairCount;
         _pairBodyVersion = -1; _pairMargin = margin;
         PrepareGeometry(); EnsureSpatial();
@@ -97,7 +98,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _verticesGPU, ref _vertexCapacity, Math.Max(1, _vertexHighWater), sizeof(Vector2), true);
         Grow(ref _geometryGPU, ref _geometryCapacity, Math.Max(1, _geometryEntries.Count), sizeof(GeometryData), true);
         var previous = _shapeCapacity;
-        Grow(ref _shapesGPU, ref _shapeCapacity, _shapeHighWater, sizeof(ShapeData), true);
+        Grow(ref _shapesGPU, ref _shapeCapacity, Math.Max(1, _shapeHighWater), sizeof(ShapeData), true);
         _treeTopologyDirty |= previous != _shapeCapacity;
         Grow(ref _proxiesGPU, ref _proxyCapacity, _shapeCapacity, sizeof(ProxyData), false);
         Grow(ref _nodesGPU, ref _nodeCapacity, checked(2 * _shapeCapacity), 32, false);
@@ -226,8 +227,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)bindings, 6);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident spatial compute");
         SDL.BindGPUComputePipeline(compute, _spatialPipeline!.DangerousGetHandle());
-        var inputs = stackalloc nint[5] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 5);
+        var inputs = stackalloc nint[7] { _bodies!.DangerousGetHandle(), _vertexEditsGPU!.DangerousGetHandle(), _geometryEditsGPU!.DangerousGetHandle(), _shapeEditsGPU!.DangerousGetHandle(), _nodesGPU!.DangerousGetHandle(), _jointsGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle(), _jointFiltersGPU?.DangerousGetHandle() ?? _nodesGPU.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 7);
         var settings = new SpatialSettings
         {
             Stage = stage,
@@ -238,7 +239,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Geometry = (uint)_geometryEntries.Count,
             Vertices = (uint)_vertexCapacity,
             Pairs = (uint)_pairCapacity,
-            Tolerances = new(_pairMargin, 0, 0, 0)
+            Tolerances = new(_pairMargin, 0, 0, 0),
+            JointFilters = JointCount > 0 ? (uint)_jointFilterCapacity : 0,
+            Joints = (uint)_jointHighWater
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SpatialSettings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

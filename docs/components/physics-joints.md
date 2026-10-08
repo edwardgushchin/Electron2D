@@ -44,3 +44,11 @@ of invalid replacement. Each world runs 120 steps at 1/120 s; one scene unit of
 anchor error and 0.05 rad beyond the configured angle limit allow the existing
 solver tolerances. This preserves current behavior; independent GPU joint ownership,
 device spring evaluation, missing settings and network replay remain open.
+
+## Independent GPU foundation
+
+[GPUPhysicsBodyStore](gpu-resident-joints.md) now retains device joint configuration
+and warm history, solves pins/grooves together with contacts and applies Hooke/axial
+spring impulses on GPU. Joint collision vetoes are device-resident. This internal
+path does not yet replace the scene/server CPU attachment; public bias, compliance,
+general caps, sleep/CCD and network replay remain open.

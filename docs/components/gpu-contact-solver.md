@@ -10,9 +10,11 @@ through Simulate. It creates no CPU solver world or CPU contact/adjacency/histor
 mirror. [The earlier stage report](gpu-resident-bodies.md) retains body/broad/narrow
 measurements; those timings exclude the response workload measured here.
 
-This is an internal response pipeline, not a selectable public GPU backend. Joints,
+This is an internal response pipeline, not a selectable public GPU backend.
+[Resident joints](gpu-resident-joints.md) now share its iteration loop; joint
+bias/softness/general caps,
 sleep, CCD, automatic/custom mass-center profiles, scene/server and direct-state
-publication, complete frame impulse/event reports, one-way/body/joint exceptions,
+publication, complete frame impulse/event reports, one-way/body exceptions,
 world setting integration and networking remain open. The store currently takes
 resolved mass/inertia about its body origin; public automatic geometry/center policy
 still needs a backend adapter. No full CPU-vs-GPU or window-FPS acceptance is claimed.
@@ -105,10 +107,10 @@ its fence wait. They exclude broad/narrow and velocity/pose passes. Driver overh
 and native allocations are not measured as heap totals; owned buffer capacity is
 retained and no managed allocation occurs in the sampled warm windows.
 
-Input validation precedes simulation. Once an executing Simulate/SolveContacts path
+Input validation precedes simulation. Once an executing Simulate/SolveConstraints path
 fails, the store rejects future reads/mutations until disposal; no CPU replay occurs.
 Finite authored inputs that generate nonrepresentable contact impulses are tested.
-An independent velocity-only SolveContacts call keeps poses fixed; Simulate consumes
+An independent velocity-only SolveConstraints call keeps poses fixed; Simulate consumes
 the separately prepared correction velocities when advancing poses.
 
 ## Checks and numerical scope
@@ -259,7 +261,7 @@ The full `ELECTRON2D_TEST_GPU_PHYSICS=1` runner also passes with the new kernels
 including legacy stage checks and GPU-device lifetime under both renderers; its log
 is `/tmp/electron2d-resident-solver-layout-gpu-suite.log`. Release builds, compiled
 shader source-generation checks and scoped formatting execute separately.
-Public CPU/GPU comparison, joints/sleep/CCD, scene publication, network replay and
+Public CPU/GPU comparison, complete joint settings, sleep/CCD, scene publication, network replay and
 real-window FPS remain outside this internal optimization.
 
 Current generated SPIR-V SHA-256 (untracked intermediate outputs):

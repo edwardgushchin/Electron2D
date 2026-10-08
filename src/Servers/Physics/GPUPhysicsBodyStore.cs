@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact response and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, contact/joint response and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -46,7 +46,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     private struct Slot
     {
         internal uint Generation;
-        internal int NextFree, Command, FirstShape;
+        internal int NextFree, Command, FirstShape, FirstJoint;
         internal bool Alive;
     }
 
@@ -94,7 +94,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (index < 0) { Reserve(_highWater + 1); index = _highWater++; }
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
-        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = -1; Count++;
+        slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = -1; Count++;
         ref var command = ref Edit(index);
         command = new() { Index = index, Generation = slot.Generation, Mask = Create };
         command.Body = new()
@@ -114,6 +114,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal void Remove(BodyHandle body)
     {
         Validate(body);
+        RemoveBodyJoints(body);
         RemoveBodyShapes(body);
         ref var command = ref Edit(body.Index);
         command = new() { Index = body.Index, Generation = body.Generation, Mask = Destroy };
@@ -345,6 +346,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeJoints(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }
