@@ -14,7 +14,8 @@ complete candidate pairs and narrow-phase contact points execute through offline
 The [contact response pipeline](gpu-contact-solver.md) now adds material/impulse
 solving, warm history and separate positional correction through Simulate. This
 component now also has [resident pin/groove/spring joints](gpu-resident-joints.md)
-and [directed collision exceptions](gpu-resident-exceptions.md).
+and [directed collision exceptions](gpu-resident-exceptions.md), plus
+[latched one-way contact episodes](gpu-resident-one-way.md).
 It is not a complete physics backend: independent GPU public joint adapters,
 scene/server selection/publication and networking remain open. [Resident CCD](gpu-resident-ccd.md) now executes internally. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
 geometry and center-aware device motion/constraint preparation. [Connected sleep/wake](gpu-resident-sleep.md) now executes on GPU. Step
@@ -93,7 +94,7 @@ The SPIR-V SHA-256 is
 
 Shape resources provide their borrowed scene-unit geometry. The device retains one
 32-byte descriptor per distinct resource, eight bytes per contour vertex and a
-64-byte attachment per shape slot, including material and integer edit revision. Circle/capsule radius, contour winding and separation-ray metadata
+80-byte attachment per shape slot, including material, one-way direction/margin and integer edit revision. Circle/capsule radius, contour winding and separation-ray metadata
 are retained; rectangles use four corners, convex polygons retain the whole contour,
 and concave shapes retain all segment endpoints. No CPU fixture partition, dynamic
 tree, body pose array or publication rank is imported. CPU attachments retain authored
@@ -127,8 +128,8 @@ pairs nor advances bodies twice. Addressability/device memory limits fail explic
 
 | Spatial operation | Traffic / synchronization |
 | --- | --- |
-| Warm changed broad phase | 8-byte reset upload and 8-byte error/count readback; one fence wait, plus 32-byte tree settings or 48-byte geometry/pair settings per dispatched pass. No shape, vertex, body pose, proxy or pair transfer. |
-| Shape edit | 80-byte scatter command per changed attachment. |
+| Warm changed broad phase | 8-byte reset upload and 8-byte error/count readback; one fence wait, plus 32-byte tree settings or 64-byte geometry/pair settings per dispatched pass. No shape, vertex, body pose, proxy or pair transfer. |
+| Shape edit | 96-byte scatter command per changed attachment. |
 | Geometry edit | 48-byte descriptor command plus 16 bytes per changed vertex. |
 | Growth | Device-to-device copies of retained geometry/shape storage; counters include waits and copied bytes. |
 | Explicit pair inspection | 16 downloaded bytes per pair, expanded into caller-owned store-qualified handles; separate fence wait. |

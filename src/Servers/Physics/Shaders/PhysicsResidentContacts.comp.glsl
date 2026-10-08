@@ -11,7 +11,7 @@ layout(std430, set=0, binding=3) readonly buffer Shapes { Shape shapes[]; };
 layout(std430, set=0, binding=4) readonly buffer Pairs { uvec4 pairs[]; };
 layout(std430, set=1, binding=0) buffer Contacts { ContactPoint contacts[]; };
 layout(std430, set=1, binding=1) buffer Summary { uvec2 summary; };
-layout(std140, set=2, binding=0) uniform Settings { uvec4 counts; vec4 tolerances; };
+layout(std140, set=2, binding=0) uniform Settings { uvec4 counts; vec4 tolerances; uvec4 history; uvec4 historyOutput; };
 const float epsilon=1.1920928955078125e-7;
 #include "PhysicsCollisionMath.inc.glsl"
 uvec4 activePair;
@@ -20,6 +20,17 @@ float contactLimit;
 bool sensor;
 void fail() { atomicOr(summary.x,1u); }
 #include "PhysicsResidentCollision.inc.glsl"
+#define ONE_WAY_STATE_BINDING 5
+#define ONE_WAY_TABLE_BINDING 6
+#include "PhysicsResidentOneWay.inc.glsl"
+layout(std430,set=1,binding=2) buffer OneWayNext { OneWayState oneWayNext[]; };
+layout(std430,set=1,binding=3) buffer OneWayNextTable { uint oneWayNextTable[]; };
+layout(std430,set=1,binding=4) buffer OneWaySummary { uvec2 oneWaySummary; };
+uvec2 checkedPieces=uvec2(0xffffffffu);
+uvec4 oneWayRevisions;
+uint pieceDecision;
+Shape shapeA,shapeB;
+bool oneWay;
 void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 {
     float separation=dot2(b-a,normal);
@@ -28,6 +39,19 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
     vec2 localB=inverseRotate(bodyB.pose.zw,b-(bodyB.pose.xy-bodyA.pose.xy));
     if(!finite2(localA)||!finite2(localB)||!finite2(normal)||!finite2(vec2(separation))||abs(dot2(normal,normal)-1)>0.001)
     {fail();return;}
+    if(oneWay)
+    {
+        if(checkedPieces!=features.zw)
+        {
+            checkedPieces=features.zw;
+            pieceDecision=previousOneWay(activePair,checkedPieces,oneWayRevisions);
+            if(pieceDecision==0u)pieceDecision=facesOneWay(shapeA,shapeB,bodyA,bodyB,normal)?2u:1u;
+            uint record=atomicAdd(oneWaySummary.x,1u);
+            if(record==0xffffffffu){fail();return;}
+            if(record<history.w)oneWayNext[record]=OneWayState(activePair,uvec4(checkedPieces,pieceDecision,0),oneWayRevisions);
+        }
+        if(pieceDecision==1u)return;
+    }
     uint at=atomicAdd(summary.y,1u);
     if(at==0xffffffffu){fail();return;}
     if(at<counts.y)contacts[at]=ContactPoint(activePair,features,vec4(normal,separation,sensor?1:0),vec4(localA,localB));
@@ -94,7 +118,21 @@ void rayContact(Shape ra,Geometry rg,ResidentBody rb,Shape other,Geometry og,Res
 }
 void main()
 {
-    uint index=gl_GlobalInvocationID.x;if(index>=counts.x)return;
+    uint index=gl_GlobalInvocationID.x;
+    if(history.x==1u){if(index<historyOutput.x)oneWayNextTable[index]=0xffffffffu;return;}
+    if(history.x==2u)
+    {
+        if(index>=min(oneWaySummary.x,history.w))return;
+        OneWayState current=oneWayNext[index];uint at=oneWayHash(current.pair,current.pieces.xy)&(historyOutput.x-1u);
+        for(uint probe=0u;probe<historyOutput.x;probe++)
+        {
+            if(atomicCompSwap(oneWayNextTable[at],0xffffffffu,index)==0xffffffffu)return;
+            at=(at+1u)&(historyOutput.x-1u);
+        }
+        fail();return;
+    }
+    if(index>=counts.x)return;
+    oneWayInfo=history.yz;
     activePair=pairs[index];
     if(activePair.x>=counts.z||activePair.y>=counts.z){fail();return;}
     Shape sa=shapes[activePair.x],sb=shapes[activePair.y];
@@ -104,6 +142,8 @@ void main()
     if(bodyA.flags.x!=sa.owner.y||bodyB.flags.x!=sb.owner.y||bodyA.flags.w==0u||bodyB.flags.w==0u||ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}
     if(ga.data.y==0u||gb.data.y==0u)return;
     sensor=((sa.policy.w|sb.policy.w)&2u)!=0u;contactLimit=sensor?0:tolerances.x;
+    shapeA=sa;shapeB=sb;oneWay=!sensor&&((sa.policy.w|sb.policy.w)&4u)!=0u;
+    oneWayRevisions=uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision);
     if((ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
     if(ga.data.z==6u){rayContact(sa,ga,bodyA,sb,gb,bodyB,false);return;}
     if(gb.data.z==6u){rayContact(sb,gb,bodyB,sa,ga,bodyA,true);return;}

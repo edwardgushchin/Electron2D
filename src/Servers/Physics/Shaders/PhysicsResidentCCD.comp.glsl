@@ -8,16 +8,20 @@ layout(std430,set=0,binding=1) readonly buffer Vertices { vec2 vertices[]; };
 layout(std430,set=0,binding=2) readonly buffer Geometries { Geometry geometries[]; };
 layout(std430,set=0,binding=3) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=4) readonly buffer Pairs { uvec4 pairs[]; };
-layout(std430,set=0,binding=5) readonly buffer Centers { vec2 centers[]; };
-layout(std430,set=0,binding=6) readonly buffer Corrections { vec4 corrections[]; };
+layout(std430,set=1,binding=1) buffer Centers { vec2 centers[]; };
+layout(std430,set=0,binding=5) readonly buffer Corrections { vec4 corrections[]; };
 layout(std430,set=1,binding=0) buffer Summary { uvec2 summary; };
-layout(std140,set=2,binding=0) uniform Settings { uvec4 counts; vec4 tolerances; };
+layout(std140,set=2,binding=0) uniform Settings { uvec4 counts; vec4 tolerances; uvec4 history; };
 const float epsilon=1.1920928955078125e-7;
 #include "PhysicsCollisionMath.inc.glsl"
 ResidentBody bodyA,bodyB;
 float contactLimit=3.402823466e38;
 void fail(){atomicOr(summary.x,1u);}
 #include "PhysicsResidentCollision.inc.glsl"
+#define ONE_WAY_STATE_BINDING 6
+#define ONE_WAY_TABLE_BINDING 7
+#include "PhysicsResidentOneWay.inc.glsl"
+uvec4 activePair;
 vec3 motion(ResidentBody body,uint index)
 {
     if(body.flags.y==0u||(body.flags.z&16u)!=0u)return vec3(0);
@@ -82,6 +86,9 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
     float wa=rayA?0:abs(va.z),wb=rayB?0:abs(vb.z);
     float bound=tolerances.w*(wa*radiusA+wb*radiusB);
     float time=0;
+    bool oneWay=((sa.policy.w|sb.policy.w)&4u)!=0u;
+    uint decision=oneWay?previousOneWay(activePair,uvec2(pieceA,pieceB),uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision)):0u;
+
     for(uint iteration=0u;iteration<256u;iteration++)
     {
         bodyA=sampleBody(startA,ca,va,time);bodyB=sampleBody(startB,cb,vb,time);
@@ -90,10 +97,32 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
         Axis axis;if(!separatingAxis(testA,testB,axis))return 1;
         float gap=axis.separation;
         if(!finite2(vec2(gap,time))){fail();return 1;}
+        float episodeMargin=max(4*tolerances.x,uintBitsToFloat(history.z))+2*tolerances.x;
+        if(oneWay&&decision!=0u&&gap>episodeMargin)
+        {
+            // Publish separation before a later impact, so the next manifold pass retires the old side decision.
+            if(time>0)return time;
+            decision=0u;
+        }
+        if(oneWay&&decision==1u)
+        {
+            // Two translating convex pieces have one overlap interval; rotation can expose another side later.
+            if(wa==0&&wb==0)return 1;
+            float travelBound=tolerances.w*length(vb.xy-va.xy)+bound;
+            float next=time+0.9*max(4*tolerances.x,episodeMargin-gap)/travelBound;
+            if(next>1)return 1;
+            if(next==time){atomicOr(summary.x,2u);return 1;}
+            time=next;continue;
+        }
         if(gap<=4*tolerances.x)
         {
             if(ga.data.z==6u&&!directed(a,b))return 1;
             if(gb.data.z==6u&&!directed(b,a))return 1;
+            if(oneWay&&decision==0u)
+            {
+                decision=facesOneWay(sa,sb,bodyA,bodyB,axis.normal)?2u:1u;
+                if(decision==1u)continue;
+            }
             // Existing contact is handled by the ordinary solver, including overlap recovery.
             if(time==0)
             {
@@ -125,7 +154,8 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=counts.x)return;
-    uvec4 pair=pairs[i];
+    oneWayInfo=history.xy;
+    uvec4 pair=pairs[i];activePair=pair;
     if(pair.x>=counts.y||pair.y>=counts.y){fail();return;}
     Shape sa=shapes[pair.x],sb=shapes[pair.y];
     if(sa.owner.x>=counts.z||sb.owner.x>=counts.z||sa.policy.x!=pair.z||sb.policy.x!=pair.w){fail();return;}
