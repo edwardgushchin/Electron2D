@@ -2027,7 +2027,7 @@
         "class:PhysicsDirectBodyState2D"
       ],
       "state": "Partial",
-      "reason": "Live owner-thread state, post-solver callbacks, forces, fields and complete normal/tangential frame impulses execute. Virtual tile collider object identity remains a separate gap (ADR 0070, PhysicsBodyStateTests, PhysicsContactImpulseTests)."
+      "reason": "Live owner-thread state, post-solver callbacks, forces, fields and complete normal/tangential frame impulses execute. Backend access/contact traversal belongs to PhysicsBodyRuntime; the public view retains engine values and rejects stale attachment identity, including same-space reattachment. Virtual tile collider identity remains a separate gap (ADR 0070, PhysicsBodyStateTests, PhysicsContactImpulseTests)."
     },
     {
       "godot": [

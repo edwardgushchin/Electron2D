@@ -1,40 +1,34 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Shapes;
-
 namespace Electron2D;
 
 /// <summary>A live owner-thread view of one attached physics body and its last solved contacts.</summary>
 /// <remarks>The server creates and caches this view. It owns no body or world. Detachment, replacement or
-/// disposal invalidates access; a later attachment receives a new view. Access is permitted outside native
-/// solver execution, including post-solver integration callbacks. Contact positions, normals and velocities
+/// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
+/// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the runtime;
+/// this view retains only its attachment identity and public contact values. Contact positions, normals and velocities
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
 /// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain
 /// unchanged by subsequent pose or fixture edits. Contact-limit assignment explicitly clears the retained point count. Live field reads retain the attachment
-/// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all native intervals of the completed outer physics step.</remarks>
+/// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all solver intervals of the completed outer physics step.</remarks>
 public sealed class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
     private readonly PhysicsSpace _space;
-    private readonly B2BodyId _id;
-    private readonly B2World _world;
-    private readonly B2Body _body;
     private Contact[] _contacts = [];
     private int _contactCount;
     private int _callbackDepth;
     internal readonly record struct Contact(RID Collider, ulong ColliderID, int LocalShape, int ColliderShape,
         Vector2 LocalPoint, Vector2 ColliderPoint, Vector2 Normal, Vector2 LocalVelocity, Vector2 ColliderVelocity, Vector2 Impulse,
-        float Depth, PhysicsFixtureTag Other);
+        float Depth, WeakReference<CollisionObject>? ColliderOwner)
+    {
+        internal CollisionObject? SceneCollider => ColliderOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
+    }
     internal ReadOnlySpan<Contact> CapturedContacts => _contacts.AsSpan(0, _contactCount);
 
-    internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space, B2BodyId id)
+    internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space)
     {
-        _runtime = runtime; _space = space; _id = id;
-        _world = B2Worlds.b2GetWorldFromId(space.WorldID); _body = b2GetBodyFullId(_world, id);
+        _runtime = runtime; _space = space;
         PrepareContacts(runtime.ContactLimit);
     }
-    internal bool Matches(PhysicsSpace space, B2BodyId id) => ReferenceEquals(_space, space) && _id == id;
     internal bool CallbackActive => _callbackDepth != 0;
     internal bool HasCapturedContacts => _contactCount != 0;
     internal void BeginCallback() => _callbackDepth++;
@@ -46,21 +40,12 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         if (_callbackDepth != 0) throw new InvalidOperationException("A borrowed body view cannot be disposed inside its callback.");
         base.ValidateDisposal();
     }
-    private B2BodyId Access()
+    private void Access()
     {
         ThrowIfDisposed();
         _space.EnsureQueryAccess();
-        try
-        {
-            var owner = _runtime.Owners;
-            if ((owner.Scene?.Space ?? owner.Server?.Space) != _space ||
-                (owner.Scene?.BackendID ?? owner.Server!.BackendID) != _id)
-                throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The backend attachment ended.");
-        }
-        catch (ArgumentException) { throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The body was released."); }
-        return _id;
+        _runtime.ValidateView(this, _space);
     }
-    private static Vector2 ToScene(B2Vec2 value) => new(value.X * PhysicsSpace.UnitsPerMeter, value.Y * PhysicsSpace.UnitsPerMeter);
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }
     private static void Finite(Vector2 value) { if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); }
     private Contact At(int index)
@@ -76,7 +61,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// constant surface speed; on an AnimatableBody it also replaces the current target-derived component.</remarks>
     public float AngularVelocity
     {
-        get => b2Body_GetAngularVelocity(Access());
+        get { Access(); return _runtime.ViewAngularVelocity; }
         set { Access(); _runtime.SetAngularVelocity(value); }
     }
 
@@ -86,30 +71,30 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// constant surface velocity; on an AnimatableBody it also replaces the current target-derived component.</remarks>
     public Vector2 LinearVelocity
     {
-        get => ToScene(b2Body_GetLinearVelocity(Access()));
+        get { Access(); return _runtime.ViewLinearVelocity; }
         set { Access(); _runtime.SetLinearVelocity(value); }
     }
 
     /// <summary>Gets center-of-mass offset from the body origin along global axes, in scene units.</summary>
     /// <value>Center-of-mass offset from the body origin along global axes, in scene units.</value>
-    public Vector2 CenterOfMass { get { var id = Access(); return ToScene(b2Body_GetWorldCenterOfMass(id) - b2Body_GetPosition(id)); } }
+    public Vector2 CenterOfMass { get { Access(); return _runtime.ViewCenterOfMass; } }
 
     /// <summary>Gets center-of-mass offset in the body local coordinates, in scene units.</summary>
     /// <value>Center-of-mass offset in the body local coordinates, in scene units.</value>
-    public Vector2 CenterOfMassLocal { get { return ToScene(b2Body_GetLocalCenterOfMass(Access())); } }
+    public Vector2 CenterOfMassLocal { get { Access(); return _runtime.ViewCenterOfMassLocal; } }
 
     /// <summary>Gets inverse dynamic mass in reciprocal kilograms; zero for static or kinematic bodies.</summary>
     /// <value>Inverse dynamic mass in reciprocal kilograms; zero for static or kinematic bodies.</value>
-    public float InverseMass { get { return PhysicsBodyRuntime.Simulation(Access()).invMass; } }
+    public float InverseMass { get { Access(); return _runtime.ViewInverseMass; } }
 
     /// <summary>Gets inverse rotational inertia in reciprocal kilograms times squared scene units; zero when rotation is locked.</summary>
     /// <value>Inverse rotational inertia in reciprocal kilograms times squared scene units; zero when rotation is locked.</value>
-    public float InverseInertia { get { var id = Access(); return b2Body_GetMotionLocks(id).angularZ ? 0 : PhysicsBodyRuntime.Simulation(id).invInertia * 0.0001f; } }
+    public float InverseInertia { get { Access(); return _runtime.ViewInverseInertia; } }
 
     /// <summary>Gets or sets whether the body is asleep; setting false wakes it.</summary>
     /// <value>Whether the body is asleep; setting false wakes it.</value>
     /// <remarks>Explicit sleep clears dynamic velocity. Static and kinematic roles ignore sleep assignments.</remarks>
-    public bool Sleeping { get { Access(); return _body.setIndex != (int)B2SolverSetType.b2_awakeSet; } set { Access(); _runtime.SetSleeping(value); } }
+    public bool Sleeping { get { Access(); return _runtime.ViewSleeping; } set { Access(); _runtime.SetSleeping(value); } }
 
     /// <summary>Gets the last nonzero physics step in seconds; zero before the first step.</summary>
     /// <value>The last nonzero physics step in seconds; zero before the first step.</value>
@@ -139,7 +124,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <value>Finite global body pose; assignment requires unit scale and zero skew.</value>
     /// <remarks>Raw kinematic transforms after their first pose queue a target for the next nonzero active step.
     /// Scene bodies retain their own transform presentation policy.</remarks>
-    public Transform Transform { get { Access(); var pose = b2GetBodyTransformQuick(_world, _body); return new(b2Rot_GetAngle(pose.q), Vector2.One, 0, ToScene(pose.p)); } set { Access(); _runtime.SetTransform(value); } }
+    public Transform Transform { get { Access(); return _runtime.ViewTransform; } set { Access(); _runtime.SetTransform(value); } }
 
     /// <summary>Gets the persistent global force in scene units times kilograms per squared second.</summary>
     /// <returns>Gets the persistent global force in scene units times kilograms per squared second.</returns>
@@ -162,9 +147,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <returns>Gets point velocity at a global-axis offset from the body origin, in scene units per second.</returns>
     public Vector2 GetVelocityAtLocalPosition(Vector2 localPosition)
     {
-        var id = Access(); Finite(localPosition);
-        var result = ToScene(b2Body_GetWorldPointVelocity(id, WorldPoint(id, localPosition)));
-        Finite(result); return result;
+        Access(); return _runtime.GetViewPointVelocity(localPosition);
     }
 
     /// <summary>Gets the contact collider RID.</summary>
@@ -239,19 +222,13 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <param name="force">Finite force in scene units times kilograms per squared second.</param>
     public void SetConstantForce(Vector2 force)
     {
-        var id = Access(); Finite(force);
-        if (_runtime.Owners.Scene is RigidBody rigid) rigid.ConstantForce = force;
-        else _runtime.ConstantForce = force;
-        b2Body_SetAwake(id, true);
+        Access(); _runtime.SetViewConstantForce(force);
     }
     /// <summary>Sets persistent torque, replacing the previous value.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
     public void SetConstantTorque(float torque)
     {
-        var id = Access(); Finite(torque);
-        if (_runtime.Owners.Scene is RigidBody rigid) rigid.ConstantTorque = torque;
-        else _runtime.ConstantTorque = torque;
-        b2Body_SetAwake(id, true);
+        Access(); _runtime.SetViewConstantTorque(torque);
     }
     /// <summary>Adds a persistent central force without adding torque.</summary>
     /// <param name="force">Finite force in scene units times kilograms per squared second, zero by default.</param>
@@ -315,12 +292,6 @@ public sealed class PhysicsDirectBodyState : ElectronObject
         Finite(linear); Finite(angular);
         LinearVelocity = linear; AngularVelocity = angular;
     }
-    private static B2Vec2 WorldPoint(B2BodyId id, Vector2 offset)
-    {
-        var point = b2Body_GetPosition(id) + Shape.ToBackend(offset);
-        if (!float.IsFinite(point.X) || !float.IsFinite(point.Y)) throw new ArgumentOutOfRangeException(nameof(offset));
-        return point;
-    }
     internal void PrepareContacts(int limit)
     {
         if (_contacts.Length < limit) Array.Resize(ref _contacts, limit);
@@ -330,57 +301,19 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     internal void CaptureContacts()
     {
         _contactCount = 0;
-        var limit = _runtime.ContactLimit;
-        if (limit == 0 || _space.CaptureFrameContacts(this, _id, limit)) return;
-        for (var key = _body.headContactKey; key != B2Constants.B2_NULL_INDEX;)
-        {
-            var contact = _world.contacts.data[key >> 1]; var edge = key & 1;
-            key = contact.edges[edge].nextKey;
-            if ((contact.flags & (uint)B2ContactFlags.b2_contactTouchingFlag) == 0) continue;
-            var own = _world.shapes.data[edge == 0 ? contact.shapeIdA : contact.shapeIdB];
-            var other = _world.shapes.data[edge == 0 ? contact.shapeIdB : contact.shapeIdA];
-            var ownTag = own.userData.GetRef<PhysicsFixtureTag>(); var otherTag = other.userData.GetRef<PhysicsFixtureTag>();
-            if (ownTag is not null && otherTag is not null)
-                CaptureContact(B2Contacts.b2GetContactSim(_world, contact), b2MakeBodyId(_world, other.bodyId),
-                    edge == 0, ownTag, otherTag, limit);
-        }
+        _runtime.CaptureViewContacts(this);
     }
 
     internal void BeginContactSnapshot() => _contactCount = 0;
 
-    private void CaptureContact(B2ContactSim contact, B2BodyId collider, bool first,
-        PhysicsFixtureTag own, PhysicsFixtureTag other, int limit)
+    internal int SelectContactSlot(float depth, int limit)
     {
-        ref var manifold = ref contact.manifold;
-        var normal = manifold.normal;
-        for (var pointIndex = 0; pointIndex < manifold.pointCount; pointIndex++)
-        {
-            ref readonly var point = ref manifold.points[pointIndex];
-            CaptureContactPoint(normal, point.point, point.separation, -point.separation,
-                _space.SolvedContactImpulse(contact, point), collider, first, own, other, limit);
-        }
+        if (_contactCount < limit) return _contactCount++;
+        // ponytail: O(candidates * limit); use a retained min-heap if large report limits become a measured bottleneck.
+        var slot = 0;
+        for (var i = 1; i < _contactCount; i++) if (_contacts[i].Depth < _contacts[slot].Depth) slot = i;
+        return depth > _contacts[slot].Depth ? slot : -1;
     }
 
-    internal void CaptureContactPoint(B2Vec2 normal, B2Vec2 point, float separation, float depth, B2Vec2 impulse,
-        B2BodyId collider, bool first, PhysicsFixtureTag own, PhysicsFixtureTag other, int limit)
-    {
-        int slot;
-        if (_contactCount < limit) slot = _contactCount++;
-        else
-        {
-            // ponytail: O(candidates * limit); use a retained min-heap if large report limits become a measured bottleneck.
-            slot = 0;
-            for (var i = 1; i < _contactCount; i++) if (_contacts[i].Depth < _contacts[slot].Depth) slot = i;
-            if (depth <= _contacts[slot].Depth) return;
-        }
-        var a = point - normal * (separation * 0.5f);
-        var b = point + normal * (separation * 0.5f);
-        var local = first ? a : b;
-        var remote = first ? b : a;
-        _contacts[slot] = new(other.ColliderRID, other.SceneObject?.InstanceID ?? 0,
-            own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
-            new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
-            ToScene(_space.SolvedPointVelocity(_id, local)), ToScene(_space.SolvedPointVelocity(collider, remote)),
-            ToScene(first ? -impulse : impulse), depth, other);
-    }
+    internal void StoreContact(int slot, in Contact contact) => _contacts[slot] = contact;
 }

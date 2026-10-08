@@ -7,14 +7,18 @@ Last updated: 2026-10-08
 **Source:** [PhysicsBodyRuntime.cs](../../src/Servers/Physics/PhysicsBodyRuntime.cs),
 [forces](../../src/Servers/Physics/PhysicsBodyRuntime.Forces.cs),
 [parameters](../../src/Servers/Physics/PhysicsBodyRuntime.Parameters.cs),
-[surface velocity](../../src/Servers/Physics/PhysicsBodyRuntime.Surface.cs).
+[surface velocity](../../src/Servers/Physics/PhysicsBodyRuntime.Surface.cs),
+[direct-view adapter](../../src/Servers/Physics/PhysicsBodyRuntime.View.cs).
 **Component:** [Physics server and queries](../components/physics-queries.md).
 
 ## Ownership and flow
 
 PhysicsServer keeps one runtime per body RID. A scene owner is weakly referenced;
 a server collider is retained until RID release. Owners resolve to the current
-attachment, and borrowed direct views reject an ended native body generation.
+attachment. The runtime owns the cached backend world/body used by a direct view,
+validates that the borrowed object is still its current view, and clears both
+the view and cached backend references on detach. Reattachment on the same RID
+and space cannot revive an old view.
 The runtime shares mass/material/field profiles, pending and constant forces,
 contact limits, callbacks and live state between scene and server operations.
 It is an internal implementation; applications use PhysicsServer, PhysicsBody
@@ -26,7 +30,8 @@ subclasses and PhysicsDirectBodyState.
 | --- | --- |
 | `Owners`, `Space`, `BodyID` | Resolve the live scene/server owner and current native attachment. |
 | `GetTransform`/`SetTransform`, velocity/sleep pairs, `SetAxisVelocity`, `RestoreSceneState` | Shared typed state, static-support wakeup and role-specific retained configuration. |
-| `EnsureMutable`, `GetView` | Enforce the world access phase and reuse a generation-bound direct view. |
+| `EnsureMutable`, `GetView`, `InvalidateView`, `ValidateView` | Enforce world phase/current attachment identity; replace a disposed view and invalidate all older attachments. |
+| `View*`, `CaptureViewContacts`, `CaptureViewContact` | Adapt backend live state and solved contacts to engine values without exposing backend handles to PhysicsDirectBodyState. |
 | `ApplyMassProfile`, `SetMassProfile` | Share body shape/mass/center validation and scene projection. |
 | `ApplyBeforeStep`, pending/constant force and torque | Consume eligible pending forces once; preserve configured totals. |
 | `ApplyResolvedFields`, parameter operations | Combine world/Area gravity and damping with body policy. |
@@ -40,6 +45,12 @@ The extra velocity affects point queries and CPU/GPU contact constraints but nev
 contributes to pose integration or actual kinematic subdivision distance.
 
 ## Verification
+
+PhysicsBodyStateTests covers current-view identity, repeated same-space scene/server
+reattachment, caller-disposed view replacement, stale writes, callbacks and warmed
+allocation. PhysicsParallelTests exercises contact publication for 288 bodies over
+256 fixed steps with retained workers. The state/surface/contact suites also pass
+through the existing GPU stage host; this is not independent GPU acceptance.
 
 PhysicsSurfaceVelocityTests covers surface contacts, query snapshots, character
 carry, inherited target motion, owner/phase/lifecycle rejection, packing and warmed

@@ -23,7 +23,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal float AngularDamp;
     internal Action<PhysicsDirectBodyState>? ForceCallback;
     internal Action<PhysicsDirectBodyState>? SyncCallback;
-    internal PhysicsDirectBodyState? View;
+    internal PhysicsDirectBodyState? View { get; private set; }
     internal bool ActiveBeforeStep;
     internal bool FieldsInitialized;
     internal bool Released;
@@ -42,12 +42,6 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal B2BodyId BodyID { get { var owner = Owners; return owner.Scene?.BackendID ?? owner.Server!.BackendID; } }
     internal bool Omitted { get => Owners.Scene is RigidBody rigid ? rigid.CustomIntegrator : OmitForces; }
     internal int ContactLimit => Owners.Scene is RigidBody rigid ? rigid.MaxContactsReported : MaxContacts;
-
-    internal PhysicsDirectBodyState GetView(PhysicsSpace space, B2BodyId id)
-    {
-        if (View is null || View.IsDisposed || !View.Matches(space, id)) View = new(this, space, id);
-        return View;
-    }
 
     internal void EnsureMutable() => Space?.EnsureQueryAccess();
 

@@ -70,6 +70,11 @@ One scene unit maps to 0.01 Box2D meters. Typed project defaults provide downwar
 
 The current geometry profile accepts translated/rotated bodies and areas with unit global scale and zero skew. Active scaled/skewed body, area or shape transforms fail explicitly and can be corrected before a later step. Invalid mass, dimensions, velocity, damping and bit indices reject before changing state. Engine-owned warmed resting-contact, active-contact, freely moving and steady area-monitoring frames in the checked Linux/.NET 8 setup allocate zero managed bytes. Backend types do not appear in the public/protected Electron2D assembly surface.
 
+Direct body views now keep backend-neutral contact values and current-attachment
+validation; backend reads, unit conversion and contact traversal reside in
+PhysicsBodyRuntime. This is the first extraction from public consumers, not a
+replacement of the current CPU world or completion of the independent GPU path.
+
 ## Verification and limits
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)

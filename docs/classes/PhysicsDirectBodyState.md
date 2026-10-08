@@ -84,6 +84,14 @@ class ControlledBody : RigidBody
 | `public Void SetConstantTorque(Single torque)` | Guarded live operation or retained contact lookup. |
 | `protected override Void ValidateDisposal()` | Guarded live operation or retained contact lookup. |
 
+The public view contains no vendor body/world IDs or fixture tags. `PhysicsBodyRuntime`
+owns backend state access, unit conversion and contact traversal. The view retains
+engine contact values and a weak collider owner, with lifetime checked against the
+runtime's current view and space. Detach invalidates old readers/writers even after
+the same RID rejoins the same space; disposing a view permits a fresh view without
+changing the attached body. Existing native storage remains behind that adapter;
+this extraction does not supply an independent GPU world.
+
 ## Property descriptions
 
 <a id="velocity"></a>

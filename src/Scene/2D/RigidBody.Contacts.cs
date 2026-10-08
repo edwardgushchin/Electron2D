@@ -122,7 +122,7 @@ public partial class RigidBody
         if (HasBackend) state.CaptureContacts();
         if (_contactMonitor)
             foreach (ref readonly var contact in state.CapturedContacts)
-                if (contact.Other.SceneObject is PhysicsBody other && !ReferenceEquals(other, this))
+                if (contact.SceneCollider is PhysicsBody other && !ReferenceEquals(other, this))
                 {
                     _nextContacts.Add(other);
                     _shapePairs.Observe(new(contact.Collider, other, false, contact.ColliderShape, contact.LocalShape));

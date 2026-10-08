@@ -111,7 +111,7 @@ internal sealed partial class PhysicsSpace
         }
     }
 
-    internal bool CaptureFrameContacts(PhysicsDirectBodyState state, B2BodyId id, int limit)
+    internal bool CaptureFrameContacts(PhysicsBodyRuntime runtime, PhysicsDirectBodyState state, B2BodyId id, int limit)
     {
         if (!_aggregateContactImpulses) return false;
         var world = b2GetWorldFromId(_worldID);
@@ -123,7 +123,7 @@ internal sealed partial class PhysicsSpace
             var own = world.shapes.data[first ? contact.ShapeA : contact.ShapeB].userData.GetRef<PhysicsFixtureTag>();
             var other = world.shapes.data[first ? contact.ShapeB : contact.ShapeA].userData.GetRef<PhysicsFixtureTag>();
             if (own is null || other is null) continue;
-            state.CaptureContactPoint(contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
+            runtime.CaptureViewContact(state, contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
                 b2MakeBodyId(world, first ? contact.BodyB : contact.BodyA), first, own, other, limit);
         }
         return true;

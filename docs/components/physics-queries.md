@@ -11,6 +11,12 @@ Process-wide service operations and events use static access to retained objects
 
 [`PhysicsTestMotionParameters`](../classes/PhysicsTestMotionParameters.md) and [`PhysicsTestMotionResult`](../classes/PhysicsTestMotionResult.md) form the typed server body-motion query. The scene [PhysicsBody](../classes/PhysicsBody.md) exposes the same sweep through `TestMove` and `MoveAndCollide`, returning [KinematicCollision](../classes/KinematicCollision.md).
 
+`PhysicsDirectBodyState` now delegates backend state access and contact traversal
+to `PhysicsBodyRuntime.View.cs`. It holds engine contact values and weak owners,
+not backend IDs or fixture records. Runtime view identity invalidates stale views
+across detachment, reattachment and caller disposal. The adapter still uses the
+current Box2D world; independent GPU ownership remains open.
+
 ## Runtime flow
 
 A SceneTree registers its existing Box2D space when the first scene collider enters or a CanvasItem asks for World. Each CollisionObject owns a stable RID from construction to disposal; fixture rebuilds attach that RID and a shape-owner index to all generated backend pieces. The server also creates explicit spaces, bodies, Areas and shapes. A server collider may attach to an explicit space or the SceneTree space. Explicit spaces advance through `SpaceStep`; a SceneTree advances its own space in the fixed physics lane. Freeing a resource removes its registry entry without reusing the numeric RID.

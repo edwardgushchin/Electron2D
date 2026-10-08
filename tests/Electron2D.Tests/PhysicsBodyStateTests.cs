@@ -10,6 +10,7 @@ internal static class PhysicsBodyStateTests
         VerifySolvedContacts();
         VerifyServerContactLimit();
         VerifyServerCallbacksAndLifetime();
+        VerifyReattachmentViews();
         VerifyServerFieldsAndForces();
         VerifyCallbackFailureAndMutations();
         VerifyWarmAllocation();
@@ -230,6 +231,49 @@ internal static class PhysicsBodyStateTests
         PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid); PhysicsServer.BodySetSpace(body, space);
         Check(PhysicsServer.BodyGetDirectState(body)!.AngularVelocity == 0, "A static-mode transition clears the retained angular velocity across attachments.");
         PhysicsServer.FreeRID(body); Reject<ObjectDisposedException>(() => _ = fresh.Step); PhysicsServer.FreeRID(space);
+    }
+
+    private static void VerifyReattachmentViews()
+    {
+        using var root = new Node();
+        var scene = new RigidBody { GravityScale = 0 };
+        root.AddChild(scene);
+        using var tree = new SceneTree(root);
+        var space = PhysicsServer.SpaceCreate();
+        var body = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodySetSpace(body, space);
+            var sceneView = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
+            var serverView = PhysicsServer.BodyGetDirectState(body)!;
+            // 0.0001 scene units/s allows only float unit-conversion rounding, not simulation drift.
+            for (var iteration = 0; iteration < 4; iteration++)
+            {
+                root.RemoveChild(scene);
+                PhysicsServer.BodySetSpace(body, default);
+                root.AddChild(scene);
+                PhysicsServer.BodySetSpace(body, space);
+                var nextScene = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
+                var nextServer = PhysicsServer.BodyGetDirectState(body)!;
+                foreach (var pair in new[] { (Old: sceneView, Current: nextScene), (Old: serverView, Current: nextServer) })
+                {
+                    pair.Current.LinearVelocity = new(7, 11);
+                    Reject<ObjectDisposedException>(() => _ = pair.Old.Transform);
+                    Reject<ObjectDisposedException>(() => _ = pair.Old.GetContactCount());
+                    Reject<ObjectDisposedException>(() => pair.Old.ApplyCentralImpulse(new(100, 0)));
+                    Reject<ObjectDisposedException>(() => pair.Old.Sleeping = true);
+                    Check((pair.Current.LinearVelocity - new Vector2(7, 11)).Length() <= 0.0001f && !pair.Current.Sleeping,
+                        "An old attachment view cannot read or mutate a replacement body on the same RID and space.");
+                }
+                sceneView = nextScene; serverView = nextServer;
+            }
+            sceneView.Dispose();
+            var replacement = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
+            Check(!ReferenceEquals(sceneView, replacement) && (replacement.LinearVelocity - new Vector2(7, 11)).Length() <= 0.0001f,
+                "Replacing a caller-disposed view retains the active body's state.");
+            Reject<ObjectDisposedException>(() => sceneView.SetConstantForce(Vector2.One));
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
 
     private static void VerifyCallbackFailureAndMutations()

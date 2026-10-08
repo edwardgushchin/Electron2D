@@ -25,7 +25,7 @@ public sealed partial class PhysicsServer
     internal void InvalidateBodyView(RID body)
     {
         lock (_registryGate)
-            if (_bodyRuntimes.TryGetValue(body, out var runtime)) runtime.View = null;
+            if (_bodyRuntimes.TryGetValue(body, out var runtime)) runtime.InvalidateView();
     }
 
     internal PhysicsDirectBodyState? BodyGetDirectStateCore(RID body)
