@@ -1,6 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Distances;
-
 namespace Electron2D;
 
 /// <summary>A directed ray that separates its endpoint from intersecting collision surfaces.</summary>
@@ -50,27 +47,10 @@ public sealed class SeparationRayShape : Shape
         return new Rect2(0, 0, 0, _length).Grow(MathF.Sqrt(0.5f) * 4f);
     }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        var from = ToBackend(localPosition);
-        var to = ToBackend(localPosition + new Vector2(0, _length).Rotated(localRotation));
-        if (!float.IsFinite(to.X) || !float.IsFinite(to.Y)) throw new ArgumentOutOfRangeException(nameof(localPosition));
-        var tag = definition.userData.GetRef<PhysicsFixtureTag>() ??
-            throw new InvalidOperationException("A separation ray requires a tagged collision owner.");
-        var settings = definition;
-        settings.userData = new B2UserData(tag with { SeparationRay = new(from, to, _slideOnSlope) });
-        settings.isSensor = true;
-        settings.density = 0;
-        settings.enablePreSolveEvents = false;
-        fixtures.Add(CreateSegmentOrPoint(bodyID, settings, from, to));
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        proxies.Add(b2MakeProxy(new B2Vec2(0, 0), new B2Vec2(0, _length * PhysicsSpace.MetersPerUnit), 2, 0));
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.SeparationRay, B = new(0, _length), SlideOnSlope = _slideOnSlope };
     }
 
     /// <inheritdoc />

@@ -1,8 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Constants;
-using static Box2D.NET.B2Distances;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 /// <summary>A hollow collection of independent two-sided collision segments.</summary>
@@ -10,7 +5,6 @@ namespace Electron2D;
 /// <see cref="CollisionShape"/> borrows this caller-owned resource.</remarks>
 public sealed class ConcavePolygonShape : Shape
 {
-    internal ReadOnlySpan<Vector2> CollisionSegments => _segments;
     private Vector2[] _segments = [];
 
     /// <summary>Creates an empty segment collection with no collision fixtures.</summary>
@@ -62,30 +56,10 @@ public sealed class ConcavePolygonShape : Shape
         return new(min.X, min.Y, max.X - min.X, max.Y - min.Y);
     }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        for (var index = 0; index < _segments.Length; index += 2)
-        {
-            var first = ToBackend(localPosition + _segments[index].Rotated(localRotation));
-            var second = ToBackend(localPosition + _segments[index + 1].Rotated(localRotation));
-            fixtures.Add(CreateSegmentOrPoint(bodyID, definition, first, second));
-        }
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        for (var index = 0; index < _segments.Length; index += 2)
-        {
-            var first = ToBackend(_segments[index]);
-            var second = ToBackend(_segments[index + 1]);
-            proxies.Add(b2DistanceSquared(first, second) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP
-                ? b2MakeProxy(new B2Vec2(first.X + (second.X - first.X) * 0.5f,
-                        first.Y + (second.Y - first.Y) * 0.5f), 1, 0)
-                : b2MakeProxy(first, second, 2, 0));
-        }
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.ConcavePolygon, Points = _segments };
     }
 
     /// <inheritdoc />

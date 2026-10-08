@@ -60,7 +60,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal Vector2 GetViewPointVelocity(Vector2 offset)
     {
         Finite(offset);
-        var point = b2Body_GetPosition(_viewID) + Shape.ToBackend(offset);
+        var point = b2Body_GetPosition(_viewID) + PhysicsShapeBackend.ToBackend(offset);
         if (!float.IsFinite(point.X) || !float.IsFinite(point.Y)) throw new ArgumentOutOfRangeException(nameof(offset));
         var result = ViewToScene(b2Body_GetWorldPointVelocity(_viewID, point));
         Finite(result); return result;

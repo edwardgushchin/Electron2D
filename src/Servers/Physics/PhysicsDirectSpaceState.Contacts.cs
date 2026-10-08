@@ -101,7 +101,7 @@ public sealed partial class PhysicsDirectSpaceState
         contacts.Clear();
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return contacts;
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = Shape.ToBackend(parameters.Motion);
+        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -139,7 +139,7 @@ public sealed partial class PhysicsDirectSpaceState
     {
         var space = PrepareShapeQuery(parameters);
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = Shape.ToBackend(parameters.Motion);
+        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         PhysicsRestInfo? best = null;
         var bestDepth = float.NegativeInfinity;
         foreach (var candidate in _shapeCandidates)

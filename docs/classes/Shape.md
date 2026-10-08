@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-05
+Last updated: 2026-10-08
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md)
 
@@ -13,6 +13,13 @@ Last updated: 2026-10-05
 The reusable 2D collision-geometry role. The caller owns a Shape resource; a [CollisionShape](CollisionShape.md) borrows it for a direct physics-body or [Area](Area.md) parent. [PhysicsShapeQueryParameters](PhysicsShapeQueryParameters.md) can also borrow it for direct shape queries, lazily registering a physics RID that remains stable through edits and is released on disposal. `Changed` invalidates the parent's and borrowed server fixtures before their next fixed step or direct query. Geometry revisions also let attached owners detect an edit when an earlier user `Changed` subscriber throws. Resource duplication of concrete shapes owns independent geometry state. The current profile supports circle, capsule, segment, separation ray, convex polygon, concave segment collection and rectangle geometry; standalone collision and contact queries execute for these families. Canvas drawing and custom solver bias retain their separate [coverage prerequisites](../coverage/classes/Shape2D.md).
 
 ## Example
+
+Internally, all built-in shapes supply a borrowed [PhysicsShapeGeometry](PhysicsShapeGeometry.md)
+view in scene units. Resources hold authored values; [PhysicsShapeBackend](PhysicsShapeBackend.md)
+owns current CPU fixture/query compilation and the weak compiled polygon cache.
+Standalone collisions consume the same source geometry without copying contours.
+This extraction preserves the public resource contract and does not add a second
+implemented backend or custom-shape registration.
 
 This complete resource-only snippet requires no SceneTree, body or space:
 

@@ -48,7 +48,7 @@ internal sealed partial class PhysicsBodyRuntime
         {
             linear = b2Body_GetLinearVelocity(id) * linearFactor;
             angular = b2Body_GetAngularVelocity(id) * angularFactor;
-            if (acceleration != Vector2.Zero) force = Shape.ToBackend(acceleration) * b2Body_GetMass(id);
+            if (acceleration != Vector2.Zero) force = PhysicsShapeBackend.ToBackend(acceleration) * b2Body_GetMass(id);
             if (!float.IsFinite(linear.X) || !float.IsFinite(linear.Y) || !float.IsFinite(angular) ||
                 !float.IsFinite(force.X) || !float.IsFinite(force.Y))
                 throw new InvalidOperationException("The resolved body field would produce nonfinite motion.");

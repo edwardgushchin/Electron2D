@@ -20,9 +20,9 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         if (Space is not null) throw new InvalidOperationException("A collider already belongs to a physics world.");
         var definition = b2DefaultBodyDef();
         definition.type = BodyType(configuration.Mode);
-        definition.position = Shape.ToBackend(position);
+        definition.position = PhysicsShapeBackend.ToBackend(position);
         definition.rotation = B2MathFunction.b2MakeRot(rotation);
-        definition.linearVelocity = Shape.ToBackend(configuration.LinearVelocity);
+        definition.linearVelocity = PhysicsShapeBackend.ToBackend(configuration.LinearVelocity);
         definition.angularVelocity = configuration.AngularVelocity;
         definition.gravityScale = configuration.GravityScale;
         definition.enableSleep = configuration.CanSleep;
@@ -111,6 +111,6 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     {
         definition.userData = new B2UserData(new PhysicsFixtureTag(rid, index, oneWay) { SceneOwner = _sceneOwner });
         definition.enablePreSolveEvents = !definition.isSensor && (oneWay is not null || PhysicsServer.Service.HasBodyCollisionExceptions(rid));
-        shape.AppendToBody(BodyID, transform.Origin, transform.Rotation, definition, _shapes);
+        PhysicsShapeBackend.AppendToBody(shape, BodyID, transform.Origin, transform.Rotation, definition, _shapes);
     }
 }

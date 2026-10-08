@@ -43,6 +43,7 @@ operations remain open in the ledger.
 | --- | --- | --- |
 | World | [PhysicsSpace](../../src/Servers/Physics/PhysicsSpace.cs) creates a B2WorldId unconditionally; EnableGPUSolver assigns callbacks on that same world | Every publicly created world uses the CPU host. There is no public independent GPU selection/fallback contract. |
 | Scene bodies and shapes | [PhysicsColliderBackend](../../src/Servers/Physics/PhysicsColliderBackend.cs) now owns body/fixture IDs and creation/rebuild/destruction for PhysicsBody, Area and raw colliders | Ownership, creation and live pose/velocity/sleep operations are consolidated in the adapter; scene motion roles and operation values use engine types. Solved-pose notifications precede motion sampling. Backend state and shape construction still use Box2D; independent GPU ownership remains open. |
+| Geometry resources | Shape.GetGeometry returns engine-unit endpoints/radius and borrowed contours; PhysicsShapeBackend owns CPU compilation and weak convex caches | Resources contain no vendor types; fixture, query and mass consumers share the CPU adapter. Polygon validation still compiles CPU hulls during authoring. Standalone collision consumes the neutral view but retains backend numeric types internally. GPU geometry ownership remains open. |
 | Server bodies | [PhysicsServerCollider](../../src/Servers/Physics/PhysicsServerCollider.cs) delegates body/fixture lifetime and live motion access to the shared component; [PhysicsBodyRuntime](../../src/Servers/Physics/PhysicsBodyRuntime.cs) still implements vendor state/forces | Authored server slots and scene slots use one fixture path, while resolved scene/server gravity and damping share PhysicsBodyRuntime. Remaining backend state/query/geometry operations need independent implementations behind the common identity/lifetime contract. |
 | Joints | [PhysicsJointRuntime](../../src/Servers/Physics/PhysicsJointRuntime.cs) stores B2 joint/body IDs and constructs revolute, wheel or filter joints | CPU joint kernels and GPU stage packets exist; independent GPU joint ownership and spring execution are absent. |
 | Queries/contacts | [PhysicsBodyRuntime.View](../../src/Servers/Physics/PhysicsBodyRuntime.View.cs) now owns body-view backend reads and traversal; [PhysicsDirectBodyState](../../src/Servers/Physics/PhysicsDirectBodyState.cs) retains engine values and current-view identity. Direct-space queries and contact publication still read vendor state | Body-view extraction preserves existing semantics; backend world, query and joint ownership remain coupled and require further work. |
@@ -76,6 +77,11 @@ PhysicsBodyStateTests guards writes during solved-pose notifications; scene/serv
 field suites cover the merged gravity/damping path and their warmed allocation
 checks. The earlier intermittent native GLib failure remains an open observation
 in GPU status; passing later lifetime tests does not establish its cause.
+
+Geometry extraction subsequently passes the expanded 28-suite CPU group and full
+current GPU suite. Shared/copy polygon tests cover successful and rejected live
+edits plus allocation-free warmed query reuse. Public shape declarations and the
+open behavior counts are unchanged.
 
 ## Open behavior groups
 

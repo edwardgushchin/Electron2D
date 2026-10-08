@@ -30,8 +30,10 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 
 Scene/server collider lifetime, engine-valued creation, pose/motion/sleep access
 and resolved body fields now use shared internal adapters. This preserves the
-existing public contract while isolating vendor-dependent operations; independent
-GPU ownership and public backend selection remain open.
+existing public contract while isolating vendor-dependent operations. Built-in
+shape resources now expose borrowed scene-unit geometry internally; CPU fixture,
+query and mass compilation is isolated in PhysicsShapeBackend. Independent GPU
+ownership and public backend selection remain open.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

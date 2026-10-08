@@ -18,7 +18,7 @@ internal sealed partial class PhysicsSpace
         {
             var body = _bodies[index];
             if (body.GetRID() != rid) continue;
-            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, Shape.ToBackend(point));
+            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, PhysicsShapeBackend.ToBackend(point));
             velocity = ToScene(backendVelocity);
             layer = body.EffectiveCollisionLayer;
             return true;
@@ -27,7 +27,7 @@ internal sealed partial class PhysicsSpace
         {
             var body = _serverColliders[index];
             if (body.IsArea || body.RID != rid) continue;
-            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, Shape.ToBackend(point));
+            var backendVelocity = b2Body_GetWorldPointVelocity(body.BackendID, PhysicsShapeBackend.ToBackend(point));
             velocity = ToScene(backendVelocity);
             layer = body.CollisionLayer;
             return true;
@@ -53,8 +53,8 @@ internal sealed partial class PhysicsSpace
             if (!other.IsArea && other.RID != ownerRID)
                 AddMotionCandidates(other.BackendShapes, ownerRID, ownShapes, excludedBodies, excludedObjects);
 
-        var requested = Shape.ToBackend(motion);
-        var fromTransform = new B2Transform(Shape.ToBackend(from.Origin), b2MakeRot(from.Rotation));
+        var requested = PhysicsShapeBackend.ToBackend(motion);
+        var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), b2MakeRot(from.Rotation));
         var recovery = new B2Vec2(0, 0);
         var recoveryHit = default(MotionContact);
         var hasRecoveryHit = false;

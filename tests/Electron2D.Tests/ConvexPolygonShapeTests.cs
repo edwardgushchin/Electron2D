@@ -8,7 +8,54 @@ internal static class ConvexPolygonShapeTests
         VerifyLargeHullFixtures();
         VerifyRotatedFixture();
         VerifyPackedResource();
+        VerifySharedAndCopiedGeometry();
         Console.WriteLine("Convex polygon hull, compound fixtures, area, packing and allocation checks passed.");
+    }
+
+    private static void VerifySharedAndCopiedGeometry()
+    {
+        using var polygon = new ConvexPolygonShape { Points = RegularPolygon(12, 20) };
+        using var duplicate = (ConvexPolygonShape)polygon.Duplicate();
+        using var root = new SubViewport();
+        using var tree = new SceneTree(root);
+        var first = new StaticBody { Name = "First" };
+        var second = new StaticBody { Name = "Second", Position = new(100, 0) };
+        var copied = new StaticBody { Name = "Copy", Position = new(200, 0) };
+        first.AddChild(new CollisionShape { Shape = polygon });
+        second.AddChild(new CollisionShape { Shape = polygon });
+        copied.AddChild(new CollisionShape { Shape = duplicate });
+        root.AddChild(first); root.AddChild(second); root.AddChild(copied);
+        var direct = first.GetWorld()!.DirectSpaceState;
+        using var point = new PhysicsPointQueryParameters();
+        var hits = new PhysicsPointResult[4];
+        // Probe well inside radius 20 and well outside radius 5, independent of contact slop.
+        foreach (var x in new[] { 15, 115, 215 })
+        {
+            point.Position = new(x, 0);
+            Check(direct.IntersectPoint(point, hits) > 0, "Shared and duplicated polygons compile their complete contours.");
+        }
+        polygon.Points = RegularPolygon(12, 5);
+        Reject<ArgumentException>(() => polygon.Points = [new(0, 0), new(0.001f, 0), new(0, 0.001f)]);
+        foreach (var x in new[] { 15, 115, 215 })
+        {
+            point.Position = new(x, 0);
+            Check((direct.IntersectPoint(point, hits) > 0) == (x == 215),
+                "An edit updates both shared fixtures, a rejected contour keeps that edit, and the duplicate stays independent.");
+        }
+        foreach (var x in new[] { 3, 103 })
+        {
+            point.Position = new(x, 0);
+            Check(direct.IntersectPoint(point, hits) > 0, "Rejected geometry preserves the smaller compiled fixtures instead of clearing them.");
+        }
+        using var query = new PhysicsShapeQueryParameters { Shape = polygon, Transform = new(0, new Vector2(-15, 0)) };
+        var results = new PhysicsShapeResult[4];
+        Check(direct.IntersectShape(query, results) == 0, "Query compilation uses the current small contour.");
+        query.Shape = duplicate;
+        Check(direct.IntersectShape(query, results) > 0, "Duplicate query compilation retains the original large contour.");
+        for (var i = 0; i < 128; i++) { query.Shape = i % 2 == 0 ? polygon : duplicate; direct.IntersectShape(query, results); }
+        var before = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 128; i++) { query.Shape = i % 2 == 0 ? polygon : duplicate; direct.IntersectShape(query, results); }
+        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed compiled polygon reuse allocates zero managed bytes.");
     }
 
     private static void VerifyPointsAndCloud()

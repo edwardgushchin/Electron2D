@@ -38,7 +38,7 @@ resources are borrowed during rebuild and are never disposed here.
 Scene and server slot overloads use one shared shape-definition/append path. It
 installs category/mask bits, sensor/density policy, surface material, one-way
 metadata and exception pre-solve eligibility. Shape resources supply their existing
-concrete geometry. Definitions are temporary locals; the component does not retain
+borrowed scene-unit geometry through PhysicsShapeBackend. Definitions are temporary locals; the component does not retain
 a large per-collider shape-definition snapshot. Mass updates are deferred until
 the owning body applies its complete profile; Areas remain massless sensors.
 

@@ -89,31 +89,36 @@ internal static class PhysicsShapeCollision
     private static ReadOnlySpan<Vector2> Prepare(Shape shape, List<B2ShapeProxy> proxies)
     {
         proxies.Clear();
-        if (shape is ConvexPolygonShape convex) return convex.CollisionPoints;
-        if (shape is CircleShape circle) proxies.Add(b2MakeProxy(default(B2Vec2), 1, circle.Radius));
-        else if (shape is CapsuleShape capsule)
+        var geometry = shape.GetGeometry();
+        switch (geometry.Kind)
         {
-            var half = capsule.MidHeight * 0.5f;
-            proxies.Add(half == 0 ? b2MakeProxy(default(B2Vec2), 1, capsule.Radius) :
-                b2MakeProxy(new B2Vec2(0, -half), new B2Vec2(0, half), 2, capsule.Radius));
+            case PhysicsShapeGeometry.ShapeKind.ConvexPolygon:
+                return geometry.Points;
+            case PhysicsShapeGeometry.ShapeKind.Circle:
+                proxies.Add(b2MakeProxy(default(B2Vec2), 1, geometry.Radius));
+                break;
+            case PhysicsShapeGeometry.ShapeKind.Capsule:
+                proxies.Add(geometry.A == geometry.B ? b2MakeProxy(default(B2Vec2), 1, geometry.Radius) :
+                    b2MakeProxy(new B2Vec2(geometry.A.X, geometry.A.Y), new B2Vec2(geometry.B.X, geometry.B.Y), 2, geometry.Radius));
+                break;
+            case PhysicsShapeGeometry.ShapeKind.Rectangle:
+                Span<B2Vec2> corners = stackalloc B2Vec2[4]
+                { new(geometry.A.X, geometry.A.Y), new(geometry.B.X, geometry.A.Y),
+                    new(geometry.B.X, geometry.B.Y), new(geometry.A.X, geometry.B.Y) };
+                proxies.Add(b2MakeProxy(corners, 4, 0));
+                break;
+            case PhysicsShapeGeometry.ShapeKind.SeparationRay:
+                proxies.Add(b2MakeProxy(default, new B2Vec2(geometry.B.X, geometry.B.Y), 2, 0));
+                break;
+            case PhysicsShapeGeometry.ShapeKind.Segment:
+                proxies.Add(SegmentProxy(geometry.A, geometry.B));
+                break;
+            case PhysicsShapeGeometry.ShapeKind.ConcavePolygon:
+                for (var index = 0; index < geometry.Points.Length; index += 2)
+                    proxies.Add(SegmentProxy(geometry.Points[index], geometry.Points[index + 1]));
+                break;
+            default: throw new NotSupportedException("The collision resource has no standalone geometry integration.");
         }
-        else if (shape is RectangleShape rectangle)
-        {
-            var half = rectangle.Size * 0.5f;
-            Span<B2Vec2> corners = stackalloc B2Vec2[4]
-            { new(-half.X, -half.Y), new(half.X, -half.Y), new(half.X, half.Y), new(-half.X, half.Y) };
-            proxies.Add(b2MakeProxy(corners, 4, 0));
-        }
-        else if (shape is SeparationRayShape ray)
-            proxies.Add(b2MakeProxy(default, new B2Vec2(0, ray.Length), 2, 0));
-        else if (shape is SegmentShape segment) proxies.Add(SegmentProxy(segment.A, segment.B));
-        else if (shape is ConcavePolygonShape concave)
-        {
-            var segments = concave.CollisionSegments;
-            for (var index = 0; index < segments.Length; index += 2)
-                proxies.Add(SegmentProxy(segments[index], segments[index + 1]));
-        }
-        else throw new NotSupportedException("The collision resource has no standalone geometry integration.");
         return [];
     }
 
@@ -270,9 +275,9 @@ internal static class PhysicsShapeCollision
         if (other.Length <= 8)
         {
             Span<B2Vec2> points = stackalloc B2Vec2[8];
-            for (var index = 0; index < other.Length; index++) points[index] = Shape.ToBackend(other[index]);
+            for (var index = 0; index < other.Length; index++) points[index] = PhysicsShapeBackend.ToBackend(other[index]);
             var proxy = b2MakeProxy(points, other.Length, radius * PhysicsSpace.MetersPerUnit);
-            var contact = PhysicsSeparationRay.Contact(ray, slide, proxy, b2Transform_identity, Shape.ToBackend(motion));
+            var contact = PhysicsSeparationRay.Contact(ray, slide, proxy, b2Transform_identity, PhysicsShapeBackend.ToBackend(motion));
             if (contact.pointCount == 0) return false;
             var value = contact.points[0];
             pointA = ToScene(value.point - contact.normal * (value.separation * 0.5f));
@@ -312,7 +317,7 @@ internal static class PhysicsShapeCollision
     private static B2ShapeProxy WorldProxy(B2ShapeProxy proxy, Transform pose)
     {
         for (var index = 0; index < proxy.count; index++)
-            proxy.points[index] = Shape.ToBackend(pose * new Vector2(proxy.points[index].X, proxy.points[index].Y));
+            proxy.points[index] = PhysicsShapeBackend.ToBackend(pose * new Vector2(proxy.points[index].X, proxy.points[index].Y));
         return proxy;
     }
 

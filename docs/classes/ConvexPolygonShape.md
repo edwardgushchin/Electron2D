@@ -1,6 +1,6 @@
 # ConvexPolygonShape
 
-Last updated: 2026-09-26
+Last updated: 2026-10-08
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -32,7 +32,7 @@ body.AddChild(new CollisionShape { Shape = hull });
 | `public void SetPointCloud(ReadOnlySpan<Vector2> pointCloud)` | Replaces Points with the closed convex hull of an unordered cloud. |
 | `public override Rect2 GetRect()` | Returns exact local-axis bounds, or default for an empty contour. |
 | `protected override Resource CreateDuplicateInstance()` | Creates an independent polygon resource. |
-| `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies public vertices and internal fixture pieces without publishing intermediate changes. |
+| `protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)` | Copies authored vertices without publishing intermediate changes; compiled pieces belong to the backend cache. |
 
 ## Member descriptions
 
@@ -53,7 +53,12 @@ Returns a value-copy tight bounding rectangle around stored vertices. Its origin
 
 ## Physics behavior and verification
 
-The public polygon remains one borrowed resource. The backend accepts at most eight vertices per fixture, so longer contours use adjacent convex fan pieces; body and area snapshots still deduplicate contacts by owner. Each piece contributes to dynamic mass and inertia. Local CollisionShape rotation and position transform every piece. Existing circle, capsule, segment and rectangle resources continue to append one fixture each. Resource duplication owns independent vertex and fixture-piece copies.
+The public polygon remains one borrowed resource. The backend accepts at most eight vertices per fixture, so longer contours use adjacent convex fan pieces; body and area snapshots still deduplicate contacts by owner. Each piece contributes to dynamic mass and inertia. Local CollisionShape rotation and position transform every piece. Existing circle, capsule, segment and rectangle resources continue to append one fixture each. Resource duplication owns independent authored vertices. PhysicsShapeBackend retains compiled hulls in a weak resource-keyed cache, compiling a duplicate on first use and replacing successful edits before their Changed notifications.
+
+The shared/copy regression checks two borrowers, an independent duplicate, rejected
+small contours and live point/shape query results. Alternating between the two
+compiled resources for 128 warmed queries allocates zero managed bytes on the
+checked Linux/.NET 10 runtime.
 
 [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) checks winding, copied arrays, cloud hulls, invalid and crossing contours, twelve-vertex body/area integration including a probe in a later piece, rotated fixtures, live edits despite a throwing `Changed` listener, removal of all fixtures, PackedScene borrowing and 64 warmed unchanged multi-fixture frames without managed allocations on Linux/.NET 8. [ADR 0062](../decisions/physics.md#adr-0062) records the compound-fixture boundary. Native allocator, other platforms, owner visual acceptance, concave decomposition and inherited drawing and custom solver bias remain unverified or incomplete.
 

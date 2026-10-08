@@ -173,7 +173,7 @@ public abstract class Joint : Entity
 
     internal static void ValidateAnchor(Vector2 local)
     {
-        var backend = Shape.ToBackend(local);
+        var backend = PhysicsShapeBackend.ToBackend(local);
         if (!local.IsFinite() || !float.IsFinite(backend.X) || !float.IsFinite(backend.Y))
             throw new InvalidOperationException("Joint anchors must fit the finite physics coordinate range.");
     }

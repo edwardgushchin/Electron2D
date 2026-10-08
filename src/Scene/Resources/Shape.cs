@@ -1,9 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Constants;
-using static Box2D.NET.B2Distances;
-using static Box2D.NET.B2Geometries;
-using static Box2D.NET.B2Shapes;
-
 namespace Electron2D;
 
 /// <summary>Defines reusable two-dimensional collision geometry.</summary>
@@ -23,9 +17,7 @@ public abstract partial class Shape : Resource
     /// <returns>The local-axis bounds, including drawing padding for a separation ray; a shape need not be centered on its origin.</returns>
     public abstract Rect2 GetRect();
 
-    internal abstract void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures);
-    internal abstract void AppendQueryProxies(List<B2ShapeProxy> proxies);
+    internal abstract PhysicsShapeGeometry GetGeometry();
 
     internal ulong GeometryRevision => _revision;
 
@@ -85,19 +77,6 @@ public abstract partial class Shape : Resource
         }
         base.Dispose(disposing);
     }
-
-    internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
-
-    internal static B2ShapeId CreateSegmentOrPoint(B2BodyId bodyID, in B2ShapeDef definition, B2Vec2 pointA, B2Vec2 pointB)
-    {
-        if (B2MathFunction.b2DistanceSquared(pointA, pointB) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP)
-        {
-            var center = new B2Vec2(pointA.X + (pointB.X - pointA.X) * 0.5f,
-                pointA.Y + (pointB.Y - pointA.Y) * 0.5f);
-            return b2CreateCircleShape(bodyID, definition, new B2Circle { center = center, radius = 0 });
-        }
-        return b2CreateSegmentShape(bodyID, definition, new B2Segment(pointA, pointB));
-    }
 }
 
 /// <summary>A circular collision shape with a configurable radius.</summary>
@@ -134,18 +113,10 @@ public sealed class CircleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_radius, -_radius, 2 * _radius, 2 * _radius); }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        var circle = new B2Circle { center = ToBackend(localPosition), radius = _radius * PhysicsSpace.MetersPerUnit };
-        fixtures.Add(b2CreateCircleShape(bodyID, definition, circle));
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        proxies.Add(b2MakeProxy(new B2Vec2(0, 0), 1, _radius * PhysicsSpace.MetersPerUnit));
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Circle, Radius = _radius };
     }
 
     /// <inheritdoc />
@@ -237,33 +208,11 @@ public sealed class CapsuleShape : Shape
         return new(-_radius, -_height * 0.5f, 2 * _radius, _height);
     }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        var midHeight = (_height - 2 * _radius) * PhysicsSpace.MetersPerUnit;
-        var circle = new B2Circle { center = ToBackend(localPosition), radius = _radius * PhysicsSpace.MetersPerUnit };
-        if (midHeight <= B2_LINEAR_SLOP)
-        {
-            fixtures.Add(b2CreateCircleShape(bodyID, definition, circle));
-            return;
-        }
-        var offset = new Vector2(0, (_height - 2 * _radius) * 0.5f).Rotated(localRotation);
-        var capsule = new B2Capsule(ToBackend(localPosition - offset), ToBackend(localPosition + offset),
-            _radius * PhysicsSpace.MetersPerUnit);
-        var id = b2CreateCapsuleShape(bodyID, definition, capsule);
-        fixtures.Add(id.index1 == 0 ? b2CreateCircleShape(bodyID, definition, circle) : id);
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        var midHeight = (_height - 2 * _radius) * PhysicsSpace.MetersPerUnit;
-        var radius = _radius * PhysicsSpace.MetersPerUnit;
-        proxies.Add(midHeight <= B2_LINEAR_SLOP
-            ? b2MakeProxy(new B2Vec2(0, 0), 1, radius)
-            : b2MakeProxy(new B2Vec2(0, -midHeight * 0.5f),
-                new B2Vec2(0, midHeight * 0.5f), 2, radius));
+        var half = (_height - 2 * _radius) * 0.5f;
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Capsule, A = new(0, -half), B = new(0, half), Radius = _radius };
     }
 
     /// <inheritdoc />
@@ -336,24 +285,10 @@ public sealed class SegmentShape : Shape
             MathF.Abs(_b.X - _a.X), MathF.Abs(_b.Y - _a.Y));
     }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        var pointA = ToBackend(localPosition + _a.Rotated(localRotation));
-        var pointB = ToBackend(localPosition + _b.Rotated(localRotation));
-        fixtures.Add(CreateSegmentOrPoint(bodyID, definition, pointA, pointB));
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        var first = ToBackend(_a);
-        var second = ToBackend(_b);
-        proxies.Add(B2MathFunction.b2DistanceSquared(first, second) <= B2_LINEAR_SLOP * B2_LINEAR_SLOP
-            ? b2MakeProxy(new B2Vec2(first.X + (second.X - first.X) * 0.5f,
-                    first.Y + (second.Y - first.Y) * 0.5f), 1, 0)
-            : b2MakeProxy(first, second, 2, 0));
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Segment, A = _a, B = _b };
     }
 
     /// <inheritdoc />
@@ -407,26 +342,10 @@ public sealed class RectangleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_size.X / 2, -_size.Y / 2, _size.X, _size.Y); }
 
-    internal override void AppendToBody(B2BodyId bodyID, Vector2 localPosition, float localRotation,
-        in B2ShapeDef definition, List<B2ShapeId> fixtures)
+    internal override PhysicsShapeGeometry GetGeometry()
     {
         ThrowIfDisposed();
-        var polygon = b2MakeOffsetBox(_size.X * PhysicsSpace.MetersPerUnit / 2,
-            _size.Y * PhysicsSpace.MetersPerUnit / 2, ToBackend(localPosition), B2MathFunction.b2MakeRot(localRotation));
-        fixtures.Add(b2CreatePolygonShape(bodyID, definition, polygon));
-    }
-
-    internal override void AppendQueryProxies(List<B2ShapeProxy> proxies)
-    {
-        ThrowIfDisposed();
-        var halfWidth = _size.X * PhysicsSpace.MetersPerUnit * 0.5f;
-        var halfHeight = _size.Y * PhysicsSpace.MetersPerUnit * 0.5f;
-        Span<B2Vec2> points = stackalloc B2Vec2[4]
-        {
-            new(-halfWidth, -halfHeight), new(halfWidth, -halfHeight),
-            new(halfWidth, halfHeight), new(-halfWidth, halfHeight)
-        };
-        proxies.Add(b2MakeProxy(points, 4, 0));
+        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Rectangle, A = -_size * 0.5f, B = _size * 0.5f };
     }
 
     /// <inheritdoc />

@@ -95,7 +95,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         if (!motion.IsFinite()) throw new ArgumentOutOfRangeException(nameof(to), "Ray span exceeds the finite range.");
         if (motion == Vector2.Zero || mask == 0 || !collideWithBodies && !collideWithAreas) return null;
 
-        var input = new B2RayCastInput(Shape.ToBackend(from), Shape.ToBackend(motion), 1);
+        var input = new B2RayCastInput(PhysicsShapeBackend.ToBackend(from), PhysicsShapeBackend.ToBackend(motion), 1);
         PhysicsRayResult? best = null;
         var bestFraction = float.PositiveInfinity;
         if (collideWithBodies)
@@ -159,7 +159,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         var hits = _pointHits;
         hits.Clear();
         if (parameters.CollisionMask == 0 || !parameters.CollideWithBodies && !parameters.CollideWithAreas) return hits;
-        var point = Shape.ToBackend(parameters.Position);
+        var point = PhysicsShapeBackend.ToBackend(parameters.Position);
         var excluded = parameters.ExclusionsArray;
         var mask = parameters.CollisionMask;
         if (parameters.CollideWithBodies)

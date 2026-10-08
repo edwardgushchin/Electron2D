@@ -90,7 +90,7 @@ internal sealed partial class PhysicsBodyRuntime
         if (Space is not null)
         {
             var id = BodyID;
-            var nativeImpulse = Shape.ToBackend(impulse);
+            var nativeImpulse = PhysicsShapeBackend.ToBackend(impulse);
             var sim = Simulation(id);
             var nativeVelocity = b2Body_GetLinearVelocity(id) + nativeImpulse * sim.invMass;
             Finite(new Vector2(nativeVelocity.X * PhysicsSpace.UnitsPerMeter, nativeVelocity.Y * PhysicsSpace.UnitsPerMeter));

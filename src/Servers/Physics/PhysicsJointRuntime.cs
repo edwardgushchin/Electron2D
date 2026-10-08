@@ -277,8 +277,8 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     }
     private static B2Vec2 LocalPoint((PhysicsSpace? Space, B2BodyId ID, Transform Pose) body, Vector2 point)
     {
-        var local = body.Space is null ? Shape.ToBackend(body.Pose.AffineInverse() * point) :
-            b2Body_GetLocalPoint(body.ID, Shape.ToBackend(point));
+        var local = body.Space is null ? PhysicsShapeBackend.ToBackend(body.Pose.AffineInverse() * point) :
+            b2Body_GetLocalPoint(body.ID, PhysicsShapeBackend.ToBackend(point));
         if (!float.IsFinite(local.X) || !float.IsFinite(local.Y) ||
             Math.Sqrt((double)local.X * local.X + (double)local.Y * local.Y) > B2_HUGE)
             throw new ArgumentOutOfRangeException(nameof(point), "The local joint anchor exceeds the backend extent.");

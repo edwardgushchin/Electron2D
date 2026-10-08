@@ -85,7 +85,7 @@ public sealed partial class PhysicsDirectSpaceState
         hits.Clear();
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return hits;
         var world = b2GetWorldFromId(space.WorldID);
-        var motion = Shape.ToBackend(parameters.Motion);
+        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
@@ -129,7 +129,7 @@ public sealed partial class PhysicsDirectSpaceState
     public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
-        var motion = Shape.ToBackend(parameters.Motion);
+        var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         if ((motion.X == 0 && motion.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
             return (1, 1);
         var world = b2GetWorldFromId(space.WorldID);
@@ -192,9 +192,9 @@ public sealed partial class PhysicsDirectSpaceState
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();
-        shape.AppendQueryProxies(_queryProxies);
+        PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
         var transform = parameters.Transform;
-        var backendTransform = new B2Transform(Shape.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
+        var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
         var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
         _queryMargin = margin;
         for (var index = 0; index < _queryProxies.Count; index++)

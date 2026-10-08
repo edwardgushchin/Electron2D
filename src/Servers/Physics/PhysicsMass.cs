@@ -29,8 +29,8 @@ internal static class PhysicsMass
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
             throw new ArgumentException("Mass geometry requires finite unit-scale poses.", nameof(pose));
         var start = proxies.Count;
-        shape.AppendQueryProxies(proxies);
-        var transform = new B2Transform(Shape.ToBackend(pose.Origin), b2MakeRot(pose.Rotation));
+        PhysicsShapeBackend.AppendQueryProxies(shape, proxies);
+        var transform = new B2Transform(PhysicsShapeBackend.ToBackend(pose.Origin), b2MakeRot(pose.Rotation));
         for (var index = start; index < proxies.Count; index++)
         {
             var proxy = proxies[index];
@@ -61,7 +61,7 @@ internal static class PhysicsMass
         if (weight > 0) { centerX /= weight; centerY /= weight; }
         if (customCenter is { } center)
         {
-            var native = Shape.ToBackend(center);
+            var native = PhysicsShapeBackend.ToBackend(center);
             centerX = native.X; centerY = native.Y;
         }
         var moment = (double)inertia * InertiaScale;

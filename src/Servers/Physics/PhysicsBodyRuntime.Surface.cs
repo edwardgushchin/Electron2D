@@ -12,7 +12,7 @@ internal sealed partial class PhysicsBodyRuntime
         if (world.locked) throw new InvalidOperationException("Surface velocity cannot change inside the solver.");
         var body = b2GetBodyFullId(world, id);
         var sim = b2GetBodySim(world, body);
-        var native = Shape.ToBackend(linear);
+        var native = PhysicsShapeBackend.ToBackend(linear);
         if (sim.surfaceLinearVelocity == native && sim.surfaceAngularVelocity == angular) return;
         sim.surfaceLinearVelocity = native; sim.surfaceAngularVelocity = angular;
         b2WakeBody(world, body);

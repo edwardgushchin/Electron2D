@@ -88,7 +88,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _defaultGravity = DefaultAreaFields.ComputeGravity(Transform.Identity, Vector2.Zero);
         if (!_defaultGravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var definition = b2DefaultWorldDef();
-        definition.gravity = Shape.ToBackend(_defaultGravity);
+        definition.gravity = PhysicsShapeBackend.ToBackend(_defaultGravity);
         definition.restitutionThreshold = 0;
         definition.frictionCallback = CombineFriction;
         definition.restitutionCallback = CombineBounce;
@@ -118,7 +118,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal string? FindAudioBusOverride(Vector2 position, uint mask)
     {
         PrepareForQuery();
-        var point = Shape.ToBackend(position);
+        var point = PhysicsShapeBackend.ToBackend(position);
         Area? selected = null;
         foreach (var area in _areas)
         {
@@ -626,7 +626,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         if (gravity != _defaultGravity)
         {
-            b2World_SetGravity(_worldID, Shape.ToBackend(gravity));
+            b2World_SetGravity(_worldID, PhysicsShapeBackend.ToBackend(gravity));
             _defaultGravity = gravity;
         }
         // ponytail: Stable insertion order is quadratic in field areas; use indexed sorting if large-world profiling needs it.

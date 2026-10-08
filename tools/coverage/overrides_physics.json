@@ -2605,7 +2605,7 @@
         "ConvexPolygonShape2D::property:points"
       ],
       "state": "Implemented",
-      "reason": "Solid convex hull resource, point-cloud generation and compound fixtures above eight vertices execute under ADR 0062; ConvexPolygonShapeTests covers bounds, winding, invalid input, copies, rotated/dynamic contacts, area monitoring, live edits, packing and warm allocation."
+      "reason": "Solid convex hull resource, point-cloud generation and compound fixtures above eight vertices execute under ADR 0062. PhysicsShapeGeometry exposes borrowed engine values; PhysicsShapeBackend owns compiled CPU hulls. ConvexPolygonShapeTests covers bounds, winding, invalid input, independent copies/shared borrowers, rotated/dynamic contacts, area monitoring, live/rejected edits, packing and warmed query allocation."
     },
     {
       "godot": [
@@ -2643,7 +2643,7 @@
         "class:Shape2D"
       ],
       "state": "Partial",
-      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families; Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
+      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend; independent GPU ownership remains open. Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
     },
     {
       "godot": [

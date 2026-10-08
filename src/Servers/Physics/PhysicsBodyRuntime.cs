@@ -87,12 +87,12 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
             PendingForce = default; PendingTorque = 0;
             return;
         }
-        if (PendingForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(PendingForce), false);
+        if (PendingForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, PhysicsShapeBackend.ToBackend(PendingForce), false);
         if (PendingTorque != 0 && !RotationLocked) b2Body_ApplyTorque(id, PendingTorque * PhysicsMass.InertiaScale, false);
         PendingForce = default; PendingTorque = 0;
         if (rigid is not null) { rigid.ApplyConstantForces(); return; }
         b2Body_SetGravityScale(id, BodyGravityScale);
-        if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, Shape.ToBackend(ConstantForce), false);
+        if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, PhysicsShapeBackend.ToBackend(ConstantForce), false);
         if (ConstantTorque != 0) b2Body_ApplyTorque(id, ConstantTorque * 0.0001f, false);
     }
 
