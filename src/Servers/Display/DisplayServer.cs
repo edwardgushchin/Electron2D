@@ -126,7 +126,7 @@ public sealed partial class DisplayServer : ElectronObject
                 // SDLActivity runs managed Main on a worker; video initialization records it as SDL's video thread.
                 if (!OperatingSystem.IsAndroid() && !SDL.IsMainThread())
                     throw new InvalidOperationException("The display server must be opened on SDL's main thread.");
-                if (!SDL.InitSubSystem(SDL.InitFlags.Video))
+                if (!InitializeVideo())
                     throw SDLFailure("initialize the video subsystem");
                 videoInitialized = true;
                 if (!SDL.IsMainThread())
@@ -212,10 +212,26 @@ public sealed partial class DisplayServer : ElectronObject
         }
     }
 
+    internal static bool InitializeVideo()
+    {
+        // Managed environment edits do not update SDL's cached native environment on every platform.
+        var driver = Environment.GetEnvironmentVariable("SDL_VIDEO_DRIVER") ?? Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
+        if (string.IsNullOrEmpty(driver)) return SDL.InitSubSystem(SDL.InitFlags.Video);
+        var previous = SDL.GetHint(SDL.Hints.VideoDriver);
+        if (!SDL.SetHintWithPriority(SDL.Hints.VideoDriver, driver, SDL.HintPriority.Override))
+            throw SDLFailure("select the requested video driver");
+        try { return SDL.InitSubSystem(SDL.InitFlags.Video); }
+        finally
+        {
+            if (previous is null) SDL.ResetHint(SDL.Hints.VideoDriver);
+            else SDL.SetHintWithPriority(SDL.Hints.VideoDriver, previous, SDL.HintPriority.Override);
+        }
+    }
+
     internal static string? PrepareVideoEnvironment()
     {
         var previous = Environment.GetEnvironmentVariable("GDK_BACKEND");
-        var driver = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
+        var driver = Environment.GetEnvironmentVariable("SDL_VIDEO_DRIVER") ?? Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
         if (!OperatingSystem.IsLinux() || previous != "x11" ||
             !(driver == "wayland" || driver is null && Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland" &&
                 !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))) return null;

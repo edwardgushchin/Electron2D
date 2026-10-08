@@ -3495,6 +3495,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.DisplayServer.VSyncMode",
+    "kind": "type",
+    "declaringType": "Electron2D.DisplayServer.VSyncMode",
+    "name": "VSyncMode",
+    "signature": "public enum Electron2D.DisplayServer.VSyncMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DomainWarpFractalType",
     "kind": "type",
     "declaringType": "Electron2D.DomainWarpFractalType",
@@ -22691,6 +22709,58 @@
     "parameters": [],
     "returnType": "Electron2D.DisplayServer.ProgressState",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.VSyncMode.Adaptive()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.VSyncMode",
+    "name": "Adaptive",
+    "signature": "public const Electron2D.DisplayServer.VSyncMode Adaptive = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.VSyncMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.VSyncMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.VSyncMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.DisplayServer.VSyncMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.VSyncMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.VSyncMode.Enabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.VSyncMode",
+    "name": "Enabled",
+    "signature": "public const Electron2D.DisplayServer.VSyncMode Enabled = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.VSyncMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.DisplayServer.VSyncMode.Mailbox()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.DisplayServer.VSyncMode",
+    "name": "Mailbox",
+    "signature": "public const Electron2D.DisplayServer.VSyncMode Mailbox = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.DisplayServer.VSyncMode",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.DomainWarpFractalType.Independent()",
@@ -74805,6 +74875,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.DisplayServer.WindowGetVSyncMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowGetVSyncMode",
+    "signature": "public static Electron2D.DisplayServer.VSyncMode WindowGetVSyncMode(System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.DisplayServer.VSyncMode",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DisplayServer.WindowIsFocused(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.DisplayServer",
@@ -75186,6 +75275,30 @@
       {
         "name": "title",
         "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "windowId",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.DisplayServer.WindowSetVSyncMode(Electron2D.DisplayServer.VSyncMode,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.DisplayServer",
+    "name": "WindowSetVSyncMode",
+    "signature": "public static System.Void WindowSetVSyncMode(Electron2D.DisplayServer.VSyncMode vsyncMode, System.Int32 windowId = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vsyncMode",
+        "type": "Electron2D.DisplayServer.VSyncMode",
         "default": null
       },
       {

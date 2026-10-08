@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Optimize>true</Optimize>
-    <AssemblyName>PhysicsSandbox</AssemblyName>
+    <AssemblyName>WaterPlayground</AssemblyName>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="../../Electron2D.csproj" AdditionalProperties="Optimize=true" />

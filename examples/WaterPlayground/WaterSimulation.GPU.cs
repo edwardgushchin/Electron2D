@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using Float4 = System.Numerics.Vector4;
 
-namespace Electron2D.Examples.PhysicsSandbox;
+namespace Electron2D.Examples.WaterPlayground;
 
 internal sealed partial class WaterSimulation
 {
@@ -52,23 +52,25 @@ internal sealed partial class WaterSimulation
     }
     private void StepGPU(bool capture)
     {
+        if (ActiveCount == 0) return;
         var device = _device!; var list = device.ComputeListBegin();
         device.ComputeListBindComputePipeline(list, _pipeline); device.ComputeListBindUniformSet(list, _parameters, 1);
         device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
-        Dispatch(5, Count); _gpuSource ^= 1;
-        for (var iteration = 0; iteration < 6; iteration++)
+        Dispatch(5, ActiveCount); _gpuSource ^= 1;
+        for (var iteration = 0; iteration < 4; iteration++)
         {
             device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
-            Dispatch(0, Math.Max(Count, _heads.Length)); Dispatch(1, Count); Dispatch(2, Count); Dispatch(3, Count);
+            Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(2, ActiveCount); Dispatch(3, ActiveCount);
             _gpuSource ^= 1;
         }
         device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
-        Dispatch(0, Math.Max(Count, _heads.Length)); Dispatch(1, Count); Dispatch(6, Count); _gpuSource ^= 1;
-        Dispatch(4, Count); device.ComputeListEnd();
-        if (capture) device.BufferGetData(_buffers[_gpuSource], MemoryMarshal.AsBytes(_state.AsSpan()));
-        device.BufferGetData(_buffers[6], MemoryMarshal.AsBytes(_summaries.AsSpan()));
+        Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(6, ActiveCount); _gpuSource ^= 1;
+        Dispatch(4, ActiveCount); device.ComputeListEnd();
+        if (capture) device.BufferGetData(_buffers[_gpuSource], MemoryMarshal.AsBytes(_state.AsSpan(0, ActiveCount)));
+        var summaryCount = ((ActiveCount + 127) / 128) * 2;
+        device.BufferGetData(_buffers[6], MemoryMarshal.AsBytes(_summaries.AsSpan(0, summaryCount)));
         var duck = Float4.Zero; var boat = Float4.Zero;
-        for (var i = 0; i < _summaries.Length; i += 2) { duck += _summaries[i]; boat += _summaries[i + 1]; }
+        for (var i = 0; i < summaryCount; i += 2) { duck += _summaries[i]; boat += _summaries[i + 1]; }
         React(Duck, duck); React(Boat, boat);
         void Dispatch(int operation, int count)
         {

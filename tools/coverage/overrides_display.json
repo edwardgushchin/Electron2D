@@ -384,6 +384,48 @@
       "godot": "DisplayServer::enum_value:WindowMode.WINDOW_MODE_WINDOWED",
       "electron2d": "enumValue:Electron2D.WindowMode.Windowed()",
       "reason": "Shared typed value contract under ADR 0051; numeric identity and member meaning are retained."
+    },
+    {
+      "godot": "DisplayServer::enum:VSyncMode",
+      "electron2d": "T:Electron2D.DisplayServer.VSyncMode",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::method:window_get_vsync_mode(int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowGetVSyncMode(System.Int32)",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::method:window_set_vsync_mode(int:DisplayServer.VSyncMode,int:)",
+      "electron2d": "method:Electron2D.DisplayServer.WindowSetVSyncMode(Electron2D.DisplayServer.VSyncMode,System.Int32)",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::enum_value:VSyncMode.VSYNC_DISABLED",
+      "electron2d": "enumValue:Electron2D.DisplayServer.VSyncMode.Disabled()",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::enum_value:VSyncMode.VSYNC_ENABLED",
+      "electron2d": "enumValue:Electron2D.DisplayServer.VSyncMode.Enabled()",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::enum_value:VSyncMode.VSYNC_ADAPTIVE",
+      "electron2d": "enumValue:Electron2D.DisplayServer.VSyncMode.Adaptive()",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
+    },
+    {
+      "godot": "DisplayServer::enum_value:VSyncMode.VSYNC_MAILBOX",
+      "electron2d": "enumValue:Electron2D.DisplayServer.VSyncMode.Mailbox()",
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified."
     }
   ],
   "extras": [
@@ -397,7 +439,6 @@
       "reason": "Typed C# native-host bootstrap creates the SDL video connection and main window.",
       "adr": "ADR 0040"
     },
-
     {
       "electron2d": "method:Electron2D.DisplayServer.Dispose(System.Boolean)",
       "reason": "Protected deterministic SDL handle release overrides the engine-owned object lifecycle.",
@@ -408,38 +449,54 @@
       "reason": "Protected owner-thread validation overrides the engine-owned object lifecycle.",
       "adr": "ADR 0003/0014"
     },
-    {"electron2d": "property:Electron2D.DisplayServer.IsAvailable()", "reason": "Observable availability gate for the session-scoped static service API; does not reserve its lifetime.", "adr": "ADR 0095"}
+    {
+      "electron2d": "property:Electron2D.DisplayServer.IsAvailable()",
+      "reason": "Observable availability gate for the session-scoped static service API; does not reserve its lifetime.",
+      "adr": "ADR 0095"
+    }
   ],
   "statusGroups": [
     {
       "state": "Implemented",
       "reason": "The DisplayServer type owns one SDL video connection and main window with an explicit typed-C# Open/Instance lifecycle, owner-thread event pump, and deterministic disposal. Member and enum rows independently record every remaining capability gap and accepted adaptation; the class declaration itself is executable (ADR 0040).",
-      "godot": ["class:DisplayServer"]
+      "godot": [
+        "class:DisplayServer"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "Typed FilesDropped copies native UTF-8 paths and publishes one ordered main-window batch after DropComplete; dummy checks cover standalone files, interrupted/empty groups, close cancellation, and callback failure. Trigger: the first native Wayland file-drop acceptance slice needs a real compositor data offer with at least two files, then must verify path ownership, ordering, callback thread, and failure continuation through ProcessEvents (ADR 0040).",
-      "godot": ["DisplayServer::method:window_set_drop_files_callback(Callable:,int:)"]
+      "godot": [
+        "DisplayServer::method:window_set_drop_files_callback(Callable:,int:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "A real Linux Wayland message box selected button index one, invoked the callback on the owner thread before return, and closed through the title bar. SDL reported zero for closing a one-button dialog, which the native toolkit cannot distinguish from choosing that button; the pinned reference does not specify a close-without-selection result and its Wayland backend does not offer dialog_show. Invalid arguments and owner-thread rejection have executable dummy checks; typed exceptions replace the upstream Error return (ADR 0040).",
-      "godot": ["DisplayServer::method:dialog_show(String:,String:,PackedStringArray:,Callable:)"]
+      "godot": [
+        "DisplayServer::method:dialog_show(String:,String:,PackedStringArray:,Callable:)"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The SDL chooser already handles asynchronous OpenFile, OpenFiles, OpenDirectory, and SaveFile with owner-thread typed result delivery, and accepts but ignores showHidden on Linux. The pinned Wayland FileChooser applies MIME filters, which SDL's extension-only filter type cannot represent; MIME-only filters and OpenAny reject explicitly. Trigger: the first native Linux portal FileChooser bridge must implement MIME filters and selected-filter behavior with executable Wayland checks; file-or-directory selection requires a separately approved native chooser capability because the standard portal has no combined mode (ADR 0040).",
-      "godot": ["DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)"]
+      "godot": [
+        "DisplayServer::method:file_dialog_show(String:,String:,String:,bool:,int:DisplayServer.FileDialogMode,PackedStringArray:,Callable:,int:)"
+      ]
     },
     {
       "state": "Partial",
       "reason": "Image and readable Texture paths execute on native Wayland with original pixel dimensions, temporary-image cleanup, source lifetime, shape isolation, owner-thread and callback-disposal checks. Compressed cursor images still require CPU decompression: implement that path in the first CPU compressed-image consumption slice under ADR 0039. Other native platforms and visual hotspot acceptance remain unverified (ADR 0040).",
-      "godot": ["DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)"]
+      "godot": [
+        "DisplayServer::method:cursor_set_custom_image(Resource:,int:DisplayServer.CursorShape,Vector2:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "ProcessEvents drains the native SDL queue on the opening thread, flushes accumulated pointer motion before the next event and at the end, commits typed input before synchronous callbacks, and continues after callback failures before reporting their aggregate. Dummy tests cover queue order, reentry/off-thread rejection, input drop and failure continuation; native Wayland smoke exercises real window, pointer and clipboard event service. Renderer, popup, color-profile and other absent-domain event families have separate Blocked rows (ADR 0040).",
-      "godot": ["DisplayServer::method:process_events()"]
+      "godot": [
+        "DisplayServer::method:process_events()"
+      ]
     },
     {
       "state": "Implemented",
@@ -467,17 +524,23 @@
     {
       "state": "Implemented",
       "reason": "The pinned Wayland backend defines window focus by the pointer's pointed-window ID. SDL.GetMouseFocus reports the same pointer-focus state, and the native Wayland check compares the public result with that state (ADR 0040).",
-      "godot": ["DisplayServer::method:window_is_focused(int:)"]
+      "godot": [
+        "DisplayServer::method:window_is_focused(int:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The pinned Wayland backend performs no foreground operation; Electron2D validates the main-window ID and likewise sends no activation request. A native WAYLAND_DEBUG probe observed zero activation requests. Other video drivers delegate the raise request to SDL and may be refused by window-manager focus policy (ADR 0040).",
-      "godot": ["DisplayServer::method:window_move_to_foreground(int:)"]
+      "godot": [
+        "DisplayServer::method:window_move_to_foreground(int:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "Wayland attention submits a serial-free xdg activation token as the pinned backend does. A native WAYLAND_DEBUG probe observed one token request, commit, and activate call without set_serial; a foreign window ID is rejected. The compositor controls any visible urgency indicator, which this probe does not establish. Other video drivers use SDL's until-focused attention request (ADR 0040).",
-      "godot": ["DisplayServer::method:window_request_attention(int:)"]
+      "godot": [
+        "DisplayServer::method:window_request_attention(int:)"
+      ]
     },
     {
       "state": "Implemented",
@@ -498,12 +561,16 @@
     {
       "state": "Implemented",
       "reason": "All five compiled enum values and numeric identities match the pinned reference; OpenAny invocation is tracked separately on file_dialog_show.",
-      "godot": ["DisplayServer::enum:FileDialogMode"]
+      "godot": [
+        "DisplayServer::enum:FileDialogMode"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "Owner-thread event pump drops queued keyboard, pointer, touch, and text input while preserving window and quit dispatch; deterministic queue tests cover pressed-state release and quit ordering.",
-      "godot": ["DisplayServer::method:force_process_and_drop_events()"]
+      "godot": [
+        "DisplayServer::method:force_process_and_drop_events()"
+      ]
     },
     {
       "state": "Implemented",
@@ -519,27 +586,37 @@
     {
       "state": "Implemented",
       "reason": "Wayland returns the primary screen as specified by the pinned reference; the native Wayland smoke verifies this fallback. On desktop drivers with global keyboard-focus information, the focused main window selects its center display; absent focus selects the primary display.",
-      "godot": ["DisplayServer::method:get_keyboard_focus_screen()"]
+      "godot": [
+        "DisplayServer::method:get_keyboard_focus_screen()"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The public backend identity matches the pinned Wayland and X11 names, while the dummy driver reports headless; dummy and native smoke checks cover the selected driver.",
-      "godot": ["DisplayServer::method:get_name()"]
+      "godot": [
+        "DisplayServer::method:get_name()"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The overlap comparison truncates subpixel area and keeps the first display on ties. The pinned Wayland backend also combines output origins with physical mode sizes, allowing mixed-scale rectangles to overlap. Native three-monitor tests verified the overlap rule, and a protocol trace confirmed that SDL xdg-output positions equal wl_output geometry positions on this host (ADR 0040).",
-      "godot": ["DisplayServer::method:get_screen_from_rect(Rect2:)"]
+      "godot": [
+        "DisplayServer::method:get_screen_from_rect(Rect2:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The owner-thread title request reaches the native Wayland main window, and both native and dummy checks verify observable title readback, invalid IDs, and null input.",
-      "godot": ["DisplayServer::method:window_set_title(String:,int:)"]
+      "godot": [
+        "DisplayServer::method:window_set_title(String:,int:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The main-window hit test uses half-open client bounds on X11, with native border and edge checks. ADR 0040 deliberately rejects the query on Wayland because global top-level positions are unavailable; a native check covers that accepted adaptation.",
-      "godot": ["DisplayServer::method:get_window_at_screen_position(Vector2i:)"]
+      "godot": [
+        "DisplayServer::method:get_window_at_screen_position(Vector2i:)"
+      ]
     },
     {
       "state": "Implemented",
@@ -554,12 +631,16 @@
     {
       "state": "Implemented",
       "reason": "All 35 active Feature IDs match the compiled C# enum; the one retired global-menu ID is excluded under ADR 0041. Runtime availability of each capability is audited separately in HasFeature and its owning service.",
-      "godot": ["DisplayServer::enum:Feature"]
+      "godot": [
+        "DisplayServer::enum:Feature"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The query reports integrated SDL-backed paths and current device state; Wayland IME advertising and SDL text-input activation passed native smoke, and the native message dialog opened. However, a true IME or file-dialog result is not yet backed by a non-UI check that the Wayland text-input-v3 protocol or Linux FileChooser service is available. Trigger: add a Wayland text-input protocol capability probe in the first native keyboard/text adapter slice and a portal FileChooser capability probe in the first Linux native chooser slice; then verify positive and absent-service results without opening UI. Other driver/device-dependent results remain separate executable verification work (ADR 0040).",
-      "godot": ["DisplayServer::method:has_feature(int:DisplayServer.Feature)"]
+      "godot": [
+        "DisplayServer::method:has_feature(int:DisplayServer.Feature)"
+      ]
     },
     {
       "state": "Blocked",
@@ -596,12 +677,16 @@
     {
       "state": "Implemented",
       "reason": "The desktop contract returns true on Linux/Wayland; the executable mobile SDL keyboard probe remains outside the current native verification gate (ADR 0021).",
-      "godot": ["DisplayServer::method:has_hardware_keyboard()"]
+      "godot": [
+        "DisplayServer::method:has_hardware_keyboard()"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The query combines the native touch-device list with the current Input.EmulateTouchFromMouse setting. Dummy checks exercise both setting states and their restoration; this matches the pinned Wayland backend (ADR 0040).",
-      "godot": ["DisplayServer::method:is_touchscreen_available()"]
+      "godot": [
+        "DisplayServer::method:is_touchscreen_available()"
+      ]
     },
     {
       "state": "Implemented",
@@ -631,12 +716,16 @@
     {
       "state": "Implemented",
       "reason": "Wayland window-relative pointer state is converted to client pixels. Synthetic native pointer events passed at density 1.25, and a focused visible window passed real pointer motion against SDL's current state; focus-loss behavior is delegated to SDL (ADR 0040).",
-      "godot": ["DisplayServer::method:mouse_get_position()"]
+      "godot": [
+        "DisplayServer::method:mouse_get_position()"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The Wayland native smoke matches SDL's five held-button flags to the typed mask at rest; a focused visible window passed real left-button press and release against SDL's current state (ADR 0040).",
-      "godot": ["DisplayServer::method:mouse_get_button_state()"]
+      "godot": [
+        "DisplayServer::method:mouse_get_button_state()"
+      ]
     },
     {
       "state": "Implemented",
@@ -649,17 +738,23 @@
     {
       "state": "Implemented",
       "reason": "On the current Wayland release target, pointer warping is unavailable: HasFeature(MouseWarp) is false and WarpMouse rejects before native mutation. A focused native run exposed SDL's synthetic reported position without physical movement, and a subsequent Wayland boundary check verified rejection without that false movement. Desktop drivers that advertise MouseWarp still require their own native acceptance checks outside this Wayland release gate (ADR 0040).",
-      "godot": ["DisplayServer::method:warp_mouse(Vector2i:)"]
+      "godot": [
+        "DisplayServer::method:warp_mouse(Vector2i:)"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "SetIcon currently applies the default to the only owned window and preserves an explicit per-window override. Propagation to windows created later requires the first multiwindow window-host vertical slice, which must store the default icon and apply it to each new window before presentation (ADR 0040).",
-      "godot": ["DisplayServer::method:set_icon(Image:)"]
+      "godot": [
+        "DisplayServer::method:set_icon(Image:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "On the current Wayland release target, WindowSetIcon copies and converts a live image, enforces a square image, and preserves a successful window override against later SetIcon calls. When the compositor lacks the icon protocol SDL rejects the request explicitly and Feature.Icon stays false; the native smoke and dummy boundary checks cover these paths. Visible shell-icon acceptance needs a compositor that advertises the optional protocol and remains a separate native capability check (ADR 0040).",
-      "godot": ["DisplayServer::method:window_set_icon(Image:,int:)"]
+      "godot": [
+        "DisplayServer::method:window_set_icon(Image:,int:)"
+      ]
     },
     {
       "state": "Implemented",
@@ -672,22 +767,30 @@
     {
       "state": "Implemented",
       "reason": "Wayland usable rect combines the output position with physical pixel size, matching the pinned backend structure. Native three-display smoke covers one 1.25-scale output and invalid fallback; a Wayland protocol trace confirmed matching SDL xdg-output and wl_output geometry positions on all three outputs (ADR 0040).",
-      "godot": ["DisplayServer::method:screen_get_usable_rect(int:)"]
+      "godot": [
+        "DisplayServer::method:screen_get_usable_rect(int:)"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The three-display GNOME Wayland probe has one 1.25-scale output. The main-window selector reports the current SDL window scale; indexed output scale rounds SDL mode pixel density upward. A Wayland protocol trace observed wl_output.scale 2 for the 1.25 output, and a user-driven transfer verified two native scale events and size/limit reapplication. Open may return a provisional window scale before the compositor assigns its preferred fractional scale: one run returned 1 while the estimated output mode was 1.25. The pinned reference also waits only for initial xdg configure. Trigger for completing initial-scale semantics: the first renderer vertical slice must present the initial buffer and verify scale-event ordering for visible and hidden/show windows (ADR 0040).",
-      "godot": ["DisplayServer::method:screen_get_scale(int:)"]
+      "godot": [
+        "DisplayServer::method:screen_get_scale(int:)"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "ScreenGetMaxScale scans indexed screen scales, matching the pinned base implementation. On a three-display Wayland host it returned 2 for the 1.25 output; the Wayland protocol trace confirmed wl_output.scale 2 for that output and 1 for the other two (ADR 0040).",
-      "godot": ["DisplayServer::method:screen_get_max_scale()"]
+      "godot": [
+        "DisplayServer::method:screen_get_max_scale()"
+      ]
     },
     {
       "state": "Implemented",
       "reason": "The Wayland native probe checked all three current modes against SDL's precise numerator and denominator: 143.980 and 143.997 Hz on this host, matching the wl_output mode refresh values independently observed in a protocol trace. Invalid/unavailable fallback is covered under dummy. The method queries the current mode on every call, so no stale rate is cached (ADR 0040).",
-      "godot": ["DisplayServer::method:screen_get_refresh_rate(int:)"]
+      "godot": [
+        "DisplayServer::method:screen_get_refresh_rate(int:)"
+      ]
     },
     {
       "state": "Implemented",
@@ -745,25 +848,6 @@
         "DisplayServer::method:window_request_hdr_output(bool:,int:)",
         "DisplayServer::method:window_set_hdr_output_max_luminance(float:,int:)",
         "DisplayServer::method:window_set_hdr_output_reference_luminance(float:,int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: First executable SDL3 GPU/SDL_Renderer 2D presentation slice with observable swap policy and explicit unsupported modes (ADR 0028).",
-      "godot": [
-        "DisplayServer::method:window_get_vsync_mode(int:)",
-        "DisplayServer::method:window_set_vsync_mode(int:DisplayServer.VSyncMode,int:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: First SDL3 GPU/SDL_Renderer 2D presentation slice with observable swap policy (ADR 0028).",
-      "godot": [
-        "DisplayServer::enum:VSyncMode",
-        "DisplayServer::enum_value:VSyncMode.VSYNC_ADAPTIVE",
-        "DisplayServer::enum_value:VSyncMode.VSYNC_DISABLED",
-        "DisplayServer::enum_value:VSyncMode.VSYNC_ENABLED",
-        "DisplayServer::enum_value:VSyncMode.VSYNC_MAILBOX"
       ]
     },
     {
@@ -873,12 +957,16 @@
     {
       "state": "Blocked",
       "reason": "Wayland conversion preserves modifier bits, reads SDL's current layout and modifier state, maps the reference physical bracket/grave/ISO positions and common special keys, and falls back for unmapped symbols. Native Wayland checks pass for number-row, bracket, grave, ISO, and Shift positions. SDL 3.4.16 returns fixed keypad keycodes under Num Lock and Shift, unlike the reference's live XKB state lookup; F25-F35 and a live Latin/non-Latin layout switch are also unverified. Trigger for parity: first native Wayland keyboard keymap/state bridge and layout-switch integration test (ADR 0040).",
-      "godot": ["DisplayServer::method:keyboard_get_keycode_from_physical(int:Key)"]
+      "godot": [
+        "DisplayServer::method:keyboard_get_keycode_from_physical(int:Key)"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "Wayland label conversion preserves modifier bits and reads SDL's live layout for mapped physical positions; native checks cover number-row, bracket, grave, ISO, and Shift positions. SDL 3.4.16 exposes fixed keypad codes rather than Num Lock's printable labels; a live non-Latin layout switch and F25-F35 physical identities are unverified. Trigger for parity: first native Wayland keyboard keymap/state bridge and layout-switch integration test (ADR 0040).",
-      "godot": ["DisplayServer::method:keyboard_get_label_from_physical(int:Key)"]
+      "godot": [
+        "DisplayServer::method:keyboard_get_label_from_physical(int:Key)"
+      ]
     },
     {
       "state": "Blocked",
@@ -1111,7 +1199,9 @@
     {
       "state": "Blocked",
       "reason": "Typed C# events replace the numeric WindowEvent vocabulary for the one-window host. The aggregate waits for the first Wayland Window/Popup scene-host slice (FORCE_CLOSE), first Android application-host slice (GO_BACK_REQUEST), first HDR renderer/output slice (OUTPUT_MAX_LINEAR_VALUE_CHANGED), and native macOS title-bar integration after that platform enters scope (TITLEBAR_CHANGE); those values retain separate triggers below (ADRs 0002/0040).",
-      "godot": ["DisplayServer::enum:WindowEvent"]
+      "godot": [
+        "DisplayServer::enum:WindowEvent"
+      ]
     },
     {
       "state": "Implemented",
@@ -1127,27 +1217,37 @@
     {
       "state": "Blocked",
       "reason": "Typed WindowDpiChanged follows SDL window content-scale changes on the main window in ProcessEvents, matching the pinned Wayland scale-change trigger despite the DPI name. A user-driven 1.25-to-1-to-1.25 move produced two native events. Exact ordering relative to the event-time client rectangle and first rendered buffer still requires the renderer vertical slice (ADR 0044).",
-      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"]
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_DPI_CHANGE"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "Trigger: First Wayland Window/Popup scene-host slice with independently owned subwindows and renderer references. The pinned Wayland backend emits this event when unwinding an XDG popup stack or when a native window readiness wait times out; its typed notification must hide the affected window and release rendering references in callback order, distinct from a user close request (ADRs 0021/0040).",
-      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE"]
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_FORCE_CLOSE"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The first Android application-host slice must integrate native back navigation and verify main-window callback order.",
-      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_GO_BACK_REQUEST"]
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_GO_BACK_REQUEST"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The first HDR renderer/output slice must expose the observed maximum linear output value and a matching display-change notification.",
-      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED"]
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_OUTPUT_MAX_LINEAR_VALUE_CHANGED"
+      ]
     },
     {
       "state": "Blocked",
       "reason": "The first native title-bar integration must observe decoration changes and verify callback order on supported desktop targets.",
-      "godot": ["DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_TITLEBAR_CHANGE"]
+      "godot": [
+        "DisplayServer::enum_value:WindowEvent.WINDOW_EVENT_TITLEBAR_CHANGE"
+      ]
     },
     {
       "state": "Excluded",
@@ -1391,6 +1491,19 @@
       "reason": "The desktop display/window paths retain their native checks. The method now also exposes five Linux compatibility GL/EGL/GLX identities with native association, foreign context isolation and lifetime checks. Native-view/mobile and other-platform graphics paths remain incomplete; unavailable identities throw explicitly (ADR 0042).",
       "godot": [
         "DisplayServer::method:window_get_native_handle(int:DisplayServer.HandleType,int:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Main-window presentation policy executes through the active GPU or compatibility renderer, with owner/identity validation, pending startup configuration, actual supported-mode fallback and getter readback. WaterPlaygroundTests checks native XWayland immediate output, mode round-trips, invalid requests and both canvas backends; other platforms remain unverified.",
+      "godot": [
+        "DisplayServer::enum:VSyncMode",
+        "DisplayServer::method:window_get_vsync_mode(int:)",
+        "DisplayServer::method:window_set_vsync_mode(int:DisplayServer.VSyncMode,int:)",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_DISABLED",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_ENABLED",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_ADAPTIVE",
+        "DisplayServer::enum_value:VSyncMode.VSYNC_MAILBOX"
       ]
     }
   ]

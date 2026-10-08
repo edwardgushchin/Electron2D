@@ -2,12 +2,16 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using Float4 = System.Numerics.Vector4;
 
-namespace Electron2D.Examples.PhysicsSandbox;
+namespace Electron2D.Examples.WaterPlayground;
 
 /// <summary>A two-way coupled particle liquid with identical CPU and GPU numerical passes.</summary>
 internal sealed partial class WaterSimulation : IDisposable
 {
     internal const int DefaultCount = 65536;
+    internal static readonly Vector2 WorldSize = new(1152, 800);
+    internal const float PourDuration = 8;
+    internal int ActiveCount { get; private set; }
+    internal RID Dragged => _dragged;
     private const float RestDensity = 100;
     private readonly RID _space;
     private readonly List<RID> _bodies = [];
@@ -35,7 +39,7 @@ internal sealed partial class WaterSimulation : IDisposable
         internal Float4 Meta, World, Material, Pointer, DuckPose, DuckMotion, BoatPose, BoatMotion, Integration;
     }
     internal Vector2[] Positions { get; }
-    internal Vector2 Size { get; private set; }
+    internal Vector2 Size => WorldSize;
     internal double Time { get; private set; }
     internal RID Duck { get; private set; }
     internal RID Boat { get; private set; }
@@ -48,24 +52,43 @@ internal sealed partial class WaterSimulation : IDisposable
     internal bool UseGPU { get; private set; }
     internal static readonly Vector2[] Hull = [new(-84, -12), new(84, -12), new(57, 26), new(-52, 26)];
 
-    internal WaterSimulation(Vector2 size, int count = DefaultCount)
+    internal WaterSimulation(int count = DefaultCount)
     {
-        ValidateSize(size);
+        var size = WorldSize;
         if (count is < 256 or > DefaultCount) throw new ArgumentOutOfRangeException(nameof(count));
         Spacing = MathF.Sqrt(size.X * size.Y / (3 * count)); _h = Spacing * .023333333f; _mass = RestDensity * Spacing * Spacing * .0001f;
         _state = new Float4[count]; _scratch = new Float4[count]; _original = new Float4[count]; _reactions = new Float4[count * 2];
         Positions = new Vector2[count]; _density = new float[count]; _lambda = new float[count]; _next = new int[count];
-        _densityWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(Count, (chunk + 1) * Chunk); i++) Density(i); };
-        _integrateWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(Count, (chunk + 1) * Chunk); i++) Integrate(i); };
-        _finishWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(Count, (chunk + 1) * Chunk); i++) Finish(i); };
+        _densityWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(ActiveCount, (chunk + 1) * Chunk); i++) Density(i); };
+        _integrateWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(ActiveCount, (chunk + 1) * Chunk); i++) Integrate(i); };
+        _finishWorker = chunk => { for (var i = chunk * Chunk; i < Math.Min(ActiveCount, (chunk + 1) * Chunk); i++) Finish(i); };
         _space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(_space, true);
         PhysicsServer.AreaSetGravity(_space, 980); PhysicsServer.AreaSetLinearDamp(_space, 0); PhysicsServer.AreaSetAngularDamp(_space, 0);
         for (var i = 0; i < 3; i++) { _wallShapes[i] = Own(new RectangleShape()); _walls[i] = Body(Vector2.Zero, _wallShapes[i], 1, PhysicsServer.BodyMode.Static); }
-        Resize(size);
-        var columns = Math.Max(1, (int)(size.X * .72f / Spacing)); var rows = (count + columns - 1) / columns;
-        for (var i = 0; i < count; i++)
-            _state[i] = new((size.X * .5f + (i % columns - (columns - 1) * .5f) * Spacing) * .01f, (-70 - (rows - 1 - i / columns) * Spacing) * .01f, 0, 0);
+        ConfigureWalls();
         Capture();
+    }
+    private void Emit()
+    {
+        var before = ActiveCount;
+        ActiveCount = Math.Min(Count, (int)(Time / PourDuration * Count));
+        const int columns = 32;
+        var rate = Count / PourDuration;
+        var speed = rate / columns * Spacing;
+        for (var i = before; i < ActiveCount; i++)
+        {
+            var born = i / rate;
+            var hash = unchecked((uint)i * 747796405u + 2891336453u);
+            var jitter = ((hash >> 16) / 65535f - .5f) * Spacing * .7f;
+            var center = Size.X * .47f + 45 * MathF.Sin(born * 1.4f);
+            var x = center + (i % columns - (columns - 1) * .5f) * Spacing + jitter;
+            var jitterY = ((unchecked(hash * 277803737u) >> 16) / 65535f - .5f) * Spacing * .7f;
+            var y = -24 + (float)(Time - born) * speed + jitterY;
+            _state[i] = new(x * .01f, y * .01f, .2f * MathF.Cos(born * 1.4f), speed * .01f);
+        }
+        if (UseGPU && ActiveCount > before)
+            _device!.BufferUpdate(_buffers[_gpuSource], (uint)(before * 16), (uint)((ActiveCount - before) * 16),
+                MemoryMarshal.AsBytes(_state.AsSpan(before, ActiveCount - before)));
     }
     private T Own<T>(T shape) where T : Shape { _shapes.Add(shape); return shape; }
     private RID Body(Vector2 position, Shape shape, float mass, PhysicsServer.BodyMode mode = PhysicsServer.BodyMode.Rigid)
@@ -75,11 +98,9 @@ internal sealed partial class WaterSimulation : IDisposable
         PhysicsServer.BodySetFriction(body, .1f); PhysicsServer.BodySetBounce(body, 0); PhysicsServer.BodySetCanSleep(body, false);
         PhysicsServer.BodySetTransform(body, new Transform(0, position)); PhysicsServer.BodySetSpace(body, _space); return body;
     }
-    private static void ValidateSize(Vector2 size)
-    { if (!size.IsFinite() || size.X < 320 || size.Y < 240) throw new ArgumentOutOfRangeException(nameof(size)); }
-    internal void Resize(Vector2 size)
+    private void ConfigureWalls()
     {
-        ValidateSize(size); var previous = Size; Size = size;
+        var size = Size;
         _wallShapes[0].Size = new(size.X + 80, 40); _wallShapes[1].Size = _wallShapes[2].Size = new(40, size.Y * 6);
         PhysicsServer.BodySetTransform(_walls[0], new Transform(0, new(size.X / 2, size.Y + 20)));
         PhysicsServer.BodySetTransform(_walls[1], new Transform(0, new(-20, 0))); PhysicsServer.BodySetTransform(_walls[2], new Transform(0, new(size.X + 20, 0)));
@@ -87,14 +108,6 @@ internal sealed partial class WaterSimulation : IDisposable
         _columns = (int)MathF.Ceiling(size.X * .01f / _h);
         _rows = (int)MathF.Ceiling((size.Y * .01f - _gridTop) / _h) + 2;
         _heads = new int[checked(_columns * _rows)];
-        if (previous.X > 0)
-        {
-            for (var i = 0; i < Count; i++) { _state[i].X *= size.X / previous.X; _state[i].Y += (size.Y - previous.Y) * .01f; }
-            foreach (var body in (ReadOnlySpan<RID>)[Duck, Boat])
-                if (body.IsValid()) { var pose = PhysicsServer.BodyGetTransform(body); pose.Origin = new(pose.Origin.X * size.X / previous.X, pose.Origin.Y + size.Y - previous.Y); PhysicsServer.BodySetTransform(body, pose); }
-            Capture();
-        }
-        if (_device is not null) CreateBuffers();
     }
     internal void BeginDrag(Vector2 position)
     {
@@ -103,7 +116,7 @@ internal sealed partial class WaterSimulation : IDisposable
             if (body.IsValid())
             {
                 var pose = PhysicsServer.BodyGetTransform(body); var local = pose.AffineInverse() * position;
-                if ((body == Duck ? new Rect2(-72, -62, 150, 110) : new Rect2(-86, -118, 172, 146)).HasPoint(local)) { _dragged = body; _dragAnchor = local; break; }
+                if ((body == Duck ? new Rect2(-80, -70, 166, 126) : new Rect2(-94, -126, 188, 162)).HasPoint(local)) { _dragged = body; _dragAnchor = local; break; }
             }
     }
     internal void MovePointer(Vector2 position) => _pointer = position;
@@ -111,7 +124,7 @@ internal sealed partial class WaterSimulation : IDisposable
     internal void Step(double delta)
     {
         if (!double.IsFinite(delta) || delta <= 0 || delta > 1d / 30) throw new ArgumentOutOfRangeException(nameof(delta));
-        var start = Stopwatch.GetTimestamp(); Time += delta;
+        var start = Stopwatch.GetTimestamp(); Time += delta; Emit();
         if (_minimumY < _gridTop + 2 * _h)
         {
             _gridTop = Math.Min(_gridTop * 2, _minimumY - 4 * _h);
@@ -119,37 +132,30 @@ internal sealed partial class WaterSimulation : IDisposable
             _heads = new int[checked(_columns * _rows)];
             if (_device is not null) CreateBuffers();
         }
-        if (Time >= 3.5 && !Duck.IsValid())
+        if (Time >= PourDuration + 1 && !Duck.IsValid())
         {
             Duck = Body(new(Size.X * .34f, -100), Own(new CapsuleShape { Radius = 32, Height = 108 }), 6);
             PhysicsServer.BodySetShapeTransform(Duck, 0, new Transform(MathF.PI / 2, new(-5, 0)));
             PhysicsServer.BodyAddShape(Duck, Own(new CircleShape { Radius = 27 }).GetRID(), new Transform(0, new(31, -32)));
             PhysicsServer.BodySetCenterOfMass(Duck, new(-5, 10)); PhysicsServer.BodySetAngularDamp(Duck, .5f);
         }
-        if (Time >= 6 && !Boat.IsValid())
+        if (Time >= PourDuration + 3 && !Boat.IsValid())
         {
             Boat = Body(new(Size.X * .69f, -140), Own(new ConvexPolygonShape { Points = Hull }), 10);
             PhysicsServer.BodySetCenterOfMass(Boat, new(0, 18)); PhysicsServer.BodySetAngularDamp(Boat, .5f);
         }
-        if (_held && _dragged.IsValid())
-        {
-            var state = PhysicsServer.BodyGetDirectState(_dragged)!;
-            var arm = state.Transform.BasisXform(_dragAnchor);
-            var error = _pointer - (state.Transform.Origin + arm);
-            var impulse = (error * 45 - state.GetVelocityAtLocalPosition(arm) * 12) * ((float)delta / state.InverseMass);
-            PhysicsServer.BodyApplyImpulse(_dragged, impulse.LimitLength(1200 * (float)delta / state.InverseMass), arm);
-        }
-        const int couplingSteps = 8;
+        const int couplingSteps = 4;
         var interval = (float)delta / couplingSteps;
         _settings = new Settings
         {
-            Meta = new(Count, 0, _columns, _rows),
+            Meta = new(ActiveCount, 0, _columns, _rows),
             World = new(Size.X * .01f, Size.Y * .01f, interval, _h),
             Material = new(_mass, RestDensity, 0, 0),
             Pointer = new(_pointer.X * .01f, _pointer.Y * .01f, _held && !_dragged.IsValid() ? 1 : 0, .65f)
         };
         for (var coupled = 0; coupled < couplingSteps; coupled++)
         {
+            PullToy(interval);
             FillToy(Duck, out _settings.DuckPose, out _settings.DuckMotion, out var duckInertia);
             FillToy(Boat, out _settings.BoatPose, out _settings.BoatMotion, out var boatInertia);
             _settings.Integration = new(_gridTop, 0, duckInertia, boatInertia);
@@ -157,7 +163,7 @@ internal sealed partial class WaterSimulation : IDisposable
             else
             {
                 Array.Clear(_reactions);
-                for (var i = 0; i < Count; i++)
+                for (var i = 0; i < ActiveCount; i++)
                 {
                     _original[i] = _state[i];
                     var acceleration = new Vector2(0, 9.8f); var offset = XY(_settings.Pointer) - XY(_state[i]);
@@ -165,22 +171,33 @@ internal sealed partial class WaterSimulation : IDisposable
                     var velocity = Velocity(_state[i]) + acceleration * interval; var position = XY(_state[i]) + velocity * interval;
                     _state[i] = new(position.X, position.Y, velocity.X, velocity.Y);
                 }
-                for (var iteration = 0; iteration < 6; iteration++)
+                for (var iteration = 0; iteration < 4; iteration++)
                 {
                     BuildGrid();
-                    Parallel.For(0, (Count + Chunk - 1) / Chunk, _densityWorker);
-                    Parallel.For(0, (Count + Chunk - 1) / Chunk, _integrateWorker);
+                    Parallel.For(0, (ActiveCount + Chunk - 1) / Chunk, _densityWorker);
+                    Parallel.For(0, (ActiveCount + Chunk - 1) / Chunk, _integrateWorker);
                     (_state, _scratch) = (_scratch, _state);
                 }
-                BuildGrid(); Parallel.For(0, (Count + Chunk - 1) / Chunk, _finishWorker); (_state, _scratch) = (_scratch, _state);
+                BuildGrid(); Parallel.For(0, (ActiveCount + Chunk - 1) / Chunk, _finishWorker); (_state, _scratch) = (_scratch, _state);
                 var duck = Float4.Zero; var boat = Float4.Zero;
-                for (var i = 0; i < Count; i++) { duck += _reactions[2 * i]; boat += _reactions[2 * i + 1]; }
+                for (var i = 0; i < ActiveCount; i++) { duck += _reactions[2 * i]; boat += _reactions[2 * i + 1]; }
                 React(Duck, duck); React(Boat, boat);
             }
             PhysicsServer.SpaceStep(_space, interval);
         }
         Capture();
         StepMS = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+    }
+    private void PullToy(float interval)
+    {
+        if (!_held || !_dragged.IsValid()) return;
+        var state = PhysicsServer.BodyGetDirectState(_dragged)!;
+        var arm = state.Transform.BasisXform(_dragAnchor);
+        var error = _pointer - (state.Transform.Origin + arm);
+        const float omega = 32;
+        var acceleration = (error * (omega * omega) - state.GetVelocityAtLocalPosition(arm) * (2 * omega) + new Vector2(0, -980))
+            / (1 + 2 * omega * interval + omega * omega * interval * interval);
+        PhysicsServer.BodyApplyImpulse(_dragged, acceleration.LimitLength(18000) * (interval / state.InverseMass), arm);
     }
     private static void FillToy(RID body, out Float4 pose, out Float4 motion, out float inverseInertia)
     {
@@ -191,14 +208,14 @@ internal sealed partial class WaterSimulation : IDisposable
     }
     private static void React(RID body, Float4 impulse)
     { if (body.IsValid()) { PhysicsServer.BodyApplyCentralImpulse(body, new(impulse.X * 100, impulse.Y * 100)); PhysicsServer.BodyApplyTorqueImpulse(body, impulse.Z * 10000); } }
-    private void Capture() { _minimumY = float.MaxValue; for (var i = 0; i < Count; i++) { Positions[i] = XY(_state[i]) * 100; _minimumY = Math.Min(_minimumY, _state[i].Y); } }
+    private void Capture() { _minimumY = float.MaxValue; for (var i = 0; i < ActiveCount; i++) { Positions[i] = XY(_state[i]) * 100; _minimumY = Math.Min(_minimumY, _state[i].Y); } }
     private static Vector2 XY(Float4 v) => new(v.X, v.Y);
     private static Vector2 Velocity(Float4 v) => new(v.Z, v.W);
     private (int X, int Y) Cell(Vector2 p) => (Math.Clamp((int)MathF.Floor(p.X / _h), 0, _columns - 1), Math.Clamp((int)MathF.Floor((p.Y - _gridTop) / _h), 0, _rows - 1));
     private void BuildGrid()
     {
         Array.Fill(_heads, -1);
-        for (var i = 0; i < Count; i++) { var (x, y) = Cell(XY(_state[i])); var cell = y * _columns + x; _next[i] = _heads[cell]; _heads[cell] = i; }
+        for (var i = 0; i < ActiveCount; i++) { var (x, y) = Cell(XY(_state[i])); var cell = y * _columns + x; _next[i] = _heads[cell]; _heads[cell] = i; }
     }
     private bool NeighborOffset(Vector2 position, int j, int mirror, out Vector2 offset)
     {

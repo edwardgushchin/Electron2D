@@ -155,8 +155,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SMASH") == "1") { GP
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_CHILD") is { } optionPath) { OptionButtonTests.RunChild(optionPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OPTION") == "1") { OptionButtonTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX") == "1") { PhysicsSandboxTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_SANDBOX_NATIVE") == "1") { PhysicsSandboxTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WATER_PLAYGROUND") == "1") { WaterPlaygroundTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WATER_PLAYGROUND_NATIVE") == "1") { WaterPlaygroundTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_CHILD") is { } tabContainerPath) { TabContainerTests.RunChild(tabContainerPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TAB_CONTAINER") == "1") { TabContainerTests.Run(); return; }

@@ -136,7 +136,7 @@ Standalone Shape methods, other shape resources, kinematic bodies, area audio in
 
 ## Interactive example
 
-[PhysicsSandbox](../../examples/PhysicsSandbox/README.md) is a single resizable water playground. Its public-API consumer solves particle density constraints on selectable CPU/GPU paths, and exchanges impulses with a duck and boat in the public CPU rigid-body space. The [simulation contract](../components/physics-sandbox.md) records units, ownership and numerical limits. The former story selector and inspectors are removed; this example does not close runtime API coverage rows.
+[WaterPlayground](../../examples/WaterPlayground/README.md) is a single resizable water playground. Its public-API consumer solves particle density constraints on selectable CPU/GPU paths, and exchanges impulses with a duck and boat in the public CPU rigid-body space. The [simulation contract](../components/water-playground.md) records units, ownership and numerical limits. The former story selector and inspectors are removed; this example does not close runtime API coverage rows.
 
 ## Decisions
 

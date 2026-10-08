@@ -12,7 +12,7 @@ A caller-owned, owner-thread compute device created by RenderingServer.CreateLoc
 
 ## Example
 
-The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/PhysicsSandbox/WaterSimulation.GPU.cs).
+The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).
 
 ```csharp
 using var device = RenderingServer.CreateLocalRenderingDevice();

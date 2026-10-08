@@ -89,3 +89,8 @@ Graphics handle verification uses `ELECTRON2D_TEST_RENDER_HANDLES=1`: Wayland EG
 GetSwapCancelOK exposes the retained DisplayServer platform dialog-order convention with active-service/owner guards. [Embedded dialogs](../components/dialogs.md) use the same internal policy for pre-startup authoring and combine it with the typed project override. Other-platform acceptance remains separately gated.
 
 [File dialogs](../components/file-dialogs.md) now execute scoped browsing, five selection modes, typed custom options, filters, menus, overwrite/folder workflows and recoverable desktop Linux trash. The shared FileDialogMode identity spans the custom browser and DisplayServer; native-file-extra and foreign platform gates remain explicit. Six permanent ui_filedialog actions use the existing InputMap settings loader.
+
+
+## Presentation policy
+
+The main window exposes [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization), with [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.

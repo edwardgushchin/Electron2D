@@ -86,6 +86,7 @@ public sealed partial class DisplayServer
         var desktop = driver is "windows" or "x11" or "wayland" or "cocoa";
         return feature switch
         {
+            Feature.SwapBuffers => _renderingAttached,
             Feature.Touchscreen => IsTouchscreenAvailableCore(),
             Feature.Mouse => SDL.HasMouse(),
             Feature.MouseWarp => driver is "windows" or "x11" or "cocoa" && SDL.HasMouse(),

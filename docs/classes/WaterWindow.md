@@ -2,16 +2,19 @@
 
 Last updated: 2026-10-09
 
-**Namespace:** `Electron2D.Examples.PhysicsSandbox`. **Declaration:** `internal sealed class WaterWindow : Window`. **Inherits:** [Window](Window.md). **Source:** [WaterWindow.cs](../../examples/PhysicsSandbox/WaterWindow.cs). **Component:** [Water playground](../components/physics-sandbox.md).
+**Namespace:** `Electron2D.Examples.WaterPlayground`. **Declaration:** `internal sealed class WaterWindow : Window`. **Inherits:** [Window](Window.md). **Source:** [WaterWindow.cs](../../examples/WaterPlayground/WaterWindow.cs). **Component:** [Water playground](../components/water-playground.md).
 
-An internal public-API consumer, not an exported engine type. Its constructor borrows a Font, creates a 1152×800 resizable Window with a 480×360 minimum and owns one WaterSimulation. The client surface is the physical container. CPU/GPU buttons and Tab choose the liquid algorithm; state is preserved across changes. A GPU creation failure is visibly reported with CPU selected. The --cpu entry-point option avoids initial compute creation.
+An internal public-API consumer, not an exported engine type. Its constructor borrows a Font, creates a 1152×800 resizable Window with a 480×360 minimum and owns one WaterSimulation. A uniform fit transform maps a fixed 1152×800 world into the client surface. CPU/GPU buttons and Tab choose the liquid algorithm; state is preserved across changes. A GPU creation failure is visibly reported with CPU selected. The --cpu entry-point option avoids initial compute creation.
 
-Native SizeChanged edits physical boundaries; OnPhysicsProcess advances one fixed interval; OnProcess publishes retained MultiMesh instances and current toy drawings. Toy geometry is behind a CanvasGroup whose 0.65 opacity applies once to the whole opaque liquid layer. This preserves translucency through overlapping particles. The readout identifies the active liquid backend, full step time and rendered FPS. Space pauses, R resets, Escape closes, and mouse dragging applies physical impulses. Focus loss releases dragging. Reset retains the window's borrowed-device owner; disposal frees the simulation, controls and render resources, then its compute device. The captured engine catch-up budget is restored. The caller retains the font through Engine.Run.
+Native SizeChanged updates only the fit transform and UI placement. OnPhysicsProcess advances the liquid, reconstructs WaterSurface and steers six fish within its wet field. OnProcess publishes toy/fish drawings and the HUD. Transparent clipped density triangles are drawn in front of toys and fish, replacing the old disc instances. The readout identifies the active liquid backend, full step time and rendered FPS. Space pauses, R refills, F11 toggles borderless fullscreen with window-size restoration, Escape closes, and mouse dragging applies physical impulses. Focus loss releases dragging. Reset retains the window's borrowed-device owner; disposal frees the simulation, controls and render resources, then its compute device. The captured engine catch-up budget is restored. The caller retains the font through Engine.Run.
 
 ```csharp
 using var font = new FontFile { Data = File.ReadAllBytes("Assets/IBMPlexSans-Regular.ttf") };
+WaterWindow.ConfigurePresentation();
 using var window = new WaterWindow(font);
 Engine.Run(window);
 ```
 
-The constructor's optional startOnGPU argument is internal to this executable. The [simulation contract](../components/physics-sandbox.md) distinguishes liquid computation, rigid physics, rendering selection and platform verification.
+The constructor's optional startOnGPU argument is internal to this executable. The [simulation contract](../components/water-playground.md) distinguishes liquid computation, rigid physics, rendering selection and platform verification.
+
+Rendering is limited to 144 FPS and requests DisplayServer.VSyncMode.Disabled. ConfigurePresentation selects XWayland when available in a Wayland session unless the caller explicitly selects a video driver. Only this process environment changes; the desktop remains unchanged. The HUD reports the actual policy, including unsupported-mode fallback.

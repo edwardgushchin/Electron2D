@@ -123,3 +123,8 @@ The same X11 smoke moved a normal window between two XWayland displays, checked 
 Window now delegates native operations to DisplayServer under Engine.Run. Startup happens before scene ready, teardown after scene finalization. The manual DisplayServer API remains available. Native backend event probes live in tests, including WindowRuntimeTests; examples no longer own a duplicate frame loop.
 
 Graphics handle verification uses `ELECTRON2D_TEST_RENDER_HANDLES=1`: Wayland EGL/GL and EGL/GLES, XWayland GLX, native identity checks, a foreign context/config, unchanged pixel output, thread/ID/disposal rejection and reopen. A forced X11/EGL GLES probe failed native surface creation before handle queries. Other platforms remain unverified.
+
+
+## Presentation policy
+
+The main window exposes [DisplayServer.WindowSetVSyncMode and WindowGetVSyncMode](../classes/DisplayServer.md#presentation-synchronization), with [VSyncMode](../classes/DisplayServer.VSyncMode.md) identities. Native unsupported modes fall back to Enabled and the getter reports the applied mode. Engine.MaxFPS independently caps host frames. Managed video-driver environment edits are honored at display/compute initialization with the previous native hint restored afterward. The [WaterPlayground](../../examples/WaterPlayground/README.md) consumer verifies the connected policy, including XWayland immediate presentation.

@@ -1365,3 +1365,11 @@ The complete coverage and exact implementation triggers for absent services are 
 - [ADR 0021: runtime target matrix](../decisions/product.md#adr-0021)
 
 `public static System.Boolean GetSwapCancelOK()` returns the active platform dialog-order convention: true on Windows, false on other supported profiles. It uses the retained service and owner guards, throwing InvalidOperationException when unavailable or off-owner. Dialog authoring uses the same internal platform policy before native startup; no OS preference callback or mutable native-theme override is implied.
+
+## Presentation synchronization
+
+`public static void WindowSetVSyncMode(DisplayServer.VSyncMode vsyncMode, int windowId = MainWindowId)` selects the native main-window policy. `public static DisplayServer.VSyncMode WindowGetVSyncMode(int windowId = MainWindowId)` returns the applied policy, or the pending request before rendering starts. Both enforce the display owner thread and main-window identity; invalid enum values fail before mutation. Changes during active canvas submission are rejected. See [VSyncMode](DisplayServer.VSyncMode.md).
+
+GPU presentation uses immediate, FIFO or mailbox modes according to device support; adaptive requests fall back to Enabled. Compatibility rendering uses swap intervals 0, 1 or -1, with unsupported modes falling back to Enabled. Readback reflects that fallback. This is independent of Engine.MaxFPS, and a desktop compositor can impose its own final synchronization. Feature.SwapBuffers reports whether a renderer is attached. Renderer hide/show restores its policy after reclaiming a surface.
+
+The display and compute hosts now honor managed SDL_VIDEO_DRIVER/SDL_VIDEODRIVER edits through a temporary native initialization hint, restoring the previous hint afterward. The modern spelling also participates in the existing GTK backend selection guard. WaterPlaygroundTests exercises mode round-trips, invalid-policy preservation, immediate XWayland presentation and native compatibility rendering. Other platforms remain unverified.

@@ -12,7 +12,7 @@ A copied binding description with a descriptor category, nonnegative binding num
 
 ## Example
 
-The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/PhysicsSandbox/WaterSimulation.GPU.cs).
+The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).
 
 ```csharp
 using var descriptor = new RDUniform { Binding = 0, UniformType = RenderingDevice.UniformType.StorageBuffer };

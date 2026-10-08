@@ -102,11 +102,19 @@ public sealed partial class RenderingServer : ElectronObject
         }
         try
         {
+            DisplayServer.Service?.ApplyVSyncPolicy(backend);
             var server = new RenderingServer(window, backend);
             Volatile.Write(ref _instance, server);
             return server;
         }
         catch { backend.Dispose(); throw; }
+    }
+
+    internal DisplayServer.VSyncMode GetVSync() { EnsureOwner(); return _backend.VSync; }
+    internal void SetVSync(DisplayServer.VSyncMode mode)
+    {
+        EnsureOwner(); if (_rendering) throw new InvalidOperationException("Presentation policy cannot change during rendering.");
+        _backend.SetVSync(mode);
     }
 
     internal double CanvasTime { get; private set; }

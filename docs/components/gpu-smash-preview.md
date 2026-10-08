@@ -11,7 +11,7 @@ ELECTRON2D_TEST_GPU_SMASH=1 dotnet run --project tests/Electron2D.Tests -c Relea
 ```
 
 This opens a dedicated 1152×800 Smash window, initially paused with 9,600 fragments.
-Press **Launch block** or **B** to start. The regular PhysicsSandbox executable is now a separate water playground using
+Press **Launch block** or **B** to start. The regular WaterPlayground executable is now a separate water playground using
 public CPU/GPU liquid algorithms and the public rigid-body space; this developer host does not add a public
 backend selector or route through the older Box2D-hosted GPU experiment.
 

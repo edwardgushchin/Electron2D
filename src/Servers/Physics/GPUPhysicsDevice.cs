@@ -18,7 +18,7 @@ internal sealed class GPUPhysicsDevice : IDisposable
         RenderHandle? device = null;
         try
         {
-            if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
+            if (!DisplayServer.InitializeVideo()) throw Failure("initialize GPU video support");
             initialized = true;
             if (previous is not null && SDL.GetCurrentVideoDriver() != "wayland")
             {

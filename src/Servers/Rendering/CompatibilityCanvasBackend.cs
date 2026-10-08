@@ -10,6 +10,15 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
     private readonly Dictionary<Texture, (RenderHandle Handle, TexturePixels Pixels)> _textures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private (nint Context, nint EGLDisplay, nint EGLConfig, nint GLXVisualID, nint GLXFBConfig) _graphics;
+    private DisplayServer.VSyncMode _vSync;
+    internal override DisplayServer.VSyncMode VSync => _vSync;
+    internal override void SetVSync(DisplayServer.VSyncMode mode)
+    {
+        var interval = mode switch { DisplayServer.VSyncMode.Disabled => 0, DisplayServer.VSyncMode.Adaptive => -1, _ => 1 };
+        if (!SDL.SetRenderVSync(_renderer.DangerousGetHandle(), interval))
+        { interval = 1; Check(SDL.SetRenderVSync(_renderer.DangerousGetHandle(), interval), "set renderer presentation policy"); }
+        _vSync = interval switch { 0 => DisplayServer.VSyncMode.Disabled, -1 => DisplayServer.VSyncMode.Adaptive, _ => DisplayServer.VSyncMode.Enabled };
+    }
     internal override string Method => "compatibility";
     internal override string Driver { get; }
 

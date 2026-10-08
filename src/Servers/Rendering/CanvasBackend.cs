@@ -16,6 +16,8 @@ internal readonly record struct CanvasBatch(int First, int Count, MaterialState?
 
 internal abstract class CanvasBackend : IDisposable
 {
+    internal abstract DisplayServer.VSyncMode VSync { get; }
+    internal abstract void SetVSync(DisplayServer.VSyncMode mode);
     internal abstract string Method { get; }
     internal abstract string Driver { get; }
     internal abstract Vector2i GetPixelSize();

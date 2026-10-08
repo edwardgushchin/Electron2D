@@ -25,6 +25,15 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
     private int _bufferSize;
     private bool _disposed, _windowClaimed, _hasPresented, _waylandRemapBlocked;
     private readonly bool _relaxedAndroidDevice;
+    private DisplayServer.VSyncMode _vSync = DisplayServer.VSyncMode.Enabled;
+    internal override DisplayServer.VSyncMode VSync => _vSync;
+    internal override void SetVSync(DisplayServer.VSyncMode mode)
+    {
+        var native = mode switch { DisplayServer.VSyncMode.Disabled => SDL.GPUPresentMode.Immediate, DisplayServer.VSyncMode.Mailbox => SDL.GPUPresentMode.Mailbox, _ => SDL.GPUPresentMode.VSync };
+        if (!SDL.WindowSupportsGPUPresentMode(Device, _window, native)) native = SDL.GPUPresentMode.VSync;
+        Check(SDL.SetGPUSwapchainParameters(Device, _window, SDL.GPUSwapchainComposition.SDR, native), "set GPU presentation policy");
+        _vSync = native switch { SDL.GPUPresentMode.Immediate => DisplayServer.VSyncMode.Disabled, SDL.GPUPresentMode.Mailbox => DisplayServer.VSyncMode.Mailbox, _ => DisplayServer.VSyncMode.Enabled };
+    }
     internal override string Method => "gpu";
     internal override string Driver { get; }
     private nint Device => _device.DangerousGetHandle();
@@ -398,7 +407,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         if (!visible && _hasPresented && Driver == "vulkan" && SDL.GetCurrentVideoDriver() == "wayland") _waylandRemapBlocked = true;
         if (_windowClaimed) { SDL.ReleaseWindowFromGPUDevice(Device, _window); _windowClaimed = false; }
         display.SetWindowVisible(visible);
-        if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; }
+        if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; SetVSync(_vSync); }
     }
     internal override void BeginFrame() { _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix, false)); _usedTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()

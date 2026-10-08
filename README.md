@@ -101,10 +101,10 @@ For macOS, use the [application bundle](examples/CharacterMovement/README.md#mac
 
 [Example source](examples/CharacterMovement/CharacterMovementScene.cs) · [Run instructions](examples/CharacterMovement/README.md)
 
-[PhysicsSandbox](examples/PhysicsSandbox/README.md) is a resizable water playground: 65,536 particles, CPU/GPU liquid comparison, and a draggable duck and sailboat. It uses public compute, physics, input and rendering APIs with a soft pastel palette.
+[WaterPlayground](examples/WaterPlayground/README.md) is a resizable water playground: 65,536 particles, CPU/GPU liquid comparison, and a draggable duck and sailboat. It uses public compute, physics, input and rendering APIs with a soft pastel palette.
 
 ```bash
-dotnet run --project examples/PhysicsSandbox -c Release
+dotnet run --project examples/WaterPlayground -c Release
 ```
 
 <a id="use-electron2d-in-your-game"></a>
