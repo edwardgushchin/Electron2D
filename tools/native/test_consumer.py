@@ -16,6 +16,13 @@ import package as native_package
 ROOT = Path(__file__).resolve().parents[2]
 PROGRAM = '''using Electron2D;
 
+foreach (var name in new[] { "Electron2D.Shaders.Canvas.vert.spv", "Electron2D.Shaders.CanvasInstanced.vert.spv",
+    "Electron2D.Shaders.Canvas.frag.spv", "Electron2D.Shaders.Clip.frag.spv", "Electron2D.PhysicsShaders.PhysicsIntegrate.comp.spv" })
+{
+    using var shader = typeof(Engine).Assembly.GetManifestResourceStream(name) ?? throw new Exception("Missing shader " + name);
+    using var reader = new BinaryReader(shader);
+    if (reader.ReadUInt32() != 0x07230203) throw new Exception("Invalid SPIR-V " + name);
+}
 using var stream = new AudioStreamWAV { Data = new byte[48000 * 2], MixRate = 48000 };
 var root = new Node();
 var player = new AudioStreamPlayer { Stream = stream };
@@ -83,6 +90,12 @@ def check(feed, rid):
         work = Path(directory)
         engine = work / "engine"
         shutil.copytree(ROOT, engine, ignore=shutil.ignore_patterns(".git", "bin", "obj", "__pycache__", ".dev-diary"))
+        for domain in ('Rendering', 'Physics'):
+            for binary in (engine / f'src/Servers/{domain}/Shaders').glob('*.spv'):
+                binary.unlink()
+        # Source builds bake shaders with prepared host tools; game packages need neither tools nor sources.
+        run([sys.executable, '-B', str(ROOT / 'tools/shaders/build_toolchain.py')], ROOT, os.environ)
+        shutil.copytree(ROOT / 'tools/shaders/obj/toolchain', engine / 'tools/shaders/obj/toolchain')
         blocked = work / "blocked"
         blocked.mkdir()
         for name in ("cmake", "ninja", "cc", "c++", "gcc", "g++", "clang", "clang++", "cl", "link", "lib", "nmake"):
@@ -109,6 +122,9 @@ def check(feed, rid):
         with ZipFile(engine_feed / f"Electron2D.{version}.nupkg") as archive:
             if any(name.startswith("runtimes/") for name in archive.namelist()):
                 raise RuntimeError("Managed engine package contains native files")
+            if any(name.startswith('tools/') or Path(name).suffix in ('.py', '.glsl', '.hlsl', '.spv')
+                   for name in archive.namelist()):
+                raise RuntimeError("Managed engine package leaked shader build inputs/tools")
             nuspec = ET.fromstring(archive.read("Electron2D.nuspec"))
             if any(element.tag.endswith("dependency") for element in nuspec.iter()):
                 raise RuntimeError("Managed engine package selects native dependencies")
@@ -136,6 +152,12 @@ def check(feed, rid):
         # A default desktop build targets its SDK host, independently of the explicit CI RID.
         consumers = ("project", "package", "generic") if rid == host_rid else ("project", "package")
         for kind in consumers:
+            if kind != 'project':
+                for name in ('python', 'python3', 'glslangValidator', 'spirv-val'):
+                    command = blocked / (name + '.cmd' if os.name == 'nt' else name)
+                    command.write_text('@exit /b 97\n' if os.name == 'nt' else '#!/bin/sh\nexit 97\n')
+                    if os.name != 'nt':
+                        command.chmod(0o755)
             app = work / kind
             app.mkdir()
             reference = '<ProjectReference Include="../engine/Electron2D.csproj" />' if kind == "project" else (

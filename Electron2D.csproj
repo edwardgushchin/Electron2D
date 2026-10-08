@@ -40,8 +40,6 @@
   <ItemGroup>
     <Compile Include="src/**/*.cs" />
     <EmbeddedResource Include="src/Vendor/ICU/data/TextBreak78.dat" LogicalName="Electron2D.TextBreak.dat" />
-    <EmbeddedResource Include="src/Servers/Rendering/Shaders/*.spv" LogicalName="Electron2D.Shaders.%(Filename)%(Extension)" />
-    <EmbeddedResource Include="src/Servers/Physics/Shaders/*.spv" LogicalName="Electron2D.PhysicsShaders.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Fonts/*.woff2;src/Scene/Theme/Fonts/*.ttf" LogicalName="Electron2D.Fonts.%(Filename)%(Extension)" />
     <EmbeddedResource Include="src/Scene/Theme/Icons/*.svg" LogicalName="Electron2D.Icons.%(Filename)%(Extension)" />
   </ItemGroup>
@@ -86,6 +84,7 @@
   <Target Name="ValidateElectron2DBrowserManagedAsset" BeforeTargets="GenerateNuspec" Condition="'$(BrowserManagedAssetDirectory)' != ''">
     <Error Condition="!Exists('$(BrowserManagedAssetDirectory)/Electron2D.dll') or !Exists('$(BrowserManagedAssetDirectory)/Electron2D.xml')" Text="The browser managed runtime and XML documentation must be built before packing." />
   </Target>
+  <Import Project="tools/shaders/RuntimeShaders.targets" />
   <Import Project="tools/text-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/audio-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />
   <Import Project="tools/enet-native.targets" Condition="'$(Electron2DBuildNativeFromSource)' == 'true'" />

@@ -1,6 +1,6 @@
 # Maintaining the Electron2D contract
 
-Last updated: 2026-10-06
+Last updated: 2026-10-08
 
 This guide describes the implementation and documentation checks used during code changes. It does not define product architecture. [The decision index](decisions/index.md) routes to the accepted ADRs, and the affected class, component, and domain pages describe current behavior. If a rule here conflicts with an accepted ADR, follow the ADR and correct this guide before implementing.
 
@@ -15,6 +15,14 @@ For a desktop self-contained CharacterMovement publish, run `python3 -B tools/ch
 All native SDL, font, text/audio/ENet assets belong under `runtimes/<RID>/native` in engine build output, NuGet package entries and project-reference publishes. The CharacterMovement audit rejects root copies and inspects the selected runtime directory; the license audit includes nested ELF files. Verify that no foreign RID or architecture is copied, then verify loading with `LD_LIBRARY_PATH` unset and a working directory outside the output. The platform package targets preserve that layout in RID builds and publishes; the resolver also supports older flat layouts. NativeLibraryTests verifies the project-reference directory contract without claiming foreign-platform execution.
 
 ## Private native package
+
+Runtime source builds also generate built-in rendering/physics shaders from source.
+The pinned host toolchain is prepared once under `tools/shaders/obj/`; generated
+resources stay under the runtime intermediate output and are embedded in the DLL.
+Run `python3 -B tools/shaders/check_runtime.py` after shader build/delivery changes.
+The fresh native-consumer audit prepares and copies these host tools before blocking
+native compilers, then verifies the ordinary source build. NuGet game consumers
+need neither shader tools nor shader sources. See [the shader build contract](../tools/shaders/README.md#built-in-runtime-shaders).
 
 The managed engine project restores no native packages. Each executable explicitly selects `Electron2D.{Platform}` for its target; all native SDL, engine, font, audio and codec assets must be restricted to that build/publish RID. Follow [native delivery](native-packaging.md) for published versions and the bootstrap feed required by unpublished development versions. The reusable native workflow audits all 18 target source receipts and binary identities before packing; Build and Tests restore the same feed. `tools/native/test_consumer.py FEED RID` verifies fresh source, ProjectReference and NuGet builds, public text/audio/ENet calls and self-contained publishes with native commands blocked and `LD_LIBRARY_PATH` unset. It requires only the selected platform package and the managed engine package. Run it after delivery/dependency changes; it also checks manifest SHA-256, asset paths and absence of managed backend DLLs. Notices come from the matching platform package. Explicit MSBuild source mode supports Linux/macOS; Windows and cross-target native production use their dedicated scripts.
 

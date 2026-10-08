@@ -6,11 +6,49 @@ SPIR-V material interface. Games load the resulting bytes through
 
 ## Build and publish
 
-The packaged compiler toolchain currently targets Linux x64. Building it requires
+The compiler bootstrap selects the Linux, macOS or Windows x64/arm64 **host**, independently
+of the game's target RID. Linux x64 execution is verified; other hosts require their CI checks.
+Building it requires
 Python 3.12 or later, CMake, Ninja, a C++17 compiler and network access for the
 first download. Source revisions and archive SHA-256 hashes are pinned in
 `toolchain.lock.json`: glslang 16.6.0, SPIRV-Tools v2026.4 and their matching
 SPIRV-Headers. These are build tools, outside the runtime project.
+
+## Built-in runtime shaders
+
+`dotnet build Electron2D.csproj` automatically compiles the HLSL rendering sources
+and GLSL compute sources through `RuntimeShaders.targets`. The pinned glslang
+compiler handles both built-in languages (`main`, Vulkan 1.0); `spirv-val` validates
+each result. This bootstrap has no dependency on Electron2D.dll or SDL, so it can
+run before the runtime exists and when cross-compiling the runtime.
+
+The first build prepares the host tools under `tools/shaders/obj/toolchain/`.
+Later builds reuse that directory without downloads or native compilation while
+the source lock and bootstrap recipe match. Parallel builds serialize tool preparation.
+Generated shaders and their content manifest live in the runtime's
+`$(IntermediateOutputPath)shaders/`, with the original resource names embedded in
+Electron2D.dll. Build inputs include the compiler recipe, all local shader/include
+files and output hashes. Unchanged bytes keep their timestamps; failed compilation
+fails the build and preserves the last valid artifact. Deleted shaders are removed,
+and `dotnet clean` removes generated resources. `publish --no-build` uses the already
+built assembly. A game/package consumer needs no Python, CMake or shader compiler.
+
+Generated runtime `.spv` files are excluded from Git. The fixed `.spv` files in
+`tests/Electron2D.Tests/Shaders` are a separate reference corpus for external-bytecode
+compatibility, malformed-input tests and DXC/GLSL importer regression checks;
+they remain versioned so a compiler regression cannot silently rewrite the oracle.
+The user-material importer below still uses ShaderCross/DXC for HLSL and emits
+logical-type metadata. Its output need not be byte-identical to built-in glslang output.
+
+```sh
+python3 -B tools/shaders/check_runtime.py
+```
+
+This check verifies include invalidation, no-op timestamps, corrupt-output recovery,
+failed compilation, stale-output removal, clean, and exact embedded bytes in a fresh
+published assembly without shader sources or compiler tools in its output.
+
+## Material importer
 
 ```sh
 python3 tools/shaders/build_toolchain.py
@@ -36,8 +74,8 @@ dotnet run --project tools/shaders/ShaderImport.csproj -c Release -- shader.frag
 python3 -B tools/shaders/check.py
 ```
 
-Arguments are input path, `vertex` or `fragment`, and output path. Vertex import is
-used for the engine's built-in canvas program; public Shader resources currently
+Arguments are input path, `vertex` or `fragment`, and output path. Vertex import
+validates the canvas program interface; public Shader resources currently
 accept the canvas fragment interface. Compiler diagnostics include source and
 stage, with source locations where supplied by the compiler. Relative includes
 resolve through the source compiler's normal file rules.

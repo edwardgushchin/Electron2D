@@ -1,8 +1,8 @@
 # Rendering domain
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
-Private native binaries come from versioned Linux/macOS packages in ordinary desktop builds. Only `Electron2DBuildNativeFromSource=true` invokes native compilers. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
+Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
 
 ## Executable shader and material identities
 

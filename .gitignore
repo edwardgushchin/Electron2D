@@ -4,4 +4,6 @@ obj/
 **/bin/
 **/obj/
 __pycache__/
+src/Servers/Rendering/Shaders/*.spv
+src/Servers/Physics/Shaders/*.spv
 **/*.SdkResolver.*.proj.Backup.tmp

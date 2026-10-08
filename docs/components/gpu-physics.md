@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-08
 
+Built-in compute bytecode is generated from the versioned GLSL/include sources at
+runtime build time and embedded from `obj/`; generated `.spv` files are no longer
+versioned. The [shader build contract](../../tools/shaders/README.md#built-in-runtime-shaders)
+owns compiler pins, invalidation and packaging. Historical bytecode hashes below
+identify the measured experiments, not files that must remain in the source tree.
+
 ## Native verification observation (2026-10-08)
 
 During body-configuration extraction, the full GPU suite passed its physics and
