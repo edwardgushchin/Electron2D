@@ -1,6 +1,6 @@
 # Electron2D architectural decision index
 
-Last updated: 2026-10-07
+Last updated: 2026-10-08
 
 This file routes architecture work to bounded domain decision documents. Read this index, the affected document, and only cross-domain documents explicitly referenced by relevant ADRs. Class, component, and domain documents remain authoritative for implemented behavior.
 
@@ -22,7 +22,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078, 0079, 0080, 0081, 0082, 0083 |
 | Typed 2D meshes and skeletal palettes | [mesh.md](mesh.md) | 0092 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053, 0097 |
-| Physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
+| CPU and independent GPU physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
 | Physics world activity | [physics-activity.md](physics-activity.md) | 0089 |
 | Physics indexed geometry | [physics-shape-slots.md](physics-shape-slots.md) | 0088 |
 | Physics joints | [physics-joints.md](physics-joints.md) | 0084, 0085, 0086, 0087 |

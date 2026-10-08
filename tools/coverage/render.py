@@ -7,6 +7,8 @@ import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
+from physics_report import render_physics
+
 
 ROOT = Path(__file__).resolve().parents[2]
 COVERAGE = ROOT / "docs/coverage"
@@ -270,7 +272,7 @@ def reason_for_type(item, lookup):
         ({"AnimatedTexture"},
          "next timed texture-frame resource slice using the existing Texture, SpriteFrames and engine clock (ADRs 0013 and 0028)"),
         ({"CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "WorldBoundaryShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D"},
-         "next concrete Box2D geometry/fixture slice using the implemented Shape and physics world (ADR 0012)"),
+         "complete shape geometry, response and queries on CPU and independent GPU worlds under ADR 0054"),
         ({"PhysicsMaterial"},
          "typed friction and restitution resource with verified Box2D shape-material transfer (ADR 0013)"),
         ({"AnimatableBody2D", "Area2D", "CharacterBody2D"},
@@ -345,10 +347,12 @@ def reason_for_type(item, lookup):
         ({"CollisionPolygon2D"},
          "polygon collision-shape resource conversion and scene polygon owner integration after the first convex/concave shape slice"),
         ({"PhysicsServer2D", "PhysicsServer2DExtension", "PhysicsServer2DManager"},
-         "typed physics resource-identity, shape/body/space lifetime and server extension contract beyond the first scene-body slice"),
+         "typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054)"),
         ({"PhysicsDirectBodyState2D", "PhysicsDirectBodyState2DExtension"},
-         "typed live body-state callback and solver ownership over the PhysicsServer space"),
-        ({"PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "KinematicCollision2D"},
+         "typed backend-extensible live body-state operations preserving owner/callback lifetime over existing PhysicsServer spaces (ADR 0054)"),
+        ({"PhysicsDirectSpaceState2DExtension"},
+         "typed backend-extensible direct-space queries and exclusion helpers with shared result/lifetime semantics (ADR 0054)"),
+        ({"PhysicsDirectSpaceState2D", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "KinematicCollision2D"},
          "typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space"),
         ({"RayCast2D", "ShapeCast2D"},
          "scene query nodes consuming the typed direct-space ray/shape query slice"),
@@ -621,6 +625,7 @@ def render():
     roadmap = defaultdict(list)
     actionable = []
     represented = []
+    classified = defaultdict(list)
     for godot_type in upstream["types"]:
         name = godot_type["name"]
         mapped = aliases.get("classes", {}).get(name, TEXTURE_NAMES.get(name, name))
@@ -664,7 +669,7 @@ def render():
             updated = "2026-10-04"
         if name in {"RichTextLabel", "RichTextEffect", "CharFXTransform", "GraphElement", "GraphNode", "GraphFrame", "GraphEdit", "@GlobalScope", "TextServer"}:
             updated = "2026-10-07"
-        if name in {"StaticBody2D", "AnimatableBody2D", "PhysicsDirectBodyState2D", "PhysicsServer2D", "RigidBody2D"}:
+        if name in {"StaticBody2D", "AnimatableBody2D", "PhysicsDirectBodyState2D", "PhysicsServer2D", "RigidBody2D", "Area2D", "Joint2D", "PinJoint2D", "Shape2D", "WorldBoundaryShape2D", "PhysicsDirectBodyState2DExtension", "PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsServer2DExtension", "PhysicsServer2DManager", "Viewport"}:
             updated = "2026-10-08"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
@@ -688,6 +693,7 @@ def render():
             used_engine.add(class_engine["id"])
         seen_upstream.add(godot_type["id"])
         counts[class_state] += 1
+        classified[name].append((godot_type["id"], class_state, class_reason))
         class_status[class_state] += 1
         lines.append(f"| [{code('class ' + name)}]({url}) | {engine_link(class_engine) if class_engine else '—'} | {class_state} | {cell(class_reason)} |")
         used_local = set()
@@ -760,6 +766,7 @@ def render():
                     raise ValueError(f"Implemented member has no Electron2D declaration: {member['id']}")
                 state, reason = row["state"], row["reason"]
             counts[state] += 1
+            classified[name].append((member["id"], state, reason))
             member_states[state] += 1
             target = "<br>".join(engine_link(match) for match in matches) if matches else code(adapted) if adapted else "—"
             lines.append(f"| [{code(member['kind'] + ' ' + member['signature'])}]({url}) | {target} | {state} | {cell(reason)} |")
@@ -797,11 +804,11 @@ def render():
         catalog.append(f"| [{cell(item['name'])}](classes/{coverage_target(item['name'])}) | {cell(item['inherits'] or '—')} | {state} | {len(item['members'])} |")
     page_text[COVERAGE / "catalog.md"] = "\n".join(catalog) + "\n"
     actionable_note = (" Reassess dependencies for " + ", ".join(f"[{name}](classes/{coverage_target(name)})" for name in actionable) + " before selecting their slices.") if actionable else ""
-    road = ["# Coverage roadmap", "", "Last updated: 2026-10-07", "",
+    road = ["# Coverage roadmap", "", "Last updated: 2026-10-08", "",
             "Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.", "",
             f"1. Close {counts['Partial']} partially implemented rows and {len(engine_only) - len(manual_extras)} unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.",
             f"2. Complete {counts['Unimplemented']} missing declarations in already represented type families; split each type by its documented dependency trigger.{actionable_note}",
-            "3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; remaining Box2D.NET physics; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
+            "3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.", "",
             "## Existing type backlog", "",
             "These classes already have an Electron2D type. The counts scope work; they do not rank the next slice or authorize skipping a dependency.", "",
             "| Godot class | Unimplemented members | Partial members |", "| --- | ---: | ---: |"]
@@ -818,6 +825,7 @@ def render():
         road.append(f"| Separate product-scope decision for each of {len(scope_names)} currently unassigned families; see their catalog pages for exact names. | {len(scope_names)} |")
     road.extend(["", "Each [catalog entry](catalog.md) opens the complete member table. Excluded rows have an accepted product reason and no implementation task.", ""])
     page_text[COVERAGE / "roadmap.md"] = "\n".join(road)
+    page_text[COVERAGE / "physics-status.md"] = render_physics(upstream, classified, coverage_target)
     summary = {"upstream_types": len(upstream["types"]), "upstream_members": sum(len(item["members"]) for item in upstream["types"]),
                "electron2d_declarations": len(engine), "mapped_engine": len(used_engine), "reviewed_extras": len(manual_extras),
                "unmapped_engine": len(engine_only) - len(manual_extras),

@@ -1,6 +1,6 @@
 # Networking
 
-Last updated: 2026-10-05
+Last updated: 2026-10-08
 
 ## Responsibility and public surface
 
@@ -15,6 +15,8 @@ The domain uses core ElectronObject identity/disposal, typed project settings an
 ## Current implementation and limits
 
 The native Linux x64 low-level transport profile executes IPv4/IPv6 loopback and Unix-domain IPC. Browser raw sockets fail explicitly. [TLS streams and certificate/key resources](../components/tls.md) execute native Linux OpenSSL client/server exchange and typed resource loading. [HTTP/HTTPS transfers and stream compression](../components/http.md) add native protocol, proxy, scene/worker and incremental codec behavior. [WebSocket messages](../components/websocket.md) execute WS/WSS client/server and bounded complete-message/control flow. [Typed multiplayer transports](../components/multiplayer.md) add offline authority and owned WS/WSS peer cohorts. [Native DTLS](../components/dtls.md), [ENet channels and multiplayer](../components/enet.md), [typed scene multiplayer](../components/scene-multiplayer.md), [scene replication](../components/scene-replication.md) and [UPNP](../components/upnp.md) execute their documented workflows. WebRTC retains its ICE/SDP/SCTP backend prerequisite in [coverage](../coverage/index.md). Other-platform transport behavior, routed traffic and native allocator totals remain separate gates.
+
+The [authoritative physics objective](../components/physics-contract-audit.md#authoritative-networking-audit) requires fixed-tick input, portable physics snapshots, client prediction/correction/replay and remote interpolation over this existing typed networking surface. Property replication is not a complete physics restore point. These capabilities and separate-process CPU-server/GPU-client acceptance remain open under ADRs 0054/0094.
 
 ## Verification
 

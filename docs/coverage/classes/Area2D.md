@@ -1,6 +1,6 @@
 # Area2D API coverage
 
-Last updated: 2026-09-26
+Last updated: 2026-10-08
 
 Godot source: [doc/classes/Area2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,7 +10,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class Area2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) | [`public sealed class Electron2D.Area`](../../classes/Area.md) | Partial | Directional monitoring and priority gravity/damping fields execute under ADRs 0055/0056; tile-map virtual bodies, audio routing and shape-index events retain gaps below. |
+| [`class Area2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) | [`public sealed class Electron2D.Area`](../../classes/Area.md) | Partial | Directional monitoring, priority gravity/damping, audio routing and logical shape-pair events execute (ADRs 0047, 0055 and 0056). Virtual tile-body object/event payloads remain incomplete. |
 | [`enum SpaceOverride`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) | [`public enum Electron2D.Area.SpaceOverride`](../../classes/Area.SpaceOverride.md) | Implemented | Pinned enum identities and linear/angular area damping modes execute over current rigid bodies; PhysicsAreaFieldTests verifies priority, signed rates and warm allocation. |
 | [`enum_value SPACE_OVERRIDE_COMBINE [SpaceOverride] = 1`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) | [`public const Electron2D.Area.SpaceOverride Combine = 1`](../../classes/Area.SpaceOverride.md) | Implemented | Pinned enum identities and linear/angular area damping modes execute over current rigid bodies; PhysicsAreaFieldTests verifies priority, signed rates and warm allocation. |
 | [`enum_value SPACE_OVERRIDE_COMBINE_REPLACE [SpaceOverride] = 2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/Area2D.xml) | [`public const Electron2D.Area.SpaceOverride CombineReplace = 2`](../../classes/Area.SpaceOverride.md) | Implemented | Pinned enum identities and linear/angular area damping modes execute over current rigid bodies; PhysicsAreaFieldTests verifies priority, signed rates and warm allocation. |

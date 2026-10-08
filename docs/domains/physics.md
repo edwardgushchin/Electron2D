@@ -14,28 +14,34 @@ Jiggle uses the existing direct-world ray query during Physics execution, with b
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
-Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree lazily owns one internal Box2D.NET world, advances it during its fixed physics lane, synchronizes dynamic body transforms and updates area overlap snapshots before timers and tweens. The selected managed backend is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012).
+Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree retains distinct viewport-selected worlds and a fallback for viewport-free scenes. Each currently creates an internal Box2D.NET space, stepped once during the fixed physics lane, with dynamic transforms and overlap snapshots published before timers and tweens. The selected managed backend is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012).
 
 ## Component inventory
 
 | Component | Production types | State |
 | --- | --- | --- |
-| [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape methods and debug color incomplete |
+| [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape collision methods execute; world boundaries, dynamic separation rays, custom solver bias and debug color remain incomplete |
 | [Scene physics bodies](../components/physics-bodies.md) | [`CollisionObject`](../classes/CollisionObject.md), [`PhysicsBody`](../classes/PhysicsBody.md), [`KinematicCollision`](../classes/KinematicCollision.md), [`CharacterBody`](../classes/CharacterBody.md), [`CharacterMotionMode`](../classes/CharacterMotionMode.md), [`CharacterPlatformOnLeave`](../classes/CharacterPlatformOnLeave.md), [`RigidBody`](../classes/RigidBody.md), [`StaticBody`](../classes/StaticBody.md), [`AnimatableBody`](../classes/AnimatableBody.md), [`PhysicsMaterial`](../classes/PhysicsMaterial.md) | Dynamic/static/kinematic motion, grounded/floating character sliding, platform carry, body sweeps, contacts, forces, fields and filtering executable; wider body/server contracts incomplete |
 | [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md), [`GrooveJoint`](../classes/GrooveJoint.md), [`DampedSpringJoint`](../classes/DampedSpringJoint.md) | Shared scene/server joint RIDs, revolute/guide/spring kernels, collision suppression, angular limits and motor executable; positional bias/correction caps, pin softness and debug drawing remain incomplete |
-| [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs and wider server methods incomplete |
-| [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio and shape events incomplete |
+| [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs execute; collider canvas filtering and wider server methods remain incomplete |
+| [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio routing and logical shape events execute; virtual tile-body payloads remain incomplete |
 
 ## Completion boundary
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
-GPU world. GPU-stage conformance alone does not close the common API contracts.
+independent GPU world. The [source audit](../components/physics-contract-audit.md)
+and [generated declaration ledger](../coverage/physics-status.md) separate current
+implementation, inherited requirements and missing behavior. Box2D internal storage,
+ordering and bitwise CPU/GPU equality do not constrain the GPU architecture. GPU-stage conformance alone does not close the common API contracts.
 Acceptance includes per-body CCD modes, stationary linear/angular surface velocity,
 world-boundary and dynamic separation-ray response, joint correction/softness/caps,
 shape/body/world solver settings, object/shape mouse picking, contact impulse totals
 and truncation, virtual tile-owner propagation, canvas-filtered point queries,
 unified shape/joint debug drawing, remaining typed server state/identity operations,
-and backend extension/registration. The owning [coverage tables](../coverage/index.md),
+and backend extension/registration. Authoritative networking additionally requires
+fixed-tick input and snapshots, restore/replay, predicted/confirmed events, remote
+interpolation and separate-process CPU-server/GPU-client verification under
+[ADR 0094](../decisions/networking.md#adr-0094); these remain unimplemented. The owning [coverage tables](../coverage/index.md),
 including [bodies](../coverage/classes/RigidBody2D.md),
 [surfaces](../coverage/classes/StaticBody2D.md) and
 [server operations](../coverage/classes/PhysicsServer2D.md), retain the detailed

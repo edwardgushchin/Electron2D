@@ -2,6 +2,23 @@
 
 Last updated: 2026-10-08
 
+## Architecture boundary after the contract audit
+
+The [2026-10-08 audit](physics-contract-audit.md) distinguishes the current
+Box2D-hosted GPU experiment from the required independent GPU backend. All stage
+measurements and exact-state hashes below describe that experiment. They remain
+useful diagnostics; preserving Box2D ordering, CPU mirrors or bitwise results is
+not an acceptance requirement. The current prototype has not established a full
+GPU advantage over a complete CPU backend.
+
+[ADR 0054](../decisions/physics.md#adr-0054) now requires persistent authoritative
+GPU state, API-driven transfers and a cost/necessity record for every bulk
+readback, mirror and wait. Public semantic, invariant, stability and lifetime
+tests with justified numerical tolerances govern acceptance. Extending the
+existing host mirrors is not the architecture for the independent backend.
+The audit records the known transfer costs, unmeasured costs and remaining
+backend extraction work. No public selector or full GPU world is claimed here.
+
 [ADR 0054](../decisions/physics.md#adr-0054) selects a full GPU world alongside the
 managed CPU compatibility backend. Implementation is in progress. The existing
 public physics API still selects CPU; no production GPU/fallback selector has

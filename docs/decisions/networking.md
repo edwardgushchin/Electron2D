@@ -1,6 +1,6 @@
 # Electron2D networking decisions
 
-Last updated: 2026-10-04
+Last updated: 2026-10-08
 
 This bounded log owns native stream and packet transport behavior. The [decision index](index.md) routes other work; current classes and [networking](../domains/networking.md) describe the executable surface.
 
@@ -109,6 +109,35 @@ Preserve spawn/Always defaults, Never/OnChange/legacy sync/watch behavior, monot
 Visibility uses explicit/public membership and conjunctive predicates, selectable internal frame updates and OR-composed root synchronization visibility. It controls tracked spawning and outgoing RPC delivery. Periodic/change-only groups batch with actual 128-minimum/1350-default sync and 65535-default delta budgets, respecting prepared/native/relay capacity. Always requests Unreliable; delta requests Reliable, with real transport semantics unchanged. High-resolution monotonic scheduling, encoded-byte changes, per-peer successful-send receipts and staged complete-group decode avoid silent omissions or malformed partial state. Setup/membership/first paths/templates/snapshots/errors allocate explicitly; prepared steady operations reuse storage and caller codecs remain their own boundary.
 
 SceneReplicationTests verifies native public WS/WSS authoring/replication, pre-Ready state, automatic/custom/late/visibility lifetime, independent typed schema/malformed/old/authority/batching fixtures and 64 prepared active/idle zero-managed-allocation intervals. File-backed add/get scene paths remain Partial pending the approved typed PackedScene disk-format/loader/saver producer; editor/file/native allocator/foreign/routed/human/rendered/agent acceptance stays separate. Dynamic object decoding remains excluded under ADR 0001.
+
+### Authoritative physics replication boundary
+
+[ADR 0054](physics.md#adr-0054) requires CPU and independent GPU physics for
+authoritative-server games. Reuse the existing transports, typed codecs, peer
+authority and scene lifetime. Add a shared public physics contract for fixed-tick
+input/acknowledgement, portable world-object identity, authoritative state and
+client reconciliation. Local RID, object instance and vendor IDs are not network
+identity. Existing property replication sequences measure transport publication;
+they are not physics ticks or complete restore checkpoints.
+
+The server validates commands for the controlling peer and confirms world state.
+Clients retain bounded unacknowledged inputs/history, restore authoritative state,
+replay inputs and interpolate remote objects. Visual smoothing must not corrupt
+the solved pose. Restore state must cover contacts, sleep and joints as well as
+body transforms/velocities; predicted and confirmed event identities prevent
+duplicate gameplay effects. Creation/destruction, authority changes and late join
+must remain coherent across correction. The wire contract is backend-neutral;
+local replay storage can remain backend-private and must not require identical
+CPU/GPU internal state or cross-platform bitwise determinism.
+
+These are required capabilities, not current replication behavior. Acceptance
+requires separate server/client processes, a CPU server with no GPU/window,
+GPU clients, controlled latency/jitter/loss/reordering, joint/contact and sleep
+scenarios, divergence recovery and an executable example. Measure wire bytes,
+retained history and replay/readback costs separately from rendering and full
+physics-step latency. The [physics audit](../components/physics-contract-audit.md)
+keeps the missing integration explicit; transport/property replication tests do
+not satisfy these physics gates.
 
 ### UPNP gateway discovery and control
 

@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-05
+Last updated: 2026-10-08
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -49,7 +49,7 @@ Godot's object surface includes deferred calls and queued deletion, but both req
 <a id="adr-0008"></a>
 ## ADR 0008: Preserve scene inheritance with Node and Entity names
 
-Last updated: 2026-10-05
+Last updated: 2026-10-08
 
 - Status: Accepted by the user on 2026-09-23.
 - Scope: Scene inheritance, type naming, and preservation of the corresponding API and responsibilities.
@@ -76,8 +76,8 @@ Last updated: 2026-10-05
 | `ShapeCast2D : Node2D` | `ShapeCast : Entity` | Spatial shape sweep with cached contact results over the shared World under ADR 0063. |
 | `CollisionObject2D : Node2D` | `abstract CollisionObject : Entity` | Collision filtering and shape ownership above physics-body specializations. |
 | `PhysicsBody2D : CollisionObject2D` | `abstract PhysicsBody : CollisionObject` | Shared fixed-step body and shape lifecycle. |
-| `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic Box2D-backed motion and contact response. |
-| `StaticBody2D : PhysicsBody2D` | `StaticBody : PhysicsBody` | Stationary Box2D-backed collision geometry. |
+| `RigidBody2D : PhysicsBody2D` | `RigidBody : PhysicsBody` | Dynamic motion and contact response through the selected physics backend (ADR 0054). |
+| `StaticBody2D : PhysicsBody2D` | `StaticBody : PhysicsBody` | Stationary collision geometry through the selected physics backend (ADR 0054). |
 | `CharacterBody2D : PhysicsBody2D` | `CharacterBody : PhysicsBody` | Caller-driven grounded/floating slide motion over the shared world under ADR 0067. |
 | `Control : CanvasItem` | `Control : CanvasItem` | UI rectangle, layout, anchors/offsets, focus and GUI behavior, including its own position/rotation/scale/pivot model. It is a sibling of Entity. |
 | `BaseButton : Control` | `BaseButton : Control` | Shared button behavior; future UI implementation. |

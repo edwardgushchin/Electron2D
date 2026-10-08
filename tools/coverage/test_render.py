@@ -6,6 +6,42 @@ import re
 from unittest.mock import Mock, patch
 
 from render import ALIASES, CLASS_PAGES, DATA, choose, coverage_target, engine_link, render, validate_public_type_names
+from physics_report import scope
+
+
+def check_physics_report(pages):
+    upstream = json.loads((DATA / "godot-4.7.2.json").read_text())
+    families, bases, cross = scope(upstream["types"])
+    assert {"PhysicalBone2D", "WorldBoundaryShape2D", "PhysicsDirectBodyState2DExtension"} <= families
+    assert {"Object", "RefCounted", "Resource", "Node", "CanvasItem", "Node2D", "MainLoop"} <= bases
+    assert "TileMapLayer::method:get_coords_for_body_rid(RID:)" in cross["TileMapLayer"]
+    assert "ProjectSettings::property:physics/2d/time_before_sleep" in cross["ProjectSettings"]
+    assert "Engine::property:time_scale" in cross["Engine"]
+    assert "TileMap" not in families | bases | cross.keys()
+    # A newly pinned descendant must enter the audit without a hand-maintained
+    # allowlist update, including one not directly beneath the root.
+    extra = {"name": "FutureRigidBody", "id": "class:FutureRigidBody", "inherits": "RigidBody2D", "members": []}
+    assert "FutureRigidBody" in scope(upstream["types"] + [extra])[0]
+    report = pages[CLASS_PAGES.parent / "physics-status.md"]
+    actual = re.findall(r"^\| \[`([^`]+)`\].*? \| (Partial|Blocked|Unimplemented) \|", report, re.MULTILINE)
+    assert len(actual) == len(dict(actual)), "Inherited physics declarations were double counted"
+    expected = {}
+    for item in upstream["types"]:
+        name = item["name"]
+        if name not in families | bases | cross.keys():
+            continue
+        declarations = [item] + item["members"]
+        table = [line for line in pages[CLASS_PAGES / coverage_target(name)].splitlines() if line.startswith("| [`")]
+        assert len(table) == len(declarations)
+        for declaration, row in zip(declarations, table):
+            if name in cross and declaration["id"] not in cross[name]:
+                continue
+            state = row.split(" | ")[2]
+            if state in {"Partial", "Blocked", "Unimplemented"}:
+                expected[declaration["id"]] = state
+    assert dict(actual) == expected, "Physics ledger must retain every open row from the class classifier"
+    assert "Joint2D::property:bias" in expected
+    assert "StaticBody2D::property:constant_angular_velocity" not in expected
 
 
 def check_public_type_names():
@@ -121,6 +157,7 @@ def main():
     ]
 
     pages, summary = render()
+    check_physics_report(pages)
     check_texture_pages(pages, upstream)
     aliases = json.loads(ALIASES.read_text())
     assert aliases["classes"]["CSharpScript"] == "Script", "C# scripts must share the concrete Script identity"

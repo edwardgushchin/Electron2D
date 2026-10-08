@@ -9421,7 +9421,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "First viewport 2D picking/interpolation integration after Box2D.NET and the renderer (ADRs 0012 and 0028).",
+      "reason": "Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054).",
       "godot": [
         "Viewport::property:physics_interpolation_mode",
         "Viewport::property:physics_object_picking",
