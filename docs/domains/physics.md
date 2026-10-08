@@ -109,7 +109,9 @@ and specialized update/gather kernels. [Device joints](../components/gpu-residen
 now share that solve loop and retain pin/groove/spring settings, warm impulses and
 collision vetoes without a CPU solver. [Explicit directed body exceptions](../components/gpu-resident-exceptions.md)
 now use the same device table for discrete and continuous collisions; live-body
-removal cleans incident edges without scanning all authored exceptions. [Mass profiles](../components/gpu-resident-mass.md)
+removal cleans incident edges without scanning all authored exceptions. [Resident one-way contacts](../components/gpu-resident-one-way.md)
+now retain initial side decisions per geometry-piece pair and share them with CCD,
+including rotating separation/recontact within one step. [Mass profiles](../components/gpu-resident-mass.md)
 now reuse shared authored-geometry normalization and supply center-aware GPU motion
 and constraint preparation. Its stability/allocation/population checks
 and opt-in fenced diagnostics do not establish public-backend or window-FPS acceptance.

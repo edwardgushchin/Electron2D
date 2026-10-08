@@ -1,6 +1,6 @@
 # Electron2D physics decisions
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
@@ -224,7 +224,7 @@ Games can use reusable multi-edge terrain, open contours and hollow line sensors
 <a id="adr-0065"></a>
 ## ADR 0065: One-way scene-body contacts
 
-Last updated: 2026-10-06
+Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: CollisionShape one-way flag and local direction on scene physics bodies
@@ -238,6 +238,7 @@ Two-sided fixtures prevent a body from passing through a platform and landing on
 
 - `CollisionShape.OneWayCollision` defaults to false and `OneWayCollisionDirection` defaults to `(0, 1)`. A finite nonzero direction is normalized before mutation; zero rejects contact from every side when the flag is enabled. Direction rotates with the shape's local pose and its parent body. Area children retain these scene properties for packing but remain sensor-only and warn that one-way response does not apply.
 - Mark only enabled body fixtures for Box2D pre-solve. Per-fixture user data carries the local contact direction; the world callback compares the first contact normal to its current body rotation. Keep the initial allowed/denied decision for the shape pair until no contact is observed. Fixture rebuilds change backend IDs and therefore discard old pair decisions without changing public node identity. Large worlds use the retained task system from ADR 0054. One-way pair updates are serialized within that world; callback state remains internal, and gameplay callbacks execute on the owner after solver tasks finish.
+- The independent GPU store retains the same initial side decision per shape/piece pair in device-only generation/revision-qualified history, including rejected contacts. Completed manifold batches publish a new history table; complete capacity recovery never truncates or advances the world. Sensors bypass side selection. CCD consumes this history and, for rotating pass-through episodes, schedules a separation boundary before later recontact so the old decision is retired before a new side is selected. Public scene/server adapters and GPU motion-query recovery remain required integration work.
 - Expose finite nonnegative `OneWayCollisionMargin`, default one scene unit, on CollisionShape and CollisionPolygon. Typed body motion accepts initial recovery against the solid side only up to the larger of this value and the query's safe margin; a deeper one-way overlap is ignored. Fixed-step pre-solve continues to use the established side decision. The value survives PackedScene, and edits rebuild fixture tags before a later motion query. No vendored source changes are needed.
 
 ### Consequences

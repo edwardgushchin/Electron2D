@@ -14,11 +14,12 @@ This is an internal response pipeline, not a selectable public GPU backend.
 [Resident joints](gpu-resident-joints.md) now share its iteration loop;
 independent GPU public joint integration,
 scene/server and direct-state
-publication, complete frame impulse/event reports, one-way filtering, public exception projection,
+publication, complete frame impulse/event reports, public one-way/exception projection,
 world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored
 geometry and uses center-relative moment arms; public-world integration still needs
 a backend adapter. Internal [explicit body exceptions](gpu-resident-exceptions.md)
-now share the joint filter table for contacts and CCD. No full CPU-vs-GPU or window-FPS acceptance is claimed.
+now share the joint filter table for contacts and CCD. [One-way piece episodes](gpu-resident-one-way.md)
+now retain accepted and rejected decisions on device, outside the impulse-history table. No full CPU-vs-GPU or window-FPS acceptance is claimed.
 
 ## Solve and history
 
@@ -68,7 +69,7 @@ family test check this path and unique point feature keys used by history.
 
 | Device payload | Purpose |
 | --- | --- |
-| 64 bytes / shape slot | Authored placement, body/geometry identities, masks/sensor policy, signed material and edit revision. Scatter edits are 80 bytes. |
+| 80 bytes / shape slot | Authored placement, body/geometry identities, masks/sensor/one-way policy, signed material and edit revision. Scatter edits are 96 bytes. |
 | 32 bytes / shared geometry | Existing descriptor, now including an integer resource revision. |
 | 64 bytes / contact coefficients | Body adjacency links, normal/tangent angular Jacobians, friction, effective masses and target speeds; unchanged throughout iterations. |
 | 32 bytes / contact impulses | Accumulated/delta physical and positional impulses, separate from coefficients. |

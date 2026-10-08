@@ -16,6 +16,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         internal uint Pairs, Shapes, Bodies, Corrections;
         internal Float4 Tolerances;
+        internal uint HistoryCount, HistoryCapacity;
+        internal float EpisodeMargin;
+        internal uint Padding;
     }
     internal long CCDQueryCount { get; private set; }
     internal long CCDIntervalCount { get; private set; }
@@ -60,6 +63,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         var pairs = FindPairs(CCDTolerance, delta, _hasPositionCorrections);
         if (pairs == 0) return 1;
+        EnsureOneWay();
         _ccdPipeline ??= _context.CreatePipeline("PhysicsResidentCCD.comp.spv");
         var wait = WaitMS;
         var command = SDL.AcquireGPUCommandBuffer(Device);
@@ -73,19 +77,23 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin continuous collision reset");
             UploadSpatial(copy, _spatialSummary!, 0, 8); SDL.EndGPUCopyPass(copy);
-            var output = new SDL.GPUStorageBufferReadWriteBinding { Buffer = _spatialSummary!.DangerousGetHandle() };
-            var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)(&output), 1);
+            var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[2];
+            outputs[0] = new() { Buffer = _spatialSummary!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _centers!.DangerousGetHandle() };
+            var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 2);
             if (compute == 0) throw GPUPhysicsDevice.Failure("begin continuous collision sweep");
             SDL.BindGPUComputePipeline(compute, _ccdPipeline.DangerousGetHandle());
-            var inputs = stackalloc nint[7] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(),
-                _shapesGPU!.DangerousGetHandle(), _pairsGPU!.DangerousGetHandle(), _centers!.DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle() };
-            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 7);
+            var inputs = stackalloc nint[8] { _bodies!.DangerousGetHandle(), _verticesGPU!.DangerousGetHandle(), _geometryGPU!.DangerousGetHandle(),
+                _shapesGPU!.DangerousGetHandle(), _pairsGPU!.DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _oneWayHistoryGPU!.DangerousGetHandle(), _oneWayHistoryTableGPU!.DangerousGetHandle() };
+            SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 8);
             var settings = new CCDSettings
             {
                 Pairs = (uint)pairs,
                 Shapes = (uint)_shapeHighWater,
                 Bodies = (uint)_highWater,
                 Corrections = _hasPositionCorrections ? 1u : 0u,
+                HistoryCount = (uint)_oneWayHistoryCount,
+                HistoryCapacity = (uint)_oneWayHistoryTableCapacity,
+                EpisodeMargin = _contactMargin,
                 Tolerances = new(CCDTolerance, 0.5f, 0.00001f, delta)
             };
             SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(CCDSettings));

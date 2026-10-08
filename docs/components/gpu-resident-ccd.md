@@ -215,3 +215,8 @@ bytecode:
 [Explicit body exceptions](gpu-resident-exceptions.md) now share the device pair
 filter with joint vetoes. Both ray and shape CCD skip vetoed obstacles and recover
 collision response after removal; no separate CCD-only exception list is kept.
+
+[One-way CCD](gpu-resident-one-way.md) now consults the published device side
+history and transformed direction. Rotating rejected episodes publish their
+separation boundary before a possible later solid-side impact. The sweep uniform
+is now 48 bytes; the existing scalar status/fraction readback and fence are reused.

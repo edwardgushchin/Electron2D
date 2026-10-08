@@ -14,6 +14,7 @@ Last updated: 2026-10-09
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
 [joints](../../src/Servers/Physics/GPUPhysicsBodyStore.Joints.cs),
 [collision exceptions](../../src/Servers/Physics/GPUPhysicsBodyStore.Exceptions.cs),
+[one-way episodes](../../src/Servers/Physics/GPUPhysicsBodyStore.OneWay.cs),
 [body kernel](../../src/Servers/Physics/Shaders/PhysicsResidentBodies.comp.glsl),
 [shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl),
 [contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl),
@@ -43,6 +44,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `SetCollisionException`, `HasCollisionException` | Retain directed live-body exceptions; either direction vetoes solid pairs. Joint contributions remain independent and sensors retain directional masks. Endpoint removal unlinks incoming/outgoing edges; see [resident exceptions](../components/gpu-resident-exceptions.md). |
 | `ExceptionUploadBytes`, `FilterSubmissionCount`, `FilterMS`, `FilterWaitMS` | Sparse exception bytes, combined joint/exception update batches, their total time and included fence waits. Unchanged filters stay resident. |
 | `SetMassProfile`, `GetMassProfile`, `GetMassProperties` | Change/read authored kilograms, zero/explicit inertia and nullable auto/custom center; resolve geometry without moving origin/velocity. See [resident mass](../components/gpu-resident-mass.md). |
+| `SetShapeOneWay`, `GetShapeOneWay`, `OneWayPairCount` | Normalized local direction and finite recovery margin; GPU piece-pair side decisions include rejected episodes and expire on separation or shape/resource revision. Sensors ignore the policy; see [resident one-way contacts](../components/gpu-resident-one-way.md). |
 | `SetShapeMaterial` | Journal finite signed friction/bounce using the existing rough/absorbent convention. |
 | `SetSleeping`, `SetCanSleep`, `GetCanSleep`, `SetSleepSettings`, `GetSleepSettings` | Device dynamic sleep policy, ordered explicit sleep/wake and connected automatic sleep; see [resident sleep](../components/gpu-resident-sleep.md). |
 | `SetCCDMode`, `GetCCDMode` | Internal Disabled/CastRay/CastShape policy with independent GPU swept bounds, contact intervals and no CPU trajectory mirror; see [CCD](../components/gpu-resident-ccd.md). |
@@ -53,7 +55,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `SetShapePose`, `SetShapeFilter` | Coalesce unit-scale local placement and 32-bit layer/mask/sensor edits. |
 | `FindPairs` | Flush authored edits without advancing time; derive bounds from device poses, refit/sort the device tree and retain complete canonical shape pairs on GPU. Return only count/error status. An optional nonnegative scene-unit margin expands both bounds by half the margin. Reuse unchanged results; grow/retry an immutable batch on overflow. |
 | `ReadPairs`, `ReadShapeBounds` | Explicit diagnostic read into caller-owned pair storage or one nullable bound. Pair order is unspecified; generations and store identity are retained. |
-| `FindContacts` | Derive complete contact points from resident pairs, shapes and bodies. Retain normal, signed separation, local anchors and features on GPU; return only count/error. Physical contacts use the optional margin, sensors require exact overlap. Output capacity recovery repeats no integration. |
+| `FindContacts` | Derive complete contact points from resident pairs, shapes and bodies. Retain normal, signed separation, local anchors and features on GPU; return only count/error. Physical contacts use the optional margin and latched one-way decisions, sensors require exact overlap. Accepted and rejected one-way piece episodes retain separate device history, published only after complete capacity recovery. Output capacity recovery repeats no integration. |
 | `ReadContacts` | Explicitly copy 64-byte point records into caller-owned storage. Point order is unspecified; records contain local store slot/generation identities, not portable network IDs. |
 | `Dispose` | Release buffers, pipeline and device reference on the owner thread, including after failure. |
 

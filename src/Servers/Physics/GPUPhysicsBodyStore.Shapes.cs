@@ -27,6 +27,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal int NextFree, PreviousOnBody, NextOnBody;
         internal bool Alive, Sensor, Dirty;
         internal float Friction, Bounce;
+        internal OneWaySettings OneWay;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct GeometryData
@@ -50,6 +51,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Generation, Layer, Mask, Flags;
         internal Vector2 Material;
         internal uint Revision, Padding;
+        internal Float4 OneWay;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct ShapeEdit
@@ -102,6 +104,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ref var slot = ref _shapeSlots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true;
         slot.Friction = friction; slot.Bounce = bounce;
+        slot.OneWay = new(false, Vector2.Down, 1);
         slot.Body = body; slot.Pose = pose; slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor;
         slot.Geometry = RetainGeometry(geometry);
         slot.PreviousOnBody = -1; slot.NextOnBody = _slots[body.Index].FirstShape;
@@ -115,6 +118,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         Validate(shape);
         ref var slot = ref _shapeSlots[shape.Index];
+        if (slot.OneWay.Enabled) _oneWayShapeCount--;
         if (slot.PreviousOnBody >= 0) _shapeSlots[slot.PreviousOnBody].NextOnBody = slot.NextOnBody;
         else _slots[slot.Body.Index].FirstShape = slot.NextOnBody;
         if (slot.NextOnBody >= 0) _shapeSlots[slot.NextOnBody].PreviousOnBody = slot.PreviousOnBody;
@@ -299,7 +303,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     Generation = slot.Generation,
                     Layer = slot.Layer,
                     Mask = slot.Mask,
-                    Flags = 1u | (slot.Sensor ? 2u : 0u),
+                    Flags = 1u | (slot.Sensor ? 2u : 0u) | (slot.OneWay.Enabled ? 4u : 0u),
+                    OneWay = new(slot.OneWay.Direction.X, slot.OneWay.Direction.Y, slot.OneWay.Margin, 0),
                     Material = new(slot.Friction, slot.Bounce),
                     Revision = slot.Revision
                 };
