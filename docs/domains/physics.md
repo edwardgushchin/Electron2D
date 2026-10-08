@@ -103,6 +103,10 @@ alongside the retained CPU compatibility backend. The internal compute host
 currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists, compact publication and complete host validation using independent packed CPU flags and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, collision-batch constraint coloring, fused body-pose/sleep-eligibility/fast-body finalization, and contact/revolute/wheel preparation and solving; the public world still
 selects CPU. [The implementation status](../components/gpu-physics.md) separates
 these executing stages from the required full GPU world and startup fallback.
+The independent GPUPhysicsBodyStore now has a [contact response path](../components/gpu-contact-solver.md)
+with persistent history, compact contact Jacobians, separate iterated impulses
+and specialized update/gather kernels. Its stability/allocation/population checks
+and opt-in fenced diagnostics do not establish public-backend or window-FPS acceptance.
 
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape RID/resource selection, live edits, swept overlap, safe/unsafe motion, manifold contact pairs, rest velocity, compound and hollow geometry, filters, off-owner rejection and warmed unchanged casts/rest queries without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.
 

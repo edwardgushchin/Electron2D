@@ -11,6 +11,7 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyAngularAndSurfaceMotion();
         VerifyMaterials();
         VerifyRaysAndHistory();
+        VerifyIncidentLists();
         VerifyFailure();
         VerifyStack();
         VerifyResidency(64);
@@ -64,6 +65,16 @@ internal static class GPUPhysicsSolverStoreTests
         Near(result[0].Velocity.X, 5, 0.001f, "Offset normal impulse changes translation");
         Near(result[0].Velocity.Z, 1, 0.001f, "Offset normal impulse respects scene-unit inertia");
         Check(result[1].Position == new Vector2(1.8f, 5), "Static pose stays fixed.");
+        store.Remove(a); store.Remove(b);
+        using var tractionFloor = new RectangleShape { Size = new(200, 2) };
+        a = Add(store, velocity: new(10, 10), mass: 2, inertia: 1);
+        b = Add(store, new(0, 2), mode: Mode.Static);
+        store.AddShape(a, circle); store.AddShape(b, tractionFloor);
+        store.SolveContacts(1f / 60); store.Read([a, b], result);
+        Near(result[0].Velocity.X, 20f / 3, 0.001f, "Tangential impulse preserves rolling speed");
+        Near(result[0].Velocity.Y, 0, 0.001f, "Floor stops the disc's normal motion");
+        Near(result[0].Velocity.Z, 20f / 3, 0.001f, "Tangential Jacobian produces angular response");
+        Near(2 * result[0].Velocity.X + result[0].Velocity.Z, 20, 0.001f, "Angular momentum about the contact is conserved");
         store.Remove(a); store.Remove(b);
         using var disc = new CircleShape { Radius = 2 };
         using var floor = new RectangleShape { Size = new(200, 10) };
@@ -187,6 +198,33 @@ internal static class GPUPhysicsSolverStoreTests
             "Eight freely rotating offset boxes settle without falling through or unbounded energy.");
     }
 
+    private static void VerifyIncidentLists()
+    {
+        const int count = 257;
+        using var store = new GPUPhysicsBodyStore();
+        using var plank = new RectangleShape { Size = new(count * 2 + 4, 2) };
+        using var circle = new CircleShape { Radius = 1 };
+        var body = Add(store, new(count - 1, 0), mode: Mode.RigidLinear, mass: count);
+        store.AddShape(body, plank, friction: 0);
+        var supports = new GPUPhysicsBodyStore.ShapeHandle[count];
+        var result = new GPUPhysicsBodyStore.Snapshot[1];
+        for (var i = 0; i < count; i++)
+        {
+            supports[i] = store.AddShape(Add(store, new(i * 2, 2), mode: Mode.Static), circle, friction: 0);
+            if (i != 63 && i != count - 1) continue;
+            store.SetVelocity(body, new(0, 10), 0);
+            store.SolveContacts(1f / 60, iterations: 1, margin: 0);
+            store.Read([body], result);
+            Check(store.ContactPointCount == i + 1, "Every support contributes one point, including after device growth.");
+            Near(result[0].Velocity.Y, 0, 0.002f, "All incident impulses contribute to the locked plank in one damped iteration");
+        }
+        for (var i = 0; i < count; i++) store.SetShapeFilter(supports[i], 1, uint.MaxValue, true);
+        store.SetVelocity(body, new(0, 10), 0);
+        store.SolveContacts(1f / 60, margin: 0); store.Read([body], result);
+        Near(result[0].Velocity.Y, 10, 0.001f, "A now-empty incident list cannot apply stale physical or warm impulses from sensor points");
+        Console.WriteLine("Resident solver: 64/257 incident contacts, growth and all-sensor transition passed.");
+    }
+
     private static void VerifyResidency(int side)
     {
         const int warmup = 384, samples = 256;
@@ -206,6 +244,7 @@ internal static class GPUPhysicsSolverStoreTests
             store.AddShape(bodies[i], circle, friction: 0.3f);
         }
         for (var i = 0; i < warmup; i++) store.Simulate(1f / 120, new(0, 980), margin: 0.1f, allowedPenetration: 0.01f);
+        store.ProfileSolverPasses = Environment.GetEnvironmentVariable("ELECTRON2D_PROFILE_RESIDENT_PASSES") == "1";
         var times = new double[samples]; var upload = store.UploadBytes; var download = store.ReadbackBytes; var uniforms = store.UniformBytes; var wait = store.WaitMS;
         var shapes = store.ShapeUploadBytes; var geometry = store.GeometryUploadBytes; var solver = store.SolverMS; var solverWait = store.SolverWaitMS;
         var allocation = GC.GetAllocatedBytesForCurrentThread();
@@ -217,6 +256,8 @@ internal static class GPUPhysicsSolverStoreTests
         allocation = GC.GetAllocatedBytesForCurrentThread() - allocation;
         Check(allocation == 0 && store.ShapeUploadBytes == shapes && store.GeometryUploadBytes == geometry, "Warmed resident response allocates no managed bytes or authored-state traffic.");
         Array.Sort(times);
+        if (store.ProfileSolverPasses)
+            Console.WriteLine($"Diagnostic fenced passes (submission overhead included), ms/tick: clear={store.SolverPassMS[0] / samples:F4}, prepare={store.SolverPassMS[1] / samples:F4}, update={store.SolverPassMS[2] / samples:F4}, gather={store.SolverPassMS[3] / samples:F4}, save={store.SolverPassMS[4] / samples:F4}, hash clear={store.SolverPassMS[5] / samples:F4}, hash insert={store.SolverPassMS[6] / samples:F4}.");
         Console.WriteLine($"Resident contact response: {count} circles, gravity 980, 4 substeps, 16 iterations, {warmup} warmup/{samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, p99={times[(int)(samples * 0.99)]:F4} ms, wait={(store.WaitMS - wait) / samples:F4} ms, solver={(store.SolverMS - solver) / samples:F4} ms, solver wait={(store.SolverWaitMS - solverWait) / samples:F4} ms; {allocation} B/tick, upload={(store.UploadBytes - upload) / samples}, readback={(store.ReadbackBytes - download) / samples}, uniforms={(store.UniformBytes - uniforms) / samples} B/tick; {store.Driver}, {store.DeviceName}, .NET {Environment.Version}.");
         var snapshots = new GPUPhysicsBodyStore.Snapshot[count]; store.Read(bodies, snapshots);
         var energy = snapshots.Sum(p => 0.5 * ((double)p.Velocity.X * p.Velocity.X + (double)p.Velocity.Y * p.Velocity.Y) + 0.25 * p.Velocity.Z * p.Velocity.Z - 980.0 * p.Position.Y);

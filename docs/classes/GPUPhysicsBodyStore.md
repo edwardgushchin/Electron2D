@@ -11,7 +11,10 @@ Last updated: 2026-10-08
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
 [body kernel](../../src/Servers/Physics/Shaders/PhysicsResidentBodies.comp.glsl),
 [shape kernel](../../src/Servers/Physics/Shaders/PhysicsResidentShapes.comp.glsl),
-[contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl)
+[contact kernel](../../src/Servers/Physics/Shaders/PhysicsResidentContacts.comp.glsl),
+[constraint preparation/history](../../src/Servers/Physics/Shaders/PhysicsResidentSolve.comp.glsl),
+[impulse update](../../src/Servers/Physics/Shaders/PhysicsResidentUpdate.comp.glsl),
+[body gather](../../src/Servers/Physics/Shaders/PhysicsResidentGather.comp.glsl)
 **Component:** [Resident GPU body state](../components/gpu-resident-bodies.md)
 
 ## Responsibility
@@ -58,7 +61,12 @@ copies, and `WaitMS` the cumulative fence wait. These exclude driver protocol an
 native allocator overhead. GeometryUploadBytes and ShapeUploadBytes distinguish
 resource and attachment edits; BroadPhaseSubmissionCount and PairCapacityRetries
 expose query/recovery work. ContactPointCount, ContactSubmissionCount and
-ContactCapacityRetries report the narrow-phase boundary. See the component page for measured scope and limits.
+ContactCapacityRetries report the narrow-phase boundary. Solver coefficients use
+64-byte records of precomputed contact Jacobians; separate 32-byte records hold
+iterated impulses. Update/gather kernels bind only their own inputs/outputs.
+ProfileSolverPasses (default false) inserts diagnostic dispatch fences and records
+seven cumulative SolverPassMS values; it changes batching, and its times include
+submission overhead rather than isolated GPU execution. See the component page for measured scope and limits.
 
 ## Verification
 
@@ -87,7 +95,7 @@ impulses/material response and warm history now execute through the solver compo
 
 GPUPhysicsSolverStoreTests covers analytic momentum/energy/inertia, signed materials,
 stationary linear/angular surfaces, directed-ray response, history reuse/invalidation/
-growth, separate correction, failed-state rejection, a ten-second eight-box stack and
+growth, 64/257-point incident lists and all-sensor transitions, separate correction, failed-state rejection, a ten-second eight-box stack and
 complete gravity-loaded 4,096/65,536-circle populations. SolverSubmissionCount,
 WarmStartedPointCount, SolverMS and SolverWaitMS expose actual work; full backend,
 networking and window performance remain open.
