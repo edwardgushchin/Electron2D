@@ -13,6 +13,21 @@ open for final window/performance acceptance. Local evidence:
 `/tmp/electron2d-body-configuration-gpu-native-failure.log` and
 `/tmp/electron2d-body-configuration-gpu.log`.
 
+## Independent resident body foundation (2026-10-08)
+
+[GPUPhysicsBodyStore](../classes/GPUPhysicsBodyStore.md) now owns device body state
+without a Box2D world. Sparse edits, generation-safe reuse, GPU-to-GPU growth,
+force/gravity/damping integration and selected state reads execute. The
+[body-stage report](gpu-resident-bodies.md) records buffers, traffic, waits and
+65,536-body verification. Contacts, joints, sleep, CCD and public selection are
+not yet connected to that store; historical full-stage results below still refer
+to the older Box2D-hosted experiment.
+
+The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only
+startup now uses DisplayServer's existing GTK/Wayland preparation. This resolves a
+new reproduced initialization hang under mismatched inherited GDK settings; the
+older impossible-allocation observation above still lacks causal stack evidence.
+
 ## Architecture boundary after the contract audit
 
 The [2026-10-08 audit](physics-contract-audit.md) distinguishes the current

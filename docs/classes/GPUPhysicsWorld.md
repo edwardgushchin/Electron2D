@@ -2,6 +2,10 @@
 
 Last updated: 2026-10-08
 
+Device and offline pipeline ownership now use [GPUPhysicsDevice](GPUPhysicsDevice.md).
+The separate [GPUPhysicsBodyStore](GPUPhysicsBodyStore.md) develops resident body
+state without this class's Box2D stage contexts; it is not yet a complete world.
+
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
 **Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Finalization.cs](../../src/Servers/Physics/GPUPhysicsWorld.Finalization.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.IslandResidency.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandResidency.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)

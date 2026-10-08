@@ -21,7 +21,9 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline, _islandGraphPipeline, _constraintColorPipeline, _finalizationPipeline;
+    private readonly GPUPhysicsDevice _context;
+    private RenderHandle _device => _context.Handle;
+    private readonly RenderHandle _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline, _islandGraphPipeline, _constraintColorPipeline, _finalizationPipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -31,14 +33,12 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 
     internal GPUPhysicsWorld()
     {
-        if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null, islandGraph = null, constraintColor = null, finalization = null;
+        GPUPhysicsDevice? context = null;
+        RenderHandle? integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null, islandGraph = null, constraintColor = null, finalization = null;
         try
         {
-            device = RenderingServer.Service?.RetainComputeDevice() ??
-                new RenderHandle(SDL.CreateGPUDevice(ShaderCompiler.GetFormats(), false, null), SDL.DestroyGPUDevice);
-            _device = device;
-            Driver = SDL.GetGPUDeviceDriver(Device) ?? "unknown";
+            _context = context = new GPUPhysicsDevice();
+            Driver = _context.Driver;
             _integrate = integrate = CreatePipeline("PhysicsIntegrate.comp.spv");
             _solve = solve = CreatePipeline("PhysicsSolve.comp.spv");
             _collide = collide = CreatePipeline("PhysicsCollide.comp.spv");
@@ -89,7 +89,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         }
         catch
         {
-            finalization?.Dispose(); constraintColor?.Dispose(); islandGraph?.Dispose(); islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            finalization?.Dispose(); constraintColor?.Dispose(); islandGraph?.Dispose(); islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); context?.Dispose();
             throw;
         }
     }
@@ -104,13 +104,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU physics requires the world owner thread.");
     }
 
-    private RenderHandle CreatePipeline(string name)
-    {
-        using var source = typeof(GPUPhysicsWorld).Assembly.GetManifestResourceStream("Electron2D.PhysicsShaders." + name)
-            ?? throw new InvalidOperationException("The physics shader is missing: " + name);
-        using var bytes = new MemoryStream(); source.CopyTo(bytes);
-        return new(ShaderCompiler.CreateComputePipeline(Device, bytes.ToArray()), handle => SDL.ReleaseGPUComputePipeline(Device, handle), _device);
-    }
+    private RenderHandle CreatePipeline(string name) => _context.CreatePipeline(name);
 
     internal void Integrate(B2SolverStageType stage, B2StepContext context)
     {
@@ -240,7 +234,6 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         _historyStorage.Dispose(); _matchedStorage.Dispose();
         _geometryStorage.Dispose(); _pairStorage.Dispose(); _manifoldStorage.Dispose(); _collide.Dispose();
         _contactInputStorage.Dispose(); _fallbackManifoldStorage.Dispose();
-        _bodyStorage.Dispose(); _contactStorage.Dispose(); _jointStorage.Dispose(); _solve.Dispose(); _integrate.Dispose(); _device.Dispose();
-        SDL.QuitSubSystem(SDL.InitFlags.Video);
+        _bodyStorage.Dispose(); _contactStorage.Dispose(); _jointStorage.Dispose(); _solve.Dispose(); _integrate.Dispose(); _context.Dispose();
     }
 }

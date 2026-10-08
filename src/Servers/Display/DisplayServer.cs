@@ -115,14 +115,8 @@ public sealed partial class DisplayServer : ElectronObject
         {
             if (_instance is not null)
                 throw new InvalidOperationException("A display server is already open.");
-            var previousGdkBackend = Environment.GetEnvironmentVariable("GDK_BACKEND");
-            var videoDriver = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
-            var correctedGdkBackend = OperatingSystem.IsLinux() && previousGdkBackend == "x11" &&
-                (videoDriver == "wayland" || videoDriver is null &&
-                    Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland" &&
-                    !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")));
-            if (correctedGdkBackend)
-                SetGDKBackend("wayland");
+            var previousGdkBackend = PrepareVideoEnvironment();
+            var correctedGdkBackend = previousGdkBackend is not null;
             var videoInitialized = false;
             var gamepadInitialized = false;
             var previousGamepadBackgroundHint = SDL.GetHint(SDL.Hints.JoystickAllowBackgroundEvents);
@@ -216,6 +210,22 @@ public sealed partial class DisplayServer : ElectronObject
                 throw;
             }
         }
+    }
+
+    internal static string? PrepareVideoEnvironment()
+    {
+        var previous = Environment.GetEnvironmentVariable("GDK_BACKEND");
+        var driver = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER");
+        if (!OperatingSystem.IsLinux() || previous != "x11" ||
+            !(driver == "wayland" || driver is null && Environment.GetEnvironmentVariable("XDG_SESSION_TYPE") == "wayland" &&
+                !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("WAYLAND_DISPLAY")))) return null;
+        SetGDKBackend("wayland");
+        return previous;
+    }
+
+    internal static void RestoreVideoEnvironment(string? previous)
+    {
+        if (previous is not null) SetGDKBackend(previous);
     }
 
     private static void SetGDKBackend(string value)

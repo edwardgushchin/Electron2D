@@ -2528,7 +2528,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and six existing shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests)."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body storage/integration now executes internally, but public GPU-world selection and its complete physical contract remain open."
     },
     {
       "godot": [

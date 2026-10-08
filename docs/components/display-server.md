@@ -26,6 +26,12 @@ Vendored SDL3-CS source supplies internal managed native bindings in `Electron2D
 
 On GNOME Wayland, native-looking client-side title bars require libdecor with its GTK plugin and a GTK backend matching the selected video driver. An inherited `GDK_BACKEND=x11` made `libdecor-gtk` fail initialization and fall back to Cairo. `Open` now updates both native and managed environment values before SDL video initialization and restores the inherited value if startup fails or selects another driver; other driver/backend combinations are unchanged. A process-local GTK style provider extends the selected title-bar background through its border box; it is removed with the window. In a visible Stillglass-Dark session, this removed a transparent one-pixel seam while keeping the themed controls. GTK is optional; without it libdecor may use its fallback decoration.
 
+GPUPhysicsDevice now reuses this same process-local environment preparation before
+compute-only SDL video initialization. This avoids bypassing the display startup
+policy when no window is open; GPU device failure and another selected driver
+restore the inherited setting. Resident-store and full GPU lifetime tests cover
+this route; repeated GTK initialization can still emit a nonfatal locale warning.
+
 The native handle query lives in [`DisplayServer.Windows.cs`](../../src/Servers/Display/DisplayServer.Windows.cs). It reads SDL window properties from the [SDL window owned by `DisplayServer`](../../src/Servers/Display/DisplayServer.cs): an X11 `Display*` or Wayland `wl_display*` for `DisplayHandle`, and an X11 window ID, Wayland `wl_surface*`, Win32 `HWND`, or Cocoa `NSWindow*` for `WindowHandle`.
 
 Taskbar progress setters reject Wayland because this host has no verified desktop notification path; SDL's stored success state is insufficient. Other native video drivers delegate to SDL. Visible taskbar progress needs a stable application ID, installed desktop entry, supporting desktop notification consumer, and native acceptance check in a separately approved Linux desktop integration after the application host owns those resources.

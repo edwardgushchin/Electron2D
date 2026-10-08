@@ -1309,6 +1309,12 @@ Internal SDL3-CS source is compiled into `Electron2D.dll`; the Linux native SDL3
 
 On GNOME Wayland, libdecor supplies the title bar. The verified session inherited `GDK_BACKEND=x11`, causing `libdecor-gtk` initialization to fail and libdecor to use its Cairo style. `Open` selects the Wayland GTK backend before SDL initializes and restores the inherited value if startup fails or SDL selects another driver. With GTK 3 available, it installs and later removes a process-local style provider that fills the default title bar's border box. The visible Stillglass-Dark window retained its themed, focus-colored controls without the transparent one-pixel seam. The desktop theme is never changed.
 
+GPUPhysicsDevice now reuses this same process-local environment preparation before
+compute-only SDL video initialization. This avoids bypassing the display startup
+policy when no window is open; GPU device failure and another selected driver
+restore the inherited setting. Resident-store and full GPU lifetime tests cover
+this route; repeated GTK initialization can still emit a nonfatal locale warning.
+
 ## Verification
 
 The Wayland native smoke accepted a 256-pixel-wide cursor with a hotspot on its last pixel, installed a 2×2 custom cursor with a fractional hotspot, retained it after the source image was disposed, rejected a nonfinite hotspot and a 257-pixel-wide image without replacing the cursor, reused the custom shape after a shape switch, and restored the system cursor when cleared. The test observes SDL's active native cursor identity; it does not inspect the compositor's rendered pixels or hotspot location.
