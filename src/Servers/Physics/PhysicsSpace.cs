@@ -57,6 +57,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         gpu.EnableIslandSplitting(world);
         gpu.EnableIslandChanges(world);
         gpu.EnableConstraintColors(world);
+        gpu.EnableBodyFinalization(world);
         return gpu;
     }
     private Vector2 _defaultGravity;

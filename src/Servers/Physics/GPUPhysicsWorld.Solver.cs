@@ -43,7 +43,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
 
     internal void Solve(B2StepContext context)
     {
-        EnsureOwner();
+        EnsureOwner(); _pendingFinalization = null; context.finalizedBodies = null!;
         var profileStart = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         var count = context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count;
         ResidentContactCount = UploadedManifoldCount = 0; ContactUploadBytes = 0;
@@ -53,6 +53,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
         // Follow the world's prepared storage budget rather than its temporarily sleeping population.
         _bodyStorage.Reserve(Math.Max(count, context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.capacity));
         PackBodies(context, count);
+        var finalize = ReferenceEquals(_bodyFinalizationWorld, context.world) && context.world.finalizeBodyStates == _consumeFinalization;
+        if (finalize) PackFinalization(context, count);
         var contactCount = 0; var jointCount = 0;
         for (var color = 0; color < B2Constants.B2_GRAPH_COLOR_COUNT; color++)
         {
@@ -79,6 +81,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (copy == 0) throw Failure("begin constraint upload");
             _bodyStorage.Upload(copy, count); _contactInputStorage.Upload(copy, contactCount); _jointStorage.Upload(copy, jointCount);
             _fallbackManifoldStorage.Upload(copy, UploadedManifoldCount);
+            if (finalize) _finalizationInputs.Upload(copy, count);
             SDL.EndGPUCopyPass(copy);
             var settings = new SolverStep
             {
@@ -100,9 +103,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     ExecuteConstraints(command, ref settings, context, 4, 8, count);
             }
             ExecuteConstraints(command, ref settings, context, 5, -1, count);
+            if (finalize) RecordFinalization(command, context, count);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin solved-state readback");
             _bodyStorage.Download(copy, count); _contactStorage.Download(copy, contactCount); _jointStorage.Download(copy, jointCount);
+            if (finalize) _finalizationResults.Download(copy, count);
             SDL.EndGPUCopyPass(copy);
             var profileRecorded = PhysicsSpace.ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             var submitted = command; command = 0; fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
@@ -118,7 +123,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 if (!Finite(_jointStorage.Data[i].Impulses) || !Finite(_jointStorage.Data[i].Limits) || !Finite(_jointStorage.Data[i].FrameA) ||
                     !Finite(_jointStorage.Data[i].FrameB) || !Finite(_jointStorage.Data[i].Geometry) || !Finite(_jointStorage.Data[i].Soft) || !Finite(_jointStorage.Data[i].Spring))
                     throw new InvalidOperationException("GPU joint preparation or solving returned nonfinite state.");
+            if (finalize) { _finalizationResults.Read(count); ValidateFinalization(context, count); }
             PublishBodies(context, count); PublishConstraints(context);
+            if (finalize)
+            {
+                _pendingFinalization = context; _finalizationCount = count; BodyFinalizationBatchCount++;
+                BodyFinalizationTransferBytes += (long)count * (sizeof(FinalizationInput) + sizeof(B2StepContext.BodyFinalization));
+            }
             if (PhysicsSpace.ProfilingEnabled)
             {
                 SolverProfileMS[0] = System.Diagnostics.Stopwatch.GetElapsedTime(profileStart, profilePacked).TotalMilliseconds;

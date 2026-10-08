@@ -10,6 +10,20 @@ namespace Box2D.NET
     // Context for a time step. Recreated each time step.
     internal class B2StepContext // TODO: @ikpil, check struct or class
     {
+        [System.Runtime.InteropServices.StructLayout(System.Runtime.InteropServices.LayoutKind.Sequential)]
+        internal struct BodyFinalization
+        {
+            internal B2Vec2 linearVelocity;
+            internal float angularVelocity, sleepTime;
+            internal B2Vec2 center;
+            internal B2Rot rotation;
+            internal B2Vec2 position;
+            internal uint bodyFlags, simFlags;
+            internal int bodyId;
+            internal uint generation, state, padding;
+        }
+        internal BodyFinalization[] finalizedBodies;
+
         internal void Reset()
         {
             dt = inv_dt = h = inv_h = 0;
@@ -29,6 +43,7 @@ namespace Box2D.NET
             generatedManifolds = null;
             generatedContactsUpdated = false;
             generatedManifoldOwner = null;
+            finalizedBodies = null;
             simdContactConstraints = default;
             activeColorCount = workerCount = 0;
             stages = default;

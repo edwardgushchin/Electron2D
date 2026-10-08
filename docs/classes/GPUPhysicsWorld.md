@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.IslandResidency.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandResidency.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Finalization.cs](../../src/Servers/Physics/GPUPhysicsWorld.Finalization.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.IslandResidency.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandResidency.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
@@ -237,6 +237,40 @@ publication and final bitset comparison are outside those phase timers. Current
 bitsets upload each batch; authoring/sleep transfers and GPU coloring parallelism
 remain open work.
 
+`EnableBodyFinalization` binds one consumption callback to the GPU solver's world.
+When that callback still belongs to this host, `Solve` packs 64-byte body inputs
+(initial center/rotation, local center/extents, sleep thresholds/timers and integer
+identity/flags) alongside ordinary solver inputs. After restitution, a parallel
+pass reads resident solved velocities/deltas and writes 64-byte final records.
+It enforces axis locks, normalizes the absolute rotation, computes origin/center,
+updates sleep time from velocity and weighted position correction, and classifies
+fast bodies, awake-island eligibility and pending-split requests. Flag carry/reset
+matches the CPU path. Root/reciprocal rounding uses residual comparisons against
+adjacent-float midpoint boundaries; the earlier Newton-only helper can choose the
+wrong neighbor when normalizing a near-unit rotation. This correction is local to
+finalization and does not change other solver shaders. The pass shares the existing solver submission/fence; it
+neither reuploads solved bodies nor adds a synchronization point.
+
+The owner reads and validates all final records before publishing solved state.
+Checks include body identity/generation, finite fields, rotation normalization,
+flag transitions and sleep-status consistency. A one-use prepared-context guard
+exposes that array before ordinary finalization workers start. Workers import
+numeric results, clear deltas/forces, emit move records, continue CCD and update
+shape AABBs. Island awake/split reduction and sleeping-set transfer still run on
+CPU. The original numeric finalizer remains available to CPU worlds and the
+internal profile control. Step reset and the worker join's `finally` clear the
+borrowed result array; rebind, disposal and failures invalidate pending ownership.
+An absent/foreign/stale prepared result fails explicitly instead of replaying.
+
+`BodyFinalizationBatchCount` counts validated batches sharing successful solver
+submissions, `BodyFinalizationCount` counts bodies handed to the publication lane,
+and `BodyFinalizationTransferBytes` counts the additional 64-byte input/output
+records. Buffers follow the prepared body-storage capacity. The numeric oracle
+uses the real CPU finalizer on identical solved data; integrated checks cover
+move events, offset centers, sleep/locks, bullets/non-bullet CCD continuation,
+invalid results, no-replay and zero warmed allocation. These establish body-level
+numeric finalization, not GPU island sleeping, GPU CCD or GPU shape bounds.
+
 `EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
 islands upload ordered body/contact/joint adjacency. GPU minimum-seed label
 propagation with pointer shortening finds components, excluding static bodies
@@ -252,7 +286,7 @@ order, all lists are imported, and the old base ID is freed last. CPU no longer
 performs connectivity discovery for this path. Scheduled splits run on the owner
 instead of a solver worker; explicit sleep requests use the same callback. Clean
 or sleeping islands keep their existing no-op behavior. Authoring island merges, constraint
-coloring, sleep decisions/transfer and query mirrors remain CPU work. Body/edge
+coloring, island sleep decisions/transfer and query mirrors remain CPU work. Body/edge
 inputs occupy 16/32 bytes; member/group/status results use 16/48/16 bytes and
 uniforms 32 bytes. `SplitIslandCount`, `SplitComponentCount` and
 `SplitConvergenceBatches` count executed splits, resulting components and submissions.

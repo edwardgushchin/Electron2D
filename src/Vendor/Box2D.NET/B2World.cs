@@ -14,6 +14,7 @@ namespace Box2D.NET
     {
         internal System.Action<B2SolverStageType, B2StepContext> integrateBodyStage;
         internal System.Action<B2StepContext> solveConstraints;
+        internal System.Action<B2StepContext> finalizeBodyStates;
         internal System.Action<B2StepContext, int> generateManifolds;
         internal System.Action<B2World> findBroadPhasePairs;
         internal System.Action<B2World> createBroadPhaseContacts;
@@ -186,6 +187,7 @@ namespace Box2D.NET
             reusableStepContext.Reset();
             integrateBodyStage = null;
             solveConstraints = null;
+            finalizeBodyStates = null;
             generateManifolds = null;
             findBroadPhasePairs = null;
             createBroadPhaseContacts = null;

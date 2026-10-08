@@ -9,6 +9,7 @@ internal static partial class GPUPhysicsTests
         VerifyBroadPhase(gpu);
         foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
         VerifyConstraints(gpu);
+        VerifyBodyFinalization();
         VerifyManifolds(gpu);
         VerifyGeometryResidency();
         VerifyContactUpdates();
@@ -28,6 +29,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(true, splitFailure: true);
         VerifyWorld(true, islandFailure: true);
         VerifyWorld(true, colorFailure: true);
+        VerifyWorld(true, finalizationFailure: true);
         VerifyOwnedWorldFailure();
         VerifyDeviceLifetime("gpu");
         VerifyDeviceLifetime("compatibility");
@@ -113,7 +115,7 @@ internal static partial class GPUPhysicsTests
             throw new InvalidOperationException($"GPU integration differs: CPU {expected}, GPU {actual}.");
     }
 
-    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false, bool removalFailure = false, bool splitFailure = false, bool islandFailure = false, bool colorFailure = false)
+    private static void VerifyWorld(bool solver, bool collisionFailure = false, bool pairFailure = false, bool creationFailure = false, bool removalFailure = false, bool splitFailure = false, bool islandFailure = false, bool colorFailure = false, bool finalizationFailure = false)
     {
         var cpuSpace = PhysicsServer.SpaceCreate(); var gpuSpace = PhysicsServer.SpaceCreate();
         var circle = PhysicsServer.CircleShapeCreate(); var rectangle = PhysicsServer.RectangleShapeCreate();
@@ -147,7 +149,17 @@ internal static partial class GPUPhysicsTests
             using var query = new PhysicsPointQueryParameters { Position = view.Transform.Origin };
             if (!PhysicsServer.SpaceGetDirectState(gpuSpace).IntersectPoint(query).Any(hit => hit.ColliderRID == gpuBody))
                 throw new InvalidOperationException("GPU-published body poses must reach direct queries.");
-            if (colorFailure)
+            if (finalizationFailure)
+            {
+                var native = B2Worlds.b2GetWorldFromId(world.WorldID); var consume = native.finalizeBodyStates;
+                native.solveConstraints = context =>
+                {
+                    var before = gpu.BodyFinalizationBatchCount; gpu.Solve(context);
+                    if (gpu.BodyFinalizationBatchCount == before) throw new Exception("The failure fixture must prepare GPU body finalization.");
+                    native.finalizeBodyStates = prepared => { consume(prepared); throw new IOException("injected GPU finalization publication failure"); };
+                };
+            }
+            else if (colorFailure)
             {
                 var native = B2Worlds.b2GetWorldFromId(world.WorldID);
                 for (var i = 0; i < native.contacts.count; i++)

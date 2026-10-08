@@ -385,7 +385,7 @@ remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
 move authoring constraint coloring and island changes to GPU, remove full CPU graph-validation scans and the separate split transfers, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
-force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
+force setup, island sleep/set transfer and CCD/shape finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
 Constant linear/angular surface velocity is shared with the CPU constraint path.
@@ -1205,3 +1205,67 @@ The final SPIR-V rebuild matches SHA-256
 `3e7aa26d09a41a77b196002df95b3d7026e1315f9d8f0111f4dcd4d74ddfb348`.
 Sleeping-wall/native-window/cross-platform/native-allocation limits still apply;
 public backend selection and full GPU-world completion remain open.
+
+## Fused numeric body finalization (2026-10-08)
+
+GPU solve now includes a parallel body-finalization pass after restitution in the
+same command submission. It reads resident solved velocities/deltas, enforces axis
+locks, normalizes absolute rotation, computes center/origin, updates sleep time
+using velocity and weighted position correction, and emits fast/awake/split flags.
+Each body adds a 64-byte input and a 64-byte result. There is no extra solver fence
+or solved-body upload. Input/result storage follows prepared body capacity.
+
+All records are validated before solved-state publication. The owner then lends
+the array to the ordinary finalization workers for one step. Workers import numeric
+results and retain move-event ordering, delta/force clearing, CCD continuation,
+shape bounds and island/set publication. A `finally` after worker completion and
+step reset clear the borrowed array. Rebind/dispose invalidate pending ownership;
+failed intervals do not replay on CPU. CPU worlds retain the same numeric rules.
+Island sleep reduction/transfer, actual CCD and shape-AABB computation remain CPU.
+
+The new numeric oracle runs the existing CPU finalizer on identical solved states
+for 0/1/63/64/65/257/4,097 bodies. It checks exact pose equality, locks, offset centers,
+rotation, sleep timers/flags and position-correction wakeups. Thirty-two warmup and
+sixteen measured sleep/wake steps allocate zero managed bytes across all threads.
+Separate live worlds compare fast bodies, bullets, wall impacts and ordered move
+events. Invalid generation, nonfinite output, status and rotation fail before pose
+publication. Stale/reset/duplicate consumption, callback ownership and an injected
+failure before worker publication are checked as well.
+
+The first candidate passed tolerance-based checks but failed maximum-Smash state
+equivalence: GPU hash
+`3886202ECE045868C5FF4A5A994E3603C6386D3D9C0858828DE18631781F2A49`
+versus the existing CPU-control hash below. GPU means were 177.40/178.22 ms and CPU
+controls 169.12/171.93 ms. Those runs are retained as failed equivalence evidence
+under ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-body-finalization-{a,b}.json`.
+Strengthening the oracle located an adjacent-float rounding discrepancy in near-unit
+rotation normalization. Newton correction alone can choose the wrong root neighbor
+at a midpoint. Finalization now compares the FMA residual with adjacent-root
+midpoint-square boundaries and corrects reciprocal rounding too. This correction
+uses float/uint operations locally; other solver shaders are unchanged.
+
+Final sequential Linux/Vulkan runs repeat the 65,537-body headless impact workload
+with 32 warmup and 64 measured steps in GPU A/CPU A/CPU B/GPU B order. The control
+sets `ELECTRON2D_SANDBOX_PROFILE_CPU_FINALIZATION=1`; all other GPU stages stay on.
+No build, test or formatter runs concurrently with these measurements.
+
+| Numeric finalization | Whole-step mean | p95 | Remaining CPU transform phase | Solver submissions | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| GPU A | 175.77 ms | 252.68 ms | 1.661 ms | 64 | 0 / 0 |
+| CPU A | 177.30 ms | 245.03 ms | 1.660 ms | 64 | 0 / 0 |
+| CPU B | 174.61 ms | 241.82 ms | 1.669 ms | 64 | 0 / 0 |
+| GPU B | 179.13 ms | 254.57 ms | 1.644 ms | 64 | 0 / 0 |
+
+Both GPU intervals finalize 1,459,456 bodies in 64 existing solver submissions,
+adding 186,810,368 input/result transfer bytes. Solver packing averages 4.38/4.36 ms
+versus 3.51/3.52 ms in controls, and readback/publication 5.18/5.14 versus 4.84/4.79 ms.
+All four final hashes match
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-body-finalization-rounded-{a,b}.json`.
+The final SPIR-V rebuild matches SHA-256
+`8d621f206159d24c48fad8d3640e8f103152e807d5eed0db126c67b0171ef432`.
+
+The numerical transfer is verified; these timings do not establish an application
+speedup. Shape bounds, CCD and publication still dominate the remaining CPU
+transform phase. Native allocation accounting, sustained all-awake/native-window
+FPS, foreign devices and full GPU-world completion remain separate requirements.

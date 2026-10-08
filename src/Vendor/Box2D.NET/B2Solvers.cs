@@ -703,112 +703,81 @@ namespace Box2D.NET
                 B2BodyState state = states[simIndex];
                 B2BodySim sim = sims[simIndex];
 
-                if (0 != (state.flags & (uint)B2BodyFlags.b2_lockLinearX))
+                B2Body body = bodies[sim.bodyId];
+                B2Island island = b2Array_Get(ref world.islands, body.islandId);
+                bool isFast, keepAwake, wantsSplit;
+                if (stepContext.finalizedBodies != null)
                 {
-                    state.linearVelocity.X = 0.0f;
+                    ref readonly var result = ref stepContext.finalizedBodies[simIndex];
+                    state.linearVelocity = result.linearVelocity;
+                    state.angularVelocity = result.angularVelocity;
+                    sim.center = result.center;
+                    sim.transform = new B2Transform(result.position, result.rotation);
+                    body.sleepTime = result.sleepTime;
+                    body.flags = result.bodyFlags; sim.flags = result.simFlags;
+                    isFast = (result.state & 1) != 0;
+                    keepAwake = (result.state & 2) != 0;
+                    wantsSplit = (result.state & 4) != 0;
+                }
+                else
+                {
+                    if (0 != (state.flags & (uint)B2BodyFlags.b2_lockLinearX)) state.linearVelocity.X = 0.0f;
+                    if (0 != (state.flags & (uint)B2BodyFlags.b2_lockLinearY)) state.linearVelocity.Y = 0.0f;
+                    if (0 != (state.flags & (uint)B2BodyFlags.b2_lockAngularZ)) state.angularVelocity = 0.0f;
+                    B2Vec2 v = state.linearVelocity;
+                    float w = state.angularVelocity;
+                    B2_ASSERT(b2IsValidVec2(v)); B2_ASSERT(b2IsValidFloat(w));
+                    sim.center = b2Add(sim.center, state.deltaPosition);
+                    sim.transform.q = b2NormalizeRot(b2MulRot(state.deltaRotation, sim.transform.q));
+                    // Sleep observes velocity at the farthest point and weighted position correction.
+                    float maxVelocity = b2Length(v) + b2AbsFloat(w) * sim.maxExtent;
+                    float maxDeltaPosition = b2Length(state.deltaPosition) + b2AbsFloat(state.deltaRotation.s) * sim.maxExtent;
+                    float sleepVelocity = b2MaxFloat(maxVelocity, 0.5f * invTimeStep * maxDeltaPosition);
+                    sim.transform.p = b2Sub(sim.center, b2RotateVector(sim.transform.q, sim.localCenter));
+                    body.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
+                    body.flags |= (sim.flags & (uint)(B2BodyFlags.b2_isSpeedCapped | B2BodyFlags.b2_hadTimeOfImpact));
+                    sim.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
+                    bool sleepy = enableSleep && body.enableSleep && !(sleepVelocity > body.sleepThreshold);
+                    body.sleepTime = sleepy ? body.sleepTime + timeStep : 0.0f;
+                    isFast = !sleepy && body.type == B2BodyType.b2_dynamicBody && enableContinuous && maxVelocity * timeStep > 0.5f * sim.minExtent;
+                    if (isFast) sim.flags |= (uint)B2BodyFlags.b2_isFast;
+                    keepAwake = body.sleepTime < B2_TIME_TO_SLEEP;
+                    wantsSplit = island.constraintRemoveCount > 0;
                 }
 
-                if (0 != (state.flags & (uint)B2BodyFlags.b2_lockLinearY))
-                {
-                    state.linearVelocity.Y = 0.0f;
-                }
-
-                if (0 != (state.flags & (uint)B2BodyFlags.b2_lockAngularZ))
-                {
-                    state.angularVelocity = 0.0f;
-                }
-
-                B2Vec2 v = state.linearVelocity;
-                float w = state.angularVelocity;
-
-                B2_ASSERT(b2IsValidVec2(v));
-                B2_ASSERT(b2IsValidFloat(w));
-
-                sim.center = b2Add(sim.center, state.deltaPosition);
-                sim.transform.q = b2NormalizeRot(b2MulRot(state.deltaRotation, sim.transform.q));
-
-                // Use the velocity of the farthest point on the body to account for rotation.
-                float maxVelocity = b2Length(v) + b2AbsFloat(w) * sim.maxExtent;
-
-                // Sleep needs to observe position correction as well as true velocity.
-                float maxDeltaPosition = b2Length(state.deltaPosition) + b2AbsFloat(state.deltaRotation.s) * sim.maxExtent;
-
-                // Position correction is not as important for sleep as true velocity.
-                float positionSleepFactor = 0.5f;
-
-                float sleepVelocity = b2MaxFloat(maxVelocity, positionSleepFactor * invTimeStep * maxDeltaPosition);
-
-                // reset state deltas
                 state.deltaPosition = b2Vec2_zero;
                 state.deltaRotation = b2Rot_identity;
-
-                sim.transform.p = b2Sub(sim.center, b2RotateVector(sim.transform.q, sim.localCenter));
-
-                // cache miss here, however I need the shape list below
-                B2Body body = bodies[sim.bodyId];
                 body.bodyMoveIndex = simIndex;
                 moveEvents[simIndex].transform = sim.transform;
                 moveEvents[simIndex].bodyId = new B2BodyId(sim.bodyId + 1, worldId, body.generation);
                 moveEvents[simIndex].userData = body.userData;
                 moveEvents[simIndex].fellAsleep = false;
-
-                // reset applied force and torque
-                sim.force = b2Vec2_zero;
-                sim.torque = 0.0f;
-
-                // If you hit this then it means you deferred mass computation but never called b2Body_ApplyMassFromShapes
+                sim.force = b2Vec2_zero; sim.torque = 0.0f;
                 B2_ASSERT((body.flags & (uint)B2BodyFlags.b2_dirtyMass) == 0);
 
-                body.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
-                body.flags |= (sim.flags & (uint)(B2BodyFlags.b2_isSpeedCapped | B2BodyFlags.b2_hadTimeOfImpact));
-                sim.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
-
-                if (enableSleep == false || body.enableSleep == false || sleepVelocity > body.sleepThreshold)
+                if (isFast)
                 {
-                    // Body is not sleepy
-                    body.sleepTime = 0.0f;
-
-                    if (body.type == B2BodyType.b2_dynamicBody && enableContinuous && maxVelocity * timeStep > 0.5f * sim.minExtent)
+                    if (0 != (sim.flags & (uint)B2BodyFlags.b2_isBullet))
                     {
-                        // This flag is only retained for debug draw
-                        sim.flags |= (uint)B2BodyFlags.b2_isFast;
-
-                        // Store in fast array for the continuous collision stage
-                        // This is deterministic because the order of TOI sweeps doesn't matter
-                        if (0 != (sim.flags & (uint)B2BodyFlags.b2_isBullet))
-                        {
-                            int bulletIndex = b2AtomicFetchAddInt(ref stepContext.bulletBodyCount, 1);
-                            stepContext.bulletBodies[bulletIndex] = simIndex;
-                        }
-                        else
-                        {
-                            b2SolveContinuous(world, simIndex, taskContext);
-                        }
+                        int bulletIndex = b2AtomicFetchAddInt(ref stepContext.bulletBodyCount, 1);
+                        stepContext.bulletBodies[bulletIndex] = simIndex;
                     }
-                    else
-                    {
-                        // Body is safe to advance
-                        sim.center0 = sim.center;
-                        sim.rotation0 = sim.transform.q;
-                    }
+                    else b2SolveContinuous(world, simIndex, taskContext);
                 }
                 else
                 {
-                    // Body is safe to advance and is falling asleep
                     sim.center0 = sim.center;
                     sim.rotation0 = sim.transform.q;
-                    body.sleepTime += timeStep;
                 }
 
                 // Any single body in an island can keep it awake
-                B2Island island = b2Array_Get(ref world.islands, body.islandId);
-                if (body.sleepTime < B2_TIME_TO_SLEEP)
+                if (keepAwake)
                 {
                     // keep island awake
                     int islandIndex = island.localIndex;
                     b2SetBit(ref awakeIslandBitSet, islandIndex);
                 }
-                else if (island.constraintRemoveCount > 0)
+                else if (wantsSplit)
                 {
                     // body wants to sleep but its island needs splitting first
                     if (body.sleepTime > taskContext.splitSleepTime)
@@ -821,7 +790,7 @@ namespace Box2D.NET
 
                 // Update shapes AABBs
                 B2Transform transform = sim.transform;
-                bool isFast = (sim.flags & (uint)B2BodyFlags.b2_isFast) != 0;
+                isFast = (sim.flags & (uint)B2BodyFlags.b2_isFast) != 0;
                 int shapeId = body.headShapeId;
                 while (shapeId != B2_NULL_INDEX)
                 {
@@ -1947,14 +1916,16 @@ public enum b2SolverBlockType
                     taskContext.splitSleepTime = 0.0f;
                 }
 
-                // Finalize bodies. Must happen after the constraint solver and after island splitting.
-                object finalizeBodiesTask =
-                    world.enqueueTaskFcn(FinalizeBodiesTask, awakeBodyCount, 64, stepContext, world.userTaskContext);
-                world.taskCount += 1;
-                if (finalizeBodiesTask != null)
+                // The owner exposes a validated GPU result before worker publication.
+                try
                 {
-                    world.finishTaskFcn(finalizeBodiesTask, world.userTaskContext);
+                    world.finalizeBodyStates?.Invoke(stepContext);
+                    object finalizeBodiesTask =
+                        world.enqueueTaskFcn(FinalizeBodiesTask, awakeBodyCount, 64, stepContext, world.userTaskContext);
+                    world.taskCount += 1;
+                    if (finalizeBodiesTask != null) world.finishTaskFcn(finalizeBodiesTask, world.userTaskContext);
                 }
+                finally { stepContext.finalizedBodies = null; }
 
                 b2FreeArenaItem(world.arena, graphBlocks);
                 b2FreeArenaItem(world.arena, jointBlocks);

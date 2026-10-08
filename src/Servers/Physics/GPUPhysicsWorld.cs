@@ -5,7 +5,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-// GPU hierarchy/contact identity maintenance, integration, manifolds and constraints execute here;
+// GPU hierarchy/contact identity maintenance, integration, manifolds, constraints and body finalization execute here;
 // CPU query/CCD mirrors, user callbacks, mirror/event publication, authoring topology/coloring and solver-set transfers remain managed.
 internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 {
@@ -21,7 +21,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         internal Float4 Values, Control;
     }
 
-    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline, _islandGraphPipeline, _constraintColorPipeline;
+    private readonly RenderHandle _device, _integrate, _solve, _collide, _broadPhase, _pairTablePipeline, _treePipeline, _filterPipeline, _contactCreationPipeline, _islandSplitPipeline, _islandGraphPipeline, _constraintColorPipeline, _finalizationPipeline;
     private readonly Storage<Body> _bodyStorage;
     private Body[] _data => _bodyStorage.Data;
     private readonly int _owner = Environment.CurrentManagedThreadId;
@@ -32,7 +32,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
     internal GPUPhysicsWorld()
     {
         if (!SDL.InitSubSystem(SDL.InitFlags.Video)) throw Failure("initialize GPU video support");
-        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null, islandGraph = null, constraintColor = null;
+        RenderHandle? device = null, integrate = null, solve = null, collide = null, broadPhase = null, pairTable = null, tree = null, filters = null, creation = null, islands = null, islandGraph = null, constraintColor = null, finalization = null;
         try
         {
             device = RenderingServer.Service?.RetainComputeDevice() ??
@@ -68,6 +68,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _contactRemovalStorage = new(this);
             _destroyDisjointContact = PublishContactRemoval; _finishContactRemovals = FinishContactRemovals;
             _contactLinkStorage = new(this); _bodyLinkStorage = new(this); _linkUpdateStorage = new(this);
+            _finalizationPipeline = finalization = CreatePipeline("PhysicsFinalize.comp.spv");
+            _finalizationInputs = new(this); _finalizationResults = new(this); _consumeFinalization = ConsumeFinalization;
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _historyStorage = new(this); _matchedStorage = new(this);
@@ -87,7 +89,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         }
         catch
         {
-            constraintColor?.Dispose(); islandGraph?.Dispose(); islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
+            finalization?.Dispose(); constraintColor?.Dispose(); islandGraph?.Dispose(); islands?.Dispose(); creation?.Dispose(); filters?.Dispose(); tree?.Dispose(); pairTable?.Dispose(); broadPhase?.Dispose(); collide?.Dispose(); solve?.Dispose(); integrate?.Dispose(); device?.Dispose(); SDL.QuitSubSystem(SDL.InitFlags.Video);
             throw;
         }
     }
@@ -112,7 +114,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
 
     internal void Integrate(B2SolverStageType stage, B2StepContext context)
     {
-        EnsureOwner();
+        EnsureOwner(); _pendingFinalization = null;
         var count = context.world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodyStates.count;
         if (count == 0) return;
         if (stage is not (B2SolverStageType.b2_stageIntegrateVelocities or B2SolverStageType.b2_stageIntegratePositions))
@@ -213,6 +215,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachContactPool();
         DetachIslandChanges();
         DetachConstraintColors();
+        DetachBodyFinalization();
+        _finalizationInputs.Dispose(); _finalizationResults.Dispose(); _finalizationPipeline.Dispose();
         _colorChanges.Dispose(); _colorMasks.Dispose(); _colorResults.Dispose(); _constraintColorPipeline.Dispose();
         _graphIslands.Dispose(); _graphBodies.Dispose(); _graphContacts.Dispose(); _graphJoints.Dispose();
         _graphChanges.Dispose(); _graphStatus.Dispose(); _islandGraphPipeline.Dispose();
