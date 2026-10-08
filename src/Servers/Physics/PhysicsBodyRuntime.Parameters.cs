@@ -26,17 +26,23 @@ internal sealed partial class PhysicsBodyRuntime
 
     internal void ApplyResolvedFields(Box2D.NET.B2BodyId id, Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
     {
-        var scaledGravity = gravity * BodyGravityScale;
-        var resolvedLinear = BodyLinearDampMode == RigidBody.DampMode.Replace ? BodyLinearDamp : linearDamp + BodyLinearDamp;
-        var resolvedAngular = BodyAngularDampMode == RigidBody.DampMode.Replace ? BodyAngularDamp : angularDamp + BodyAngularDamp;
+        var rigid = Owners.Scene as RigidBody;
+        var gravityScale = rigid?.GravityScale ?? BodyGravityScale;
+        var ownLinear = rigid?.LinearDamp ?? BodyLinearDamp;
+        var ownAngular = rigid?.AngularDamp ?? BodyAngularDamp;
+        var linearMode = rigid?.LinearDampMode ?? BodyLinearDampMode;
+        var angularMode = rigid?.AngularDampMode ?? BodyAngularDampMode;
+        var scaledGravity = gravity * gravityScale;
+        var resolvedLinear = linearMode == RigidBody.DampMode.Replace ? ownLinear : linearDamp + ownLinear;
+        var resolvedAngular = angularMode == RigidBody.DampMode.Replace ? ownAngular : angularDamp + ownAngular;
         var linearFactor = MathF.Max(0, 1 - (float)delta * resolvedLinear);
         var angularFactor = MathF.Max(0, 1 - (float)delta * resolvedAngular);
-        var acceleration = scaledGravity - defaultGravity * BodyGravityScale;
+        var acceleration = scaledGravity - defaultGravity * gravityScale;
         if (!scaledGravity.IsFinite() || !acceleration.IsFinite() || !float.IsFinite(resolvedLinear) ||
             !float.IsFinite(resolvedAngular) || !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
             throw new InvalidOperationException("The resolved body field exceeds the finite simulation range.");
         var changed = FieldsInitialized && (Gravity != scaledGravity || LinearDamp != resolvedLinear || AngularDamp != resolvedAngular);
-        var active = b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody && !OmitForces && (changed || b2Body_IsAwake(id));
+        var active = b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody && !Omitted && (changed || b2Body_IsAwake(id));
         var linear = default(Box2D.NET.B2Vec2); var angular = 0f; var force = default(Box2D.NET.B2Vec2);
         if (active)
         {

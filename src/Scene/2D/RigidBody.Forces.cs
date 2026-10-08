@@ -1,6 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-
 namespace Electron2D;
 
 public partial class RigidBody
@@ -15,7 +12,6 @@ public partial class RigidBody
 
     internal void SetConstantTotals(Vector2 force, float torque) { _constantForce = force; _constantTorque = torque; }
 
-    private const float TorqueUnitScale = PhysicsSpace.MetersPerUnit * PhysicsSpace.MetersPerUnit;
     private Vector2 _constantForce;
     private float _constantTorque;
 
@@ -136,22 +132,22 @@ public partial class RigidBody
     {
         EnsureMutable();
         LinearVelocity = PhysicsBodyRuntime.ProjectAxisVelocity(LinearVelocity, axisVelocity);
-        if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
+        if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);
     }
 
     internal void ApplyConstantForces()
     {
         if (_constantForce == Vector2.Zero && _constantTorque == 0) return;
-        if (_freeze || PhysicsMadeStatic || !HasBackend || !b2Body_IsAwake(BackendID)) return;
+        if (_freeze || PhysicsMadeStatic || !HasBackend || !Backend.IsAwake) return;
         if (_constantForce != Vector2.Zero)
-            b2Body_ApplyForceToCenter(BackendID, Shape.ToBackend(_constantForce), wake: false);
+            Backend.ApplyCentralForce(_constantForce, wake: false);
         if (_constantTorque != 0)
-            b2Body_ApplyTorque(BackendID, _constantTorque * TorqueUnitScale, wake: false);
+            Backend.ApplyTorque(_constantTorque, wake: false);
     }
 
     private void WakeForPersistentForce()
     {
-        if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
+        if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);
         else _sleeping = false;
     }
 

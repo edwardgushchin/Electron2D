@@ -1,7 +1,4 @@
 using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
@@ -72,7 +69,7 @@ public abstract class PhysicsBody : CollisionObject
         try
         {
             RebuildShapes(); Runtime.RestoreSceneState();
-            if (configuration.Sleeping && configuration.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) b2Body_SetAwake(BackendID, false);
+            if (configuration.Sleeping && configuration.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(false);
             if (PhysicsMadeStatic) OnMadeStatic();
         }
         catch { DetachBackend(); throw; }
@@ -83,10 +80,7 @@ public abstract class PhysicsBody : CollisionObject
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
         if (Space is null) return;
         if (!Space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
-        {
-            var world = b2GetWorldFromId(Space.WorldID);
-            rigid.OnBackendAdvanced(world, b2GetBodyFullId(world, BackendID));
-        }
+            rigid.OnBackendAdvanced();
         Backend.Detach();
         _appliedShapeRevisions.Clear();
         _shapesDirty = true;
@@ -128,18 +122,12 @@ public abstract class PhysicsBody : CollisionObject
     }
 
     internal virtual void ApplySceneTransform(Vector2 position, float rotation) =>
-        b2Body_SetTransform(BackendID, Shape.ToBackend(position), b2MakeRot(rotation));
+        Backend.SetPose(position, rotation);
 
-    internal void CompleteBackend(B2World? world = null)
+    internal void CompleteBackend()
     {
         if (Space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
-        world ??= b2GetWorldFromId(Space.WorldID);
-        var backendBody = b2GetBodyFullId(world, BackendID);
-        var backendTransform = b2GetBodyTransformQuick(world, backendBody);
-        var position = backendTransform.p;
-        var rotation = backendTransform.q;
-        var scenePosition = new Vector2(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter);
-        var sceneRotation = b2Rot_GetAngle(rotation);
+        var (scenePosition, sceneRotation) = Backend.GetPose();
         _lastPosition = scenePosition;
         _lastRotation = sceneRotation;
         var current = GlobalTransform;
@@ -153,7 +141,8 @@ public abstract class PhysicsBody : CollisionObject
             _validatedRotation = sceneRotation;
             _preparedTransform = solverTransform;
         }
-        OnBackendAdvanced(world, backendBody);
+        // Pose notifications may write velocity; sample motion after those callbacks.
+        OnBackendAdvanced();
     }
 
     internal abstract PhysicsServer.BodyMode RequestedBodyMode { get; }
@@ -180,7 +169,7 @@ public abstract class PhysicsBody : CollisionObject
 
     internal virtual PhysicsBodyConfiguration CreateBodyConfiguration() => new(RequestedBodyMode);
     internal abstract bool MovesWithSimulation { get; }
-    internal virtual void OnBackendAdvanced(B2World world, B2Body body) { }
+    internal virtual void OnBackendAdvanced() { }
     internal virtual void OnShapesRebuilt() => PhysicsServer.Service.BodyRuntime(PhysicsRID).ApplyMassProfile();
     internal virtual Vector2 EffectiveGravity => Vector2.Zero;
 

@@ -1,6 +1,4 @@
 using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
@@ -62,11 +60,11 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         try
         {
             if (!IsArea && _mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear)
-                b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
+                _backend.SetLinearVelocity(_linearVelocity);
             RebuildShapes();
             if (!IsArea && _mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
                 PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _linearVelocity, _angularVelocity);
-            if (_sleeping) b2Body_SetAwake(BackendID, false);
+            if (_sleeping) _backend.SetAwake(false);
         }
         catch { DetachBackend(); throw; }
     }
@@ -172,11 +170,11 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             _angularVelocity = 0;
         if (Space is null) return;
         _backend.SetMotionMode(_mode);
-        b2Body_SetMotionLocks(BackendID, new(false, false, mode == PhysicsServer.BodyMode.RigidLinear));
-        b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
-        if (mode is PhysicsServer.BodyMode.Rigid) b2Body_SetAngularVelocity(BackendID, _angularVelocity);
+        _backend.SetRotationLocked(mode == PhysicsServer.BodyMode.RigidLinear);
+        _backend.SetLinearVelocity(_linearVelocity);
+        if (mode is PhysicsServer.BodyMode.Rigid) _backend.SetAngularVelocity(_angularVelocity);
         if (mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.RigidLinear)
-            b2Body_SetAngularVelocity(BackendID, 0);
+            _backend.SetAngularVelocity(0);
         RebuildShapes();
     }
 
@@ -192,15 +190,15 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         }
         _transform = transform;
         if (Space is not null)
-            b2Body_SetTransform(BackendID, Shape.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
+            _backend.SetPose(transform);
     }
 
     internal void PrepareMotion(double delta)
     {
         if (IsArea || _mode != PhysicsServer.BodyMode.Kinematic) return;
         if (_hasKinematicTarget)
-            b2Body_SetTargetTransform(BackendID, new(Shape.ToBackend(_kinematicTarget.Origin), b2MakeRot(_kinematicTarget.Rotation)), (float)delta, wake: true);
-        else { b2Body_SetLinearVelocity(BackendID, default); b2Body_SetAngularVelocity(BackendID, 0); }
+            _backend.SetTargetPose(_kinematicTarget, delta);
+        else _backend.ClearVelocity();
     }
 
     internal void CompleteMotion()
@@ -214,10 +212,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     {
         if (Space is null || IsArea || _mode == PhysicsServer.BodyMode.Static)
             return _transform;
-        var position = b2Body_GetPosition(BackendID);
-        var rotation = b2Rot_GetAngle(b2Body_GetRotation(BackendID));
-        return new(rotation, Vector2.One, 0,
-            new(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter));
+        var pose = _backend.GetPose();
+        return new(pose.Rotation, Vector2.One, 0, pose.Position);
     }
 
     internal void AppendMassGeometry(List<B2ShapeProxy> proxies)
@@ -227,8 +223,8 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     }
 
     internal Vector2 GetLinearVelocity() => Space is null || _mode == PhysicsServer.BodyMode.Static ? _linearVelocity :
-        new(b2Body_GetLinearVelocity(BackendID).X * PhysicsSpace.UnitsPerMeter, b2Body_GetLinearVelocity(BackendID).Y * PhysicsSpace.UnitsPerMeter);
-    internal float GetAngularVelocity() => Space is null || _mode == PhysicsServer.BodyMode.Static ? _angularVelocity : b2Body_GetAngularVelocity(BackendID);
+        _backend.LinearVelocity;
+    internal float GetAngularVelocity() => Space is null || _mode == PhysicsServer.BodyMode.Static ? _angularVelocity : _backend.AngularVelocity;
     internal void SetAngularVelocity(float velocity)
     {
         if (!float.IsFinite(velocity)) throw new ArgumentOutOfRangeException(nameof(velocity));
@@ -236,10 +232,10 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         {
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             {
-                b2Body_SetAngularVelocity(BackendID, 0);
+                _backend.SetAngularVelocity(0);
                 PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _linearVelocity, velocity);
             }
-            else b2Body_SetAngularVelocity(BackendID, velocity);
+            else _backend.SetAngularVelocity(velocity);
         }
         _angularVelocity = velocity;
     }
@@ -251,21 +247,21 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         {
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             {
-                b2Body_SetLinearVelocity(BackendID, default);
+                _backend.SetLinearVelocity(default);
                 PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, velocity, _angularVelocity);
             }
-            else b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(velocity));
+            else _backend.SetLinearVelocity(velocity);
         }
         _linearVelocity = velocity;
     }
 
-    internal bool GetSleeping() => Space is not null ? !b2Body_IsAwake(BackendID) :
+    internal bool GetSleeping() => Space is not null ? !_backend.IsAwake :
         _mode == PhysicsServer.BodyMode.Static || _mode != PhysicsServer.BodyMode.Kinematic && _sleeping;
 
     internal void SetSleeping(bool sleeping)
     {
         if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic) return;
-        if (Space is not null) b2Body_SetAwake(BackendID, !sleeping);
+        if (Space is not null) _backend.SetAwake(!sleeping);
         _sleeping = sleeping;
         if (sleeping) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
     }
@@ -273,7 +269,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
     internal bool GetCanSleep() => _canSleep;
     internal void SetCanSleep(bool canSleep)
     {
-        if (Space is not null) b2Body_EnableSleep(BackendID, canSleep);
+        if (Space is not null) _backend.SetCanSleep(canSleep);
         _canSleep = canSleep;
         if (!canSleep) _sleeping = false;
     }
@@ -294,11 +290,9 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             return;
         _transform = GetTransform();
         if (_mode == PhysicsServer.BodyMode.Kinematic) return;
-        _sleeping = !b2Body_IsAwake(BackendID);
-        var velocity = b2Body_GetLinearVelocity(BackendID);
-        _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter,
-            velocity.Y * PhysicsSpace.UnitsPerMeter);
-        _angularVelocity = b2Body_GetAngularVelocity(BackendID);
+        _sleeping = !_backend.IsAwake;
+        _linearVelocity = _backend.LinearVelocity;
+        _angularVelocity = _backend.AngularVelocity;
     }
 
     internal void RebuildShapes()

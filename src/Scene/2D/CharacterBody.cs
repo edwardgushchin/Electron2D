@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 /// <summary>Selects grounded floor/ceiling classification or floating all-wall motion.</summary>
@@ -253,7 +249,7 @@ public partial class CharacterBody : PhysicsBody
 
     internal override void ApplySceneTransform(Vector2 position, float rotation)
     {
-        b2Body_SetTransform(BackendID, Shape.ToBackend(position), b2MakeRot(rotation));
+        Backend.SetPose(position, rotation);
         _queryPoseApplied = true;
     }
 
@@ -263,17 +259,15 @@ public partial class CharacterBody : PhysicsBody
         if (!target.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(target.Skew))
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
         if (_queryPoseApplied)
-            b2Body_SetTransform(BackendID, Shape.ToBackend(_solverPose.Origin), b2MakeRot(_solverPose.Rotation));
-        var transform = new B2Transform(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
-        if (PhysicsMadeStatic) b2Body_SetTransform(BackendID, transform.p, transform.q);
-        else b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
+            Backend.SetPose(_solverPose);
+        if (PhysicsMadeStatic) Backend.SetPose(target);
+        else Backend.SetTargetPose(target, delta);
     }
 
     internal void CaptureSolverPose()
     {
-        var position = b2Body_GetPosition(BackendID);
-        _solverPose = new Transform(b2Rot_GetAngle(b2Body_GetRotation(BackendID)), Vector2.One, 0,
-            new(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter));
+        var pose = Backend.GetPose();
+        _solverPose = new Transform(pose.Rotation, Vector2.One, 0, pose.Position);
         _queryPoseApplied = false;
     }
 

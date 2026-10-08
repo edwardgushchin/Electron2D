@@ -34,7 +34,7 @@ subclasses and PhysicsDirectBodyState.
 | `View*`, `CaptureViewContacts`, `CaptureViewContact` | Adapt backend live state and solved contacts to engine values without exposing backend handles to PhysicsDirectBodyState. |
 | `ApplyMassProfile`, `SetMassProfile` | Share body shape/mass/center validation and scene projection. |
 | `ApplyBeforeStep`, pending/constant force and torque | Consume eligible pending forces once; preserve configured totals. |
-| `ApplyResolvedFields`, parameter operations | Combine world/Area gravity and damping with body policy. |
+| `ApplyResolvedFields`, parameter operations | Combine world/Area gravity and damping with scene or server authored body policy through one finite-validated update path. |
 | `ApplyImpulse`, `AddForce`, velocity/mass access | Preserve dynamic-role, lock, finite-value and detached-state behavior. |
 | `SetSurfaceVelocity(B2BodyId id, Vector2 linear, float angular)` | Set virtual global linear/angular contact velocity separately from integrated state and wake touching bodies. |
 
@@ -43,6 +43,13 @@ and owner access before mutation. StaticBody, AnimatableBody and raw static
 colliders reuse the channel; shape rebuild and reentry preserve scene configuration.
 The extra velocity affects point queries and CPU/GPU contact constraints but never
 contributes to pose integration or actual kinematic subdivision distance.
+
+Resolved gravity and damping live once in this runtime for both RigidBody and raw
+server bodies. RigidBody retains authored settings; its GetGravity and direct-state
+field views read these resolved values. Custom integration skips automatic field
+forces but still observes changed fields and wakes an eligible dynamic body.
+Frozen, disabled-static and inactive physical-bone roles retain their motion gates.
+Validation completes before publishing field values or applying motion changes.
 
 ## Verification
 

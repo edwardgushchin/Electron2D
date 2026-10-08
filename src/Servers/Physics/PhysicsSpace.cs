@@ -442,7 +442,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             {
                 try
                 {
-                    body.CompleteBackend(world);
+                    body.CompleteBackend();
                     if (body is AnimatableBody animatable) animatable.SyncPose();
                     else if (body is CharacterBody character) character.CaptureSolverPose();
                 }

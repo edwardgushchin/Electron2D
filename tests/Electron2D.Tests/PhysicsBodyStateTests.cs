@@ -6,6 +6,7 @@ internal static class PhysicsBodyStateTests
     {
         VerifyLiveFieldsAndForces();
         VerifyBodyViewSynchronization();
+        VerifyPoseNotificationWrites();
         VerifyCustomIntegration();
         VerifySolvedContacts();
         VerifyServerContactLimit();
@@ -31,6 +32,29 @@ internal static class PhysicsBodyStateTests
             "A direct body view synchronizes its own pose without scanning unrelated bodies.");
         tree.PhysicsFrame(1d / 60);
         Check(other.Position.DistanceTo(new(30, 40)) < .001f, "The world step synchronizes the remaining body normally.");
+    }
+
+    private static void VerifyPoseNotificationWrites()
+    {
+        using var root = new Node();
+        var body = new RigidBody { GravityScale = 0, CanSleep = false, LinearVelocity = new(10, 0) };
+        root.AddChild(body);
+        using var tree = new SceneTree(root);
+        var notifications = 0;
+        body.NotifyLocalTransformChanges = true;
+        body.LocalTransformChanged += _ =>
+        {
+            notifications++;
+            body.LinearVelocity = new(23, -7);
+            body.AngularVelocity = 0.5f;
+        };
+        tree.PhysicsFrame(1d / 60);
+        var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
+        // Only unit-conversion rounding is allowed: no further integration follows this notification.
+        Check(notifications > 0 && (body.LinearVelocity - new Vector2(23, -7)).Length() < 0.0001f &&
+            (state.LinearVelocity - body.LinearVelocity).Length() < 0.0001f &&
+            MathF.Abs(body.AngularVelocity - 0.5f) < 0.000001f && MathF.Abs(state.AngularVelocity - 0.5f) < 0.000001f,
+            "Solver motion is sampled after pose notifications, retaining user velocity edits in both scene and direct state.");
     }
 
     private static void VerifyLiveFieldsAndForces()

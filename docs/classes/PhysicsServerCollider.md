@@ -11,6 +11,9 @@ Body/fixture IDs and current-space ownership now reside in [PhysicsColliderBacke
 Attachment now supplies PhysicsBodyConfiguration and scene-unit pose to the shared
 adapter. RigidLinear starts with its rotation lock; stored kinematic/static virtual
 velocities and delayed targets retain their existing application policy.
+Live pose, contact velocity, sleep and target-motion access now use the same
+engine-valued adapter as scene bodies; the server collider retains detached
+configuration and pending-target policy.
 
 ## Description and runtime flow
 

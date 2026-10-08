@@ -15,8 +15,10 @@ PhysicsBody, Area and server-created colliders now share [PhysicsColliderBackend
 [PhysicsBodyConfiguration](../classes/PhysicsBodyConfiguration.md) carries initial
 velocity/gravity/sleep/lock policy in engine units. Scene/server creation and
 scene motion-role dispatch use PhysicsServer.BodyMode; vendor body definitions
-and mode conversion reside in the collider adapter. Live solver state and query
-operations still require further extraction before independent GPU execution.
+and mode conversion reside in the collider adapter. Scene pose, velocity, sleep,
+target motion and exact frozen-pose restoration now use that adapter too.
+PhysicsBodyRuntime applies one shared scene/server gravity and damping path.
+Solving, queries and joints still require independent backend implementations.
 
 ## Fixed-step flow
 

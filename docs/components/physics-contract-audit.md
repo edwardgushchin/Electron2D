@@ -42,8 +42,8 @@ operations remain open in the ledger.
 | Layer | Source evidence | Current boundary |
 | --- | --- | --- |
 | World | [PhysicsSpace](../../src/Servers/Physics/PhysicsSpace.cs) creates a B2WorldId unconditionally; EnableGPUSolver assigns callbacks on that same world | Every publicly created world uses the CPU host. There is no public independent GPU selection/fallback contract. |
-| Scene bodies and shapes | [PhysicsColliderBackend](../../src/Servers/Physics/PhysicsColliderBackend.cs) now owns body/fixture IDs and creation/rebuild/destruction for PhysicsBody, Area and raw colliders | Ownership and engine-valued initial body configuration are consolidated; scene motion roles use PhysicsServer.BodyMode. The adapter constructs vendor definitions. Live state, concrete backend and shape construction still use Box2D; independent GPU ownership remains open. |
-| Server bodies | [PhysicsServerCollider](../../src/Servers/Physics/PhysicsServerCollider.cs) delegates body/fixture lifetime to the shared component; [PhysicsBodyRuntime](../../src/Servers/Physics/PhysicsBodyRuntime.cs) still implements vendor state/forces | Authored server slots and scene slots use one fixture path. Remaining state/query/geometry operations need independent implementations behind the common identity/lifetime contract. |
+| Scene bodies and shapes | [PhysicsColliderBackend](../../src/Servers/Physics/PhysicsColliderBackend.cs) now owns body/fixture IDs and creation/rebuild/destruction for PhysicsBody, Area and raw colliders | Ownership, creation and live pose/velocity/sleep operations are consolidated in the adapter; scene motion roles and operation values use engine types. Solved-pose notifications precede motion sampling. Backend state and shape construction still use Box2D; independent GPU ownership remains open. |
+| Server bodies | [PhysicsServerCollider](../../src/Servers/Physics/PhysicsServerCollider.cs) delegates body/fixture lifetime and live motion access to the shared component; [PhysicsBodyRuntime](../../src/Servers/Physics/PhysicsBodyRuntime.cs) still implements vendor state/forces | Authored server slots and scene slots use one fixture path, while resolved scene/server gravity and damping share PhysicsBodyRuntime. Remaining backend state/query/geometry operations need independent implementations behind the common identity/lifetime contract. |
 | Joints | [PhysicsJointRuntime](../../src/Servers/Physics/PhysicsJointRuntime.cs) stores B2 joint/body IDs and constructs revolute, wheel or filter joints | CPU joint kernels and GPU stage packets exist; independent GPU joint ownership and spring execution are absent. |
 | Queries/contacts | [PhysicsBodyRuntime.View](../../src/Servers/Physics/PhysicsBodyRuntime.View.cs) now owns body-view backend reads and traversal; [PhysicsDirectBodyState](../../src/Servers/Physics/PhysicsDirectBodyState.cs) retains engine values and current-view identity. Direct-space queries and contact publication still read vendor state | Body-view extraction preserves existing semantics; backend world, query and joint ownership remain coupled and require further work. |
 | GPU experiment | [GPU implementation status](gpu-physics.md) records resident trees/geometry/graphs and integration/contact/joint kernels | The solver remains hosted by Box2D with CPU mirrors, packing, validation and waits. Stage success is not independent-backend acceptance. |
@@ -69,6 +69,13 @@ body-state and contact-impulse suites. Their existing GPU variants exercise the
 stage-hosted prototype, not an independent backend. Other named suites are source
 evidence for their recorded coverage; they are not all rerun by this documentation
 slice. No new whole-backend performance measurement is claimed.
+
+The live-state extraction additionally passes the 24-suite collider CPU group,
+the current full GPU suite and PhysicsParallelTests (288 bodies, 256 fixed steps).
+PhysicsBodyStateTests guards writes during solved-pose notifications; scene/server
+field suites cover the merged gravity/damping path and their warmed allocation
+checks. The earlier intermittent native GLib failure remains an open observation
+in GPU status; passing later lifetime tests does not establish its cause.
 
 ## Open behavior groups
 

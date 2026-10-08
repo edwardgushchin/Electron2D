@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 /// <summary>Chooses stationary or manually driven kinematic participation while a rigid body is frozen.</summary>
@@ -18,7 +14,6 @@ public partial class RigidBody
     private RigidFreezeMode _freezeMode;
     private Transform _frozenSolverPose = Transform.Identity;
     private bool _frozenQueryPoseApplied;
-    private B2Transform _frozenNativePose;
 
     /// <summary>Gets or sets how a frozen body participates in physics.</summary>
     /// <value><see cref="RigidFreezeMode.Static"/> by default. The value has no effect while Freeze is false.</value>
@@ -54,7 +49,7 @@ public partial class RigidBody
     internal void ResetFrozenSolverPose()
     {
         _frozenSolverPose = GlobalTransform;
-        if (HasBackend) _frozenNativePose = b2Body_GetTransform(BackendID);
+        if (HasBackend) Backend.SavePose();
         _frozenQueryPoseApplied = false;
     }
 
@@ -66,18 +61,18 @@ public partial class RigidBody
             throw new InvalidOperationException("Physics bodies require finite unit-scale global poses.");
         if (PhysicsMadeStatic)
         {
-            b2Body_SetTransform(BackendID, Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
+            Backend.SetPose(target);
             return;
         }
         if (target == _frozenSolverPose)
         {
-            b2Body_SetLinearVelocity(BackendID, default); b2Body_SetAngularVelocity(BackendID, 0);
+            Backend.ClearVelocity();
             _frozenQueryPoseApplied = false;
             return;
         }
         if (_frozenQueryPoseApplied)
-            b2Body_SetTransform(BackendID, _frozenNativePose.p, _frozenNativePose.q);
-        b2Body_SetTargetTransform(BackendID, new(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation)), (float)delta, true);
+            Backend.RestorePose();
+        Backend.SetTargetPose(target, delta);
     }
 
 }

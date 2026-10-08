@@ -1,6 +1,3 @@
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 /// <summary>A two-dimensional region that reports physics bodies and other areas crossing its shapes.</summary>
@@ -219,7 +216,7 @@ public sealed partial class Area : CollisionObject
         var rotation = GlobalRotation;
         if (position != _lastPosition || rotation != _lastRotation)
         {
-            b2Body_SetTransform(Backend.BodyID, Shape.ToBackend(position), b2MakeRot(rotation));
+            Backend.SetPose(position, rotation);
             _lastPosition = position;
             _lastRotation = rotation;
         }

@@ -1,12 +1,10 @@
-using static Box2D.NET.B2Bodies;
-
 namespace Electron2D;
 
 public partial class RigidBody
 {
     private bool _customIntegrator;
-    internal float ResolvedLinearDamp => _effectiveLinearDamp;
-    internal float ResolvedAngularDamp => _effectiveAngularDamp;
+    internal float ResolvedLinearDamp => Runtime.LinearDamp;
+    internal float ResolvedAngularDamp => Runtime.AngularDamp;
 
     /// <summary>Gets or sets omission of ordinary gravity, damping and accumulated force integration.</summary>
     /// <value>False by default. Impulses, motion and solver contacts remain active when true.</value>
@@ -18,7 +16,7 @@ public partial class RigidBody
         {
             EnsureMutable();
             _customIntegrator = value;
-            if (HasBackend) b2Body_SetGravityScale(BackendID, value ? 0 : _gravityScale);
+            if (HasBackend) Backend.SetGravityScale(value ? 0 : _gravityScale);
         }
     }
 

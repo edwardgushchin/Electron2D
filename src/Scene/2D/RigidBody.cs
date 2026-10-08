@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Shapes;
-
 namespace Electron2D;
 
 /// <summary>A collision body moved by the fixed-step two-dimensional physics simulation.</summary>
@@ -50,10 +46,6 @@ public partial class RigidBody : PhysicsBody
     private float _angularDamp;
     private DampMode _linearDampMode;
     private DampMode _angularDampMode;
-    private Vector2 _effectiveGravity;
-    private float _effectiveLinearDamp;
-    private float _effectiveAngularDamp;
-    private bool _fieldsInitialized;
     private bool _freeze;
     private bool _lockRotation;
     private bool _canSleep = true;
@@ -88,7 +80,7 @@ public partial class RigidBody : PhysicsBody
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
-        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Service.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) b2Body_SetGravityScale(BackendID, _customIntegrator ? 0 : value); }
+        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Service.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) Backend.SetGravityScale(_customIntegrator ? 0 : value); }
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
@@ -103,7 +95,7 @@ public partial class RigidBody : PhysicsBody
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
             _linearVelocity = value;
-            if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(value));
+            if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetLinearVelocity(value);
         }
     }
 
@@ -114,7 +106,7 @@ public partial class RigidBody : PhysicsBody
     public float AngularVelocity
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _angularVelocity; }
-        set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAngularVelocity(BackendID, value); }
+        set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAngularVelocity(value); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -176,7 +168,7 @@ public partial class RigidBody : PhysicsBody
     public bool LockRotation
     {
         get { ThrowIfDisposed(); return _lockRotation; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; if (HasBackend) b2Body_SetMotionLocks(BackendID, new(false, false, !_freeze && value)); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; if (HasBackend) Backend.SetRotationLocked(!_freeze && value); }
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
@@ -185,7 +177,7 @@ public partial class RigidBody : PhysicsBody
     public bool CanSleep
     {
         get { ThrowIfDisposed(); return _canSleep; }
-        set { EnsureMutable(); _canSleep = value; if (HasBackend) b2Body_EnableSleep(BackendID, value); else if (!value && !_freeze) _sleeping = false; }
+        set { EnsureMutable(); _canSleep = value; if (HasBackend) Backend.SetCanSleep(value); else if (!value && !_freeze) _sleeping = false; }
     }
 
     /// <summary>Gets or sets whether the body is currently asleep.</summary>
@@ -194,11 +186,11 @@ public partial class RigidBody : PhysicsBody
     /// <value>False by default.</value>
     public bool Sleeping
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasBackend ? !b2Body_IsAwake(BackendID) : _sleeping; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasBackend ? !Backend.IsAwake : _sleeping; }
         set
         {
             EnsureMutable(); _sleeping = value; _sleepChangePending = false;
-            if (HasBackend) b2Body_SetAwake(BackendID, !value);
+            if (HasBackend) Backend.SetAwake(!value);
             if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
         }
     }
@@ -236,26 +228,25 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnBodyTypeChanged()
     {
-        b2Body_SetMotionLocks(BackendID, new(false, false, !_freeze && _lockRotation));
+        Backend.SetRotationLocked(!_freeze && _lockRotation);
         ApplyMass(_mass);
         ResetFrozenSolverPose();
         if (_freeze || PhysicsMadeStatic) return;
-        b2Body_SetLinearVelocity(BackendID, Shape.ToBackend(_linearVelocity));
-        b2Body_SetAngularVelocity(BackendID, _angularVelocity);
+        Backend.SetLinearVelocity(_linearVelocity);
+        Backend.SetAngularVelocity(_angularVelocity);
     }
 
     internal override bool MovesWithSimulation => !_freeze || FrozenKinematic;
-    internal override Vector2 EffectiveGravity => _effectiveGravity;
+    internal override Vector2 EffectiveGravity => Runtime.Gravity;
 
     internal override PhysicsServer.BodyMode RequestedBodyMode => !_freeze ? PhysicsServer.BodyMode.Rigid :
         _freezeMode == RigidFreezeMode.Kinematic ? PhysicsServer.BodyMode.Kinematic : PhysicsServer.BodyMode.Static;
 
     internal override PhysicsBodyConfiguration CreateBodyConfiguration()
     {
-        _fieldsInitialized = false;
+        Runtime.FieldsInitialized = false;
         _frozenSolverPose = GlobalTransform;
         _frozenQueryPoseApplied = false;
-        _frozenNativePose = new B2Transform(Shape.ToBackend(_frozenSolverPose.Origin), B2MathFunction.b2MakeRot(_frozenSolverPose.Rotation));
         return new(RequestedBodyMode, FrozenKinematic ? default : _linearVelocity,
             FrozenKinematic ? 0 : _angularVelocity, _customIntegrator ? 0 : _gravityScale,
             _canSleep, _sleeping, !_freeze && _lockRotation);
@@ -263,57 +254,15 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnShapesRebuilt() => ApplyMass(_mass);
 
-    internal override void OnBackendAdvanced(B2World world, B2Body body)
+    internal override void OnBackendAdvanced()
     {
         if (FrozenKinematic) ResetFrozenSolverPose();
-        var state = b2GetBodyState(world, body);
-        var velocity = state?.linearVelocity ?? default;
-        _linearVelocity = new(velocity.X * PhysicsSpace.UnitsPerMeter, velocity.Y * PhysicsSpace.UnitsPerMeter);
-        _angularVelocity = state?.angularVelocity ?? 0;
-        var sleeping = state is null;
+        var motion = Backend.GetSolverMotion();
+        _linearVelocity = motion.LinearVelocity;
+        _angularVelocity = motion.AngularVelocity;
+        var sleeping = motion.Sleeping;
         if (sleeping != _sleeping) _sleepChangePending = true;
         _sleeping = sleeping;
-    }
-
-    internal void ApplyAreaFields(Vector2 gravity, float linearDamp, float angularDamp,
-        Vector2 defaultGravity, double delta)
-    {
-        var scaledGravity = gravity * _gravityScale;
-        var resolvedLinear = _linearDampMode == DampMode.Replace ? _linearDamp : linearDamp + _linearDamp;
-        var resolvedAngular = _angularDampMode == DampMode.Replace ? _angularDamp : angularDamp + _angularDamp;
-        var linearFactor = MathF.Max(0, 1 - (float)delta * resolvedLinear);
-        var angularFactor = MathF.Max(0, 1 - (float)delta * resolvedAngular);
-        var extraAcceleration = scaledGravity - defaultGravity * _gravityScale;
-        if (!scaledGravity.IsFinite() || !extraAcceleration.IsFinite() ||
-            !float.IsFinite(resolvedLinear) || !float.IsFinite(resolvedAngular) ||
-            !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
-            throw new InvalidOperationException("The resolved physics field exceeds the finite simulation range.");
-
-        var changed = _fieldsInitialized && (scaledGravity != _effectiveGravity ||
-            resolvedLinear != _effectiveLinearDamp || resolvedAngular != _effectiveAngularDamp);
-        var active = !_freeze && !PhysicsMadeStatic && !_customIntegrator && HasBackend && (changed || b2Body_IsAwake(BackendID));
-        var dampedVelocity = default(B2Vec2);
-        var dampedAngularVelocity = 0f;
-        var force = default(B2Vec2);
-        if (active)
-        {
-            dampedVelocity = b2Body_GetLinearVelocity(BackendID) * linearFactor;
-            dampedAngularVelocity = b2Body_GetAngularVelocity(BackendID) * angularFactor;
-            if (extraAcceleration != Vector2.Zero) force = Shape.ToBackend(extraAcceleration) * b2Body_GetMass(BackendID);
-            if (!float.IsFinite(dampedVelocity.X) || !float.IsFinite(dampedVelocity.Y) ||
-                !float.IsFinite(dampedAngularVelocity) || !float.IsFinite(force.X) || !float.IsFinite(force.Y))
-                throw new InvalidOperationException("The resolved physics field would produce nonfinite motion.");
-        }
-        _effectiveGravity = scaledGravity;
-        _effectiveLinearDamp = resolvedLinear;
-        _effectiveAngularDamp = resolvedAngular;
-        _fieldsInitialized = true;
-        if (_customIntegrator && changed && HasBackend && !_freeze && !PhysicsMadeStatic) b2Body_SetAwake(BackendID, true);
-        if (!active) return;
-        if (changed) b2Body_SetAwake(BackendID, true);
-        if (linearFactor != 1) b2Body_SetLinearVelocity(BackendID, dampedVelocity);
-        if (angularFactor != 1) b2Body_SetAngularVelocity(BackendID, dampedAngularVelocity);
-        if (force.X != 0 || force.Y != 0) b2Body_ApplyForceToCenter(BackendID, force, wake: false);
     }
 
     /// <inheritdoc />

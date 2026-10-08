@@ -5,8 +5,8 @@ using static Box2D.NET.B2Types;
 
 namespace Electron2D;
 
-/// <summary>Owns the body and fixture attachment shared by scene and server colliders.</summary>
-internal sealed class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwner = null)
+/// <summary>Owns shared scene/server body and fixture attachments and adapts live motion to engine units.</summary>
+internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwner = null)
 {
     private readonly List<B2ShapeId> _shapes = [];
     private readonly WeakReference<CollisionObject>? _sceneOwner = sceneOwner is null ? null : new(sceneOwner);
@@ -29,6 +29,9 @@ internal sealed class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwne
         definition.isAwake = !configuration.Sleeping;
         definition.motionLocks.angularZ = configuration.LockRotation || configuration.Mode == PhysicsServer.BodyMode.RigidLinear;
         BodyID = b2CreateBody(space.WorldID, definition);
+        _world = B2Worlds.b2GetWorldFromId(space.WorldID);
+        _body = b2GetBodyFullId(_world, BodyID);
+        _savedPose = b2GetBodyTransformQuick(_world, _body);
         Space = space;
     }
 
@@ -50,6 +53,7 @@ internal sealed class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwne
         if (Space is null) return;
         if (!Space.HasBackendFailure) b2DestroyBody(BodyID);
         _shapes.Clear();
+        _world = null; _body = null; _savedPose = default;
         BodyID = default;
         Space = null;
     }

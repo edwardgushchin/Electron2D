@@ -1,10 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Arrays;
-using static Box2D.NET.B2Constants;
-using static Box2D.NET.B2Contacts;
-using static Box2D.NET.B2Worlds;
-
 namespace Electron2D;
 
 public partial class RigidBody
@@ -161,7 +154,7 @@ public partial class RigidBody
     {
         if (Space?.HasBackendFailure == true) return;
         if (Backend.HasMotionMode(PhysicsServer.BodyMode.Static)) return;
-        _sleeping = !b2Body_IsAwake(BackendID);
+        _sleeping = !Backend.IsAwake;
         _sleepChangePending = false;
     }
 

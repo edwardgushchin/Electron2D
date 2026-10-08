@@ -56,12 +56,8 @@ internal sealed partial class PhysicsSpace
             if (body is RigidBody or CharacterBody)
             {
                 if (!uniform) ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
-                if (body is RigidBody rigid) rigid.ApplyAreaFields(gravity, linearDamp, angularDamp, _defaultGravity, delta);
-                else
-                {
-                    runtime.ApplyResolvedFields(body.BackendID, gravity, linearDamp, angularDamp, _defaultGravity, delta);
-                    ((CharacterBody)body).SetResolvedGravity(runtime.Gravity);
-                }
+                runtime.ApplyResolvedFields(body.BackendID, gravity, linearDamp, angularDamp, _defaultGravity, delta);
+                if (body is CharacterBody character) character.SetResolvedGravity(runtime.Gravity);
             }
             runtime.ApplyBeforeStep(body.BackendID, body);
             captureCallbacks |= RequiresBodySnapshot(runtime, body);

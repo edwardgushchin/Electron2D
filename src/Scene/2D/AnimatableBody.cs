@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 /// <summary>A manually moved kinematic body whose motion influences dynamic contacts.</summary>
@@ -61,21 +57,18 @@ public sealed class AnimatableBody : StaticBody
             throw new InvalidOperationException("Physics bodies require unit global scale and zero skew.");
         if (_syncToPhysics && !_hasTarget && target == _lastValidTransform && !PhysicsMadeStatic)
         {
-            b2Body_SetLinearVelocity(BackendID, default); b2Body_SetAngularVelocity(BackendID, 0);
+            Backend.ClearVelocity();
             return;
         }
-        var transform = new B2Transform(Shape.ToBackend(target.Origin), b2MakeRot(target.Rotation));
-        if (PhysicsMadeStatic) b2Body_SetTransform(BackendID, transform.p, transform.q);
-        else b2Body_SetTargetTransform(BackendID, transform, (float)delta, wake: true);
+        if (PhysicsMadeStatic) Backend.SetPose(target);
+        else Backend.SetTargetPose(target, delta);
     }
 
     internal void SyncPose()
     {
         if (!_syncToPhysics) { _hasTarget = false; return; }
-        var position = b2Body_GetPosition(BackendID);
-        var rotation = b2Rot_GetAngle(b2Body_GetRotation(BackendID));
-        var scenePosition = new Vector2(position.X * PhysicsSpace.UnitsPerMeter, position.Y * PhysicsSpace.UnitsPerMeter);
-        var solved = new Transform(rotation, Vector2.One, 0, scenePosition);
+        var pose = Backend.GetPose();
+        var solved = new Transform(pose.Rotation, Vector2.One, 0, pose.Position);
         _hasTarget = false;
         _lastValidTransform = solved;
         if (GlobalTransform == solved) return;
