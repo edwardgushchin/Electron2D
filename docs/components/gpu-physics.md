@@ -73,7 +73,7 @@ separate pass marks moved shapes from the existing query buffer with the current
 epoch. Pure movement does not upload stable filters or joints, and the retry uses
 the same epoch. `FilterSnapshotCount`, `FilterUpdatedShapes`, `FilterUpdatedJoints`
 and `FilterUploadBytes` report this boundary. This retains broad-phase metadata;
-per-step manifold geometry and solver-joint inputs are still separate uploads.
+resident manifold geometry and per-step pair poses/solver-joint inputs use separate buffers.
 
 The pair table itself is never uploaded: 4-byte GPU slots
 reference retained 8-byte contact keys. The initial world binding and capacity
@@ -106,8 +106,18 @@ among circles, capsules, two-sided segments and convex polygons (up to eight
 vertices, including rounded polygons). SAT, edge clipping and vertex contacts
 preserve feature IDs and the speculative distance used for warm starting.
 Chain segments are explicitly unsupported by this development entry. Geometry
-records are shared by shape ID rather than duplicated per contact (144 bytes);
-each pair occupies 48 bytes and its returned manifold 80 bytes. The owner waits
+records stay resident by shape ID rather than being duplicated per contact (144
+bytes). Shape creation/destruction and circle/capsule/segment/polygon edits
+invalidate that slot. Geometry is packed lazily on the first overlapping pair
+that references an invalid slot; unused/sleeping geometry needs no upload.
+A scatter pass in the existing collision pipeline installs only changed records
+before the manifold pass, within one submission/fence. Repeated references and
+intermediate edits coalesce to one final record. World/observer changes and
+buffer growth invalidate all cached slots; failed batches do not mark pending
+records resident. Movement, materials and collision filters do not change local
+geometry. `ResidentGeometryCount`, `UploadedGeometryCount` and `GeometryUploadBytes`
+report each batch, while `GeometryCacheResetCount` is cumulative. Pair poses still
+upload each batch: each pair occupies 48 bytes and its returned manifold 80 bytes. The owner waits
 for the collision fence and validates the batch before publication. Material
 mixing, pre-solve filtering and contact transitions still use the common managed
 world path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
@@ -501,6 +511,50 @@ resident-tree profile's 321,239,648 to 119,897,696 bytes (62.68% less); readback
 remains 156,052,844 bytes and candidates 496,638. Pair/tree delta counts are unchanged.
 Host packing/ranking averages 3.54/3.51 ms, versus the preceding 5.46/5.43 ms.
 This removes the full filter scan/upload; the complete step remains about 161 ms
-and does not meet 60 FPS. CPU contact transitions, geometry/constraint input packing,
+and does not meet 60 FPS. CPU contact transitions, pair/constraint input packing,
 readback, queries/CCD and publication ranking still remain in the developing backend.
 Artifacts: ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-resident-filters-{a,b}.json`.
+
+
+## Resident shape geometry (2026-10-08)
+
+`ELECTRON2D_TEST_GPU_GEOMETRY=1` checks three contacts sharing two geometry slots,
+all four editable primitive types (including type changes), rejected degenerate
+capsules, movement/rotation, material/filter changes, repeated edits, disabled
+edits, empty/separated batches, shape ID reuse, buffer growth, lost observers,
+failed-batch retry and disposal without detaching another host's observer.
+The existing nine-family CPU manifold oracle also requires zero geometry upload
+on repeated batches. After 32 warm edits, 64 measured edit batches upload exactly
+one final 144-byte shape each and allocate zero managed bytes across all threads.
+The test-only `ELECTRON2D_SANDBOX_PROFILE_UPLOAD_GEOMETRY=1` control invalidates the
+cache before each batch, forcing upload of every referenced shape for comparison
+within the same binary. This differs from the former full shape-slot upload,
+which also transferred unused geometry.
+
+`PhysicsCollide.comp.spv` SHA-256:
+`ccd5cd9ffad33c3fc2f75c730bf088c79785071e36d2ff830fda3a85d5e2aa79`.
+
+Four sequential Linux/Vulkan headless profiles used 65,537 Smash bodies with 32
+warmup and 64 measured steps; no builds/tests overlapped measurement. `resident`
+retains geometry and `upload` forces each referenced shape to upload every batch:
+
+| Mode | Whole step mean | Step p95 | Collision stage mean | Geometry input bytes |
+| --- | --- | --- | --- | --- |
+| resident A | 161.23 ms | 249.26 ms | 75.31 ms | 5,153,472 |
+| upload A | 159.65 ms | 246.02 ms | 74.46 ms | 214,963,056 |
+| upload B | 162.55 ms | 253.59 ms | 76.13 ms | 214,963,056 |
+| resident B | 160.39 ms | 253.69 ms | 74.10 ms | 5,153,472 |
+
+Both resident runs upload 35,788 first-use/invalid slots (5,153,472 bytes), reuse
+1,457,011 referenced slots and reset no caches during measurement. Both forced
+runs upload 1,492,799 records (214,963,056 bytes) and reset 64 times. Geometry input
+falls by 97.60%; both modes still upload current pair poses and read back manifolds
+for managed contact processing. All four intervals allocate zero owner/all-thread
+managed bytes, retain awake counts 6,425 through 41,122 and state SHA-256
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+The intervals cover impact propagation, not steady all-awake or rendered frames.
+Run-to-run timing overlaps: this verifies reduced transfers and geometry residency,
+not a demonstrated whole-step speedup or 60 FPS. Contact lifecycle, pose/constraint
+packing, readback, query/CCD mirrors and the remaining complete-backend obligations
+are unchanged. Artifacts: ignored
+`bin/physics-sandbox/profile-Release-gpu-geometry-{resident,upload}-{a,b}.json`.

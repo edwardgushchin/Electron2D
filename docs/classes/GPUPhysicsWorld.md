@@ -38,8 +38,8 @@ separate pass marks moved shapes from existing queries with the current epoch.
 Movement alone uploads no stable filter metadata. Binding/capacity/observer changes
 or epoch wrap require a snapshot; retries retain the same epoch.
 `FilterSnapshotCount`, `FilterUpdatedShapes`, `FilterUpdatedJoints` and
-`FilterUploadBytes` expose that work. These records are separate from manifold
-geometry and solver-joint inputs, which still upload per step.
+`FilterUploadBytes` expose that work. These filter records are separate from
+resident local geometry. Pair-pose and solver-joint inputs still upload per step.
 CPU pair and custom-filter order is preserved, including deleted/reused proxy slots.
 `BroadPhaseCandidateCount` and `BroadPhaseRetryCount` describe the latest query batch;
 `BroadPhaseCandidateTotal`, upload/readback byte totals and `BroadPhaseProfileMS`
@@ -54,9 +54,16 @@ and disposal prevent stale-world reuse. `PairTableSnapshotCount`,
 `PairTableRebuildCount`, `PairTableUpdatedSlots` and `PairTableUploadBytes` report
 this residency. Ordinary CPU worlds do not register the change observer.
 
-`GenerateManifolds` packs geometry once per referenced shape, current pair
-transforms and fat-proxy overlap, then generates all contact points in one
-compute submission. Its packed shape/pair/result records occupy 144/48/80
+`GenerateManifolds` keeps local shape geometry resident. Creation/destruction and
+primitive edits invalidate a slot, and the first overlapping pair referencing it
+packs the final record. A GPU scatter pass installs changed geometry before the
+manifold pass in the same submission. Unused geometry waits for a real reference;
+movement/material/filter edits do not upload it. World/observer changes or buffer
+growth clear residency, and only a validated completed batch commits pending
+slots. Disposal detaches only its own observer. `ResidentGeometryCount`,
+`UploadedGeometryCount` and `GeometryUploadBytes` describe the latest batch;
+`GeometryCacheResetCount` is cumulative. Current pair transforms and fat-proxy
+overlap are still packed on CPU before generating all points in one submission. Its packed shape/pair/result records occupy 144/48/80
 bytes, plus a 32-byte history result. Feature matching and normal/tangent/rolling
 warm-start reuse execute on GPU. Current contacts read the retained previous
 solver buffer; cold/stale contacts upload 32-byte histories. Empty histories

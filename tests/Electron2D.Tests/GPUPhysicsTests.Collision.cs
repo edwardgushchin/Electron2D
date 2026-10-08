@@ -3,6 +3,10 @@ using Electron2D;
 using static Box2D.NET.B2Geometries;
 using static Box2D.NET.B2Hulls;
 using static Box2D.NET.B2Manifolds;
+using static Box2D.NET.B2Bodies;
+using static Box2D.NET.B2Shapes;
+using static Box2D.NET.B2Types;
+using static Box2D.NET.B2Worlds;
 
 internal static partial class GPUPhysicsTests
 {
@@ -83,7 +87,12 @@ internal static partial class GPUPhysicsTests
                 catch (Exception ex) { throw new InvalidOperationException($"GPU manifold case {i}/{count}, {types[i % types.Length]} differs.", ex); }
             }
             var before = GC.GetTotalAllocatedBytes(true);
-            for (var i = 0; i < 8; i++) gpu.GenerateManifolds(context, count);
+            for (var i = 0; i < 8; i++)
+            {
+                gpu.GenerateManifolds(context, count);
+                if (gpu.UploadedGeometryCount != 0 || gpu.GeometryUploadBytes != 0)
+                    throw new Exception("Unchanged manifolds must reuse resident geometry.");
+            }
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
             if (bytes != 0) throw new InvalidOperationException($"Prepared GPU manifolds allocated {bytes} managed bytes.");
             world.shapes.data[0].type = B2ShapeType.b2_chainSegmentShape;
@@ -93,6 +102,108 @@ internal static partial class GPUPhysicsTests
         }
         if (activeFamilies.Any(count => count == 0)) throw new InvalidOperationException("Every GPU shape pair family must produce an active contact in the conformance batch.");
         Console.WriteLine("GPU manifolds passed: nine shape pair families, rotated/offset shapes, speculative/empty contacts, features and warmed allocation.");
+    }
+
+    internal static void VerifyGeometryResidency()
+    {
+        using var gpu = new GPUPhysicsWorld();
+        var id = b2CreateWorld(b2DefaultWorldDef());
+        var world = b2GetWorldFromId(id);
+        var definition = b2DefaultBodyDef(); definition.type = B2BodyType.b2_dynamicBody;
+        var bodyA = b2CreateBody(id, definition); definition.position = new(.4f, .3f);
+        var bodyB = b2CreateBody(id, definition);
+        var shapeDef = b2DefaultShapeDef();
+        var shapeA = b2CreateCircleShape(bodyA, shapeDef, new B2Circle { radius = .9f });
+        var shapeB = b2CreateCircleShape(bodyB, shapeDef, new B2Circle { radius = .6f });
+        var context = new B2StepContext { world = world, contacts = new B2ContactSim[3] };
+        for (var i = 0; i < context.contacts.Count; i++) context.contacts[i] = new();
+        void Check(int uploads)
+        {
+            var a = world.shapes.data[shapeA.index1 - 1]; var b = world.shapes.data[shapeB.index1 - 1];
+            foreach (var contact in context.contacts) { contact.shapeIdA = shapeA.index1 - 1; contact.shapeIdB = shapeB.index1 - 1; }
+            var poseA = b2GetBodySim(world, world.bodies.data[a.bodyId]).transform;
+            var poseB = b2GetBodySim(world, world.bodies.data[b.bodyId]).transform;
+            var expected = B2MathFunction.b2AABB_Overlaps(a.fatAABB, b.fatAABB) ? CollisionReference(a, poseA, b, poseB) : default;
+            gpu.GenerateManifolds(context, context.contacts.Count);
+            foreach (var actual in context.generatedManifolds.AsSpan(0, context.contacts.Count)) CompareManifold(expected, actual);
+            var referenced = B2MathFunction.b2AABB_Overlaps(a.fatAABB, b.fatAABB) ? 2 : 0;
+            if (gpu.ResidentGeometryCount + gpu.UploadedGeometryCount != referenced)
+                throw new Exception("Geometry accounting must count each referenced slot once.");
+            if (gpu.UploadedGeometryCount != uploads || gpu.GeometryUploadBytes != uploads * 144L)
+                throw new Exception($"Geometry upload count differs: expected {uploads}, got {gpu.UploadedGeometryCount}.");
+        }
+        try
+        {
+            Check(2); Check(0); // Three pairs share the same two geometry slots.
+            b2Body_SetTransform(bodyA, new(.1f, 0), new(1, 0)); Check(0);
+            b2Shape_SetFriction(shapeA, .7f); b2Shape_SetFilter(shapeA, new B2Filter { categoryBits = 8, maskBits = ulong.MaxValue }); Check(0);
+            b2Shape_SetCircle(shapeA, new B2Circle { center = new(.2f, -.1f), radius = 1.1f }); Check(1);
+            b2Shape_SetCapsule(shapeA, new B2Capsule(new(-.7f, 0), new(.7f, 0), .5f)); Check(1);
+            b2Shape_SetCapsule(shapeA, new B2Capsule(new(0, 0), new(0, 0), .5f)); Check(0); // Rejected degenerate edit.
+            b2Shape_SetSegment(shapeA, new B2Segment { point1 = new(-1, 0), point2 = new(1, 0) }); Check(1);
+            var polygon = b2MakeBox(.7f, .5f);
+            b2Shape_SetPolygon(shapeA, ref polygon); Check(1);
+            b2Body_SetTransform(bodyA, new(.1f, 0), new(MathF.Cos(.3f), MathF.Sin(.3f))); Check(0);
+            b2Shape_SetCircle(shapeA, new B2Circle { radius = .8f });
+            b2Shape_SetPolygon(shapeA, ref polygon); Check(1); // Only the final edit reaches the GPU.
+            b2Body_Disable(bodyA);
+            b2Shape_SetCircle(shapeA, new B2Circle { radius = 1.2f });
+            gpu.GenerateManifolds(context, 0);
+            if (gpu.UploadedGeometryCount != 0) throw new Exception("An empty collision batch must not upload dirty shapes.");
+            b2Body_Enable(bodyA); Check(1);
+            b2Body_SetTransform(bodyB, new(20, 0), new(1, 0));
+            b2Shape_SetCircle(shapeA, new B2Circle { radius = .7f }); Check(0);
+            b2Body_SetTransform(bodyB, new(.4f, .3f), new(1, 0)); Check(1);
+
+            var old = shapeA;
+            b2DestroyShape(shapeA, true);
+            shapeA = b2CreatePolygonShape(bodyA, shapeDef, polygon);
+            if (shapeA.index1 != old.index1) throw new Exception("Geometry fixture must reuse its shape slot.");
+            Check(1);
+            var resets = gpu.GeometryCacheResetCount;
+            for (var i = 0; i < 130; i++)
+                b2CreateCircleShape(bodyA, shapeDef, new B2Circle { center = new(100 + i * 3, 0), radius = .5f });
+            Check(2); // Growth invalidates the buffer, but untouched shapes stay lazy.
+            if (gpu.GeometryCacheResetCount != resets + 1) throw new Exception("Geometry growth must invalidate prior GPU storage.");
+            world.shapeGeometryChanged = null!;
+            b2Shape_SetCircle(shapeA, new B2Circle { radius = .5f }); Check(2);
+            if (gpu.GeometryCacheResetCount != resets + 2) throw new Exception("Lost geometry observer must invalidate the cache.");
+
+            void Edit(int tick)
+            {
+                b2Shape_SetCircle(shapeA, new B2Circle { center = new(.2f, 0), radius = .5f });
+                b2Shape_SetCircle(shapeA, new B2Circle { center = new(.1f, 0), radius = tick % 2 == 0 ? .7f : .9f });
+                Check(1);
+            }
+            for (var i = 0; i < 32; i++) Edit(i);
+            var before = GC.GetTotalAllocatedBytes(true);
+            for (var i = 0; i < 64; i++) Edit(i);
+            var bytes = GC.GetTotalAllocatedBytes(true) - before;
+            if (bytes != 0) throw new Exception($"Warmed geometry edits allocated {bytes} managed bytes.");
+
+            // Fail after one dirty shape was packed, before any dispatch. Its cache
+            // must remain invalid and the next valid batch must still upload it.
+            b2Shape_SetCircle(shapeA, new B2Circle { radius = 1 });
+            var b = world.shapes.data[shapeB.index1 - 1]; b.type = B2ShapeType.b2_chainSegmentShape;
+            try { gpu.GenerateManifolds(context, 3); throw new Exception("Unsupported geometry must reject the batch."); }
+            catch (NotSupportedException) { }
+            b.type = B2ShapeType.b2_circleShape; Check(1);
+            var observer = world.shapeGeometryChanged;
+            using (var other = new GPUPhysicsWorld())
+            {
+                other.GenerateManifolds(context, 3);
+                if (world.shapeGeometryChanged == observer) throw new Exception("Other GPU hosts must claim their own geometry cache.");
+                gpu.Dispose();
+                if (world.shapeGeometryChanged is null) throw new Exception("Disposal must not detach another host's geometry observer.");
+            }
+            if (world.shapeGeometryChanged is not null) throw new Exception("GPU disposal must detach its geometry observer.");
+        }
+        finally
+        {
+            b2DestroyWorld(id);
+            if (world.shapeGeometryChanged is not null) throw new Exception("World reset must detach its geometry observer.");
+        }
+        Console.WriteLine("Resident GPU geometry passed: shared slots, all shape edits, lazy uploads, movement, ID reuse, growth, observer/disposal/failure boundaries and 64 warmed edits with zero managed bytes.");
     }
 
     private static B2Shape CollisionShape(B2ShapeType type, Random random)

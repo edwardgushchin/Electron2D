@@ -49,7 +49,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _bodyStorage = new(this); _contactStorage = new(this); _jointStorage = new(this);
             _contactInputStorage = new(this); _fallbackManifoldStorage = new(this);
             _historyStorage = new(this); _matchedStorage = new(this);
-            _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
+            _geometryChanged = MarkGeometryChanged;
+            _geometryUpdateStorage = new(this); _geometryStorage = new(this); _pairStorage = new(this); _manifoldStorage = new(this);
             _treeStorage = new(this); _treeQueryStorage = new(this); _treeCandidateStorage = new(this);
             _broadShapeStorage = new(this); _broadJointStorage = new(this); _existingPairStorage = new(this);
             _pairKeyStorage = new(this); _pairUpdateStorage = new(this); _pairStatusStorage = new(this);
@@ -184,6 +185,8 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachPairTracking();
         DetachProxyTracking();
         DetachFilterTracking();
+        DetachGeometryTracking();
+        _geometryUpdateStorage.Dispose();
         _shapeFilterUpdateStorage.Dispose(); _jointFilterUpdateStorage.Dispose(); _filterPipeline.Dispose();
         _proxyStorage.Dispose(); _proxyUpdateStorage.Dispose(); _treeOrderStorage.Dispose(); _treePipeline.Dispose();
         _pairKeyStorage.Dispose(); _pairUpdateStorage.Dispose(); _pairStatusStorage.Dispose(); _pairTablePipeline.Dispose();

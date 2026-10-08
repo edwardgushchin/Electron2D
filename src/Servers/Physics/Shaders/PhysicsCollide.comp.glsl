@@ -14,6 +14,7 @@ layout(std430, set = 1, binding = 2) buffer Results { Result results[]; };
 layout(std430, set = 1, binding = 3) buffer Matched { ContactHistory matched[]; };
 layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; };
 layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
+layout(std430, set = 0, binding = 2) readonly buffer GeometryUpdates { Geometry geometryUpdates[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; };
 const float epsilon = 1.1920928955078125e-7;
 const float speculative = 0.02;
@@ -214,6 +215,10 @@ Manifold polygons(Geometry ga,Geometry gb,vec4 xf)
 void main()
 {
     uint index=gl_GlobalInvocationID.x; if(index>=settings.x) return;
+    if (settings.y == 1)
+    {
+        Geometry g = geometryUpdates[index]; shapes[int(g.info.w)] = g; return;
+    }
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     if(pair.ids.z==0) { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return; }
     Geometry a=shapes[int(pair.ids.x)],b=shapes[int(pair.ids.y)]; int ta=int(a.info.x),tb=int(b.info.x);

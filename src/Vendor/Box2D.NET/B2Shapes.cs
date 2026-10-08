@@ -196,6 +196,7 @@ namespace Box2D.NET
 
             b2ValidateSolverSets(world);
             world.shapeFilterChanged?.Invoke(shapeId);
+            world.shapeGeometryChanged?.Invoke(shapeId);
 
             return shape;
         }
@@ -359,6 +360,7 @@ namespace Box2D.NET
             b2FreeId(world.shapeIdPool, shapeId);
             shape.id = B2_NULL_INDEX;
             world.shapeFilterChanged?.Invoke(shapeId);
+            world.shapeGeometryChanged?.Invoke(shapeId);
 
             b2ValidateSolverSets(world);
         }
@@ -1475,6 +1477,7 @@ namespace Box2D.NET
             B2Shape shape = b2GetShape(world, shapeId);
             shape.us.circle = new B2Circle(circle.center, circle.radius);
             shape.type = B2ShapeType.b2_circleShape;
+            world.shapeGeometryChanged?.Invoke(shape.id);
 
             // need to wake bodies so they can react to the shape change
             bool wakeBodies = true;
@@ -1499,6 +1502,7 @@ namespace Box2D.NET
             B2Shape shape = b2GetShape(world, shapeId);
             shape.us.capsule = new B2Capsule(capsule.center1, capsule.center2, capsule.radius);
             shape.type = B2ShapeType.b2_capsuleShape;
+            world.shapeGeometryChanged?.Invoke(shape.id);
 
             // need to wake bodies so they can react to the shape change
             bool wakeBodies = true;
@@ -1517,6 +1521,7 @@ namespace Box2D.NET
             B2Shape shape = b2GetShape(world, shapeId);
             shape.us.segment = new B2Segment(segment.point1, segment.point2);
             shape.type = B2ShapeType.b2_segmentShape;
+            world.shapeGeometryChanged?.Invoke(shape.id);
 
             // need to wake bodies so they can react to the shape change
             bool wakeBodies = true;
@@ -1535,6 +1540,7 @@ namespace Box2D.NET
             B2Shape shape = b2GetShape(world, shapeId);
             shape.us.polygon = polygon;
             shape.type = B2ShapeType.b2_polygonShape;
+            world.shapeGeometryChanged?.Invoke(shape.id);
 
             // need to wake bodies so they can react to the shape change
             bool wakeBodies = true;
