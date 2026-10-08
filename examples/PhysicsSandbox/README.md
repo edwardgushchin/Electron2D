@@ -16,6 +16,17 @@ dotnet run --project examples/PhysicsSandbox -c Release -p:Electron2DBuildNative
 
 The project references this checkout. It enables compiler/JIT optimization for itself and its runtime reference even in Debug, while retaining symbols and Debug backend assertions. This keeps a plain `dotnet run` usable for active particle loads. Windows, Linux and macOS desktop hosts use the same scene code; actual execution has been checked on Linux x64/Wayland. This example does not include mobile, TV or browser entry points.
 
+## Independent GPU Smash preview
+
+A separate developer preview runs Smash on the new independent GPU physics world:
+
+```sh
+ELECTRON2D_TEST_GPU_SMASH=1 dotnet run --project tests/Electron2D.Tests -c Release
+```
+
+It starts paused with 9,600 fragments; use **Launch block** to begin. The regular
+example's physics path is unchanged. See [controls, settings and verification limits](../../docs/components/gpu-smash-preview.md).
+
 ## Choose a story
 
 Use the upper-left dropdown. It supports pointer selection, arrow keys and Enter. Switching or resetting destroys the previous story, bodies, joints, borrowed geometry owned by that story and any independent server world. The new story starts from its factory configuration.

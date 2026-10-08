@@ -8,6 +8,11 @@ versioned. The [shader build contract](../../tools/shaders/README.md#built-in-ru
 owns compiler pins, invalidation and packaging. Historical bytecode hashes below
 identify the measured experiments, not files that must remain in the source tree.
 
+A separate [GPU Smash preview](gpu-smash-preview.md) now connects the independent
+resident body store to an interactive window and MultiMesh publication. Its explicit
+pose readback, controls and native smoke checks are documented there; it does not
+add public backend selection or replace the regular example's CPU physics.
+
 ## Native verification observation (2026-10-08)
 
 During body-configuration extraction, the full GPU suite passed its physics and
