@@ -52,19 +52,19 @@ internal static class PinJointTests
         Check(pin.GetConfigurationWarnings().Length == 0, "A corrected self-connection recovers.");
         bob.Name = "Other";
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 == 0, "Renaming an active endpoint invalidates its stored path.");
+        Check(!pin.Runtime.HasBackend, "Renaming an active endpoint invalidates its stored path.");
         bob.Name = "Bob";
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 != 0, "Restoring the endpoint name reconnects the path.");
-        var previousID = pin.BackendID;
+        Check(pin.Runtime.HasBackend, "Restoring the endpoint name reconnects the path.");
+        var previousID = pin.Runtime.Backend.ID;
         pin.Scale = new(2, 1);
         pin.NodeB = "../Missing";
         pin.NodeB = "../Bob";
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(pin.BackendID.Equals(previousID), "Invalid joint geometry preserves the previous backend constraint.");
+        Check(pin.Runtime.Backend.ID.Equals(previousID), "Invalid joint geometry preserves the previous backend constraint.");
         pin.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 != 0 && pin.GetConfigurationWarnings().Length == 0,
+        Check(pin.Runtime.HasBackend && pin.GetConfigurationWarnings().Length == 0,
             "Invalid joint geometry can be corrected on the next step.");
         var radiusBefore = bob.GlobalPosition.Length();
         pin.Position = new(300, 0);
@@ -149,7 +149,7 @@ internal static class PinJointTests
         Check(body.GetContactCount() == 0, "Connected-body contacts are disabled by default.");
         pin.DisableCollision = false;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
-        Check(b2Joint_GetCollideConnected(pin.BackendID), "Enabled connected collisions reach the solver joint.");
+        Check(b2Joint_GetCollideConnected(pin.Runtime.Backend.ID), "Enabled connected collisions reach the solver joint.");
         Check(body.GetContactCount() > 0, "Enabling connected collisions creates solver contacts.");
         pin.DisableCollision = true;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
@@ -173,15 +173,15 @@ internal static class PinJointTests
         late.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(late);
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 != 0, "A body added after the joint enters connects on the next step.");
+        Check(pin.Runtime.HasBackend, "A body added after the joint enters connects on the next step.");
         root.RemoveChild(late);
         late.Name = "Other";
         root.AddChild(late);
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 == 0, "A path that no longer resolves leaves the joint inactive.");
+        Check(!pin.Runtime.HasBackend, "A path that no longer resolves leaves the joint inactive.");
         late.Name = "Late";
         tree.PhysicsFrame(1d / 60);
-        Check(pin.BackendID.index1 != 0, "A matching node rename reconnects an unresolved joint.");
+        Check(pin.Runtime.HasBackend, "A matching node rename reconnects an unresolved joint.");
     }
 
     private static void Check(bool condition, string message)

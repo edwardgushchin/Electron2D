@@ -4,18 +4,18 @@ using static Box2D.NET.B2MathFunction;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsJointRuntime
+internal sealed partial class PhysicsJointBackend
 {
     private B2Vec2 _pointA;
     private B2Vec2 _pointB;
     private B2Vec2 _pendingImpulse;
 
-    internal void PrepareSolverStep(float delta)
+    internal void PrepareSolverStep(float delta, PhysicsJointRuntime settings)
     {
         _pendingImpulse = default;
-        if (Type != PhysicsServer.JointType.DampedSpring || BackendID.index1 == 0 || SpringStiffness == 0 && SpringDamping == 0) return;
-        _pointA = b2Body_GetWorldPoint(BodyAID, _definition.localFrameA.p);
-        _pointB = b2Body_GetWorldPoint(BodyBID, _definition.localFrameB.p);
+        if (settings.Type != PhysicsServer.JointType.DampedSpring || !IsAttached || settings.SpringStiffness == 0 && settings.SpringDamping == 0) return;
+        _pointA = b2Body_GetWorldPoint(BodyAID, _localFrameA.p);
+        _pointB = b2Body_GetWorldPoint(BodyBID, _localFrameB.p);
         var dx = (double)_pointB.X - _pointA.X;
         var dy = (double)_pointB.Y - _pointA.Y;
         var distance = Math.Sqrt(dx * dx + dy * dy);
@@ -33,9 +33,9 @@ internal sealed partial class PhysicsJointRuntime
         var angularA = b2Body_GetAngularVelocity(BodyAID);
         var angularB = b2Body_GetAngularVelocity(BodyBID);
         var speed = ((double)velocityB.X - velocityA.X) * nx + ((double)velocityB.Y - velocityA.Y) * ny + angularB * crossB - angularA * crossA;
-        var rest = (SpringAutomaticRest ? Math.Abs(SpringAutomaticLength) : SpringRestLength) * (double)PhysicsSpace.MetersPerUnit;
-        var elastic = (rest - distance) * SpringStiffness * delta;
-        var decay = Math.Exp(-(double)SpringDamping * delta * inverse);
+        var rest = (settings.SpringAutomaticRest ? Math.Abs(settings.SpringAutomaticLength) : settings.SpringRestLength) * (double)PhysicsSpace.MetersPerUnit;
+        var elastic = (rest - distance) * settings.SpringStiffness * delta;
+        var decay = Math.Exp(-(double)settings.SpringDamping * delta * inverse);
         var total = elastic * decay - speed * (1 - decay) / inverse;
         var impulse = new B2Vec2((float)(nx * total), (float)(ny * total));
         if (!float.IsFinite(impulse.X) || !float.IsFinite(impulse.Y))

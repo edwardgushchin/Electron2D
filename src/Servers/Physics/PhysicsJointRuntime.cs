@@ -1,14 +1,7 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Constants;
-using static Box2D.NET.B2Joints;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2RevoluteJoints;
-using static Box2D.NET.B2WheelJoints;
-
 namespace Electron2D;
 
-internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsServer.JointType? declaredType = null)
+/// <summary>Retains joint identity, sampled engine frames, settings and common scene/server lifetime.</summary>
+internal sealed class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsServer.JointType? declaredType = null)
 {
     internal RID RID { get; } = rid;
     internal WeakReference<Joint>? Scene { get; } = scene is null ? null : new(scene);
@@ -17,12 +10,13 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal PhysicsSpace? Space { get; private set; }
     internal RID BodyA { get; private set; }
     internal RID BodyB { get; private set; }
-    internal B2JointId BackendID { get; private set; }
-    internal B2BodyId BodyAID { get; private set; }
-    internal B2BodyId BodyBID { get; private set; }
-    private B2JointDef _definition;
-    private float _lowerTranslation;
-    private float _upperTranslation;
+    internal const float MaxExtentSceneUnits = 10_000_000;
+    internal PhysicsJointBackend Backend { get; } = new();
+    internal bool HasBackend => Backend.IsAttached;
+    internal Transform FrameA { get; private set; } = Transform.Identity;
+    internal Transform FrameB { get; private set; } = Transform.Identity;
+    internal float LowerTranslation { get; private set; }
+    internal float UpperTranslation { get; private set; }
     internal bool DisableCollision { get; private set; } = true;
     internal bool PinLimitEnabled { get; private set; }
     internal float PinLimitLower { get; private set; }
@@ -86,7 +80,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         if (DeclaredType is { } declared && declared != type)
             throw new InvalidOperationException("A scene joint cannot change its concrete node role through the server.");
         var a = Snapshot(first);
-        var b = second.IsValid() ? Snapshot(second) : (Space: (PhysicsSpace?)null, ID: default(B2BodyId), Pose: Transform.Identity);
+        var b = second.IsValid() ? Snapshot(second) : (Space: (PhysicsSpace?)null, Backend: (PhysicsColliderBackend?)null, Pose: Transform.Identity);
         if (a.Space is not null && b.Space is not null && !ReferenceEquals(a.Space, b.Space))
             throw new ArgumentException("Joint bodies must belong to the same physics space.", nameof(second));
         var nextSpace = a.Space ?? b.Space;
@@ -94,12 +88,8 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
             nextSpace is not null && !ReferenceEquals(sceneSpace, nextSpace))
             throw new InvalidOperationException("A scene joint belongs to its scene physics world.");
         ValidatePose(a.Pose); ValidatePose(b.Pose);
-        var definition = b2DefaultJointDef();
-        definition.localFrameA.p = LocalPoint(a, anchorA);
-        definition.localFrameB.p = LocalPoint(b, anchorB);
-        definition.localFrameA.q = b2InvMulRot(Rotation(a), b2MakeRot(angle));
-        definition.localFrameB.q = b2InvMulRot(Rotation(b), b2MakeRot(angle));
-        definition.collideConnected = !DisableCollision;
+        var frameA = PhysicsJointBackend.SampleLocalFrame(a.Backend, a.Pose, anchorA, angle);
+        var frameB = PhysicsJointBackend.SampleLocalFrame(b.Backend, b.Pose, anchorB, angle);
         var rest = Length(anchorB - anchorA);
         if (type is PhysicsServer.JointType.DampedSpring or PhysicsServer.JointType.Groove) ValidateExtent(rest);
         DetachSpace();
@@ -111,16 +101,15 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
             SpringRestLength = rest; SpringAutomaticRest = false;
             SpringStiffness = 20; SpringDamping = 1.5f;
         }
-        Type = type; BodyA = first; BodyB = second; _definition = definition;
-        _lowerTranslation = lower * PhysicsSpace.MetersPerUnit;
-        _upperTranslation = upper * PhysicsSpace.MetersPerUnit;
+        Type = type; BodyA = first; BodyB = second; FrameA = frameA; FrameB = frameB;
+        LowerTranslation = lower; UpperTranslation = upper;
         RefreshSpace();
     }
 
     internal void RefreshSpace()
     {
         if (Type == PhysicsServer.JointType.Empty) return;
-        (PhysicsSpace? Space, B2BodyId ID, Transform Pose) a, b;
+        (PhysicsSpace? Space, PhysicsColliderBackend? Backend, Transform Pose) a, b;
         try
         {
             a = Snapshot(BodyA);
@@ -136,35 +125,8 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
             Space = next;
             next?.AddJointRuntime(this);
         }
-        if (BackendID.index1 != 0 || next is null || a.Space is null || BodyB.IsValid() && !ReferenceEquals(a.Space, b.Space)) return;
-        BodyAID = a.ID;
-        BodyBID = BodyB.IsValid() ? b.ID : next.GetJointWorldBody();
-        var definition = _definition;
-        definition.bodyIdA = BodyAID; definition.bodyIdB = BodyBID;
-        definition.collideConnected = !DisableCollision;
-        switch (Type)
-        {
-            case PhysicsServer.JointType.Pin:
-                var pin = b2DefaultRevoluteJointDef();
-                pin.@base = definition;
-                pin.enableLimit = PinLimitEnabled;
-                pin.lowerAngle = PinLimitEnabled ? PinLimitLower : 0;
-                pin.upperAngle = PinLimitEnabled ? PinLimitUpper : 0;
-                pin.enableMotor = PinMotorEnabled; pin.motorSpeed = PinMotorVelocity; pin.maxMotorTorque = PinMotorMaxTorque;
-                BackendID = b2CreateRevoluteJoint(next.WorldID, pin);
-                break;
-            case PhysicsServer.JointType.Groove:
-                var groove = b2DefaultWheelJointDef();
-                groove.@base = definition; groove.enableSpring = false; groove.enableLimit = true;
-                groove.lowerTranslation = _lowerTranslation; groove.upperTranslation = _upperTranslation;
-                BackendID = b2CreateWheelJoint(next.WorldID, groove);
-                break;
-            case PhysicsServer.JointType.DampedSpring:
-                var spring = b2DefaultFilterJointDef(); spring.@base = definition;
-                BackendID = b2CreateFilterJoint(next.WorldID, spring);
-                break;
-        }
-        if (BackendID.index1 == 0) throw new InvalidOperationException("The physics backend did not create the joint.");
+        if (HasBackend || next is null || a.Space is null || BodyB.IsValid() && !ReferenceEquals(a.Space, b.Space)) return;
+        Backend.Attach(next, a.Backend!, BodyB.IsValid() ? b.Backend : null, this);
         if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
     }
 
@@ -187,22 +149,19 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     private void DetachNative()
     {
-        if (BackendID.index1 != 0)
-        {
-            if (DisableCollision && BodyB.IsValid()) PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
-            if (Space?.HasBackendFailure != true) b2DestroyJoint(BackendID, wakeAttached: true);
-        }
-        BackendID = default; BodyAID = BodyBID = default;
+        if (HasBackend && DisableCollision && BodyB.IsValid())
+            PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
+        Backend.Detach();
     }
 
     internal void SetDisableCollision(bool value)
     {
         if (DisableCollision == value) return;
-        if (BackendID.index1 != 0 && DisableCollision && BodyB.IsValid())
+        if (HasBackend && DisableCollision && BodyB.IsValid())
             PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
         DisableCollision = value;
-        if (BackendID.index1 != 0) b2Joint_SetCollideConnected(BackendID, !value);
-        if (BackendID.index1 != 0 && value && BodyB.IsValid())
+        if (HasBackend) Backend.SetCollideConnected(!value);
+        if (HasBackend && value && BodyB.IsValid())
             PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
         if (BodyA.IsValid()) MarkBodyDirty(BodyA);
         if (BodyB.IsValid()) MarkBodyDirty(BodyB);
@@ -225,32 +184,31 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     }
     private void ApplyPinLimits()
     {
-        if (BackendID.index1 == 0 || Type != PhysicsServer.JointType.Pin) return;
-        if (PinLimitEnabled) b2RevoluteJoint_SetLimits(BackendID, PinLimitLower, PinLimitUpper);
-        b2RevoluteJoint_EnableLimit(BackendID, PinLimitEnabled);
+        if (!HasBackend || Type != PhysicsServer.JointType.Pin) return;
+        Backend.SetPinLimits(PinLimitEnabled, PinLimitLower, PinLimitUpper);
     }
     internal void SetPinMotorEnabled(bool value)
     {
         PinMotorEnabled = value;
-        if (BackendID.index1 != 0 && Type == PhysicsServer.JointType.Pin) b2RevoluteJoint_EnableMotor(BackendID, value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorEnabled(value);
     }
     internal void SetPinMotorVelocity(float value)
     {
         Finite(value); PinMotorVelocity = value;
-        if (BackendID.index1 != 0 && Type == PhysicsServer.JointType.Pin) b2RevoluteJoint_SetMotorSpeed(BackendID, value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorVelocity(value);
     }
     internal void SetPinMotorMaxTorque(float value)
     {
         Coefficient(value); PinMotorMaxTorque = value;
-        if (BackendID.index1 != 0 && Type == PhysicsServer.JointType.Pin) b2RevoluteJoint_SetMaxMotorTorque(BackendID, value);
+        if (HasBackend && Type == PhysicsServer.JointType.Pin) Backend.SetPinMotorMaxTorque(value);
     }
     internal void SetGrooveLength(float value)
     {
         ValidateExtent(value);
-        _lowerTranslation = MathF.Min(0, value) * PhysicsSpace.MetersPerUnit;
-        _upperTranslation = MathF.Max(0, value) * PhysicsSpace.MetersPerUnit;
-        if (BackendID.index1 != 0 && Type == PhysicsServer.JointType.Groove)
-            b2WheelJoint_SetLimits(BackendID, _lowerTranslation, _upperTranslation);
+        LowerTranslation = MathF.Min(0, value);
+        UpperTranslation = MathF.Max(0, value);
+        if (HasBackend && Type == PhysicsServer.JointType.Groove)
+            Backend.SetGrooveLimits(LowerTranslation, UpperTranslation);
     }
     internal void SetSpringRestLength(float value, bool automatic = false)
     {
@@ -260,11 +218,15 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal void SetSpringStiffness(float value) { Coefficient(value); SpringStiffness = value; }
     internal void SetSpringDamping(float value) { Coefficient(value); SpringDamping = value; }
 
-    private static (PhysicsSpace? Space, B2BodyId ID, Transform Pose) Snapshot(RID body)
+    internal void PrepareSolverStep(float delta) => Backend.PrepareSolverStep(delta, this);
+    internal void ValidateSolverStep(PhysicsSpace space) => Backend.ValidateSolverStep(space);
+    internal void ApplySolverStep() => Backend.ApplySolverStep();
+
+    private static (PhysicsSpace? Space, PhysicsColliderBackend? Backend, Transform Pose) Snapshot(RID body)
     {
         var owners = PhysicsServer.Service.ResolveBodyOwners(body);
-        return owners.Scene is { } scene ? (scene.Space, scene.BackendID, scene.GlobalTransform) :
-            (owners.Server!.Space, owners.Server.BackendID, owners.Server.GetTransform());
+        return owners.Scene is { } scene ? (scene.Space, scene.Backend, scene.GlobalTransform) :
+            (owners.Server!.Space, owners.Server.Backend, owners.Server.GetTransform());
     }
     private static PhysicsSpace? BodySpace(RID body)
     {
@@ -275,17 +237,6 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         }
         catch (ArgumentException) { return null; }
     }
-    private static B2Vec2 LocalPoint((PhysicsSpace? Space, B2BodyId ID, Transform Pose) body, Vector2 point)
-    {
-        var local = body.Space is null ? PhysicsShapeBackend.ToBackend(body.Pose.AffineInverse() * point) :
-            b2Body_GetLocalPoint(body.ID, PhysicsShapeBackend.ToBackend(point));
-        if (!float.IsFinite(local.X) || !float.IsFinite(local.Y) ||
-            Math.Sqrt((double)local.X * local.X + (double)local.Y * local.Y) > B2_HUGE)
-            throw new ArgumentOutOfRangeException(nameof(point), "The local joint anchor exceeds the backend extent.");
-        return local;
-    }
-    private static B2Rot Rotation((PhysicsSpace? Space, B2BodyId ID, Transform Pose) body) =>
-        body.Space is null ? b2MakeRot(body.Pose.Rotation) : b2Body_GetRotation(body.ID);
     private static void MarkBodyDirty(RID rid)
     {
         try
@@ -303,7 +254,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     private static float Length(Vector2 value) => (float)Math.Sqrt((double)value.X * value.X + (double)value.Y * value.Y);
     internal static void ValidateExtent(float value)
     {
-        if (!float.IsFinite(value) || MathF.Abs(value) > B2_HUGE * PhysicsSpace.UnitsPerMeter)
+        if (!float.IsFinite(value) || MathF.Abs(value) > MaxExtentSceneUnits)
             throw new ArgumentOutOfRangeException(nameof(value));
     }
     private static void Finite(float value) { if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value)); }

@@ -33,7 +33,9 @@ and resolved body fields now use shared internal adapters. This preserves the
 existing public contract while isolating vendor-dependent operations. Built-in
 shape resources now expose borrowed scene-unit geometry internally; CPU fixture,
 query and mass compilation is isolated in PhysicsShapeBackend. Independent GPU
-ownership and public backend selection remain open.
+ownership and public backend selection remain open. Joint identity, sampled frames
+and settings now also sit outside vendor storage; PhysicsJointBackend owns current
+constraint handles and CPU spring evaluation.
 
 Physics readiness requires both CPU/Box2D.NET behavior and a complete selectable
 independent GPU world. The [source audit](../components/physics-contract-audit.md)

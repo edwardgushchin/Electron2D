@@ -1,5 +1,3 @@
-using static Box2D.NET.B2Constants;
-
 namespace Electron2D;
 
 /// <summary>Constrains one body anchor to a finite groove on another body while leaving rotation free.</summary>
@@ -7,7 +5,6 @@ namespace Electron2D;
 /// The second body's anchor is sampled at <see cref="InitialOffset"/> on that axis when attached.</remarks>
 public sealed class GrooveJoint : Joint
 {
-    private static readonly float MaxExtentSceneUnits = B2_HUGE * PhysicsSpace.UnitsPerMeter;
     private static readonly PropertyDescriptor[] GrooveProperties =
     [
         new PropertyDescriptor<GrooveJoint, float>(nameof(Length), joint => joint.Length,
@@ -37,7 +34,7 @@ public sealed class GrooveJoint : Joint
             if (_length == value) return;
             _length = value;
             Runtime.SetGrooveLength(value);
-            if (BackendID.index1 == 0 || HasServerOverride) MarkJointDirty();
+            if (!Runtime.HasBackend || HasServerOverride) MarkJointDirty();
         }
     }
 
@@ -73,7 +70,7 @@ public sealed class GrooveJoint : Joint
 
     private static void ValidateExtent(float value, string name)
     {
-        if (!float.IsFinite(value) || MathF.Abs(value) > MaxExtentSceneUnits)
+        if (!float.IsFinite(value) || MathF.Abs(value) > PhysicsJointRuntime.MaxExtentSceneUnits)
             throw new ArgumentOutOfRangeException(name);
     }
 

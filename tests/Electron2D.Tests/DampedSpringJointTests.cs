@@ -170,13 +170,13 @@ internal static class DampedSpringJointTests
         Check(body.GetContactCount() == 0, "Re-disabling spring collisions removes the active contact.");
         spring.NodeB = "../Missing";
         tree.PhysicsFrame(1d / 60);
-        Check(spring.BackendID.index1 == 0, "An unresolved endpoint removes the filter joint and force generation.");
+        Check(!spring.Runtime.HasBackend, "An unresolved endpoint removes the filter joint and force generation.");
         spring.NodeB = "../Second";
         tree.PhysicsFrame(1d / 60);
-        var id = spring.BackendID;
+        var id = spring.Runtime.Backend.ID;
         spring.Scale = new(2, 1); spring.Length = 6;
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(spring.BackendID.Equals(id), "Invalid spring geometry retains the previous native connection.");
+        Check(spring.Runtime.Backend.ID.Equals(id), "Invalid spring geometry retains the previous native connection.");
         spring.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
         var velocity = body.LinearVelocity;
@@ -187,9 +187,9 @@ internal static class DampedSpringJointTests
         Reject<InvalidOperationException>(() => Task.Run(() => spring.Damping = 3).GetAwaiter().GetResult());
         Reject<InvalidOperationException>(() => Task.Run(() => spring.Stiffness).GetAwaiter().GetResult());
         root.RemoveChild(body);
-        Check(spring.BackendID.index1 == 0, "Body departure clears the spring's native connection before body destruction.");
+        Check(!spring.Runtime.HasBackend, "Body departure clears the spring's native connection before body destruction.");
         root.AddChild(body); tree.PhysicsFrame(1d / 60);
-        Check(spring.BackendID.index1 != 0, "Body reentry rebuilds the spring and its local anchors.");
+        Check(spring.Runtime.HasBackend, "Body reentry rebuilds the spring and its local anchors.");
         spring.RestLength = 30;
         body.NotifyLocalTransformChanges = true;
         var phaseRejected = false;
@@ -209,7 +209,7 @@ internal static class DampedSpringJointTests
         body.LocalTransformChanged -= failing;
         body.NotifyLocalTransformChanges = false;
         tree.PhysicsFrame(1d / 60);
-        Check(spring.BackendID.index1 != 0, "A throwing body-sync callback leaves the spring and world reusable.");
+        Check(spring.Runtime.HasBackend, "A throwing body-sync callback leaves the spring and world reusable.");
     }
 
     private static void VerifyTransformedAnchorsAndSleep()

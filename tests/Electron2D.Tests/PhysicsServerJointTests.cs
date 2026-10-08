@@ -9,7 +9,75 @@ internal static class PhysicsServerJointTests
         VerifyLifetimeAndRollback();
         VerifyJointExceptionContributions();
         VerifyMixedBodiesAndPhaseGuards();
+        VerifyFrameReattachment(false);
         Console.WriteLine("Physics joint RID, server/scene roles, native response, ownership and lifetime checks passed.");
+    }
+
+    internal static void VerifyFrameReattachment(bool gpu)
+    {
+        var server = PhysicsServer.Service;
+        var source = PhysicsServer.SpaceCreate();
+        var replacement = PhysicsServer.SpaceCreate();
+        var shape = PhysicsServer.CircleShapeCreate();
+        var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
+        var second = CreateBody(server, shape, Vector2.Zero);
+        var joint = PhysicsServer.JointCreate();
+        try
+        {
+            PhysicsServer.SpaceSetActive(source, true); PhysicsServer.SpaceSetActive(replacement, true);
+            if (gpu)
+            {
+                server.GetSceneSpace(source).EnableGPUSolver();
+                server.GetSceneSpace(replacement).EnableGPUSolver();
+            }
+            var initialA = new Transform(0.37f, new Vector2(13.4f, 27.6f));
+            var initialB = new Transform(-0.61f, new Vector2(80.3f, 80.7f));
+            var anchor = new Vector2(45.2f, 60.8f);
+            var localA = initialA.AffineInverse() * anchor;
+            var localB = initialB.AffineInverse() * anchor;
+            var initialAngle = initialB.Rotation - initialA.Rotation;
+            PhysicsServer.BodySetTransform(first, initialA); PhysicsServer.BodySetTransform(second, initialB);
+            PhysicsServer.BodySetCanSleep(second, false);
+            PhysicsServer.BodySetSpace(first, source); PhysicsServer.BodySetSpace(second, source);
+            PhysicsServer.JointMakePin(joint, anchor, first, second);
+            PhysicsServer.PinJointSetAngularLimitLower(joint, -0.15f);
+            PhysicsServer.PinJointSetAngularLimitUpper(joint, 0.15f);
+            PhysicsServer.PinJointSetAngularLimitEnabled(joint, true);
+            PhysicsServer.PinJointSetMotorTargetVelocity(joint, 0.8f);
+            PhysicsServer.PinJointSetMotorEnabled(joint, true);
+            VerifyMotion(source);
+
+            var transfer = new Transform(1.1f, new Vector2(240.5f, -130.2f));
+            var poseA = transfer * PhysicsServer.BodyGetTransform(first);
+            var poseB = transfer * PhysicsServer.BodyGetTransform(second);
+            PhysicsServer.BodySetSpace(first, default); PhysicsServer.BodySetSpace(second, default);
+            PhysicsServer.BodySetTransform(first, poseA); PhysicsServer.BodySetTransform(second, poseB);
+            PhysicsServer.BodySetLinearVelocity(second, Vector2.Zero); PhysicsServer.BodySetAngularVelocity(second, 0);
+            PhysicsServer.BodySetSpace(first, replacement); PhysicsServer.BodySetSpace(second, replacement);
+            Reject<ArgumentOutOfRangeException>(() => PhysicsServer.JointMakePin(joint, new(float.MaxValue, 0), first, second));
+            Check(PhysicsServer.JointGetType(joint) == PhysicsServer.JointType.Pin && PhysicsServer.PinJointGetAngularLimitEnabled(joint) &&
+                PhysicsServer.PinJointGetMotorTargetVelocity(joint) == 0.8f, "Reattachment and rejected replacement preserve joint identity and authored settings.");
+            VerifyMotion(replacement);
+
+            void VerifyMotion(RID space)
+            {
+                for (var i = 0; i < 120; i++) PhysicsServer.SpaceStep(space, 1d / 120);
+                var a = PhysicsServer.BodyGetTransform(first);
+                var b = PhysicsServer.BodyGetTransform(second);
+                var angle = b.Rotation - a.Rotation - initialAngle;
+                angle = MathF.Atan2(MathF.Sin(angle), MathF.Cos(angle));
+                // One scene unit allows the 0.5-unit linear solver slop plus integration error;
+                // 0.05 rad beyond the 0.15-rad limit allows the angular solver tolerance.
+                Check((a * localA).DistanceTo(b * localB) < 1 && angle is > 0.02f and < 0.2f,
+                    "Rotated off-center anchors and angular reference remain effective across world replacement.");
+            }
+        }
+        finally
+        {
+            PhysicsServer.FreeRID(joint); PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second);
+            PhysicsServer.FreeRID(shape); PhysicsServer.FreeRID(source); PhysicsServer.FreeRID(replacement);
+        }
+        Console.WriteLine($"Joint sampled frames and world replacement passed on {(gpu ? "GPU" : "CPU")}.");
     }
 
     private static RID CreateBody(PhysicsServer server, RID shape, Vector2 position, bool stationary = false, float mass = 1)

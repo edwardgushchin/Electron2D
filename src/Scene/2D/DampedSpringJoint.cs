@@ -1,5 +1,3 @@
-using static Box2D.NET.B2Constants;
-
 namespace Electron2D;
 
 /// <summary>Connects two body-local anchors with a Hooke spring and axial damping.</summary>
@@ -8,7 +6,6 @@ namespace Electron2D;
 /// and can rotate the bodies. The scene owner thread owns attached configuration and simulation.</remarks>
 public sealed class DampedSpringJoint : Joint
 {
-    private static readonly float MaxExtentSceneUnits = B2_HUGE * PhysicsSpace.UnitsPerMeter;
     private static readonly PropertyDescriptor[] SpringProperties =
     [
         new PropertyDescriptor<DampedSpringJoint, float>(nameof(Length), joint => joint.Length,
@@ -91,7 +88,7 @@ public sealed class DampedSpringJoint : Joint
 
     private static void ValidateExtent(float value)
     {
-        if (!float.IsFinite(value) || MathF.Abs(value) > MaxExtentSceneUnits) throw new ArgumentOutOfRangeException(nameof(value));
+        if (!float.IsFinite(value) || MathF.Abs(value) > PhysicsJointRuntime.MaxExtentSceneUnits) throw new ArgumentOutOfRangeException(nameof(value));
     }
 
     /// <inheritdoc />

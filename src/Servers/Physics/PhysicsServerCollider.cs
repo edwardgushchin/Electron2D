@@ -31,6 +31,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         bool OneWay = false, float Margin = 0, Vector2 Direction = default);
 
     internal RID RID { get; } = rid;
+    internal PhysicsColliderBackend Backend => _backend;
     internal B2BodyId BackendID => _backend.BodyID;
     internal bool IsArea { get; } = isArea;
     internal PhysicsAreaFields? AreaFields { get; } = isArea ? new(9.80665f, new(0, -1)) : null;

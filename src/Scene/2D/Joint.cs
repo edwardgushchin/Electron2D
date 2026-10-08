@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 /// <summary>Connects two scene physics bodies in their shared physics world.</summary>
@@ -152,7 +150,7 @@ public abstract class Joint : Entity
 
     internal void BodyArrived()
     {
-        if (BackendID.index1 == 0 && !_serverOverride) _dirty = true;
+        if (!Runtime.HasBackend && !_serverOverride) _dirty = true;
     }
 
     internal void DetachBackend()
@@ -163,8 +161,6 @@ public abstract class Joint : Entity
         _dirty = true;
     }
 
-    internal B2JointId BackendID => Runtime.BackendID;
-
     internal virtual void ValidateJointConfiguration(PhysicsBody first, PhysicsBody second, Transform transform)
     {
         ValidateAnchor(first.ToLocal(transform.Origin));
@@ -173,8 +169,7 @@ public abstract class Joint : Entity
 
     internal static void ValidateAnchor(Vector2 local)
     {
-        var backend = PhysicsShapeBackend.ToBackend(local);
-        if (!local.IsFinite() || !float.IsFinite(backend.X) || !float.IsFinite(backend.Y))
+        if (!local.IsFinite())
             throw new InvalidOperationException("Joint anchors must fit the finite physics coordinate range.");
     }
 
