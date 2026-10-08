@@ -286,6 +286,7 @@ namespace Box2D.NET
             }
 
             world.contactLinksChanged?.Invoke(contact);
+            world.islandGraphChanged?.Invoke(2, contact.contactId);
 
             // Add to pair set for fast lookup
             ulong pairKey = B2_SHAPE_PAIR_KEY(shapeIdA, shapeIdB);
@@ -466,6 +467,7 @@ namespace Box2D.NET
             bodyB.contactCount = prepared.HasValue ? removal.CountB : bodyB.contactCount - 1;
 
             world.contactLinksChanged?.Invoke(contact);
+            world.islandGraphChanged?.Invoke(2, contact.contactId);
 
             // Remove contact from the array that owns it
             if (contact.islandId != B2_NULL_INDEX)

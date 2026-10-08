@@ -56,11 +56,11 @@ internal static partial class GPUPhysicsTests
                 b2Body_SetAwake(last, true); b2Body_SetAwake(other, true); CompareIslands(cpu, actual);
                 using (var replacement = new GPUPhysicsWorld())
                 {
-                    replacement.EnableIslandChanges(actual); var callback = actual.beginIslandChanges;
+                    replacement.EnableIslandChanges(actual); var callback = actual.beginIslandChanges; var observer = actual.islandGraphChanged;
                     gpu.EnableIslandChanges(cpu);
-                    if (actual.beginIslandChanges != callback) throw new Exception("Graph rebinding replaced another host's callback.");
+                    if (actual.beginIslandChanges != callback || actual.islandGraphChanged != observer) throw new Exception("Graph rebinding replaced another host's callback.");
                 }
-                if (actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null)
+                if (actual.islandGraphChanged is not null || actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null)
                     throw new Exception("Graph disposal retained a callback.");
             }
             finally { b2DestroyWorld(c); b2DestroyWorld(g); }

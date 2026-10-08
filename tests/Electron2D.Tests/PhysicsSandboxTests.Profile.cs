@@ -55,7 +55,7 @@ internal static partial class PhysicsSandboxTests
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_ISLAND_GRAPH") == "1")
                 {
                     var profileWorld = Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID);
-                    profileWorld.beginIslandChanges = profileWorld.finishIslandChanges = null!; profileWorld.changeContactIsland = null!;
+                    profileWorld.beginIslandChanges = profileWorld.finishIslandChanges = null!; profileWorld.changeContactIsland = null!; profileWorld.islandGraphChanged = null!;
                 }
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_CPU_SPLITS") == "1")
                     Box2D.NET.B2Worlds.b2GetWorldFromId(gpuSpace.WorldID).splitIsland = null!;
@@ -114,6 +114,8 @@ internal static partial class PhysicsSandboxTests
             var contactPoolUploadStart = gpu?.ContactPoolUploadBytes ?? 0;
             var contactLinkUploadStart = gpu?.ContactLinkUploadBytes ?? 0;
             var graphStart = gpu?.IslandChangeCount ?? 0; var mergeStart = gpu?.MergedIslandCount ?? 0; var graphBytesStart = gpu?.IslandGraphTransferBytes ?? 0;
+            var graphUploadStart = gpu?.IslandGraphUploadBytes ?? 0; var graphReadbackStart = gpu?.IslandGraphReadbackBytes ?? 0;
+            var graphSnapshotStart = gpu?.IslandGraphSnapshotCount ?? 0; var graphRetryStart = gpu?.IslandGraphReadbackRetries ?? 0;
             var splitStart = gpu?.SplitIslandCount ?? 0;
             var componentStart = gpu?.SplitComponentCount ?? 0;
             var removedStart = gpu?.RemovedContactCount ?? 0;
@@ -171,7 +173,9 @@ internal static partial class PhysicsSandboxTests
             var splitIslands = (gpu?.SplitIslandCount ?? 0) - splitStart;
             var splitComponents = (gpu?.SplitComponentCount ?? 0) - componentStart;
             var islandChanges = (gpu?.IslandChangeCount ?? 0) - graphStart; var mergedIslands = (gpu?.MergedIslandCount ?? 0) - mergeStart; var islandGraphTransferBytes = (gpu?.IslandGraphTransferBytes ?? 0) - graphBytesStart;
-            physics.Add(new { islandChanges, mergedIslands, islandGraphTransferBytes, splitIslands, splitComponents, removedContacts, removalReadbackBytes, contactLinkUploadBytes, createdContacts, contactPoolSnapshots, contactPoolUploadBytes, updatedContacts, geometryCacheResets, residentGeometry, uploadedGeometry, geometryUploadBytes, filterSnapshots, filterUpdatedShapes, filterUpdatedJoints, filterUploadBytes, treeSnapshots, treeRebuilds, treeRefits, treeUpdatedProxies, treeUploadBytes, pairTableSnapshots, pairTableRebuilds, pairTableUpdatedSlots, pairTableUploadBytes, broadPhaseMS, broadPhaseUploadBytes, broadPhaseReadbackBytes, broadPhaseCandidates, scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
+            var islandGraphUploadBytes = (gpu?.IslandGraphUploadBytes ?? 0) - graphUploadStart; var islandGraphReadbackBytes = (gpu?.IslandGraphReadbackBytes ?? 0) - graphReadbackStart;
+            var islandGraphSnapshots = (gpu?.IslandGraphSnapshotCount ?? 0) - graphSnapshotStart; var islandGraphRetries = (gpu?.IslandGraphReadbackRetries ?? 0) - graphRetryStart;
+            physics.Add(new { islandGraphUploadBytes, islandGraphReadbackBytes, islandGraphSnapshots, islandGraphRetries, islandChanges, mergedIslands, islandGraphTransferBytes, splitIslands, splitComponents, removedContacts, removalReadbackBytes, contactLinkUploadBytes, createdContacts, contactPoolSnapshots, contactPoolUploadBytes, updatedContacts, geometryCacheResets, residentGeometry, uploadedGeometry, geometryUploadBytes, filterSnapshots, filterUpdatedShapes, filterUpdatedJoints, filterUploadBytes, treeSnapshots, treeRebuilds, treeRefits, treeUpdatedProxies, treeUploadBytes, pairTableSnapshots, pairTableRebuilds, pairTableUpdatedSlots, pairTableUploadBytes, broadPhaseMS, broadPhaseUploadBytes, broadPhaseReadbackBytes, broadPhaseCandidates, scene = SandboxWindow.SceneNames[index], bodies = scene.BodyCount, constructionBytes, stateSHA256 = StateHash(scene), meanMS = samples.Average(), p95MS = Percentile(samples), bytesPerTick = (double)allocated / samples.Length, allThreadsAllocated, sampleBytes, awakeCounts, phaseBytes, contacts = Box2D.NET.B2Worlds.b2World_GetCounters(backendWorld).contactCount, backendStepMS = backendStep / samples.Length, backendSolveMS = backendSolve / samples.Length, backendPairsMS = backendPairs / samples.Length, backendCollideMS = backendCollide / samples.Length, backendSensorsMS = backendSensors / samples.Length, phaseMS = phases.Select(v => v / samples.Length).ToArray(), gpuSolverPhaseMS = gpuPhases.Select(v => v / samples.Length).ToArray(), residentContacts, uploadedManifolds, contactUploadBytes, residentHistories, uploadedHistories, historyUploadBytes });
         }
         if (Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_PROFILE_HEADLESS") == "1")
         {

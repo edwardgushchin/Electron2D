@@ -55,6 +55,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
             _islandGraphPipeline = islandGraph = CreatePipeline("PhysicsIslandGraph.comp.spv");
             _graphIslands = new(this); _graphBodies = new(this); _graphContacts = new(this); _graphJoints = new(this);
             _graphChanges = new(this); _graphStatus = new(this);
+            _graphUpdates = new(this); _graphDirtyStorage = new(this); _graphOutput = new(this); _graphChanged = MarkGraphChanged;
             _beginIslandChanges = BeginIslandChanges; _changeContactIsland = ChangeContactIsland; _finishIslandChanges = FinishIslandChanges;
             _contactSlotStorage = new(this); _contactFreeStorage = new(this); _contactScanStorage = new(this);
             _contactPoolStorage = new(this); _contactChangeStorage = new(this);
@@ -210,6 +211,7 @@ internal sealed unsafe partial class GPUPhysicsWorld : IDisposable
         DetachIslandChanges();
         _graphIslands.Dispose(); _graphBodies.Dispose(); _graphContacts.Dispose(); _graphJoints.Dispose();
         _graphChanges.Dispose(); _graphStatus.Dispose(); _islandGraphPipeline.Dispose();
+        _graphUpdates.Dispose(); _graphDirtyStorage.Dispose(); _graphOutput.Dispose();
         if (_splitWorld is not null && _splitWorld.splitIsland == _splitIsland) _splitWorld.splitIsland = null!;
         _splitWorld = null;
         _splitBodyStorage.Dispose(); _splitContactStorage.Dispose(); _splitJointStorage.Dispose();

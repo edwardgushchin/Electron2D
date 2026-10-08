@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsWorld : IDisposable`
 
-**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
+**Source:** [GPUPhysicsWorld.cs](../../src/Servers/Physics/GPUPhysicsWorld.cs), [GPUPhysicsWorld.Solver.cs](../../src/Servers/Physics/GPUPhysicsWorld.Solver.cs), [GPUPhysicsWorld.Collision.cs](../../src/Servers/Physics/GPUPhysicsWorld.Collision.cs), [GPUPhysicsWorld.ContactUpdate.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactUpdate.cs), [GPUPhysicsWorld.ContactCreation.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactCreation.cs), [GPUPhysicsWorld.ContactRemoval.cs](../../src/Servers/Physics/GPUPhysicsWorld.ContactRemoval.cs), [GPUPhysicsWorld.Islands.cs](../../src/Servers/Physics/GPUPhysicsWorld.Islands.cs), [GPUPhysicsWorld.IslandGraph.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandGraph.cs), [GPUPhysicsWorld.IslandResidency.cs](../../src/Servers/Physics/GPUPhysicsWorld.IslandResidency.cs), [GPUPhysicsWorld.BroadPhase.cs](../../src/Servers/Physics/GPUPhysicsWorld.BroadPhase.cs), [GPUPhysicsWorld.Tree.cs](../../src/Servers/Physics/GPUPhysicsWorld.Tree.cs), [GPUPhysicsWorld.PairTable.cs](../../src/Servers/Physics/GPUPhysicsWorld.PairTable.cs), [GPUPhysicsWorld.Filters.cs](../../src/Servers/Physics/GPUPhysicsWorld.Filters.cs), [GPUPhysicsWorld.Storage.cs](../../src/Servers/Physics/GPUPhysicsWorld.Storage.cs) · **Component:** [GPU physics](../components/gpu-physics.md)
 
 ## Internal flow
 
@@ -136,16 +136,37 @@ points and removed island IDs are freed in the original order. Completed lists
 publish before solver validation; no game callback observes the intermediate graph.
 Authoring changes outside collision retain their immediate CPU path.
 
-The batch currently uploads and reads the complete graph snapshot, using retained
-64-byte island, 16-byte member, 32-byte operation and 16-byte status records, with
-32-byte uniforms. Ordered union/list edits remain serial on GPU; remapping is
-parallel. These are explicit transfer/ordering limits, not resident graph storage.
-`IslandChangeCount`, `MergedIslandCount` and `IslandGraphTransferBytes` count actual
-operations, merges and both transfer directions. No membership changes means no
-submission. Partial publication failure poisons the world; failed-world teardown
-detaches managed resources and releases raw storage in bulk, without walking an
-incomplete graph or capturing uncommitted motion. Rebinding/disposal resets only
-this host's callbacks.
+The graph stays resident between batches. Body/contact/joint creation, deletion,
+authoring merges/unlinks and CPU/GPU splits journal unique record keys. Packing
+reads the final value after each authoring operation, including adjacent list
+nodes. A lost observer, a different native island pool or graph-buffer growth
+requires one complete snapshot; ordinary batches scatter only changed records.
+Prepared GPU merges suppress redundant native island journal writes, while contact
+lifecycle changes still invalidate their final slots. Sleep/set-index changes do
+not change the graph records. Journal writes follow the backend's serialized graph
+mutation phases, including the single CPU split worker when that control is used.
+
+Resident islands/members use 64/16 bytes, ordered operations 32 bytes, journal
+updates 80 bytes, status/uniforms 16/32 bytes. GPU passes mark changed slots and
+compact output into keyed 68-byte island or 20-byte member records. Cleared merge
+parents cannot survive slot reuse. The owner patches retained mirrors, validates
+the complete graph and publishes only returned changes. Output capacity persists;
+an overflow grows it and reruns only output gathering from the completed GPU graph,
+never union, contact insertion or removal. No extra physics work is replayed.
+
+`IslandGraphSnapshotCount`, `IslandGraphUploadBytes`, `IslandGraphReadbackBytes`
+and `IslandGraphReadbackRetries` expose residency and actual scheduled transfers,
+including spare compact-output capacity and retries. `IslandChangeCount`,
+`MergedIslandCount` and `IslandGraphTransferBytes` retain their cumulative meanings.
+No membership changes means no submission; pending journals wait for the next real
+batch. Ordered union/list edits remain serial on GPU, and the CPU still validates
+its full retained mirror. CPU/GPU split currently uses a separate input/output path
+and journals its publication into this resident graph.
+
+Partial publication failure poisons the world; failed-world teardown detaches
+managed resources and releases raw storage in bulk without traversing incomplete
+lists or capturing uncommitted motion. Rebinding/disposal resets only this host's
+callbacks, and world reset clears the journal observer.
 
 `EnableIslandSplitting` installs an owner-thread split callback. Dirty awake
 islands upload ordered body/contact/joint adjacency. GPU minimum-seed label

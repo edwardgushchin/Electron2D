@@ -62,6 +62,7 @@ namespace Box2D.NET
             ref B2IslandSim islandSim = ref b2Array_Add(ref set.islandSims);
             islandSim.islandId = islandId;
 
+            world.islandGraphChanged?.Invoke(0, islandId);
             return island;
         }
 
@@ -91,6 +92,7 @@ namespace Box2D.NET
             island.setIndex = B2_NULL_INDEX;
             island.localIndex = B2_NULL_INDEX;
             b2FreeId(world.islandIdPool, islandId);
+            world.islandGraphChanged?.Invoke(0, islandId);
         }
 
 
@@ -138,6 +140,7 @@ namespace Box2D.NET
             {
                 B2Body body = b2Array_Get(ref world.bodies, bodyId);
                 body.islandId = bigId;
+                world.islandGraphChanged?.Invoke(1, bodyId);
                 bodyId = body.islandNext;
             }
 
@@ -146,6 +149,7 @@ namespace Box2D.NET
             {
                 B2Contact contact = b2Array_Get(ref world.contacts, contactId);
                 contact.islandId = bigId;
+                world.islandGraphChanged?.Invoke(2, contactId);
                 contactId = contact.islandNext;
             }
 
@@ -154,6 +158,7 @@ namespace Box2D.NET
             {
                 B2Joint joint = b2Array_Get(ref world.joints, jointId);
                 joint.islandId = bigId;
+                world.islandGraphChanged?.Invoke(3, jointId);
                 jointId = joint.islandNext;
             }
 
@@ -162,11 +167,13 @@ namespace Box2D.NET
             B2Body tailBody = b2Array_Get(ref world.bodies, big.tailBody);
             B2_ASSERT(tailBody.islandNext == B2_NULL_INDEX);
             tailBody.islandNext = small.headBody;
+            world.islandGraphChanged?.Invoke(1, tailBody.id);
 
             B2_ASSERT(small.headBody != B2_NULL_INDEX);
             B2Body headBody = b2Array_Get(ref world.bodies, small.headBody);
             B2_ASSERT(headBody.islandPrev == B2_NULL_INDEX);
             headBody.islandPrev = big.tailBody;
+            world.islandGraphChanged?.Invoke(1, headBody.id);
 
             big.tailBody = small.tailBody;
             big.bodyCount += small.bodyCount;
@@ -189,10 +196,12 @@ namespace Box2D.NET
                 B2Contact tailContact = b2Array_Get(ref world.contacts, big.tailContact);
                 B2_ASSERT(tailContact.islandNext == B2_NULL_INDEX);
                 tailContact.islandNext = small.headContact;
+                world.islandGraphChanged?.Invoke(2, tailContact.contactId);
 
                 B2Contact headContact = b2Array_Get(ref world.contacts, small.headContact);
                 B2_ASSERT(headContact.islandPrev == B2_NULL_INDEX);
                 headContact.islandPrev = big.tailContact;
+                world.islandGraphChanged?.Invoke(2, headContact.contactId);
 
                 big.tailContact = small.tailContact;
                 big.contactCount += small.contactCount;
@@ -215,10 +224,12 @@ namespace Box2D.NET
                 B2Joint tailJoint = b2Array_Get(ref world.joints, big.tailJoint);
                 B2_ASSERT(tailJoint.islandNext == B2_NULL_INDEX);
                 tailJoint.islandNext = small.headJoint;
+                world.islandGraphChanged?.Invoke(3, tailJoint.jointId);
 
                 B2Joint headJoint = b2Array_Get(ref world.joints, small.headJoint);
                 B2_ASSERT(headJoint.islandPrev == B2_NULL_INDEX);
                 headJoint.islandPrev = big.tailJoint;
+                world.islandGraphChanged?.Invoke(3, headJoint.jointId);
 
                 big.tailJoint = small.tailJoint;
                 big.jointCount += small.jointCount;
@@ -240,6 +251,7 @@ namespace Box2D.NET
 
             b2DestroyIsland(world, small.islandId);
 
+            world.islandGraphChanged?.Invoke(0, bigId);
             b2ValidateIsland(world, bigId);
 
             return bigId;
@@ -258,6 +270,7 @@ namespace Box2D.NET
                 contact.islandNext = island.headContact;
                 B2Contact headContact = b2Array_Get(ref world.contacts, island.headContact);
                 headContact.islandPrev = contact.contactId;
+                world.islandGraphChanged?.Invoke(2, headContact.contactId);
             }
 
             island.headContact = contact.contactId;
@@ -268,6 +281,8 @@ namespace Box2D.NET
 
             island.contactCount += 1;
             contact.islandId = islandId;
+            world.islandGraphChanged?.Invoke(2, contact.contactId);
+            world.islandGraphChanged?.Invoke(0, islandId);
 
             b2ValidateIsland(world, islandId);
         }
@@ -331,6 +346,7 @@ namespace Box2D.NET
                 B2Contact prevContact = b2Array_Get(ref world.contacts, contact.islandPrev);
                 B2_ASSERT(prevContact.islandNext == contact.contactId);
                 prevContact.islandNext = contact.islandNext;
+                world.islandGraphChanged?.Invoke(2, prevContact.contactId);
             }
 
             if (contact.islandNext != B2_NULL_INDEX)
@@ -338,6 +354,7 @@ namespace Box2D.NET
                 B2Contact nextContact = b2Array_Get(ref world.contacts, contact.islandNext);
                 B2_ASSERT(nextContact.islandPrev == contact.contactId);
                 nextContact.islandPrev = contact.islandPrev;
+                world.islandGraphChanged?.Invoke(2, nextContact.contactId);
             }
 
             if (island.headContact == contact.contactId)
@@ -357,6 +374,8 @@ namespace Box2D.NET
             contact.islandId = B2_NULL_INDEX;
             contact.islandPrev = B2_NULL_INDEX;
             contact.islandNext = B2_NULL_INDEX;
+            world.islandGraphChanged?.Invoke(2, contact.contactId);
+            world.islandGraphChanged?.Invoke(0, islandId);
 
             b2ValidateIsland(world, islandId);
         }
@@ -374,6 +393,7 @@ namespace Box2D.NET
                 joint.islandNext = island.headJoint;
                 B2Joint headJoint = b2Array_Get(ref world.joints, island.headJoint);
                 headJoint.islandPrev = joint.jointId;
+                world.islandGraphChanged?.Invoke(3, headJoint.jointId);
             }
 
             island.headJoint = joint.jointId;
@@ -384,6 +404,8 @@ namespace Box2D.NET
 
             island.jointCount += 1;
             joint.islandId = islandId;
+            world.islandGraphChanged?.Invoke(3, joint.jointId);
+            world.islandGraphChanged?.Invoke(0, islandId);
 
             b2ValidateIsland(world, islandId);
         }
@@ -434,6 +456,7 @@ namespace Box2D.NET
                 B2Joint prevJoint = b2Array_Get(ref world.joints, joint.islandPrev);
                 B2_ASSERT(prevJoint.islandNext == joint.jointId);
                 prevJoint.islandNext = joint.islandNext;
+                world.islandGraphChanged?.Invoke(3, prevJoint.jointId);
             }
 
             if (joint.islandNext != B2_NULL_INDEX)
@@ -441,6 +464,7 @@ namespace Box2D.NET
                 B2Joint nextJoint = b2Array_Get(ref world.joints, joint.islandNext);
                 B2_ASSERT(nextJoint.islandPrev == joint.jointId);
                 nextJoint.islandPrev = joint.islandPrev;
+                world.islandGraphChanged?.Invoke(3, nextJoint.jointId);
             }
 
             if (island.headJoint == joint.jointId)
@@ -460,6 +484,8 @@ namespace Box2D.NET
             joint.islandId = B2_NULL_INDEX;
             joint.islandPrev = B2_NULL_INDEX;
             joint.islandNext = B2_NULL_INDEX;
+            world.islandGraphChanged?.Invoke(3, joint.jointId);
+            world.islandGraphChanged?.Invoke(0, islandId);
 
             b2ValidateIsland(world, islandId);
         }
@@ -563,6 +589,7 @@ namespace Box2D.NET
                     }
 
                     island.bodyCount += 1;
+                    world.islandGraphChanged?.Invoke(1, bodyId);
 
                     // Search all contacts connected to this body.
                     int contactKey = body.headContactKey;
@@ -609,6 +636,7 @@ namespace Box2D.NET
                         {
                             B2Contact tailContact = b2Array_Get(ref world.contacts, island.tailContact);
                             tailContact.islandNext = contactId;
+                            world.islandGraphChanged?.Invoke(2, tailContact.contactId);
                         }
 
                         contact.islandPrev = island.tailContact;
@@ -621,6 +649,7 @@ namespace Box2D.NET
                         }
 
                         island.contactCount += 1;
+                        world.islandGraphChanged?.Invoke(2, contactId);
                     }
 
                     // Search all joints connect to this body.
@@ -680,6 +709,7 @@ namespace Box2D.NET
                         {
                             B2Joint tailJoint = b2Array_Get(ref world.joints, island.tailJoint);
                             tailJoint.islandNext = jointId;
+                            world.islandGraphChanged?.Invoke(3, tailJoint.jointId);
                         }
 
                         joint.islandPrev = island.tailJoint;
@@ -692,6 +722,7 @@ namespace Box2D.NET
                         }
 
                         island.jointCount += 1;
+                        world.islandGraphChanged?.Invoke(3, jointId);
                     }
                 }
 

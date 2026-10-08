@@ -118,14 +118,18 @@ internal static partial class GPUPhysicsTests
         try
         {
             Frame(false);
+            if (islandChanges && count == 63 && gpu.IslandGraphReadbackRetries == 0) throw new Exception("Dense initial graph must exercise compact-output growth.");
             for (var i = 0; i < 32; i++) { Frame(true); Frame(false); }
             var snapshots = gpu.ContactPoolSnapshotCount; var links = gpu.ContactLinkUploadBytes; var poolBytes = gpu.ContactPoolUploadBytes;
             var removed = gpu.RemovedContactCount; var changes = gpu.IslandChangeCount; var merges = gpu.MergedIslandCount;
+            var graphSnapshots = gpu.IslandGraphSnapshotCount; var graphRetries = gpu.IslandGraphReadbackRetries;
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 16; i++) { Frame(true); Frame(false); }
             var bytes = GC.GetTotalAllocatedBytes(true) - before;
             if (bytes != 0 || gpu.ContactPoolSnapshotCount != snapshots || gpu.ContactLinkUploadBytes != links || gpu.ContactPoolUploadBytes != poolBytes)
                 throw new Exception($"Warmed GPU removal allocated {bytes} bytes or reuploaded retained contact topology.");
+            if (islandChanges && (gpu.IslandGraphSnapshotCount != graphSnapshots || gpu.IslandGraphReadbackRetries != graphRetries))
+                throw new Exception("Warmed island changes must retain the graph and compact-output capacity.");
             if (count >= 1 && gpu.RemovedContactCount == removed) throw new Exception("The fixture must remove contacts on GPU.");
             if (islandChanges && count > 0 && (gpu.IslandChangeCount == changes || count is > 1 and < 257 && gpu.MergedIslandCount == merges))
                 throw new Exception("The island fixture must change membership and merge on GPU.");
@@ -134,6 +138,35 @@ internal static partial class GPUPhysicsTests
             {
                 b2DestroyBody(b2MakeBodyId(cpu, count)); b2DestroyBody(b2MakeBodyId(actual, count));
                 Collide(cpu, cpuContext); Collide(actual, gpuContext); Compare();
+                if (islandChanges && count == 65)
+                {
+                    B2BodyId Replace(B2WorldId id)
+                    {
+                        var bd = b2DefaultBodyDef(); bd.type = B2BodyType.b2_dynamicBody; bd.position = new(1000, 0);
+                        var body = b2CreateBody(id, bd); var sd = b2DefaultShapeDef(); sd.enableContactEvents = true; sd.enablePreSolveEvents = true;
+                        b2CreateCircleShape(body, sd, new B2Circle { radius = 1 }); return body;
+                    }
+                    var a = Replace(cpuID); var b = Replace(gpuID);
+                    var ja = SplitJoint(cpuID, b2MakeBodyId(cpu, 1), a, 0); var jb = SplitJoint(gpuID, b2MakeBodyId(actual, 1), b, 0);
+                    Frame(false); // Native authoring merge and recycled body/island ID reach the resident graph.
+                    B2Joints.b2DestroyJoint(ja, true); B2Joints.b2DestroyJoint(jb, true);
+                    foreach (var type in new[] { B2BodyType.b2_staticBody, B2BodyType.b2_kinematicBody, B2BodyType.b2_dynamicBody })
+                    {
+                        b2Body_SetType(a, type); b2Body_SetType(b, type); Frame(true); Frame(false);
+                    }
+                    b2Body_Disable(a); b2Body_Disable(b); Collide(cpu, cpuContext); Collide(actual, gpuContext); Compare();
+                    b2Body_Enable(a); b2Body_Enable(b); Frame(true); Frame(false);
+                    var savedSplit = actual.splitIsland; actual.splitIsland = null!;
+                    Frame(true); Frame(false); actual.splitIsland = savedSplit; // CPU split publication uses the same journal.
+                    var oldSnapshots = gpu.IslandGraphSnapshotCount;
+                    actual.islandGraphChanged = null!; Frame(true);
+                    if (gpu.IslandGraphSnapshotCount != oldSnapshots + 1) throw new Exception("Lost graph observer must force a complete resynchronization.");
+                    // Capacity growth also replaces GPU storage, so its next use must snapshot.
+                    oldSnapshots = gpu.IslandGraphSnapshotCount;
+                    for (var i = 0; i < 260; i++) { Replace(cpuID); Replace(gpuID); }
+                    Frame(false);
+                    if (gpu.IslandGraphSnapshotCount != oldSnapshots + 1) throw new Exception("Growing graph buffers must restore all retained records.");
+                }
             }
         }
         finally
@@ -145,7 +178,7 @@ internal static partial class GPUPhysicsTests
             b2DestroyWorld(cpuID); b2DestroyWorld(gpuID);
             if (cpu.integrateBodyStage is not null || cpu.solveConstraints is not null || actual.generateManifolds is not null ||
                 actual.destroyDisjointContact is not null || actual.finishContactRemovals is not null ||
-                actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null ||
+                actual.islandGraphChanged is not null || actual.beginIslandChanges is not null || actual.changeContactIsland is not null || actual.finishIslandChanges is not null ||
                 cpu.reusableStepContext.states is not null || actual.reusableStepContext.generatedManifoldOwner is not null)
                 throw new Exception("World reset must detach every GPU stage callback.");
         }

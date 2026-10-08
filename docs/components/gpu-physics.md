@@ -384,7 +384,7 @@ Native allocation accounting, other devices/platforms and visual acceptance
 remain unverified.
 
 Remaining work: remove CPU tree mirrors/rank dependency and adjacency mirror dependency,
-move constraint coloring and authoring island changes to GPU, retain the island graph without full snapshots, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
+move constraint coloring and authoring island changes to GPU, remove full CPU graph-validation scans and the separate split transfers, complete external edit handling, implement chain manifolds and GPU contact transitions without full manifold/history readback, spring
 force setup, sleep/CCD finalization, complete query/event/state contracts, independent backend selection
 and startup fallback, native end-to-end scene checks and performance profiling.
 
@@ -921,8 +921,9 @@ after custom material/pre-solve callbacks and before contact-state publication.
 A GPU weighted union preserves the larger-island winner, endpoint-A ties, exact
 list concatenation and ordered contact insertion/removal. It records only merge
 parents during the ordered pass; a parallel pass remaps body/contact/joint IDs.
-This eliminates per-merge traversal of every smaller-island member. It uses one
-submission with two compute passes, rather than one device wait per new contact.
+This eliminates per-merge traversal of every smaller-island member. The initial
+form used two compute passes in one submission; resident maintenance and compact
+output add the passes described below without a wait per contact.
 
 The host checks the full returned graph before live changes. The original contact
 loop still wakes sleeping sets and frees each removed island ID at its original
@@ -945,8 +946,8 @@ warmup. Separate fixtures check unequal joint islands, sleeping-set wake chains,
 stopped-touching contacts that remain alive, callback ownership and partial-merge
 teardown. The full GPU suite also injects failure after completed graph publication.
 
-The current graph still crosses the host boundary as a complete snapshot per
-nonempty batch. Ordered union/list edits are serial on GPU. Initial sequential
+The initial graph implementation crossed the host boundary as a complete snapshot
+per nonempty batch. It is superseded by the resident stage below. Initial sequential
 Linux/Vulkan maximum-Smash runs use 65,537 bodies, 32 warmup and 64 measured headless
 diagnostic steps with no concurrent build/test/formatter. The test-only control
 `ELECTRON2D_SANDBOX_PROFILE_CPU_ISLAND_GRAPH=1` retains other GPU stages:
@@ -959,8 +960,66 @@ diagnostic steps with no concurrent build/test/formatter. The test-only control
 The GPU interval performs 405,412 membership changes and 35,134 merges, transferring
 1,432,956,032 graph bytes across both directions. Both state hashes remain
 `13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
-This implementation is slower than the CPU graph control; retained resident graph
-storage and parallel ordering remain necessary optimization work. Artifacts:
+That snapshot implementation was slower than the CPU graph control; the next stage
+below replaces its complete graph transfers. Parallel ordering remains unfinished. Artifacts:
 ignored `bin/physics-sandbox/profile-Release-{gpu,cpu}-island-graph-a.json`.
 These checks establish this executing stage, not full GPU backend completion,
 steady all-awake frame rate, other devices or native-window acceptance.
+
+
+## Resident island graph and compact publication (2026-10-08)
+
+The graph now persists on GPU. Serialized native graph mutations journal island,
+body, contact and joint slots, coalescing repeated writes to the final record.
+The hooks cover creation/destruction, type/enable changes, authoring list edits,
+merges and both CPU and GPU split publication. Adjacent list nodes are included.
+Prepared GPU merges do not reupload their own island changes. Contact lifecycle
+records still synchronize newly created, freed and reused slots. Binding/pool
+changes, a lost observer or graph-buffer growth require a snapshot; warm fixed
+capacity batches upload only the journal and their ordered contact operations.
+
+The GPU tracks changed slots across union, remapping and retirement. Compaction
+returns keyed 68-byte island and 20-byte member records instead of the complete
+graph. The owner applies these to retained mirrors, validates the complete graph
+and publishes only changed records. A growing output batch reports its required
+word count; the host grows scratch and gathers the already completed graph again.
+Union/list mutations are never repeated. Warm capacity uses one submission/fence.
+Readback accounting includes the retained output capacity, not just useful words.
+
+The focused graph oracle now requires no snapshots or output retries after warmup,
+while preserving zero all-thread managed allocation and exact CPU lists/ID order.
+It forces initial compact-output overflow, recycled body/island IDs, authoring
+joint merge/removal, static/kinematic/dynamic changes, disable/enable, CPU and GPU
+split publication, observer loss, capacity growth and ownership/reset boundaries.
+The complete GPU failure/callback/lifecycle suite covers the same integrated path.
+
+The ordered union pass is still serial. The host still scans its retained graph
+for validation, publishes native mirrors and manages wake/set-transfer/coloring.
+Split inputs/results remain separate and feed the journal. This stage does not
+complete the independent backend or establish native-window FPS or other devices.
+
+Final sequential Linux/Vulkan maximum-Smash runs use the same 65,537-body scene,
+32 warmup and 64 measured headless diagnostic steps. Order is GPU A/CPU A/CPU B/GPU B;
+no build/test/formatter ran concurrently. The CPU graph control disables all three
+batch callbacks and the new graph journal observer; other GPU stages remain active.
+
+| Island graph | Whole-step mean | p95 | Managed bytes, owner/all threads |
+| --- | ---: | ---: | ---: |
+| Resident GPU A | 177.50 ms | 246.13 ms | 0 / 0 |
+| CPU A | 160.88 ms | 256.78 ms | 0 / 0 |
+| CPU B | 163.40 ms | 234.11 ms | 0 / 0 |
+| Resident GPU B | 179.73 ms | 255.26 ms | 0 / 0 |
+
+Each GPU interval performs 405,412 membership changes and 35,134 merges, uploads
+52,704,224 graph bytes and reads back 46,528,640 bytes. Total transfer is 99,232,864
+bytes, down 93.07% from the prior snapshot stage's 1,432,956,032 bytes. There are
+zero snapshots and zero readback-capacity retries in the measured interval. All
+four state hashes remain
+`13E529560ADFA82C42498E411407CE134B211859CFE79B706A0EC98322B09F90`.
+The transfer reduction does not establish a whole-step speedup: the GPU graph is
+still slower than the CPU graph control. Ordered union and full host validation
+remain targets for separate timing and parallelization. Artifacts: ignored
+`bin/physics-sandbox/profile-Release-{gpu,cpu}-island-resident-final-{a,b}.json`.
+An initial atomic-dirty-mark candidate measured 175.47 ms with the same transfer
+counts (`profile-Release-gpu-island-resident-a.json`); final slot-owned writes remove
+those unnecessary atomics without a demonstrated timing gain.

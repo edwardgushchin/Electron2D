@@ -392,6 +392,7 @@ namespace Box2D.NET
             b2ValidateSolverSets(world);
 
             world.jointFilterChanged?.Invoke(jointId);
+            world.islandGraphChanged?.Invoke(3, jointId);
             return new B2JointPair(joint, jointSim);
         }
 
@@ -734,6 +735,7 @@ namespace Box2D.NET
             }
 
             world.jointFilterChanged?.Invoke(jointId);
+            world.islandGraphChanged?.Invoke(3, jointId);
 
             // Free joint and id (preserve joint generation)
             joint.setIndex = B2_NULL_INDEX;

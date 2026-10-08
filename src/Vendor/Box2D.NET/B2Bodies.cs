@@ -118,6 +118,7 @@ namespace Box2D.NET
             island.headBody = body.id;
             island.tailBody = body.id;
             island.bodyCount = 1;
+            world.islandGraphChanged?.Invoke(1, body.id);
         }
 
         internal static void b2RemoveBodyFromIsland(B2World world, B2Body body)
@@ -137,12 +138,14 @@ namespace Box2D.NET
             {
                 B2Body prevBody = b2Array_Get(ref world.bodies, body.islandPrev);
                 prevBody.islandNext = body.islandNext;
+                world.islandGraphChanged?.Invoke(1, prevBody.id);
             }
 
             if (body.islandNext != B2_NULL_INDEX)
             {
                 B2Body nextBody = b2Array_Get(ref world.bodies, body.islandNext);
                 nextBody.islandPrev = body.islandPrev;
+                world.islandGraphChanged?.Invoke(1, nextBody.id);
             }
 
             B2_ASSERT(island.bodyCount > 0);
@@ -179,6 +182,8 @@ namespace Box2D.NET
             body.islandId = B2_NULL_INDEX;
             body.islandPrev = B2_NULL_INDEX;
             body.islandNext = B2_NULL_INDEX;
+            world.islandGraphChanged?.Invoke(1, body.id);
+            world.islandGraphChanged?.Invoke(0, islandId);
         }
 
         public static void b2DestroyBodyContacts(B2World world, B2Body body, bool wakeBodies)
@@ -347,6 +352,7 @@ namespace Box2D.NET
 
             b2ValidateSolverSets(world);
 
+            world.islandGraphChanged?.Invoke(1, bodyId);
             B2BodyId id = new B2BodyId(bodyId + 1, world.worldId, body.generation);
             return id;
         }
@@ -463,6 +469,7 @@ namespace Box2D.NET
             body.setIndex = B2_NULL_INDEX;
             body.localIndex = B2_NULL_INDEX;
             body.id = B2_NULL_INDEX;
+            world.islandGraphChanged?.Invoke(1, bodyId.index1 - 1);
 
             b2ValidateSolverSets(world);
         }

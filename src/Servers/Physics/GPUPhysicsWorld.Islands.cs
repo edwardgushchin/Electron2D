@@ -299,18 +299,21 @@ internal sealed unsafe partial class GPUPhysicsWorld
         {
             var body = world.bodies.data[_splitBodyStorage.Data[i].ID]; var member = _splitBodyResult.Data[i];
             body.islandId = _splitIDs[member.Root]; body.islandPrev = member.Prev; body.islandNext = member.Next;
+            world.islandGraphChanged?.Invoke(1, _splitBodyStorage.Data[i].ID);
         }
         for (var i = 0; i < _splitContacts; i++)
         {
             var member = _splitContactResult.Data[i]; if (member.Root < 0) continue;
             var contact = world.contacts.data[_splitContactStorage.Data[i].ID];
             contact.islandId = _splitIDs[member.Root]; contact.islandPrev = member.Prev; contact.islandNext = member.Next;
+            world.islandGraphChanged?.Invoke(2, _splitContactStorage.Data[i].ID);
         }
         for (var i = 0; i < _splitJoints; i++)
         {
             var member = _splitJointResult.Data[i]; if (member.Root < 0) continue;
             var joint = world.joints.data[_splitJointStorage.Data[i].ID];
             joint.islandId = _splitIDs[member.Root]; joint.islandPrev = member.Prev; joint.islandNext = member.Next;
+            world.islandGraphChanged?.Invoke(3, _splitJointStorage.Data[i].ID);
         }
         b2DestroyIsland(world, source.islandId);
 #if DEBUG

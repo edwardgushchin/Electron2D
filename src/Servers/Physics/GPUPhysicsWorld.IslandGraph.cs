@@ -25,10 +25,10 @@ internal sealed unsafe partial class GPUPhysicsWorld
         internal int A, B, Link, Root, Freed, Padding;
     }
     [StructLayout(LayoutKind.Sequential)]
-    private struct GraphStep { internal int Bodies, Contacts, Joints, Islands, Operation, Changes, Padding1, Padding2; }
+    private struct GraphStep { internal int Bodies, Contacts, Joints, Islands, Operation, Changes, Updates, OutputCapacity; }
 
     [StructLayout(LayoutKind.Sequential)]
-    private struct GraphStatus { internal int Error, Merges, Padding1, Padding2; }
+    private struct GraphStatus { internal int Error, Merges, OutputWords, Padding; }
 
     private readonly Storage<GraphIsland> _graphIslands;
     private readonly Storage<SplitMember> _graphBodies, _graphContacts, _graphJoints;
@@ -48,6 +48,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         EnsureOwner();
         DetachIslandChanges(); _graphWorld = world;
+        world.islandGraphChanged = _graphChanged;
         world.beginIslandChanges = _beginIslandChanges;
         world.changeContactIsland = _changeContactIsland;
         world.finishIslandChanges = _finishIslandChanges;
@@ -57,11 +58,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         if (_graphWorld is not null)
         {
+            if (_graphWorld.islandGraphChanged == _graphChanged) _graphWorld.islandGraphChanged = null!;
             if (_graphWorld.beginIslandChanges == _beginIslandChanges) _graphWorld.beginIslandChanges = null!;
             if (_graphWorld.changeContactIsland == _changeContactIsland) _graphWorld.changeContactIsland = null!;
             if (_graphWorld.finishIslandChanges == _finishIslandChanges) _graphWorld.finishIslandChanges = null!;
         }
-        _graphWorld = null; _graphReady = false;
+        _graphWorld = null; _graphReady = false; _residentGraph = null; ClearGraphJournal();
     }
 
     private void BeginIslandChanges(B2World world)
@@ -93,96 +95,84 @@ internal sealed unsafe partial class GPUPhysicsWorld
             }
         }
         if (_graphCount == 0) return;
-        _graphIslands.Reserve(Math.Max(1, world.islands.count)); _graphBodies.Reserve(Math.Max(1, world.bodies.count));
-        _graphContacts.Reserve(Math.Max(1, world.contacts.count)); _graphJoints.Reserve(Math.Max(1, world.joints.count)); _graphStatus.Reserve(1);
-        if (_graphExpectedContacts.Length < _graphContacts.Data.Length) Array.Resize(ref _graphExpectedContacts, _graphContacts.Data.Length);
-        if (_graphFreed.Length < _graphIslands.Data.Length) Array.Resize(ref _graphFreed, _graphIslands.Data.Length);
-        Array.Clear(_graphFreed);
-        for (var i = 0; i < world.islands.count; i++)
-        {
-            var island = world.islands.data[i];
-            _graphIslands.Data[i] = new()
-            {
-                ID = island.islandId,
-                Parent = island.islandId,
-                Removed = island.constraintRemoveCount,
-                BodyHead = island.headBody,
-                BodyTail = island.tailBody,
-                BodyCount = island.bodyCount,
-                ContactHead = island.headContact,
-                ContactTail = island.tailContact,
-                ContactCount = island.contactCount,
-                JointHead = island.headJoint,
-                JointTail = island.tailJoint,
-                JointCount = island.jointCount
-            };
-        }
-        for (var i = 0; i < world.bodies.count; i++)
-        {
-            var b = world.bodies.data[i];
-            _graphBodies.Data[i] = new() { Root = b.islandId, Prev = b.islandPrev, Next = b.islandNext, Visited = b.id >= 0 ? 1 : 0 };
-        }
-        for (var i = 0; i < world.contacts.count; i++)
-        {
-            var c = world.contacts.data[i];
-            _graphContacts.Data[i] = new() { Root = c.islandId, Prev = c.islandPrev, Next = c.islandNext, Visited = c.contactId >= 0 ? 1 : 0 };
-            _graphExpectedContacts[i] = c.contactId >= 0 && c.islandId >= 0;
-        }
-        for (var i = 0; i < world.joints.count; i++)
-        {
-            var j = world.joints.data[i];
-            _graphJoints.Data[i] = new() { Root = j.islandId, Prev = j.islandPrev, Next = j.islandNext, Visited = j.jointId >= 0 ? 1 : 0 };
-        }
-        for (var i = 0; i < _graphCount; i++) _graphExpectedContacts[_graphChanges.Data[i].Contact] = _graphChanges.Data[i].Link != 0;
+        PrepareGraphResidency(world);
         DispatchIslandChanges(world);
         ValidateIslandChanges(world);
         b2Array_Reserve(ref world.islandIdPool.freeArray, checked(world.islandIdPool.freeArray.count + _graphStatus.Data[0].Merges));
+        ClearGraphJournal();
         _graphReady = true;
     }
 
     private void DispatchIslandChanges(B2World world)
     {
-        var command = SDL.AcquireGPUCommandBuffer(Device); if (command == 0) throw Failure("acquire island graph commands");
-        nint fence = 0;
-        try
+        var first = true;
+        while (true)
         {
-            var copy = SDL.BeginGPUCopyPass(command); if (copy == 0) throw Failure("begin island graph upload");
-            _graphIslands.Upload(copy, world.islands.count); _graphBodies.Upload(copy, world.bodies.count);
-            _graphContacts.Upload(copy, world.contacts.count); _graphJoints.Upload(copy, world.joints.count); _graphChanges.Upload(copy, _graphCount);
-            SDL.EndGPUCopyPass(copy);
-            GraphPass(command, world, 0, 1);
-            GraphPass(command, world, 1, Math.Max(world.bodies.count, Math.Max(world.contacts.count, world.joints.count)));
-            var readback = SDL.BeginGPUCopyPass(command); if (readback == 0) throw Failure("begin island graph readback");
-            _graphIslands.Download(readback, world.islands.count); _graphBodies.Download(readback, world.bodies.count);
-            _graphContacts.Download(readback, world.contacts.count); _graphJoints.Download(readback, world.joints.count);
-            _graphChanges.Download(readback, _graphCount); _graphStatus.Download(readback, 1); SDL.EndGPUCopyPass(readback);
-            var submitted = command; command = 0; fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
-            if (fence == 0) throw Failure("submit island graph changes");
-            Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for island graph changes");
-            _graphStatus.Read(1);
-            if (_graphStatus.Data[0].Error != 0) throw new InvalidOperationException($"GPU island graph error {_graphStatus.Data[0].Error}.");
-            _graphIslands.Read(world.islands.count); _graphBodies.Read(world.bodies.count);
-            _graphContacts.Read(world.contacts.count); _graphJoints.Read(world.joints.count); _graphChanges.Read(_graphCount);
-            IslandGraphTransferBytes += 2L * (world.islands.count * sizeof(GraphIsland) +
-                (world.bodies.count + world.contacts.count + world.joints.count) * sizeof(SplitMember) + _graphCount * sizeof(GraphChange)) + sizeof(GraphStatus);
-        }
-        finally
-        {
-            if (command != 0) SDL.CancelGPUCommandBuffer(command);
-            if (fence != 0) SDL.ReleaseGPUFence(Device, fence);
+            var command = SDL.AcquireGPUCommandBuffer(Device); if (command == 0) throw Failure("acquire island graph commands");
+            nint fence = 0;
+            try
+            {
+                if (first)
+                {
+                    var copy = SDL.BeginGPUCopyPass(command); if (copy == 0) throw Failure("begin island graph upload");
+                    long bytes;
+                    if (_graphSnapshot)
+                    {
+                        _graphIslands.Upload(copy, world.islands.count); _graphBodies.Upload(copy, world.bodies.count);
+                        _graphContacts.Upload(copy, world.contacts.count); _graphJoints.Upload(copy, world.joints.count);
+                        bytes = (long)world.islands.count * sizeof(GraphIsland) + (long)(world.bodies.count + world.contacts.count + world.joints.count) * sizeof(SplitMember);
+                    }
+                    else { _graphUpdates.Upload(copy, _graphUpdateCount); bytes = (long)_graphUpdateCount * sizeof(GraphUpdate); }
+                    _graphChanges.Upload(copy, _graphCount); bytes += (long)_graphCount * sizeof(GraphChange); SDL.EndGPUCopyPass(copy);
+                    IslandGraphUploadBytes += bytes; IslandGraphTransferBytes += bytes;
+                    GraphPass(command, world, 3, _graphKeys);
+                    if (_graphUpdateCount != 0) GraphPass(command, world, 4, _graphUpdateCount);
+                    GraphPass(command, world, 0, 1);
+                    GraphPass(command, world, 1, Math.Max(world.bodies.count, Math.Max(world.contacts.count, world.joints.count)));
+                    GraphPass(command, world, 2, world.islands.count);
+                }
+                else GraphPass(command, world, 6, 1); // Repack completed output; never execute a merge twice.
+                GraphPass(command, world, 5, _graphKeys);
+                var readback = SDL.BeginGPUCopyPass(command); if (readback == 0) throw Failure("begin island graph readback");
+                _graphOutput.Download(readback, _graphOutput.Data.Length);
+                _graphChanges.Download(readback, _graphCount); _graphStatus.Download(readback, 1); SDL.EndGPUCopyPass(readback);
+                var bytesRead = (long)_graphOutput.Data.Length * sizeof(int) + (long)_graphCount * sizeof(GraphChange) + sizeof(GraphStatus);
+                IslandGraphReadbackBytes += bytesRead; IslandGraphTransferBytes += bytesRead;
+                var submitted = command; command = 0; fence = SDL.SubmitGPUCommandBufferAndAcquireFence(submitted);
+                if (fence == 0) throw Failure("submit island graph changes");
+                Check(SDL.WaitForGPUFences(Device, true, new ReadOnlySpan<nint>(&fence, 1), 1), "wait for island graph changes");
+                _graphStatus.Read(1);
+                if (_graphStatus.Data[0].Error != 0) throw new InvalidOperationException($"GPU island graph error {_graphStatus.Data[0].Error}.");
+                var words = _graphStatus.Data[0].OutputWords;
+                var maximum = checked(world.islands.count * 17 + (world.bodies.count + world.contacts.count + world.joints.count) * 5);
+                if (words < 0 || words > maximum) throw new InvalidOperationException("GPU graph output count is invalid.");
+                if (words > _graphOutput.Data.Length)
+                {
+                    _graphOutput.Reserve(words); IslandGraphReadbackRetries++; first = false; continue;
+                }
+                _graphChanges.Read(_graphCount); ReadGraphOutput(world);
+                return;
+            }
+            finally
+            {
+                if (command != 0) SDL.CancelGPUCommandBuffer(command);
+                if (fence != 0) SDL.ReleaseGPUFence(Device, fence);
+            }
         }
     }
 
     private void GraphPass(nint command, B2World world, int operation, int count)
     {
-        Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[6];
+        Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[8];
         bindings[0] = new() { Buffer = _graphIslands.Handle }; bindings[1] = new() { Buffer = _graphBodies.Handle };
         bindings[2] = new() { Buffer = _graphContacts.Handle }; bindings[3] = new() { Buffer = _graphJoints.Handle };
         bindings[4] = new() { Buffer = _graphChanges.Handle }; bindings[5] = new() { Buffer = _graphStatus.Handle };
-        var pass = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 6);
+        bindings[6] = new() { Buffer = _graphDirtyStorage.Handle }; bindings[7] = new() { Buffer = _graphOutput.Handle };
+        var pass = SDL.BeginGPUComputePass(command, ReadOnlySpan<SDL.GPUStorageTextureReadWriteBinding>.Empty, 0, bindings, 8);
         if (pass == 0) throw Failure("begin island graph pass");
         SDL.BindGPUComputePipeline(pass, _islandGraphPipeline.DangerousGetHandle());
-        var step = new GraphStep { Bodies = world.bodies.count, Contacts = world.contacts.count, Joints = world.joints.count, Islands = world.islands.count, Operation = operation, Changes = _graphCount };
+        var update = _graphUpdates.Handle; SDL.BindGPUComputeStorageBuffers(pass, 0, (nint)(&update), 1);
+        var step = new GraphStep { Bodies = world.bodies.count, Contacts = world.contacts.count, Joints = world.joints.count, Islands = world.islands.count, Operation = operation, Changes = _graphCount, Updates = _graphUpdateCount, OutputCapacity = _graphOutput.Data.Length };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&step), (uint)sizeof(GraphStep));
         SDL.DispatchGPUCompute(pass, checked((uint)(count + 63) / 64), 1, 1); SDL.EndGPUComputePass(pass); DispatchCount++;
     }
@@ -211,7 +201,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         {
             var g = _graphIslands.Data[i];
             if (world.islands.data[i].islandId < 0) continue;
-            if (g.ID != i || g.Removed < 0 || (_graphFreed[i] ? g.Parent == i || g.BodyCount != 0 || g.ContactCount != 0 || g.JointCount != 0 : g.Parent != i || g.BodyCount <= 0))
+            if (g.ID != (_graphFreed[i] ? -1 : i) || g.Removed < 0 || (_graphFreed[i] ? g.Parent != -1 || g.BodyCount != 0 || g.ContactCount != 0 || g.JointCount != 0 : g.Parent != i || g.BodyCount <= 0))
                 throw new InvalidOperationException("GPU island descriptor differs.");
             if (_graphFreed[i]) continue;
             ValidateGraphList(g.BodyHead, g.BodyTail, g.BodyCount, i, _graphBodies.Data, world.bodies.count);
@@ -265,28 +255,30 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         EnsureOwner(); if (!_graphReady) return;
         if (!ReferenceEquals(world, _graphWorld) || _graphCursor != _graphCount) throw new InvalidOperationException("GPU island changes were not fully published.");
-        for (var i = 0; i < world.bodies.count; i++)
+        foreach (var key in _graphResults)
         {
-            if (_graphBodies.Data[i].Visited == 0) continue;
-            var b = world.bodies.data[i]; var m = _graphBodies.Data[i]; b.islandId = m.Root; b.islandPrev = m.Prev; b.islandNext = m.Next;
+            var i = key >> 2;
+            switch (key & 3)
+            {
+                case 0:
+                    var m = _graphIslands.Data[i]; var g = world.islands.data[i];
+                    g.headBody = m.BodyHead; g.tailBody = m.BodyTail; g.bodyCount = m.BodyCount;
+                    g.headContact = m.ContactHead; g.tailContact = m.ContactTail; g.contactCount = m.ContactCount;
+                    g.headJoint = m.JointHead; g.tailJoint = m.JointTail; g.jointCount = m.JointCount; g.constraintRemoveCount = m.Removed;
+                    break;
+                case 1:
+                    var b = world.bodies.data[i]; var bm = _graphBodies.Data[i]; b.islandId = bm.Root; b.islandPrev = bm.Prev; b.islandNext = bm.Next;
+                    break;
+                case 2:
+                    var c = world.contacts.data[i]; var cm = _graphContacts.Data[i]; c.islandId = cm.Root; c.islandPrev = cm.Prev; c.islandNext = cm.Next;
+                    break;
+                case 3:
+                    var j = world.joints.data[i]; var jm = _graphJoints.Data[i]; j.islandId = jm.Root; j.islandPrev = jm.Prev; j.islandNext = jm.Next;
+                    break;
+            }
         }
-        for (var i = 0; i < world.contacts.count; i++)
-        {
-            if (_graphContacts.Data[i].Visited == 0) continue;
-            var c = world.contacts.data[i]; var m = _graphContacts.Data[i]; c.islandId = m.Root; c.islandPrev = m.Prev; c.islandNext = m.Next;
-        }
-        for (var i = 0; i < world.joints.count; i++)
-        {
-            if (_graphJoints.Data[i].Visited == 0) continue;
-            var j = world.joints.data[i]; var m = _graphJoints.Data[i]; j.islandId = m.Root; j.islandPrev = m.Prev; j.islandNext = m.Next;
-        }
-        for (var i = 0; i < world.islands.count; i++)
-        {
-            var m = _graphIslands.Data[i]; if (m.ID < 0) continue;
-            var g = world.islands.data[i]; g.headBody = m.BodyHead; g.tailBody = m.BodyTail; g.bodyCount = m.BodyCount;
-            g.headContact = m.ContactHead; g.tailContact = m.ContactTail; g.contactCount = m.ContactCount;
-            g.headJoint = m.JointHead; g.tailJoint = m.JointTail; g.jointCount = m.JointCount; g.constraintRemoveCount = m.Removed;
-        }
+        _residentGraph = world.islandIdPool;
+        if (_graphSnapshot) IslandGraphSnapshotCount++;
         IslandChangeCount += _graphCount; MergedIslandCount += _graphStatus.Data[0].Merges;
         _graphReady = false;
     }
