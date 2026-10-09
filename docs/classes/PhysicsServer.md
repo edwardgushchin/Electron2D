@@ -58,6 +58,7 @@ PhysicsServer.FreeRID(space);
 | `public static void BodySetTransform(RID body, Transform transform)` / `AreaSetTransform(RID area, Transform transform)` | Set finite unit-scale, zero-skew pose. |
 | `public static Transform BodyGetTransform(RID body)` | Current scene presentation or raw solver pose. |
 | `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
+| `public static void BodySetContinuousCollisionDetectionMode(RID body, CCDMode mode)` / `CCDMode BodyGetContinuousCollisionDetectionMode(RID body)` | Store/read the same per-body policy as RigidBody.ContinuousCD, including detached/non-dynamic roles; validates live body identity, owner/phase and enum values. |
 | `public static void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
 | `public static void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
 | `public static void AreaSetCollisionLayer(RID area, uint layer)` | Rebuild Area sensor fixtures with 32-bit queryable layers. |
@@ -608,3 +609,9 @@ Accepts a configured pin or an unconfigured scene PinJoint RID. Other roles reje
 The constructor captures ProjectSettings.Physics2DDefaultConstraintBias with feature overrides, initially 0.2. Replacing it changes only joints with zero authored Bias; explicit nonzero values remain effective. This is a joint recovery parameter, not contact-separation bias. Other applicable space parameters retain their separate pending coverage.
 
 All access checks resource identity and related world ownership/phase, including an endpoint-free scene joint's attachment space. ArgumentException reports stale/wrong resources or concrete roles; ArgumentOutOfRangeException reports invalid numbers; InvalidOperationException reports solver-owned or off-owner access. PhysicsJointPolicyTests exercises both CPU and the internally enabled stage GPU path; independent GPU public-world integration remains open.
+
+## Continuous collision
+
+The two body CCD accessors use the shared CCDMode enum; scene and server bodies
+share one runtime setting. Area/shape/freed RIDs reject. See [continuous collision](../components/cpu-continuous-collision.md)
+for force/impulse cadence, geometry limits and actual backend acceptance.

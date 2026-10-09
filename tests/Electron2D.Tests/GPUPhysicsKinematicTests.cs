@@ -122,7 +122,7 @@ internal static class GPUPhysicsKinematicTests
             Near(Read(s, a).Position.X, 80, 0, "Fast kinematic motion reaches its complete target");
             Check(s.CCDIntervalCount > 0 && Read(s, b).Position.X > 81.9f && Read(s, b).Velocity.X > 3999 && !Read(s, b).Sleeping,
                 "Kinematic path wakes and pushes a default-CCD dynamic body before crossing it.");
-            Check(s.GetCCDMode(b) == Store.CCDMode.Disabled, "Fast kinematic handling never changes its peer's authored CCD policy.");
+            Check(s.GetCCDMode(b) == CCDMode.Disabled, "Fast kinematic handling never changes its peer's authored CCD policy.");
         }
         foreach (var surface in new[] { -4000f, 4000f })
         {

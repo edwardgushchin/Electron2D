@@ -93,7 +93,7 @@ internal static class GPUPhysicsOneWayTests
     private static void VerifyCCD()
     {
         using var floor = new RectangleShape { Size = new(100, 0.2f) }; using var ball = new CircleShape { Radius = 1 };
-        foreach (var ccd in new[] { Store.CCDMode.CastRay, Store.CCDMode.CastShape })
+        foreach (var ccd in new[] { CCDMode.CastRay, CCDMode.CastShape })
         {
             using var s = new Store(); var a = Body(s, mode: Mode.Static); var surface = s.AddShape(a, floor);
             s.SetShapeOneWay(surface, new(true, Vector2.Down, 1));
@@ -112,7 +112,7 @@ internal static class GPUPhysicsOneWayTests
             using var s = new Store(); using var beam = new RectangleShape { Size = new(20, 0.2f) }; using var ball = new CircleShape { Radius = 1 };
             var platform = Body(s, mode: Mode.Kinematic); var surface = s.AddShape(platform, beam, friction: 0);
             s.SetShapeOneWay(surface, new(true, Vector2.Down, 1));
-            var b = Body(s, new(5, 0.5f)); s.AddShape(b, ball, friction: 0); s.SetCCDMode(b, Store.CCDMode.CastShape);
+            var b = Body(s, new(5, 0.5f)); s.AddShape(b, ball, friction: 0); s.SetCCDMode(b, CCDMode.CastShape);
             Check(s.FindContacts(margin) == 0 && s.OneWayPairCount == 1, "Rotating CCD starts in a rejected overlap.");
             s.SetKinematicTarget(platform, Vector2.Zero, MathF.PI - 0.000001f);
             s.Simulate(0.05f, Vector2.Zero, substeps: 1, iterations: 32, margin: margin);

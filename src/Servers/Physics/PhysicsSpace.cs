@@ -99,6 +99,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var definition = b2DefaultWorldDef();
         definition.gravity = PhysicsShapeBackend.ToBackend(_defaultGravity);
         definition.restitutionThreshold = 0;
+        definition.enableContinuous = false; // Per-body modes use the shared scene/server trajectory pass.
         definition.frictionCallback = CombineFriction;
         definition.restitutionCallback = CombineBounce;
         _tasks = new(OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount));
@@ -140,7 +141,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
-    internal bool HasBackendFailure => _gpuFailure is not null;
+    internal bool HasBackendFailure => _gpuFailure is not null || _continuousFailure is not null;
 
     internal void EnsureReleaseAccess()
     {
@@ -154,6 +155,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         EnsureReleaseAccess();
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
+        if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);
     }
 
@@ -439,7 +441,6 @@ internal sealed partial class PhysicsSpace : IDisposable
             PrepareAreaFields();
             RecordStepPhase(1, ref profileMark);
             var hasKinematicBodies = PrepareBodyStates(delta);
-            _contactStep++;
             var world = b2GetWorldFromId(_worldID);
             world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
@@ -505,6 +506,11 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         _tasks.Dispose();
+        if (_continuousTree is not null) Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(_continuousTree);
+        _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear();
+        _continuousForces.Clear(); _continuousJointBudgets.Clear();
+        _continuousBodies.Capacity = _continuousShapes.Capacity = _continuousProxies.Capacity = 0;
+        _continuousForces.Capacity = _continuousJointBudgets.Capacity = 0; _continuousFinalize = null;
         b2GetWorldFromId(_worldID).integrateBodyStage = null!;
         b2GetWorldFromId(_worldID).solveConstraints = null!;
         b2GetWorldFromId(_worldID).generateManifolds = null!;

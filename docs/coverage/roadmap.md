@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1409 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1420 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 1369 missing declarations in already represented type families; split each type by its documented dependency trigger. Reassess dependencies for [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) before selecting their slices.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -19,7 +19,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [OS](classes/OS.md) | 94 | 6 |
 | [Node](classes/Node.md) | 58 | 63 |
 | [Window](classes/Window.md) | 35 | 57 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | 34 | 7 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | 34 | 13 |
 | [Object](classes/Object.md) | 32 | 22 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | 18 | 4 |
 | [Engine](classes/Engine.md) | 16 | 18 |
@@ -49,6 +49,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [NavigationServer2D](classes/NavigationServer2D.md) | 0 | 12 |
 | [NoiseTexture2D](classes/NoiseTexture2D.md) | 0 | 12 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
+| [RigidBody2D](classes/RigidBody2D.md) | 0 | 10 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
@@ -62,7 +63,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 5 |
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
-| [RigidBody2D](classes/RigidBody2D.md) | 0 | 5 |
 | [Noise](classes/Noise.md) | 0 | 4 |
 | [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | 0 | 3 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |

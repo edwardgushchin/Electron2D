@@ -2,7 +2,7 @@ using System.Diagnostics;
 using Electron2D;
 using Store = Electron2D.GPUPhysicsBodyStore;
 using Mode = Electron2D.PhysicsServer.BodyMode;
-using CCD = Electron2D.GPUPhysicsBodyStore.CCDMode;
+using CCD = Electron2D.CCDMode;
 
 internal static class GPUPhysicsCCDStoreTests
 {

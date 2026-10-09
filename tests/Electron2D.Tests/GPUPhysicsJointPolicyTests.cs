@@ -121,7 +121,7 @@ internal static class GPUPhysicsJointPolicyTests
     private static void VerifyContinuousBudget()
     {
         using var s = new Store(); using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(0.2f, 100) };
-        var projectile = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(3000, 0), 0, CanSleep: false, ContinuousMode: Store.CCDMode.CastShape));
+        var projectile = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(3000, 0), 0, CanSleep: false, ContinuousMode: CCDMode.CastShape));
         s.AddShape(projectile, circle, friction: 0, bounce: 0.5f); s.AddShape(Body(s, new(20, 0), mode: Mode.Static), wall, friction: 0, bounce: 0.5f);
         var b = Body(s, new(0, 1000), new(100, 0));
         s.AddJoint(new(Kind.Pin, b, default, Transform.Identity, new Transform(0, new(0, 1000))) { MaxForce = 10, MaxBias = 0 });

@@ -78,9 +78,9 @@ internal static class GPUPhysicsBodyParameterTests
         var initialLock = s.Add(new(Mode.RigidLinear, Vector2.Zero, 0, new(6, 8), 3));
         s.SetMode(initialLock, Mode.Rigid); Near(Read(s, initialLock).Velocity.Z, 0, 0, "Changing the initial locked role before submission cannot restore rejected rotation.");
         s.Remove(initialSleep); s.Remove(initialLock);
-        var b = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(6, 8), 3, Mass: 2, Inertia: 4, CanSleep: false, ContinuousMode: Store.CCDMode.CastShape));
+        var b = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(6, 8), 3, Mass: 2, Inertia: 4, CanSleep: false, ContinuousMode: CCDMode.CastShape));
         s.SetIntegrationPolicy(b, new(2, LockRotation: true)); var state = Read(s, b);
-        Check(!state.CanSleep && state.ContinuousMode == Store.CCDMode.CastShape && state.RotationLocked, "Editing an unsubmitted body preserves CCD and sleep bits.");
+        Check(!state.CanSleep && state.ContinuousMode == CCDMode.CastShape && state.RotationLocked, "Editing an unsubmitted body preserves CCD and sleep bits.");
         foreach (var flush in new[] { false, true })
         {
             void Flush() { if (flush) Read(s, b); }
@@ -123,14 +123,14 @@ internal static class GPUPhysicsBodyParameterTests
     {
         using var s = new Store(); using var wall = new RectangleShape { Size = new(0.2f, 100) }; using var circle = new CircleShape { Radius = 1 };
         var a = s.Add(new(Mode.Static, new(20, 0), 0, Vector2.Zero, 0)); s.AddShape(a, wall, friction: 0);
-        var b = s.Add(new(Mode.Static, Vector2.Zero, 0, Vector2.Zero, 0, ContinuousMode: Store.CCDMode.CastShape, CanSleep: false)); s.AddShape(b, circle, friction: 0);
+        var b = s.Add(new(Mode.Static, Vector2.Zero, 0, Vector2.Zero, 0, ContinuousMode: CCDMode.CastShape, CanSleep: false)); s.AddShape(b, circle, friction: 0);
         s.SetMode(b, Mode.Rigid); s.SetIntegrationPolicy(b, new(0, 2)); s.SetVelocity(b, new(3000, 100), 0);
         s.Simulate(0.02f, Vector2.Zero, substeps: 1, margin: 0);
         Check(Read(s, b).Position.X < 20 && s.CCDIntervalCount > 0, "A static-to-rigid transition activates its retained CCD mode.");
         Near(Read(s, b).Velocity.Y, 96, 0.001f, "CCD impact intervals do not apply outer-tick damping again");
         var queries = s.CCDQueryCount; s.SetMode(b, Mode.Kinematic); s.SetPose(b, Vector2.Zero, 0); s.SetKinematicTarget(b, new(60, 0), 0);
         s.Simulate(0.02f, Vector2.Zero, substeps: 1, margin: 0);
-        Check(s.GetCCDMode(b) == Store.CCDMode.CastShape && s.CCDQueryCount == queries && Read(s, b).Position.X > 59, "Kinematic targets retain configured CCD but do not collide with static peers.");
+        Check(s.GetCCDMode(b) == CCDMode.CastShape && s.CCDQueryCount == queries && Read(s, b).Position.X > 59, "Kinematic targets retain configured CCD but do not collide with static peers.");
     }
     private static void VerifyFailures()
     {

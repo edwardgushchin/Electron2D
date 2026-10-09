@@ -55,11 +55,20 @@ internal sealed partial class PhysicsSpace
 
     private void StepBackend(float delta)
     {
-        foreach (var joint in _jointRuntimes) joint.PrepareSolverStep(delta);
-        _jointImpulseVelocities.Clear();
-        foreach (var joint in _jointRuntimes) joint.ValidateSolverStep(this);
-        foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
-        try { b2World_Step(_worldID, delta, 4); }
+        if (delta / 4 > 0 && HasContinuousBodies()) StepContinuous(delta); else StepDiscreteBackend(delta);
+    }
+
+    private void StepDiscreteBackend(float delta, bool applyJointForces = true, int substeps = 4)
+    {
+        if (applyJointForces)
+        {
+            foreach (var joint in _jointRuntimes) joint.PrepareSolverStep(delta);
+            _jointImpulseVelocities.Clear();
+            foreach (var joint in _jointRuntimes) joint.ValidateSolverStep(this);
+            foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
+        }
+        _contactStep++;
+        try { b2World_Step(_worldID, delta, substeps); PruneOneWayPairs(); }
         catch (Exception failure) when (_gpuWorld is not null)
         {
             // A partially committed GPU interval cannot be replayed through the compatibility solver.

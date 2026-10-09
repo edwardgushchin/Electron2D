@@ -2437,6 +2437,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CCDMode",
+    "kind": "type",
+    "declaringType": "Electron2D.CCDMode",
+    "name": "CCDMode",
+    "signature": "public enum Electron2D.CCDMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CPUParticles",
     "kind": "type",
     "declaringType": "Electron2D.CPUParticles",
@@ -20642,6 +20660,45 @@
     "parameters": [],
     "returnType": "Electron2D.ButtonActionMode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CCDMode.CastRay()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CCDMode",
+    "name": "CastRay",
+    "signature": "public const Electron2D.CCDMode CastRay = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CCDMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CCDMode.CastShape()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CCDMode",
+    "name": "CastShape",
+    "signature": "public const Electron2D.CCDMode CastShape = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CCDMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CCDMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CCDMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.CCDMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CCDMode",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.CPUParticles.DrawOrderMode.Index()",
@@ -110583,6 +110640,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetContinuousCollisionDetectionMode(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetContinuousCollisionDetectionMode",
+    "signature": "public static Electron2D.CCDMode BodyGetContinuousCollisionDetectionMode(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.CCDMode",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetDirectState(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -111240,6 +111316,30 @@
       {
         "name": "torque",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetContinuousCollisionDetectionMode(Electron2D.RID,Electron2D.CCDMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetContinuousCollisionDetectionMode",
+    "signature": "public static System.Void BodySetContinuousCollisionDetectionMode(Electron2D.RID body, Electron2D.CCDMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.CCDMode",
         "default": null
       }
     ],
@@ -184523,6 +184623,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RigidBody.ContinuousCD()",
+    "kind": "property",
+    "declaringType": "Electron2D.RigidBody",
+    "name": "ContinuousCD",
+    "signature": "public Electron2D.CCDMode ContinuousCD { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CCDMode",
     "value": null
   },
   {

@@ -6,8 +6,6 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
-    /// <summary>Internal per-dynamic-body trajectory policy; public scene/server adapters remain separate.</summary>
-    internal enum CCDMode { Disabled, CastRay, CastShape }
     private int _ccdBodyCount;
     private RenderHandle? _ccdPipeline;
     private const float CCDTolerance = 0.001f;

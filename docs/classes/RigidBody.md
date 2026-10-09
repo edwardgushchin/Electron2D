@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -31,6 +31,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 
 | Member | Default | Contract |
 | --- | --- | --- |
+| `public CCDMode ContinuousCD { get; set; }` | Disabled | Stored per-body discrete/ray/full-shape trajectory policy; see [continuous collision](../components/cpu-continuous-collision.md). |
 | `public float Mass { get; set; }` | 1 | Positive finite kilograms within the solver range; normalizes automatic shape inertia and retains an explicit override. |
 | `public RigidCenterOfMassMode CenterOfMassMode { get; set; }` | Auto | Automatic geometry or configured local center. |
 | `public Vector2 CenterOfMass { get; set; }` | Zero | Stored local offset; changed assignment requires Custom. |
@@ -236,3 +237,11 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+## ContinuousCD
+
+Uses the shared CCDMode contract. Changed modes wake attached dynamics and survive
+freeze, detachment and packing. Undefined values reject before mutation. CPU
+trajectory checks include solved motor/contact motion and preserve remaining time
+and complete frame impulses. Ray mode can miss off-ray/rotational features; the
+independent GPU public binding and missing shape-family behavior remain open.

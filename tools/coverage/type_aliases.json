@@ -95,6 +95,8 @@
     "CPUParticles2D.Parameter": "CPUParticles.Parameter",
     "CPUParticles2D.ParticleFlags": "CPUParticles.ParticleFlags",
     "PhysicsServer2D.BodyMode": "PhysicsServer.BodyMode",
+    "PhysicsServer2D.CCDMode": "CCDMode",
+    "RigidBody2D.CCDMode": "CCDMode",
     "CharacterBody2D.MotionMode": "CharacterMotionMode",
     "CharacterBody2D.PlatformOnLeave": "CharacterPlatformOnLeave",
     "Area2D.SpaceOverride": "Area.SpaceOverride",

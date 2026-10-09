@@ -3311,8 +3311,8 @@
         "RigidBody2D::enum_value:CCDMode.CCD_MODE_DISABLED",
         "RigidBody2D::property:continuous_cd"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: complete CPU per-body Disabled/CastRay/CastShape implementation and public scene/server/backend adapters, preserving other bodies' policy and interval contact/event semantics (ADR 0054). Independent resident GPU ray/full-shape sweeps, rotational geometry and impact intervals now execute internally. A Box2D bullet or global continuous switch cannot represent the three public branches; the public family enters the complete integrated slice."
+      "state": "Partial",
+      "reason": "Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding and complete dynamic separation-ray/boundary shape response."
     },
     {
       "state": "Implemented",

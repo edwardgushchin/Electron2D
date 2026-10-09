@@ -18,7 +18,7 @@ internal static class GPUPhysicsReportTests
     private static Vector2 Sum(ReadOnlySpan<Store.ContactReport> reports)
     { var total = Vector2.Zero; foreach (var report in reports) total += report.Impulse; return total; }
     private static Vector2 Linear(Store.Snapshot body) => new(body.Velocity.X, body.Velocity.Y);
-    private static Store.BodyHandle Add(Store s, Mode mode, Vector2 position, Vector2 velocity = default, float mass = 2, Store.CCDMode ccd = Store.CCDMode.Disabled) =>
+    private static Store.BodyHandle Add(Store s, Mode mode, Vector2 position, Vector2 velocity = default, float mass = 2, CCDMode ccd = CCDMode.Disabled) =>
         s.Add(new(mode, position, 0, velocity, 0, Mass: mass, CanSleep: false, LockRotation: true, ContinuousMode: ccd));
     private static void Momentum(int steps)
     {
@@ -59,8 +59,8 @@ internal static class GPUPhysicsReportTests
     private static void Transient(int steps)
     {
         using var s = new Store { CaptureContactReports = true }; using var shape = new CircleShape { Radius = 5 };
-        var a = Add(s, Mode.Rigid, new(-50, 0), new(600, 0), ccd: Store.CCDMode.CastShape);
-        var b = Add(s, Mode.Rigid, new(50, 0), new(-600, 0), mass: 3, ccd: Store.CCDMode.CastShape);
+        var a = Add(s, Mode.Rigid, new(-50, 0), new(600, 0), ccd: CCDMode.CastShape);
+        var b = Add(s, Mode.Rigid, new(50, 0), new(-600, 0), mass: 3, ccd: CCDMode.CastShape);
         s.AddShape(a, shape, friction: 0, bounce: 1); s.AddShape(b, shape, friction: 0, bounce: 1);
         s.Simulate(.1f, Vector2.Zero, substeps: steps, iterations: 32);
         Span<Store.ContactReport> reports = stackalloc Store.ContactReport[16]; Span<int> counts = stackalloc int[2];

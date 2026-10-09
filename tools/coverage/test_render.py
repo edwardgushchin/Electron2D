@@ -317,7 +317,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 117, "Partial": 8, "Unimplemented": 34, "Blocked": 10, "Excluded": 46}
+                "Implemented": 117, "Partial": 14, "Unimplemented": 34, "Blocked": 4, "Excluded": 46}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -329,8 +329,12 @@ def main():
     assert " | Implemented | " in next(row for row in resource_rows if row.startswith("| [`method _get_rid("))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("set_active", "space_set_active", "space_is_active"))
-    assert all(" | Blocked | " in next(row for row in server_rows if f"method {name}(" in row)
+    assert all(" | Partial | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_get_continuous_collision_detection_mode", "body_set_continuous_collision_detection_mode"))
+    for owner in ("RigidBody2D", "PhysicsServer2D"):
+        rows = pages[CLASS_PAGES / f"{owner}.md"].splitlines()
+        ccd = next(row for row in rows if row.startswith("| [`enum CCDMode"))
+        assert "public enum Electron2D.CCDMode" in ccd and "public independent-GPU" in ccd
     area_parameter_rows = [row for row in server_rows if "AreaParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
     assert len(area_parameter_rows) == 11 and all(" | Excluded | " in row for row in area_parameter_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method area_{action}_param(" in row)

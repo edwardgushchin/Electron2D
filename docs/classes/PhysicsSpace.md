@@ -85,3 +85,12 @@ origins inside the complete contour or its swept region before selecting pieces.
 The fixture tag borrows the contour weakly; shared resource collision scratch stays
 allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
 both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).
+
+
+## Continuous collision policy
+
+The shared public CCDMode now supplies the scene/server setting and resident GPU
+configuration. CPU worlds inspect solved motion before publication and preserve
+remaining tick time and nominal force/joint budgets through impact continuations.
+The runtime stores policy across attachments and roles; independent GPU world
+binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).

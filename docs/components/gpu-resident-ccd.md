@@ -14,10 +14,9 @@ with other authored commands, including CanSleep. Reused slots start with their 
 definition. Step and SolveConstraints remain their existing partial-stage controls.
 
 This is an internal independent GPU implementation under
-[ADR 0054](../decisions/physics.md#adr-0054). The public CPU CCD modes, scene/server
-adapters, selectable GPU world, complete contact/event publication and networking
-remain open. The new internal enum does not close public declaration coverage.
-Existing public CPU behavior is unchanged.
+[ADR 0054](../decisions/physics.md#adr-0054). [Public CPU CCD modes](cpu-continuous-collision.md) now execute through scene/server
+settings, and this store reuses the shared public CCDMode enum. Independent GPU
+world selection, public contact/event projection and networking remain open.
 
 The pinned [reference API](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RigidBody2D.xml)
 defines disabled, ray and shape prediction. Its

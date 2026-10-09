@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-09
 
+[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding and missing shape-family response remain open.
+
 [Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.

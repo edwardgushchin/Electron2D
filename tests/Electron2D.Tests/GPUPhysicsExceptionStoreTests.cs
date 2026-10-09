@@ -100,7 +100,7 @@ internal static class GPUPhysicsExceptionStoreTests
     private static void VerifyCCD()
     {
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(0.2f, 100) };
-        foreach (var mode in new[] { Store.CCDMode.CastRay, Store.CCDMode.CastShape })
+        foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
         {
             using var s = new Store();
             var a = Body(s); var b = Body(s, new(20, 0), Mode.Static);

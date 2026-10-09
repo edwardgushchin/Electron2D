@@ -182,3 +182,12 @@ ReportDeviceCapacityBytes/ReportTransferCapacityBytes expose retained report sto
 contact mirror is retained; [publication storage and traffic](../components/gpu-resident-reports.md)
 are separate from integration/solver benchmarks. GPUPhysicsReportTests checks the
 shared public momentum/reporting contract and the internal publication lifecycle.
+
+
+## Continuous collision policy
+
+The shared public CCDMode now supplies the scene/server setting and resident GPU
+configuration. CPU worlds inspect solved motion before publication and preserve
+remaining tick time and nominal force/joint budgets through impact continuations.
+The runtime stores policy across attachments and roles; independent GPU world
+binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).

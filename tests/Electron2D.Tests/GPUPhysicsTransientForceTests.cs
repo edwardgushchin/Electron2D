@@ -106,7 +106,7 @@ internal static class GPUPhysicsTransientForceTests
     {
         using var s = new Store(); using var wall = new RectangleShape { Size = new(0.2f, 100) }; using var circle = new CircleShape { Radius = 1 };
         var a = s.Add(new(Mode.Static, new(20, 0), 0, Vector2.Zero, 0)); s.AddShape(a, wall, friction: 0);
-        var b = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(3000, 0), 0, Inertia: 1, CanSleep: false, ContinuousMode: Store.CCDMode.CastShape)); s.AddShape(b, circle, friction: 0);
+        var b = s.Add(new(Mode.Rigid, Vector2.Zero, 0, new(3000, 0), 0, Inertia: 1, CanSleep: false, ContinuousMode: CCDMode.CastShape)); s.AddShape(b, circle, friction: 0);
         s.ApplyForce(b, new(0, 100)); s.Simulate(0.02f, Vector2.Zero, substeps: 1, margin: 0);
         var first = Read(s, b); Check(first.Position.X < 20 && s.CCDIntervalCount > 0, "Force-loaded body collides through the continuous path.");
         Near(first.Velocity.Y, 2, 0.001f, "CCD impact intervals do not integrate transient force again");

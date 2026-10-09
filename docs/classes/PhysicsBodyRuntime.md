@@ -79,3 +79,12 @@ callback. PhysicsBodyStateTests explicitly replaces both a later scene body and 
 raw server body during an earlier callback, then verifies only their next-frame
 callbacks execute and both older direct views stay invalid. World stepping,
 geometry/query adapters and independent GPU binding remain separate open work.
+
+
+## Continuous collision policy
+
+The shared public CCDMode now supplies the scene/server setting and resident GPU
+configuration. CPU worlds inspect solved motion before publication and preserve
+remaining tick time and nominal force/joint budgets through impact continuations.
+The runtime stores policy across attachments and roles; independent GPU world
+binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).

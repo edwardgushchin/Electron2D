@@ -16,6 +16,8 @@ public partial class RigidBody : PhysicsBody
 
     private static readonly PropertyDescriptor[] BodyProperties =
     [
+        new PropertyDescriptor<RigidBody, CCDMode>(nameof(ContinuousCD), body => body.ContinuousCD,
+            (body, value) => body.ContinuousCD = value, _ => CCDMode.Disabled, stored: true),
         new PropertyDescriptor<RigidBody, bool>(nameof(CustomIntegrator), body => body.CustomIntegrator,
             (body, value) => body.CustomIntegrator = value, _ => false, stored: true),
         new PropertyDescriptor<RigidBody, float>(nameof(Mass), body => body.Mass, (body, value) => body.Mass = value, _ => 1f, stored: true),
