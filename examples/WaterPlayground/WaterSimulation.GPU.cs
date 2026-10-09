@@ -27,6 +27,7 @@ internal sealed partial class WaterSimulation
         }
         if (enabled && !UseGPU)
         { _gpuSource = 0; _device!.BufferUpdate(_buffers[0], 0, (uint)(Count * 16), MemoryMarshal.AsBytes(_state.AsSpan())); }
+        if (UseGPU != enabled) StepMS = 0;
         UseGPU = enabled;
     }
     private void CreateBuffers()
@@ -34,8 +35,8 @@ internal sealed partial class WaterSimulation
         if (_device is null) return;
         for (var i = 0; i < _gpuSets.Length; i++) if (_gpuSets[i].IsValid()) { _device.FreeRID(_gpuSets[i]); _gpuSets[i] = default; }
         for (var i = 0; i < _buffers.Length; i++) if (_buffers[i].IsValid()) { _device.FreeRID(_buffers[i]); _buffers[i] = default; }
-        var groups = (Count + 127) / 128; _summaries = new Float4[groups * 2];
-        int[] sizes = [Count * 16, Count * 16, _heads.Length * 4, Count * 4, Count * 8, Count * 32, groups * 32, Count * 16];
+        var groups = (Count + 127) / 128; _summaries = new Float4[groups * BodyCount];
+        int[] sizes = [Count * 16, Count * 16, _heads.Length * 4, Count * 4, Count * 8, Count * BodyCount * 16, groups * BodyCount * 16, Count * 16];
         for (var i = 0; i < _buffers.Length; i++) _buffers[i] = _device.StorageBufferCreate((uint)sizes[i]);
         for (var flip = 0; flip < 2; flip++)
         {
@@ -67,11 +68,14 @@ internal sealed partial class WaterSimulation
         Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(6, ActiveCount); _gpuSource ^= 1;
         Dispatch(4, ActiveCount); device.ComputeListEnd();
         if (capture) device.BufferGetData(_buffers[_gpuSource], MemoryMarshal.AsBytes(_state.AsSpan(0, ActiveCount)));
-        var summaryCount = ((ActiveCount + 127) / 128) * 2;
+        var summaryCount = ((ActiveCount + 127) / 128) * BodyCount;
         device.BufferGetData(_buffers[6], MemoryMarshal.AsBytes(_summaries.AsSpan(0, summaryCount)));
-        var duck = Float4.Zero; var boat = Float4.Zero;
-        for (var i = 0; i < summaryCount; i += 2) { duck += _summaries[i]; boat += _summaries[i + 1]; }
-        React(Duck, duck); React(Boat, boat);
+        for (var slot = 0; slot < BodyCount; slot++)
+        {
+            var sum = Float4.Zero;
+            for (var i = slot; i < summaryCount; i += BodyCount) sum += _summaries[i];
+            React(_actors[slot], sum);
+        }
         void Dispatch(int operation, int count)
         {
             _settings.Meta.Y = operation;
