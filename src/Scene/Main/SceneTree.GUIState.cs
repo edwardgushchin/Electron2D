@@ -28,6 +28,7 @@ public sealed partial class SceneTree
         using var scope = SelectGUI(viewport);
         List<Exception>? errors = null;
         try { ClearGUIHover(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { ClearPhysicsPicking(viewport); } catch (Exception error) { CollectException(ref errors, error); }
         try { ReleaseGUIFocus(viewport); } catch (Exception error) { CollectException(ref errors, error); }
         if (ReferenceEquals(_gui.Section, _gui))
             try { CancelGUIDrag(viewport); } catch (Exception error) { CollectException(ref errors, error); }
@@ -78,8 +79,21 @@ public sealed partial class SceneTree
         finally { _guiRefreshStates.Clear(); _refreshingGUI = false; }
         ThrowCollected("Viewport GUI refresh callbacks failed.", errors);
     }
-    internal void ExitGUIViewport(Viewport viewport) { using var scope = SelectGUI(viewport); ClearGUIHover(); }
-    internal void DisableGUIViewport(Viewport viewport) { using var scope = SelectGUI(viewport); try { ClearGUIHover(); } finally { viewport.DispatchNotification(Node.NotificationVPMouseExit); _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0; } }
+    internal void ExitGUIViewport(Viewport viewport)
+    {
+        using var scope = SelectGUI(viewport); List<Exception>? errors = null;
+        try { ClearGUIHover(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { ClearPhysicsPicking(viewport); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Viewport pointer-exit callbacks failed.", errors);
+    }
+    internal void DisableGUIViewport(Viewport viewport)
+    {
+        using var scope = SelectGUI(viewport); List<Exception>? errors = null;
+        try { ExitGUIViewport(viewport); } catch (Exception error) { CollectException(ref errors, error); }
+        try { viewport.DispatchNotification(Node.NotificationVPMouseExit); } catch (Exception error) { CollectException(ref errors, error); }
+        _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0;
+        ThrowCollected("Viewport input-disable callbacks failed.", errors);
+    }
     internal Control? GetGUIHoveredControl(Viewport viewport) { EnsureOwnerThread(); using var scope = SelectGUI(viewport); return _gui.GuiHoverTarget; }
     private void UpdateEmbeddedHover(SubViewportContainer container, Vector2 parentPoint, ref List<Exception>? errors)
     {

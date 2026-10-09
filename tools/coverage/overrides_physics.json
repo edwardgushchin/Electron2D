@@ -1354,6 +1354,86 @@
       "godot": "Performance::enum_value:Monitor.PHYSICS_2D_ISLAND_COUNT",
       "electron2d": "enumValue:Electron2D.Performance.Monitor.PhysicsIslandCount()",
       "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "CollisionObject2D::method:_input_event(Viewport:,InputEvent:,int:)",
+      "electron2d": "method:Electron2D.CollisionObject.OnInputEvent(Electron2D.Viewport,Electron2D.InputEvent,System.Int32)",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::method:_mouse_enter()",
+      "electron2d": "method:Electron2D.CollisionObject.OnMouseEnter()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::method:_mouse_exit()",
+      "electron2d": "method:Electron2D.CollisionObject.OnMouseExit()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::method:_mouse_shape_enter(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.OnMouseShapeEnter(System.Int32)",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::method:_mouse_shape_exit(int:)",
+      "electron2d": "method:Electron2D.CollisionObject.OnMouseShapeExit(System.Int32)",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)",
+      "electron2d": "event:Electron2D.CollisionObject.InputEvent()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::signal:mouse_entered()",
+      "electron2d": "event:Electron2D.CollisionObject.MouseEntered()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::signal:mouse_exited()",
+      "electron2d": "event:Electron2D.CollisionObject.MouseExited()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::signal:mouse_shape_entered(int:)",
+      "electron2d": "event:Electron2D.CollisionObject.MouseShapeEntered()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::signal:mouse_shape_exited(int:)",
+      "electron2d": "event:Electron2D.CollisionObject.MouseShapeExited()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "CollisionObject2D::property:input_pickable",
+      "electron2d": "property:Electron2D.CollisionObject.InputPickable()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "PhysicsBody2D::property:input_pickable",
+      "electron2d": "property:Electron2D.CollisionObject.InputPickable()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests. PhysicsBody projects the inherited member with its false constructor/revert default."
+    },
+    {
+      "godot": "Viewport::property:physics_object_picking",
+      "electron2d": "property:Electron2D.Viewport.PhysicsObjectPicking()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "Viewport::property:physics_object_picking_sort",
+      "electron2d": "property:Electron2D.Viewport.PhysicsObjectPickingSort()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "Viewport::property:physics_object_picking_first_only",
+      "electron2d": "property:Electron2D.Viewport.PhysicsObjectPickingFirstOnly()",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/common/enable_object_picking",
+      "electron2d": "property:Electron2D.ProjectSettings.PhysicsObjectPicking()",
+      "reason": "Typed root-picking default sampled with feature overrides during SceneTree activation. The supplied root's explicit authored choice wins under ADR 0099."
     }
   ],
   "extras": [
@@ -3148,7 +3228,7 @@
         "class:CollisionObject2D"
       ],
       "state": "Partial",
-      "reason": "Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054)."
+      "reason": "Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. Pointer delivery is verified on public CPU/GPU worlds (ADR 0099); the complete existing shape-owner/disable suite still needs public cross-backend conformance. Inherited API gaps remain recorded on their declaring families."
     },
     {
       "godot": [
@@ -3244,23 +3324,6 @@
     },
     {
       "godot": [
-        "CollisionObject2D::method:_input_event(Viewport:,InputEvent:,int:)",
-        "CollisionObject2D::method:_mouse_enter()",
-        "CollisionObject2D::method:_mouse_exit()",
-        "CollisionObject2D::method:_mouse_shape_enter(int:)",
-        "CollisionObject2D::method:_mouse_shape_exit(int:)",
-        "CollisionObject2D::property:input_pickable",
-        "CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)",
-        "CollisionObject2D::signal:mouse_entered()",
-        "CollisionObject2D::signal:mouse_exited()",
-        "CollisionObject2D::signal:mouse_shape_entered(int:)",
-        "CollisionObject2D::signal:mouse_shape_exited(int:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: viewport physics picking, pointer routing and shape-index event delivery."
-    },
-    {
-      "godot": [
         "PhysicsBody2D::method:move_and_collide(Vector2:,bool:,float:,bool:)",
         "PhysicsBody2D::method:test_move(Transform2D:,Vector2:,KinematicCollision2D:,float:,bool:)"
       ],
@@ -3273,13 +3336,6 @@
       ],
       "state": "Implemented",
       "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Shared public CPU/GPU character, platform and directed-ray scenarios now execute through ELECTRON2D_TEST_GPU_MOTION_SCENES; complete inherited/query-family conformance remains open."
-    },
-    {
-      "godot": [
-        "PhysicsBody2D::property:input_pickable"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: viewport physics picking and collision-object input eligibility."
     },
     {
       "godot": [
@@ -4068,6 +4124,34 @@
       ],
       "state": "Unimplemented",
       "reason": "Trigger: wire completed Engine frame timings and committed navigation timings to Performance with explicit reset, headless and independent-host sampling semantics."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::method:_input_event(Viewport:,InputEvent:,int:)",
+        "CollisionObject2D::method:_mouse_enter()",
+        "CollisionObject2D::method:_mouse_exit()",
+        "CollisionObject2D::method:_mouse_shape_enter(int:)",
+        "CollisionObject2D::method:_mouse_shape_exit(int:)",
+        "CollisionObject2D::property:input_pickable",
+        "CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)",
+        "CollisionObject2D::signal:mouse_entered()",
+        "CollisionObject2D::signal:mouse_exited()",
+        "CollisionObject2D::signal:mouse_shape_entered(int:)",
+        "CollisionObject2D::signal:mouse_shape_exited(int:)",
+        "PhysicsBody2D::property:input_pickable",
+        "Viewport::property:physics_object_picking",
+        "Viewport::property:physics_object_picking_first_only",
+        "Viewport::property:physics_object_picking_sort"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0099: actual public CPU/GPU point queries deliver queued pointer input, object/shape hover and protected callbacks at physics-frame start. Defaults, per-canvas cap/sort/first-only, handled GUI input, transforms/shared worlds, callback mutation/errors, native capture/exit and zero warmed physics allocation are checked by PhysicsPickingTests and PhysicsPickingNativeTests."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/common/enable_object_picking"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0099 and PhysicsPickingTests verify the true project default, false/true root activation sampling, unchanged existing/child viewports and explicit authored precedence. Ordinary typed registry metadata/feature override machinery supplies the setting."
     }
   ]
 }

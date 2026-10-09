@@ -10,7 +10,7 @@ Last updated: 2026-10-09
 
 ## Description
 
-The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture; changing layer or mask marks fixtures for reconstruction before the next fixed step. Bodies use reciprocal filters for contact response. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class does not expose a backend ID or implement mouse picking yet.
+The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture; changing layer or mask marks fixtures for reconstruction before the next fixed step. Bodies use reciprocal filters for contact response. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class keeps backend IDs private and supplies viewport pointer picking under ADR 0099.
 
 ## API summary
 
@@ -62,7 +62,7 @@ Changing the policy while disabled applies it immediately. Entry, reparent and r
 
 ## Limits and verification
 
-[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Collision priority and viewport mouse-picking callbacks/events retain distinct [coverage gaps](../coverage/classes/CollisionObject2D.md).
+[PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks defaults, bit 32, invalid indices, contact filtering and scene storage; [AreaTests](../../tests/Electron2D.Tests/AreaTests.cs) checks directional area filtering. [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks stable RID identity. Collision priority and [viewport pointer callbacks/events](../components/physics-picking.md) now execute; complete public cross-backend shape-owner/disable conformance remains open.
 
 ## Shape-owner example
 
@@ -179,3 +179,35 @@ reentry refresh it. Physics disable removal retains canvas membership. Point
 queries use this exact association; physical response and Area monitoring remain
 independent of the visual canvas. [Canvas association](../components/physics-queries.md#canvas-association)
 documents server overrides and verification.
+
+<a id="pointer-input"></a>
+## Pointer input
+
+`public bool InputPickable { get; set; }` is stored and defaults true here and on
+Area. PhysicsBody changes that default to false. Picking additionally requires
+visible, processing scene membership, an active shape and a nonzero CollisionLayer.
+The receiving Viewport must enable PhysicsObjectPicking. Ordinary queries and
+collision response are unchanged.
+
+| Signature | Delivery |
+| --- | --- |
+| `protected virtual void OnInputEvent(Viewport viewport, InputEvent inputEvent, int shapeIndex)` | Borrowed viewport-local pointer event and global logical shape index. |
+| `public event Action<Node, InputEvent, int>? InputEvent` | Same delivery after OnInputEvent; the Node argument is the selecting Viewport. |
+| `protected virtual void OnMouseEnter()` / `public event Action? MouseEntered` | First entered shape; virtual callback then signal. |
+| `protected virtual void OnMouseExit()` / `public event Action? MouseExited` | Departure from all shapes; virtual callback then signal. |
+| `protected virtual void OnMouseShapeEnter(int shapeIndex)` / `public event Action<int>? MouseShapeEntered` | Newly entered global logical shape. |
+| `protected virtual void OnMouseShapeExit(int shapeIndex)` / `public event Action<int>? MouseShapeExited` | Previously sampled departed shape index, including removed/reindexed slots. |
+
+Explicit server object association controls the callback receiver. Null, disposed
+or non-CollisionObject bindings suppress delivery; a live assigned CollisionObject
+receives the physical source's shape index. Later rebinding cannot retarget an
+already sampled hit. Hover is deduplicated by assigned object and shape index.
+
+The next physics-frame picking pass supplies these events after ordinary input
+stages have declined them. Call the selecting viewport's SetInputAsHandled to stop
+later hits; duplicate the borrowed event to retain it. Touch/drag produce input
+without mouse hover. Errors are aggregated after other eligible callbacks; removal
+or disposal prevents further delivery to a stale hit. Subscriptions are cleared on
+disposal. Property writes keep normal scene owner/capture guards. See
+[Physics picking](../components/physics-picking.md) for canvas limits, lifecycle,
+CPU/GPU/native tests and costs.

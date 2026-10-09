@@ -334,3 +334,11 @@ Performance. CPU and independent GPU worlds use their actual solver state; share
 worlds count once, inactive worlds are omitted, and cached reads neither allocate
 nor synchronize a device. Public CPU/GPU and headless CPU lifetime/error checks are
 recorded in the component; this does not close the remaining physics/network goal.
+
+## Physical pointer events
+
+[Physics picking](../components/physics-picking.md) connects CollisionObject and
+Viewport through actual CPU/GPU point queries, with shape-index input, object/shape
+hover, stored eligibility, canvas transforms, handled-state routing and cleanup.
+It has common and native-window checks. Broader GPU conformance, debug/tile/backend
+extensions, networking and whole-application performance requirements stay open.

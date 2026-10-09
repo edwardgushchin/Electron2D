@@ -9421,12 +9421,9 @@
     },
     {
       "state": "Blocked",
-      "reason": "Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054).",
+      "reason": "Remaining viewport-specific physics interpolation policy over existing worlds and renderer; trigger: its complete default/override integration. Pointer picking now executes under ADR 0099.",
       "godot": [
-        "Viewport::property:physics_interpolation_mode",
-        "Viewport::property:physics_object_picking",
-        "Viewport::property:physics_object_picking_first_only",
-        "Viewport::property:physics_object_picking_sort"
+        "Viewport::property:physics_interpolation_mode"
       ]
     },
     {

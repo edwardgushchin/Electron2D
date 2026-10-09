@@ -7,6 +7,7 @@ public abstract partial class CollisionObject : Entity
 {
     private static readonly PropertyDescriptor[] CollisionProperties =
     [
+        new PropertyDescriptor<CollisionObject, bool>(nameof(InputPickable), node => node.InputPickable, (node, value) => node.InputPickable = value, node => node is not PhysicsBody, stored: true),
         new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionLayer), node => node.CollisionLayer, (node, value) => node.CollisionLayer = value, _ => 1u, stored: true),
         new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionMask), node => node.CollisionMask, (node, value) => node.CollisionMask = value, _ => 1u, stored: true),
         new PropertyDescriptor<CollisionObject, float>(nameof(CollisionPriority), node => node.CollisionPriority, (node, value) => node.CollisionPriority = value, _ => 1f, stored: true),
@@ -148,7 +149,7 @@ public abstract partial class CollisionObject : Entity
         try { base.Dispose(disposing); }
         finally
         {
-            if (disposing) { _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Service.UnregisterSceneObject(_rid); }
+            if (disposing) { ClearPhysicsInputHandlers(); _shapeOwners.Clear(); _shapeSlots.Clear(); _childOwners.Clear(); PhysicsServer.Service.UnregisterSceneObject(_rid); }
         }
     }
 

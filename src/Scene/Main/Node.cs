@@ -1293,6 +1293,7 @@ public partial class Node : ElectronObject
     /// <summary>Tests whether this node follows another node in the same active tree's depth-first order.</summary>
     /// <param name="node">The other live node.</param>
     /// <returns>True when this node is later; descendants follow their ancestors.</returns>
+    /// <remarks>Includes internal children and reuses ancestry links without allocating a temporary path.</remarks>
     /// <exception cref="ArgumentNullException">The other node is null.</exception>
     /// <exception cref="InvalidOperationException">Either node is detached, belongs to another tree, or access is off-owner.</exception>
     /// <exception cref="ObjectDisposedException">Either node is disposed.</exception>
@@ -1306,13 +1307,16 @@ public partial class Node : ElectronObject
         if (!ReferenceEquals(node.Tree, tree)) throw new InvalidOperationException("Nodes must belong to the same tree.");
         if (ReferenceEquals(this, node)) return false;
 
-        var left = GetAncestry();
-        var right = node.GetAncestry();
-        var index = 0;
-        while (index < left.Count && index < right.Count && ReferenceEquals(left[index], right[index])) index++;
-        if (index == left.Count) return false;
-        if (index == right.Count) return true;
-        return left[index].GetIndex() > right[index].GetIndex();
+        var left = this; var right = node;
+        var leftDepth = 0; var rightDepth = 0;
+        for (var at = Parent; at is not null; at = at.Parent) leftDepth++;
+        for (var at = node.Parent; at is not null; at = at.Parent) rightDepth++;
+        var descendant = leftDepth > rightDepth;
+        while (leftDepth > rightDepth) { left = left.Parent!; leftDepth--; }
+        while (rightDepth > leftDepth) { right = right.Parent!; rightDepth--; }
+        if (ReferenceEquals(left, right)) return descendant;
+        while (!ReferenceEquals(left.Parent, right.Parent)) { left = left.Parent!; right = right.Parent!; }
+        return left.GetIndex(includeInternal: true) > right.GetIndex(includeInternal: true);
     }
 
     /// <summary>Returns this node and its descendants as relative paths in depth-first order.</summary>

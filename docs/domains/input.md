@@ -80,3 +80,11 @@ The [GUI buttons and shortcuts component](../components/gui-buttons.md) connects
 [Numeric input](../components/numeric-input.md) adds SpinBox formula/text/arrow/repeat/relative-drag authoring through shared Range and LineEdit, fresh scene factories and generated numeral localization. Current Wayland GPU/compatibility capture/input/pixels and prepared active rendering are exercised; precise pointer warp, inherited semantic/editor and foreign target gates remain separate.
 
 [Color authoring](../components/color-authoring.md) connects spatial/numeric color editing, local swatches, typed palette files, owned popup buttons and completed application-viewport sampling. Native external capture and semantic/foreign-target gates remain separate.
+
+## Physical pointer delivery
+
+Unhandled viewport mouse/touch/drag events can enter the optional physics picking
+queue. Delivery occurs at the next physics-frame boundary before node callbacks;
+GUI/ordinary handled input and pointer capture suppress it. Hover shares viewport
+lifetime and native exit routing. See [Physics picking](../components/physics-picking.md)
+for the CPU/GPU, embedded-view and callback/error contracts.

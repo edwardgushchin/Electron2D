@@ -17,7 +17,7 @@ public abstract class PhysicsBody : CollisionObject
     private ulong _appliedMaterialRevision;
 
     /// <summary>Creates a detached body with no collision shapes.</summary>
-    protected PhysicsBody() { }
+    protected PhysicsBody() { InputPickable = false; }
 
     private PhysicsBodyRuntime? _runtime;
     internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(PhysicsRID);

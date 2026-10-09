@@ -541,3 +541,25 @@ The viewport owns its borrowed default canvas and supports simultaneous attachme
 [Canvas and physics worlds](../components/worlds.md) documents World.Canvas, Viewport.World/FindWorld, nearest-viewport CanvasItem access, shared rendering, independent physics, membership changes and runtime lifetime. Existing server and native kernels remain the implementation path. [WorldTests](../../tests/Electron2D.Tests/WorldTests.cs) supplies direct behavior and actual target-pixel evidence.
 
 `World? World { get; set; }` starts with an independent default; null resets it, and an explicit resource is borrowed. `World? FindWorld()` returns the current valid world. World association is discoverable and not stored. Off-owner, capture/submission, live physics callback and cross-tree binding changes reject before publication.
+
+<a id="physics-picking"></a>
+## Physics picking
+
+| Stored property | Default | Behavior |
+| --- | --- | --- |
+| `bool PhysicsObjectPicking` | false while detached | Queue unhandled pointer events; an unauthored root samples the true-by-default project setting on activation. |
+| `bool PhysicsObjectPickingSort` | false | Sort selected hits within each canvas by descending effective Z, then reverse scene order. |
+| `bool PhysicsObjectPickingFirstOnly` | false | Deliver only the first eligible hit of each canvas. |
+
+The cap is 64 logical shape hits per canvas, before sorting. Input consumption stops
+later hits and canvases. Borrowed event coordinates remain viewport-local; a canvas
+inverse and exact canvas ID select physics geometry. Shared World, custom canvas
+viewports and embedded container routing use the same queries on CPU/GPU.
+
+Disabling picking or GUI input drops pending copies and clears hover. Pointer exit,
+viewport detachment and disposal do the same. Capture suppresses picking. Active
+hover refreshes on physics frames without requiring pointer movement. Mutations
+require normal scene ownership; disposed access rejects. Exit-handler failures are
+aggregated after cleanup; clearing from an active picking callback finishes at its
+pass boundary. [Physics picking](../components/physics-picking.md) records semantics,
+examples, costs and verification.

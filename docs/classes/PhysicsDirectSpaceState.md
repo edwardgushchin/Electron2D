@@ -52,3 +52,11 @@ SeparationRayShape queries use a front-facing directed surface crossing. Contain
 Assigned object identity is sampled with each query result, including raw server objects.
 Rebinding does not retarget earlier results; disposal/collection makes object resolution null
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
+
+## Viewport picking consumer
+
+The internal picking stage consumes the same complete point-hit collector as both
+public IntersectPoint overloads. It applies scene eligibility before its own cap;
+public query masks, ordering and result limits retain their existing contracts.
+See [Physics picking](../components/physics-picking.md) for CPU/GPU ownership and
+current GPU metadata transfer cost.

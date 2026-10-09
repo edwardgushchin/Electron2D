@@ -90,9 +90,12 @@ public abstract partial class Viewport : Node
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
+        List<Exception>? errors = null;
         if (disposing)
         {
             RenderingOwner?.ReleaseViewport(this);
+            try { Picking?.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
+            Picking = null;
             ReleaseViewportRID();
             ReleaseViewportWorld();
             TextureSizeUpdated = null;
@@ -101,6 +104,7 @@ public abstract partial class Viewport : Node
             GUIFocusChanged = null;
             _audioListener = null;
         }
-        base.Dispose(disposing);
+        try { base.Dispose(disposing); } catch (Exception error) { CollectException(ref errors, error); }
+        ThrowCollected("Viewport disposal callbacks failed.", errors);
     }
 }

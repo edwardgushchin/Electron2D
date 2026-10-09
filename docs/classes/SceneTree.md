@@ -966,3 +966,11 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+## Physical pointer stage
+
+Enabled viewports process their unhandled pointer queues after PhysicsFrameStarted
+and before node physics callbacks. Scene processing and simulation then retain
+their existing order. The common CPU/GPU path maintains object/shape hover, uses
+normal viewport handled state and rejects reentrant scene input. See
+[Physics picking](../components/physics-picking.md) for lifecycle and verified scope.

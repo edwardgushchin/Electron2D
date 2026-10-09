@@ -1561,3 +1561,11 @@ During active-tree disposal, internal exit handlers may disable both internal
 processing lanes without passing the ordinary disposed-object mutation guard.
 The exception is limited to owner-thread tree exit and disabling; reenabling or
 mutating a disposed node remains rejected. RayCast and ShapeCast disposal exercise it.
+
+## Tree-order comparison cost
+
+IsGreaterThan compares active ancestry without temporary list allocation. Internal
+front/back children participate in the actual sibling order. Existing owner,
+shared-tree and disposed-object checks remain enforced. Sorted physical pointer
+selection uses this operation; PhysicsPickingTests covers internal siblings and
+ancestor/descendant ordering during warmed allocation checks.

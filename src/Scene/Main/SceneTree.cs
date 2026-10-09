@@ -121,7 +121,7 @@ public sealed partial class SceneTree : MainLoop
         try
         {
             root.InitializeRootAutoTranslateMode(ProjectSettings.GetWithOverride(ProjectSettings.RootNodeAutoTranslate));
-            if (root is Viewport audioRoot) audioRoot.AudioListenerEnable2D = true;
+            if (root is Viewport audioRoot) { audioRoot.AudioListenerEnable2D = true; audioRoot.InitializePhysicsPicking(); }
             _physicsInterpolation = ProjectSettings.GetWithOverride(ProjectSettings.PhysicsInterpolation);
             if (attachToEngine)
                 Engine.Service.AttachConstructingTree(this);
@@ -922,6 +922,9 @@ public sealed partial class SceneTree : MainLoop
             if (!_inputHandled)
                 DispatchInputStage(@event, InputStage.Unhandled, ref errors);
 
+            if (inputViewport is { IsDisposed: false } pickingViewport && ReferenceEquals(pickingViewport.Tree, this))
+                try { QueuePhysicsPicking(pickingViewport, @event); } catch (Exception error) { CollectException(ref errors, error); }
+
             if (_gui.GuiHoverRefreshPending && _gui.GuiHoverKnown && _gui.GuiHoverViewport is { } refreshViewport)
                 UpdateGUIHover(refreshViewport, _gui.GuiHoverPosition, ref errors);
         }
@@ -1257,6 +1260,7 @@ public sealed partial class SceneTree : MainLoop
                 CollectException(ref errors, error);
             }
 
+            if (physics) ProcessPhysicsPicking(ref errors);
             if (!physics) { PollMultiplayer(ref errors); FlushTransformNotifications(ref errors); }
             var scheduledNodes = CaptureScheduledNodes(physics);
 

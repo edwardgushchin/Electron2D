@@ -315,6 +315,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> RootNodeAutoTranslate { get; } =
         new("internationalization/rendering/root_node_auto_translate", true);
 
+    /// <summary>Defines the initial picking policy for a newly activated root viewport without an explicit authored choice.</summary>
+    /// <value>True by default; sampled once during scene activation, including feature overrides.</value>
+    public static ProjectSetting<bool> PhysicsObjectPicking { get; } =
+        new("physics/common/enable_object_picking", true);
+
     /// <summary>Determines whether new scene trees interpolate 2D canvas transforms between physics ticks.</summary>
     /// <value>False by default; sampled when a SceneTree is constructed.</value>
     public static ProjectSetting<bool> PhysicsInterpolation { get; } =

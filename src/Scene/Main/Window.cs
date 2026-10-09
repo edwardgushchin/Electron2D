@@ -371,7 +371,7 @@ public partial class Window : Viewport
     private void HandleMouseExited()
     {
         List<Exception>? errors = null;
-        try { Tree?.ClearGUIHover(); } catch (Exception error) { CollectException(ref errors, error); }
+        try { Tree?.ExitGUIViewport(this); } catch (Exception error) { CollectException(ref errors, error); }
         try { MouseExited?.Invoke(); } catch (Exception error) { CollectException(ref errors, error); }
         ThrowCollected("Window pointer-exit callbacks failed.", errors);
     }

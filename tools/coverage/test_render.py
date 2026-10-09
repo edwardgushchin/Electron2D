@@ -400,7 +400,15 @@ def main():
     assert all(" | Implemented | " in row for row in shape_node_rows
                if "one_way_collision" in row and "margin" not in row)
     assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
+    picking_rows = pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
+    for name in ("_input_event", "_mouse_enter", "_mouse_exit", "_mouse_shape_enter", "_mouse_shape_exit"):
+        assert " | Implemented | " in next(row for row in picking_rows if f"method {name}(" in row)
+    for name in ("input_event", "mouse_entered", "mouse_exited", "mouse_shape_entered", "mouse_shape_exited"):
+        assert " | Implemented | " in next(row for row in picking_rows if f"signal {name}(" in row)
+    for name in ("physics_object_picking", "physics_object_picking_sort", "physics_object_picking_first_only"):
+        assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "Viewport.md"].splitlines() if f"property bool {name} =" in row)
     physics_body_rows = pages[CLASS_PAGES / "PhysicsBody2D.md"].splitlines()
+    assert " | Implemented | " in next(row for row in physics_body_rows if "property bool input_pickable = false" in row)
     assert " | Implemented | " in next(row for row in physics_body_rows
                                         if row.startswith("| [`method get_gravity("))
     assert all(" | Implemented | " in next(row for row in physics_body_rows

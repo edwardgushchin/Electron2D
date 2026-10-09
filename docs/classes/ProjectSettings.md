@@ -1403,3 +1403,14 @@ independent GPU worlds. Existing worlds retain their values until changed throug
 nonnegative with representable squared distances; positive backend squares cannot
 underflow to zero. Zero radius disables history reuse; zero maximum separation
 retains only cached contacts without positive normal gap or tangential drift.
+
+
+## Root physics picking
+
+`public static ProjectSetting<bool> PhysicsObjectPicking { get; }` represents
+`physics/common/enable_object_picking`, default true. SceneTree activation samples
+its feature-resolved value for a root Viewport whose picking property has not been
+explicitly authored. The supplied root object's explicit value takes precedence.
+Already active roots and ordinary child viewports are unaffected by later project
+edits. Each registry registers the definition with ordinary typed metadata and
+persistence. See [Physics picking](../components/physics-picking.md).

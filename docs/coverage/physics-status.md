@@ -19,7 +19,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [CapsuleShape2D](classes/CapsuleShape2D.md) | [Shape2D](classes/Shape2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 41 | 0 | 0 | 0 | 0 |
 | [CircleShape2D](classes/CircleShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
-| [CollisionObject2D](classes/CollisionObject2D.md) | [Node2D](classes/Node2D.md) | 34 | 1 | 11 | 0 | 0 |
+| [CollisionObject2D](classes/CollisionObject2D.md) | [Node2D](classes/Node2D.md) | 45 | 1 | 0 | 0 | 0 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [CollisionShape2D](classes/CollisionShape2D.md) | [Node2D](classes/Node2D.md) | 5 | 1 | 1 | 0 | 0 |
 | [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
@@ -29,7 +29,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [Joint2D](classes/Joint2D.md) | [Node2D](classes/Node2D.md) | 5 | 1 | 0 | 0 | 0 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | [RefCounted](classes/RefCounted.md) | 11 | 3 | 0 | 0 | 0 |
 | [PhysicalBone2D](classes/PhysicalBone2D.md) | [RigidBody2D](classes/RigidBody2D.md) | 8 | 0 | 0 | 0 | 0 |
-| [PhysicsBody2D](classes/PhysicsBody2D.md) | [CollisionObject2D](classes/CollisionObject2D.md) | 6 | 1 | 1 | 0 | 0 |
+| [PhysicsBody2D](classes/PhysicsBody2D.md) | [CollisionObject2D](classes/CollisionObject2D.md) | 7 | 1 | 0 | 0 | 0 |
 | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | [Object](classes/Object.md) | 41 | 2 | 0 | 0 | 0 |
 | [PhysicsDirectBodyState2DExtension](classes/PhysicsDirectBodyState2DExtension.md) | [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | 0 | 0 | 49 | 0 | 0 |
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | [Object](classes/Object.md) | 5 | 2 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 568 | 52 | 215 | 3 | 54 |
+| **Total** | | 580 | 52 | 203 | 3 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -70,18 +70,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Area2D::signal:body_exited(Node2D:)`](classes/Area2D.md) | Partial | Current PhysicsBody nodes work, but the reference also reports tile-map virtual collision bodies; trigger: tile collision-owner integration with the area space. |
 | [`Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)`](classes/Area2D.md) | Partial | Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests). |
 | [`Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)`](classes/Area2D.md) | Partial | Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests). |
-| [`class:CollisionObject2D`](classes/CollisionObject2D.md) | Partial | Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054). |
-| [`CollisionObject2D::method:_input_event(Viewport:,InputEvent:,int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::method:_mouse_enter()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::method:_mouse_exit()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::method:_mouse_shape_enter(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::method:_mouse_shape_exit(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::property:input_pickable`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::signal:mouse_entered()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::signal:mouse_exited()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::signal:mouse_shape_entered(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::signal:mouse_shape_exited(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
+| [`class:CollisionObject2D`](classes/CollisionObject2D.md) | Partial | Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. Pointer delivery is verified on public CPU/GPU worlds (ADR 0099); the complete existing shape-owner/disable suite still needs public cross-backend conformance. Inherited API gaps remain recorded on their declaring families. |
 | [`class:CollisionShape2D`](classes/CollisionShape2D.md) | Partial | Body geometry, one-way contact side and margin-based motion recovery execute; physics debug color still requires renderer canvas integration. |
 | [`CollisionShape2D::property:debug_color`](classes/CollisionShape2D.md) | Blocked | Trigger: 2D physics debug drawing through the retained canvas renderer. |
 | [`class:DampedSpringJoint2D`](classes/DampedSpringJoint2D.md) | Partial | Anchor Hooke force and axial drag, general force cap and shared scene/server lifetime execute under ADRs 0086/0087. Springs have no positional recovery rows. Physics debug drawing remains missing. |
@@ -91,7 +80,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`KinematicCollision2D::method:get_collider()`](classes/KinematicCollision2D.md) | Partial | Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063). |
 | [`KinematicCollision2D::method:get_collider_shape()`](classes/KinematicCollision2D.md) | Partial | Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063). |
 | [`class:PhysicsBody2D`](classes/PhysicsBody2D.md) | Partial | Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054). |
-| [`PhysicsBody2D::property:input_pickable`](classes/PhysicsBody2D.md) | Blocked | Trigger: viewport physics picking and collision-object input eligibility. |
 | [`class:PhysicsDirectBodyState2D`](classes/PhysicsDirectBodyState2D.md) | Partial | Live owner-thread state, post-solver callbacks, forces, fields and complete normal/tangential frame impulses execute. Backend access/contact traversal belongs to PhysicsBodyRuntime; the public view retains engine values and rejects stale attachment identity, including same-space reattachment. Virtual tile collider identity remains a separate gap (ADR 0070, PhysicsBodyStateTests, PhysicsContactImpulseTests). |
 | [`PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)`](classes/PhysicsDirectBodyState2D.md) | Partial | Physical scene-collider access and generic sampled object associations execute for scene/server bodies, including replacement, disposal and weak lifetime (PhysicsObjectBindingTests). Virtual tile collider identity still requires tile-body generation and lookup (ADRs 0063, 0070). |
 | [`class:PhysicsDirectBodyState2DExtension`](classes/PhysicsDirectBodyState2DExtension.md) | Blocked | Trigger: typed backend-extensible live body-state operations preserving owner/callback lifetime over existing PhysicsServer spaces (ADR 0054). |
@@ -616,13 +604,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 14 | 3 | 6 | 1 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 15 | 3 | 6 | 0 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 1 | 1 | 0 | 1 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
-| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 0 | 0 | 4 | 0 | 0 |
-| **Total** | | 18 | 12 | 46 | 2 | 0 |
+| [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 0 | 1 | 0 | 0 |
+| **Total** | | 22 | 12 | 43 | 1 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -642,7 +630,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`ProjectSettings::property:debug/shapes/collision/shape_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
-| [`ProjectSettings::property:physics/common/enable_object_picking`](classes/ProjectSettings.md) | Unimplemented | Trigger: next core timing-settings slice in ProjectSettings (ADRs 0016 and 0019). |
 | [`ProjectSettings::property:physics/common/max_physics_steps_per_frame`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_ticks_per_second`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
@@ -684,7 +671,4 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`TileSet::method:set_physics_layer_collision_mask(int:,int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`TileSet::method:set_physics_layer_collision_priority(int:,float:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`TileSet::method:set_physics_layer_physics_material(int:,PhysicsMaterial:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Blocked | Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054). |
-| [`Viewport::property:physics_object_picking`](classes/Viewport.md) | Blocked | Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054). |
-| [`Viewport::property:physics_object_picking_first_only`](classes/Viewport.md) | Blocked | Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054). |
-| [`Viewport::property:physics_object_picking_sort`](classes/Viewport.md) | Blocked | Viewport-specific physics interpolation/picking policy over existing worlds and renderer; wire enable/sort/first-only through collision-object pointer events (ADRs 0008, 0028 and 0054). |
+| [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Blocked | Remaining viewport-specific physics interpolation policy over existing worlds and renderer; trigger: its complete default/override integration. Pointer picking now executes under ADR 0099. |

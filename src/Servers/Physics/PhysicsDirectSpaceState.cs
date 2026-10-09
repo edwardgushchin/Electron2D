@@ -163,7 +163,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         return count;
     }
 
-    private List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters)
+    internal List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters)
     {
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(parameters);

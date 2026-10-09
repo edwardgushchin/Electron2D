@@ -445,7 +445,7 @@ Body/Area geometry previously consisted only of direct child providers. The appl
 
 ### Consequences and verification
 
-Games can create procedural multi-shape groups without hidden scene nodes, disable or transform them, and recover owner identity from real query/motion results. ShapeOwnerTests checks defaults/ID reuse, interleaved indices, removals, weak/disposed identity, copied arrays, numeric errors, manual query/motion/rigid response, one-way/Area behavior, child lifecycle/packing, callback-failure revisions, resource disposal and 64 warmed owner solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Input picking and priority retain their own coverage gaps; ADR 0072 adds disable modes, and the monitoring decisions own shape-index events.
+Games can create procedural multi-shape groups without hidden scene nodes, disable or transform them, and recover owner identity from real query/motion results. ShapeOwnerTests checks defaults/ID reuse, interleaved indices, removals, weak/disposed identity, copied arrays, numeric errors, manual query/motion/rigid response, one-way/Area behavior, child lifecycle/packing, callback-failure revisions, resource disposal and 64 warmed owner solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner visual acceptance remain unverified. Input picking now follows [ADR 0099](physics-picking.md#adr-0099), while priority follows ADR 0098; ADR 0072 adds disable modes, and the monitoring decisions own shape-index events.
 
 ### Rejected alternatives
 

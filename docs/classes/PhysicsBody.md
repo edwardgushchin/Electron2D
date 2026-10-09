@@ -61,7 +61,7 @@ A dynamic [RigidBody](RigidBody.md) reports its most recently resolved [Area](Ar
 
 Both methods use finite global scene-unit motion and a finite nonnegative recovery margin. They prepare pending body/shape/filter edits before scanning other bodies in the same physics space; Areas are sensors and do not block. Reciprocal layer/mask bits, the body's own RID and one-way pass-through direction are respected. Initial penetration is moved out before the sweep; `recoveryAsCollision=true` also reports that depenetration. Remaining overlap after recovery attempts stops motion at a zero safe fraction rather than allowing tunneling. Eight sweep refinements bracket the first new impact. Compound fixtures retain their direct owner indices. `TestMove` uses its supplied finite unit-scale global pose, leaves the body unchanged and fills `collision` on a completed hit or miss. A detached `TestMove` returns false; an attached `MoveAndCollide` is required and throws if no registered space exists. `MoveAndCollide(testOnly:true)` returns a collision without changing pose. On a regular call it applies travel, including recovery; a miss returns null. Callers own returned [KinematicCollision](KinematicCollision.md) objects.
 
-[PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) covers scene and server colliders, contact owners/angle, test-only and actual travel, alternate starting pose, masks, disabled fixtures, one-way approach and margin, deep overlap, owner-thread rejection and 64 warmed unchanged `TestMove` calls with zero managed allocation on Linux/.NET 8. Input picking retains its own [coverage](../coverage/classes/PhysicsBody2D.md); the derived CharacterBody's separation-ray floor behavior remains a distinct [coverage gap](../coverage/classes/CharacterBody2D.md). Native allocation, other platforms and owner acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) covers scene and server colliders, contact owners/angle, test-only and actual travel, alternate starting pose, masks, disabled fixtures, one-way approach and margin, deep overlap, owner-thread rejection and 64 warmed unchanged `TestMove` calls with zero managed allocation on Linux/.NET 8. [Input picking](../components/physics-picking.md) now executes on both public backends; the derived CharacterBody's separation-ray floor behavior remains a distinct [coverage gap](../coverage/classes/CharacterBody2D.md). Native allocation, other platforms and owner acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 <a id="collisionexceptions"></a>
 ### Collision exceptions
@@ -89,3 +89,11 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+## Pointer eligibility default
+
+Inherited [InputPickable](CollisionObject.md#pointer-input) defaults **false** on
+PhysicsBody and its descendants, including StaticBody, AnimatableBody, RigidBody,
+CharacterBody and PhysicalBone. Enable it explicitly for viewport physics picking.
+Its typed stored descriptor exposes the same false revert default. This does not
+change simulation, collision layers or ordinary direct-space queries.

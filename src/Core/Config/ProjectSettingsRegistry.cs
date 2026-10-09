@@ -90,6 +90,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
         RegisterInternal(PhysicsInterpolation, isBasic: false);
+        RegisterInternal(PhysicsObjectPicking, isBasic: false);
         RegisterInternal(PseudolocalizationEnabled, isBasic: false);
         RegisterInternal(PseudolocalizationReplaceWithAccents, isBasic: false);
         RegisterInternal(PseudolocalizationDoubleVowels, isBasic: false);
@@ -1183,6 +1184,7 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||
         ReferenceEquals(setting, PhysicsInterpolation) ||
+        ReferenceEquals(setting, PhysicsObjectPicking) ||
         ReferenceEquals(setting, PseudolocalizationEnabled) ||
         ReferenceEquals(setting, PseudolocalizationReplaceWithAccents) ||
         ReferenceEquals(setting, PseudolocalizationDoubleVowels) ||

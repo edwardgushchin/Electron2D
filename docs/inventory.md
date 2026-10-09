@@ -1061,3 +1061,7 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 | [Core](domains/core.md) | [Physics statistics](components/physics-statistics.md) | [Performance.Monitor](classes/Performance.Monitor.md) | [Performance.cs](../src/Core/Config/Performance.cs) | Current | Stable selectors for completed physical counts. |
 | [Physics](domains/physics.md) | [Physics statistics](components/physics-statistics.md) | [PhysicsServer.ProcessInfo](classes/PhysicsServer.ProcessInfo.md) | [PhysicsServer.Statistics.cs](../src/Servers/Physics/PhysicsServer.Statistics.cs) | Current | Active bodies, candidates and constraint islands across active worlds. |
 | [Physics](domains/physics.md) | [Physics statistics](components/physics-statistics.md) | [PhysicsSpace.Statistics / SensorStatisticsQuery](classes/PhysicsSpace.md#statistics-publication) | [PhysicsSpace.Statistics.cs](../src/Servers/Physics/PhysicsSpace.Statistics.cs) | Internal | Completed snapshot and allocation-free native sensor-query context. |
+
+| Domain | Component | Type | Source | Status | Current behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Physics](domains/physics.md) | [Physics picking](components/physics-picking.md) | PhysicsPickingState / Hit | [SceneTree.PhysicsPicking.cs](../src/Scene/Main/SceneTree.PhysicsPicking.cs) | Internal | Per-viewport event ownership, logical slot identity, cached hits and object/shape hover. |

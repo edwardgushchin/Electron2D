@@ -38884,6 +38884,71 @@
     "value": null
   },
   {
+    "id": "event:Electron2D.CollisionObject.InputEvent()",
+    "kind": "event",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "InputEvent",
+    "signature": "public event System.Action\u003CElectron2D.Node, Electron2D.InputEvent, System.Int32\u003E InputEvent",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CElectron2D.Node, Electron2D.InputEvent, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CollisionObject.MouseEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "MouseEntered",
+    "signature": "public event System.Action MouseEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CollisionObject.MouseExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "MouseExited",
+    "signature": "public event System.Action MouseExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CollisionObject.MouseShapeEntered()",
+    "kind": "event",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "MouseShapeEntered",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E MouseShapeEntered",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.CollisionObject.MouseShapeExited()",
+    "kind": "event",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "MouseShapeExited",
+    "signature": "public event System.Action\u003CSystem.Int32\u003E MouseShapeExited",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
     "id": "event:Electron2D.ColorPicker.ColorChanged()",
     "kind": "event",
     "declaringType": "Electron2D.ColorPicker",
@@ -67513,6 +67578,99 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnInputEvent(Electron2D.Viewport,Electron2D.InputEvent,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnInputEvent",
+    "signature": "protected virtual System.Void OnInputEvent(Electron2D.Viewport viewport, Electron2D.InputEvent inputEvent, System.Int32 shapeIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "viewport",
+        "type": "Electron2D.Viewport",
+        "default": null
+      },
+      {
+        "name": "inputEvent",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnMouseEnter()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnMouseEnter",
+    "signature": "protected virtual System.Void OnMouseEnter()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnMouseExit()",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnMouseExit",
+    "signature": "protected virtual System.Void OnMouseExit()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnMouseShapeEnter(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnMouseShapeEnter",
+    "signature": "protected virtual System.Void OnMouseShapeEnter(System.Int32 shapeIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CollisionObject.OnMouseShapeExit(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "OnMouseShapeExit",
+    "signature": "protected virtual System.Void OnMouseShapeExit(System.Int32 shapeIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -170154,6 +170312,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.CollisionObject.InputPickable()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "InputPickable",
+    "signature": "public System.Boolean InputPickable { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.CollisionPolygon.BuildMode()",
     "kind": "property",
     "declaringType": "Electron2D.CollisionPolygon",
@@ -184246,6 +184417,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.PhysicsObjectPicking()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "PhysicsObjectPicking",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E PhysicsObjectPicking { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.PhysicsTicksPerSecond()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -191596,6 +191780,45 @@
     "declaringType": "Electron2D.Viewport",
     "name": "HandleInputLocally",
     "signature": "public System.Boolean HandleInputLocally { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.PhysicsObjectPicking()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "PhysicsObjectPicking",
+    "signature": "public System.Boolean PhysicsObjectPicking { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.PhysicsObjectPickingFirstOnly()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "PhysicsObjectPickingFirstOnly",
+    "signature": "public System.Boolean PhysicsObjectPickingFirstOnly { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Viewport.PhysicsObjectPickingSort()",
+    "kind": "property",
+    "declaringType": "Electron2D.Viewport",
+    "name": "PhysicsObjectPickingSort",
+    "signature": "public System.Boolean PhysicsObjectPickingSort { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
