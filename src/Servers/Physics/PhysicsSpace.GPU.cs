@@ -3,6 +3,7 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     internal GPUPhysicsBodyStore? GPUStore { get; }
+    internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
     internal long GPUStatePublicationEpoch { get; private set; } = -1;
@@ -93,12 +94,14 @@ internal sealed partial class PhysicsSpace
     private void PrepareGPUReports()
     {
         _gpuReportBodyCount = 0; var contacts = 0;
-        foreach (var backend in _gpuColliders.Values)
+        foreach (var body in _bodies) Add(body.Backend, body.Runtime);
+        foreach (var body in _serverColliders)
+            if (!body.IsArea) Add(body.Backend, body.Runtime);
+
+        void Add(PhysicsColliderBackend backend, PhysicsBodyRuntime runtime)
         {
-            if (backend.GPUSensor) continue;
-            var runtime = PhysicsServer.Service.BodyRuntime(backend.RID);
             var limit = runtime.ContactLimit;
-            if (limit == 0) continue;
+            if (limit == 0) return;
             _gpuReportBodies[_gpuReportBodyCount] = backend.GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);
         }
@@ -188,8 +191,14 @@ internal sealed partial class PhysicsSpace
                 foreach (var body in _serverColliders) if (!body.IsArea) _callbackBodies.Add(new(body.Runtime, body.Backend, body.Backend.AttachmentVersion, null));
             }
             foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
-            SyncGPUExceptions(); PrepareGPUReports();
+            SyncGPUExceptions();
+            var prepareMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+            if (ProfilingEnabled) GPUPrepareBodiesMS = System.Diagnostics.Stopwatch.GetElapsedTime(profileMark, prepareMark).TotalMilliseconds;
+            PrepareGPUReports();
+            if (ProfilingEnabled) { GPUPrepareReportsMS = System.Diagnostics.Stopwatch.GetElapsedTime(prepareMark).TotalMilliseconds; prepareMark = System.Diagnostics.Stopwatch.GetTimestamp(); }
+            var wakeWait = ProfilingEnabled ? GPUStore!.WaitMS : 0;
             FlushGPUWakes();
+            if (ProfilingEnabled) { GPUPrepareWakesMS = System.Diagnostics.Stopwatch.GetElapsedTime(prepareMark).TotalMilliseconds; GPUPrepareWakeWaitMS = GPUStore!.WaitMS - wakeWait; }
             RecordStepPhase(2, ref profileMark);
             intervalSubmissions = GPUStore!.SubmissionCount; intervalEntered = true;
             GPUStore.SimulateFields((float)delta, GPUFields(DefaultAreaFields));

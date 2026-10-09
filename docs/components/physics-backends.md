@@ -336,3 +336,63 @@ versus baseline 6.9512/8.3114/9.9863 ms. **No window-FPS improvement is claimed*
 this optimization removes traffic while host/driver timing remains variable.
 Logs `/tmp/e2d-publication-window-paired-{before,after}.log` and captures
 `/tmp/e2d-publication-window-paired-{before,after}-{CPU,GPU}.png` retain both runs.
+
+## Contact receiver preparation
+
+GPU report selection walks the space's attached scene and server bodies and reads
+their retained `PhysicsBodyRuntime`. It no longer resolves every RID through the
+process-wide registry each tick. Scene and server Areas are excluded; static and
+kinematic body receivers still participate. Limits are read afresh before each
+solve, so zero, increased and decreased caps do not require a new dirty flag or
+receiver cache. Existing owner/lifetime validation and checked capacity sums remain.
+No public API, solver settings, contact-selection policy or transfer format changes.
+
+`PhysicsGPUPublicationTests` checks mixed scene/server receivers, scene static-body
+reports, exclusion of both sensor kinds, live cap changes, detach/reattach and
+permanently invalid old direct-state views on CPU and GPU. The internal preparation
+profiler splits body/motion/joint work, report selection, command/wake publication
+and its included fence wait. Timing calls run only when profiling is enabled.
+
+On Linux/.NET 10, the same 65,536-body fixture above (32,768 independent colliding
+pairs, 64 warmup and 64 measured ticks) was run in baseline/changed/changed/baseline
+order. Baseline is `c5d3d319` with the same added timing instrumentation; changed
+runs replace only receiver enumeration. Every dynamic pose and linear velocity is
+reset each tick; solver population, geometry, sleep policy, substeps and iterations
+are identical. Whole time includes these public edits and the complete step.
+
+| Run | Report selection mean ms | Total preparation mean ms | Whole GPU p50 / p95 / p99 ms | Whole CPU p50 ms |
+| --- | ---: | ---: | --- | ---: |
+| Baseline first | 4.0590 | 11.7998 | 37.4349 / 42.0777 / 43.6200 | 66.4490 |
+| Changed first | 1.4597 | 10.5504 | 38.3089 / 43.8692 / 46.0663 | 66.1238 |
+| Changed repeat | 1.3028 | 9.2064 | 37.6139 / 39.9252 / 42.6025 | 67.1499 |
+| Baseline repeat | 4.6024 | 13.0355 | 42.0410 / 47.9104 / 49.0096 | 67.6625 |
+
+Receiver selection consistently dropped from 4.06–4.60 to 1.30–1.46 ms. Whole-step
+ranges overlap: the first changed run was slower overall, and mean GPU fence waits
+varied from 7.75 to 9.94 ms. These runs establish the local reduction, not a stable
+whole-frame speedup or 60 Hz at this population. Changed runs still spend
+5.95–7.14 ms preparing parameters/motion/joints and 1.95 ms publishing commands/wakes
+(including 0.80–0.91 ms of fence waits). Those are separate remaining costs.
+
+All eight CPU/GPU intervals measured zero owner-thread and all-thread managed bytes.
+Each GPU tick retained 5,767,344 uploaded / 192 downloaded bytes, 23 submissions and
+one body publication: this change removes host registry work without reducing real
+contacts or device work. It neither measures native allocations nor adds new rendered
+FPS or network acceptance. Logs are `/tmp/e2d-prepare-baseline.log`,
+`/tmp/e2d-prepare-after.log`, `/tmp/e2d-prepare-after-repeat.log` and
+`/tmp/e2d-prepare-baseline-repeat.log`.
+
+A separate run with profiling disabled used the same fixture at smaller populations
+(64 warmup / 64 samples). Full public-edit-plus-step times in milliseconds:
+
+| Bodies | CPU p50 / p95 / p99 | GPU p50 / p95 / p99 |
+| ---: | --- | --- |
+| 512 | 0.5269 / 0.5747 / 0.8578 | 2.6884 / 3.4700 / 4.5198 |
+| 4,096 | 3.4514 / 3.9086 / 3.9624 | 4.1833 / 5.2598 / 6.4216 |
+| 16,384 | 16.7861 / 27.8723 / 39.1876 | 8.6432 / 9.8766 / 10.6761 |
+
+These six intervals also allocated zero owner/all-thread managed bytes. GPU traffic
+was respectively 45,232 / 360,624 / 1,441,968 uploaded bytes and 192 downloaded bytes
+per tick, with 23 submissions and one publication. CPU remains faster at the two
+smaller populations. This is one comparison of independent colliding pairs, not
+an all-scenes backend recommendation. Log: `/tmp/e2d-prepare-small.log`.

@@ -5,8 +5,8 @@ internal static class PhysicsGPUPublicationTests
 {
     internal static void Run(bool includeGPU = true)
     {
-        Verify(PhysicsServer.Backend.CPU); Scene(PhysicsServer.Backend.CPU); ConnectedWake(PhysicsServer.Backend.CPU);
-        if (includeGPU) { Verify(PhysicsServer.Backend.GPU); Scene(PhysicsServer.Backend.GPU); ConnectedWake(PhysicsServer.Backend.GPU); }
+        Verify(PhysicsServer.Backend.CPU); Scene(PhysicsServer.Backend.CPU); ConnectedWake(PhysicsServer.Backend.CPU); ContactReceivers(PhysicsServer.Backend.CPU);
+        if (includeGPU) { Verify(PhysicsServer.Backend.GPU); Scene(PhysicsServer.Backend.GPU); ConnectedWake(PhysicsServer.Backend.GPU); ContactReceivers(PhysicsServer.Backend.GPU); }
     }
     private static RID CreateBody(RID space)
     {
@@ -84,6 +84,67 @@ internal static class PhysicsGPUPublicationTests
             Check(!PhysicsServer.BodyGetSleeping(b) && PhysicsServer.BodyGetLinearVelocity(b).X > .1f, "Skipping unused snapshots preserves connected wake and joint response");
         }
         finally { PhysicsServer.FreeRID(joint); PhysicsServer.FreeRID(b); PhysicsServer.FreeRID(a); PhysicsServer.FreeRID(space); }
+    }
+    private static void ContactReceivers(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var shape = new RectangleShape { Size = new(20, 20) };
+        using var floorShape = new RectangleShape { Size = new(200, 20) };
+        var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
+        floor.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(floor);
+        using var scene = new RigidBody { Name = "Scene", GravityScale = 0, CanSleep = false };
+        scene.AddChild(new CollisionShape { Shape = shape }); root.AddChild(scene);
+        var area = new Area { Name = "Sensor", Position = new(0, 80) };
+        area.AddChild(new CollisionShape { Shape = floorShape }); root.AddChild(area);
+        using var tree = new SceneTree(root);
+        var raw = PhysicsServer.BodyCreate(); var sensor = PhysicsServer.AreaCreate();
+        try
+        {
+            PhysicsServer.BodyAddShape(raw, shape.GetRID()); PhysicsServer.BodySetGravityScale(raw, 0); PhysicsServer.BodySetCanSleep(raw, false);
+            PhysicsServer.BodySetSpace(raw, world.Space);
+            PhysicsServer.AreaAddShape(sensor, floorShape.GetRID()); PhysicsServer.AreaSetTransform(sensor, new(0, new(0, 80))); PhysicsServer.AreaSetSpace(sensor, world.Space);
+            using var sceneView = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
+            using var rawView = PhysicsServer.BodyGetDirectState(raw)!;
+            using var floorView = PhysicsServer.BodyGetDirectState(floor.GetRID())!;
+            foreach (var limit in new[] { 0, 1, 4, 0, 1 })
+            {
+                scene.MaxContactsReported = limit;
+                PhysicsServer.BodySetMaxContactsReported(raw, limit);
+                PhysicsServer.BodySetMaxContactsReported(floor.GetRID(), limit);
+                Check(sceneView.GetContactCount() == 0 && rawView.GetContactCount() == 0 && floorView.GetContactCount() == 0, "Live limit edits clear prior scene, raw and static contact snapshots");
+                Step(); CheckReports(limit, sceneView, rawView);
+            }
+            root.RemoveChild(scene); PhysicsServer.BodySetSpace(raw, default);
+            tree.PhysicsFrame(1d / 60);
+            Check(floorView.GetContactCount() == 0, "Detached receivers cannot retain reports in their former world");
+            root.AddChild(scene); PhysicsServer.BodySetSpace(raw, world.Space);
+            Reject<ObjectDisposedException>(() => sceneView.GetContactCount());
+            Reject<ObjectDisposedException>(() => rawView.GetContactCount());
+            using var reattachedScene = PhysicsServer.BodyGetDirectState(scene.GetRID())!;
+            using var reattachedRaw = PhysicsServer.BodyGetDirectState(raw)!;
+            Step(); CheckReports(1, reattachedScene, reattachedRaw);
+            Console.WriteLine($"Contact receivers {backend}: mixed scene/raw/static bodies, sensor exclusion, live zero/grow/shrink caps and detach/reattach passed.");
+
+            void Step()
+            {
+                scene.Position = new(-30, 80); scene.LinearVelocity = new(0, 100); scene.Rotation = 0; scene.AngularVelocity = 0;
+                PhysicsServer.BodySetTransform(raw, new(0, new(30, 80))); PhysicsServer.BodySetLinearVelocity(raw, new(0, 100)); PhysicsServer.BodySetAngularVelocity(raw, 0);
+                tree.PhysicsFrame(1d / 60);
+            }
+            void CheckReports(int limit, PhysicsDirectBodyState sceneState, PhysicsDirectBodyState rawState)
+            {
+                VerifyView(sceneState, floor.GetRID()); VerifyView(rawState, floor.GetRID());
+                Check(floorView.GetContactCount() <= limit && (floorView.GetContactCount() > 0) == (limit > 0), "Static scene receivers retain their independent cap");
+                for (var i = 0; i < floorView.GetContactCount(); i++)
+                    Check(floorView.GetContactCollider(i) == raw || floorView.GetContactCollider(i) == scene.GetRID(), "Sensors never enter physical contact reports");
+                void VerifyView(PhysicsDirectBodyState view, RID collider)
+                {
+                    Check(view.GetContactCount() <= limit && (view.GetContactCount() > 0) == (limit > 0), "Live cap applies on the next step");
+                    for (var i = 0; i < view.GetContactCount(); i++) Check(view.GetContactCollider(i) == collider, "Report belongs to the actual receiver and collider");
+                }
+            }
+        }
+        finally { PhysicsServer.FreeRID(sensor); PhysicsServer.FreeRID(raw); }
     }
     private static void Near(float value, float expected) => Check(Math.Abs(value - expected) < .001f, "A one-second-unit force integrated for 1/60 s agrees within .001 scene units/s (or rad/s)");
     private sealed class Probe : RigidBody

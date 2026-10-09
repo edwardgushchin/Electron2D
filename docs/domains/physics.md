@@ -361,3 +361,8 @@ completion remains observable and caches distinguish intermediate selected reads
 from change-publication state. [Public-world measurements up to 65,536 bodies](../components/physics-backends.md#conditional-body-publication)
 report exact traffic, zero warmed physics allocations, phase costs and variable
 native/window timing without treating this fixture as full performance acceptance.
+
+GPU contact-report preparation now reads retained runtimes from attached scene and
+server body lists instead of resolving every RID through the shared registry.
+[Receiver preparation](../components/physics-backends.md#contact-receiver-preparation)
+preserves live caps, non-rigid receivers, sensor exclusion and attachment lifetime.

@@ -41,7 +41,7 @@ internal static class PhysicsGPUPublicationPerformance
                 PhysicsServer.BodySetTransform(dynamicBodies[i], poses[i]); PhysicsServer.BodyAddShape(dynamicBodies[i], shape.GetRID()); PhysicsServer.BodySetSpace(dynamicBodies[i], space);
             }
             for (var i = 0; i < warmup; i++) { Reset(); PhysicsServer.SpaceStep(space, 1d / 60); }
-            var phases = new double[8];
+            var phases = new double[8]; var preparation = new double[4];
             var total = new double[samples]; var reset = new double[samples]; var steps = new double[samples];
             var up = gpu?.UploadBytes ?? 0; var down = gpu?.ReadbackBytes ?? 0; var submits = gpu?.SubmissionCount ?? 0; var wait = gpu?.WaitMS ?? 0; var publications = gpu?.ChangePublicationCount ?? 0;
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
@@ -50,7 +50,12 @@ internal static class PhysicsGPUPublicationPerformance
                 var start = Stopwatch.GetTimestamp(); Reset(); var split = Stopwatch.GetTimestamp(); reset[i] = Stopwatch.GetElapsedTime(start, split).TotalMilliseconds;
                 PhysicsServer.SpaceStep(space, 1d / 60); var end = Stopwatch.GetTimestamp();
                 steps[i] = Stopwatch.GetElapsedTime(split, end).TotalMilliseconds; total[i] = Stopwatch.GetElapsedTime(start, end).TotalMilliseconds;
-                if (PhysicsSpace.ProfilingEnabled) for (var phase = 0; phase < phases.Length; phase++) phases[phase] += data.ProfileMS[phase];
+                if (PhysicsSpace.ProfilingEnabled)
+                {
+                    for (var phase = 0; phase < phases.Length; phase++) phases[phase] += data.ProfileMS[phase];
+                    preparation[0] += data.GPUPrepareBodiesMS; preparation[1] += data.GPUPrepareReportsMS;
+                    preparation[2] += data.GPUPrepareWakesMS; preparation[3] += data.GPUPrepareWakeWaitMS;
+                }
             }
             owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
             up = (gpu?.UploadBytes ?? 0) - up; down = (gpu?.ReadbackBytes ?? 0) - down; submits = (gpu?.SubmissionCount ?? 0) - submits; wait = (gpu?.WaitMS ?? 0) - wait; publications = (gpu?.ChangePublicationCount ?? 0) - publications;
@@ -66,6 +71,7 @@ internal static class PhysicsGPUPublicationPerformance
             Console.WriteLine($"Public publication world {backend}, {count} bodies/{pairs} independent colliding pairs: {warmup} warmup/{samples} samples, all dynamic poses/linear velocities reset + full 1/60 s step, 4 substeps/16 iterations, sleeping disabled; whole p50/p95/p99={total[32]:F4}/{total[60]:F4}/{total[63]:F4} ms, reset/step p50={reset[32]:F4}/{steps[32]:F4}; {owner}/{all} owner/all managed B; GPU up/down={up / samples}/{down / samples} B, submissions/publications={submits / samples}/{publications / samples}, wait={wait / samples:F4} ms/tick.");
             if (backend == PhysicsServer.Backend.GPU && PhysicsSpace.ProfilingEnabled)
             {
+                Console.WriteLine($"  GPU preparation detail means: parameters/motion/joints {preparation[0] / samples:F4}, report selection {preparation[1] / samples:F4}, command/wake publication {preparation[2] / samples:F4} ms (included wake wait {preparation[3] / samples:F4} ms).");
                 var names = new[] { "attachments", "pre-publication/fields", "body/joint preparation/wakes", "resident simulation/debug", "post-publication/reports", "scene/server completion", "contacts/areas/views", "callbacks/events" };
                 for (var i = 0; i < phases.Length; i++) Console.WriteLine($"  GPU phase {names[i]}: mean {phases[i] / samples:F4} ms.");
             }

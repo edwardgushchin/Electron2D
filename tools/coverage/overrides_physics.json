@@ -2658,7 +2658,7 @@
         "PhysicsServer2D::method:body_set_state_sync_callback(RID:,Callable:)"
       ],
       "state": "Implemented",
-      "reason": "Cached body attachment views, typed force/sync callbacks including generic userdata, omission policy and contact caps execute for scene/server bodies with mutation/failure/lifetime checks (ADR 0070, PhysicsBodyStateTests)."
+      "reason": "Cached body attachment views, typed force/sync callbacks including generic userdata, omission policy and contact caps execute for scene/server bodies with mutation/failure/lifetime checks (ADR 0070, PhysicsBodyStateTests). PhysicsGPUPublicationTests checks CPU/GPU mixed scene/server/static contact receivers, sensor exclusion, live caps and attachment-view invalidation; GPU selection reads retained body runtimes without registry lookups."
     },
     {
       "godot": [
