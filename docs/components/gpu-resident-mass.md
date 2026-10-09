@@ -80,12 +80,12 @@ step. No solved velocity is copied to CPU for these operations.
 | --- | --- |
 | Device body | 80 bytes per retained slot, unchanged hot layout. |
 | Device local center | 8 bytes per slot; integration and contact/joint preparation read it. Growth copies it GPU-to-GPU. |
-| CPU body slot | 72 bytes: identity/attachment/edit routing, authored role/CCD/profile and resolved immutable geometry values. No live pose or velocity. |
+| CPU body slot | 88 bytes: identity/attachment/edit routing, authored role/CCD/integration/mass profiles and resolved immutable geometry values. No live pose or velocity. |
 | Pending body command | 128 bytes, including optional mass/center updates and captured impulse delta. Consumed entries are cleared. |
 | Body state result | 48 bytes pose/velocity/sleep under the subsequent [resident sleep stage](gpu-resident-sleep.md); only explicitly requested bodies are downloaded. |
 
 At 65,536 slots, bodies plus centers use 5.5 MiB. Authored body/command array payload
-is now 12.5 MiB with the CCD policy and exception-link fields, measured by AuthoredBodyCapacityBytes; it excludes object headers, shape
+is now 13.5 MiB with the CCD/integration policies and exception-link fields, measured by AuthoredBodyCapacityBytes; it excludes object headers, shape
 and joint metadata, dirty-index capacity, proxy scratch and driver allocations.
 Unchanged warmed ticks add no mass upload, readback or wait. A real profile edit
 coalesces into the existing body command. GetMassProperties reads the authoring

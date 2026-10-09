@@ -58,7 +58,7 @@ void wake(uint id,bool reset)
     ResidentBody b=bodies[id];if(b.flags.w==0u||b.flags.y<2u)return;
     if((b.flags.z&16u)!=0u)
     {
-        if(previous.w!=0u)bodyForces(b,policy.w,gravity.xy);
+        if(previous.w!=0u)bodyForces(b,policy.w,gravity.xy,gravity.w);
         b.flags.z&=~16u;b.velocity.w=0;
     }
     if(reset)b.velocity.w=0;

@@ -1,13 +1,13 @@
 # Electron2D physics field decisions
 
-Last updated: 2026-09-26
+Last updated: 2026-10-09
 
 This bounded document owns scene/server Area gravity, damping and space default fields. The stable [physics ADR 0056 anchor](physics.md#adr-0056) routes here.
 
 <a id="adr-0056"></a>
 ## ADR 0056: Area field priority and body damping
 
-Last updated: 2026-09-26
+Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: Executable area gravity/damping, typed world defaults and body field response
@@ -22,6 +22,7 @@ Area monitoring supplies shape geometry and directional filtering but initially 
 - Add typed `ProjectSettings` keys for the 2D default gravity strength/vector and linear/angular damping, with pinned defaults 980, (0, 1), 0.1 and 1. A SceneTree physics world samples active overrides when its first body or area attaches; the existing world retains that snapshot until an explicit typed server default-field edit.
 - Give scene and server Areas the five numeric `SpaceOverride` modes and finite signed gravity/damping fields, including transformed point gravity, constant-strength or inverse-square falloff, shared direction/point storage and integer priority. Field participation is independent of `Monitoring` and `Monitorable`; an area's mask still tests the body's layer. Resolve each channel in descending priority before the backend world step, using current shape overlap rather than the preceding event snapshot.
 - Preserve the backend's sampled world gravity, then apply each current dynamic body's difference from it as a mass-scaled force. Apply the pinned `max(0, 1 - delta * totalDamp)` linear/angular velocity factors before solver stepping and keep backend damping at zero. `RigidBody.DampMode` selects Combine or Replace separately for each channel. `PhysicsBody.GetGravity()` reports the last resolved vector after body gravity scaling on RigidBody; CharacterBody reports the same selected world/Area gravity without automatically applying it to caller-owned Velocity. Detached and StaticBody queries return zero.
+- The independent resident GPU solver applies the same damping-before-force rule once per outer tick, then distributes force/gravity contributions across scheduled substeps. A newly awakened zero-velocity sleeper receives only its eligible interval forces; CCD impact subdivisions do not repeat outer-tick damping. Signed coefficients and default-force omission are live sparse body policies. Public scene/server field projection, GPU Area reduction and explicit direct-state integration remain unfinished; the internal policy stage does not close those integration boundaries.
 - Validate all public numeric and enum inputs before mutation and reject a nonfinite resolved field or motion before changing body velocity. A changed resolved field wakes a sleeping body. Reuse area-order scratch storage and existing shape-distance scans; the checked warmed moving and sleeping-body field paths allocate zero managed bytes on Linux/.NET 8. No vendored source is changed.
 
 ### Consequences

@@ -81,8 +81,10 @@ replayed on CPU.
 
 ## Interval integration and force cadence
 
-Each scheduled substep applies its normal force, damping, spring and bounded motor
-contribution once, then solves its initial contacts/joints. GPU sweep threads reduce
+The outer tick applies signed damping once before force integration. Each scheduled
+substep applies its normal force, spring and bounded motor contribution once, then
+solves its initial contacts/joints. Live omission skips default gravity/damping/forces
+while preserving constraints and impulses; see [body policies](gpu-resident-parameters.md). GPU sweep threads reduce
 the earliest fraction. Bodies advance to it, the ordinary geometry/manifold and
 impulse solvers resolve the impact, and the remaining duration is swept again.
 Thus restitution, friction, angular response, static surface motion, joint
@@ -106,10 +108,10 @@ contact/event snapshot.
 ## Storage, transfer and native limits
 
 The hot device body remains 80 B; CCD mode fits existing flag bits. Commands remain
-128 B and selected snapshots 48 B. CPU slots are now 72 B, retaining the authored CCD
-enum and an incident-exception list head in addition
+128 B and selected snapshots 48 B. CPU slots are now 88 B, retaining the authored CCD
+enum, integration policy and an incident-exception list head in addition
 to their prior configuration; there is no evolving body/trajectory mirror. At
-65,536 slots the CPU slot/command payload is 12.5 MiB, measured by
+65,536 slots the CPU slot/command payload is 13.5 MiB, measured by
 AuthoredBodyCapacityBytes.
 Swept bounds and candidate pairs reuse existing retained device buffers. Each
 nonempty TOI query adds an 8-B status/fraction reset and 8-B result readback at one

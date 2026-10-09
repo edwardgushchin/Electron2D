@@ -73,11 +73,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _sleepGraphGPU, ref _sleepGraphCapacity, _highWater, 16, true);
         Grow(ref _sleepEdgesGPU, ref _sleepEdgeCapacity, Math.Max(1, ContactPointCount + _jointHighWater), 16, true);
     }
-    private void PrepareSleep(nint command, float delta, Vector2? gravity)
+    private void PrepareSleep(nint command, float delta, Vector2? gravity, float dampingDelta)
     {
         var settings = SleepParameters(delta);
         settings.ApplyForces = gravity.HasValue ? 1u : 0u;
-        settings.Gravity = new(gravity?.X ?? 0, gravity?.Y ?? 0, _wakeAllSleep ? 1 : 0, 0);
+        settings.Gravity = new(gravity?.X ?? 0, gravity?.Y ?? 0, _wakeAllSleep ? 1 : 0, dampingDelta);
         SleepPass(command, settings, 0, _highWater, _spatialSummary!);
         SleepPass(command, settings, 1, _sleepEdgeCount, _spatialSummary!);
         SleepPass(command, settings, 2, _sleepGraphBodies, _spatialSummary!);

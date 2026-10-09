@@ -46,7 +46,7 @@ upload exception records nor rebuild the table.
 
 | Storage or transfer | Payload and purpose |
 | --- | --- |
-| CPU body metadata | 72 bytes per slot, including one incident-exception list head; no solved poses or velocities. |
+| CPU body metadata | 88 bytes per slot after live integration policies, including one incident-exception list head; no solved poses or velocities. |
 | CPU exception slot | 40 bytes for authored endpoint indices/generations, incident/free links and journal flags, plus the directed-key dictionary and retained dirty-index storage. |
 | Exception scatter | 32 bytes per changed slot; body wake edits share their existing coalesced 128-byte command. |
 | Device authored exception | 16 bytes per retained exception slot. Growth preserves records GPU-to-GPU. |
@@ -107,8 +107,9 @@ The final focused run after the concurrent main update also passed public CPU
 exceptions and the resident GPU checks, with the same exact traffic and zero
 managed allocations (`/tmp/electron2d-resident-exceptions-final-focused.log`).
 Its timings overlap other regression work and are not a controlled comparison.
-The 65,536-body integration check reports authored body/command capacity
-13,107,200 bytes, confirming the new 72-byte CPU slot plus 128-byte staging record.
+At this stage the 65,536-body integration check reported authored body/command
+capacity 13,107,200 bytes for then-72-byte metadata and 128-byte staging. The later
+[live body policy stage](gpu-resident-parameters.md) raises metadata to 88 bytes.
 
 Source-generated shader SHA-256 values for this change:
 

@@ -13,14 +13,18 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     internal readonly record struct BodyHandle(int Index, uint Generation, long Owner);
     internal readonly record struct BodyDefinition(PhysicsServer.BodyMode Mode, Vector2 Position, float Rotation,
         Vector2 Velocity, float AngularVelocity, float Mass = 1, float Inertia = 0, float GravityScale = 1,
-        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null, bool CanSleep = true, bool Sleeping = false, CCDMode ContinuousMode = CCDMode.Disabled);
+        float LinearDamp = 0, float AngularDamp = 0, Vector2 ConstantForce = default, float ConstantTorque = 0, Vector2? CenterOfMass = null, bool CanSleep = true, bool Sleeping = false, CCDMode ContinuousMode = CCDMode.Disabled, bool LockRotation = false, bool OmitForceIntegration = false);
 
     [StructLayout(LayoutKind.Sequential)]
     internal struct Snapshot
     {
         internal Float4 Pose, Velocity;
         internal float SleepTime;
-        internal uint SleepFlags, Padding1, Padding2;
+        internal uint SleepFlags;
+        internal PhysicsServer.BodyMode Mode;
+        internal uint Padding;
+        internal readonly bool RotationLocked => (SleepFlags & 4) != 0;
+        internal readonly bool OmitForceIntegration => (SleepFlags & 1024) != 0;
         internal readonly bool Sleeping => (SleepFlags & 16) != 0;
         internal readonly bool CanSleep => (SleepFlags & 8) == 0;
         internal readonly CCDMode ContinuousMode => (CCDMode)((SleepFlags >> 8) & 3);
@@ -54,6 +58,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal int NextFree, Command, FirstShape, FirstJoint, FirstException;
         internal PhysicsServer.BodyMode Mode;
         internal CCDMode CCDMode;
+        internal IntegrationPolicy Integration;
         internal MassProfile MassProfile;
         internal PhysicsMass.Properties MassProperties;
         internal bool Alive, MassDirty, CanSleep;
@@ -106,6 +111,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         else _free = _slots[index].NextFree;
         ref var slot = ref _slots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = slot.FirstException = -1; Count++;
+        slot.Integration = new(definition.GravityScale, definition.LinearDamp, definition.AngularDamp, definition.LockRotation, definition.OmitForceIntegration);
         slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep; slot.CCDMode = definition.ContinuousMode;
         if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount++;
         slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
@@ -115,12 +121,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         command.Body = new()
         {
             Pose = new(definition.Position.X, definition.Position.Y, MathF.Cos(definition.Rotation), MathF.Sin(definition.Rotation)),
-            Velocity = new(definition.Velocity.X, definition.Velocity.Y, definition.AngularVelocity, 0),
+            Velocity = definition.Sleeping && definition.Mode >= PhysicsServer.BodyMode.Rigid ? default :
+                new(definition.Velocity.X, definition.Velocity.Y, RotationLocked(slot) ? 0 : definition.AngularVelocity, 0),
             Force = new(definition.ConstantForce.X, definition.ConstantForce.Y, definition.ConstantTorque, definition.GravityScale),
             Properties = new(1 / definition.Mass, definition.Inertia > 0 ? 1 / definition.Inertia : 0, definition.LinearDamp, definition.AngularDamp),
             Generation = slot.Generation,
             Mode = (uint)definition.Mode,
-            Locks = (definition.Mode == PhysicsServer.BodyMode.RigidLinear ? 4u : 0u) | (definition.CanSleep ? 0u : 8u) |
+            Locks = (RotationLocked(slot) ? 4u : 0u) | (definition.OmitForceIntegration ? 1024u : 0u) | (definition.CanSleep ? 0u : 8u) |
                 (definition.Sleeping && definition.Mode >= PhysicsServer.BodyMode.Rigid ? 16u : 0u) | ((uint)definition.ContinuousMode << 8),
             Alive = 1
         };
@@ -154,7 +161,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         Validate(body);
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
-        ref var command = ref Edit(body.Index); command.Mask |= Velocity;
+        if (RotationLocked(_slots[body.Index])) angular = 0;
+        ref var command = ref Edit(body.Index); command.Mask = (command.Mask | Velocity) & ~ClearAngular;
         command.Body.Velocity = new(linear.X, linear.Y, angular, 0);
         // A later explicit velocity assignment supersedes earlier queued impulses.
         command.Impulse = default; command.Mask &= ~Impulse;
@@ -165,11 +173,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         Validate(body);
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
+        if (_slots[body.Index].Mode < PhysicsServer.BodyMode.Rigid) return;
         PrepareMasses();
         ref readonly var slot = ref _slots[body.Index];
         var properties = slot.MassProperties;
         var linearDelta = slot.Mode >= PhysicsServer.BodyMode.Rigid ? linear / properties.Mass : Vector2.Zero;
-        var angularDelta = slot.Mode == PhysicsServer.BodyMode.Rigid && properties.Inertia > 0 ? angular / properties.Inertia : 0;
+        var angularDelta = !RotationLocked(slot) && properties.Inertia > 0 ? angular / properties.Inertia : 0;
         ref var command = ref Edit(body.Index);
         // Capture the authored mass at the call: later profile/geometry edits preserve earlier impulse effects.
         var total = command.Impulse + new Float4(linearDelta.X, linearDelta.Y, angularDelta, 0);
@@ -283,7 +292,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); centers?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -307,7 +316,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             if (commandBytes > 0) Upload(copy, _commands!, 8, commandBytes);
             if (requestBytes > 0) Upload(copy, _requests!, 8 + commandBytes, requestBytes);
             SDL.EndGPUCopyPass(copy);
-            var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, positionCorrections ? 1 : 0), Capacity = (uint)_highWater };
+            var settings = new Settings { Step = new(gravity.X, gravity.Y, delta, motionStage == 4 ? (positionCorrections ? 1 : 0) : dampingDelta ?? delta), Capacity = (uint)_highWater };
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0) Dispatch(command, ref settings, motionStage, _highWater);
             if (motionStage == 4 && (sleepDelta ?? delta) > 0) FinishSleep(command, sleepDelta ?? delta);

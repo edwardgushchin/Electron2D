@@ -23,7 +23,10 @@ now retain accepted and rejected decisions on device, outside the impulse-histor
 
 ## Solve and history
 
-Each substep integrates physical velocities, computes current contact points, solves
+[Live integration policies](gpu-resident-parameters.md) now apply signed damping
+once at the outer tick boundary, then distribute gravity/constant force integration
+across its scheduled substeps. Omission skips default fields/forces while retaining
+contact/joint response. Each substep integrates physical velocities, computes current contact points, solves
 them and advances poses. Contact threads update normal/Coulomb-friction impulses
 independently. A device-built incident list lets one invocation per dynamic body
 gather signed impulse deltas and apply its inverse mass/inertia without

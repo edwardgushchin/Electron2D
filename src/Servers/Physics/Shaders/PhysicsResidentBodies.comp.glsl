@@ -35,8 +35,14 @@ void main()
             b = bodies[index];
             if (b.flags.x != generation || b.flags.w == 0u) { fail(1u); return; }
         }
-        // A nonzero alive word also versions explicit pose/velocity/mass edits for contact and joint history.
-        if ((mask & 1u) == 0u && (((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
+        // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
+        if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
+        if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
+        if ((mask & 8192u) != 0u)
+        {
+            b.force.w=c.body.force.w;b.properties.zw=c.body.properties.zw;
+            b.flags.z=(b.flags.z&~1028u)|(c.body.flags.z&1028u);
+        }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
@@ -47,6 +53,7 @@ void main()
         if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
         if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
         if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);
+        if ((mask & 16384u) != 0u) b.velocity.z=0;
         if ((mask & 16u) != 0u && b.flags.y >= 2u)
         {
             b.velocity.xy += c.impulse.xy;
@@ -63,7 +70,7 @@ void main()
         float dt = step.z;
         if (control.x != 4u && b.flags.y >= 2u)
         {
-            bodyForces(b,dt,step.xy);
+            bodyForces(b,dt,step.xy,step.w);
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (control.x != 3u)
@@ -86,6 +93,6 @@ void main()
         if (request.x >= control.z) { fail(1u); return; }
         ResidentBody b = bodies[request.x];
         if (b.flags.w == 0u || b.flags.x != request.y) { fail(1u); return; }
-        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz,0), b.velocity.w, b.flags.z, uvec2(0));
+        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz,0), b.velocity.w, b.flags.z, uvec2(b.flags.y,0));
     }
 }
