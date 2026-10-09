@@ -36,7 +36,8 @@ public abstract partial class Shape
     /// <returns>True when the applicable swept regions intersect.</returns>
     /// <remarks>These are independent swept volumes, without synchronized time fractions. Concave terrain motion
     /// is ignored. Separation rays extend only by their positive axial motion and ignore the counterpart's motion.
-    /// Two concave resources or two separation rays do not collide. No scene, space or RID is required.
+    /// World boundaries take precedence: their motion is ignored and the other shape is tested at its final pose.
+    /// Two concave resources, two separation rays or two world boundaries do not collide. No scene, space or RID is required.
     /// Resources must not be mutated or disposed concurrently with a query.</remarks>
     /// <exception cref="ArgumentNullException">The other resource is null.</exception>
     /// <exception cref="ObjectDisposedException">Either resource is disposed.</exception>

@@ -29,6 +29,7 @@ void fail(){atomicOr(status.x,1u);}
 bool lessKey(uvec4 a,uvec4 b){return a.y<b.y||(a.y==b.y&&(a.x<b.x||(a.x==b.x&&(a.z<b.z||(a.z==b.z&&a.w<b.w)))));}
 bool contains(Hull h)
 {
+    if(h.boundary){vec3 p=boundaryPlane(h);return p.z+h.radius>=0;}
     if(h.count==1u){vec2 d=vertex(h,0u);float squared=dot2(d,d),radius=h.radius*h.radius;if(!finite2(vec2(squared,radius))){fail();return false;}return squared<=radius;}
     if(h.count==2u){if(h.radius==0)return false;return length(closest(vec2(0),vertex(h,0u),vertex(h,1u)))<=h.radius;}
     for(uint i=0u;i<h.count;i++)if(dot2(-vertex(h,i),edgeNormal(h,i))>0)return false;
@@ -46,6 +47,8 @@ bool circleHit(vec2 center,float radius,vec2 d,out float fraction,out vec2 norma
 }
 bool queryRay(Hull h,vec2 d,out float fraction,out vec2 normal)
 {
+    if(h.boundary){uint feature;return rayHit(h,vec2(0),d,fraction,normal,feature);}
+
     fraction=2;normal=vec2(0);
     if(h.count==1u)return circleHit(vertex(h,0u),h.radius,d,fraction,normal);
     if(h.count==2u)
@@ -101,7 +104,7 @@ void main()
     while(at!=0)
     {
         Node n=nodes[at];
-        if(n.hasCategory!=0&&overlapsRayBounds(n.bounds,q,ray)&&((q.policy.y&1u)!=0u||(n.typeMask&8)!=0))
+        if(n.hasCategory!=0&&((n.typeMask&16)!=0||overlapsRayBounds(n.bounds,q,ray))&&((q.policy.y&1u)!=0u||(n.typeMask&8)!=0))
         {
             if(at<int(leaves)){at*=2;continue;}
             uint index=uint(n.shape);if(index>=shapeCount){fail();return;}

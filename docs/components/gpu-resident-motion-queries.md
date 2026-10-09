@@ -103,3 +103,9 @@ same Release runner (`/tmp/electron2d-motion-query-gpu.log`,
 `/tmp/electron2d-motion-query-cpu.log`). These cover the shared directed-query
 extraction and existing failure/lifetime/renderer-independence boundaries;
 they do not establish public independent-GPU or networking acceptance.
+
+WorldBoundaryShape participates analytically in both query argument positions,
+including far-away half-plane contacts, normal/distance transforms and ray pairs.
+The shared shape and body-motion matrices now include this geometry. Direct-space
+shape queries retain initial overlap during motion; body-motion recovery/casts
+retain their own directed-ray policy. Public independent-GPU binding remains open.

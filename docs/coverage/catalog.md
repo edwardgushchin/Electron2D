@@ -1055,7 +1055,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |
 | [World2D](classes/World2D.md) | Resource | Implemented | 4 |
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |
-| [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Unimplemented | 2 |
+| [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Implemented | 2 |
 | [WorldBoundaryShape3D](classes/WorldBoundaryShape3D.md) | Shape3D | Excluded | 1 |
 | [WorldEnvironment](classes/WorldEnvironment.md) | Node | Blocked | 3 |
 | [X509Certificate](classes/X509Certificate.md) | Resource | Implemented | 4 |

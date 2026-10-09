@@ -339,3 +339,9 @@ tangential impulse for points one and two. Feature IDs remain in Impulses1/2.W f
 resident history matching. Publication includes the tangent totals and native solve
 epoch; shader numeric validation checks these fields before exposing results.
 PhysicsContactImpulseTests verifies world momentum and outer-frame sums.
+
+Analytic world boundaries are handled outside finite broad-phase bounds. The CPU
+hosted GPU-stage experiment leaves boundary/ray custom manifold publication on the
+host; independent GPUPhysicsBodyStore uses device plane contacts instead.
+[WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks both
+paths, with [measurements and limits](../components/physics-shapes.md#infinite-world-boundaries).

@@ -115,6 +115,9 @@ namespace Box2D.NET
 
             switch (geometry)
             {
+                case B2Plane plane:
+                    shape.us.boundary = plane;
+                    break;
                 case B2Capsule capsule:
                     shape.us.capsule = capsule;
                     break;
@@ -236,6 +239,9 @@ namespace Box2D.NET
             B2ShapeId id = new B2ShapeId(shape.id + 1, bodyId.world0, shape.generation);
             return id;
         }
+
+        internal static B2ShapeId b2CreateBoundaryShape(B2BodyId body, in B2ShapeDef definition, B2Plane plane) =>
+            b2CreateShape(body, definition, plane, B2ShapeType.b2_boundaryShape);
 
         /// Create a circle shape and attach it to a body. The shape definition and geometry are fully cloned.
         /// Contacts are not created until the next time step.
@@ -632,6 +638,8 @@ namespace Box2D.NET
         {
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                { var point = b2TransformPoint(xf, shape.us.boundary.offset * shape.us.boundary.normal); return new B2AABB(point, point); }
                 case B2ShapeType.b2_capsuleShape:
                     return b2ComputeCapsuleAABB(shape.us.capsule, xf);
                 case B2ShapeType.b2_circleShape:
@@ -778,6 +786,8 @@ namespace Box2D.NET
 
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                { extent.minExtent = 0; extent.maxExtent = b2Length(shape.us.boundary.offset * shape.us.boundary.normal - localCenter); break; }
                 case B2ShapeType.b2_capsuleShape:
                 {
                     float radius = shape.us.capsule.radius;
@@ -851,6 +861,8 @@ namespace Box2D.NET
             B2CastOutput output = new B2CastOutput();
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                { output = B2Boundaries.Ray(shape.us.boundary, localInput); break; }
                 case B2ShapeType.b2_capsuleShape:
                     output = b2RayCastCapsule(shape.us.capsule, localInput);
                     break;
@@ -877,6 +889,9 @@ namespace Box2D.NET
 
         internal static B2CastOutput b2ShapeCastShape(in B2ShapeCastInput input, B2Shape shape, in B2Transform transform)
         {
+            if (input.proxy.isBoundary || shape.type == B2ShapeType.b2_boundaryShape)
+                return b2ShapeCast(new B2ShapeCastPairInput { proxyA = b2MakeShapeDistanceProxy(shape), transformA = transform,
+                    proxyB = input.proxy, transformB = b2Transform_identity, translationB = input.translation, maxFraction = input.maxFraction });
             B2CastOutput output = new B2CastOutput();
 
             if (input.proxy.count == 0)
@@ -986,7 +1001,7 @@ namespace Box2D.NET
 
             // Create proxies in the broad-phase.
             shape.proxyKey =
-                b2BroadPhase_CreateProxy(bp, type, shape.fatAABB, shape.filter.categoryBits, shape.id, forcePairCreation);
+                b2BroadPhase_CreateProxy(bp, type, shape.fatAABB, shape.filter.categoryBits, shape.id, forcePairCreation, shape.type == B2ShapeType.b2_boundaryShape);
             B2_ASSERT(B2_PROXY_TYPE(shape.proxyKey) < B2BodyType.b2_bodyTypeCount);
         }
 
@@ -1003,6 +1018,8 @@ namespace Box2D.NET
         {
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                { return B2Boundaries.Proxy(shape.us.boundary); }
                 case B2ShapeType.b2_capsuleShape:
                     return b2MakeProxy(shape.us.capsule.center1, shape.us.capsule.center2, 2, shape.us.capsule.radius);
                 case B2ShapeType.b2_circleShape:
@@ -1069,6 +1086,8 @@ namespace Box2D.NET
 
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                { return B2Boundaries.Contains(shape.us.boundary, localPoint); }
                 case B2ShapeType.b2_capsuleShape:
                     return b2PointInCapsule(shape.us.capsule, localPoint);
 
@@ -1100,6 +1119,8 @@ namespace Box2D.NET
             B2CastOutput output = new B2CastOutput();
             switch (shape.type)
             {
+                case B2ShapeType.b2_boundaryShape:
+                    output = B2Boundaries.Ray(shape.us.boundary, localInput); break;
                 case B2ShapeType.b2_capsuleShape:
                     output = b2RayCastCapsule(shape.us.capsule, localInput);
                     break;
@@ -1296,7 +1317,7 @@ namespace Box2D.NET
 
                     bool forcePairCreation = true;
                     shape.proxyKey = b2BroadPhase_CreateProxy(world.broadPhase, proxyType, shape.fatAABB, shape.filter.categoryBits,
-                        shapeId, forcePairCreation);
+                        shapeId, forcePairCreation, shape.type == B2ShapeType.b2_boundaryShape);
                 }
                 else
                 {

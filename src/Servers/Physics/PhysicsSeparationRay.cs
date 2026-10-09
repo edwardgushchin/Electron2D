@@ -20,6 +20,17 @@ internal static class PhysicsSeparationRay
         var rayPose = flip ? poseB : poseA; var otherPose = flip ? poseA : poseB;
         var other = flip ? a : b; var tag = flip ? tagA : tagB;
         var worldRay = WorldProxy(ray, rayPose, default);
+        if (other.type == B2ShapeType.b2_boundaryShape)
+        {
+            if (b2LengthSquared(ray.To - ray.From) == 0) return default;
+            var result = B2Boundaries.Contact(worldRay, b2Transform_identity, B2Shapes.b2MakeShapeDistanceProxy(other), otherPose, margin);
+            if (flip) result.normal = -result.normal;
+            for (var i = 0; i < result.pointCount; i++)
+            {
+                ref var p = ref result.points[i]; p.anchorA = p.point - poseA.p; p.anchorB = p.point - poseB.p;
+            }
+            return result;
+        }
         B2Manifold contact;
         if (tag is { Compound: { } contour })
         {
@@ -52,6 +63,18 @@ internal static class PhysicsSeparationRay
         in B2ShapeProxy other, in B2Transform otherTransform, SeparationRayData? otherRay,
         in B2Vec2 motion, float margin)
     {
+        if (query.isBoundary || other.isBoundary)
+        {
+            var target = otherRay is { } data ? WorldProxy(data, otherTransform, default) : other;
+            var targetPose = otherRay is not null ? b2Transform_identity : otherTransform;
+            if (queryRay is not null && b2LengthSquared(query.points[1] - query.points[0]) == 0 ||
+                otherRay is { } empty && b2LengthSquared(empty.To - empty.From) == 0) return default;
+            var moved = query;
+            if (queryRay is not null) moved.points[1] += margin * b2Normalize(moved.points[1] - moved.points[0]);
+            for (var i = 0; i < moved.count; i++) moved.points[i] += motion;
+            if (moved.isBoundary) moved.boundary.offset += b2Dot(moved.boundary.normal, motion);
+            return B2Boundaries.Contact(moved, b2Transform_identity, target, targetPose, 0);
+        }
         if (queryRay is { } slide)
             return otherRay is null ? Contact(query, slide, other, otherTransform, motion, margin) : default;
         if (otherRay is not { } ray) return default;

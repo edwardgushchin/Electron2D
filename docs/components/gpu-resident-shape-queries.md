@@ -122,3 +122,9 @@ The complete GPU suite and the 37-suite CPU collider group passed on this host
 (`/tmp/electron2d-shape-query-gpu.log`, `/tmp/electron2d-shape-query-cpu.log`).
 This includes the shared manifold extraction and existing failure/lifetime checks;
 it does not establish public independent-backend or networking acceptance.
+
+WorldBoundaryShape participates analytically in both query argument positions,
+including far-away half-plane contacts, normal/distance transforms and ray pairs.
+The shared shape and body-motion matrices now include this geometry. Direct-space
+shape queries retain initial overlap during motion; body-motion recovery/casts
+retain their own directed-ray policy. Public independent-GPU binding remains open.

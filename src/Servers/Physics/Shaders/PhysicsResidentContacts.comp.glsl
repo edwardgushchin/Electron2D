@@ -105,6 +105,13 @@ void main()
     oneWayRevisions=uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision);
     if((!sensor&&ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
     if(sensor&&(ga.data.z==6u||gb.data.z==6u))contactLimit=0;
+    if(ga.data.z==7u||gb.data.z==7u)
+    {
+        if(ga.data.z==7u&&gb.data.z==7u)return;
+        if((ga.data.z==6u&&vertices[ga.data.x]==vertices[ga.data.x+1u])||(gb.data.z==6u&&vertices[gb.data.x]==vertices[gb.data.x+1u]))return;
+        uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;
+        for(uint i=0u;i<na;i++)for(uint j=0u;j<nb;j++)ordinary(hull(sa,ga,bodyA,i),hull(sb,gb,bodyB,j),uvec2(i,j));return;
+    }
     if(ga.data.z==6u){rayContact(sa,ga,bodyA,sb,gb,bodyB,false);return;}
     if(gb.data.z==6u){rayContact(sb,gb,bodyB,sa,ga,bodyA,true);return;}
     uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;

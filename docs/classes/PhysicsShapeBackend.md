@@ -20,6 +20,7 @@ backend hull arrays themselves. Public APIs and geometry units are unchanged.
 | `GetHulls` | Borrow the compiled convex partitions from the weak resource cache; directed solver contacts use their stable ordinal to select one outer entry. |
 | `AppendToBody` | Apply a slot's local pose and definition, append its concrete fixtures, preserve sub-tolerance capsule/segment fallback and directed ray metadata/manifold hooks and compound partition ordinals. |
 | `AppendQueryProxies` | Append each local convex or hollow query piece in backend units; callers retain transform, margin, exclusions and mass policy. |
+| `GetQueryProxy` | Preserve exact directed-ray endpoints and analytic plane identity when reading a concrete CPU fixture. |
 | `ValidateAndCachePolygon` | Validate and compile the entire candidate before replacing its cached hulls. The resource commits its copied points immediately afterward, before Changed notifications. |
 | `ToBackend` | Convert scene-unit vectors at backend call sites without coupling the Shape base class to vendor vectors. |
 
@@ -46,3 +47,8 @@ motion queries, standalone collisions and their warmed allocation assertions.
 ConvexPolygonShapeTests checks one edited resource shared by two bodies against an
 independent duplicate, preserves the prior small contour after an invalid edit,
 and exercises alternating query resources without warmed managed allocations.
+
+World boundaries compile their transformed equation into a distinct native plane
+primitive. Query proxies carry the plane explicitly; finite editing/bookkeeping
+bounds never substitute for the infinite half-plane. WorldBoundaryTests verifies
+far-away queries and scene/server response.

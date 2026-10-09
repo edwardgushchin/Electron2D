@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 ## Scope and owned types
 
-[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`SeparationRayShape`](../classes/SeparationRayShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
+[`Shape`](../classes/Shape.md) is the abstract managed geometry resource. [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`SeparationRayShape`](../classes/SeparationRayShape.md), [`WorldBoundaryShape`](../classes/WorldBoundaryShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md) and [`RectangleShape`](../classes/RectangleShape.md) provide concrete fixtures. [`CollisionShape`](../classes/CollisionShape.md) borrows one Shape as a direct `PhysicsBody` or `Area` child. [`CollisionPolygon`](../classes/CollisionPolygon.md) is a sibling scene child that owns its generated solid or hollow geometry; [`PolygonBuildMode`](../classes/PolygonBuildMode.md) chooses its construction mode. None of these public types expose backend handles.
 
 ## Runtime flow
 
@@ -15,7 +15,8 @@ current CPU fixtures and query proxies and retains compiled convex hulls in a we
 resource-keyed cache. The common collider adapter calls it for scene/server slots;
 mass and direct queries use the same compilation. Standalone Shape collision reads
 the view directly, preserving whole convex contours. Compiled polygon validation
-still runs during authoring; independent GPU geometry ownership remains open.
+still runs during authoring; independent GPU geometry storage executes internally,
+while public GPU world binding remains open.
 
 Circle radius defaults to 10 scene units, capsule radius/full height to 10/30, segment endpoints to (0, 0)/(0, 10), and rectangle size to (20, 20). Capsule height and radius stay linked; MidHeight sets their central separation. The capsule accepts finite nonnegative dimensions, including zero and line/circle limits. Circle and rectangle require finite positive dimensions; segment endpoints and their difference must be finite and may coincide. These shapes report local bounds, publish geometry changes and support independent resource duplication; equal capsule radius/height writes do not publish, while an equal MidHeight write does. A CollisionShape starts with no resource, `Disabled=false`, `OneWayCollision=false` and local direction `(0, 1)`; assigning a live resource or changing either flag updates its direct collision owner's fixtures before the next physics step. Local position and rotation offset the fixture; scale/skew are rejected while active. The parent body or area owns its backend fixtures, while the caller owns the Shape resource.
 
@@ -66,3 +67,46 @@ Logs: `/tmp/electron2d-ray-collider.log` and `/tmp/electron2d-ray-gpu-suite.log`
 The stage measurement includes host-directed contact generation and constraint
 upload; it does not measure the independent GPU backend or establish large-world
 speedups. Scene rendering, native allocations and networking are outside this probe.
+
+## Infinite world boundaries
+
+WorldBoundaryShape stores the analytic solid side `Normal.Dot(point) <= Distance`.
+Nonunit normal magnitude remains authored data; both backends normalize the equation
+for geometry. It contributes no geometric mass/inertia. Its finite GetRect is an
+editing marker, never a collision envelope. PhysicsServer.WorldBoundaryShapeCreate
+and ShapeGetType complete creation/type/data access for the eight built-in kinds;
+Custom remains an enum identity without extension geometry support.
+
+CPU primitives carry a plane tag, a separate unbounded broad-phase registration,
+analytic support manifolds and conservative translating/rotating TOI. The unbounded
+registry compares plane equations each step, renewing candidates when rotation
+changes the half-plane despite an unchanged finite bookkeeping AABB. Independent
+GPU storage carries the same kind and plane parameters; shaders handle unbounded
+tree traversal, free-side pruning, contacts, queries and CCD. No CPU pose/geometry
+mirror is used for resident simulation. The old CPU-hosted GPU-stage experiment
+continues to publish custom boundary/ray manifolds on the host; that path is separate.
+
+WorldBoundaryTests checks scene/server and independent store response at X=1,000,000,
+queries up to X=4,000,000, contacts against all seven other built-in families,
+nonunit equations, resource motion precedence, shape/type
+lifetime, sensors, sleep/edit/removal, and both CCD modes including a rotating plane.
+GPUPhysicsShapeQueryTests and GPUPhysicsMotionQueryTests include boundaries in the
+shared geometry matrices. The regression moving a query plane away from an already
+overlapping ray preserves the direct query's initial intersection.
+
+Linux/.NET 10, Release, 1/60 s, one awake body plus static plane, 128 warmup and 128
+measured complete step calls; GPU device Vulkan / NVIDIA GeForce RTX 3090 Ti:
+
+| Path | p50 / p95 / p99, ms | All-thread managed bytes over 128 steps |
+| --- | --- | --- |
+| Public CPU, dummy video | 0.0044 / 0.0045 / 0.0048 | 0 |
+| CPU host with GPU stages | 0.2200 / 0.2513 / 0.4571 | 0 |
+| Independent resident GPU | 1.9938 / 2.5606 / 3.5468 | 0 |
+
+Resident per-step traffic: 160 B buffer upload, 14,324 B uniforms, 160 B status
+readback; included device waits average 1.1224 ms. No pose readback occurs in the
+measured loop. Logs: `/tmp/electron2d-boundary-cpu.log`,
+`/tmp/electron2d-boundary-stages.log`, `/tmp/electron2d-boundary-resident.log`.
+These are tiny-world overhead/allocation probes, not large-world speedup or 60 FPS
+acceptance. Native allocation, window rendering, network behavior, other platforms
+and public independent-GPU binding remain unverified or unimplemented as applicable.

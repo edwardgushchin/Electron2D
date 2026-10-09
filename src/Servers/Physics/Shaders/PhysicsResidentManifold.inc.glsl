@@ -10,6 +10,27 @@ void facePoint(Hull refHull,Hull incHull,vec2 p,vec2 n,uint refEdge,uint incEdge
 }
 void ordinary(Hull a,Hull b,uvec2 pieces)
 {
+    if(a.boundary||b.boundary)
+    {
+        if(a.boundary&&b.boundary)return;
+        bool flip=b.boundary;Hull plane=flip?b:a,other=flip?a:b;vec3 line=boundaryPlane(plane);line.z+=plane.radius;
+        float minimum=dot2(line.xy,vertex(other,0u));
+        for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
+        if(minimum-line.z-other.radius>contactLimit)return;
+        vec2 tangent=vec2(-line.y,line.x);float lo=3.402823466e38,hi=-lo;uint first=0u,last=0u;
+        for(uint i=0u;i<other.count;i++)
+        {
+            vec2 p=vertex(other,i);if(dot2(line.xy,p)>minimum+tolerances.z)continue;float along=dot2(tangent,p);
+            if(along<lo){lo=along;first=i;}if(along>hi){hi=along;last=i;}
+        }
+        for(uint i=0u;i<(hi-lo>tolerances.z?2u:1u);i++)
+        {
+            uint v=i==0u?first:last;vec2 p=vertex(other,v)-other.radius*line.xy;
+            vec2 projected=p-(dot2(line.xy,p)-line.z)*line.xy;
+            if(flip)emitPoint(p,projected,-line.xy,uvec4(2u*v,0u,pieces));else emitPoint(projected,p,line.xy,uvec4(0u,2u*v,pieces));
+        }
+        return;
+    }
     Axis axis;if(!separatingAxis(a,b,axis))return;
     if(axis.owner!=0u)
     {

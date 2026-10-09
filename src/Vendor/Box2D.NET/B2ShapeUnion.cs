@@ -24,5 +24,8 @@ namespace Box2D.NET
 
         [FieldOffset(0)]
         public B2ChainSegment chainSegment;
+
+        [FieldOffset(0)]
+        public B2Plane boundary;
     }
 }

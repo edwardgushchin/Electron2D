@@ -91,6 +91,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             throw new InvalidOperationException("GPU tree proxy bounds must be finite and ordered.");
         result.ProxyKey = key;
         result.HasCategory = node.categoryBits != 0 ? 1 : 0;
+        result.Padding = world.shapes.data[id].type == B2ShapeType.b2_boundaryShape ? 16 : 0;
         return result;
     }
 

@@ -12,5 +12,6 @@ namespace Box2D.NET
         public B2BodyType queryTreeType;
         public int queryProxyKey;
         public int queryShapeIndex;
+        internal bool includeBoundaries;
     }
 }

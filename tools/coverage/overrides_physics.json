@@ -1963,6 +1963,26 @@
     {
       "electron2d": "property:Electron2D.Joint.MaxForce()",
       "reason": "ADR 0087: serializable scene projection of the existing general server joint parameter, sharing the same RID/runtime value; required to retain server-authored configuration through PackedScene."
+    },
+    {
+      "electron2d": "constructor:Electron2D.WorldBoundaryShape..ctor()",
+      "reason": "Managed construction provides the default upward analytic half-plane.",
+      "adr": "ADRs 0003, 0013, 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.WorldBoundaryShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Resource duplication preserves independent authored normal and distance.",
+      "adr": "ADRs 0003, 0013, 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.WorldBoundaryShape.CreateDuplicateInstance()",
+      "reason": "Resource duplication creates an independent analytic boundary.",
+      "adr": "ADRs 0003, 0013, 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.WorldBoundaryShape.GetRect()",
+      "reason": "Finite normalized editing marker for infinite geometry; never used as collision bounds.",
+      "adr": "ADRs 0003, 0013, 0054"
     }
   ],
   "statusGroups": [
@@ -2608,7 +2628,7 @@
         "PhysicsServer2D::method:shape_get_data(RID:)"
       ],
       "state": "Partial",
-      "reason": "Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary is absent; directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068)."
+      "reason": "Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068)."
     },
     {
       "godot": [
@@ -2623,7 +2643,7 @@
         "PhysicsServer2D::method:free_rid(RID:)"
       ],
       "state": "Partial",
-      "reason": "Scene-owned identities and explicit spaces/bodies/Areas/shapes/joints have tested lifetime (PhysicsQueryTests, PhysicsServerJointTests). WorldBoundary and backend extension resources still require creation/free/lifetime verification (ADRs 0054 and 0063)."
+      "reason": "Scene-owned identities and explicit spaces/bodies/Areas/shapes/joints have tested lifetime (PhysicsQueryTests, PhysicsServerJointTests). WorldBoundary creation/data/free/lifetime now execute (WorldBoundaryTests); backend extension resources still require verification (ADRs 0054 and 0063)."
     },
     {
       "godot": [
@@ -3312,7 +3332,7 @@
         "RigidBody2D::property:continuous_cd"
       ],
       "state": "Partial",
-      "reason": "Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding and world-boundary shape response."
+      "reason": "Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests)."
     },
     {
       "state": "Implemented",
@@ -3373,6 +3393,27 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0087: the numeric selector is represented by typed SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias; the actual correction behavior executes."
+    },
+    {
+      "godot": [
+        "class:WorldBoundaryShape2D",
+        "WorldBoundaryShape2D::property:normal",
+        "WorldBoundaryShape2D::property:distance",
+        "PhysicsServer2D::method:world_boundary_shape_create()",
+        "PhysicsServer2D::method:shape_get_type(RID:)",
+        "PhysicsServer2D::enum:ShapeType",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_WORLD_BOUNDARY",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_SEPARATION_RAY",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_SEGMENT",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_CIRCLE",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_RECTANGLE",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_CAPSULE",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_CONVEX_POLYGON",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_CONCAVE_POLYGON",
+        "PhysicsServer2D::enum_value:ShapeType.SHAPE_CUSTOM"
+      ],
+      "state": "Implemented",
+      "reason": "Analytic infinite half-plane resource, typed creation/data/lifetime, logical ShapeType identities, CPU scene/server response/sensing/sleep and internal GPU contact/query/CCD paths execute (ADR 0054, WorldBoundaryTests, shared GPU query matrices). Custom preserves only its enum identity; extension geometry and public GPU binding remain separate open capabilities."
     }
   ]
 }

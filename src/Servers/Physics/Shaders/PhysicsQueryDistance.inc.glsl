@@ -33,6 +33,15 @@ vec3 triangleWeights(vec2 a,vec2 b,vec2 c)
 }
 float queryDistance(Hull a,Hull b,vec2 sweepA,vec2 sweepB,out vec2 normal)
 {
+    if(a.boundary||b.boundary)
+    {
+        if(a.boundary&&b.boundary){normal=vec2(0);return 3.402823466e38;}
+        bool flip=b.boundary;Hull plane=flip?b:a,other=flip?a:b;vec3 line=boundaryPlane(plane);
+        vec2 sp=flip?sweepB:sweepA,so=flip?sweepA:sweepB;
+        float minimum=dot2(line.xy,vertex(other,0u));
+        for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
+        normal=flip?-line.xy:line.xy;return max(0,minimum+min(0,dot2(line.xy,so))-line.z-max(0,dot2(line.xy,sp)));
+    }
     QuerySupport simplex[3];uint count=1u;vec3 weights=vec3(1,0,0);
     simplex[0]=querySupport(a,b,sweepA,sweepB,vec2(1,0));
     vec2 v=simplex[0].w;

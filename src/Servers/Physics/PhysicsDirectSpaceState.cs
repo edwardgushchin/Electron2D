@@ -241,7 +241,8 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         bool includeSeparationRays = false)
     {
         tag = b2Shape_GetUserData(shape).GetRef<PhysicsFixtureTag>()!;
-        if (tag is null || !includeSeparationRays && tag.SeparationRay is not null ||
+        if (tag is null || tag.SeparationRay is { } empty && empty.From.X == empty.To.X && empty.From.Y == empty.To.Y ||
+            !includeSeparationRays && tag.SeparationRay is not null ||
             (b2Shape_GetFilter(shape).categoryBits & mask) == 0) return false;
         foreach (var rid in excluded) if (rid == tag.ColliderRID) return false;
         return true;

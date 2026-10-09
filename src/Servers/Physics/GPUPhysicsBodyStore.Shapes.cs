@@ -247,7 +247,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 var geometry = source.GetGeometry();
                 var count = geometry.Kind switch
                 {
-                    PhysicsShapeGeometry.ShapeKind.Circle => 1,
+                    PhysicsShapeGeometry.ShapeKind.Circle or PhysicsShapeGeometry.ShapeKind.WorldBoundary => 1,
                     PhysicsShapeGeometry.ShapeKind.Rectangle => 4,
                     PhysicsShapeGeometry.ShapeKind.ConvexPolygon or PhysicsShapeGeometry.ShapeKind.ConcavePolygon => geometry.Points.Length,
                     _ => 2
@@ -264,7 +264,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 {
                     var point = geometry.Kind switch
                     {
-                        PhysicsShapeGeometry.ShapeKind.Circle => Vector2.Zero,
+                        PhysicsShapeGeometry.ShapeKind.Circle or PhysicsShapeGeometry.ShapeKind.WorldBoundary => Vector2.Zero,
                         PhysicsShapeGeometry.ShapeKind.Rectangle => v switch { 0 => geometry.A, 1 => new(geometry.B.X, geometry.A.Y), 2 => geometry.B, _ => new(geometry.A.X, geometry.B.Y) },
                         PhysicsShapeGeometry.ShapeKind.ConvexPolygon or PhysicsShapeGeometry.ShapeKind.ConcavePolygon => geometry.Points[v],
                         _ => v == 0 ? geometry.A : geometry.B
@@ -283,7 +283,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     }
                     winding = area < 0 ? -1 : 1;
                 }
-                edit.Data.Parameters = new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, winding);
+                edit.Data.Parameters = geometry.Kind == PhysicsShapeGeometry.ShapeKind.WorldBoundary
+                    ? new(geometry.A.X, geometry.A.Y, geometry.Radius) : new(geometry.Radius, geometry.SlideOnSlope ? 1 : 0, winding);
                 edit.Data.Revision = unchecked((uint)source.GeometryRevision);
             }
             if (entry.Source is { } current) { entry.Revision = current.GeometryRevision; entry.Disposed = current.IsDisposed; }

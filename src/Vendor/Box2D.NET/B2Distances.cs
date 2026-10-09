@@ -469,6 +469,7 @@ namespace Box2D.NET
         // I spent time optimizing this and could find no further significant gains 3/30/2025
         public static B2DistanceOutput b2ShapeDistance(ref B2DistanceInput input, ref B2SimplexCache cache, Span<B2Simplex> simplexes, int simplexCapacity)
         {
+            if (input.proxyA.isBoundary || input.proxyB.isBoundary) return B2Boundaries.Distance(input);
             B2_UNUSED(simplexes, simplexCapacity);
             B2_ASSERT(input.proxyA.count > 0 && input.proxyB.count > 0);
             B2_ASSERT(input.proxyA.radius >= 0.0f);
@@ -664,6 +665,7 @@ namespace Box2D.NET
         // Shape cast using conservative advancement
         public static B2CastOutput b2ShapeCast(in B2ShapeCastPairInput input)
         {
+            if (input.proxyA.isBoundary || input.proxyB.isBoundary) return B2Boundaries.Cast(input);
             // Compute tolerance
             float linearSlop = B2_LINEAR_SLOP;
             float totalRadius = input.proxyA.radius + input.proxyB.radius;
@@ -1173,6 +1175,7 @@ namespace Box2D.NET
         // by computing the largest time at which separation is maintained.
         public static B2TOIOutput b2TimeOfImpact(in B2TOIInput input)
         {
+            if (input.proxyA.isBoundary || input.proxyB.isBoundary) return B2Boundaries.TimeOfImpact(input);
 #if B2_SNOOP_TOI_COUNTERS
             ulong ticks = b2GetTicks();
             ++b2_toiCalls;

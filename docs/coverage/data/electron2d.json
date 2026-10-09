@@ -7006,6 +7006,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsServer.ShapeType",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "ShapeType",
+    "signature": "public enum Electron2D.PhysicsServer.ShapeType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsShapeQueryParameters",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsShapeQueryParameters",
@@ -10583,6 +10601,21 @@
     "signature": "public sealed class Electron2D.World",
     "visibility": "public",
     "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.WorldBoundaryShape",
+    "kind": "type",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "WorldBoundaryShape",
+    "signature": "public sealed class Electron2D.WorldBoundaryShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -18431,6 +18464,19 @@
     "declaringType": "Electron2D.World",
     "name": ".ctor",
     "signature": "public World()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.WorldBoundaryShape..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": ".ctor",
+    "signature": "public WorldBoundaryShape()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -32151,6 +32197,123 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.PhysicsServer.JointType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Capsule()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "Capsule",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType Capsule = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Circle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "Circle",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType Circle = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.ConcavePolygon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "ConcavePolygon",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType ConcavePolygon = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.ConvexPolygon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "ConvexPolygon",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType ConvexPolygon = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Custom()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "Custom",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType Custom = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Rectangle()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "Rectangle",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType Rectangle = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Segment()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "Segment",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType Segment = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.SeparationRay()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "SeparationRay",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType SeparationRay = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ShapeType.WorldBoundary()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ShapeType",
+    "name": "WorldBoundary",
+    "signature": "public const Electron2D.PhysicsServer.ShapeType WorldBoundary = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
     "value": "0"
   },
   {
@@ -112809,6 +112972,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.ShapeGetType(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "ShapeGetType",
+    "signature": "public static Electron2D.PhysicsServer.ShapeType ShapeGetType(Electron2D.RID shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.ShapeSetData(Electron2D.RID,Electron2D.Shape)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -112985,6 +113167,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.WorldBoundaryShapeCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "WorldBoundaryShapeCreate",
+    "signature": "public static Electron2D.RID WorldBoundaryShapeCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -157401,6 +157596,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.WorldBoundaryShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorldBoundaryShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorldBoundaryShape.GetRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "GetRect",
+    "signature": "public override Electron2D.Rect2 GetRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.X509Certificate.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.X509Certificate",
@@ -190811,6 +191071,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WorldBoundaryShape.Distance()",
+    "kind": "property",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "Distance",
+    "signature": "public System.Single Distance { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.WorldBoundaryShape.Normal()",
+    "kind": "property",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "Normal",
+    "signature": "public Electron2D.Vector2 Normal { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   }
 ]

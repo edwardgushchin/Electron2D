@@ -68,8 +68,15 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 #include "PhysicsDirectedQuery.inc.glsl"
 bool piecesContact(Hull a,Hull b,Geometry ga,Geometry gb,vec2 motion,bool emit,uint pieceA,uint pieceB)
 {
-    if(ga.data.z==6u)return gb.data.z!=6u&&directedQuery(a,b,vec2(0),activeQuery.rotationMargin.z,ga.parameters.y!=0,false,motion,pieceA,pieceB,emit);
-    if(gb.data.z==6u)return directedQuery(b,a,motion,0,gb.parameters.y!=0,true,vec2(0),pieceA,pieceB,emit);
+    bool boundary=a.boundary||b.boundary;
+    if(boundary)
+    {
+        if(a.boundary&&b.boundary)return false;
+        if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return false;a.extension=normalized(axis)*activeQuery.rotationMargin.z;}
+        if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return false;
+    }
+    if(!boundary&&ga.data.z==6u)return gb.data.z!=6u&&directedQuery(a,b,vec2(0),activeQuery.rotationMargin.z,ga.parameters.y!=0,false,motion,pieceA,pieceB,emit);
+    if(!boundary&&gb.data.z==6u)return directedQuery(b,a,motion,0,gb.parameters.y!=0,true,vec2(0),pieceA,pieceB,emit);
     vec2 normal;float distance=queryDistance(a,b,vec2(0),vec2(0),normal),radii=a.radius+b.radius;
     bool initial=distance-radii<=0.05;
     if(activeQuery.geometry.z==3u&&initial)return false;
@@ -96,7 +103,7 @@ void main()
     Shape sa=Shape(vec4(0,0,1,0),uvec4(0),uvec4(0),vec2(0),uvec2(0),vec4(0));
     vec2 lo=vec2(3.402823466e38),hi=-lo;
     for(uint v=0u;v<ga.data.y;v++){vec2 p=rotate(q.rotationMargin.xy,vertices[ga.data.x+v]);lo=min(lo,p);hi=max(hi,p);}
-    vec2 expansion=vec2(ga.parameters.x+q.rotationMargin.z+2);
+    vec2 expansion=vec2((ga.data.z==7u?0:ga.parameters.x)+q.rotationMargin.z+2);
     vec2 envelope=q.ray.zw;
     if(ga.data.z==6u)
     {
@@ -109,7 +116,7 @@ void main()
     while(at!=0)
     {
         Node node=nodes[at];
-        if(node.hasCategory!=0&&all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))
+        if(node.hasCategory!=0&&(ga.data.z==7u||(node.typeMask&16)!=0||(all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))))
         {
             if(at<int(leaves)){at*=2;continue;}
             uint index=uint(node.shape);if(index>=shapeCount){fail();return;}Shape sb=shapes[index];Mapping mapping=mappings[index];

@@ -15,7 +15,7 @@ and the directed-ray slope flag. It contains no world identity, vendor handles,
 backend structs or compiled fixture partitions. It never copies a contour.
 
 Circle, capsule, segment, rectangle, convex contour, paired concave edges and
-separation ray implement the same internal resource operation. Callers consume
+separation ray and infinite world boundary implement the same internal resource operation. Callers consume
 the span synchronously while the resource is live and unchanged. A disposed
 resource rejects access. The internal abstract operation preserves the current
 built-in-only shape implementation boundary; public extension support remains open.
@@ -35,3 +35,7 @@ families through public APIs, including existing warmed allocation checks.
 ConvexPolygonShapeTests additionally checks shared borrowers, independent resource
 copies, rejected edits and 128 warmed alternating-resource queries with zero
 managed allocation. No new whole-world performance or device acceptance is claimed.
+
+For WorldBoundary, A stores the normalized outward normal and Radius stores the
+normalized signed plane offset. This tagged representation has no finite collision
+radius or contour; consumers must dispatch on Kind before using those fields.

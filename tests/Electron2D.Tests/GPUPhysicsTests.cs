@@ -25,6 +25,7 @@ internal static partial class GPUPhysicsTests
         PhysicsJointPolicyTests.Run(true);
         PhysicsCCDTests.Run(true);
         SeparationRayDynamicsTests.Run(true);
+        WorldBoundaryTests.Run(true);
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyWorld(true, pairFailure: true);
@@ -36,6 +37,7 @@ internal static partial class GPUPhysicsTests
         VerifyWorld(true, finalizationFailure: true);
         VerifyOwnedWorldFailure();
         GPUPhysicsBodyStoreTests.Run();
+        WorldBoundaryTests.RunResident();
         GPUPhysicsBodyParameterTests.Run();
         GPUPhysicsTransientForceTests.Run();
         GPUPhysicsKinematicTests.Run();

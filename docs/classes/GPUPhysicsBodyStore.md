@@ -191,3 +191,10 @@ configuration. CPU worlds inspect solved motion before publication and preserve
 remaining tick time and nominal force/joint budgets through impact continuations.
 The runtime stores policy across attachments and roles; independent GPU world
 binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).
+
+WorldBoundaryShape is retained as an analytic plane (geometry kind 7). Its tree
+flag bypasses finite bounds; free-side support culling limits candidates. Device
+manifolds, ray/point/shape/body-motion queries and translating/rotating CCD use the
+plane equation. WorldBoundaryTests additionally verifies sensors, sleeping support,
+resource edits and removal. See the [boundary report](../components/physics-shapes.md#infinite-world-boundaries).
+Public scene/server backend binding remains separate work.

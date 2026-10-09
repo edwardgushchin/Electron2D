@@ -37,6 +37,7 @@ ResidentBody sampleBody(ResidentBody start,vec2 center,vec3 speed,float t)
 float extent(Shape shape,Geometry geometry,vec2 center)
 {
     float radius=0;
+    if(geometry.data.z==7u)return 0;
     for(uint i=0u;i<geometry.data.y;i++)
     {
         vec2 v=vertices[geometry.data.x+i];
@@ -51,10 +52,25 @@ float extent(Shape shape,Geometry geometry,vec2 center)
 }
 Hull asPoint(Hull h,vec2 point)
 {
-    h.pose.xy=point;h.pose.zw=vec2(0);h.count=1u;h.radius=0;h.midpoint=false;return h;
+    h.pose.xy=point;h.pose.zw=vec2(0);h.count=1u;h.radius=0;h.midpoint=false;h.boundary=false;return h;
 }
 float closingSpeed(Hull a,Hull b,vec3 va,vec3 vb,vec2 ca,vec2 cb,vec2 n,bool rayA,bool rayB)
 {
+    if(a.boundary||b.boundary)
+    {
+        bool flip=b.boundary;Hull lineHull=flip?b:a,other=flip?a:b;vec3 line=boundaryPlane(lineHull);
+        vec2 centerA=rotate(bodyA.pose.zw,ca),centerB=bodyB.pose.xy-bodyA.pose.xy+rotate(bodyB.pose.zw,cb);
+        float minimum=dot2(line.xy,vertex(other,0u)),speed=0;
+        for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
+        for(uint i=0u;i<other.count;i++)
+        {
+            vec2 p=vertex(other,i);if(dot2(line.xy,p)>minimum+tolerances.z)continue;p-=other.radius*line.xy;
+            vec2 projected=p-(dot2(line.xy,p)-line.z-lineHull.radius)*line.xy;
+            vec2 pa=flip?p:projected,pb=flip?projected:p;
+            speed=max(speed,dot2(va.xy-vb.xy,n)+(rayA?0:va.z*cross2(pa-centerA,n))-(rayB?0:vb.z*cross2(pb-centerB,n)));
+        }
+        return speed;
+    }
     float plane=project(b,n).x+b.radius,speed=0;
     vec2 centerA=rotate(bodyA.pose.zw,ca),centerB=bodyB.pose.xy-bodyA.pose.xy+rotate(bodyB.pose.zw,cb);
     for(uint i=0u;i<b.count;i++)
@@ -81,8 +97,8 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
     vec2 localA=vec2(0),localB=vec2(0),direction=normalized(va.xy-vb.xy);
     if((rayA||rayB)&&direction==vec2(0))return 1;
     uint feature;
-    if(rayA)localA=support(a,direction,vertex(a,0u),feature)+a.radius*direction;
-    if(rayB)localB=support(b,-direction,vertex(b,0u),feature)-b.radius*direction;
+    if(rayA&&!a.boundary)localA=support(a,direction,vertex(a,0u),feature)+a.radius*direction;
+    if(rayB&&!b.boundary)localB=support(b,-direction,vertex(b,0u),feature)-b.radius*direction;
     float wa=rayA?0:abs(va.z),wb=rayB?0:abs(vb.z);
     float bound=tolerances.w*(wa*radiusA+wb*radiusB);
     float time=0;
@@ -91,9 +107,10 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
 
     for(uint iteration=0u;iteration<256u;iteration++)
     {
-        bodyA=sampleBody(startA,ca,va,time);bodyB=sampleBody(startB,cb,vb,time);
+        vec3 sampleA=va,sampleB=vb;if(rayA&&ga.data.z==7u)sampleA.z=0;if(rayB&&gb.data.z==7u)sampleB.z=0;
+        bodyA=sampleBody(startA,ca,sampleA,time);bodyB=sampleBody(startB,cb,sampleB,time);
         a=hull(sa,ga,bodyA,pieceA);b=hull(sb,gb,bodyB,pieceB);
-        Hull testA=rayA?asPoint(a,localA+time*tolerances.w*va.xy-bodyA.pose.xy):a,testB=rayB?asPoint(b,localB+time*tolerances.w*vb.xy-bodyA.pose.xy):b;
+        Hull testA=rayA&&!a.boundary?asPoint(a,localA+time*tolerances.w*va.xy-bodyA.pose.xy):a,testB=rayB&&!b.boundary?asPoint(b,localB+time*tolerances.w*vb.xy-bodyA.pose.xy):b;
         Axis axis;if(!separatingAxis(testA,testB,axis))return 1;
         float gap=axis.separation;
         if(!finite2(vec2(gap,time))){fail();return 1;}
@@ -116,8 +133,8 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
         }
         if(gap<=4*tolerances.x)
         {
-            if(ga.data.z==6u&&!directed(a,b))return 1;
-            if(gb.data.z==6u&&!directed(b,a))return 1;
+            if(ga.data.z==6u&&gb.data.z!=7u&&!directed(a,b))return 1;
+            if(gb.data.z==6u&&ga.data.z!=7u&&!directed(b,a))return 1;
             if(oneWay&&decision==0u)
             {
                 decision=facesOneWay(sa,sb,bodyA,bodyB,axis.normal)?2u:1u;
@@ -169,9 +186,15 @@ void main()
     Geometry ga=geometries[sa.owner.z],gb=geometries[sb.owner.z];
     if(ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}
     if(ga.data.y==0u||gb.data.y==0u||(ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
+    if(ga.data.z==7u&&gb.data.z==7u)return;
+    if((ga.data.z==6u&&vertices[ga.data.x]==vertices[ga.data.x+1u])||(gb.data.z==6u&&vertices[gb.data.x]==vertices[gb.data.x+1u]))return;
     vec3 va=motion(startA,sa.owner.x),vb=motion(startB,sb.owner.x);
     vec2 ca=centers[sa.owner.x],cb=centers[sb.owner.x];
     float radiusA=extent(sa,ga,ca),radiusB=extent(sb,gb,cb);
+    float travel=tolerances.w*length(vb.xy-va.xy);
+    float centers=length(startB.pose.xy+rotate(startB.pose.zw,cb)-startA.pose.xy-rotate(startA.pose.zw,ca));
+    if(ga.data.z==7u)radiusA=centers+radiusB+travel;
+    if(gb.data.z==7u)radiusB=centers+radiusA+travel;
     float bound=tolerances.w*(abs(va.z)*radiusA+abs(vb.z)*radiusB);
     if(!finite2(vec2(bound))){fail();return;}if(bound==0&&va.xy==vb.xy)return;
     // Keep the entire sweep near the first body's initial origin, including rotational sampling.

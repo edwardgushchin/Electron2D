@@ -25,7 +25,7 @@ internal static class PhysicsMass
             if (shape.IsDisposed) return;
             var first = _all.Count;
             AppendProxies(shape, pose, _all);
-            if (!sensor && shape is not SeparationRayShape)
+            if (!sensor && shape is not (SeparationRayShape or WorldBoundaryShape))
                 for (var i = first; i < _all.Count; i++) _solid.Add(_all[i]);
         }
         internal Properties Calculate(float mass, float inertia, Vector2? center)
@@ -56,7 +56,7 @@ internal static class PhysicsMass
 
     internal static void AppendGeometry(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
     {
-        if (shape.IsDisposed || shape is SeparationRayShape) return;
+        if (shape.IsDisposed || shape is SeparationRayShape or WorldBoundaryShape) return;
         AppendProxies(shape, pose, proxies);
     }
 
@@ -129,7 +129,7 @@ internal static class PhysicsMass
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = b2GetShape(world, shapes[index]);
-            if (shape.sensorIndex == B2_NULL_INDEX && shape.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is null)
+            if (shape.type != B2ShapeType.b2_boundaryShape && shape.sensorIndex == B2_NULL_INDEX && shape.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is null)
                 proxies.Add(b2MakeShapeDistanceProxy(shape));
         }
         var result = Calculate(proxies, mass, inertia, customCenter);

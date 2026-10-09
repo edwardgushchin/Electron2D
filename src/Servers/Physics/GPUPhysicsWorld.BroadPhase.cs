@@ -93,6 +93,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 _treeQueryStorage.Data[i].Bounds = Bounds(b2DynamicTree_GetAABB(bp.trees[(int)B2_PROXY_TYPE(key)], B2_PROXY_ID(key)));
                 var shape = b2BroadPhase_GetShapeIndex(bp, key);
                 _treeQueryStorage.Data[i].ShapeIndex = shape;
+                _treeQueryStorage.Data[i].Padding1 = world.shapes.data[shape].type == B2ShapeType.b2_boundaryShape ? 1 : 0;
                 _treeQueryStorage.Data[i].Capacity = Math.Max(16, _candidateCapacities[shape]);
             }
         }
@@ -157,6 +158,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
             for (var j = query.Offset; j < end; j++)
             {
                 var otherShape = _treeCandidateStorage.Data[j];
+                var a = world.shapes.data[query.ShapeIndex]; var b = world.shapes.data[otherShape];
+                if ((a.type == B2ShapeType.b2_boundaryShape || b.type == B2ShapeType.b2_boundaryShape) && !B2Boundaries.Overlap(world, a, b)) continue;
                 var key = world.shapes.data[otherShape].proxyKey;
                 var first = key < query.ProxyKey;
                 b2AddFilteredPair(first ? otherShape : query.ShapeIndex, first ? query.ShapeIndex : otherShape, ref context);

@@ -78,6 +78,7 @@ namespace Box2D.NET
             bp.trees = new B2DynamicTree[(int)B2BodyType.b2_bodyTypeCount];
             bp.moveSet = b2CreateSet(16);
             bp.moveArray = b2Array_Create<int>(16);
+            bp.boundaries = b2Array_Create<B2BroadPhase.BoundaryProxy>(0);
             bp.moveResults = null;
             bp.movePairs = null;
             bp.movePairCapacity = 0;
@@ -99,6 +100,7 @@ namespace Box2D.NET
 
             b2DestroySet(ref bp.moveSet);
             b2Array_Destroy(ref bp.moveArray);
+            b2Array_Destroy(ref bp.boundaries);
             b2DestroySet(ref bp.pairSet);
 
             //memset( bp, 0, sizeof( b2BroadPhase ) );
@@ -131,11 +133,12 @@ namespace Box2D.NET
             }
         }
 
-        public static int b2BroadPhase_CreateProxy(B2BroadPhase bp, B2BodyType proxyType, in B2AABB aabb, ulong categoryBits, int shapeIndex, bool forcePairCreation)
+        public static int b2BroadPhase_CreateProxy(B2BroadPhase bp, B2BodyType proxyType, in B2AABB aabb, ulong categoryBits, int shapeIndex, bool forcePairCreation, bool unbounded = false)
         {
             B2_ASSERT(0 <= proxyType && proxyType < B2BodyType.b2_bodyTypeCount);
             int proxyId = b2DynamicTree_CreateProxy(bp.trees[(int)proxyType], aabb, categoryBits, (ulong)shapeIndex);
             int proxyKey = B2_PROXY_KEY(proxyId, proxyType);
+            if (unbounded) b2Array_Push(ref bp.boundaries, new B2BroadPhase.BoundaryProxy { Key = proxyKey });
             if (proxyType != B2BodyType.b2_staticBody || forcePairCreation)
             {
                 b2BufferMove(bp, proxyKey);
@@ -148,6 +151,8 @@ namespace Box2D.NET
         {
             B2_ASSERT(bp.moveArray.count == (int)bp.moveSet.count);
             b2UnBufferMove(bp, proxyKey);
+            for (var i = 0; i < bp.boundaries.count; i++)
+                if (bp.boundaries.data[i].Key == proxyKey) { b2Array_RemoveSwap(ref bp.boundaries, i); break; }
 
             B2BodyType proxyType = B2_PROXY_TYPE(proxyKey);
             int proxyId = B2_PROXY_ID(proxyKey);
@@ -182,6 +187,11 @@ namespace Box2D.NET
         public static bool b2PairQueryCallback(int proxyId, ulong userData, ref B2QueryPairContext context)
         {
             int shapeId = (int)userData;
+            var shape = context.world.shapes.data[shapeId];
+            var queryShape = context.world.shapes.data[context.queryShapeIndex];
+            if (!context.includeBoundaries && shape.type == B2ShapeType.b2_boundaryShape) return true;
+            if ((shape.type == B2ShapeType.b2_boundaryShape || queryShape.type == B2ShapeType.b2_boundaryShape) &&
+                !B2Boundaries.Overlap(context.world, shape, queryShape)) return true;
 
             ref B2QueryPairContext queryContext = ref context;
             B2BroadPhase broadPhase = queryContext.world.broadPhase;
@@ -341,6 +351,22 @@ namespace Box2D.NET
         }
 
 
+        private static B2TreeStats b2QueryPairTree(B2BroadPhase bp, in B2AABB bounds, ref B2QueryPairContext context)
+        {
+            var tree = bp.trees[(int)context.queryTreeType];
+            context.includeBoundaries = context.world.shapes.data[context.queryShapeIndex].type == B2ShapeType.b2_boundaryShape;
+            if (context.includeBoundaries)
+                return tree.root == B2_NULL_INDEX ? default : b2DynamicTree_Query(tree, tree.nodes[tree.root].aabb, B2_DEFAULT_MASK_BITS, b2PairQueryCallback, ref context);
+            var result = b2DynamicTree_Query(tree, bounds, B2_DEFAULT_MASK_BITS, b2PairQueryCallback, ref context);
+            context.includeBoundaries = true;
+            for (var i = 0; i < bp.boundaries.count; i++)
+            {
+                var key = bp.boundaries.data[i].Key; if (B2_PROXY_TYPE(key) != context.queryTreeType) continue;
+                var id = B2_PROXY_ID(key); b2PairQueryCallback(id, b2DynamicTree_GetUserData(tree, id), ref context);
+            }
+            return result;
+        }
+
         public static void b2FindPairsTask(int startIndex, int endIndex, uint threadIndex, object context)
         {
             b2TracyCZoneNC(B2TracyCZone.pair_task, "Pair", B2HexColor.b2_colorMediumSlateBlue, true);
@@ -385,12 +411,12 @@ namespace Box2D.NET
                 {
                     // consider using bits = groupIndex > 0 ? B2_DEFAULT_MASK_BITS : maskBits
                     queryContext.queryTreeType = B2BodyType.b2_kinematicBody;
-                    B2TreeStats statsKinematic = b2DynamicTree_Query(bp.trees[(int)B2BodyType.b2_kinematicBody], fatAABB, B2_DEFAULT_MASK_BITS, b2PairQueryCallback, ref queryContext);
+                    B2TreeStats statsKinematic = b2QueryPairTree(bp, fatAABB, ref queryContext);
                     stats.nodeVisits += statsKinematic.nodeVisits;
                     stats.leafVisits += statsKinematic.leafVisits;
 
                     queryContext.queryTreeType = B2BodyType.b2_staticBody;
-                    B2TreeStats statsStatic = b2DynamicTree_Query(bp.trees[(int)B2BodyType.b2_staticBody], fatAABB, B2_DEFAULT_MASK_BITS, b2PairQueryCallback, ref queryContext);
+                    B2TreeStats statsStatic = b2QueryPairTree(bp, fatAABB, ref queryContext);
                     stats.nodeVisits += statsStatic.nodeVisits;
                     stats.leafVisits += statsStatic.leafVisits;
                 }
@@ -398,7 +424,7 @@ namespace Box2D.NET
                 // All proxies collide with dynamic proxies
                 // Using B2_DEFAULT_MASK_BITS so that b2Filter::groupIndex works.
                 queryContext.queryTreeType = B2BodyType.b2_dynamicBody;
-                B2TreeStats statsDynamic = b2DynamicTree_Query(bp.trees[(int)B2BodyType.b2_dynamicBody], fatAABB, B2_DEFAULT_MASK_BITS, b2PairQueryCallback, ref queryContext);
+                B2TreeStats statsDynamic = b2QueryPairTree(bp, fatAABB, ref queryContext);
                 stats.nodeVisits += statsDynamic.nodeVisits;
                 stats.leafVisits += statsDynamic.leafVisits;
             }
@@ -409,6 +435,19 @@ namespace Box2D.NET
         public static void b2UpdateBroadPhasePairs(B2World world)
         {
             B2BroadPhase bp = world.broadPhase;
+
+            // An infinite plane can rotate into distant bodies without changing its finite bookkeeping AABB.
+            // Check only the small unbounded registry; rebuild candidates only when the actual equation changes.
+            for (var i = 0; i < bp.boundaries.count; i++)
+            {
+                ref var item = ref bp.boundaries.data[i];
+                var tree = bp.trees[(int)B2_PROXY_TYPE(item.Key)];
+                var shape = world.shapes.data[(int)b2DynamicTree_GetUserData(tree, B2_PROXY_ID(item.Key))];
+                var plane = B2Boundaries.Transform(shape.us.boundary, B2Bodies.b2GetBodyTransform(world, shape.bodyId));
+                if (plane.normal.X == item.Plane.normal.X && plane.normal.Y == item.Plane.normal.Y && plane.offset == item.Plane.offset) continue;
+                item.Plane = plane;
+                b2BufferMove(bp, item.Key);
+            }
 
             int moveCount = bp.moveArray.count;
             B2_ASSERT(moveCount == (int)bp.moveSet.count);

@@ -24,6 +24,9 @@ namespace Box2D.NET
         /// A line segment owned by a chain shape
         b2_chainSegmentShape,
 
+        /// An analytic infinite solid half-plane.
+        b2_boundaryShape,
+
         /// The number of shape types
         b2_shapeTypeCount
     }

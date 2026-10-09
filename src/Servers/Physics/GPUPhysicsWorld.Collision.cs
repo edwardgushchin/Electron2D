@@ -89,9 +89,11 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 Flags = (int)(contact.simFlags >> 16) << 1,
                 History = -1
             };
-            if (b2AABB_Overlaps(a.fatAABB, b.fatAABB))
+            var custom = a.manifoldOverride is not null || b.manifoldOverride is not null || a.type == B2ShapeType.b2_boundaryShape || b.type == B2ShapeType.b2_boundaryShape;
+            if (custom) pair.Flags |= 0x40000000;
+            if (B2Boundaries.Overlap(world, a, b))
             {
-                PackGeometry(a, contact.shapeIdA); PackGeometry(b, contact.shapeIdB);
+                if (!custom) { PackGeometry(a, contact.shapeIdA); PackGeometry(b, contact.shapeIdB); }
                 var simA = b2GetBodySim(world, world.bodies.data[a.bodyId]);
                 var simB = b2GetBodySim(world, world.bodies.data[b.bodyId]);
                 var poseA = simA.transform; var poseB = simB.transform;

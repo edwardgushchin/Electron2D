@@ -143,3 +143,8 @@ equal depth; object/shape monitoring consumes the same retained points. Limits a
 zero through 4095 and assignment clears point counts. PhysicsContactImpulseTests
 checks CPU/GPU momentum, subdivision, sleep reset, raw/scene parity, ties and zero
 warmed allocation. See [the direct-state contract](../classes/PhysicsDirectBodyState.md#contacts).
+
+WorldBoundaryShape contributes no geometric area, centroid or polar inertia. The
+configured mass and explicit inertia remain effective for dynamic boundary owners.
+Analytic contacts, sleep and boundary edits/removal reuse ordinary body policies;
+WorldBoundaryTests exercises these on CPU and in the independent GPU store.

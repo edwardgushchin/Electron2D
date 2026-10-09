@@ -94,3 +94,9 @@ configuration. CPU worlds inspect solved motion before publication and preserve
 remaining tick time and nominal force/joint budgets through impact continuations.
 The runtime stores policy across attachments and roles; independent GPU world
 binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).
+
+Analytic world boundaries are handled outside finite broad-phase bounds. The CPU
+hosted GPU-stage experiment leaves boundary/ray custom manifold publication on the
+host; independent GPUPhysicsBodyStore uses device plane contacts instead.
+[WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks both
+paths, with [measurements and limits](../components/physics-shapes.md#infinite-world-boundaries).

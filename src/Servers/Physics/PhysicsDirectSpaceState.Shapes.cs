@@ -90,12 +90,13 @@ public sealed partial class PhysicsDirectSpaceState
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
-            var other = b2MakeShapeDistanceProxy(backendShape);
+            var other = PhysicsShapeBackend.GetQueryProxy(backendShape);
             var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null)
+                if (query.isBoundary || other.isBoundary) query = BoundaryQuery(query);
+                if (!query.isBoundary && !other.isBoundary && (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null))
                 {
                     if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
                         candidate.Tag.SeparationRay, motion, _queryMargin).pointCount == 0) continue;
@@ -140,12 +141,13 @@ public sealed partial class PhysicsDirectSpaceState
         foreach (var candidate in _shapeCandidates)
         {
             var backendShape = b2GetShape(world, candidate.ShapeID);
-            var other = b2MakeShapeDistanceProxy(backendShape);
+            var other = PhysicsShapeBackend.GetQueryProxy(backendShape);
             var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
             for (var piece = 0; piece < _queryProxies.Count; piece++)
             {
                 var query = _queryProxies[piece];
-                if (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null)
+                if (query.isBoundary || other.isBoundary) query = BoundaryQuery(query);
+                if (!query.isBoundary && !other.isBoundary && (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null))
                 {
                     if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
                             candidate.Tag.SeparationRay, motion * bestSafe, _queryMargin).pointCount == 0) continue;
@@ -198,11 +200,12 @@ public sealed partial class PhysicsDirectSpaceState
             var overlaps = false;
             for (var i = first; i < end && !overlaps; i++)
             {
-                var candidate = _shapeCandidates[i]; var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
+                var candidate = _shapeCandidates[i]; var other = PhysicsShapeBackend.GetQueryProxy(b2GetShape(world, candidate.ShapeID));
                 var pose = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                 foreach (var query in _queryProxies)
                 {
-                    overlaps = _queryRaySlide is not null || candidate.Tag.SeparationRay is not null
+                    overlaps = query.isBoundary || other.isBoundary ? Overlaps(BoundaryQuery(query), other, pose) :
+                        _queryRaySlide is not null || candidate.Tag.SeparationRay is not null
                         ? PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, pose, candidate.Tag.SeparationRay, default, _queryMargin).pointCount != 0
                         : Overlaps(query, other, pose);
                     if (overlaps) break;
@@ -247,6 +250,7 @@ public sealed partial class PhysicsDirectSpaceState
         _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();
         PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
+        if (shape is SeparationRayShape { Length: 0 }) _queryProxies.Clear();
         _queryCompoundConvex = shape is ConvexPolygonShape && _queryProxies.Count > 1;
         var transform = parameters.Transform;
         var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
@@ -255,6 +259,7 @@ public sealed partial class PhysicsDirectSpaceState
         for (var index = 0; index < _queryProxies.Count; index++)
         {
             var proxy = _queryProxies[index];
+            if (proxy.isBoundary) proxy.boundary = B2Boundaries.Transform(proxy.boundary, backendTransform);
             if (_queryRaySlide is null) proxy.radius += margin;
             if (!float.IsFinite(proxy.radius)) throw new ArgumentOutOfRangeException(nameof(parameters));
             for (var pointIndex = 0; pointIndex < proxy.count; pointIndex++)
@@ -283,6 +288,13 @@ public sealed partial class PhysicsDirectSpaceState
         }
         RemoveContainedRaySlots(PhysicsShapeBackend.ToBackend(parameters.Motion));
         return space;
+    }
+
+    private B2ShapeProxy BoundaryQuery(B2ShapeProxy query)
+    {
+        if (_queryRaySlide is not null && query.count == 2)
+            query.points[1] += _queryMargin * b2Normalize(query.points[1] - query.points[0]);
+        return query;
     }
 
     private void AddCandidates(IReadOnlyList<B2ShapeId> shapes, uint mask, RID[] excluded)

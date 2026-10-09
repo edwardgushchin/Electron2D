@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Borrowed local geometry in scene units, independent of solver handles and storage.</summary>
 internal readonly ref struct PhysicsShapeGeometry
 {
-    internal enum ShapeKind { Circle, Capsule, Segment, Rectangle, ConvexPolygon, ConcavePolygon, SeparationRay }
+    internal enum ShapeKind { Circle, Capsule, Segment, Rectangle, ConvexPolygon, ConcavePolygon, SeparationRay, WorldBoundary }
 
     internal required ShapeKind Kind { get; init; }
     // Endpoints for segments/capsules/rays, minimum and maximum corners for a rectangle.

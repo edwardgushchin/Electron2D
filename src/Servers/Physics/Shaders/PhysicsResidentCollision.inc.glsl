@@ -1,5 +1,5 @@
 // Shared resident convex/segment/ray geometry in body-A-relative coordinates.
-struct Hull { uint start; uint count; float radius; float winding; vec4 pose; bool midpoint; };
+struct Hull { uint start; uint count; float radius; float winding; vec4 pose; bool midpoint; bool boundary; vec3 plane; vec2 extension; };
 struct Axis { vec2 normal; float separation; uint owner; uint edge; };
 bool finite2(vec2 v) { return !any(isnan(v))&&!any(isinf(v)); }
 vec2 normalized(vec2 v)
@@ -14,11 +14,11 @@ vec2 vertex(Hull h,uint i)
 {
     vec2 v=vertices[h.start+i];
     if(h.midpoint)v=0.5*v+0.5*vertices[h.start+1u];
-    return transform(h.pose,v);
+    return transform(h.pose,v)+(i==1u?h.extension:vec2(0));
 }
 Hull hull(Shape s,Geometry g,ResidentBody body,uint piece)
 {
-    Hull h; h.start=g.data.x; h.count=g.data.y; h.radius=g.parameters.x; h.winding=g.parameters.z; h.midpoint=false;
+    Hull h; h.start=g.data.x; h.count=g.data.y; h.radius=g.parameters.x; h.winding=g.parameters.z; h.midpoint=false; h.boundary=g.data.z==7u; h.plane=g.parameters; h.extension=vec2(0); if(h.boundary)h.radius=0;
     h.pose=vec4(body.pose.xy-bodyA.pose.xy+rotate(body.pose.zw,s.pose.xy),
         body.pose.z*s.pose.z-body.pose.w*s.pose.w,body.pose.w*s.pose.z+body.pose.z*s.pose.w);
     if(g.data.z==5u) {h.start+=2u*piece;h.count=2u;}
@@ -28,6 +28,17 @@ Hull hull(Shape s,Geometry g,ResidentBody body,uint piece)
         if(dot2(d,d)<=tolerances.y*tolerances.y) {h.count=1u;h.midpoint=true;}
     }
     return h;
+}
+vec3 boundaryPlane(Hull h)
+{
+    vec2 n=rotate(h.pose.zw,h.plane.xy);return vec3(n,h.plane.z+dot2(n,h.pose.xy));
+}
+float boundaryGap(Hull a,Hull b,out vec2 normal)
+{
+    bool flip=b.boundary;Hull plane=flip?b:a,other=flip?a:b;vec3 line=boundaryPlane(plane);
+    float minimum=dot2(line.xy,vertex(other,0u));
+    for(uint i=1u;i<other.count;i++)minimum=min(minimum,dot2(line.xy,vertex(other,i)));
+    normal=flip?-line.xy:line.xy;return minimum-line.z-a.radius-b.radius;
 }
 uint edges(Hull h) { return h.count==1u?0u:h.count; }
 vec2 edgeNormal(Hull h,uint i)
@@ -65,6 +76,12 @@ bool cornerAxis(Hull a,Hull b,vec2 axis,inout Axis best)
 bool separatingAxis(Hull a,Hull b,out Axis best)
 {
     best=Axis(vec2(1,0),-3.402823466e38,0u,0u);
+    if(a.boundary||b.boundary)
+    {
+        if(a.boundary&&b.boundary)return false;
+        vec2 normal;float gap=boundaryGap(a,b,normal);if(!finite2(vec2(gap))){fail();return false;}
+        best=Axis(normal,gap,0u,0u);return gap<=contactLimit;
+    }
     for(uint i=0u;i<edges(a);i++)if(!axisTest(a,b,edgeNormal(a,i),1u,i,best))return false;
     for(uint i=0u;i<edges(b);i++)if(!axisTest(a,b,-edgeNormal(b,i),2u,i,best))return false;
     if(a.radius>0||b.radius>0||a.count<=2u||b.count<=2u)
@@ -91,6 +108,7 @@ uint edgeFeature(Hull h,uint i,vec2 p)
 }
 vec2 support(Hull h,vec2 n,vec2 toward,out uint feature)
 {
+    if(h.boundary){vec3 p=boundaryPlane(h);feature=0u;return toward+(p.z+h.radius-dot2(p.xy,toward))*p.xy;}
     uint at=0u;float best=dot2(vertex(h,0u),n);
     for(uint i=1u;i<h.count;i++) {float p=dot2(vertex(h,i),n);if(p>best){best=p;at=i;}}
     vec2 result=vertex(h,at);feature=2u*at;
@@ -115,6 +133,13 @@ bool rayCircle(vec2 from,vec2 d,vec2 center,float radius,out float fraction,out 
 }
 bool rayHit(Hull h,vec2 from,vec2 d,out float fraction,out vec2 normal,out uint feature)
 {
+    if(h.boundary)
+    {
+        vec3 line=boundaryPlane(h);float gap=dot2(line.xy,from)-line.z-h.radius,rate=dot2(line.xy,d);
+        fraction=0;normal=line.xy;feature=0u;if(gap<0||rate>=0)return false;
+        fraction=-gap/rate;return fraction<=1;
+    }
+
     fraction=2;normal=vec2(0);feature=0u;
     if(h.count==1u)return rayCircle(from,d,vertex(h,0u),h.radius,fraction,normal);
     if(h.count==2u)

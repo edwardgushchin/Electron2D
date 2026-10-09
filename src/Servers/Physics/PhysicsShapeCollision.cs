@@ -26,6 +26,8 @@ internal static class PhysicsShapeCollision
         Validate(firstPose, firstMotion);
         Validate(secondPose, secondMotion);
         count = 0;
+        if (first is WorldBoundaryShape || second is WorldBoundaryShape)
+            return BoundaryContact(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         if (first is ConcavePolygonShape && second is ConcavePolygonShape ||
             first is SeparationRayShape && second is SeparationRayShape) return false;
         var buffers = s_buffers ??= new();
@@ -77,6 +79,42 @@ internal static class PhysicsShapeCollision
             }
         }
         return hit;
+    }
+
+    private static bool BoundaryContact(Shape first, Transform firstPose, Vector2 firstMotion, Shape second,
+        Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
+    {
+        count = 0;
+        if (first is WorldBoundaryShape && second is WorldBoundaryShape) return false;
+        var flip = second is WorldBoundaryShape; var plane = (WorldBoundaryShape)(flip ? second : first);
+        var other = flip ? first : second;
+        if (other is SeparationRayShape { Length: 0 }) return false;
+        var planePose = flip ? secondPose : firstPose;
+        var otherPose = flip ? firstPose : secondPose;
+        // The boundary is stationary in resource-pair tests; the finite shape is tested at its requested endpoint.
+        otherPose.Origin += flip ? firstMotion : secondMotion;
+        var geometry = plane.GetGeometry(); var inverse = planePose.AffineInverse();
+        var raw = new Vector2(inverse.X.Dot(geometry.A), inverse.Y.Dot(geometry.A));
+        var normal = WorldBoundaryShape.Normalize(raw, 0).Normal;
+        var offset = Dot(normal, planePose * (geometry.A * geometry.Radius));
+        var buffers = s_buffers ??= new(); var full = Prepare(other, buffers.First);
+        var pieces = other is ConvexPolygonShape ? full.IsEmpty ? 0 : 1 : buffers.First.Count;
+        Span<Vector2> support = stackalloc Vector2[2]; var collided = false;
+        for (var i = 0; i < pieces; i++)
+        {
+            var proxy = other is ConvexPolygonShape ? default : buffers.First[i];
+            var hull = BuildHull(proxy, full, otherPose, Vector2.Zero, buffers, ref buffers.FirstHull);
+            var used = Support(hull, proxy.radius, -normal, support);
+            for (var j = 0; j < used; j++)
+            {
+                var point = support[j]; var separation = Dot(normal, point) - offset;
+                if (separation >= 0) continue;
+                collided = true; if (contacts.IsEmpty) return true;
+                var projected = point - (float)separation * normal;
+                Store(flip ? point : projected, flip ? projected : point, contacts, ref count);
+            }
+        }
+        return collided;
     }
 
     /// <summary>Resolves one complete convex motion contact, using native primitive profiles and optional unpartitioned contours.</summary>

@@ -61,7 +61,7 @@ internal static class GPUPhysicsMotionQueryTests
         Shape[] shapes = [new RectangleShape { Size = new(20, 16) }, new CapsuleShape { Radius = 5, Height = 24 },
             new SegmentShape { A = new(-9, 0), B = new(9, 0) }, new ConvexPolygonShape { Points = contour },
             new ConcavePolygonShape { Segments = [new(-10, -10), new(10, -10), new(10, -10), new(10, 10)] },
-            new SeparationRayShape { Length = 20 }];
+            new SeparationRayShape { Length = 20 }, new WorldBoundaryShape()];
         using var floor = new RectangleShape { Size = new(200, 20) }; using var slope = new SegmentShape { A = new(-100, 20), B = new(100, -20) };
         using var s = new Store(); var space = PhysicsServer.SpaceCreate(); var cpuFloor = PhysicsServer.BodyCreate(); var obstacle = Body(s, new(0, 100));
         var target = s.AddShape(obstacle, floor); PhysicsServer.BodySetMode(cpuFloor, Mode.Static); PhysicsServer.BodyAddShape(cpuFloor, floor.GetRID()); PhysicsServer.BodySetTransform(cpuFloor, new(0, new(0, 100))); PhysicsServer.BodySetSpace(cpuFloor, space);

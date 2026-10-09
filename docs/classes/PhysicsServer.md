@@ -615,3 +615,13 @@ All access checks resource identity and related world ownership/phase, including
 The two body CCD accessors use the shared CCDMode enum; scene and server bodies
 share one runtime setting. Area/shape/freed RIDs reject. See [continuous collision](../components/cpu-continuous-collision.md)
 for force/impulse cadence, geometry limits and actual backend acceptance.
+
+## Logical shape identities and infinite boundaries
+
+`public static RID WorldBoundaryShapeCreate()` creates an owned upward zero-distance
+half-plane. `ShapeSetData`/`ShapeGetData` preserve its typed raw normal and distance.
+`public static ShapeType ShapeGetType(RID shape)` validates a live shape and returns
+its logical authored geometry, independent of compiled fixture decomposition or
+short-shape fallbacks. See [ShapeType](PhysicsServer.ShapeType.md) for numeric values
+and [WorldBoundaryShape](WorldBoundaryShape.md) for geometry/lifetime/verification.
+The Custom identity does not provide an extension factory.

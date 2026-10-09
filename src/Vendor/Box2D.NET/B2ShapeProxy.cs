@@ -17,5 +17,7 @@ namespace Box2D.NET
 
         /// The external radius of the point cloud. May be zero.
         public float radius;
+        internal bool isBoundary;
+        internal B2Plane boundary;
     }
 }

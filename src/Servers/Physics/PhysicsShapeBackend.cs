@@ -79,6 +79,11 @@ internal static class PhysicsShapeBackend
                         ToBackend(localPosition + geometry.Points[index].Rotated(localRotation)),
                         ToBackend(localPosition + geometry.Points[index + 1].Rotated(localRotation))));
                 break;
+            case Kind.WorldBoundary:
+                var normal = geometry.A.Rotated(localRotation);
+                var plane = new B2Plane(new(normal.X, normal.Y), (geometry.Radius + normal.Dot(localPosition)) * PhysicsSpace.MetersPerUnit);
+                fixtures.Add(b2CreateBoundaryShape(bodyID, definition, plane));
+                break;
             case Kind.SeparationRay:
                 var from = ToBackend(localPosition);
                 var to = ToBackend(localPosition + geometry.B.Rotated(localRotation));
@@ -93,6 +98,9 @@ internal static class PhysicsShapeBackend
             default: throw new NotSupportedException("The shape has no CPU geometry integration.");
         }
     }
+
+    internal static B2ShapeProxy GetQueryProxy(B2Shape shape) => shape.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is { } ray
+        ? b2MakeProxy(ray.From, ray.To, 2, 0) : b2MakeShapeDistanceProxy(shape);
 
     internal static void AppendQueryProxies(Shape shape, List<B2ShapeProxy> proxies)
     {
@@ -123,6 +131,9 @@ internal static class PhysicsShapeBackend
             case Kind.ConcavePolygon:
                 for (var index = 0; index < geometry.Points.Length; index += 2)
                     proxies.Add(SegmentProxy(ToBackend(geometry.Points[index]), ToBackend(geometry.Points[index + 1])));
+                break;
+            case Kind.WorldBoundary:
+                proxies.Add(B2Boundaries.Proxy(new(new(geometry.A.X, geometry.A.Y), geometry.Radius * PhysicsSpace.MetersPerUnit)));
                 break;
             case Kind.SeparationRay:
                 proxies.Add(b2MakeProxy(default, ToBackend(geometry.B), 2, 0));

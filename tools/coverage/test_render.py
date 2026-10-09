@@ -314,10 +314,14 @@ def main():
     server_rows = [row for row in pages[CLASS_PAGES / "PhysicsServer2D.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert "../../classes/PhysicsServer.md" in class_rows["PhysicsServer2D"]
+    boundary_rows = [row for row in pages[CLASS_PAGES / "WorldBoundaryShape2D.md"].splitlines() if row.startswith("| [`")]
+    assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("world_boundary_shape_create", "shape_get_type"))
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 117, "Partial": 14, "Unimplemented": 34, "Blocked": 4, "Excluded": 46}
+                "Implemented": 129, "Partial": 14, "Unimplemented": 22, "Blocked": 4, "Excluded": 46}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

@@ -905,6 +905,16 @@ public sealed partial class PhysicsServer
     /// <returns>A live separation-ray shape RID.</returns>
     public static RID SeparationRayShapeCreate() => Service.SeparationRayShapeCreateCore();
 
+    /// <summary>Creates an owned infinite half-plane shape, upward normal and zero distance by default.</summary>
+    /// <returns>A shape RID released with FreeRID; typed data can be copied through ShapeSetData.</returns>
+    public static RID WorldBoundaryShapeCreate() => Service.WorldBoundaryShapeCreateCore();
+
+    /// <summary>Returns the concrete geometry type of an owned or borrowed shape RID.</summary>
+    /// <param name="shape">A live physics shape RID.</param>
+    /// <returns>The geometry type, independent of attached bodies and their current backend.</returns>
+    /// <exception cref="ArgumentException">The RID is stale or does not identify a shape.</exception>
+    public static ShapeType ShapeGetType(RID shape) => Service.ShapeGetTypeCore(shape);
+
     /// <summary>Creates a caller-owned empty convex polygon shape.</summary>
     /// <returns>A live convex-polygon-shape RID.</returns>
     public static RID ConvexPolygonShapeCreate() => Service.ConvexPolygonShapeCreateCore();

@@ -2,6 +2,42 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    /// <summary>Identifies the geometry carried by a physics shape RID.</summary>
+    public enum ShapeType
+    {
+        /// <summary>An infinite solid half-plane.</summary>
+        WorldBoundary = 0,
+        /// <summary>A directed separation ray.</summary>
+        SeparationRay = 1,
+        /// <summary>A two-sided segment.</summary>
+        Segment = 2,
+        /// <summary>A filled circle.</summary>
+        Circle = 3,
+        /// <summary>A filled rectangle.</summary>
+        Rectangle = 4,
+        /// <summary>A rounded capsule.</summary>
+        Capsule = 5,
+        /// <summary>A filled convex polygon.</summary>
+        ConvexPolygon = 6,
+        /// <summary>A hollow collection of paired edges.</summary>
+        ConcavePolygon = 7,
+        /// <summary>Extension-owned geometry; built-in factories do not produce this type.</summary>
+        Custom = 8
+    }
+
+    internal ShapeType ShapeGetTypeCore(RID shape) => GetShape(shape).Geometry.GetGeometry().Kind switch
+    {
+        PhysicsShapeGeometry.ShapeKind.WorldBoundary => ShapeType.WorldBoundary,
+        PhysicsShapeGeometry.ShapeKind.SeparationRay => ShapeType.SeparationRay,
+        PhysicsShapeGeometry.ShapeKind.Segment => ShapeType.Segment,
+        PhysicsShapeGeometry.ShapeKind.Circle => ShapeType.Circle,
+        PhysicsShapeGeometry.ShapeKind.Rectangle => ShapeType.Rectangle,
+        PhysicsShapeGeometry.ShapeKind.Capsule => ShapeType.Capsule,
+        PhysicsShapeGeometry.ShapeKind.ConvexPolygon => ShapeType.ConvexPolygon,
+        PhysicsShapeGeometry.ShapeKind.ConcavePolygon => ShapeType.ConcavePolygon,
+        _ => throw new NotSupportedException("The geometry has no registered shape type.")
+    };
+
     internal RID SpaceCreateCore()
     {
         ThrowIfDisposed();
@@ -36,6 +72,7 @@ public sealed partial class PhysicsServer
     internal RID RectangleShapeCreateCore() => CreateShape(new RectangleShape());
     internal RID CapsuleShapeCreateCore() => CreateShape(new CapsuleShape());
     internal RID SegmentShapeCreateCore() => CreateShape(new SegmentShape());
+    internal RID WorldBoundaryShapeCreateCore() => CreateShape(new WorldBoundaryShape());
     internal RID SeparationRayShapeCreateCore() => CreateShape(new SeparationRayShape());
     internal RID ConvexPolygonShapeCreateCore() => CreateShape(new ConvexPolygonShape());
     internal RID ConcavePolygonShapeCreateCore() => CreateShape(new ConcavePolygonShape());

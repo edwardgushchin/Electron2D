@@ -44,6 +44,25 @@ bool excepted(uint a,uint b)
     }
     fail(8u);return true;
 }
+bool boundaryOverlap(uint aIndex,uint bIndex)
+{
+    Shape a=shapes[aIndex],b=shapes[bIndex];Geometry ga=geometries[a.owner.z],gb=geometries[b.owner.z];
+    if(ga.data.z!=7u&&gb.data.z!=7u)return true;
+    if(ga.data.z==7u&&gb.data.z==7u)return false;
+    bool flip=gb.data.z==7u;Shape shape=flip?b:a;Geometry geometry=flip?gb:ga;ResidentBody body=bodies[shape.owner.x];
+    vec2 n=rotatePoint(rotatePoint(geometry.parameters.xy,shape.pose.zw),body.pose.zw);
+    float d=geometry.parameters.z+dot(n,body.pose.xy+rotatePoint(shape.pose.xy,body.pose.zw));
+    if(tolerances.y>0&&body.flags.y!=0u&&(body.flags.z&16u)==0u)
+    {
+        vec3 motion=body.velocity.xyz;if(tolerances.z!=0)motion+=corrections[shape.owner.x].xyz;
+        if(motion.z!=0)return true;
+        d+=max(0,tolerances.y*dot(n,motion.xy));
+    }
+    vec4 box=proxies[flip?aIndex:bIndex].bounds;
+    vec2 nearest=vec2(n.x>=0?box.x:box.z,n.y>=0?box.y:box.w);
+    float projected=dot(n,nearest);if(!finite4(vec4(n,d,projected))){fail(2u);return false;}
+    return projected<=d+0.5*tolerances.x;
+}
 bool accept(uint aIndex, uint bIndex)
 {
     if (bIndex == aIndex) return false;
@@ -55,12 +74,12 @@ bool accept(uint aIndex, uint bIndex)
         // Body queries own mixed pairs, so a large Area cannot serialize a whole receiver population.
         if(sensorA&&!sensorB)return false;
         if(sensorA&&sensorB&&bIndex<aIndex)return false;
-        return (sensorA && (a.policy.z&b.policy.y)!=0u) || (sensorB && (b.policy.z&a.policy.y)!=0u);
+        return ((sensorA && (a.policy.z&b.policy.y)!=0u) || (sensorB && (b.policy.z&a.policy.y)!=0u)) && boundaryOverlap(aIndex,bIndex);
     }
     if(bIndex<aIndex)return false;
     if (excepted(a.owner.x,b.owner.x)) return false;
     if (bodies[a.owner.x].flags.y<2u && bodies[b.owner.x].flags.y<2u) return false;
-    return (a.policy.z&b.policy.y)!=0u && (b.policy.z&a.policy.y)!=0u;
+    return (a.policy.z&b.policy.y)!=0u && (b.policy.z&a.policy.y)!=0u && boundaryOverlap(aIndex,bIndex);
 }
 void main()
 {
@@ -79,15 +98,16 @@ void main()
         ResidentBody b=bodies[s.owner.x]; Geometry g=geometries[s.owner.z];
         if (b.flags.w==0u || b.flags.x!=s.owner.y || g.data.w!=s.owner.w || g.data.y==0u) {proxies[i]=p;return;}
         if (g.data.x>counts.z || g.data.y>counts.z-g.data.x) {fail(1u);proxies[i]=p;return;}
+        bool boundary=g.data.z==7u;float radius=boundary?0:g.parameters.x;
         vec2 lower=vec2(3.402823466e38), upper=-lower;float sweepRadius=0;
         for(uint v=0u;v<g.data.y;v++)
         {
             vec2 local=s.pose.xy+rotatePoint(vertices[g.data.x+v],s.pose.zw);
             vec2 world=b.pose.xy+rotatePoint(local,b.pose.zw);
             lower=min(lower,world);upper=max(upper,world);
-            if(tolerances.y>0)sweepRadius=max(sweepRadius,length(local-centers[s.owner.x])+g.parameters.x);
+            if(tolerances.y>0)sweepRadius=max(sweepRadius,length(local-centers[s.owner.x])+radius);
         }
-        p.bounds=vec4(lower-vec2(g.parameters.x+0.5*tolerances.x),upper+vec2(g.parameters.x+0.5*tolerances.x));
+        p.bounds=vec4(lower-vec2(radius+0.5*tolerances.x),upper+vec2(radius+0.5*tolerances.x));
         if(tolerances.y>0&&b.flags.y!=0u&&(b.flags.z&16u)==0u)
         {
             vec3 motion=b.velocity.xyz;
@@ -98,7 +118,7 @@ void main()
             p.bounds=vec4(p.bounds.xy+min(shift,vec2(0))-pad,p.bounds.zw+max(shift,vec2(0))+pad);
         }
         if (!finite4(p.bounds) || !finite4(vec4(p.bounds.zw-p.bounds.xy,0,0))) {fail(2u);proxies[i]=p;return;}
-        p.data=ivec4(b.flags.y>=2u?2:int(b.flags.y),int(i),1,(s.policy.w&2u)!=0u?8:0);
+        p.data=ivec4(b.flags.y>=2u?2:int(b.flags.y),int(i),1,((s.policy.w&2u)!=0u?8:0)|(boundary?16:0));
         proxies[i]=p;return;
     }
     Proxy query=proxies[i];
@@ -109,7 +129,7 @@ void main()
     while(at!=0)
     {
         Node n=nodes[at];
-        bool overlap=all(lessThanEqual(n.bounds.xy,query.bounds.zw)) && all(lessThanEqual(query.bounds.xy,n.bounds.zw));
+        bool overlap=(query.data.w&16)!=0||(n.typeMask&16)!=0||(all(lessThanEqual(n.bounds.xy,query.bounds.zw)) && all(lessThanEqual(query.bounds.xy,n.bounds.zw)));
         if(n.hasCategory!=0 && (n.typeMask&types)!=0 && overlap)
         {
             if(at<int(counts.x)) {at*=2;continue;}

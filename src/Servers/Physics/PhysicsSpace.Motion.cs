@@ -242,7 +242,7 @@ internal sealed partial class PhysicsSpace
     private static B2Manifold MotionManifold(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,
         in B2ShapeProxy other, PhysicsFixtureTag target, B2Transform otherPose)
     {
-        if (own.Compound is null && target.Compound is null) return PhysicsDirectSpaceState.GetManifold(query, other, otherPose);
+        if (query.isBoundary || other.isBoundary || own.Compound is null && target.Compound is null) return PhysicsDirectSpaceState.GetManifold(query, other, otherPose);
         // ponytail: reuse full-contour SAT scratch; cache transformed hulls if compound CPU queries dominate measured cost.
         var firstPose = ScenePose(from, recovery) * (own.Compound?.LocalPose ?? Transform.Identity);
         var secondPose = ScenePose(otherPose, default) * (target.Compound?.LocalPose ?? Transform.Identity);
@@ -280,6 +280,10 @@ internal sealed partial class PhysicsSpace
 
     private static B2ShapeProxy WorldProxy(B2ShapeProxy proxy, in B2Transform transform, in B2Vec2 offset)
     {
+        if (proxy.isBoundary)
+        {
+            var pose = transform; pose.p += offset; proxy.boundary = B2Boundaries.Transform(proxy.boundary, pose);
+        }
         for (var index = 0; index < proxy.count; index++)
             proxy.points[index] = b2TransformPoint(transform, proxy.points[index]) + offset;
         return proxy;

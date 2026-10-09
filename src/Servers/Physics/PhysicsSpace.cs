@@ -507,9 +507,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
         _tasks.Dispose();
         if (_continuousTree is not null) Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(_continuousTree);
-        _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear();
+        _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear(); _continuousBoundaries.Clear();
         _continuousForces.Clear(); _continuousJointBudgets.Clear();
-        _continuousBodies.Capacity = _continuousShapes.Capacity = _continuousProxies.Capacity = 0;
+        _continuousBodies.Capacity = _continuousShapes.Capacity = _continuousProxies.Capacity = _continuousBoundaries.Capacity = 0;
         _continuousForces.Capacity = _continuousJointBudgets.Capacity = 0; _continuousFinalize = null;
         b2GetWorldFromId(_worldID).integrateBodyStage = null!;
         b2GetWorldFromId(_worldID).solveConstraints = null!;
@@ -728,6 +728,17 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool ShapePairOverlaps(B2ShapeId first, B2ShapeId second)
     {
         var world = b2GetWorldFromId(_worldID);
+        var shapeA = b2GetShape(world, first); var shapeB = b2GetShape(world, second);
+        if ((shapeA.type == B2ShapeType.b2_boundaryShape || shapeB.type == B2ShapeType.b2_boundaryShape) &&
+            (shapeA.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is not null || shapeB.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is not null))
+        {
+            var directedCache = default(B2SimplexCache);
+            return PhysicsSeparationRay.SolverContact(shapeA, b2Body_GetTransform(b2Shape_GetBody(first)), shapeB,
+                b2Body_GetTransform(b2Shape_GetBody(second)), ref directedCache).pointCount != 0;
+        }
+        if (shapeA.type == B2ShapeType.b2_boundaryShape || shapeB.type == B2ShapeType.b2_boundaryShape)
+            return B2Boundaries.Contact(b2MakeShapeDistanceProxy(shapeA), b2Body_GetTransform(b2Shape_GetBody(first)),
+                b2MakeShapeDistanceProxy(shapeB), b2Body_GetTransform(b2Shape_GetBody(second)), 0).pointCount != 0;
         var aabbA = b2Shape_GetAABB(first);
         var rayA = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>()?.SeparationRay;
         var rayB = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>()?.SeparationRay;
@@ -736,8 +747,6 @@ internal sealed partial class PhysicsSpace : IDisposable
             (aabbA.upperBound.X < aabbB.lowerBound.X || aabbA.lowerBound.X > aabbB.upperBound.X ||
             aabbA.upperBound.Y < aabbB.lowerBound.Y || aabbA.lowerBound.Y > aabbB.upperBound.Y))
             return false;
-        var shapeA = b2GetShape(world, first);
-        var shapeB = b2GetShape(world, second);
         var input = new B2DistanceInput
         {
             proxyA = b2MakeShapeDistanceProxy(shapeA),

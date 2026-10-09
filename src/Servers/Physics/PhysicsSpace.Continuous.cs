@@ -22,10 +22,10 @@ internal sealed partial class PhysicsSpace
     private readonly record struct ContinuousShape(B2ShapeId ID, int Body, B2AABB Bounds);
     private readonly List<ContinuousBody> _continuousBodies = [];
     private readonly List<ContinuousShape> _continuousShapes = [];
-    private readonly List<int> _continuousProxies = [];
+    private readonly List<int> _continuousProxies = [], _continuousBoundaries = [];
     private B2DynamicTree? _continuousTree;
     private Exception? _continuousFailure;
-    private float _continuousFraction, _continuousNearStep;
+    private float _continuousFraction, _continuousNearStep, _continuousDuration;
     internal long ContinuousQueryCount { get; private set; }
 
     private bool HasContinuousBodies()
@@ -56,9 +56,9 @@ internal sealed partial class PhysicsSpace
 
     private float FindContinuousInterval(B2StepContext context)
     {
-        var delta = context.dt;
+        var delta = context.dt; _continuousDuration = delta;
         _continuousTree ??= b2DynamicTree_Create();
-        _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousFraction = 1; _continuousNearStep = delta;
+        _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousBoundaries.Clear(); _continuousFraction = 1; _continuousNearStep = delta;
         var world = b2GetWorldFromId(_worldID);
         foreach (var body in _bodies) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
         foreach (var body in _serverColliders) if (!body.IsArea) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
@@ -79,6 +79,7 @@ internal sealed partial class PhysicsSpace
                 bounds.lowerBound -= pad; bounds.upperBound += pad;
                 if (!b2IsValidVec2(bounds.lowerBound) || !b2IsValidVec2(bounds.upperBound)) throw new InvalidOperationException("Continuous bounds exceed the finite range.");
                 var slot = _continuousShapes.Count; _continuousShapes.Add(new(id, index, bounds));
+                if (shape.type == B2ShapeType.b2_boundaryShape) _continuousBoundaries.Add(slot);
                 if (slot == _continuousProxies.Count) _continuousProxies.Add(b2DynamicTree_CreateProxy(_continuousTree, bounds, ulong.MaxValue, (ulong)slot));
                 else b2DynamicTree_MoveProxy(_continuousTree, _continuousProxies[slot], bounds);
             }
@@ -90,7 +91,16 @@ internal sealed partial class PhysicsSpace
         {
             var shape = _continuousShapes[i]; var body = bodies[shape.Body];
             if (!body.Dynamic || body.Mode == CCDMode.Disabled) continue;
-            query.Shape = i; b2DynamicTree_Query(_continuousTree, shape.Bounds, ulong.MaxValue, QueryContinuousPair, ref query);
+            query.Shape = i;
+            if (b2GetShape(world, shape.ID).type == B2ShapeType.b2_boundaryShape)
+            {
+                for (var j = 0; j < _continuousShapes.Count; j++) if (j != i) TestContinuousPair(i, j);
+            }
+            else
+            {
+                b2DynamicTree_Query(_continuousTree, shape.Bounds, ulong.MaxValue, QueryContinuousPair, ref query);
+                foreach (var boundary in _continuousBoundaries) TestContinuousPair(i, boundary);
+            }
         }
         return MathF.Min(delta * _continuousFraction, _continuousNearStep);
     }
@@ -99,7 +109,10 @@ internal sealed partial class PhysicsSpace
     private static bool QueryContinuousPair(int proxy, ulong data, ref ContinuousQuery query)
     {
         if ((int)data == query.Shape) return true;
-        query.Space.TestContinuousPair(query.Shape, (int)data); return true;
+        var target = query.Space._continuousShapes[(int)data];
+        if (b2GetShape(b2GetWorldFromId(query.Space._worldID), target.ID).type != B2ShapeType.b2_boundaryShape)
+            query.Space.TestContinuousPair(query.Shape, (int)data);
+        return true;
     }
 
     private void TestContinuousPair(int first, int second)
@@ -170,6 +183,7 @@ internal sealed partial class PhysicsSpace
                 input.sweepB.q1.s != input.sweepB.q2.s || input.sweepB.q1.c != input.sweepB.q2.c;
             if (!rotating && b2Dot(vb - va, distance.normal) >= 0) return;
             var rate = bodies[a.Body].Speed + bodies[b.Body].Speed;
+            if (input.proxyA.isBoundary || input.proxyB.isBoundary) rate = MathF.Max(rate, B2Boundaries.SweepRate(input) / _continuousDuration);
             if (rate > 0)
             {
                 var extent = MathF.Min(PhysicsColliderBackend.Simulation(bodies[a.Body].Backend.BodyID).minExtent,
@@ -200,6 +214,8 @@ internal sealed partial class PhysicsSpace
 
     private static bool MakeLeadingRay(ref B2ShapeProxy shape, ref B2Sweep sweep, in B2Sweep other, PhysicsFixtureTag.CompoundContour? contour)
     {
+        if (shape.isBoundary) { sweep.q2 = sweep.q1; return true; }
+
         var delta = sweep.c2 - sweep.c1 - (other.c2 - other.c1); var length = b2Length(delta);
         if (length == 0) return false;
         var direction = b2InvRotateVector(sweep.q1, delta * (1 / length));

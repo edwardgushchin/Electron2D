@@ -22,6 +22,12 @@ namespace Box2D.NET
         // todo moveSet can grow quite large on the first time step and remain large
         public B2HashSet moveSet;
         public B2Array<int> moveArray;
+        internal struct BoundaryProxy
+        {
+            internal int Key;
+            internal B2Plane Plane;
+        }
+        internal B2Array<BoundaryProxy> boundaries;
 
         // These are the results from the pair query and are used to create new contacts
         // in deterministic order.
@@ -40,6 +46,7 @@ namespace Box2D.NET
             trees = null;
             moveSet = new B2HashSet();
             b2Array_Clear(ref moveArray);
+            b2Array_Clear(ref boundaries);
             moveResults = null;
             movePairs = null;
             movePairCapacity = 0;

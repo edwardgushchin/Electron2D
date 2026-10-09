@@ -79,8 +79,8 @@ void main()
         while (at != 0)
         {
             Node n = nodes[at];
-            bool overlap = all(lessThanEqual(n.bounds.xy, q.bounds.zw)) &&
-                           all(lessThanEqual(q.bounds.xy, n.bounds.zw));
+            bool overlap = q.shape.y!=0 || (n.typeMask&16)!=0 || (all(lessThanEqual(n.bounds.xy, q.bounds.zw)) &&
+                           all(lessThanEqual(q.bounds.xy, n.bounds.zw)));
             if (n.hasCategory != 0 && (n.typeMask & typeMask) != 0 && overlap)
             {
                 if (at < settings.y) { at *= 2; continue; }

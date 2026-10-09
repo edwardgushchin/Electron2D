@@ -68,8 +68,9 @@ rest of the tick through ordinary contact response.
 The checked CPU path covers circles, rectangles, capsules, segments, full convex
 resources and paired concave segments within their existing geometry tolerances.
 Ray mode is deliberately approximate. SeparationRayDynamicsTests now verifies
-directed dynamic response and axial ray/full-shape CCD. WorldBoundaryShape remains
-an open owning shape capability and is not certified by this CCD slice. The independent resident GPU store now uses the same
+directed dynamic response and axial ray/full-shape CCD. WorldBoundaryTests additionally verifies analytic infinite planes with ray/full-shape
+translation and rotating-plane CCD; conservative angular bounds use finite-body
+distance from the plane owner rather than a nonexistent finite plane radius. The independent resident GPU store now uses the same
 public enum and retains its own device CCD implementation, but public independent
 world selection/binding is still open.
 

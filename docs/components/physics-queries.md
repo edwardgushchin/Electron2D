@@ -101,3 +101,9 @@ pending targets survive reentry. PhysicsServerStateTests verifies real CPU/GPU
 motion, lifecycle, guards and 64 warmed state/read/step cycles with zero all-thread
 managed bytes. [The server reference](../classes/PhysicsServer.md#body-state)
 records units, errors, scene role policies and remaining verification limits.
+
+WorldBoundaryShape participates analytically in both query argument positions,
+including far-away half-plane contacts, normal/distance transforms and ray pairs.
+The shared shape and body-motion matrices now include this geometry. Direct-space
+shape queries retain initial overlap during motion; body-motion recovery/casts
+retain their own directed-ray policy. Public independent-GPU binding remains open.

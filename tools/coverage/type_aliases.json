@@ -87,7 +87,8 @@
     "NavigationPathQueryParameters2D": "NavigationPathQueryParameters",
     "NavigationPathQueryResult2D": "NavigationPathQueryResult",
     "NavigationAgent2D": "NavigationAgent",
-    "NavigationObstacle2D": "NavigationObstacle"
+    "NavigationObstacle2D": "NavigationObstacle",
+    "WorldBoundaryShape2D": "WorldBoundaryShape"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",
@@ -201,6 +202,7 @@
     "ENetPacketPeer.PeerState": "ENetPeerState",
     "ENetPacketPeer.PeerStatistic": "ENetPeerStatistic",
     "ResourceSaver.SaverFlags": "SaverFlags",
-    "ResourceFormatLoader.CacheMode": "ResourceLoader.CacheMode"
+    "ResourceFormatLoader.CacheMode": "ResourceLoader.CacheMode",
+    "PhysicsServer2D.ShapeType": "PhysicsServer.ShapeType"
   }
 }

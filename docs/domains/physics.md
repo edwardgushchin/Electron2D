@@ -271,3 +271,11 @@ RigidBody monitoring. PhysicsContactImpulseTests checks momentum and allocation;
 virtual tile identities remain separate from this completed reporting behavior.
 
 Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Internal [GPU CCD](../components/gpu-resident-ccd.md) now executes per-body ray/full-shape sweeps and impact intervals. [Resident joint policies](../components/gpu-resident-joints.md#joint-solver-policies) execute internally. Public backend selection, independent GPU joint-policy adapters, CCD adapters, sleep/contact-event publication and network replay remain open.
+
+[WorldBoundaryShape](../classes/WorldBoundaryShape.md) supplies an analytic infinite
+half-plane throughout CPU scene/server collision, Area sensing, queries and CCD.
+The independent GPU store implements matching geometry and shared query contracts;
+public GPU binding remains open. [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs)
+checks far-away contacts, lifetime, sleep/edit/removal and zero warmed managed
+allocation. [Measured overhead and traffic](../components/physics-shapes.md#infinite-world-boundaries)
+do not establish large-scene throughput or rendered acceptance.

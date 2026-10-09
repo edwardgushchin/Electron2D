@@ -1,7 +1,7 @@
 // Shared directed contact against an ordinary or extruded convex region.
 Hull pointHull(Hull templateHull,vec2 point)
 {
-    templateHull.count=1u;templateHull.radius=0;templateHull.midpoint=false;templateHull.pose=vec4(point,0,0);return templateHull;
+    templateHull.count=1u;templateHull.boundary=false;templateHull.radius=0;templateHull.midpoint=false;templateHull.pose=vec4(point,0,0);return templateHull;
 }
 bool directedQuery(Hull ray,Hull other,vec2 extrusion,float margin,bool slide,bool flip,vec2 extension,uint pieceA,uint pieceB,bool emit)
 {

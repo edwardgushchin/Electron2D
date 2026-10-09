@@ -5,7 +5,16 @@ Last updated: 2026-10-09
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public
-GPU-world selection/binding remains open; declaration coverage is unchanged.
+GPU-world selection/binding remains open.
+
+[WorldBoundaryShape](../classes/WorldBoundaryShape.md) now supplies an analytic infinite
+half-plane with CPU scene/server and internal GPU response, sensing, queries and CCD.
+Its three own rows and the server factory, type getter and ShapeType identities
+are Implemented. Custom remains an enum identity without an extension factory.
+[WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks lifetime,
+sleep/edit/removal, far-away geometry and zero warmed managed allocation; the
+[component report](../components/physics-shapes.md#infinite-world-boundaries) records
+tiny-world timing/traffic and keeps public GPU/large-world/rendered acceptance open.
 
 [Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public direct-state/event projection remains open.
 

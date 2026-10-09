@@ -114,6 +114,9 @@ namespace Box2D.NET
             return b2CollideChainSegmentAndPolygon(shapeA.us.chainSegment, xfA, ref shapeB.us.polygon, xfB, ref cache);
         }
 
+        private static B2Manifold b2BoundaryManifold(B2Shape a, in B2Transform poseA, B2Shape b, in B2Transform poseB, ref B2SimplexCache cache) =>
+            B2Boundaries.Contact(B2Shapes.b2MakeShapeDistanceProxy(a), poseA, B2Shapes.b2MakeShapeDistanceProxy(b), poseB);
+
         internal static void b2AddType(b2ManifoldFcn fcn, B2ShapeType type1, B2ShapeType type2)
         {
             B2_ASSERT(0 <= type1 && type1 < B2ShapeType.b2_shapeTypeCount);
@@ -145,6 +148,8 @@ namespace Box2D.NET
                 b2AddType(b2ChainSegmentAndCircleManifold, B2ShapeType.b2_chainSegmentShape, B2ShapeType.b2_circleShape);
                 b2AddType(b2ChainSegmentAndCapsuleManifold, B2ShapeType.b2_chainSegmentShape, B2ShapeType.b2_capsuleShape);
                 b2AddType(b2ChainSegmentAndPolygonManifold, B2ShapeType.b2_chainSegmentShape, B2ShapeType.b2_polygonShape);
+                for (var type = B2ShapeType.b2_circleShape; type < B2ShapeType.b2_boundaryShape; type++)
+                    b2AddType(b2BoundaryManifold, B2ShapeType.b2_boundaryShape, type);
                 s_initialized = true;
             }
         }
@@ -562,7 +567,7 @@ namespace Box2D.NET
         {
             // Directed/custom contacts retain ordinary material, history and solver handling.
             b2ManifoldFcn custom = shapeA.manifoldOverride ?? shapeB.manifoldOverride;
-            if (custom != null) generatedManifolds = null;
+            if (custom != null || shapeA.type == B2ShapeType.b2_boundaryShape || shapeB.type == B2ShapeType.b2_boundaryShape) generatedManifolds = null;
             // Save old manifold
             B2Manifold oldManifold = generatedManifolds == null ? contactSim.manifold : default;
 

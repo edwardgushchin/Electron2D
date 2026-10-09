@@ -89,3 +89,9 @@ Circle and rectangle bounds, validation and copying are checked in [PhysicsBodyT
 **ValidateDisposal:** An owned server RID controls its private geometry view. The view cannot be disposed by a borrower (InvalidOperationException before disposal), including concurrently with owner-controlled retirement; ShapeSetData retires an old held view and FreeRID retires the current view. Other managed shapes retain caller-controlled disposal. For independent data, request ShapeGetData rather than retain a borrowed view across replacement.
 
 [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies identity, query projection, view retirement, callback failures and guarded lifetime under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). No rendering-resource RID support is implied.
+
+WorldBoundaryShape adds an infinite half-plane special pair. Two boundaries do not
+collide; other geometry separates along its normal. Standalone resource motion
+ignores boundary displacement and tests the other shape at its endpoint, taking
+precedence over separation-ray motion rules. WorldBoundaryTests verifies this
+policy; direct-space queries retain their separate swept-query semantics.

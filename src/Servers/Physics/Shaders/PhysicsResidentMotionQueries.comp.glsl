@@ -51,7 +51,15 @@ bool recovered=false,blocked=false;
 Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin,bool requireOverlap)
 {
     pairContact=Contact(vec2(0),vec2(0),0,false);contactLimit=2;
-    if(ga.data.z==6u){if(gb.data.z!=6u)directedQuery(a,b,vec2(0),margin,ga.parameters.y!=0,false,extension,0u,0u,true);}
+    if(a.boundary||b.boundary)
+    {
+        if(a.boundary&&b.boundary)return pairContact;
+        if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return pairContact;a.extension=normalized(axis)*margin;}
+        if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return pairContact;
+        a.pose.xy+=extension;vec2 normal;
+        if(!requireOverlap||queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05)ordinary(a,b,uvec2(0));
+    }
+    else if(ga.data.z==6u){if(gb.data.z!=6u)directedQuery(a,b,vec2(0),margin,ga.parameters.y!=0,false,extension,0u,0u,true);}
     else if(gb.data.z==6u)directedQuery(b,a,extension,0,gb.parameters.y!=0,true,vec2(0),0u,0u,true);
     else
     {
@@ -133,7 +141,7 @@ vec4 queryBounds(Shape shape,Geometry g,bool recovering)
         vec2 point=rotate(bodyA.pose.zw,shape.pose.xy+rotate(shape.pose.zw,vertices[g.data.x+i]));lo=min(lo,point);hi=max(hi,point);
     }
     vec2 motion=recovering?vec2(0):q.motionMargin.xy;
-    vec2 grow=vec2(g.parameters.x+q.motionMargin.z+2);
+    vec2 grow=vec2((g.data.z==7u?0:g.parameters.x)+q.motionMargin.z+2);
     vec4 bounds=vec4(lo+min(motion,vec2(0))-grow,hi+max(motion,vec2(0))+grow);
     if(!recovering&&g.data.z==6u)
     {
@@ -157,7 +165,7 @@ void scan(bool recovering)
         while(at!=0)
         {
             Node node=nodes[at];
-            if(node.hasCategory!=0&&all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))
+            if(node.hasCategory!=0&&(ga.data.z==7u||(node.typeMask&16)!=0||(all(lessThanEqual(node.bounds.xy,bounds.zw))&&all(greaterThanEqual(node.bounds.zw,bounds.xy)))))
             {
                 if(at<int(leaves)){at*=2;continue;}
                 indexB=uint(node.shape);if(indexB>=shapeCount){fail();return;}shapeB=shapes[indexB];mapB=mappings[indexB];

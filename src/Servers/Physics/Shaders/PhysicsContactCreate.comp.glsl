@@ -101,8 +101,9 @@ void main()
         Request r = requests[index];
         Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0),ivec4(-1,-1,0,0));
         int ta = rankType(r.a.z), tb = rankType(r.b.z);
-        if (ta < 0 || ta > 4 || tb < 0 || tb > 4) { atomicMax(pool.z, 5); created[index] = result; return; }
-        bool customPair = ta >= 3 && tb >= 3;
+        if (ta < 0 || ta > 5 || tb < 0 || tb > 5) { atomicMax(pool.z, 5); created[index] = result; return; }
+        if (ta == 5 && tb == 5) { created[index] = result; return; }
+        bool customPair = ta >= 3 && tb >= 3 && ta != 5 && tb != 5;
         if (customPair && ((r.flags.x | r.flags.y) & 4u) == 0u) { created[index] = result; return; }
         if (!customPair && ta < tb)
         {

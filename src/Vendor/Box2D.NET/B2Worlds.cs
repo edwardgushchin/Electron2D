@@ -403,7 +403,7 @@ namespace Box2D.NET
                 B2Shape shapeB = shapes[contactSim.shapeIdB];
 
                 // Do proxies still overlap?
-                bool overlap = b2AABB_Overlaps(shapeA.fatAABB, shapeB.fatAABB);
+                bool overlap = B2Boundaries.Overlap(world, shapeA, shapeB);
                 if (overlap == false)
                 {
                     contactSim.simFlags |= (uint)B2ContactSimFlags.b2_simDisjoint;

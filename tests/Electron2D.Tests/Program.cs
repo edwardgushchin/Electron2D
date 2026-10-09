@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY_GPU") == "1") { WorldBoundaryTests.RunResident(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY") == "1") { WorldBoundaryTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RAY_DYNAMICS") == "1") { SeparationRayDynamicsTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 {
@@ -31,7 +33,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1
     Environment.SetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND", null);
     PhysicsBodyTests.Run(); AreaTests.Run();
     CapsuleShapeTests.Run(); SegmentShapeTests.Run(); ConvexPolygonShapeTests.Run(); ConcavePolygonShapeTests.Run();
-    SeparationRayShapeTests.Run(); CollisionPolygonTests.Run(); OneWayCollisionTests.Run(); ShapeOwnerTests.Run();
+    SeparationRayShapeTests.Run(); WorldBoundaryTests.Run(); CollisionPolygonTests.Run(); OneWayCollisionTests.Run(); ShapeOwnerTests.Run();
     PhysicsMaterialTests.Run(); PhysicsMassProfileTests.Run(); PhysicsServerShapeSlotTests.Run();
     PhysicsAreaMonitorTests.Run(); PhysicsAreaFieldTests.Run(); PhysicsServerAreaFieldTests.Run(); CollisionDisableModeTests.Run();
     PhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(); PhysicsMotionTests.Run(); PhysicsCCDTests.Run(); ShapeCollisionTests.Run();
@@ -644,6 +646,7 @@ PhysicsActivityTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();
+WorldBoundaryTests.Run();
 ShapeCollisionTests.Run();
 OneWayCollisionTests.Run();
 CollisionPolygonTests.Run();

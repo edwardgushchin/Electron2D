@@ -193,6 +193,8 @@ void main()
         Geometry g = geometryUpdates[index]; shapes[int(g.id)] = g; return;
     }
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
+    if ((pair.ids.z & 0x40000000) != 0)
+    { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); materials[index]=vec4(0); return; }
     bool complete = (settings.z & 1u) != 0;
     uint previous = uint(pair.ids.z) >> 1;
     if ((uint(pair.ids.z) & 1u) == 0)

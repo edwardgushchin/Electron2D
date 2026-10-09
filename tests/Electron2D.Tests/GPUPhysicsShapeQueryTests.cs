@@ -75,7 +75,7 @@ internal static class GPUPhysicsShapeQueryTests
         var polygon = new Vector2[12]; for (var i = 0; i < polygon.Length; i++) polygon[i] = new Vector2(20, 0).Rotated(-i * Mathf.Tau / polygon.Length);
         Shape[] shapes = [new CircleShape { Radius = 10 }, new ConvexPolygonShape { Points = polygon },
             new ConcavePolygonShape { Segments = [new(-15, -15), new(15, -15), new(15, -15), new(15, 15), new(15, 15), new(-15, 15)] },
-            new SegmentShape { A = new(-20, 0), B = new(20, 0) }, new SeparationRayShape { Length = 20 }];
+            new SegmentShape { A = new(-20, 0), B = new(20, 0) }, new SeparationRayShape { Length = 20 }, new WorldBoundaryShape()];
         using var store = new Store(); var space = PhysicsServer.SpaceCreate(); var bodies = new RID[shapes.Length]; var leases = new Store.QueryGeometry[shapes.Length];
         using var parameters = new PhysicsShapeQueryParameters(); Span<Store.ShapeQueryHit> hits = stackalloc Store.ShapeQueryHit[16];
         Vector2[] positions = [new(0, -25), new(0, -10), new(15, -10), new(45, 0), new(0, 25), new(0, 10)];
