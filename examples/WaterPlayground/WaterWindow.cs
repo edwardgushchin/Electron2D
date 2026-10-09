@@ -1,9 +1,10 @@
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Electron2D.Examples.WaterPlayground;
 
 /// <summary>A fixed-world water playground with independent window presentation.</summary>
-internal sealed class WaterWindow : Window
+internal sealed partial class WaterWindow : Window
 {
     internal static readonly Color Cream = Color.FromHTML("#F7F4EB"), Water = Color.FromHTML("#A7D8DE");
     private static readonly Color Butter = Color.FromHTML("#F5D684"), Wing = Color.FromHTML("#EBC46F"),
@@ -20,12 +21,13 @@ internal sealed class WaterWindow : Window
     private string _deviceError = "";
     private string _presentation = "";
     private bool _held, _fullscreen;
+    private long _lastHUD;
     private Vector2 _pointer;
     private Vector2i _windowedSize;
     internal WaterSimulation Simulation { get; private set; }
     internal bool Paused { get; private set; }
     internal Transform ViewTransform { get; private set; } = Transform.Identity;
-    internal int SwimmingFishCount => Simulation.SwimmingFishCount;
+    internal bool InterfaceVisible { get; private set; } = true;
 
     internal static void ConfigurePresentation()
     {
@@ -43,7 +45,7 @@ internal sealed class WaterWindow : Window
         Size = new(1152, 800); MinSize = new(480, 360); Unresizable = false;
         Simulation = new();
         _world = new Entity { Name = "World" }; AddChild(_world);
-        _drawing = new Entity { Name = "ToysAndFish" }; _drawing.Draw += DrawScene; _world.AddChild(_drawing);
+        _drawing = new Entity { Name = "Toys" }; _drawing.Draw += DrawScene; _world.AddChild(_drawing);
         _waterDrawing = new Entity { Name = "WaterSurface" };
         _waterDrawing.Draw += canvas =>
         {
@@ -58,9 +60,10 @@ internal sealed class WaterWindow : Window
         _buttonStyle.SetCornerRadiusAll(8); _activeStyle.SetCornerRadiusAll(8); _activeStyle.SetBorderWidthAll(1);
         _cpu = ModeButton("CPU"); _gpu = ModeButton("GPU");
         _cpu.Pressed += () => SetMode(false); _gpu.Pressed += () => SetMode(true);
+        MakeTools();
         PhysicsProcessEnabled = ProcessEnabled = InputEnabled = true;
         SizeChanged += FitWorld;
-        FocusExited += () => { _held = false; Simulation.EndDrag(); };
+        FocusExited += () => { _movingFaucet = false; _held = false; Simulation.EndDrag(); };
         Ready += _ =>
         {
             RenderingServer.SetDefaultClearColor(Cream);
@@ -74,20 +77,21 @@ internal sealed class WaterWindow : Window
     {
         var button = new Button { Name = text, Text = text, Size = new(72, 36), ToggleMode = true, ButtonGroup = _modes };
         button.AddThemeFontOverride("font", _font); button.AddThemeFontSizeOverride("font_size", 14);
-        foreach (var state in new[] { "normal", "hover" }) button.AddThemeStyleBoxOverride(state, _buttonStyle);
+        foreach (var state in new[] { "normal", "hover", "disabled" }) button.AddThemeStyleBoxOverride(state, _buttonStyle);
         button.AddThemeStyleBoxOverride("focus", _focusStyle);
         foreach (var state in new[] { "pressed", "hover_pressed" }) button.AddThemeStyleBoxOverride(state, _activeStyle);
         foreach (var state in new[] { "font_color", "font_hover_color", "font_pressed_color", "font_focus_color" }) button.AddThemeColorOverride(state, Ink);
+        button.AddThemeColorOverride("font_disabled_color", new(Ink.R, Ink.G, Ink.B, .5f));
         AddChild(button); return button;
     }
     private void FitWorld()
     {
         var scale = Size.X / Simulation.Size.X;
         ViewTransform = new Transform(0, new Vector2(scale, scale), 0, new Vector2(0, Size.Y - Simulation.Size.Y * scale));
-        Simulation.EntryY = Math.Min(0, ToWorld(Vector2.Zero).Y);
+        Simulation.EntryY = ToWorld(Vector2.Zero).Y;
         _world.Transform = ViewTransform;
-        Surface.Update(Simulation); _waterDrawing.QueueRedraw();
-        _cpu.Position = new(Size.X - 176, 20); _gpu.Position = new(Size.X - 96, 20);
+        Surface.Update(Simulation); _waterDrawing.QueueRedraw(); _drawing.QueueRedraw(); _hud.QueueRedraw();
+        _cpu.Position = new(Size.X - 176, 20); _gpu.Position = new(Size.X - 96, 20); FitTools();
     }
     internal Vector2 ToWorld(Vector2 screen) => ViewTransform.AffineInverse() * screen;
     internal void SetMode(bool gpu)
@@ -98,31 +102,42 @@ internal sealed class WaterWindow : Window
             catch (InvalidOperationException) { _deviceError = "GPU compute unavailable · CPU mode"; gpu = false; }
         }
         Simulation.SetUseGPU(gpu, _device);
-        _cpu.SetPressedNoSignal(!gpu); _gpu.SetPressedNoSignal(gpu);
+        _cpu.SetPressedNoSignal(!gpu); _gpu.SetPressedNoSignal(gpu); _hud.QueueRedraw();
     }
     internal void Reset()
     {
         var gpu = Simulation.UseGPU; Simulation.Dispose(); Simulation = new(); if (gpu) Simulation.SetUseGPU(true, _device);
-        Paused = false; _held = false; FitWorld();
+        Paused = false; _held = false; _movingFaucet = false; foreach (var button in _tools) button.Disabled = false; UpdateValves(); FitWorld();
     }
     protected override void OnPhysicsProcess(double delta)
     {
         if (Paused) return;
-        Simulation.Step(delta); Surface.Update(Simulation); _waterDrawing.QueueRedraw();
+        Simulation.Step(delta); Surface.Update(Simulation); _waterDrawing.QueueRedraw(); _drawing.QueueRedraw();
     }
-    protected override void OnProcess(double delta) { _drawing.QueueRedraw(); _hud.QueueRedraw(); }
+    protected override void OnProcess(double delta)
+    {
+        UpdateToolCapacity();
+        if (Stopwatch.GetElapsedTime(_lastHUD).TotalSeconds >= .25) { _lastHUD = Stopwatch.GetTimestamp(); if (InterfaceVisible) _hud.QueueRedraw(); }
+    }
     protected override void OnInput(InputEvent input)
     {
-        if (input is InputEventMouseMotion motion) { _pointer = ToWorld(motion.Position); Simulation.MovePointer(_pointer); }
+        if (ToyInput(input)) { if (input is InputEventKey) SetInputAsHandled(); return; }
+        if (input is InputEventMouseMotion motion) { _pointer = ToWorld(motion.Position); Simulation.MovePointer(_pointer); if (Simulation.Dragged.IsValid()) _drawing.QueueRedraw(); }
         if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left } button)
         {
-            if (button.Pressed && (new Rect2(_cpu.Position, _cpu.Size).HasPoint(button.Position) || new Rect2(_gpu.Position, _gpu.Size).HasPoint(button.Position))) return;
+            if (button.Pressed && OverControls(button.Position)) return;
             _pointer = ToWorld(button.Position); _held = button.Pressed;
             if (_held) Simulation.BeginDrag(_pointer); else Simulation.EndDrag();
+            _drawing.QueueRedraw();
         }
         if (input is not InputEventKey { Pressed: true, Echo: false } key) return;
         switch (key.PhysicalKeycode)
         {
+            case Key.H:
+                InterfaceVisible = !InterfaceVisible; _movingFaucet = false;
+                _hud.Visible = _cpu.Visible = _gpu.Visible = InterfaceVisible;
+                foreach (var control in _tools) control.Visible = InterfaceVisible;
+                break;
             case Key.R: Reset(); break;
             case Key.Tab: SetMode(!Simulation.UseGPU); break;
             case Key.Space: Paused = !Paused; break;
@@ -132,7 +147,9 @@ internal sealed class WaterWindow : Window
                 else { Mode = WindowMode.Windowed; Borderless = false; Size = _windowedSize; }
                 break;
             case Key.Escape: Tree!.Quit(); break;
+            default: return;
         }
+        _hud.QueueRedraw(); _drawing.QueueRedraw(); SetInputAsHandled();
     }
     private void DrawScene(CanvasItem canvas)
     {
@@ -140,32 +157,22 @@ internal sealed class WaterWindow : Window
         canvas.DrawLine(new(0, Simulation.Size.Y - 1), new(Simulation.Size.X, Simulation.Size.Y - 1), Light, 2);
         if (Simulation.Duck.IsValid()) DrawDuck(canvas, Simulation.DuckPose);
         if (Simulation.Boat.IsValid()) DrawBoat(canvas, Simulation.BoatPose);
-        for (var i = 0; i < WaterSimulation.FishCount; i++)
-        {
-            if (!Simulation.FishBody(i).IsValid()) continue;
-            var pose = Simulation.FishPose(i); var direction = Simulation.FishDirection(i);
-            canvas.DrawSetTransform(pose.Origin, pose.Rotation, new(direction, 1));
-            var tint = i % 3 == 0 ? Peach : i % 3 == 1 ? Lavender : Butter;
-            var tail = MathF.Sin((float)Simulation.Time * 7 + i) * 4;
-            canvas.DrawColoredPolygon([new(-12, 0), new(-28, -10 + tail), new(-26, 10 + tail)], tint);
-            canvas.DrawSetTransform(pose.Origin, pose.Rotation, new(direction * 1.9f, 1));
-            canvas.DrawCircle(Vector2.Zero, 10, tint);
-            canvas.DrawSetTransform(pose.Origin, pose.Rotation, new(direction, 1));
-            canvas.DrawCircle(new(10, -2), 2, Ink); canvas.DrawLine(new(-2, -2), new(-7, 4), Sail, 1.5f, true);
-        }
         canvas.DrawSetTransform(Vector2.Zero);
-        if (Simulation.Dragged.IsValid()) canvas.DrawCircle(_pointer, 5, new Color(Ink.R, Ink.G, Ink.B, .6f), false, 1.5f, true);
+        DrawTools(canvas);
+        if (InterfaceVisible && Simulation.Dragged.IsValid()) canvas.DrawCircle(_pointer, 5, new Color(Ink.R, Ink.G, Ink.B, .6f), false, 1.5f, true);
     }
     private void DrawHUD(CanvasItem canvas)
     {
         canvas.DrawString(_font, new(24, 33), "WaterPlayground", fontSize: 18, modulate: Ink);
-        canvas.DrawString(_font, new(24, 57), Paused ? "Paused · Space to play" : (Size.X < 700 ? "Drag toys · Space: pause · R: refill · F11: fullscreen" : "Drag toys / fish / water · Space: pause · R: refill · F11: fullscreen"), fontSize: 13, modulate: Ink);
+        canvas.DrawString(_font, new(24, 57), Paused ? "Paused · Space to play" : (Size.X < 700 ? "Drag · Q/E: tilt · Space: pause · R: reset · H: UI" : "Drag toys / water · Q/E or wheel: tilt · Space: pause · R: reset · F11: fullscreen · H: hide UI"), fontSize: 13, modulate: Ink);
         Span<char> timing = stackalloc char[24];
         timing.TryWrite(CultureInfo.InvariantCulture, $"{Simulation.StepMS:0.0} ms", out var timingLength);
         Span<char> text = stackalloc char[120];
         text.TryWrite(CultureInfo.InvariantCulture, $"{Simulation.ActiveCount:N0} / {Simulation.Count:N0} particles · {(Simulation.UseGPU ? "GPU" : "CPU")} {(Simulation.StepMS > 0 ? timing[..timingLength] : "pending".AsSpan())} · {Engine.FramesPerSecond:0} / 144 FPS", out var length);
         var position = new Vector2(24, 81);
         foreach (var character in text[..length]) position.X += _font.DrawChar(canvas, position, character, 13, Ink);
+        DrawFaucet(canvas);
+        canvas.DrawString(_font, new(24, 126), Simulation.StoredCount == 0 && !Simulation.DrainOpen ? "Reservoir empty · D: open drain to feed the jet again" : "Top handle: move faucet · Q/E: aim · F: flow · D: drain", fontSize: 12, modulate: Ink);
         canvas.DrawString(_font, new(24, 104), _deviceError.Length > 0 ? _deviceError : _presentation, fontSize: 12, modulate: Ink);
     }
     private static void DrawDuck(CanvasItem canvas, Transform pose)

@@ -3,12 +3,13 @@ using SDL = SDL3.SDL;
 using Electron2D;
 using Electron2D.Examples.WaterPlayground;
 
-internal static class WaterPlaygroundTests
+internal static partial class WaterPlaygroundTests
 {
     internal static void Run()
     {
         PhysicsSolverStorageTests.Run();
         using var device = RenderingServer.CreateLocalRenderingDevice();
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WATER_TOYS") == "1") { CheckToys(device, false); CheckToys(device, true); return; }
         CheckOpenTop(device, false);
         CheckOpenTop(device, true);
         using var water = new WaterSimulation();
@@ -16,38 +17,48 @@ internal static class WaterPlaygroundTests
         Check(water.Count == 65536 && !water.Duck.IsValid() && !water.Boat.IsValid(), "Water precedes both toys.");
         Check(water.ActiveCount == 0, "Water is released progressively instead of starting as a block.");
         var elapsed = Stopwatch.StartNew();
-        var appeared = new bool[WaterSimulation.FishCount + 2];
-        for (var frame = 0; frame < 1200; frame++)
+        var appeared = new bool[2];
+        var highestSplash = 0f;
+        var frames = 60 * int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_WATER_SECONDS") ?? "20");
+        for (var frame = 0; frame < frames; frame++)
         {
             water.Step(1d / 60);
             if (frame % 60 == 59)
                 Console.WriteLine($"t={water.Time:F1} min={water.Positions.Min(p => p.Y):F1} max={water.Positions.Max(p => p.Y):F1} above={water.Positions.Count(p => p.Y < 0)} duck={water.DuckPose.Origin} boat={water.BoatPose.Origin} step={water.StepMS:F2}ms elapsed={elapsed.ElapsedMilliseconds}");
             CheckContained(water);
+            for (var i = 0; i < water.ActiveCount; i++) highestSplash = Math.Min(highestSplash, water.Positions[i].Y);
             if (frame == 0) Check(water.ActiveCount > 0 && water.Positions.Take(water.ActiveCount).All(p => p.Y + 8 < water.EntryY), "The first water particles and their reconstructed edge start offscreen.");
             for (var slot = 0; slot < appeared.Length; slot++)
                 if (water.ActorExists(slot) && !appeared[slot])
                 {
-                    Check(water.ActorBounds(slot).End.Y < water.EntryY, "Each toy and fish starts entirely above its entry edge.");
+                    Check(water.ActorBounds(slot).End.Y < water.EntryY, "Each toy starts entirely above its entry edge.");
                     appeared[slot] = true;
                 }
-            if (frame == 789) Check(water.FishBody(0).IsValid() && water.FishPose(0).Origin.Y < 100 && !water.FishInWater(0), "The first fish falls visibly through air before swimming.");
             if (frame == 179) Check(!water.Duck.IsValid() && !water.Boat.IsValid(), "No early toy spawn.");
             if (frame == 599) Check(water.Duck.IsValid() && !water.Boat.IsValid(), "Duck falls before the boat.");
         }
+        Check(highestSplash > -1200, $"Inflow and toy impacts avoid explosive outliers: highest splash={highestSplash}.");
         var top = water.Positions.Select(p => p.Y).Order().ElementAt(water.Count / 20);
         Check(top > 450 && top < 620, $"Settled water fills about a third of the window: {top}.");
         Check(water.DuckPose.Origin.Y > 400 && water.DuckPose.Origin.Y < 690, "The duck floats above the floor.");
         Check(water.BoatPose.Origin.Y > 400 && water.BoatPose.Origin.Y < 690, "The boat floats above the floor.");
-        Check(water.SwimmingFishCount == 6, "All six physical fish reach water and swim after falling.");
         var beforeSwitch = water.Positions.ToArray();
         water.SetUseGPU(false);
         Check(water.Positions.SequenceEqual(beforeSwitch), "Changing backend preserves every particle position.");
         var cpu = new double[8];
-        for (var i = 0; i < cpu.Length + 2; i++) { water.Step(1d / 60); CheckContained(water); if (i >= 2) cpu[i - 2] = water.StepMS; }
+        for (var i = 0; i < 2; i++) water.Step(1d / 60);
+        var allocated = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < cpu.Length; i++) { water.Step(1d / 60); CheckContained(water); cpu[i] = water.StepMS; }
+        var cpuBytes = (GC.GetTotalAllocatedBytes(true) - allocated) / cpu.Length;
         water.SetUseGPU(true);
-        var gpu = new double[32];
-        for (var i = 0; i < gpu.Length + 8; i++) { water.Step(1d / 60); if (i >= 8) gpu[i - 8] = water.StepMS; }
-        Console.WriteLine($"Comparable settled 64k steps: CPU mean={cpu.Average():F3}ms, GPU mean={gpu.Average():F3}ms (includes readback and coupling).");
+        var warmup = Stopwatch.StartNew();
+        while (warmup.Elapsed.TotalSeconds < 1) water.Step(1d / 60);
+        var gpu = new double[128]; allocated = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < gpu.Length; i++) { water.Step(1d / 60); gpu[i] = water.StepMS; }
+        var gpuBytes = (GC.GetTotalAllocatedBytes(true) - allocated) / gpu.Length;
+        Check(cpuBytes == 0 && gpuBytes == 0, "Warmed CPU and GPU fluid steps allocate no managed memory across worker threads.");
+        Array.Sort(gpu);
+        Console.WriteLine($"Comparable settled 64k steps: CPU mean={cpu.Average():F3}ms {cpuBytes} B/step, GPU mean={gpu.Average():F3}ms median={gpu[gpu.Length / 2]:F3}ms p95={gpu[(int)(gpu.Length * .95)]:F3}ms {gpuBytes} B/step (full step including waits/readback, managed allocations across threads).");
         Check(water.Positions.All(p => p.IsFinite()), "Both algorithms maintain finite positions after switching.");
         var duckBefore = water.DuckPose.Origin;
         water.BeginDrag(duckBefore); water.MovePointer(duckBefore + new Vector2(50, -80));
@@ -55,23 +66,11 @@ internal static class WaterPlaygroundTests
         water.EndDrag();
         Check(water.DuckPose.Origin.DistanceTo(duckBefore) > 20, "Pointer dragging applies a physical impulse to the duck.");
         Check(water.DuckPose.Origin.Y < duckBefore.Y - 45, "The grab lifts against gravity rather than barely balancing its weight.");
-        var fishBefore = water.FishPose(0).Origin;
-        water.BeginDrag(fishBefore);
-        Check(water.Dragged == water.FishBody(0), "Fish use the same physical mouse grab as the toys.");
-        water.MovePointer(fishBefore + new Vector2(0, -200));
-        for (var i = 0; i < 50; i++) { water.Step(1d / 60); CheckContained(water); }
-        Check(water.FishPose(0).Origin.Y < fishBefore.Y - 100, "A submerged fish can be lifted out of the water.");
-        water.MovePointer(new(-300, -300));
-        for (var i = 0; i < 80; i++) { water.Step(1d / 60); CheckContained(water); }
-        Check(water.ActorBounds(2).Position.X < 15 && water.ActorBounds(2).End.Y < -150, "Dragging can lift a fish above the open top while retaining the side wall.");
-        water.EndDrag();
         var surface = new WaterSurface(); surface.Update(water);
         Check(surface.VertexCount > 0 && surface.VertexCount < 160000, "Density reconstruction uses compact continuous geometry.");
         var wet = 0;
         for (var x = 32; x < 1120; x += 16) if (surface.Sample(new(x, 770)) > .65f) wet++;
         Check(wet > 60, "The basin has continuous water without a particle-dot pattern.");
-        for (var i = 1; i < WaterSimulation.FishCount; i++)
-            Check(!water.FishInWater(i) || surface.Sample(water.FishPose(i).Origin) >= .18f, "Submerged fish remain behind the transparent water surface.");
         var mass = water.Volume;
         Check(water.Size == WaterSimulation.WorldSize && water.ActiveCount == 65536 && mass > 3, "The physical world and total mass are fixed.");
         Console.WriteLine($"Water playground checks passed; {water.Count} particles, {water.Volume:F2} m3.");
@@ -89,11 +88,12 @@ internal static class WaterPlaygroundTests
         for (var i = 0; i < 12; i++) { water.Step(1d / 60); CheckContained(water); }
         Check(water.Positions[0].Y < -20, "An upward-moving droplet crosses the former ceiling in both backends.");
         for (var i = 0; i < 60; i++) { water.Step(1d / 60); CheckContained(water); }
-        Check(water.Positions[0].Y > 100 && water.ActiveCount == (int)(water.Time / WaterSimulation.PourDuration * water.Count), "Escaped water falls back without deletion or respawn.");
+        Check(water.Positions[0].Y > 100 && water.ActiveCount == 1, $"Escaped water falls back without deletion or respawn: y={water.Positions[0].Y}, count={water.ActiveCount}, t={water.Time}.");
     }
 
     internal static void RunNative()
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WATER_TOYS") == "1") { RunNativeToys(); return; }
         WaterWindow.ConfigurePresentation();
         var method = Environment.GetEnvironmentVariable("ELECTRON2D_WATER_BACKEND") ?? "gpu";
         ProjectSettings.Set(ProjectSettings.RenderingMethod, method);
@@ -102,20 +102,32 @@ internal static class WaterPlaygroundTests
         using var font = new FontFile { Data = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf")) };
         using var window = new WaterWindow(font) { Unfocusable = true };
         if (Environment.GetEnvironmentVariable("ELECTRON2D_WATER_PORTRAIT") == "1") window.Size = new(480, 800);
-        var appeared = new bool[WaterSimulation.FishCount + 2];
+        var appeared = new bool[2];
         var directory = System.IO.Path.GetFullPath("bin/water-playground/" + method);
         Directory.CreateDirectory(directory);
-        var phase = 0; var interaction = 0; var dragStart = Vector2.Zero; var boatOrigin = Vector2.Zero; var fishOrigin = Vector2.Zero; var pausedTime = 0d; var pausedDuck = Transform.Identity; var pausedParticle = Vector2.Zero; var snapshot = Array.Empty<Vector2>();
+        var video = Environment.GetEnvironmentVariable("ELECTRON2D_WATER_VIDEO") == "1"; var videoFrame = 0; var nextVideoTime = 0d;
+        if (video) Directory.CreateDirectory(System.IO.Path.Combine(directory, "sequence"));
+        var frameTimes = new double[4096]; var frameCount = 0; var lastFrame = 0L;
+        var phase = 0; var interaction = 0; var dragStart = Vector2.Zero; var boatOrigin = Vector2.Zero; var pausedTime = 0d; var pausedDuck = Transform.Identity; var pausedParticle = Vector2.Zero; var snapshot = Array.Empty<Vector2>();
         void AfterDraw()
         {
             var time = window.Simulation.Time;
+            var timestamp = Stopwatch.GetTimestamp();
+            if (!video && time is > 14 and < 20 && lastFrame != 0 && frameCount < frameTimes.Length)
+                frameTimes[frameCount++] = Stopwatch.GetElapsedTime(lastFrame, timestamp).TotalMilliseconds;
+            lastFrame = timestamp;
+            if (video && time >= nextVideoTime && time < 20)
+            {
+                using var frame = RenderingServer.Service!.Readback();
+                frame.SavePNG(System.IO.Path.Combine(directory, "sequence", $"{videoFrame++:00000}.png")); nextVideoTime += 1d / 30;
+            }
             if (time > 0 && time < .02)
                 Check(window.Simulation.Positions.Take(window.Simulation.ActiveCount).All(p => (window.ViewTransform * (p + new Vector2(0, 8))).Y < 0), "The initial water batch is hidden above the visible top, including a portrait view.");
             if (interaction < 105)
                 for (var slot = 0; slot < appeared.Length; slot++)
                     if (window.Simulation.ActorExists(slot) && !appeared[slot])
                     {
-                        Check((window.ViewTransform * window.Simulation.ActorBounds(slot)).End.Y < 0, "A new toy or fish is fully outside the rendered top edge, including portrait views.");
+                        Check((window.ViewTransform * window.Simulation.ActorBounds(slot)).End.Y < 0, "A new toy is fully outside the rendered top edge, including portrait views.");
                         appeared[slot] = true;
                     }
             if (phase == 0 && time > .6 || phase == 1 && time > 4 || phase == 2 && time > 9.8 || phase == 3 && time > 13.5 || phase == 4 && time > 20)
@@ -124,7 +136,7 @@ internal static class WaterPlaygroundTests
                 image.SavePNG(System.IO.Path.Combine(directory, $"{phase:00}.png"));
                 Console.WriteLine($"capture {phase}: {window.Size}, t={time:F2}, FPS={Engine.FramesPerSecond:F1}");
                 phase++;
-                if (phase == 4) window.Size = new(1920, 1080);
+                if (phase == 4 && !video) window.Size = new(1920, 1080);
 
             }
             if (phase == 1 && time > .4 && time < .7 && window.Simulation.EntryY < -100)
@@ -134,7 +146,7 @@ internal static class WaterPlaygroundTests
                 Check(visibleWaterAboveOrigin, "The falling water surface is drawn in the visible air above the original world origin.");
             }
             if (phase < 5) return;
-            if (interaction == 0) { Check(window.SwimmingFishCount == 6, "Six physical fish swim after falling into the basin."); CheckView(); }
+            if (interaction == 0) CheckView();
             interaction++;
             if (interaction == 1) { dragStart = window.ViewTransform * window.Simulation.DuckPose.Origin; NativeMotion(dragStart); NativeButton(dragStart, true); }
             if (interaction == 2) NativeMotion(dragStart + new Vector2(-60, -45));
@@ -142,9 +154,14 @@ internal static class WaterPlaygroundTests
             if (interaction == 21) { boatOrigin = window.Simulation.BoatPose.Origin; dragStart = window.ViewTransform * (window.Simulation.BoatPose * new Vector2(0, -70)); NativeMotion(dragStart); NativeButton(dragStart, true); }
             if (interaction == 22) NativeMotion(dragStart + new Vector2(-60, -40));
             if (interaction == 40) { NativeButton(dragStart + new Vector2(-60, -40), false); Check(window.Simulation.BoatPose.Origin.DistanceTo(boatOrigin) > 10, "Native mouse drags the boat by its sail."); }
-            if (interaction == 41) { fishOrigin = window.Simulation.FishPose(0).Origin; dragStart = window.ViewTransform * fishOrigin; NativeMotion(dragStart); NativeButton(dragStart, true); }
-            if (interaction == 42) { Check(window.Simulation.Dragged == window.Simulation.FishBody(0), "Native mouse picks the fish."); NativeMotion(dragStart + new Vector2(0, -180)); }
-            if (interaction == 60) { NativeButton(dragStart + new Vector2(0, -180), false); Check(window.Simulation.FishPose(0).Origin.Y < fishOrigin.Y - 35, "Native mouse lifts a swimming fish."); }
+            if (interaction == 41) NativeKey(SDL.Scancode.H);
+            if (interaction == 42)
+            {
+                Check(!window.InterfaceVisible && !window.GetNode<Button>("CPU").Visible && !window.GetNode<Button>("Bucket").Visible && !window.GetNode<Entity>("HUD").Visible, "H hides the complete interface.");
+                Capture("interface-hidden.png"); NativeClick(new(window.Size.X - 140, 39));
+            }
+            if (interaction == 43) { Check(window.Simulation.UseGPU, "Hidden mode controls do not intercept pointer input."); NativeKey(SDL.Scancode.H); }
+            if (interaction == 44) Check(window.InterfaceVisible && window.GetNode<Button>("CPU").Visible && window.GetNode<Button>("Bucket").Visible, "H restores interface controls.");
             if (interaction == 61) NativeClick(new(window.Size.X - 140, 39));
             if (interaction == 62) { Check(!window.Simulation.UseGPU, "Native CPU button selects CPU fluid."); NativeClick(new(window.Size.X - 60, 39)); }
             if (interaction == 63) { Check(window.Simulation.UseGPU, "Native GPU button restores GPU fluid."); NativeKey(SDL.Scancode.Space); }
@@ -164,7 +181,7 @@ internal static class WaterPlaygroundTests
             }
             if (interaction == 106)
             {
-                Check(window.Simulation.Count == 65536 && window.Simulation.ActiveCount < 1000 && !window.Simulation.Duck.IsValid() && !window.Simulation.FishBody(0).IsValid(), "Reset begins a new pour and removes toys and fish.");
+                Check(window.Simulation.ActiveCount < 1000 && !window.Simulation.Duck.IsValid() && !window.Simulation.Boat.IsValid(), "Reset begins a new pour and removes toys.");
                 window.Tree!.Quit();
             }
         }
@@ -185,7 +202,12 @@ internal static class WaterPlaygroundTests
         };
         try { Check(Engine.Run(window) == 0, "Native water scene exits cleanly."); }
         finally { if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= AfterDraw; }
-        Check(phase == 5 && interaction == 106, "Native lifecycle reaches water, fish, dragging and resize captures.");
+        if (frameCount > 0)
+        {
+            var samples = frameTimes.AsSpan(0, frameCount); samples.Sort();
+            Console.WriteLine($"Rendered 64k frames: count={frameCount}, median={samples[frameCount / 2]:F2}ms p95={samples[(int)(frameCount * .95)]:F2}ms, mean FPS={1000 / samples.ToArray().Average():F1}");
+        }
+        Check(phase == 5 && interaction == 106, "Native lifecycle reaches water, dragging and resize captures.");
         void Capture(string name)
         {
             using var image = RenderingServer.Service!.Readback();
@@ -210,7 +232,7 @@ internal static class WaterPlaygroundTests
             var p = water.Positions[i];
             Check(p.IsFinite() && p.X >= 0 && p.X <= water.Size.X && p.Y <= water.Size.Y, "Every active particle stays inside the side and bottom walls; the top is open.");
         }
-        for (var slot = 0; slot < WaterSimulation.FishCount + 2; slot++)
+        for (var slot = 0; slot < 2; slot++)
             if (water.ActorExists(slot))
             {
                 var b = water.ActorBounds(slot);
@@ -236,6 +258,7 @@ namespace Electron2D.Examples.WaterPlayground
         // A deterministic physical initial condition, compiled only into the executable checks.
         internal void LaunchFirstParticleForTest()
         {
+            ActiveCount = 1; FaucetFlow = 0;
             _state[0] = new(Size.X * .005f, .2f, 0, -4);
             Capture();
         }

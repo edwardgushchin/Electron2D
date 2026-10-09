@@ -1,15 +1,17 @@
 # WaterPlayground
 
-A resizable pastel water scene. A stream enters from above the screen and gradually releases 65,536 simulated fluid particles, then a rubber duck and sailboat fall into the basin. Six fish then fall into the water and swim underwater. A continuous translucent surface covers the immersed toys and fish.
+A resizable pastel water scene. A stream enters from above the screen and gradually releases 65,536 simulated fluid particles, then a rubber duck and sailboat fall into the basin. A translucent surface follows the solved particles, without a separate waterline painted over objects.
 
 ```sh
 dotnet run --project examples/WaterPlayground -c Release
 ```
 
-Drag a toy or fish to lift it, or stir the water. **Space** pauses, **R** refills, **F11** toggles borderless fullscreen. **CPU/GPU** buttons or **Tab** switch the liquid solver without resetting it. `--cpu` starts with CPU fluid; `--compatibility` independently selects the compatibility renderer.
+Drag toys to lift them, or stir the water. **H** hides or restores the whole interface; hidden buttons do not intercept the mouse. **Space** pauses, **R** refills, **F11** toggles borderless fullscreen. **CPU/GPU** buttons or **Tab** switch liquid computation without resetting it. `--cpu` starts with CPU fluid; `--compatibility` independently selects the compatibility renderer.
 
-The world always measures 1152×800 units and contains about 3.07 m³ after the eight-second pour. Resizing/fullscreen scales the view uniformly to the window width, with the bottom anchored to the lower edge. Shapes keep their proportions; the view shows more or less upper air. Existing positions, mass and physics stay unchanged. Water, toys and fish start above the visible top and may pass through it; the sides and bottom remain closed. Splashes keep simulating above the view and fall back without being deleted. CPU and GPU use identical particle counts and numerical settings. Both exchange impulses with CPU PhysicsServer toys and fish. Fish propulsion acts only underwater and yields to a mouse grab.
+The bottom toolbar adds a hollow bucket, a water wheel with a lift, a movable gate, wooden cargo, steel balls and a buoyant ball. **Q/E** or the mouse wheel tilts a held object; holding the wheel brakes it. Scoop and pour water, raise the gate to release a wave, or load the boat.
 
-Rendering is capped at **144 FPS** and requests **VSync off**. On a Wayland desktop with XWayland available, this example selects XWayland for immediate presentation. An explicit `SDL_VIDEO_DRIVER` environment choice takes priority. Unsupported presentation policies are reported in the window. No system settings are changed. The cap is a maximum, not a performance guarantee; CPU fluid at 65,536 particles remains slow.
+Drag the top handle to move the faucet. With no toy held, **Q/E** aims the jet and the mouse wheel adjusts flow. **F** cycles flow; **D** toggles the bottom drain. The reservoir is finite: after the initial pour, open the drain to recirculate water through the inlet.
 
-The example uses public RenderingDevice, PhysicsServer, canvas and input APIs. It adds no fluid-specific runtime API. See [the model and verification contract](../../docs/components/water-playground.md).
+The world always measures 1152×800 units and contains about 3.07 m³ after the eight-second pour. Resizing scales the view uniformly to the window width and anchors the bottom. Shapes keep their proportions, and existing positions and mass stay unchanged. Water and toys enter above the visible top and may pass through it; the sides and bottom remain closed.
+
+Both fluid modes use the same particle population and numerical passes, and exchange impulses with CPU PhysicsServer bodies. This is an approximate two-dimensional particle liquid; it does not simulate air or three-dimensional turbulence. CPU mode is a comparison/compatibility path and is substantially slower at 65,536 particles. Rendering is capped at 144 FPS with VSync disabled where the platform supports it.

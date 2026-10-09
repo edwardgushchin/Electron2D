@@ -51,9 +51,6 @@ internal sealed class WaterSurface
                 _density[i] = (_scratch[Math.Max(0, y - 2) * Columns + x] + 4 * _scratch[Math.Max(0, y - 1) * Columns + x] +
                     6 * _scratch[i] + 4 * _scratch[Math.Min(_rows - 1, y + 1) * Columns + x] + _scratch[Math.Min(_rows - 1, y + 2) * Columns + x]) / 16;
             }
-        // The view looks through water in front of the solid toys. Only bridge their immersed silhouette.
-        for (var slot = 0; slot < WaterSimulation.FishCount + 2; slot++)
-            if (water.ActorExists(slot)) CoverActor(water.ActorBounds(slot));
         _vertices.Clear(); _colors.Clear();
         for (var y = 0; y < _rows - 1; y++)
             for (var x = 0; x < Columns - 1; x++)
@@ -73,18 +70,6 @@ internal sealed class WaterSurface
             }
     }
     private bool Full(int i) => _density[i] >= .18f && _density[i + 1] >= .18f && _density[i + Columns] >= .18f && _density[i + Columns + 1] >= .18f;
-    private void CoverActor(Rect2 bounds)
-    {
-        if (bounds.End.Y < _top || bounds.Position.Y > WaterSimulation.WorldSize.Y) return;
-        var left = Math.Clamp((int)(bounds.Position.X / CellSize), 0, Columns - 1); var right = Math.Clamp((int)(bounds.End.X / CellSize), 0, Columns - 1);
-        var top = Math.Clamp((int)MathF.Floor((bounds.Position.Y - _top) / CellSize), 0, _rows - 1); var bottom = Math.Clamp((int)MathF.Floor((bounds.End.Y - _top) / CellSize), 0, _rows - 1);
-        for (var y = top; y <= bottom; y++)
-        {
-            var depth = Math.Min(_density[y * Columns + left], _density[y * Columns + right]);
-            if (depth < .18f) continue;
-            for (var x = left; x <= right; x++) _density[y * Columns + x] = Math.Max(_density[y * Columns + x], depth);
-        }
-    }
     private void Clip(Vector2 a, Vector2 b, Vector2 c, float da, float db, float dc)
     {
         const float edge = .18f;

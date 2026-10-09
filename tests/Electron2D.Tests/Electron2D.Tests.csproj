@@ -11,7 +11,7 @@
   <ItemGroup>
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
-    <Compile Include="../../examples/WaterPlayground/WaterWindow.cs;../../examples/WaterPlayground/WaterSimulation.cs;../../examples/WaterPlayground/WaterSimulation.GPU.cs;../../examples/WaterPlayground/WaterSurface.cs" Link="Examples/%(Filename)%(Extension)" />
+    <Compile Include="../../examples/WaterPlayground/WaterWindow.cs;../../examples/WaterPlayground/WaterWindow.Toys.cs;../../examples/WaterPlayground/WaterSimulation.cs;../../examples/WaterPlayground/WaterSimulation.GPU.cs;../../examples/WaterPlayground/WaterSimulation.Toys.cs;../../examples/WaterPlayground/WaterSurface.cs" Link="Examples/%(Filename)%(Extension)" />
     <Compile Include="../../editor/EditorScene.cs" Link="Editor/EditorScene.cs" />
     <Compile Include="../../examples/CharacterMovement/CharacterMovementScene.cs" Link="Examples/CharacterMovementScene.cs" />
     <Compile Include="../../examples/CharacterMovement/Player.cs" Link="Examples/Player.cs" />

@@ -35,8 +35,8 @@ internal sealed partial class WaterSimulation
         if (_device is null) return;
         for (var i = 0; i < _gpuSets.Length; i++) if (_gpuSets[i].IsValid()) { _device.FreeRID(_gpuSets[i]); _gpuSets[i] = default; }
         for (var i = 0; i < _buffers.Length; i++) if (_buffers[i].IsValid()) { _device.FreeRID(_buffers[i]); _buffers[i] = default; }
-        var groups = (Count + 127) / 128; _summaries = new Float4[groups * BodyCount];
-        int[] sizes = [Count * 16, Count * 16, _heads.Length * 4, Count * 4, Count * 8, Count * BodyCount * 16, groups * BodyCount * 16, Count * 16];
+        var groups = (Count + 127) / 128; _summaries = new Float4[BodyCount];
+        int[] sizes = [Count * 16, Count * 16, _heads.Length * 4, Count * 4, Count * 32, Count * BodyCount * 16, (groups + 1) * BodyCount * 16, Count * 16];
         for (var i = 0; i < _buffers.Length; i++) _buffers[i] = _device.StorageBufferCreate((uint)sizes[i]);
         for (var flip = 0; flip < 2; flip++)
         {
@@ -51,14 +51,19 @@ internal sealed partial class WaterSimulation
         }
         _gpuSource = 0; _device.BufferUpdate(_buffers[0], 0, (uint)(Count * 16), MemoryMarshal.AsBytes(_state.AsSpan()));
     }
-    private void StepGPU(bool capture)
+    private void StepGPU(bool sort, bool capture)
     {
         if (ActiveCount == 0) return;
         var device = _device!; var list = device.ComputeListBegin();
         device.ComputeListBindComputePipeline(list, _pipeline); device.ComputeListBindUniformSet(list, _parameters, 1);
         device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
+        if (sort)
+        {
+            Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(8, _heads.Length); _gpuSource ^= 1;
+            device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
+        }
         Dispatch(5, ActiveCount); _gpuSource ^= 1;
-        for (var iteration = 0; iteration < 4; iteration++)
+        for (var iteration = 0; iteration < PressureIterations; iteration++)
         {
             device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
             Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(2, ActiveCount); Dispatch(3, ActiveCount);
@@ -66,21 +71,17 @@ internal sealed partial class WaterSimulation
         }
         device.ComputeListBindUniformSet(list, _gpuSets[_gpuSource], 0);
         Dispatch(0, _heads.Length); Dispatch(1, ActiveCount); Dispatch(6, ActiveCount); _gpuSource ^= 1;
-        Dispatch(4, ActiveCount); device.ComputeListEnd();
+        if (_actorLimit > 0) { Dispatch(4, ActiveCount); Dispatch(7, _actorLimit * 128); }
+        device.ComputeListEnd();
         if (capture) device.BufferGetData(_buffers[_gpuSource], MemoryMarshal.AsBytes(_state.AsSpan(0, ActiveCount)));
-        var summaryCount = ((ActiveCount + 127) / 128) * BodyCount;
-        device.BufferGetData(_buffers[6], MemoryMarshal.AsBytes(_summaries.AsSpan(0, summaryCount)));
-        for (var slot = 0; slot < BodyCount; slot++)
-        {
-            var sum = Float4.Zero;
-            for (var i = slot; i < summaryCount; i += BodyCount) sum += _summaries[i];
-            React(_actors[slot], sum);
-        }
+        if (_actorLimit == 0) return;
+        device.BufferGetData(_buffers[6], MemoryMarshal.AsBytes(_summaries.AsSpan()));
+        for (var slot = 0; slot < _actorLimit; slot++) React(_actors[slot], _summaries[slot]);
         void Dispatch(int operation, int count)
         {
             _settings.Meta.Y = operation;
             device.BufferUpdate(_uniform, 0, (uint)Marshal.SizeOf<Settings>(), MemoryMarshal.AsBytes(MemoryMarshal.CreateReadOnlySpan(ref _settings, 1)));
-            device.ComputeListDispatch(list, (uint)((count + 127) / 128), 1, 1);
+            device.ComputeListDispatch(list, (uint)((count + 127) / 128), operation == 4 ? (uint)_actorLimit : 1, 1);
         }
     }
     private void FreeGPU()
