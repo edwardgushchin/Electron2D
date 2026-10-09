@@ -172,6 +172,29 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         Wake(body.Index);
     }
 
+    private const uint LinearVelocityEdit = 1048576, AngularVelocityEdit = 2097152;
+
+    internal void SetSolverLinearVelocity(BodyHandle body, Vector2 value)
+    {
+        Validate(body);
+        if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
+        ref var command = ref Edit(body.Index); command.Mask |= LinearVelocityEdit;
+        command.Body.Velocity.X = value.X; command.Body.Velocity.Y = value.Y;
+        // A component assignment supersedes only that component's earlier impulses.
+        command.Impulse.X = command.Impulse.Y = 0;
+        Wake(body.Index);
+    }
+
+    internal void SetSolverAngularVelocity(BodyHandle body, float value)
+    {
+        Validate(body);
+        if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
+        ref var command = ref Edit(body.Index); command.Mask = (command.Mask | AngularVelocityEdit) & ~ClearAngular;
+        command.Body.Velocity.Z = RotationLocked(_slots[body.Index]) ? 0 : value;
+        command.Impulse.Z = 0;
+        Wake(body.Index);
+    }
+
     internal void SetVelocity(BodyHandle body, Vector2 linear, float angular) => SetVelocityCore(body, linear, angular, true);
     internal void SetSolverVelocity(BodyHandle body, Vector2 linear, float angular) => SetVelocityCore(body, linear, angular, false);
 
@@ -180,7 +203,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         Validate(body);
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
         if (RotationLocked(_slots[body.Index])) angular = 0;
-        ref var command = ref Edit(body.Index); command.Mask = (command.Mask | Velocity) & ~ClearAngular;
+        ref var command = ref Edit(body.Index); command.Mask = (command.Mask | Velocity) & ~(ClearAngular | LinearVelocityEdit | AngularVelocityEdit);
         var value = new Float4(linear.X, linear.Y, angular, 0);
         if (surfaceForNondynamic && _slots[body.Index].Mode < PhysicsServer.BodyMode.Rigid)
         {

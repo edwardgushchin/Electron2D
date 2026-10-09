@@ -133,7 +133,7 @@ shared-world deduplication, separate viewport transforms, toggle/removal and res
 release on all four physics/renderer combinations. Pixel tolerance is .05 red/.04
 other channels for render-target rounding. Captures: `/tmp/e2d-contact-debug-*.png`.
 
-Measured on Linux x64 with 256 independent static/dynamic circle pairs (512 bodies),
+Pre-optimization measurement at `1dedab39`, on Linux x64 with 256 independent static/dynamic circle pairs (512 bodies),
 96 warmup iterations and 64 samples, resetting every dynamic pose/velocity and then
 stepping 1/60 s. CPU/GPU use the same fixture and public operations on the same source
 candidate. Contact cap is 128 when enabled. Timings include the reset; no rendering.
@@ -152,9 +152,10 @@ in 64 warmed render frames. First preparation/growth, capture encoding and
 native/driver allocations are excluded. These tiny-window checks establish pixels,
 not representative FPS; timing noise prevents an on/off speedup claim.
 
-The complete GPU path loses badly on this reset-heavy workload: 768 command
+The pre-optimization GPU path lost badly on this reset-heavy workload: 768 command
 submissions per reset, before stepping. Current pose/velocity setters invalidate
 GPU snapshots; preserving the other velocity component triggers synchronous
-single-body reads. Phase timing and submission counts expose this existing adapter
-bottleneck. Fixing batched/partial authored edits and measuring representative
-massive scenes remain required; contact diagnostics do not establish GPU advantage.
+single-body reads. Phase timing and submission counts exposed this adapter bottleneck.
+[Independent component commands](gpu-resident-bodies.md#component-velocity-writes)
+now remove those setter reads; the linked report contains new whole-path and real
+window measurements. Representative massive-scene GPU advantage remains required.

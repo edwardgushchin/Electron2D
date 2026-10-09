@@ -20,12 +20,13 @@ and [directed collision exceptions](gpu-resident-exceptions.md), plus
 [single-tick transient forces](gpu-resident-forces.md), plus
 [kinematic targets and virtual surfaces](gpu-resident-kinematic.md) and
 [device Area field reduction](gpu-resident-fields.md).
-It is not a complete physics backend: independent GPU public joint adapters,
-scene/server selection/publication and networking remain open. [Resident CCD](gpu-resident-ccd.md) now executes internally. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
+Public [scene/server selection, body publication and joint adapters](physics-backends.md)
+now consume the resident world. Full API conformance, extensions, virtual tile owners,
+networking and massive-scene performance acceptance remain open. [Resident CCD](gpu-resident-ccd.md) now executes internally. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
 geometry and center-aware device motion/constraint preparation. [Connected sleep/wake](gpu-resident-sleep.md) now executes on GPU. Step
 remains an integration-only control; FindContacts computes contact points.
 Its partial-pipeline timings cannot be compared with full CPU physics or reported
-as window FPS. These missing consumers must be connected to resident state before
+as window FPS. Full observable conformance and whole-world performance must be established before
 the independent GPU objective is satisfied.
 
 ## Storage, transfers and waits
@@ -303,3 +304,94 @@ Local logs retain the failed run and follow-ups under
 Nonfatal gtk_disable_setlocale warnings can still appear on repeated initialization.
 The earlier distinct GLib impossible-allocation observation in GPU status remains
 open; no stack evidence establishes that it had the same cause.
+
+## Component velocity writes
+
+The scene/server adapter queues linear and angular assignments independently through
+`SetSolverLinearVelocity` / `SetSolverAngularVelocity`. Preserving the untouched
+component happens on device. A pose followed by either setter no longer flushes
+wakes and reads a one-body snapshot just to reconstruct a complete velocity value.
+The shared snapshot epoch is still invalidated; a real getter, axis projection,
+query, callback or subsequent step observes the ordered changes through existing
+publication. No live velocity mirror or new public API is introduced.
+
+Two unused bits in the existing command mask select XY or Z. Body storage remains
+96 bytes, commands remain 176 bytes, and CPU slots retain only authored metadata.
+A partial assignment replaces earlier impulses on its own component and preserves
+the other component's impulses. Later impulses still apply. Full assignments replace
+both components and clear both pending partial masks. Sleep clears both velocities;
+a following partial write wakes the body without reviving its other old component.
+Rotation-lock/role changes and subsequent explicit writes retain their order.
+Virtual surface motion stays separate from solver motion. Shader history versions
+compare only the affected velocity components; private sleep-clock changes alone
+do not turn a partial assignment into a whole-velocity edit.
+
+`ELECTRON2D_TEST_PHYSICS_VELOCITY_EDITS=1` exercises the public CPU/GPU scene/server
+contract, direct-state setters and custom integration callbacks, impulses, sleep,
+locks, axis projection and invalid/foreign/owner guards. It checks that a prepared
+pose/linear/angular write sequence causes **zero GPU submissions/readback** before
+an explicit observation. Resident-command checks also cover writes before creation
+publication, coalesced impulses, full/partial replacement and stationary surfaces.
+Nonintegrated motion comparisons use .0001 scene units/s and rad/s tolerance for
+CPU unit conversion; identity/lifetime/traffic assertions are exact.
+
+### Complete-path measurements
+
+Linux x64, .NET 10.0.1 Release, Vulkan/RTX 3090 Ti. The unchanged
+`ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG=1` fixture contains 256 independent
+static/dynamic circle pairs, 512 real bodies, 96 warmups and 64 measured iterations.
+Each iteration resets every dynamic pose/linear velocity and runs a full 1/60 s
+step. Enabled diagnostics use cap 128; no rendering is included in this table.
+Before is `1dedab39`; after is the component-write implementation on that base.
+CPU/GPU controls run on the same after source and identical fixture.
+
+| Path | Whole p50 / p95 / p99 ms | Reset / step p50 ms | Reset submissions | GPU upload / readback B per iteration | GPU mean wait ms |
+| --- | --- | --- | ---: | --- | ---: |
+| CPU after, contacts off | .3676 / .4206 / .4346 | .0707 / .2965 | 0 | 0 / 0 | 0 |
+| CPU after, contacts on | .3712 / .4335 / .5215 | .0689 / .3000 | 0 | 0 / 0 | 0 |
+| GPU before, contacts off | 54.0535 / 64.8426 / 69.4052 | 51.1207 / 3.2462 | 768 | 98496 / 63696 | 35.3224 |
+| GPU after, contacts off | 2.9684 / 3.9388 / 5.1509 | .0667 / 2.9018 | 0 | 45248 / 41168 | 1.6692 |
+| GPU before, contacts on | 58.3084 / 71.0705 / 133.0743 | 54.7341 / 3.4701 | 768 | 98496 / 64728 | 38.4161 |
+| GPU after, contacts on | 2.9579 / 4.3234 / 4.7088 | .0667 / 2.8920 | 0 | 45248 / 42200 | 1.7825 |
+
+All these warmed intervals allocated **0 owner-thread and 0 all-thread managed
+bytes**. Logs: `/tmp/e2d-velocity-baseline-perf.log` and
+`/tmp/e2d-velocity-perf1.log`. Removing setter readback improves this GPU whole path
+about 18 times with contacts off, but **CPU is still faster** on this small scene.
+This is an adapter improvement, not evidence of solver or massive-scene superiority.
+The count and features are unchanged. First capacity growth and native/driver
+allocations are not measured. Impulse validation and explicit getters still have
+real read consumers; these commands do not remove their existing waits.
+
+### Real-window measurement
+
+`ELECTRON2D_TEST_PHYSICS_VELOCITY_EDITS_NATIVE=1` runs the same 256 circle pairs as
+scene bodies in an actual 640-by-520 GPU-rendered window. Every fixed tick writes
+pose, linear and angular velocity for all dynamics, then renders their real scene
+poses. It warms 96 physics ticks and measures four seconds, excluding image capture
+and shutdown. Fixed-step target is 60 Hz; `Engine.MaxFPS=0`. The request to disable
+VSync fell back to **Enabled**, so the measured presentation rate is capped near
+144 Hz. This check establishes sustained output under that cap, not uncapped FPS.
+
+After optimization, CPU measured 143.83 FPS / 59.93 physics ticks/s and GPU measured
+143.56 FPS / 59.92 ticks/s. Frame p50/p95/p99: CPU 6.9520/7.0153/7.0685 ms; GPU
+6.9492/8.7416/10.1794 ms. Both measured zero owner-thread managed bytes over their
+four-second windows. GPU's 240 ticks submitted 6480 batches, uploaded 10,859,520 B,
+read 9,880,320 B and spent 633.012 ms in measured waits. Captures
+`/tmp/e2d-velocity-window-after-{CPU,GPU}.png` verify actual body pixels; log
+`/tmp/e2d-velocity-native1.log`. All-thread/native allocation, other renderers/platforms,
+65,536-body sustained performance and authoritative networking remain separate gates.
+
+The identical native harness built against the unmodified `1dedab39` runtime
+measured CPU 143.31 FPS / 60.17 ticks/s. Baseline GPU produced only **1.46 FPS and
+11.66 ticks/s**: six rendered frames and 48 physics ticks in 4.117 s. Its frame
+p50/p95/p99 were 691.9386/711.3140/711.3140 ms; with only six frames these are a
+short-stall observation, not a long-run latency distribution. The host performed
+its capped catch-up ticks between renders. Those 48 ticks submitted 75,024 batches,
+uploaded 7,283,712 B, read 4,138,752 B and waited 2820.160 ms; owner managed bytes
+were zero. Per-tick submissions therefore fell from **1563 to 27** while the new
+version sustained the requested 60 Hz. The baseline/after source has the same
+population, edits, renderer, warmup and four-second measurement policy; actual work
+completed differs because the old version cannot keep up. Log:
+`/tmp/e2d-velocity-window-baseline.log`; captures
+`/tmp/e2d-velocity-window-before-{CPU,GPU}.png`.

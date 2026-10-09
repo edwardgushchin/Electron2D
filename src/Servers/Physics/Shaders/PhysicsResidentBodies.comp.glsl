@@ -41,8 +41,11 @@ void main()
         vec4 pending=(mask&1u)!=0u?vec4(0):transientForces[index];
         if((mask&32768u)!=0u)pending.xyz+=c.transientForce.xyz;
         if(!finite4(pending)){fail(2u);return;}
+        bool velocityChanged=((mask&8u)!=0u&&b.velocity!=c.body.velocity)||
+            ((mask&1048576u)!=0u&&b.velocity.xy!=c.body.velocity.xy)||
+            ((mask&2097152u)!=0u&&b.velocity.z!=c.body.velocity.z);
         // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
-        if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
+        if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
         if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
         if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
@@ -55,6 +58,8 @@ void main()
         }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
+        if ((mask & 1048576u) != 0u) b.velocity.xy = c.body.velocity.xy;
+        if ((mask & 2097152u) != 0u) b.velocity.z = c.body.velocity.z;
         if ((mask & 64u) != 0u) { centers[index] = c.center.xy; b.properties.xy = c.body.properties.xy; }
         if ((mask & 32u) != 0u) b.force.xyz = c.body.force.xyz;
         if ((mask & 1024u) != 0u) b.flags.z|=32u;

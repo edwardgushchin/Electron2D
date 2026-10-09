@@ -348,3 +348,10 @@ CollisionShape.DebugColor and SceneTree.DebugCollisionsHint to retained shape/ca
 geometry and bounded contact-point snapshots on both renderers and explicit
 CPU/GPU worlds (ADR 0100). Contact color/limits are sampled typed settings; GPU
 reads only selected coordinates. Tile owners, extensions and networking remain open.
+
+GPU linear/angular setters now queue independent command components instead of
+reading the other velocity component back first. Scene/server and direct-state
+semantics, impulses, sleep and surface motion retain their shared contract.
+[Component-write measurements](../components/gpu-resident-bodies.md#component-velocity-writes)
+separate the complete small-scene speedup, capped real-window output and remaining
+massive-scene/native/network acceptance.

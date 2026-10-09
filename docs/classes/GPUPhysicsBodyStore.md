@@ -258,3 +258,14 @@ permitted for cleanup without authorizing subsequent reads or steps. Zero limit
 skips diagnostic compute and readback. Capacity is retained until disposal. The
 [component report](../components/physics-debug.md#contact-point-snapshots) distinguishes
 these explicit diagnostic transfers from ordinary simulation and body publication.
+
+## Independent velocity-component commands
+
+Internal `SetSolverLinearVelocity(BodyHandle, Vector2)` and
+`SetSolverAngularVelocity(BodyHandle, float)` validate and queue only their respective
+components. They preserve the other component and its pending impulses on device,
+keep virtual surfaces separate, and obey full-write/sleep/lock/role ordering. The
+command and body layouts are unchanged; two command-mask bits carry the selection.
+No state read or publication is needed to preserve the other component. Read/query
+and step paths retain the existing owner/failure/generation guards and freshness.
+See [component writes and measurements](../components/gpu-resident-bodies.md#component-velocity-writes).

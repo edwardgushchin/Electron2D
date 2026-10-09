@@ -120,3 +120,10 @@ identity, mass/policy/force state, sampled direct contacts and attachment versio
 A 64-byte observable cache serves scene/server getters; shared epoch invalidation
 avoids a per-edit scan. Immediate wake publication uses the solved device graph.
 See [shared backend flow and limits](../components/physics-backends.md).
+
+Linear and angular setters now use independent resident command components, avoiding
+`GetSolverMotion` readback solely to preserve the untouched value. They still
+invalidate the shared GPU snapshot epoch and queue wake propagation. Actual reads,
+axis projection and other observation paths keep their existing freshness behavior.
+The CPU path and public signatures are unchanged. [Component-write checks](../components/gpu-resident-bodies.md#component-velocity-writes)
+cover scene/server and direct-state consumers plus custom integration callbacks.

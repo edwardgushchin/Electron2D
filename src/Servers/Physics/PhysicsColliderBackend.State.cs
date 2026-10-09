@@ -50,12 +50,12 @@ internal sealed partial class PhysicsColliderBackend
     internal void RestorePose() { if (GPU is not null) SetPose(_gpuSavedPose.Position, _gpuSavedPose.Rotation); else b2Body_SetTransform(BodyID, _savedPose.p, _savedPose.q); }
     internal void SetLinearVelocity(Vector2 velocity)
     {
-        if (GPU is { } gpu) { gpu.SetSolverVelocity(GPUHandle, velocity, GetSolverMotion().AngularVelocity); Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu) { gpu.SetSolverLinearVelocity(GPUHandle, velocity); Space!.InvalidateGPUStates(); }
         else b2Body_SetLinearVelocity(BodyID, PhysicsShapeBackend.ToBackend(velocity));
     }
     internal void SetAngularVelocity(float velocity)
     {
-        if (GPU is { } gpu) { gpu.SetSolverVelocity(GPUHandle, GetSolverMotion().LinearVelocity, velocity); Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu) { gpu.SetSolverAngularVelocity(GPUHandle, velocity); Space!.InvalidateGPUStates(); }
         else b2Body_SetAngularVelocity(BodyID, velocity);
     }
     internal void ClearVelocity()

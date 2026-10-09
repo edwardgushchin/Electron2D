@@ -10,6 +10,7 @@ internal static partial class GPUPhysicsTests
         PhysicsPickingTests.Run();
         PhysicsDebugTests.Run();
         PhysicsContactDebugTests.Run();
+        PhysicsVelocityEditTests.Run();
         VerifyBroadPhase(gpu);
         foreach (var count in new[] { 1, 63, 64, 65, 4097, 65536 }) VerifyIntegration(gpu, count);
         VerifyConstraints(gpu);
