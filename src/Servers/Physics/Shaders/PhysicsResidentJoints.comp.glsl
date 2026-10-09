@@ -114,7 +114,8 @@ void main()
     }
     if(j.ids.y==2u)return;
     JointState old=states[i];uvec4 epochs=uvec4(a.flags.w,b.flags.w,j.ids.x,1u);
-    float ratio=old.epochs==epochs&&old.last.y>0?time.x/old.last.y:0;
+    // Cached impulses seed iteration; do not amplify a short-interval impact into a large cancellation.
+    float ratio=old.epochs==epochs&&old.last.y>0?min(1,time.x/old.last.y):0;
     states[i].epochs=epochs;
     if(history.w==0u)states[i].budget=vec4(impulseCap(j),0,0,0);
     float bias=j.solverPolicy.x==0?time.z:j.solverPolicy.x;

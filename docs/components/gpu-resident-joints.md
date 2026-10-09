@@ -262,3 +262,10 @@ resources. Generated files remain untracked. Current generated SPIR-V SHA-256:
 
 - Joints: `538ef810426fcaa28e109e974c2e01f55d0e5699c5a05335861e581c31d0fb0e`.
 - Update: `fef2402bbd6595be715db3671feaaf3d19197c272046ef0cb6fc8a9927ed98b2`.
+
+
+Warm-start duration scaling is bounded above by one, matching contact constraints.
+[Contact publication verification](gpu-resident-reports.md#numerical-regression-found-by-publication-tests)
+reproduces unequal-mass pin velocity loss after a 25,000-fold duration increase;
+the unamplified cache preserves momentum while fresh iteration supplies any extra
+impulse. Joint impulses remain excluded from contact-report payloads.

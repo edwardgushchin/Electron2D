@@ -164,3 +164,13 @@ contract and checks target/idle/continuous/contact/joint behavior and allocation
 GPUPhysicsFieldTests compares priority, point/damping/body modes, actual geometry,
 wake/lifetime/error behavior against public CPU operations and measures a complete
 4,096-receiver field population with zero warmed owner-thread allocations.
+
+Contact publication is opt-in through CaptureContactReports. ReadContactReports
+selects each requested body's incident contacts on device with independent limits,
+returning observed generations, positions, receiver normal/impulse and final point
+velocities. Completed snapshots survive later authoring and zero-time calls.
+ReportPublicationCount/ReportReadCount count completed frame/read batches;
+ReportDeviceCapacityBytes/ReportTransferCapacityBytes expose retained report storage. No CPU
+contact mirror is retained; [publication storage and traffic](../components/gpu-resident-reports.md)
+are separate from integration/solver benchmarks. GPUPhysicsReportTests checks the
+shared public momentum/reporting contract and the internal publication lifecycle.

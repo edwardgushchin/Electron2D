@@ -278,3 +278,11 @@ Iteration-layout SPIR-V SHA-256 before mass-profile integration (untracked outpu
 [Resident sleep](gpu-resident-sleep.md) now supplies dynamic component sleep/wake. Historical timings/traffic above predate its graph passes and 8-byte body status. Current active benchmark bodies explicitly disable automatic sleep; no smaller awake population is substituted.
 
 [Resident continuous collision](gpu-resident-ccd.md) now reuses this solver at impact intervals. Initial force/spring/motor duration is not replayed; CCD restitution uses a bounded contact skin, while ordinary non-CCD restitution keeps its original boundary. Public transient contact/event accumulation remains an adapter obligation.
+
+
+[Completed contact publication](gpu-resident-reports.md) now retains outer-tick
+world-axis impulses and transient manifolds on device, with explicit capped receiver
+reads. Its CCD regression found unstable amplification after a very short interval:
+contact warm-start scaling is now bounded above by one. Additional support/impact
+impulse is computed by the solver. Stable-duration historical measurements above
+are unchanged controls, not new full-backend acceptance.

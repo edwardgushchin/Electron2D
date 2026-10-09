@@ -240,6 +240,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var resolved = delta > 0 && PrepareFields(defaults, delta, 0);
         Submit(delta, gravity, default, default, resolvedFields: resolved);
+        if (delta > 0) { _reportCount = 0; _reportReady = false; }
     }
 
     internal void Read(ReadOnlySpan<BodyHandle> bodies, Span<Snapshot> results)
@@ -439,6 +440,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }
