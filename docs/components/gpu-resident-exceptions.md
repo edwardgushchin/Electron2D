@@ -48,7 +48,7 @@ upload exception records nor rebuild the table.
 | --- | --- |
 | CPU body metadata | 88 bytes per slot after live integration policies, including one incident-exception list head; no solved poses or velocities. |
 | CPU exception slot | 40 bytes for authored endpoint indices/generations, incident/free links and journal flags, plus the directed-key dictionary and retained dirty-index storage. |
-| Exception scatter | 32 bytes per changed slot; body wake edits share their existing coalesced 128-byte command. |
+| Exception scatter | 32 bytes per changed slot; body wake edits share their existing coalesced 144-byte command. |
 | Device authored exception | 16 bytes per retained exception slot. Growth preserves records GPU-to-GPU. |
 | Device canonical filter source | 16 bytes per retained joint or exception contribution, including both body generations. Rebuilt on the GPU. |
 | Device hash table | 4 bytes per hash slot, power-of-two capacity at least twice combined joint/exception high-water count. Duplicate sources collapse at lookup. |

@@ -114,7 +114,10 @@ now retain initial side decisions per geometry-piece pair and share them with CC
 including rotating separation/recontact within one step. [Live body policies](../components/gpu-resident-parameters.md)
 now update roles, gravity/damping, dynamic rotation locks and automatic integration
 omission without a pose/velocity mirror; CPU field and mode checks cover the shared
-settings semantics. [Mass profiles](../components/gpu-resident-mass.md)
+settings semantics. [Transient forces](../components/gpu-resident-forces.md) now
+retain pending force/torque and outer-tick eligibility on device, with CPU response
+checks and no body-state download for consumption. Public force projection remains
+open. [Mass profiles](../components/gpu-resident-mass.md)
 now reuse shared authored-geometry normalization and supply center-aware GPU motion
 and constraint preparation. Its stability/allocation/population checks
 and opt-in fenced diagnostics do not establish public-backend or window-FPS acceptance.

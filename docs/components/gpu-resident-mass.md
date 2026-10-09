@@ -81,11 +81,11 @@ step. No solved velocity is copied to CPU for these operations.
 | Device body | 80 bytes per retained slot, unchanged hot layout. |
 | Device local center | 8 bytes per slot; integration and contact/joint preparation read it. Growth copies it GPU-to-GPU. |
 | CPU body slot | 88 bytes: identity/attachment/edit routing, authored role/CCD/integration/mass profiles and resolved immutable geometry values. No live pose or velocity. |
-| Pending body command | 128 bytes, including optional mass/center updates and captured impulse delta. Consumed entries are cleared. |
+| Pending body command | 144 bytes, including optional mass/center updates and captured impulse delta. Consumed entries are cleared. |
 | Body state result | 48 bytes pose/velocity/sleep under the subsequent [resident sleep stage](gpu-resident-sleep.md); only explicitly requested bodies are downloaded. |
 
 At 65,536 slots, bodies plus centers use 5.5 MiB. Authored body/command array payload
-is now 13.5 MiB with the CCD/integration policies and exception-link fields, measured by AuthoredBodyCapacityBytes; it excludes object headers, shape
+is now 14.5 MiB with the CCD/integration policies and exception-link fields plus transient-force command input, measured by AuthoredBodyCapacityBytes; it excludes object headers, shape
 and joint metadata, dirty-index capacity, proxy scratch and driver allocations.
 Unchanged warmed ticks add no mass upload, readback or wait. A real profile edit
 coalesces into the existing body command. GetMassProperties reads the authoring
@@ -134,7 +134,7 @@ allocation. Native allocator totals and foreign devices/platforms remain unmeasu
 Linux/.NET 10.0.1, Vulkan, RTX 3090 Ti, 2026-10-08. The active-edit test reports
 **0 B managed**, **0.1049 ms mean** per edit+step+explicit-read, **152 B upload**
 and **40 B readback** per iteration. These include the existing status/request
-payloads and one coalesced 128-byte body command; unchanged ticks send no command.
+payloads and one coalesced body command (128 bytes in that historical run; now 144); unchanged ticks send no command.
 
 The final separate-center-buffer run retains the contact workload from the earlier
 report (gravity 980, 1/120 s, four substeps, sixteen iterations, 384 warmup/256

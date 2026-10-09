@@ -57,7 +57,7 @@ internal static class GPUPhysicsBodyStoreTests
         var uploads = store.UploadBytes; var readbacks = store.ReadbackBytes;
         store.Read(handles.AsSpan(0, 1), state);
         Near(state[0].Position, new(42, 43), 0, "Sparse pose edit");
-        Check(store.UploadBytes - uploads == 8 + 128 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
+        Check(store.UploadBytes - uploads == 8 + 144 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
             "One edit and one requested body transfer only their command, handle, result and status.");
 
         var copies = store.DeviceCopyBytes;

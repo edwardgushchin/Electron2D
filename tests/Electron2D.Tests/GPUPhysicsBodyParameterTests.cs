@@ -162,8 +162,8 @@ internal static class GPUPhysicsBodyParameterTests
         var samples = new double[128]; var upload = s.UploadBytes; var readback = s.ReadbackBytes; var wait = s.WaitMS; var allocation = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); Tick(i); samples[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
         allocation = GC.GetAllocatedBytesForCurrentThread() - allocation;
-        Check(allocation == 0 && s.UploadBytes - upload == 128 * (128 + 96) && s.ReadbackBytes - readback == 128 * 96,
-            "Live role/policy/velocity edits share one 128-byte command, never download states and allocate zero managed bytes after warmup.");
+        Check(allocation == 0 && s.UploadBytes - upload == 128 * (144 + 96) && s.ReadbackBytes - readback == 128 * 96,
+            "Live role/policy/velocity edits share one 144-byte command, never download states and allocate zero managed bytes after warmup.");
         Array.Sort(samples);
         Console.WriteLine($"Resident body parameters: 4096 bodies, 128 warmup/128 samples, 4 substeps/16 iterations; p50={samples[64]:F4}, p95={samples[121]:F4}, p99={samples[126]:F4} ms, wait={(s.WaitMS - wait) / 128:F4} ms; {allocation} managed B, upload={(s.UploadBytes - upload) / 128}, readback={(s.ReadbackBytes - readback) / 128} B/tick; {s.Driver}, {s.DeviceName}.");
     }

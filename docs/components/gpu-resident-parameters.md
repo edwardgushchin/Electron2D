@@ -10,7 +10,7 @@ The internal `SetMode`/`GetMode` pair uses PhysicsServer.BodyMode;
 signed linear/angular damping, a dynamic rotation lock and default-force omission.
 These are executable device settings, with comparisons against the public CPU
 contract. The independent public scene/server adapter, Area field reduction,
-transient-force projection and explicit direct-state IntegrateForces remain open.
+public transient-force projection and explicit direct-state IntegrateForces remain open.
 No public declarations or coverage states change in this stage.
 
 Changing mode preserves the body handle, pose, authored mass/center/inertia,
@@ -32,7 +32,8 @@ normal projection when attaching this backend.
 
 ## Ordered edits and state lifetime
 
-All changes share the existing 128-byte per-body command. Mode/policy fields have
+All changes share the 144-byte per-body command (128 before
+[transient force storage](gpu-resident-forces.md)). Mode/policy fields have
 separate masks from pose, velocity, force and mass edits. Angular clearing is an
 ordered side effect: lock then unlock cannot resurrect old spin, while a later
 explicit unlocked velocity or impulse can supply new spin. A transient
@@ -53,8 +54,8 @@ The 48-byte selected Snapshot now uses a reserved word for the actual role and
 reports effective rotation lock/omission through its existing flags. CPU retains
 only authored integration configuration, never a current velocity/pose mirror.
 Metadata grows from 72 to 88 bytes per retained body; command/device-body/snapshot
-sizes remain 128/80/48 bytes. At 65,536 bodies the metadata/command capacity is
-14,155,776 bytes (13.5 MiB), excluding shapes, joints and driver/object overhead.
+sizes are now 144/80/48 bytes. At 65,536 bodies the metadata/command capacity is
+15,204,352 bytes (14.5 MiB), excluding shapes, joints and driver/object overhead.
 
 ## Damping cadence
 
@@ -97,7 +98,7 @@ nonfinite device failure and disposal are exercised. A thin-wall CCD case activa
 retained CCD after Static→Rigid, keeps collision-tangential velocity 96 ± 0.001 after
 the once-per-tick damping factor, and stops CCD scheduling after Kinematic entry.
 
-The residency workload has 4,096 bodies, four substeps and sixteen solver
+The historical residency run before transient-force storage has 4,096 bodies, four substeps and sixteen solver
 iterations. Each tick switches one body through Static→Rigid, changes its policy
 and writes velocity. After 128 warmup and 128 measured ticks, it allocates zero
 owner-thread managed bytes and transfers exactly one 128-byte edit plus 96 bytes

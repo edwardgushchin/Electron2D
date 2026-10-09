@@ -10,6 +10,7 @@ layout(std430,set=0,binding=0) readonly buffer Points { ContactPoint points[]; }
 layout(std430,set=0,binding=1) readonly buffer Shapes { Shape shapes[]; };
 layout(std430,set=0,binding=2) readonly buffer Joints { ResidentJoint joints[]; };
 layout(std430,set=0,binding=3) readonly buffer Corrections { vec4 corrections[]; };
+layout(std430,set=0,binding=4) readonly buffer TransientForces { vec4 transientForces[]; };
 layout(std430,set=1,binding=0) buffer Bodies { ResidentBody bodies[]; };
 // Previous/current component parent, aggregate wake/ineligible bits, minimum clock bits, generation.
 layout(std430,set=1,binding=1) buffer Graph { uvec4 graph[]; };
@@ -58,7 +59,7 @@ void wake(uint id,bool reset)
     ResidentBody b=bodies[id];if(b.flags.w==0u||b.flags.y<2u)return;
     if((b.flags.z&16u)!=0u)
     {
-        if(previous.w!=0u)bodyForces(b,policy.w,gravity.xy,gravity.w);
+        if(previous.w!=0u)bodyForces(b,policy.w,gravity.xy,gravity.w,transientForces[id].w!=0?transientForces[id].xyz:vec3(0));
         b.flags.z&=~16u;b.velocity.w=0;
     }
     if(reset)b.velocity.w=0;

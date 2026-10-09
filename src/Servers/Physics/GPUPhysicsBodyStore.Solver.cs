@@ -48,10 +48,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             for (var substep = 0; substep < substeps; substep++)
             {
                 var dampingDelta = substep == 0 ? delta : 0;
-                Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta);
+                Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta, beginTick: substep == 0);
                 SolveConstraintsCore(h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, gravity, dampingDelta: dampingDelta);
-                if (_ccdBodyCount > 0 && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
-                else Submit(h, default, default, default, 4, _hasPositionCorrections);
+                if (_ccdBodyCount > 0 && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
+                else Submit(h, default, default, default, 4, _hasPositionCorrections, endTick: substep == substeps - 1);
                 _hasPositionCorrections = false;
             }
             _sleepBodyVersion = _bodyVersion; _sleepShapeVersion = _shapeVersion; _sleepGeometryEpoch = Shape.GeometryEpoch;

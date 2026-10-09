@@ -112,9 +112,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 4);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident sleep graph");
         SDL.BindGPUComputePipeline(compute, _sleepPipeline!.DangerousGetHandle());
-        var inputs = stackalloc nint[4] { _contactsGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
-            (_jointsGPU ?? _shapesGPU).DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
+        var inputs = stackalloc nint[5] { _contactsGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
+            (_jointsGPU ?? _shapesGPU).DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _transientForces!.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 5);
         settings.Stage = stage; settings.Count = (uint)count;
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SleepUniforms));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

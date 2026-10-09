@@ -3,7 +3,7 @@
 #include "PhysicsResidentBody.inc.glsl"
 layout(local_size_x = 64) in;
 
-struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; };
+struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; vec4 transientForce; };
 struct Snapshot { vec4 pose; vec4 velocity; float clock; uint flags; uvec2 padding; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
@@ -12,6 +12,7 @@ layout(std430, set = 1, binding = 0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Status { uint status; };
 layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
 layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
+layout(std430,set=1,binding=4) buffer TransientForces { vec4 transientForces[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { vec4 step; uvec4 control; };
 
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
@@ -27,7 +28,7 @@ void main()
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
-        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 32, 0)); centers[index]=vec2(0); return; }
+        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 32, 0)); centers[index]=vec2(0); transientForces[index]=vec4(0); return; }
         ResidentBody b;
         if ((mask & 1u) != 0u) { b = c.body; centers[index] = c.center.xy; }
         else
@@ -35,6 +36,9 @@ void main()
             b = bodies[index];
             if (b.flags.x != generation || b.flags.w == 0u) { fail(1u); return; }
         }
+        vec4 pending=(mask&1u)!=0u?vec4(0):transientForces[index];
+        if((mask&32768u)!=0u)pending.xyz+=c.transientForce.xyz;
+        if(!finite4(pending)){fail(2u);return;}
         // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
         if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
@@ -61,16 +65,22 @@ void main()
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
-        bodies[index] = b;
+        bodies[index] = b; transientForces[index]=pending;
     }
     else if (control.x == 1u || control.x == 3u || control.x == 4u)
     {
         ResidentBody b = bodies[i];
-        if (b.flags.w == 0u || b.flags.y == 0u || (b.flags.z&16u)!=0u) return;
+        if (b.flags.w == 0u) return;
+        vec4 pending=transientForces[i];
+        // Select once at outer-tick entry. A sleeper woken by this tick's contacts
+        // retains its queued force until the next tick, as does a static body.
+        if((control.w&1u)!=0u)pending.w=b.flags.y==1u||(b.flags.y>=2u&&(b.flags.z&16u)==0u)?1:0;
+        if(b.flags.y!=0u&&(b.flags.z&16u)==0u)
+        {
         float dt = step.z;
         if (control.x != 4u && b.flags.y >= 2u)
         {
-            bodyForces(b,dt,step.xy,step.w);
+            bodyForces(b,dt,step.xy,step.w,pending.w!=0?pending.xyz:vec3(0));
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (control.x != 3u)
@@ -84,8 +94,10 @@ void main()
         b.pose.zw *= inversesqrt(dot(b.pose.zw, b.pose.zw));
         b.pose.xy = center - rotate(b.pose.zw,centers[i]);
         }
+        }
+        if((control.w&2u)!=0u&&pending.w!=0)pending=vec4(0);
         if (!finite4(b.pose) || !finite4(b.velocity)) { fail(2u); return; }
-        bodies[i] = b;
+        bodies[i] = b; transientForces[i]=pending;
     }
     else
     {

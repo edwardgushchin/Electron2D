@@ -40,6 +40,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `SetMode`, `GetMode` | Change/read the authored solver role without replacing handles or attachments. Nondynamic transitions clear motion, RigidLinear clears angular motion, and dynamic restoration retains configured mass/forces/CCD. |
 | `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, resolved signed damping, dynamic rotation lock and default-force omission. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
+| `ApplyForce` | Accumulate resolved world-axis transient force and center torque until the next eligible outer tick. Static/sleeping entry retains it; kinematic or omitted integration consumes it. See [lifetime, traffic and error boundaries](../components/gpu-resident-forces.md). |
 | `Step` | Flush pending edits and integrate live bodies on GPU. Static poses stay fixed, kinematics ignore forces/gravity, rigid bodies use mass/inertia/gravity/signed damping, RigidLinear locks rotation. |
 | `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Damping is applied once before the outer tick's force integration; default-force omission preserves contacts and impulses. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
 | `SolveConstraints` | Solve contacts, pins, grooves and springs together and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
@@ -143,3 +144,8 @@ GPUPhysicsExceptionStoreTests verifies directed and joint contributions, sensor 
 endpoint reuse, connected wakeup, contact-history retirement and both CCD modes.
 Its 8,192-body/4,096-entry workload checks complete filtered populations and
 128 warmed live-edit ticks with zero managed allocations; see the exception report.
+
+GPUPhysicsTransientForceTests compares single-use force/torque with the public CPU
+API and covers substeps, sleep, omission, CCD, joints, growth and generation reuse.
+The resident force buffer adds 16 device bytes per body; sparse commands are now
+144 bytes. Warmed owner-thread allocations remain zero in the checked workload.

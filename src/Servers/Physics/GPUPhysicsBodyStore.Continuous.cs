@@ -36,7 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         command.Padding = (command.Padding & ~768u) | ((uint)mode << 8);
         Wake(body.Index, true);
     }
-    private void AdvanceContinuous(float delta, Vector2 gravity, int iterations, float margin, float penetration, float correction, float speed, float bounce)
+    private void AdvanceContinuous(float delta, Vector2 gravity, int iterations, float margin, float penetration, float correction, float speed, float bounce, bool endTick)
     {
         var remaining = delta;
         for (var interval = 0; interval < 128; interval++)
@@ -44,7 +44,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var fraction = FindCCDFraction(remaining);
             if (fraction == 1)
             {
-                Submit(remaining, default, default, default, 4, _hasPositionCorrections, delta);
+                Submit(remaining, default, default, default, 4, _hasPositionCorrections, delta, endTick: endTick);
                 _hasPositionCorrections = false; return;
             }
             var travel = remaining * fraction;
@@ -54,7 +54,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 penetration, correction, speed, bounce, gravity, false, 4 * CCDTolerance);
             if (remaining == 0)
             {
-                Submit(0, default, default, default, 4, false, delta); _hasPositionCorrections = false; return;
+                Submit(0, default, default, default, 4, false, delta, endTick: endTick); _hasPositionCorrections = false; return;
             }
         }
         throw new InvalidOperationException("GPU continuous collision did not converge within its interval budget.");
