@@ -174,9 +174,11 @@ fixed physics ticks, an authoritative physics restore point or input replay.
 Changed-body publications are observable latest state, not replay history. An
 internal [GPU checkpoint](gpu-checkpoints.md) now restores device-local motion,
 forces, contacts, sleep and joint history within a fixed authored configuration.
-CPU checkpoints, public scene/server capture/apply, portable state, lifecycle
-rewind and network reconciliation remain absent; this foundation closes none of
-the complete integration rows below.
+A separate internal [CPU checkpoint](cpu-checkpoints.md) now restores persistent
+solver/contact/sleep/joint/sensor state with stable authored identities. Public
+scene/server capture/apply, portable state, lifecycle rewind and network
+reconciliation remain absent; these foundations close none of the complete
+integration rows below.
 
 | Required integration | Existing prerequisite | Open acceptance |
 | --- | --- | --- |

@@ -89,6 +89,8 @@ internal static class DampedSpringJointTests
         Check(MathF.Abs(body.LinearVelocity.Y) < 0.001f,
             "Live Length resamples the second anchor and the automatic relaxed length together.");
         spring.RestLength = 120;
+        // Retire background-GC allocation contexts before measuring; affected runtimes can count their unused bytes.
+        GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false);
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 120);
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 120);

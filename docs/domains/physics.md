@@ -375,6 +375,8 @@ remain free of premature rebound. Shared API and warm allocation checks cover th
 
 An internal [GPU replay checkpoint](../components/gpu-checkpoints.md) now retains
 resident body/force/contact/sleep/joint history without CPU state readback for an
-unchanged authored configuration. It verifies local rewind/replay only. CPU and
-public world snapshots, topology/lifecycle rewind, portable identity, network
-correction and predicted/confirmed event handling remain open.
+unchanged authored configuration. An internal [CPU solver checkpoint](../components/cpu-checkpoints.md)
+now restores managed contact, joint, sleep, sensor and spatial history with stable
+object identities. These verify local backend replay only. Public world snapshots,
+topology/lifecycle rewind, portable identity, network correction and
+predicted/confirmed event handling remain open.

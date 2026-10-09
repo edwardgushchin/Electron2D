@@ -476,3 +476,10 @@ owner/all-thread managed bytes (GPU whole-step p50/p95/p99
 The prior real-window results remain separate: native allocations, new window
 measurements, network restore/replay and general conformance are not established
 by this optimization.
+
+## Backend-local replay storage
+
+The internal [CPU checkpoint](cpu-checkpoints.md) and [GPU checkpoint](gpu-checkpoints.md)
+retain each solver's persistent replay state. They do not yet capture the common
+attachment adapters, resource/scene lifetime or event-confirmation state. Shared
+public world capture/apply and authoritative network correction remain open.
