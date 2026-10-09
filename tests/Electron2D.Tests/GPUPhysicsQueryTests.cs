@@ -8,7 +8,7 @@ internal static class GPUPhysicsQueryTests
 {
     internal static void Run()
     {
-        CompareCPU(); OrderingAndFilters(); BoundaryAndBatch(); Lifetime(); Measure();
+        CompareCPU(); OrderingAndFilters(); BoundaryAndBatch(); Lifetime(); AdaptiveReadback(); Measure();
         Console.WriteLine("Resident world queries: public CPU ray/point geometry, stable logical caps, masks/exclusions/canvas, lifetime and warmed allocation passed.");
     }
     private static Store.BodyHandle Body(Store s, Vector2 position = default, float rotation = 0) => s.Add(new(Mode.Static, position, rotation, Vector2.Zero, 0));
@@ -159,6 +159,57 @@ internal static class GPUPhysicsQueryTests
         Check(Execute(s, new(new(50, 0), Limit: 4), hits) == 1 && hits[0].Collider == 60, "Growth preserves logical mapping and live data.");
         circle.Dispose(); Check(Execute(s, new(new(50, 0), Limit: 4), hits) == 0, "Disposed geometry disappears.");
         s.Dispose(); Reject<ObjectDisposedException>(() => Execute(s, new(Vector2.Zero, Limit: 1), new Store.QueryHit[1]));
+    }
+    private static void AdaptiveReadback()
+    {
+        using var s = new Store(); using var circle = new CircleShape { Radius = 2 };
+        const int population = 256, limit = 512;
+        for (var i = 0; i < population; i++) s.SetQueryIdentity(s.AddShape(Body(s), circle), (ulong)i + 1, 0);
+        s.SetQueryIdentity(s.AddShape(Body(s, new(100, 0)), circle), 1000, 0);
+        Query[] queries = [new(new(100, 0), Limit: limit), new(default, Limit: 0), new(new(1000, 0), Limit: limit)];
+        var counts = new int[4]; counts[^1] = 777;
+        var hits = new Store.QueryHit[2 * limit + 1]; hits.AsSpan().Fill(new() { Collider = 777 });
+        s.Query(queries, [], counts, hits);
+        var read = s.ReadbackBytes; var submissions = s.SubmissionCount;
+        s.Query(queries, [], counts, hits);
+        Check(counts[0] == 1 && counts[1] == 0 && counts[2] == 0 && counts[3] == 777, "Sparse batch retains counts and zero-limit segments");
+        Check(s.ReadbackBytes - read == 8 + 3 * 4 + 2 * 64 && s.SubmissionCount - submissions == 1,
+            "Sparse queries read one predicted hit per nonempty segment with one fence, independent of reserved capacity");
+        queries[0] = new(default, Limit: limit); queries[2] = queries[0];
+        read = s.ReadbackBytes; submissions = s.SubmissionCount; var searches = s.QuerySubmissionCount;
+        s.Query(queries, [], counts, hits);
+        Check(counts[0] == population && counts[2] == population && s.SubmissionCount - submissions == 2 && s.QuerySubmissionCount == searches + 1,
+            "Unexpected dense results fetch missing tails once without repeating the search");
+        Check(s.ReadbackBytes - read == 8 + 3 * 4 + 2 * population * 64, "Overflow downloads only actual missing results");
+        for (var i = 0; i < population; i++) Check(hits[i].Collider == (ulong)i + 1 && hits[limit + i].Collider == (ulong)i + 1, "Packed transfer preserves both logical result segments");
+        Check(hits[population].Collider == 777 && hits[limit - 1].Collider == 777 && hits[limit + population].Collider == 777 && hits[^1].Collider == 777,
+            "Prefix and overflow copies leave all unused caller tails unchanged");
+        read = s.ReadbackBytes; submissions = s.SubmissionCount;
+        s.Query(queries, [], counts, hits);
+        Check(s.SubmissionCount == submissions + 1 && s.ReadbackBytes - read == 8 + 3 * 4 + 2 * population * 64, "Dense predictions retain one fence without downloading cap padding");
+        queries[0] = new(new(1000, 0), Limit: limit); queries[2] = queries[0];
+        s.Query(queries, [], counts, hits); read = s.ReadbackBytes; s.Query(queries, [], counts, hits);
+        Check(s.ReadbackBytes - read == 8 + 3 * 4 + 2 * 64, "Readback shrinks again after sparse results");
+        queries[0] = new(default, Limit: limit); queries[2] = new(default, Limit: 7);
+        s.Query(queries, [], counts, hits);
+        Check(counts[0] == population && counts[2] == 7 && hits[limit + 6].Collider == 7, "Changed caps clamp the prediction and keep output offsets");
+        using var probe = s.RetainQueryGeometry(circle);
+        Store.ShapeQuery[] shapeQueries = [new(probe, Transform.Identity, Limit: limit), new(probe, Transform.Identity, Limit: 0), new(probe, new(0, new(100, 0)), Limit: limit)];
+        var shapeHits = new Store.ShapeQueryHit[2 * limit + 1]; shapeHits.AsSpan().Fill(new() { Collider = 777 });
+        s.QueryShapes(shapeQueries, [], counts, shapeHits);
+        Check(counts[0] == population && counts[1] == 0 && counts[2] == 1 && shapeHits[limit].Collider == 1000 && shapeHits[^1].Collider == 777,
+            "Shape queries reuse adaptive storage with their different output stride");
+        s.Query(queries, [], counts, hits);
+        Check(counts[0] == population && counts[2] == 7 && hits[limit + 6].Collider == 7, "Point query tails remain correct after shape-query reuse");
+        for (var i = 0; i < 32; i++) s.Query(queries, [], counts, hits);
+        var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
+        for (var i = 0; i < 32; i++)
+        {
+            queries[0] = queries[0] with { From = (i & 1) == 0 ? new(1000, 0) : Vector2.Zero };
+            s.Query(queries, [], counts, hits);
+        }
+        owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+        Check(owner == 0 && all == 0, "Repeated sparse/dense readback and overflow allocate zero managed bytes after capacity warmup");
     }
     private static void Measure()
     {

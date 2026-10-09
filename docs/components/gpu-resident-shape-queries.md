@@ -6,10 +6,10 @@ Last updated: 2026-10-09
 
 GPUPhysicsBodyStore.QueryShapes executes logical shape intersections, contact pairs,
 deepest rest information and translational motion brackets on resident geometry.
-It creates no CPU solver world or temporary simulation body. This remains an
-internal adapter prerequisite: public PhysicsDirectSpaceState and ShapeCast still
-use CPU. Public backend selection, body-motion/CharacterBody binding,
-callback/event projection, missing shape families and networking remain open.
+It creates no CPU solver world or temporary simulation body. PhysicsDirectSpaceState
+and ShapeCast route through this store when their World uses GPU; CPU worlds retain
+the managed solver query path. [Shared world integration](physics-backends.md)
+records the executed public checks and remaining full-contract/network obligations.
 
 RetainQueryGeometry borrows an authored Shape in a disposable QueryGeometry lease.
 The lease shares the world's geometry cache, observes resource changes and has no
@@ -81,8 +81,11 @@ These corrections preserve public signatures and the existing containment rules.
 
 A shape request uploads 80 bytes; each capped result reserves 96 bytes, plus a
 4-byte count and the batch's 8-byte status exchange. Mapping/geometry edits add
-authored-data traffic only when dirty. One result fence includes capped segments,
-so no second count-discovery fence or complete state readback is needed. The center
+authored-data traffic only when dirty. The shared [adaptive readback](gpu-resident-queries.md#device-work-and-traffic)
+packs predicted result prefixes with counts in one submission, then reads only
+missing tails if needed. GPU search caps and complete results are unchanged; no
+complete body-state readback is introduced. Cast and rest need at most one result
+and keep their single fence. The center
 buffer is bound in the existing read/write storage group but only read by this
 kernel, keeping the pipeline within eight read-only buffer slots.
 

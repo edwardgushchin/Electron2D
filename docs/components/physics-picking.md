@@ -67,8 +67,10 @@ allocating temporary lists and correctly includes internal children.
 
 The steady physics pass and sorted passive hover reuse scratch; newly queued input
 copies, first use, growth and user callbacks have separate costs. GPU picking
-currently reads capacity-sized point-hit metadata before scene-policy filtering.
-That transfer is a known optimization target, not a required CPU simulation mirror.
+uses [adaptive result readback](gpu-resident-queries.md#device-work-and-traffic)
+before scene-policy filtering: predicted hit prefixes and counts arrive together,
+with one extra copy only when additional hits need fetching. All eligible hits
+remain available for scene filtering; no CPU body-state mirror is introduced.
 The native path clears the exact window viewport on SDL mouse exit, also fixing
 stale GUI hover when the global GUI selection pointed elsewhere.
 
@@ -95,17 +97,27 @@ DisplayServer and RenderingServer remain unavailable.
 
 ### Current complete-frame cost
 
-Linux x64/.NET 10.0.1, Ryzen 7 5700X, Vulkan/RTX 3090 Ti, this change over parent
-450b7f8: 1,024 static circles on a 32-by-32 grid, one hovered shape, sorted passive
-query plus the complete 1/60 s physics frame, 96 warmup and 64 measured frames.
-Both implementations run the same authored scene and delivery code.
+Linux x64/.NET 10.0.1, Ryzen 7 5700X, Vulkan/RTX 3090 Ti. The readback change
+is based on 4e10451: 1,024 static circles on a 32-by-32 grid, one hovered shape,
+sorted passive query plus the complete 1/60 s physics frame, 96 warmup and 64
+measured frames. CPU and GPU run the same authored scene and delivery code.
 
-| Backend | p50 / p95 / p99 (ms) | Owner / all-thread managed bytes | GPU upload / readback per frame | Mean device wait (ms) |
+| Revision / backend | p50 / p95 / p99 (ms) | Owner / all-thread managed bytes | GPU upload / readback per frame | Mean device wait (ms) |
 | --- | --- | --- | --- | --- |
-| CPU | 0.2497 / 0.2594 / 0.2807 | 0 / 0 | 0 / 0 B | 0 |
-| GPU | 0.5601 / 0.8000 / 1.2509 | 0 / 0 | 72 / 65,564 B | 0.1448 |
+| Parent / CPU | 0.2460 / 0.2517 / 0.2608 | 0 / 0 | 0 / 0 B | 0 |
+| Parent / GPU | 0.5434 / 0.8443 / 0.9189 | 0 / 0 | 72 / 65,564 B | 0.1419 |
+| Adaptive readback / CPU | 0.2533 / 0.2640 / 0.2768 | 0 / 0 | 0 / 0 B | 0 |
+| Adaptive readback / GPU | 0.6439 / 2.2192 / 2.3360 | 0 / 0 | 72 / 92 B | 0.5234 |
 
-This quiet picking workload favors CPU. GPU transfers expose the current
-capacity-sized query-result download; reducing that transfer remains open. These
-numbers are not rigid-body stress results or rendered-window FPS. Native/device
-allocation and other platforms remain unmeasured.
+Complete-frame readback falls 99.86%; the point query itself reads 76 bytes
+(8 status + 4 count + one 64-byte hit), with 16 other frame-status bytes.
+The regression test bounds this sparse frame's readback to 128 bytes. Query caps,
+scene eligibility and selected objects are unchanged.
+
+These measurements do **not** establish a latency win. GPU waits were variable;
+a live WaterPlayground and desktop graphics applications shared the device during
+the after run. They were not stopped. This quiet workload still favors CPU.
+Evidence: `/tmp/e2d-query-picking-before.log` and `/tmp/e2d-query-picking-after.log`.
+These numbers are not rigid-body stress results or rendered-window FPS. Native/device
+allocation and other platforms remain unmeasured; controlled GPU timing and the
+full-goal performance acceptance remain open.

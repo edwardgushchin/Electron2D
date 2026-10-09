@@ -74,10 +74,12 @@ picking callback finish at its current pass boundary.
 
 CPU/GPU use one delivery path. Query and traversal scratch are reused after warmup;
 queued external events may allocate their owned copies outside the physics step.
-GPU point queries currently return complete hit metadata before CPU scene-policy
-filtering; this is not a CPU body-state mirror. Measure the transfer cost and keep
-capacity-sized readback optimization open rather than claiming it necessary to
-the final architecture. Broader GPU/network completion remains separate.
+GPU point queries return complete hit metadata before CPU scene-policy filtering;
+this is not a CPU body-state mirror. Predict transfer prefixes from prior counts
+and fetch any missing tails without rerunning the GPU search. Prediction must never
+truncate results or change the query cap. Measure both the normal fence and any
+extra tail fence; returned bytes should follow hits rather than world capacity.
+Broader GPU/network completion remains separate.
 
 ### Verification
 

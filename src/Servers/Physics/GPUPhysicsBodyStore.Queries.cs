@@ -36,7 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     [StructLayout(LayoutKind.Sequential)]
     private struct QuerySettings { internal uint Count, Leaves, Shapes, Bodies; }
     private QueryInput[] _queryInputs = [];
-    private int[] _queryLimits = [];
+    private int[] _queryLimits = [], _queryReadbackLimits = [], _queryFound = [];
     private long _boundsBodyVersion = -1, _boundsShapeVersion = -1;
     private QueryMapping[] _queryMappings = [];
     private int _queryMappingUsed;
@@ -118,17 +118,26 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         if (_queryLimits.Length >= count) return;
         var capacity = Capacity(count); Array.Resize(ref _queryLimits, capacity); Array.Resize(ref _queryInputs, capacity);
+        Array.Resize(ref _queryReadbackLimits, capacity); Array.Resize(ref _queryFound, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
         int total, ref RenderHandle? pipeline, string shader, bool centers = false, int scratchBytesPerQuery = 0) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
-        if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); return; }
+        if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); _queryFound.AsSpan(0, queries.Length).Clear(); return; }
         EnsureQueryMappings();
         pipeline ??= _context.CreatePipeline(shader);
         var mappingBytes = _queryMappingDirty ? checked(_shapeHighWater * sizeof(QueryMapping)) : 0;
         var inputBytes = checked(queries.Length * sizeof(TInput)); var excludedBytes = checked(exclusions.Length * 8);
         var outputBytes = checked(total * sizeof(THit)); var countBytes = checked(queries.Length * 4);
+        // Predict only the transfer size; the shader still computes every result up to the caller's cap.
+        var prefixCount = 0;
+        for (var i = 0; i < queries.Length; i++)
+        {
+            _queryReadbackLimits[i] = Math.Min(_queryLimits[i], Math.Max(1, _queryFound[i]));
+            prefixCount += _queryReadbackLimits[i];
+        }
+        var prefixBytes = checked(prefixCount * sizeof(THit));
         Grow(ref _queryMappingGPU, ref _queryMappingCapacity, _shapeHighWater, sizeof(QueryMapping), true);
         Grow(ref _queryInputGPU, ref _queryInputCapacity, inputBytes, 1, false);
         Grow(ref _queryExcludedGPU, ref _queryExcludedCapacity, Math.Max(1, exclusions.Length), 8, false);
@@ -136,7 +145,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _queryCountsGPU, ref _queryCountCapacity, queries.Length, 4, false);
         _queryStatus ??= Buffer(8);
         GrowTransfer(ref _queryUpload, ref _queryUploadCapacity, checked(8 + mappingBytes + inputBytes + excludedBytes), SDL.GPUTransferBufferUsage.Upload);
-        GrowTransfer(ref _queryDownload, ref _queryDownloadCapacity, checked(8 + countBytes + outputBytes), SDL.GPUTransferBufferUsage.Download);
+        GrowTransfer(ref _queryDownload, ref _queryDownloadCapacity, checked(8 + countBytes + prefixBytes), SDL.GPUTransferBufferUsage.Download);
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident world queries");
         try
@@ -174,29 +183,79 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident query results");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _queryStatus.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _queryDownload!.DangerousGetHandle() });
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _queryCountsGPU.DangerousGetHandle(), Size = (uint)countBytes }, new() { TransferBuffer = _queryDownload.DangerousGetHandle(), Offset = 8 });
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _queryOutputGPU.DangerousGetHandle(), Size = (uint)outputBytes }, new() { TransferBuffer = _queryDownload.DangerousGetHandle(), Offset = (uint)(8 + countBytes) });
+            if (prefixBytes == outputBytes) DownloadQueryRange(copy, 0, 8 + countBytes, outputBytes);
+            else
+            {
+                var source = 0; var target = 8 + countBytes;
+                for (var i = 0; i < queries.Length; i++)
+                {
+                    var bytes = _queryReadbackLimits[i] * sizeof(THit);
+                    DownloadQueryRange(copy, source, target, bytes);
+                    source += _queryLimits[i] * sizeof(THit); target += bytes;
+                }
+            }
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
-            UploadBytes += 8 + mappingBytes + inputBytes + excludedBytes; ReadbackBytes += 8 + countBytes + outputBytes; UniformBytes += sizeof(QuerySettings); QuerySubmissionCount++;
-            mapped = SDL.MapGPUTransferBuffer(Device, _queryDownload.DangerousGetHandle(), false);
+            UploadBytes += 8 + mappingBytes + inputBytes + excludedBytes; ReadbackBytes += 8 + countBytes + prefixBytes; UniformBytes += sizeof(QuerySettings); QuerySubmissionCount++;
+            var missingBytes = 0;
+            mapped = SDL.MapGPUTransferBuffer(Device, _queryDownload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident query results");
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException($"GPU world query failed (status 0x{*(uint*)mapped:X}).");
                 var found = (uint*)((byte*)mapped + 8);
                 for (var i = 0; i < queries.Length; i++) if (found[i] > _queryLimits[i]) throw new InvalidOperationException("GPU world query exceeded its result limit.");
-                var offset = 0;
+                var offset = 0; var packed = 8 + countBytes;
                 fixed (THit* target = hits)
                     for (var i = 0; i < queries.Length; i++)
                     {
-                        var bytes = found[i] * (uint)sizeof(THit);
-                        System.Buffer.MemoryCopy((byte*)mapped + 8 + countBytes + offset * sizeof(THit), target + offset, bytes, bytes);
-                        counts[i] = (int)found[i]; offset += _queryLimits[i];
+                        var count = (int)found[i]; _queryFound[i] = count;
+                        var bytes = Math.Min(count, _queryReadbackLimits[i]) * sizeof(THit);
+                        System.Buffer.MemoryCopy((byte*)mapped + packed, target + offset, bytes, bytes);
+                        missingBytes += Math.Max(0, count - _queryReadbackLimits[i]) * sizeof(THit);
+                        offset += _queryLimits[i]; packed += _queryReadbackLimits[i] * sizeof(THit);
                     }
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _queryDownload.DangerousGetHandle()); }
+            if (missingBytes > 0)
+            {
+                GrowTransfer(ref _queryDownload, ref _queryDownloadCapacity, missingBytes, SDL.GPUTransferBufferUsage.Download);
+                command = SDL.AcquireGPUCommandBuffer(Device);
+                if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident query tails");
+                copy = SDL.BeginGPUCopyPass(command);
+                if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident query tails");
+                var offset = 0; var packed = 0;
+                for (var i = 0; i < queries.Length; i++)
+                {
+                    var bytes = Math.Max(0, _queryFound[i] - _queryReadbackLimits[i]) * sizeof(THit);
+                    DownloadQueryRange(copy, (offset + _queryReadbackLimits[i]) * sizeof(THit), packed, bytes);
+                    offset += _queryLimits[i]; packed += bytes;
+                }
+                SDL.EndGPUCopyPass(copy); Finish(ref command); ReadbackBytes += missingBytes;
+                mapped = SDL.MapGPUTransferBuffer(Device, _queryDownload!.DangerousGetHandle(), false);
+                if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident query tails");
+                try
+                {
+                    offset = packed = 0;
+                    fixed (THit* target = hits)
+                        for (var i = 0; i < queries.Length; i++)
+                        {
+                            var bytes = Math.Max(0, _queryFound[i] - _queryReadbackLimits[i]) * sizeof(THit);
+                            System.Buffer.MemoryCopy((byte*)mapped + packed, target + offset + _queryReadbackLimits[i], bytes, bytes);
+                            offset += _queryLimits[i]; packed += bytes;
+                        }
+                }
+                finally { SDL.UnmapGPUTransferBuffer(Device, _queryDownload.DangerousGetHandle()); }
+            }
+            _queryFound.AsSpan(0, queries.Length).CopyTo(counts);
             _failed = false; _queryMappingDirty = false;
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+    }
+    private void DownloadQueryRange(nint copy, int source, int target, int bytes)
+    {
+        if (bytes == 0) return;
+        SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _queryOutputGPU!.DangerousGetHandle(), Offset = (uint)source, Size = (uint)bytes },
+            new() { TransferBuffer = _queryDownload!.DangerousGetHandle(), Offset = (uint)target });
     }
     private void UploadQuery(nint copy, RenderHandle target, int offset, int bytes) => SDL.UploadToGPUBuffer(copy,
         new() { TransferBuffer = _queryUpload!.DangerousGetHandle(), Offset = (uint)offset }, new() { Buffer = target.DangerousGetHandle(), Size = (uint)bytes }, false);

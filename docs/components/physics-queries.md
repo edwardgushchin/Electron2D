@@ -2,11 +2,11 @@
 
 Last updated: 2026-10-09
 
-[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding and missing shape-family response remain open.
+[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the [world adapter](physics-backends.md) also dispatches GPU worlds to their resident CCD path. Full-contract acceptance remains tracked separately.
 
-[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
+[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding is covered by the [shared scene motion checks](physics-backends.md#public-scene-motion-conformance).
 
-[Resident shape queries](gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding remains open.
+[Resident shape queries](gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding uses the same [world adapter](physics-backends.md). The common GPU query driver downloads predicted hit prefixes and any exact missing tails, preserving full caps and avoiding capacity-sized reads for sparse queries.
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -22,13 +22,14 @@ adapter for live state, mass/force application and contact projection. Common co
 holds engine-valued mass profiles and contact values, with weak scene ownership;
 concrete world/body references and fixture traversal belong to PhysicsColliderBackend.
 The same adapter version qualifies queued callbacks across same-world reentry.
-The adapter still uses the current Box2D world; independent GPU binding remains open.
+CPU attachments use Box2D.NET and GPU attachments use the resident store;
+backend identity belongs to their selected World.
 
-[Independent resident ray/point queries](gpu-resident-queries.md) now execute internally on GPU; public direct-space views still use CPU. CPU origin-inside tests now cover the complete logical compound slot before casting, avoiding false hits on internal polygon seams. Other collider slots remain eligible. PhysicsQueryTests covers the regression for body/Area queries and warmed zero managed allocation.
+[Independent resident ray/point queries](gpu-resident-queries.md) execute on GPU for public GPU direct-space views; CPU spaces retain their solver queries. CPU origin-inside tests now cover the complete logical compound slot before casting, avoiding false hits on internal polygon seams. Other collider slots remain eligible. PhysicsQueryTests covers the regression for body/Area queries and warmed zero managed allocation.
 
 ## Runtime flow
 
-A SceneTree registers its existing Box2D space when the first scene collider enters or a CanvasItem asks for World. Each CollisionObject owns a stable RID from construction to disposal; fixture rebuilds attach that RID and a shape-owner index to all generated backend pieces. The server also creates explicit spaces, bodies, Areas and shapes. A server collider may attach to an explicit space or the SceneTree space. Explicit spaces advance through `SpaceStep`; a SceneTree advances its own space in the fixed physics lane. Freeing a resource removes its registry entry without reusing the numeric RID.
+A World lazily registers its selected backend space when physics is needed. Each CollisionObject owns a stable RID from construction to disposal; rebuilt backend geometry keeps that RID and its logical shape-owner index. The server also creates explicit spaces, bodies, Areas and shapes. A server collider may attach to an explicit space or the SceneTree space. Explicit spaces advance through `SpaceStep`; a SceneTree advances its own space in the fixed physics lane. Freeing a resource removes its registry entry without reusing the numeric RID.
 
 Direct ray and point views prepare pending scene geometry/poses, then scan current body, Area and explicit-server fixtures. Query masks inspect collider layers independent of those colliders' masks; optional flags include sensors or bodies, RID arrays exclude objects, and results retain both RID and scene object where one exists. Server-only results have a null scene collider and zero InstanceID. Ray hits choose nearest fraction with RID/index tie order. Point hits sort and deduplicate by RID/index before applying the result cap. A direct view cannot query during solver stepping or off the space owner thread.
 

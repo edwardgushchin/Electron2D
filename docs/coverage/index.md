@@ -21,6 +21,10 @@ tiny-world timing/traffic and keeps public GPU/large-world/rendered acceptance o
 
 [Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes, with shared character/platform/freeze/surface checks.
 
+[GPU query readback](../components/gpu-resident-queries.md#device-work-and-traffic) now
+packs predicted results and exact overflow tails across point/ray/shape/motion
+queries. This changes transfer cost, not public signatures or coverage states.
+
 [Physics audit](../components/physics-contract-audit.md) and the [generated physics declaration ledger](physics-status.md) track the CPU and independent GPU objective against the current pin, including inherited API and cross-domain consumers. Existing Implemented rows are not independent GPU acceptance.
 
 The following paragraph records the historical CPU-hosted stage experiment. The independent public backend is described in [backend selection](../components/physics-backends.md).

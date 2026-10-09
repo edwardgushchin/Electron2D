@@ -242,6 +242,7 @@ internal static class PhysicsPickingTests
         }
         owner = GC.GetAllocatedBytesForCurrentThread() - owner; total = GC.GetTotalAllocatedBytes(true) - total;
         Check(owner == 0 && total == 0, $"Warmed 1024-body picking frames allocate {owner}/{total} bytes");
+        Check(gpu is null || gpu.ReadbackBytes - down <= 128 * times.Length, "Sparse picking transfers selected metadata, not a capacity-sized result buffer");
         Array.Sort(times);
         Console.WriteLine($"Picking {backend}: 1024 static circles, one hovered shape, sorted passive point query + complete physics frame, 96 warmup/64 samples; p50/p95/p99={times[32]:F4}/{times[60]:F4}/{times[63]:F4} ms, {owner}/{total} owner/all-thread managed B, GPU up/down={((gpu?.UploadBytes ?? 0) - up) / 64}/{((gpu?.ReadbackBytes ?? 0) - down) / 64} B, wait={((gpu?.WaitMS ?? 0) - wait) / 64:F4} ms.");
     }

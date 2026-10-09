@@ -9,9 +9,12 @@ without changing its live transform, advancing simulation or creating a CPU worl
 A batch reads current GPU geometry, tree, poses and center-aware point velocities.
 The CPU uploads authored queries, attached shape tokens and incident explicit
 exceptions; it does not read all body state or enumerate potential collision pairs.
-This is an internal prerequisite. Public PhysicsServer.BodyTestMotion, PhysicsBody
-movement and CharacterBody still use the CPU world; independent public GPU binding,
-backend selection, event projection and networking remain open.
+Public PhysicsServer.BodyTestMotion, PhysicsBody movement and CharacterBody use
+this path in a GPU World; CPU worlds retain their solver. [Public scene motion
+conformance](physics-backends.md#public-scene-motion-conformance) records the shared
+checks. The remaining full-contract and network obligations stay open. The shared
+[adaptive query readback](gpu-resident-queries.md#device-work-and-traffic) preserves
+one result per motion request, including recovery travel on a miss, with one fence.
 
 ## Behavior
 

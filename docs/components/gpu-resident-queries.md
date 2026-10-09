@@ -6,7 +6,7 @@ Last updated: 2026-10-09
 
 GPUPhysicsBodyStore.Query performs batched world ray and point queries against
 current resident geometry, without a CPU solver world or a CPU pose/bounds mirror.
-PhysicsDirectSpaceState now selects this path for public GPU worlds; CPU spaces retain Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. [Body-motion recovery](gpu-resident-motion-queries.md) also executes internally. The [shared world adapter](physics-backends.md) now supplies public canvas association, backend selection and event projection. Full picking and networking remain open.
+PhysicsDirectSpaceState now selects this path for public GPU worlds; CPU spaces retain Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. [Body-motion recovery](gpu-resident-motion-queries.md) also executes internally. The [shared world adapter](physics-backends.md) now supplies public canvas association, backend selection and event projection. [Pointer picking](physics-picking.md) uses the same public queries. Networking and the remaining complete-backend obligations stay open.
 
 Each resident shape contains a complete authored Shape, including large convex
 contours or all paired concave segments. SetQueryIdentity assigns its logical
@@ -61,16 +61,37 @@ a bounded heap is a measured upgrade if large caps dominate.
 
 Retained buffers contain 48 bytes per query, 32 bytes per shape mapping, 8 bytes per
 exclusion key, 4 bytes per returned count and 64 bytes per reserved output slot.
-An ordinary batch uploads queries, exclusions and 8 status bytes; downloads contain
-counts, reserved capped segments and 8 status bytes. Reading reserved segments
-avoids a separate count-discovery fence. Unwritten slots are never exposed to the
-caller. A metadata edit uploads the retained mapping table once; unchanged reads
+An ordinary batch uploads queries, exclusions and 8 status bytes. The GPU reserves
+complete capped result segments, but the download packs only predicted prefixes:
+for each query ordinal, clamp the previous returned count to the current cap, with
+a minimum of one slot for a nonzero cap. Counts and 8 status bytes share this first
+submission. If counts exceed those prefixes, one additional copy submission reads
+only the missing tails from the already completed result buffer; it neither reruns
+the search nor advances simulation. All counts validate before copying hits. The
+owner-thread operation cannot interleave world edits between these reads.
+
+Predictions shrink after sparse results and are shared across ray/point, shape and
+body-motion queries; changing batch sizes, caps or record strides does not affect
+correctness. No-hit and unused destination tails remain untouched. Contiguous full
+segments (including ray batches) retain one bulk copy. Transfer storage grows only
+for packed prefixes or actual missing tails and is reused at its high-water size.
+A sudden increase in hits can add one fence; alternating dense/sparse requests may
+pay that fence repeatedly. Both waits and every downloaded byte enter the existing
+store counters. Submitted failures keep the store poisoned and never replay on CPU. A metadata edit uploads the retained mapping table once; unchanged reads
 upload no geometry or identity table. Capacity growth and changed-tree preparation
 have additional recorded traffic/waits; they are outside the static warm-read timing.
 QuerySubmissionCount and QuerySpatialSubmissionCount distinguish search from tree
-preparation; BroadPhaseSubmissionCount counts only simulation pair submissions.
+preparation; an overflow copy adds to SubmissionCount but not QuerySubmissionCount.
+BroadPhaseSubmissionCount counts only simulation pair submissions.
 
 ## Verification
+
+GPUPhysicsQueryTests first reproduced capacity-sized downloads on the old driver.
+Its adaptive-readback checks now cover sparse/dense transitions, exact transfer and
+submission counts, two packed result segments separated by a zero cap, changed
+limits, shape/point stride changes, caller sentinels and zero owner/all-thread
+managed allocation through repeated overflow after capacity warmup. PhysicsPickingTests
+also bounds complete-frame readback for one selected shape among 1,024 bodies.
 
 GPUPhysicsQueryTests compares 64 rays and 64 points per geometry case against
 public CPU queries, including body rotation, clockwise/counterclockwise 12-gons,
@@ -88,7 +109,15 @@ query/contact interleaving, edits, reuse, growth, errors and caller-tail preserv
 PhysicsQueryTests independently retains the compound-inside CPU regression and
 warmed allocation check, without requiring a GPU.
 
-The static workload creates all 65,536 circle shapes, executes 256 ray queries per
+The adaptive-driver run on the same 65,536-shape/256-ray workload below measured
+p50/p95/p99 0.0948/0.8183/1.5048 ms, mean wait 0.2029 ms, with unchanged
+12,296/17,416 B upload/readback per batch and 0/0 owner/all-thread managed bytes.
+Evidence: `/tmp/e2d-query-green2.log`. Its GPU was shared with a running graphics
+example and desktop applications; comparison with the historical timing below is
+not a controlled speedup claim. The [same-scene CPU/GPU picking measurement](physics-picking.md#current-complete-frame-cost)
+records the sparse-query transfer reduction and observed timing limits.
+
+Historical baseline before adaptive readback: the static workload creates all 65,536 circle shapes, executes 256 ray queries per
 batch, warms 96 batches and records 128 batches. Every ray result is checked. The
 measured interval includes command submission, the result fence and copies; it does
 not include world construction or dynamic tree refits. On Linux/.NET 10, Vulkan, NVIDIA GeForce RTX 3090 Ti, the focused run measured
