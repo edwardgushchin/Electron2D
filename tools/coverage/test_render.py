@@ -324,7 +324,12 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 133, "Partial": 12, "Unimplemented": 12, "Blocked": 4, "Excluded": 54}
+                "Implemented": 137, "Partial": 12, "Unimplemented": 12, "Blocked": 0, "Excluded": 54}
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_attach_canvas_instance_id", "body_get_canvas_instance_id",
+                            "area_attach_canvas_instance_id", "area_get_canvas_instance_id"))
+    point_rows = pages[CLASS_PAGES / "PhysicsPointQueryParameters2D.md"].splitlines()
+    assert " | Implemented | " in next(row for row in point_rows if row.startswith("| [`property int canvas_instance_id"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

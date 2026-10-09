@@ -94,6 +94,7 @@ public sealed class PhysicsRayQueryParameters : ElectronObject
 public sealed class PhysicsPointQueryParameters : ElectronObject
 {
     private Vector2 _position;
+    private ulong _canvasInstanceID;
     private RID[] _exclude = [];
     internal RID[] ExclusionsArray { get { ThrowIfDisposed(); return _exclude; } }
     private uint _collisionMask = uint.MaxValue;
@@ -101,6 +102,16 @@ public sealed class PhysicsPointQueryParameters : ElectronObject
 
     /// <summary>Creates a point query at the world origin with all layers enabled.</summary>
     public PhysicsPointQueryParameters() { }
+
+    /// <summary>Gets or sets the exact canvas association accepted by this point query.</summary>
+    /// <value>Zero selects the default canvas; a CanvasLayer instance ID selects that layer.</value>
+    /// <remarks>This is a filtering identity, not a coordinate transform or rendering canvas RID.
+    /// Server-created colliders may use an explicitly assigned association.</remarks>
+    public ulong CanvasInstanceID
+    {
+        get { ThrowIfDisposed(); return _canvasInstanceID; }
+        set { ThrowIfDisposed(); _canvasInstanceID = value; }
+    }
 
     /// <summary>Gets or sets the finite global sample point.</summary>
     /// <value>Zero by default.</value>

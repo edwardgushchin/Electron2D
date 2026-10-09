@@ -109,7 +109,7 @@ void main()
             if(at<int(leaves)){at*=2;continue;}
             uint index=uint(n.shape);if(index>=shapeCount){fail();return;}
             Shape s=shapes[index];Mapping mapping=mappings[index];bool sensor=(s.policy.w&2u)!=0u;
-            bool accepted=(s.policy.y&q.policy.x)!=0u&&(q.policy.y&(sensor?2u:1u))!=0u&&(q.extra.zw==uvec2(0)||q.extra.zw==mapping.canvas.xy);
+            bool accepted=(s.policy.y&q.policy.x)!=0u&&(q.policy.y&(sensor?2u:1u))!=0u&&(ray||q.extra.zw==mapping.canvas.xy);
             for(uint j=0u;accepted&&j<q.extra.y;j++)if(exclusions[q.extra.x+j]==mapping.identity.xy)accepted=false;
             if(accepted)
             {

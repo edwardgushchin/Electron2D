@@ -89,16 +89,20 @@ internal static class GPUPhysicsQueryTests
         using var s = new Store(); using var circle = new CircleShape { Radius = 10 };
         var handles = new Store.ShapeHandle[5]; ulong[] keys = [100, (1ul << 40) + 3, 9, 9, 42]; int[] logical = [0, 1, 7, 7, 0];
         for (var i = 0; i < handles.Length; i++)
-        { handles[i] = s.AddShape(Body(s), circle, layer: 1u << 31, mask: 0, sensor: i == 4); s.SetQueryIdentity(handles[i], keys[i], logical[i], i == 4 ? 80ul : 70ul); }
-        Span<Store.QueryHit> hits = stackalloc Store.QueryHit[4]; var count = Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Limit: 4), hits);
+        { handles[i] = s.AddShape(Body(s), circle, layer: 1u << 31, mask: 0, sensor: i == 4); s.SetQueryIdentity(handles[i], keys[i], logical[i], 70ul); }
+        Span<Store.QueryHit> hits = stackalloc Store.QueryHit[4];
+        Check(Execute(s, new(Vector2.Zero, Areas: true, Limit: 4), hits) == 0, "Canvas zero selects the default canvas rather than all canvases.");
+        var count = Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Limit: 4, Canvas: 70), hits);
         Check(count == 4 && hits[0].Collider == 9 && hits[1].Collider == 42 && hits[2].Collider == 100 && hits[3].Collider == keys[1], "Point order/dedup uses unsigned 64-bit collider key and logical index.");
-        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Limit: 2), hits) == 2 && hits[0].Collider == 9 && hits[1].Collider == 42, "Cap follows logical order.");
+        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Limit: 2, Canvas: 70), hits) == 2 && hits[0].Collider == 9 && hits[1].Collider == 42, "Cap follows logical order.");
+        s.SetQueryIdentity(handles[4], 42, 0, 80);
         Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Limit: 4, Canvas: 80), hits) == 1 && hits[0].Collider == 42, "Canvas filter uses authored association.");
-        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Bodies: false, Limit: 4), hits) == 1 && hits[0].Collider == 42, "Area-only query");
-        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Limit: 4, ExclusionStart: 1, ExclusionCount: 2), hits, [0, 9, 100]) == 1 && hits[0].Collider == keys[1], "Exclusions address logical collider keys and ignore reciprocal mask.");
+        s.SetQueryIdentity(handles[4], 42, 0, 70);
+        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Areas: true, Bodies: false, Limit: 4, Canvas: 70), hits) == 1 && hits[0].Collider == 42, "Area-only query");
+        Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Limit: 4, ExclusionStart: 1, ExclusionCount: 2, Canvas: 70), hits, [0, 9, 100]) == 1 && hits[0].Collider == keys[1], "Exclusions address logical collider keys and ignore reciprocal mask.");
         count = Execute(s, new(new(-30, 0), new(30, 0), Ray: true, Mask: 1u << 31, Areas: true), hits);
         Check(count == 1 && hits[0].Collider == 9, "Equal-distance ray tie follows logical identity.");
-        s.SetQueryIdentity(handles[1], 1, 9); Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Limit: 4), hits) == 3 && hits[0].Collider == 1, "Identity-only edits do not require moving the body.");
+        s.SetQueryIdentity(handles[1], 1, 9, 70); Check(Execute(s, new(Vector2.Zero, Mask: 1u << 31, Limit: 4, Canvas: 70), hits) == 3 && hits[0].Collider == 1, "Identity-only edits do not require moving the body.");
         hits.Fill(new() { Collider = 777 }); Check(Execute(s, new(new(100, 100), Limit: 4), hits) == 0 && hits[0].Collider == 777 && hits[3].Collider == 777, "Miss leaves destination tail unchanged.");
     }
     private static void BoundaryAndBatch()

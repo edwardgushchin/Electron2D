@@ -6,7 +6,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
-    /// <summary>One ray or point query in scene units. Exclusion indices address the batch's collider-key span; canvas zero accepts every canvas.</summary>
+    /// <summary>One ray or point query in scene units. Exclusion indices address the batch's collider-key span; points match the exact canvas, including zero. Rays ignore canvas association.</summary>
     internal readonly record struct WorldQuery(Vector2 From, Vector2 To = default, bool Ray = false, uint Mask = uint.MaxValue,
         bool Bodies = true, bool Areas = false, bool HitFromInside = false, int Limit = 32,
         int ExclusionStart = 0, int ExclusionCount = 0, ulong Canvas = 0);

@@ -7,8 +7,7 @@ Last updated: 2026-10-09
 GPUPhysicsBodyStore.Query performs batched world ray and point queries against
 current resident geometry, without a CPU solver world or a CPU pose/bounds mirror.
 This internal path is not connected to PhysicsDirectSpaceState yet. Public spaces
-still use Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. Body-motion recovery, public canvas association,
-picking, backend selection and event/network projection remain open.
+still use Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. [Body-motion recovery](gpu-resident-motion-queries.md) also executes internally. Public canvas association now works on the CPU host; independent GPU-world binding, picking, backend selection and event/network projection remain open.
 
 Each resident shape contains a complete authored Shape, including large convex
 contours or all paired concave segments. SetQueryIdentity assigns its logical
@@ -22,9 +21,10 @@ on the CPU because it is authored identity, not simulated state.
 
 - Query masks inspect all 32 layer bits, independent of reciprocal collision masks,
   body exceptions, joint collision vetoes and one-way response. Body and sensor
-  flags are independent. Explicit collider exclusions use batched ranges. Canvas
-  zero accepts every association; another value requires equality. This internal
-  filter does not close the missing public CanvasInstanceID contract.
+  flags are independent. Explicit collider exclusions use batched ranges. Point canvas
+  selection uses exact 64-bit equality, including zero for the default canvas. Rays
+  ignore canvas association. PhysicsCanvasTests compares this with public CPU
+  queries; public independent-GPU binding remains open.
 - Rays return the nearest hit; exact fraction ties sort by collider key and logical
   slot. Point results sort and deduplicate by those keys before applying each cap.
   The final physical-index tie is internal. Keys compare as unsigned 64-bit values;

@@ -309,3 +309,11 @@ now weights penetration recovery through scene/server body operations and indepe
 resident GPU motion queries. Storage, owner/step validation and live edits preserve
 collider identity and physical sleep/impulses. Public independent-GPU world binding
 and the other audited requirements remain open.
+
+
+[Canvas association](../components/physics-queries.md#canvas-association) now connects
+Body/Area attach/get operations, scene CanvasLayer entry/exit and exact point-query
+filtering, including default zero and full 64-bit keys. Shared/independent worlds,
+reparenting, live edits, raw colliders and warmed allocation have CPU/GPU checks.
+The GPU fix removes the former zero-as-wildcard behavior; public GPU-world binding
+and arbitrary object-instance attachment remain open.

@@ -171,3 +171,11 @@ but remains a sensor and never obstructs body motion. Priority changes preserve
 RID, fixtures, sleep and rigid contact impulses; recovered motion can change a
 later sweep's result. For example, `wall.CollisionPriority = 8f;` favors recovery
 out of that wall relative to ordinary obstacles. See [recovery policy](../components/physics-contact-policy.md#collision-priority).
+
+
+Canvas entry assigns the nearest CanvasLayer.InstanceID to the shared physics
+attachment, or zero for the default canvas. Canvas exit clears it; reparenting and
+reentry refresh it. Physics disable removal retains canvas membership. Point
+queries use this exact association; physical response and Area monitoring remain
+independent of the visual canvas. [Canvas association](../components/physics-queries.md#canvas-association)
+documents server overrides and verification.

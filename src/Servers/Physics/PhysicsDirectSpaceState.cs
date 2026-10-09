@@ -166,15 +166,15 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         var mask = parameters.CollisionMask;
         if (parameters.CollideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
-                ScanPointShapes(space.Bodies[index].BackendShapes, point, mask, excluded, hits);
+                ScanPointShapes(space.Bodies[index].Backend, point, mask, parameters.CanvasInstanceID, excluded, hits);
         if (parameters.CollideWithAreas)
             for (var index = 0; index < space.Areas.Count; index++)
-                ScanPointShapes(space.Areas[index].BackendShapes, point, mask, excluded, hits);
+                ScanPointShapes(space.Areas[index].Backend, point, mask, parameters.CanvasInstanceID, excluded, hits);
         for (var index = 0; index < space.ServerColliders.Count; index++)
         {
             var collider = space.ServerColliders[index];
             if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
-                ScanPointShapes(collider.BackendShapes, point, mask, excluded, hits);
+                ScanPointShapes(collider.Backend, point, mask, parameters.CanvasInstanceID, excluded, hits);
         }
         hits.Sort(static (left, right) =>
         {
@@ -226,9 +226,11 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         }
     }
 
-    private static void ScanPointShapes(IReadOnlyList<B2ShapeId> shapes, B2Vec2 point, uint mask,
-        RID[] excluded, List<PhysicsPointResult> hits)
+    private static void ScanPointShapes(PhysicsColliderBackend backend, B2Vec2 point, uint mask,
+        ulong canvasInstanceID, RID[] excluded, List<PhysicsPointResult> hits)
     {
+        if (backend.CanvasInstanceID != canvasInstanceID) return;
+        var shapes = backend.Shapes;
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = shapes[index];

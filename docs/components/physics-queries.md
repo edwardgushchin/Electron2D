@@ -44,7 +44,7 @@ An enabled ShapeCast borrows a Shape resource and converts its local target into
 
 ## Dependencies, invariants and limits
 
-The server builds on existing Shape resources, SceneTree owner-thread rules and the existing per-World internal Box2D.NET spaces. Its seven shape creation families cover only shapes already implemented as resources; world-boundary and custom shape resources remain separate slices; joint resource lifetime and kernels execute through the shared runtime. Canvas/navigation RIDs and independent/shared viewport worlds execute. Collider canvas-instance point filtering, scene query debug drawing and the remaining server methods are recorded in the [contract audit](physics-contract-audit.md). Server-only colliders share query/solver state but are not represented in current scene Area object-event arrays or server-only Area field configuration. Query scans are linear in fixture count; warmed unchanged casts and rest queries allocate no managed memory, while per-call result arrays, native allocation, other platforms and large-world throughput have not been audited.
+The server builds on existing Shape resources, SceneTree owner-thread rules and the existing per-World internal Box2D.NET spaces. Its shape creation families include the analytic world boundary; extension-defined custom geometry remains separate work; joint resource lifetime and kernels execute through the shared runtime. Canvas/navigation RIDs and independent/shared viewport worlds execute. Scene query debug drawing and the remaining server methods are recorded in the [contract audit](physics-contract-audit.md). Server-only colliders share query/solver state but are not represented in current scene Area object-event arrays or server-only Area field configuration. Query scans are linear in fixture count; warmed unchanged casts and rest queries allocate no managed memory, while per-call result arrays, native allocation, other platforms and large-world throughput have not been audited.
 
 [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks RID and ray/point behavior. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks resource/RID shape selection and four direct operations. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body sweeps; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks pair suppression in motion and regular solver contact. [RayCastTests](../../tests/Electron2D.Tests/RayCastTests.cs) and [ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) check scene node timing and lifecycle. Physics debug-gizmo drawing and virtual tile collision-object results remain separate dependencies. [ADR 0063](../decisions/physics.md#adr-0063) defines the ownership and query contract.
 
@@ -107,3 +107,44 @@ including far-away half-plane contacts, normal/distance transforms and ray pairs
 The shared shape and body-motion matrices now include this geometry. Direct-space
 shape queries retain initial overlap during motion; body-motion recovery/casts
 retain their own directed-ray policy. Public independent-GPU binding remains open.
+
+
+## Canvas association
+
+PhysicsPointQueryParameters.CanvasInstanceID and the Body/Area attach/get server
+operations share retained metadata in PhysicsColliderBackend. Scene canvas
+notifications bind the nearest CanvasLayer instance or zero, including reparenting;
+physics disable removal does not remove canvas membership. Raw server edits are
+immediate and survive reattachment. Zero is an exact default-canvas selector, not
+an all-canvas wildcard. Selection uses physical world coordinates even when a
+CanvasLayer has a visual offset. Separate World identities still bound every query.
+
+PhysicsCanvasTests exercises four overlapping raw colliders (two bodies and two
+Areas), default and high-bit 64-bit associations, same-low-bits nonmatching keys,
+layers, kinds, exclusions, stable caps, live edits, attachment, wrong-kind/freed RID,
+thread and solver guards. Scene checks cover entry/exit, reparent, overrides,
+sleep preservation, disabled participation, shared/independent worlds and Area
+monitoring across canvas layers. The independent GPU query kernel now uses the
+same exact selector and leaves ray queries unrestricted by canvas. A regression
+check failed on the old zero-as-wildcard GPU path before this correction.
+
+Linux/.NET 10 Release, Vulkan/NVIDIA GeForce RTX 3090 Ti, 128 warmup/128 samples:
+the focused four-collider test changes one body's canvas then queries the complete
+population. CPU p50/p95/p99 was 0.0003/0.0003/0.0004 ms. The GPU measurement, including
+the public CPU oracle and exact result comparison, was 0.0644/0.2144/0.3443 ms,
+with 184 B upload, 268 B readback and 0.0599 ms mean wait per query. Both intervals
+allocated 0/0 owner/all-thread managed bytes. These small query costs do not claim
+whole-step GPU advantage or window FPS. Evidence: `/tmp/e2d-canvas-cpu.log` and
+`/tmp/e2d-canvas-gpu.log`.
+
+Run `ELECTRON2D_TEST_PHYSICS_CANVAS=1` or
+`ELECTRON2D_TEST_PHYSICS_CANVAS_GPU=1` with the Release test runner; the complete
+collider and GPU suites also include the respective checks. Public independent-GPU
+binding, object-instance attachment, tile owners, picking and networking remain
+open. Native allocations, other devices/platforms and rendered acceptance were
+not measured by these headless tests.
+
+The complete collider suite and complete GPU suite passed after integration:
+`ELECTRON2D_TEST_COLLIDER_BACKEND=1` and `ELECTRON2D_TEST_GPU_PHYSICS=1` with
+`tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`.
+Logs: `/tmp/e2d-canvas-colliders.log`, `/tmp/e2d-canvas-full-gpu.log`.

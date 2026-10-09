@@ -34,6 +34,7 @@ resources are borrowed during rebuild and are never disposed here.
 | `GetSolverMotion`, velocity/sleep accessors | Return raw integrated velocity for scene publication or combined contact velocity for server state, retaining virtual surface semantics. |
 | `SavePose`, `RestorePose` | Keep a private exact backend pose for frozen kinematic query restoration; avoid decoded-angle round trips while idle. |
 | Velocity, gravity, sleep and rotation setters; force/torque application | Convert units in one adapter while the scene/server caller retains validation and role policy. |
+| `CanvasInstanceID` | Authored 64-bit point-query association, retained across fixture rebuild and server reattachment. Scene canvas notifications replace it; zero denotes the default canvas. |
 | `AttachmentVersion` | Monotonic per-collider attachment epoch used by common views and queued callbacks, independent of native handle reuse. |
 | `ApplyMassProfile`, COM/inverse getters | Compile current fixtures, retain reusable CPU mass scratch and return neutral scene-unit mass properties. |
 | `ApplyImpulse`, `ApplyFieldMotion`, `ClearTransientForces` | Preflight CPU numeric candidates, apply already-resolved body policy and preserve current force/omission/wake ordering. |

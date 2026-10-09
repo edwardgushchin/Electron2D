@@ -1249,6 +1249,31 @@
       "godot": "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCollisionPriority(Electron2D.RID,System.Single)",
       "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_attach_canvas_instance_id(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAttachCanvasInstanceID(Electron2D.RID,System.UInt64)",
+      "reason": "Unsigned 64-bit canvas association follows the existing instance-ID value type; scene/server entry, overrides and point filtering execute under ADR 0063."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_canvas_instance_id(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCanvasInstanceID(Electron2D.RID)",
+      "reason": "Unsigned 64-bit canvas association follows the existing instance-ID value type; scene/server entry, overrides and point filtering execute under ADR 0063."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_attach_canvas_instance_id(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaAttachCanvasInstanceID(Electron2D.RID,System.UInt64)",
+      "reason": "Unsigned 64-bit canvas association follows the existing instance-ID value type; scene/server entry, overrides and point filtering execute under ADR 0063."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_canvas_instance_id(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetCanvasInstanceID(Electron2D.RID)",
+      "reason": "Unsigned 64-bit canvas association follows the existing instance-ID value type; scene/server entry, overrides and point filtering execute under ADR 0063."
+    },
+    {
+      "godot": "PhysicsPointQueryParameters2D::property:canvas_instance_id",
+      "electron2d": "property:Electron2D.PhysicsPointQueryParameters.CanvasInstanceID()",
+      "reason": "Exact unsigned 64-bit canvas association, including zero for the default canvas, matches scene/server metadata (ADR 0063, PhysicsCanvasTests)."
     }
   ],
   "extras": [
@@ -2671,8 +2696,8 @@
       "godot": [
         "class:PhysicsPointQueryParameters2D"
       ],
-      "state": "Partial",
-      "reason": "Point, copied exclusions, mask and Area/body flags execute; CanvasInstanceID still needs collider canvas association and filtering using existing independent/shared worlds (ADRs 0028 and 0063)."
+      "state": "Implemented",
+      "reason": "All own query fields execute, including exact canvas identity with default zero, copied exclusions and layer/kind filters. PhysicsCanvasTests verifies scene/server lifecycle and GPU parity; inherited gaps stay on their declaring types."
     },
     {
       "godot": [
@@ -2689,15 +2714,15 @@
       "godot": [
         "PhysicsPointQueryParameters2D::property:canvas_instance_id"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: attach canvas instance identity to scene/server colliders and filter point queries by it. Independent/shared World canvases already execute; they are not an absent prerequisite (ADRs 0028 and 0063, WorldTests)."
+      "state": "Implemented",
+      "reason": "Exact 64-bit canvas equality, including zero for the default canvas, executes before point result caps on public CPU and independent GPU. Scene entry/reparent/exit and raw body/Area associations are covered by PhysicsCanvasTests (ADR 0063)."
     },
     {
       "godot": [
         "class:PhysicsDirectSpaceState2D"
       ],
       "state": "Partial",
-      "reason": "All six direct-space query methods execute for current geometry; point canvas-instance filtering remains incomplete. New shape families and tile owners require integration through every result family (ADRs 0054 and 0063)."
+      "reason": "All six direct-space query methods and exact point canvas filtering execute for current geometry. Object-instance binding, tile result owners, public independent-GPU integration and extensions remain open (ADRs 0054/0063)."
     },
     {
       "godot": [
@@ -2711,7 +2736,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"
       ],
       "state": "Partial",
-      "reason": "Typed point hits, RID ordering, deduplicated shape-owner indices and max-results execute; CanvasInstanceID filtering still needs collider canvas association, not new World identity (ADRs 0028 and 0063)."
+      "reason": "Typed ordered/deduplicated point results, array/span caps, exact canvas identity, masks and exclusions execute for scene/server colliders and internally on independent GPU. Arbitrary object-instance attachment and tile ownership remain open on the result family (ADR 0063, PhysicsCanvasTests)."
     },
     {
       "godot": [
@@ -3705,6 +3730,16 @@
       ],
       "state": "Implemented",
       "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_attach_canvas_instance_id(RID:,int:)",
+        "PhysicsServer2D::method:body_get_canvas_instance_id(RID:)",
+        "PhysicsServer2D::method:area_attach_canvas_instance_id(RID:,int:)",
+        "PhysicsServer2D::method:area_get_canvas_instance_id(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Scene/server body and Area canvas association is retained without fixture rebuild or wake; entry/exit/reparent projects CanvasLayer identity. Point queries use exact equality, including zero, with matching resident GPU behavior. Kind/lifetime/thread/solver guards and warmed allocations are checked by PhysicsCanvasTests (ADR 0063). Public GPU-world binding remains open."
     }
   ]
 }

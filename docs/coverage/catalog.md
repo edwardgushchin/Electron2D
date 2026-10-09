@@ -619,7 +619,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsDirectSpaceState3D](classes/PhysicsDirectSpaceState3D.md) | Object | Excluded | 6 |
 | [PhysicsDirectSpaceState3DExtension](classes/PhysicsDirectSpaceState3DExtension.md) | PhysicsDirectSpaceState3D | Excluded | 8 |
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | Resource | Implemented | 4 |
-| [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | RefCounted | Partial | 6 |
+| [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | RefCounted | Implemented | 6 |
 | [PhysicsPointQueryParameters3D](classes/PhysicsPointQueryParameters3D.md) | RefCounted | Excluded | 5 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | RefCounted | Implemented | 8 |
 | [PhysicsRayQueryParameters3D](classes/PhysicsRayQueryParameters3D.md) | RefCounted | Excluded | 9 |

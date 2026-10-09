@@ -127,6 +127,8 @@ public abstract partial class CollisionObject : Entity
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
+        if (what == NotificationEnterCanvas) Backend.CanvasInstanceID = GetCanvasLayerNode()?.InstanceID ?? 0;
+        else if (what == NotificationExitCanvas) Backend.CanvasInstanceID = 0;
         if (what is NotificationDisabled or NotificationEnabled && IsInsideTree)
             UpdatePhysicsParticipation();
     }

@@ -109472,6 +109472,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaAttachCanvasInstanceID(Electron2D.RID,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaAttachCanvasInstanceID",
+    "signature": "public static System.Void AreaAttachCanvasInstanceID(Electron2D.RID area, System.UInt64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaClearShapes(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -109539,6 +109563,25 @@
       }
     ],
     "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetCanvasInstanceID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetCanvasInstanceID",
+    "signature": "public static System.UInt64 AreaGetCanvasInstanceID(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -110645,6 +110688,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyAttachCanvasInstanceID(Electron2D.RID,System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyAttachCanvasInstanceID",
+    "signature": "public static System.Void BodyAttachCanvasInstanceID(Electron2D.RID body, System.UInt64 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "id",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyClearShapes(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -110769,6 +110836,25 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetCanvasInstanceID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetCanvasInstanceID",
+    "signature": "public static System.UInt64 BodyGetCanvasInstanceID(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -181305,6 +181391,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsPointQueryParameters.CanvasInstanceID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointQueryParameters",
+    "name": "CanvasInstanceID",
+    "signature": "public System.UInt64 CanvasInstanceID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
