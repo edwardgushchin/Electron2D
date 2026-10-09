@@ -10,16 +10,13 @@ through Simulate. It creates no CPU solver world or CPU contact/adjacency/histor
 mirror. [The earlier stage report](gpu-resident-bodies.md) retains body/broad/narrow
 measurements; those timings exclude the response workload measured here.
 
-This is an internal response pipeline, not a selectable public GPU backend.
-[Resident joints](gpu-resident-joints.md) now share its iteration loop;
-independent GPU public joint integration,
-scene/server and direct-state
-publication, complete frame impulse/event reports, public one-way/exception projection,
-world setting integration and networking remain open. The store now resolves [mass profiles](gpu-resident-mass.md) from shared authored
-geometry and uses center-relative moment arms; public-world integration still needs
-a backend adapter. Internal [explicit body exceptions](gpu-resident-exceptions.md)
-now share the joint filter table for contacts and CCD. [One-way piece episodes](gpu-resident-one-way.md)
-now retain accepted and rejected decisions on device, outside the impulse-history table. No full CPU-vs-GPU or window-FPS acceptance is claimed.
+[Selected public GPU worlds](physics-backends.md) use this resident response pipeline
+through scene/server and direct-state adapters. [Resident joints](gpu-resident-joints.md),
+[mass profiles](gpu-resident-mass.md), [body exceptions](gpu-resident-exceptions.md),
+[one-way episodes](gpu-resident-one-way.md), CCD, world settings and completed-frame
+contact reports execute on that path. Full conformance, portable network restore/replay
+and broad performance acceptance remain open; the historical stage timings below do
+not establish those requirements.
 
 ## Solve and history
 
@@ -49,10 +46,23 @@ restitution. Separate correction velocities repair penetration during pose advan
 they never enter physical velocity or saved warm impulses. Without this split, the
 initial warm-start candidate visibly jittered in the eight-box test (11.67 units/s).
 The corrected test settles below its 0.5-unit/s bound. Directed separation-ray points
-receive real normal/friction/restitution response in both slope modes; public CPU
-ray response and full reporting remain separate open requirements.
+receive real normal/friction/restitution response in both slope modes, with public
+CPU/GPU response and completed-frame contact reports.
 
-An 80-byte device history record retains shape generations, point features, body
+For discrete contacts with positive separation, restitution uses incoming normal
+velocity when `separation + normalVelocity * interval <= 0`. Speculative separation
+impulses must not erase that impact velocity before restitution is prepared.
+Approaches that cannot reach the contact during the interval and receding pairs do
+not receive an early rebound. CCD retains its contact/TOI threshold; correction
+slack, material mixing, bounce-speed threshold and reporting policy are unchanged.
+The old touching-only condition could stop an elastic falling circle at the floor
+without any rebound. `PhysicsBodyParameterTests` reproduces that public-world case
+on CPU/GPU, alongside absorbency and friction. `VerifySpeculativeImpact` in
+`GPUPhysicsSolverStoreTests` also checks unequal-mass momentum, energy and completed
+frame impulses, plus future and receding pairs; velocity/impulse tolerance is .001
+scene units and energy tolerance .02 for analytic energy 15,000.
+
+A 96-byte device history record retains shape generations, point features, body
 pose/velocity edit epochs, shape and geometry revisions, physical impulses and the
 previous normal. Lookup compares full keys, not hash equality alone; a normal dot
 product below 0.99 rejects the match. Reused impulses scale by substep duration.
@@ -78,7 +88,7 @@ family test check this path and unique point feature keys used by history.
 | 32 bytes / contact impulses | Accumulated/delta physical and positional impulses, separate from coefficients. |
 | 8 bytes / body head | Device-built incident-list head and contact degree. |
 | 16 bytes / body correction | Temporary positional/angular correction velocity, reset per solve. |
-| 80 bytes / history record | Full identity/revision key, physical impulses and normal. |
+| 96 bytes / history record | Full identity/revision key, physical impulses and normal. |
 | 4 bytes / hash slot | Device record index; retained power-of-two table stays at most half full. |
 
 Preparation projects each world-space lever arm onto the normal/tangent once.

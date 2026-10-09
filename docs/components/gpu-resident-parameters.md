@@ -78,9 +78,14 @@ default effects while preserving configured values for later restoration.
 
 `ELECTRON2D_TEST_GPU_RESIDENT_PARAMETERS=1` runs
 [GPUPhysicsBodyParameterTests](../../tests/Electron2D.Tests/GPUPhysicsBodyParameterTests.cs)
-and existing public CPU PhysicsBodyParameterTests. The full GPU runner includes
-the new suite. A public CPU space supplies the field and mode oracle; no native
-internal layout/order is compared.
+and `PhysicsBodyParameterTests` on explicit CPU and GPU worlds. The full GPU runner
+also includes the public GPU parameter suite. Shared checks cover signed field
+response, material ownership/reload/disposal, friction/rebound/absorbency, CharacterBody
+gravity, invalid/thread/pose-callback writes and 64 warm allocation-free field steps.
+Scene/server persistent force and torque edits, omission with retained impulses,
+rotation-lock role transitions and reattachment agree with mass/inertia over 1/60 s
+within one percent or .01 velocity units. A public CPU space supplies the internal
+field/mode oracle; no native layout or traversal order is compared.
 
 Field cases use mass 2, inertia 4, initial velocity (10,20), angular velocity 4,
 gravity (0,30), force (4,6), torque 8 and duration 0.1. They cover signed gravity,

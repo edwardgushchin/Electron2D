@@ -125,7 +125,9 @@ void main()
         float bias=firstBias==0?(secondBias==0?time.z:secondBias):secondBias==0?firstBias:0.5*(firstBias+secondBias);
         float fraction=1-pow(1-bias,correctionPolicy.x);
         float correction=min(time.w,fraction*max(-p.normal.z-policy.x,0)*time.y);
-        if(p.normal.z<=contactThreshold&&vn< -policy.y)target=max(target,-material.y*vn);
+        // Preserve impact velocity before speculative separation impulses remove it.
+        bool reachesContact=p.normal.z<=contactThreshold||(!continuous&&p.normal.z+vn*time.x<=0);
+        if(reachesContact&&vn< -policy.y)target=max(target,-material.y*vn);
         c.normal=vec4(n,an,bn);c.tangent=vec4(material.x,0,at,bt);
         c.parameters=vec4(kn>0?1/kn:0,kt>0?1/kt:0,target,correction);
         vec2 warm=previousImpulse(p,sa,sb,material.x);vec4 impulse=vec4(warm,warm);

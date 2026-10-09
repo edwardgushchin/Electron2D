@@ -8,6 +8,7 @@ internal static class GPUPhysicsSolverStoreTests
     internal static void Run()
     {
         VerifyImpact();
+        VerifySpeculativeImpact();
         VerifyAngularAndSurfaceMotion();
         VerifyMaterials();
         VerifyRaysAndHistory();
@@ -50,6 +51,40 @@ internal static class GPUPhysicsSolverStoreTests
         Reject<ArgumentOutOfRangeException>(() => store.Simulate(0.1f, Vector2.Zero, substeps: 0));
         store.Read([a, b], result);
         Console.WriteLine("Resident solver: elastic/inelastic mass ratios, momentum/energy, sensors and input guards passed.");
+    }
+
+    private static void VerifySpeculativeImpact()
+    {
+        using var store = new GPUPhysicsBodyStore { CaptureContactReports = true }; using var circle = new CircleShape { Radius = 10 };
+        var bodies = new Body[6]; var states = new GPUPhysicsBodyStore.Snapshot[6];
+        for (var pair = 0; pair < 3; pair++)
+        {
+            var gap = pair == 1 ? 4 : .5f; var speed = pair == 2 ? -100 : 100;
+            bodies[pair * 2] = Add(store, new(0, pair * 100), new(speed, 0), inertia: 50);
+            bodies[pair * 2 + 1] = Add(store, new(20 + gap, pair * 100), new(-speed, 0), mass: 2, inertia: 100);
+            store.AddShape(bodies[pair * 2], circle, friction: 0, bounce: .5f);
+            store.AddShape(bodies[pair * 2 + 1], circle, friction: 0, bounce: .5f);
+        }
+        store.Simulate(1f / 60, Vector2.Zero); store.Read(bodies, states);
+        Near(states[0].Velocity.X, -500f / 3, .001f, "An approaching separated pair retains its elastic impact velocity");
+        Near(states[1].Velocity.X, 100f / 3, .001f, "Separated unequal masses preserve momentum");
+        Near(.5f * states[0].Velocity.X * states[0].Velocity.X + states[1].Velocity.X * states[1].Velocity.X, 15000, .02f, "Speculative elastic impact preserves kinetic energy");
+        Near(states[2].Velocity.X, 100, .001f, "A future impact beyond the interval cannot rebound early");
+        Near(states[3].Velocity.X, -100, .001f, "Future impact leaves both velocities unchanged");
+        Near(states[4].Velocity.X, -100, .001f, "A separated receding pair cannot rebound");
+        Near(states[5].Velocity.X, 100, .001f, "Receding bodies retain outgoing velocity");
+        var reports = new GPUPhysicsBodyStore.ContactReport[4]; var counts = new int[2];
+        store.ReadContactReports(bodies.AsSpan(0, 2), new[] { 2, 2 }, counts, reports);
+        for (var body = 0; body < 2; body++)
+        {
+            Check(counts[body] > 0, "The speculative impact remains reportable after separation later in the frame");
+            var impulse = Vector2.Zero;
+            for (var point = 0; point < counts[body]; point++) impulse += reports[body * 2 + point].Impulse;
+            Near(impulse.X, body == 0 ? states[0].Velocity.X - 100 : 2 * (states[1].Velocity.X + 100), .001f,
+                "Completed-frame impulse agrees with actual momentum change");
+            Near(impulse.Y, 0, .001f, "Head-on impact has no transverse impulse");
+        }
+        Console.WriteLine("Resident speculative restitution: incoming impact, unequal-mass momentum/energy, future and receding pairs passed.");
     }
 
     private static void VerifyAngularAndSurfaceMotion()

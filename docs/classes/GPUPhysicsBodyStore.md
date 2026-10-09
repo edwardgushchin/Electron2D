@@ -39,6 +39,12 @@ points, material response, contact impulses, pin/groove/spring solving and warm 
 [backend integration](../components/physics-backends.md) documents publication and
 verification limits. Complete conformance, performance and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
 
+Discrete restitution retains incoming normal speed when the current separation can
+close within the solve interval. Speculative braking therefore cannot erase a
+forthcoming elastic impact; future and receding pairs do not rebound early.
+CCD retains its contact threshold. Unequal-mass momentum, energy and completed-frame
+impulse checks are described in the [contact solver](../components/gpu-contact-solver.md#solve-and-history).
+
 | Operation | Contract |
 | --- | --- |
 | `ReadChanges`, `BodySlotCount` | Consume latest observable changes into a retained span sized for all slots. Initial bodies, changed pose/velocity/fields/policy, replacements and removals carry generations; untouched tails remain intact. Device history is private to this single publisher. See [semantics and transfer costs](../components/gpu-body-publication.md). |

@@ -366,3 +366,9 @@ GPU contact-report preparation now reads retained runtimes from attached scene a
 server body lists instead of resolving every RID through the shared registry.
 [Receiver preparation](../components/physics-backends.md#contact-receiver-preparation)
 preserves live caps, non-rigid receivers, sensor exclusion and attachment lifetime.
+
+Public body-parameter conformance now runs on explicit CPU and GPU worlds, including
+material response, signed fields, persistent force/torque, omission and reattachment.
+[Discrete GPU restitution](../components/gpu-contact-solver.md#solve-and-history)
+preserves incoming impact speed before speculative braking; future and receding pairs
+remain free of premature rebound. Shared API and warm allocation checks cover this path.

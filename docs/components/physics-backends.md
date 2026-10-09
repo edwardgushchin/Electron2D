@@ -382,17 +382,50 @@ FPS or network acceptance. Logs are `/tmp/e2d-prepare-baseline.log`,
 `/tmp/e2d-prepare-after.log`, `/tmp/e2d-prepare-after-repeat.log` and
 `/tmp/e2d-prepare-baseline-repeat.log`.
 
-A separate run with profiling disabled used the same fixture at smaller populations
-(64 warmup / 64 samples). Full public-edit-plus-step times in milliseconds:
+The smaller-population table formerly reported here as the changed revision is
+withdrawn. An IL audit found that restoring source with preserved timestamps let
+an incremental build retain the baseline registry-based `PrepareGPUReports`.
+`/tmp/e2d-prepare-small.log` and the final broad-suite run from that experiment
+therefore do not verify the changed receiver path. The earlier two changed 65,536
+runs and focused checks preceded that restoration; their measurements above remain
+separate evidence. The stale method is recorded in `/tmp/e2d-parameters-stale-il.log`.
+Subsequent comparisons force recompilation with `--no-incremental` and inspect the
+consumer DLL, rather than relying on a successful incremental build.
 
-| Bodies | CPU p50 / p95 / p99 | GPU p50 / p95 / p99 |
-| ---: | --- | --- |
-| 512 | 0.5269 / 0.5747 / 0.8578 | 2.6884 / 3.4700 / 4.5198 |
-| 4,096 | 3.4514 / 3.9086 / 3.9624 | 4.1833 / 5.2598 / 6.4216 |
-| 16,384 | 16.7861 / 27.8723 / 39.1876 | 8.6432 / 9.8766 / 10.6761 |
+A forced rebuild of `7e918def` confirms the attached-list receiver method in
+`/tmp/e2d-parameters-baseline-il.log`. Its 65,536-body comparison measured CPU
+p50/p95/p99 70.1175/76.8703/88.4601 ms and GPU 33.5278/39.9213/41.4280 ms, with
+5.6378 ms for parameters/motion/joints, 1.2643 ms for report selection and 1.9765 ms
+for command/wake publication. Both warmed intervals allocated zero owner/all-thread
+managed bytes; GPU transfers and submission counts remain those reported above.
+Log: `/tmp/e2d-parameters-baseline-forced.log`.
 
-These six intervals also allocated zero owner/all-thread managed bytes. GPU traffic
-was respectively 45,232 / 360,624 / 1,441,968 uploaded bytes and 192 downloaded bytes
-per tick, with 23 submissions and one publication. CPU remains faster at the two
-smaller populations. This is one comparison of independent colliding pairs, not
-an all-scenes backend recommendation. Log: `/tmp/e2d-prepare-small.log`.
+After the discrete restitution correction, the same forced-build 65,536-body fixture
+measured CPU p50/p95/p99 67.1080/70.3527/72.1527 ms and GPU
+35.0679/39.0912/41.0822 ms. Both intervals again allocated zero owner/all-thread managed
+bytes; GPU upload/readback remained 5,767,344/192 bytes, 23 submissions and one
+publication per tick. Mean preparation was 5.6995 ms for parameters/motion/joints,
+1.3796 ms for report selection and 1.8649 ms for commands/wakes, with 7.9851 ms total
+fence waits per tick. This preserves the full CPU/GPU comparison; the contact fix
+is a correctness change and these samples do not establish an additional speedup.
+Log: `/tmp/e2d-parameters-after.log`. The proposed owner-lookup micro-optimization
+was deferred and is not part of this result. The forced baseline full GPU suite
+passed in `/tmp/e2d-parameters-baseline-gpu.log`, replacing the stale broad-suite
+verification described above.
+
+The forced-build real-window check (`ELECTRON2D_TEST_PHYSICS_VELOCITY_EDITS_NATIVE=1`)
+also completed: 640×520 GPU renderer, VSync enabled, MaxFPS=0, 512 circle bodies,
+256 pose/linear/angular edits per physics tick, requested 60 Hz, 96 warmup ticks
+and about four measured seconds per backend.
+
+| Physics | Rendered FPS | Actual physics ticks/s | Frame p50 / p95 / p99 ms | Owner-thread managed bytes |
+| --- | ---: | ---: | --- | ---: |
+| CPU | 143.78 | 60.16 | 6.9545 / 6.9979 / 7.0433 | 0 |
+| GPU | 143.60 | 59.69 | 6.9547 / 8.1649 / 9.2332 | 0 |
+
+The GPU interval had 239 ticks, 10,812,360 uploaded / 47,800 downloaded bytes,
+5,736 submissions and 601.235 ms of accumulated waits. This is capped rendered output
+for a small world, not 60 Hz at 65,536 bodies; all-thread/native window allocations
+and a before/after rendered-speed claim are outside this check. Log:
+`/tmp/e2d-parameters-native.log`; captures:
+`/tmp/e2d-parameters-window-{CPU,GPU}.png`.

@@ -3565,7 +3565,7 @@
         "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations."
+      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations on explicit CPU/GPU worlds. Shared persistent force/torque, omission, rotation locks and reattachment are also checked; GPU predicted-impact restitution preserves incoming speed before speculative braking."
     },
     {
       "godot": [
@@ -3611,7 +3611,7 @@
         "PhysicsServer2D::enum_value:BodyDampMode.BODY_DAMP_MODE_REPLACE"
       ],
       "state": "Implemented",
-      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations."
+      "reason": "ADR 0076: all ten parameter branches execute through typed mass/center/inertia/material/field getter/setters for scene/server RIDs. BodyDampMode reuses existing RigidBody.DampMode values. PhysicsBodyParameterTests verifies defaults/signed values, Combine/Replace physics, material friction/rebound/absorbency, borrowed ownership/reload/disposal/failure, non-rigid gravity, lifetime, errors and zero warmed allocations on explicit CPU/GPU worlds. Shared persistent force/torque, omission, rotation locks and reattachment are also checked; GPU predicted-impact restitution preserves incoming speed before speculative braking."
     },
     {
       "godot": [

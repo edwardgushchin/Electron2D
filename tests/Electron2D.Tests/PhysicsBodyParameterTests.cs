@@ -2,17 +2,18 @@ using Electron2D;
 
 internal static class PhysicsBodyParameterTests
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
-        VerifyConfigurationAndMaterialOwnership();
-        VerifyServerFieldResponse();
-        VerifySignedMaterialResponse();
-        VerifySceneAndCharacterProjection();
-        VerifyFailuresAndWarmChanges();
-        Console.WriteLine("Typed body material/field parameters, physical response, ownership and allocation checks passed.");
+        VerifyConfigurationAndMaterialOwnership(backend);
+        VerifyServerFieldResponse(backend);
+        VerifySignedMaterialResponse(backend);
+        VerifySceneAndCharacterProjection(backend);
+        VerifyFailuresAndWarmChanges(backend);
+        VerifyPersistentIntegration(backend);
+        Console.WriteLine($"Typed body material/field parameters, physical response, ownership and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyConfigurationAndMaterialOwnership()
+    private static void VerifyConfigurationAndMaterialOwnership(PhysicsServer.Backend backend)
     {
         var server = PhysicsServer.Service; var rid = PhysicsServer.BodyCreate();
         try
@@ -34,7 +35,7 @@ internal static class PhysicsBodyParameterTests
         finally { PhysicsServer.FreeRID(rid); }
         Reject<ArgumentException>(() => PhysicsServer.BodyGetBounce(rid));
         using var circle = new CircleShape(); using var material = new PhysicsMaterial { Friction = 0.2f, Bounce = 0.3f, Rough = true, Absorbent = true };
-        var root = new Node(); var first = new RigidBody { Name = "first", PhysicsMaterialOverride = material }; var second = new StaticBody { Name = "second", Position = new(100, 0), PhysicsMaterialOverride = material };
+        using var world = new World(backend); var root = new SubViewport { World = world }; var first = new RigidBody { Name = "first", PhysicsMaterialOverride = material }; var second = new StaticBody { Name = "second", Position = new(100, 0), PhysicsMaterialOverride = material };
         Add(first, circle); Add(second, circle); root.AddChild(first); root.AddChild(second); using var tree = new SceneTree(root);
         Check(PhysicsServer.BodyGetFriction(first.GetRID()) == -0.2f && PhysicsServer.BodyGetBounce(first.GetRID()) == -0.3f, "Material modifiers project signed raw parameters.");
         PhysicsServer.BodySetFriction(first.GetRID(), 0.8f); PhysicsServer.BodySetBounce(first.GetRID(), 0.6f);
@@ -47,9 +48,9 @@ internal static class PhysicsBodyParameterTests
         Check(PhysicsServer.BodyGetFriction(first.GetRID()) == 1 && PhysicsServer.BodyGetBounce(first.GetRID()) == 0, "Material disposal reloads default coefficients.");
     }
 
-    private static void VerifyServerFieldResponse()
+    private static void VerifyServerFieldResponse(PhysicsServer.Backend backend)
     {
-        using var region = new RectangleShape { Size = new(2000, 2000) }; var root = new Node();
+        using var region = new RectangleShape { Size = new(2000, 2000) }; using var world = new World(backend); var root = new SubViewport { World = world };
         var area = new Area
         {
             GravitySpaceOverride = Area.SpaceOverride.Replace,
@@ -86,9 +87,9 @@ internal static class PhysicsBodyParameterTests
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(circle); }
     }
 
-    private static void VerifySignedMaterialResponse()
+    private static void VerifySignedMaterialResponse(PhysicsServer.Backend backend)
     {
-        using var floorShape = new RectangleShape { Size = new(400, 20) }; var root = new Node();
+        using var floorShape = new RectangleShape { Size = new(400, 20) }; using var world = new World(backend); var root = new SubViewport { World = world };
         var floor = new StaticBody { Name = "floor", Position = new(0, 100) }; Add(floor, floorShape); root.AddChild(floor);
         using var tree = new SceneTree(root); var server = PhysicsServer.Service;
         var bouncy = PhysicsServer.BodyCreate(); var absorbent = PhysicsServer.BodyCreate(); var shape = PhysicsServer.CircleShapeCreate();
@@ -100,7 +101,7 @@ internal static class PhysicsBodyParameterTests
             var bounceState = PhysicsServer.BodyGetDirectState(bouncy)!; var absorbState = PhysicsServer.BodyGetDirectState(absorbent)!;
             var upward = 0f;
             for (var frame = 0; frame < 100; frame++) { tree.PhysicsFrame(1d / 60); upward = MathF.Min(upward, bounceState.LinearVelocity.Y); }
-            Check(upward < -100 && absorbState.Transform.Origin.Y is > 75 and < 83, "Positive restitution rebounds while signed absorbency suppresses rebound.");
+            Check(upward < -100 && absorbState.Transform.Origin.Y is > 75 and < 83, $"Positive restitution rebounds while signed absorbency suppresses rebound: upward={upward}, absorbent pose={absorbState.Transform.Origin}, velocity={absorbState.LinearVelocity}.");
             PhysicsServer.BodySetBounce(floor.GetRID(), 0); PhysicsServer.BodySetBounce(bouncy, 0);
             PhysicsServer.BodySetTransform(bouncy, new(0, Vector2.One, 0, new(-50, 80))); bounceState.LinearVelocity = new(100, 0);
             PhysicsServer.BodySetFriction(floor.GetRID(), 0); PhysicsServer.BodySetFriction(bouncy, 1);
@@ -114,9 +115,9 @@ internal static class PhysicsBodyParameterTests
         finally { PhysicsServer.FreeRID(bouncy); PhysicsServer.FreeRID(absorbent); PhysicsServer.FreeRID(shape); }
     }
 
-    private static void VerifySceneAndCharacterProjection()
+    private static void VerifySceneAndCharacterProjection(PhysicsServer.Backend backend)
     {
-        using var circle = new CircleShape(); var root = new Node(); var body = new RigidBody { Name = "body" };
+        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world }; var body = new RigidBody { Name = "body" };
         var character = new CharacterBody { Name = "character", Position = new(100, 0) }; Add(body, circle); Add(character, circle); root.AddChild(body); root.AddChild(character);
         using var tree = new SceneTree(root); var server = PhysicsServer.Service;
         PhysicsServer.BodySetGravityScale(body.GetRID(), 2); PhysicsServer.BodySetLinearDamp(body.GetRID(), 3); PhysicsServer.BodySetAngularDamp(body.GetRID(), 4);
@@ -129,9 +130,9 @@ internal static class PhysicsBodyParameterTests
             "Non-rigid scene profiles expose the same scaled resolved gravity in both API lanes.");
     }
 
-    private static void VerifyFailuresAndWarmChanges()
+    private static void VerifyFailuresAndWarmChanges(PhysicsServer.Backend backend)
     {
-        using var circle = new CircleShape(); var root = new Node(); var body = new RigidBody { GravityScale = 0, CanSleep = false }; Add(body, circle); root.AddChild(body);
+        using var circle = new CircleShape(); using var world = new World(backend); var root = new SubViewport { World = world }; var body = new RigidBody { GravityScale = 0, CanSleep = false }; Add(body, circle); root.AddChild(body);
         using var tree = new SceneTree(root); var server = PhysicsServer.Service; var rid = body.GetRID();
         using var changedMaterial = new PhysicsMaterial();
         Action<Resource> fail = _ => throw new ApplicationException("material revision");
@@ -157,6 +158,46 @@ internal static class PhysicsBodyParameterTests
         for (var pass = 0; pass < 64; pass++) { Configure(); tree.PhysicsFrame(1d / 60); }
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed field parameter/read and active solver paths allocate zero managed bytes.");
         void Configure() { PhysicsServer.BodySetLinearDamp(rid, 2); PhysicsServer.BodySetAngularDamp(rid, 3); PhysicsServer.BodySetGravityScale(rid, 0); _ = PhysicsServer.BodyGetFriction(rid); _ = PhysicsServer.BodyGetLinearDamp(rid); }
+    }
+
+    private static void VerifyPersistentIntegration(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var body = new RigidBody { Mass = 2, Inertia = 4, GravityScale = 0, CanSleep = false };
+        root.AddChild(body); using var tree = new SceneTree(root);
+        PhysicsServer.AreaSetGravity(world.Space, 0); PhysicsServer.AreaSetLinearDamp(world.Space, 0); PhysicsServer.AreaSetAngularDamp(world.Space, 0);
+        var raw = PhysicsServer.BodyCreate(); var ids = new[] { body.GetRID(), raw };
+        try
+        {
+            PhysicsServer.BodySetMass(raw, 2); PhysicsServer.BodySetInertia(raw, 4); PhysicsServer.BodySetCanSleep(raw, false);
+            PhysicsServer.BodySetSpace(raw, world.Space);
+            SetConstants(new(120, 0), 240); Step(1, 1);
+            SetConstants(new(240, 0), -240); Reset(); Step(2, -1);
+            body.CustomIntegrator = true; PhysicsServer.BodySetOmitForceIntegration(raw, true); Reset();
+            foreach (var id in ids) { PhysicsServer.BodyApplyCentralImpulse(id, new(2, 0)); PhysicsServer.BodyApplyTorqueImpulse(id, 4); }
+            Step(1, 1);
+            body.CustomIntegrator = false; PhysicsServer.BodySetOmitForceIntegration(raw, false);
+            body.LockRotation = true; PhysicsServer.BodySetMode(raw, PhysicsServer.BodyMode.RigidLinear); Reset(); Step(2, 0);
+            body.LockRotation = false; PhysicsServer.BodySetMode(raw, PhysicsServer.BodyMode.Rigid); Reset(); Step(2, -1);
+            root.RemoveChild(body); PhysicsServer.BodySetSpace(raw, default);
+            SetConstants(new(60, 0), 120);
+            root.AddChild(body); PhysicsServer.BodySetSpace(raw, world.Space); Reset(); Step(.5f, .5f);
+        }
+        finally { PhysicsServer.FreeRID(raw); }
+        void SetConstants(Vector2 force, float torque)
+        {
+            body.ConstantForce = force; body.ConstantTorque = torque;
+            PhysicsServer.BodySetConstantForce(raw, force); PhysicsServer.BodySetConstantTorque(raw, torque);
+        }
+        void Reset()
+        { foreach (var id in ids) { PhysicsServer.BodySetLinearVelocity(id, Vector2.Zero); PhysicsServer.BodySetAngularVelocity(id, 0); } }
+        void Step(float linear, float angular)
+        {
+            tree.PhysicsFrame(1d / 60);
+            foreach (var id in ids)
+                Check(Near(PhysicsServer.BodyGetLinearVelocity(id).X, linear) && Near(PhysicsServer.BodyGetAngularVelocity(id), angular),
+                    "Scene/server persistent forces, omission, rotation locks and reentry follow mass/inertia over 1/60 s within one percent or .01 units/s");
+        }
     }
 
     private sealed class ParameterDuringPose : RigidBody
