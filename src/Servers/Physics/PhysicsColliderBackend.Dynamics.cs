@@ -8,7 +8,7 @@ internal sealed partial class PhysicsColliderBackend
 {
     private List<B2ShapeProxy>? _massProxies;
     internal bool IsDynamic => HasMotionMode(PhysicsServer.BodyMode.Rigid);
-    internal bool RotationLocked => GPU is not null ? GPUState.RotationLocked : b2Body_GetMotionLocks(BodyID).angularZ;
+    internal bool RotationLocked => GPU is { } gpu ? gpu.GetRotationLocked(GPUHandle) : b2Body_GetMotionLocks(BodyID).angularZ;
     internal Vector2 CenterOfMass => GPU is not null ? CenterOfMassLocal.Rotated(GPUState.Rotation) : ToScene(b2Body_GetWorldCenterOfMass(BodyID) - b2Body_GetPosition(BodyID));
     internal Vector2 CenterOfMassLocal => GPU is { } gpu ? gpu.GetMassProperties(GPUHandle).Center : ToScene(b2Body_GetLocalCenterOfMass(BodyID));
     internal float InverseMass => GPU is { } gpu ? IsDynamic ? 1 / gpu.GetMassProperties(GPUHandle).Mass : 0 : Simulation(BodyID).invMass;

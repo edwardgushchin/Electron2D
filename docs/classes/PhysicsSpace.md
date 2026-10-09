@@ -156,3 +156,18 @@ retained pre-solve midpoint/separation; GPU supplies a bounded compact result.
 Disabled/sleeping/sensor pairs do not become markers. Reading a failed world still
 rejects, while disabling is permitted for release. These internal operations do not
 expand the public PhysicsServer API. See [diagnostics](../components/physics-debug.md).
+
+## Conditional GPU body publication
+
+GPU preparation scans existing callback/contact-snapshot predicates and pending
+force/torque. Only consumers needing pre-step activity retain the initial full
+publication and ApplyBeforeStep phase. Connected wakes still publish before device
+simulation; completion continues to publish final state. A per-world publication
+epoch qualifies attachment caches against selected intermediate reads, so a final
+state equal to earlier publication never revives an intermediate cached pose.
+
+GPU steps now populate the existing eight optional ProfileMS/ProfileBytes slots:
+attachments; consumers/pre-publication/fields; body/joint preparation/wakes;
+simulation/debug; post-publication/reports; scene/server completion;
+contacts/Areas/views; callbacks/events. Mean profiling does not add GPU fences.
+See [public-world measurement and limits](../components/physics-backends.md#conditional-body-publication).

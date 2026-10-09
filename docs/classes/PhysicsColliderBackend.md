@@ -127,3 +127,11 @@ invalidate the shared GPU snapshot epoch and queue wake propagation. Actual read
 axis projection and other observation paths keep their existing freshness behavior.
 The CPU path and public signatures are unchanged. [Component-write checks](../components/gpu-resident-bodies.md#component-velocity-writes)
 cover scene/server and direct-state consumers plus custom integration callbacks.
+
+The GPU cache also tracks whether it matches the world's latest change publication.
+Selected reads after authored edits are not automatically revalidated by a later
+empty publication; the next observation refreshes them. Matching-epoch selected
+reads regain compatibility without adding a second state copy. RotationLocked reads
+validated authored resident role/policy metadata, avoiding a pose readback during
+ordinary preparation. [Publication tests](../components/physics-backends.md#conditional-body-publication)
+cover intermediate reads restored to the prior final pose.

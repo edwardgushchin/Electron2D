@@ -355,3 +355,9 @@ semantics, impulses, sleep and surface motion retain their shared contract.
 [Component-write measurements](../components/gpu-resident-bodies.md#component-velocity-writes)
 separate the complete small-scene speedup, capped real-window output and remaining
 massive-scene/native/network acceptance.
+
+GPU pre-step body publication is now conditional on actual activity consumers;
+completion remains observable and caches distinguish intermediate selected reads
+from change-publication state. [Public-world measurements up to 65,536 bodies](../components/physics-backends.md#conditional-body-publication)
+report exact traffic, zero warmed physics allocations, phase costs and variable
+native/window timing without treating this fixture as full performance acceptance.

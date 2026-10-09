@@ -269,3 +269,10 @@ command and body layouts are unchanged; two command-mask bits carry the selectio
 No state read or publication is needed to preserve the other component. Read/query
 and step paths retain the existing owner/failure/generation guards and freshness.
 See [component writes and measurements](../components/gpu-resident-bodies.md#component-velocity-writes).
+
+`GetRotationLocked(BodyHandle)` derives current lock policy from the existing authored
+role/integration slot after the ordinary owner/generation/failure checks; it requires
+no GPU readback. `ChangePublicationCount` counts successful nonempty-world change
+publication operations for diagnostics, including publications with zero changed
+records. It changes no stream semantics or public API. The common world now
+[omits pre-step publication without a consumer](../components/physics-backends.md#conditional-body-publication).

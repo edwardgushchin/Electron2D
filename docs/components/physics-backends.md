@@ -67,7 +67,9 @@ An immediate dirty body getter may issue a selected GPU read. Bulk frame publica
 uses the [changed-state stream](gpu-body-publication.md); its device history/output
 and host scratch remain separately accounted for.
 
-Preparation and completion currently publish changes synchronously. Contact receivers
+Completion publishes changes synchronously. Preparation does so only when pending
+forces or body-snapshot consumers need pre-step activity; see the conditional-publication
+contract below. Contact receivers
 download their requested capped records; Area monitoring issues queries per local shape.
 Those costs are part of the complete SpaceStep and must not be omitted from CPU/GPU
 comparisons. Immediate connected-wake publication adds a status read/fence when a previous
@@ -202,3 +204,135 @@ zero all-thread managed bytes. GPU upload/readback/uniforms were
 public state/contact publication; it excludes construction, rendering and native
 allocation. These tiny-world diagnostics ran on the shared desktop and do not
 replace the controlled massive-scene comparison or establish rendered FPS.
+
+## Conditional body publication
+
+The GPU adapter no longer downloads authored intermediate poses for every ordinary
+step. Pre-step activity is needed to preserve pending-force eligibility, omission
+and retention while sleeping/static, and dispatch of receivers active before the
+solver. If any body has pending force/torque or satisfies the existing callback/
+contact-snapshot predicate, the original full pre-step publication and activity
+capture remain. The complete receiver order is retained, allowing an earlier
+callback to enable a later receiver within the same step. With no such consumer,
+activity capture is skipped; constant forces and field integration stay on device.
+Queued connected wakes are still flushed before simulation. This optimization
+removes a redundant observation, not a solver phase or physical feature.
+
+Rotation-lock preparation reads the existing authored role/integration metadata
+through the validated resident handle. It does not read a GPU pose snapshot just
+to learn an already-known policy bit. Actual pose/query/joint consumers continue
+to use fresh selected reads when necessary. Completion still publishes changed
+states for scene poses, fields, contacts, getters and callbacks.
+
+Each attachment distinguishes a cache compatible with the last change publication
+from a selected intermediate read. A world retains its last publication's authored
+state epoch. If an explicit getter observes a temporary pose which is then restored,
+a later unchanged change-stream entry cannot falsely validate that temporary cache.
+The attachment refreshes it on its next real read. A completed publication or a
+selected read at the current publication epoch restores compatibility; it does not
+force permanent per-body reads after one getter. No second 64-byte state copy,
+new request list or device buffer is introduced. Reattachment resets the qualifier.
+
+`PhysicsGPUPublicationTests` runs public CPU/GPU checks for unchanged/intermediate
+reads, fresh solved poses, late callback registration, live direct views, custom
+integration attach/detach, retained forces across sleep/static roles, force omission,
+one-tick torque and connected joint wake. The counter `ChangePublicationCount`
+records successful resident change publications, allowing an exact one-versus-two
+consumer check without depending on incidental solver fences. Select with
+`ELECTRON2D_TEST_GPU_PUBLICATION=1`; the managed and full GPU runners include it.
+The first candidate exposed both a hidden rotation-policy read and stale cache
+revalidation; those candidates were rejected before the final implementation.
+
+### Large public-world measurements
+
+`ELECTRON2D_TEST_GPU_PUBLICATION_BENCHMARK=1` selects
+`PhysicsGPUPublicationPerformance`. Optional `ELECTRON2D_PUBLICATION_COUNTS` is a
+comma-separated even body-count list, default `512,4096,16384,65536`.
+Each world has half static and half dynamic circles, radius 4, arranged as separated
+colliding pairs with one unit of initial penetration. Every iteration resets all
+dynamic poses/linear velocities and runs the complete public SpaceStep at 1/60 s,
+4 substeps and 16 solver iterations. Automatic sleep is disabled for dynamics;
+no callbacks, sensors, contact-report receivers or debug capture are requested.
+64 warmups and 64 measured iterations use the same workload on each backend.
+Actual population and finite separating response are verified after timing. This
+is a mass collision workload with independent pairs, not a dense destruction pile.
+
+Baseline is `d37b6f09` with only the publication counter and benchmark harness.
+Both CPU/GPU after columns use the same candidate. Linux x64, .NET 10.0.1 Release,
+Vulkan/RTX 3090 Ti. Entries are whole reset-plus-step p50/p95/p99 milliseconds:
+
+| Bodies | CPU after | GPU before | GPU after | GPU readback B/tick before / after |
+| ---: | --- | --- | --- | ---: |
+| 512 | 0.4299 / 0.5396 / 0.8614 | 2.7680 / 3.7033 / 4.4021 | 3.2413 / 6.9550 / 7.2580 | 41160 / 192 |
+| 4096 | 4.2516 / 9.2730 / 12.4016 | 4.2071 / 5.3594 / 6.2812 | 4.1154 / 5.1992 / 6.2678 | 327880 / 192 |
+| 16384 | 15.4845 / 17.6731 / 25.2686 | 10.6502 / 13.0604 / 14.3852 | 11.2745 / 14.3228 / 16.5346 | 1310920 / 192 |
+| 65536 | 63.0945 / 66.6107 / 67.8118 | 51.0120 / 54.5431 / 54.9735 | 50.7523 / 139.6676 / 226.3529 | 5243080 / 192 |
+
+All intervals measured **0 owner-thread and 0 all-thread managed bytes**. GPU
+submissions fell from 26 to 23 and body publications from two to one per tick.
+After upload is 45232 / 360624 / 1441968 / 5767344 bytes for these populations;
+baseline uploads eight more bytes. The deterministic reset fixture returns to the
+same final poses every tick, so no changed bodies need republishing after warmup.
+The 192 bytes are necessary status/count traffic, not a universal body-state budget;
+a world with changed final poses still downloads their change records. This does
+not reduce the number of physical bodies, contacts or solver iterations.
+
+Logs: `/tmp/e2d-publication-baseline-perf.log` and
+`/tmp/e2d-publication-after-perf.log`. Timing tails were variable, and the first
+matrix does not establish a consistent latency improvement from this optimization.
+Desktop activity and dynamic device clocks were not controlled; no unproven cause
+is assigned to that variation. The byte/publication reductions are exact counters.
+A separate small debug fixture run also showed a 17 ms median; that observation
+is retained in `/tmp/e2d-publication-small2.log`, not silently replaced by a faster run.
+
+A follow-up 65,536-body run with `ELECTRON2D_PUBLICATION_PROFILE=1` and a local
+runtime-reference reuse in the consumer scan measured CPU 67.9761/72.5464/93.7380 ms
+and GPU 39.2548/43.7043/45.0439 ms. GPU reset/step p50 was 10.4212/29.0945 ms,
+mean fence wait 8.9723 ms, with the same 192-byte readback and zero managed bytes.
+The optional existing phase profiler now covers GPU steps too (means, milliseconds):
+
+| GPU step phase | Mean ms |
+| --- | ---: |
+| Attachment preparation | 1.1014 |
+| Consumer scan / pre-publication / authored fields | 1.9269 |
+| Body/joint preparation and wake publication | 11.7488 |
+| Resident simulation and optional contact diagnostics | 9.5978 |
+| Post-step publication and contact reports | 1.1806 |
+| Scene/server completion | 2.7981 |
+| Contacts / Areas / direct-view capture | .4190 |
+| Callbacks / events | .0008 |
+
+The profiler uses eight existing internal timing/allocation slots with GPU-specific
+phase meanings and is disabled by default. It adds no phase-specific GPU fences.
+The 65,536-body result is a bounded GPU advantage on this workload, not a 60 Hz or
+cross-platform acceptance result. Reducing authored-command/preparation cost remains
+a measured priority. Profile log: `/tmp/e2d-publication-large-profile.log`.
+
+### Native window boundary
+
+The existing 512-body component-edit window was rerun, along with all four
+CPU/GPU × gpu/compatibility contact-pixel checks. The contact checks passed with
+zero warmed render allocations. In the first window rerun, CPU measured 141.85 FPS /
+59.69 ticks/s and GPU 90.36 FPS / 61.15 ticks/s, with actual VSync Enabled. GPU readback
+was 49,000 B over 245 ticks (200 B/tick), instead of the earlier 41,168 B/tick.
+That interval allocated zero GPU-window owner-thread managed bytes; the CPU-window
+interval recorded 200,264 B. The whole-window allocation source has not been localized;
+these figures must not be described as zero-allocation window acceptance. Headless
+physical steps remained at zero on both backends. Log:
+`/tmp/e2d-publication-native-window.log`; contact pixels:
+`/tmp/e2d-publication-native-contacts.log`. Timing variation requires paired follow-up
+before claiming a window-FPS improvement. Large rendered worlds, native allocations,
+other platforms, extensions/tile owners and authoritative networking remain open.
+
+A subsequent paired rerun used the unchanged 512-body window first on `d37b6f09`,
+then on this implementation, with other test/build processes stopped. Baseline
+CPU/GPU measured 143.78/143.63 FPS; after CPU/GPU measured 143.86/135.35 FPS.
+All four intervals recorded zero owner-thread managed bytes, so the earlier CPU
+allocation did not reproduce; its source remains unassigned. Both GPU intervals
+completed 240 physics ticks in approximately four seconds. GPU readback fell from
+9,880,320 to 48,000 bytes and submissions from 6480 to 5760; total measured waits
+were 592.698/592.222 ms. After frame p50/p95/p99 was 6.9684/12.8642/14.2234 ms,
+versus baseline 6.9512/8.3114/9.9863 ms. **No window-FPS improvement is claimed**:
+this optimization removes traffic while host/driver timing remains variable.
+Logs `/tmp/e2d-publication-window-paired-{before,after}.log` and captures
+`/tmp/e2d-publication-window-paired-{before,after}-{CPU,GPU}.png` retain both runs.

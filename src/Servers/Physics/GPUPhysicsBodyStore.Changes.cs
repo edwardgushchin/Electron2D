@@ -15,6 +15,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 
     private RenderHandle? _changesPipeline, _changesHistory, _changesResults, _changesStatus, _changesUpload, _changesDownload;
     private int _changesHistoryCapacity, _changesResultCapacity, _changesDownloadCapacity, _publishedSlots;
+    internal long ChangePublicationCount { get; private set; }
     internal int BodySlotCount { get { EnsureAccess(); return _highWater; } }
     internal long ChangeDeviceCapacityBytes => (long)(_changesHistoryCapacity + _changesResultCapacity) * sizeof(BodyChange) + (_changesStatus is null ? 0 : 8);
     internal long ChangeTransferCapacityBytes => _changesDownloadCapacity + (_changesUpload is null ? 0 : 8);
@@ -88,7 +89,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 try { fixed (BodyChange* target = destination) System.Buffer.MemoryCopy((byte*)mapped + 8, target, bytes, bytes); }
                 finally { SDL.UnmapGPUTransferBuffer(Device, _changesDownload.DangerousGetHandle()); }
             }
-            _publishedSlots = _highWater; _failed = false;
+            _publishedSlots = _highWater; _failed = false; ChangePublicationCount++;
             return count;
         }
         finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }

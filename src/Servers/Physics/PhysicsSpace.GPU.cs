@@ -5,6 +5,7 @@ internal sealed partial class PhysicsSpace
     internal GPUPhysicsBodyStore? GPUStore { get; }
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
+    internal long GPUStatePublicationEpoch { get; private set; } = -1;
     internal void InvalidateGPUStates(bool wake = true)
     {
         _gpuWakePending |= wake;
@@ -66,21 +67,23 @@ internal sealed partial class PhysicsSpace
         FlushGPUWakes();
         PrepareGPUCapacity();
         var count = GPUStore!.ReadChanges(_gpuChanges);
+        GPUStatePublicationEpoch = GPUStateEpoch;
         foreach (ref readonly var change in _gpuChanges.AsSpan(0, count))
             if (change.Alive != 0 && _gpuColliders.TryGetValue((int)change.Index, out var backend) && backend.GPUHandle.Generation == change.Generation)
-                backend.AcceptGPUState(change.State);
-        // Pending no-op edits have also been flushed; their previously published state stays current.
-        foreach (var backend in _gpuColliders.Values) backend.GPUStateValid = true;
+                backend.AcceptGPUState(change.State, published: true);
+        // A selected intermediate read may differ from unchanged publication history.
+        foreach (var backend in _gpuColliders.Values) backend.CompleteGPUStatePublication();
     }
 
     private static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
         new(fields.GravityVector, fields.Gravity, fields.GravityPoint, fields.GravityPointUnitDistance, fields.LinearDamp, fields.AngularDamp,
             fields.GravitySpaceOverride, fields.LinearDampSpaceOverride, fields.AngularDampSpaceOverride, fields.Priority);
 
-    private void PrepareGPUBody(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta)
+    private void PrepareGPUBody(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta, bool captureActivity)
     {
         runtime.Backend.PrepareGPUParameters(runtime);
-        runtime.ApplyBeforeStep(body);
+        if (captureActivity) runtime.ApplyBeforeStep(body);
+        else runtime.ActiveBeforeStep = false;
         if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
         else if (body is CharacterBody character) character.PrepareMotion(delta);
         else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
@@ -144,6 +147,8 @@ internal sealed partial class PhysicsSpace
     {
         _stepping = true; List<Exception>? errors = null; var advanced = false;
         var intervalEntered = false; var intervalSubmissions = 0L;
+        var profileMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
+        if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
         try
         {
             LastStep = (float)delta;
@@ -151,15 +156,32 @@ internal sealed partial class PhysicsSpace
             foreach (var area in _areas) area.PrepareBackend();
             foreach (var body in _serverColliders) body.PrepareBackend();
             foreach (var joint in _joints) joint.PrepareBackend();
-            PublishGPU();
+            RecordStepPhase(0, ref profileMark);
+            var callbacks = false; var pendingForces = false;
+            foreach (var body in _bodies)
+            {
+                var runtime = body.Runtime;
+                callbacks |= RequiresBodySnapshot(runtime, body);
+                pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
+            }
+            foreach (var body in _serverColliders)
+                if (!body.IsArea)
+                {
+                    var runtime = body.Runtime;
+                    callbacks |= RequiresBodySnapshot(runtime, null);
+                    pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
+                }
+            var captureActivity = callbacks || pendingForces;
+            if (captureActivity) PublishGPU();
             uint areaOrder = 0;
             foreach (var area in _areas) GPUStore!.SetAreaFields(area.Backend.GPUHandle, GPUFields(area.Fields), areaOrder++);
             foreach (var body in _serverColliders)
                 if (body.IsArea) GPUStore!.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
-            _callbackBodies.Clear(); var callbacks = false;
-            foreach (var body in _bodies) { PrepareGPUBody(body.Runtime, body, delta); callbacks |= RequiresBodySnapshot(body.Runtime, body); }
+            RecordStepPhase(1, ref profileMark);
+            _callbackBodies.Clear();
+            foreach (var body in _bodies) PrepareGPUBody(body.Runtime, body, delta, captureActivity);
             foreach (var body in _serverColliders)
-                if (!body.IsArea) { PrepareGPUBody(body.Runtime, null, delta); callbacks |= RequiresBodySnapshot(body.Runtime, null); }
+                if (!body.IsArea) PrepareGPUBody(body.Runtime, null, delta, captureActivity);
             if (callbacks)
             {
                 foreach (var body in _bodies) _callbackBodies.Add(new(body.Runtime, body.Backend, body.Backend.AttachmentVersion, body));
@@ -167,11 +189,15 @@ internal sealed partial class PhysicsSpace
             }
             foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
             SyncGPUExceptions(); PrepareGPUReports();
+            FlushGPUWakes();
+            RecordStepPhase(2, ref profileMark);
             intervalSubmissions = GPUStore!.SubmissionCount; intervalEntered = true;
             GPUStore.SimulateFields((float)delta, GPUFields(DefaultAreaFields));
             CaptureDebugContacts();
+            RecordStepPhase(3, ref profileMark);
             var statistics = new Statistics(GPUStore.PublishedActiveBodyCount, GPUStore.PairCount, GPUStore.PublishedIslandCount);
             PublishGPU(); ReadGPUReports(); advanced = true;
+            RecordStepPhase(4, ref profileMark);
             foreach (var body in _serverColliders)
             {
                 if (!body.IsArea) body.Backend.PublishGPUFields(body.Runtime);
@@ -188,11 +214,13 @@ internal sealed partial class PhysicsSpace
                 }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
+            RecordStepPhase(5, ref profileMark);
             CollectBodyContactRange(0, _bodies.Count, 0, this);
             foreach (var body in _bodies)
                 if (body is RigidBody rigid) { if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid); rigid.QueueContactChanges(_contactEvents); }
             ScanGPUAreas(); CaptureBodyStates();
             PhysicsServer.Service.PublishStatistics(this, statistics);
+            RecordStepPhase(6, ref profileMark);
         }
         catch (Exception error)
         {
@@ -204,6 +232,7 @@ internal sealed partial class PhysicsSpace
         catch (Exception error) { (errors ??= []).Add(error); }
         try { DispatchEvents(); }
         catch (Exception error) { (errors ??= []).Add(error); }
+        RecordStepPhase(7, ref profileMark);
         if (errors is not null) throw new AggregateException("GPU physics-world step failed.", errors);
     }
 }

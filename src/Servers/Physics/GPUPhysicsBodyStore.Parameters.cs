@@ -16,6 +16,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ref var command = ref Edit(body.Index); slot.Surface.W = value;
         command.Body.Surface.W = value; command.Mask |= CollisionPriorityEdit;
     }
+    internal bool GetRotationLocked(BodyHandle body) { Validate(body); return RotationLocked(_slots[body.Index]); }
     internal PhysicsServer.BodyMode GetMode(BodyHandle body) { Validate(body); return _slots[body.Index].Mode; }
     internal IntegrationPolicy GetIntegrationPolicy(BodyHandle body) { Validate(body); return _slots[body.Index].Integration; }
 

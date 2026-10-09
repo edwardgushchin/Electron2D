@@ -11,7 +11,7 @@ internal sealed partial class PhysicsColliderBackend
     internal readonly List<(GPUPhysicsBodyStore.ShapeHandle Handle, int Slot, GPUPhysicsBodyStore.QueryGeometry? Query, Transform Pose)> GPUShapes = [];
     private GPUPhysicsBodyStore? GPU => Space?.GPUStore;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
-    private bool _gpuStateValid;
+    private bool _gpuStateValid, _gpuStateMatchesPublication;
     private long _gpuStateEpoch;
     internal bool GPUStateValid
     {
@@ -37,14 +37,19 @@ internal sealed partial class PhysicsColliderBackend
         }
     }
 
-    internal void AcceptGPUState(in GPUPhysicsBodyStore.Snapshot state) { _gpuState = state; GPUStateValid = true; }
+    internal void AcceptGPUState(in GPUPhysicsBodyStore.Snapshot state, bool published = false)
+    {
+        _gpuState = state; GPUStateValid = true;
+        _gpuStateMatchesPublication = published || Space!.GPUStatePublicationEpoch == Space.GPUStateEpoch;
+    }
+    internal void CompleteGPUStatePublication() => GPUStateValid = _gpuStateMatchesPublication;
     private void AttachGPU(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration, long version)
     {
         var store = space.GPUStore!;
         GPUHandle = store.Add(new(configuration.Mode, position, rotation, configuration.LinearVelocity,
             configuration.AngularVelocity, GravityScale: configuration.GravityScale, CanSleep: configuration.CanSleep,
             Sleeping: configuration.Sleeping, LockRotation: configuration.LockRotation));
-        Space = space; AttachmentVersion = version; GPUStateValid = false;
+        Space = space; AttachmentVersion = version; GPUStateValid = false; _gpuStateMatchesPublication = false;
         _gpuConstantForce = _gpuSurfaceLinear = default; _gpuSurfaceAngular = _gpuConstantTorque = 0;
         space.RegisterGPUCollider(this); ExternalObjectNode()?.AddPhysicsObjectBinding(this);
     }
