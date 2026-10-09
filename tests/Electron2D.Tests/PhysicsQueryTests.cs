@@ -8,6 +8,7 @@ internal static class PhysicsQueryTests
         VerifySceneRayAndRID();
         VerifyServerResourcesAndPointQueries();
         VerifyServerShapeFamilies();
+        VerifyCompoundInside();
         Console.WriteLine("Physics RID, scene/server ray and point query checks passed.");
     }
 
@@ -358,6 +359,42 @@ internal static class PhysicsQueryTests
         PhysicsServer.FreeRID(convexRID);
         PhysicsServer.FreeRID(concaveRID);
         PhysicsServer.FreeRID(space);
+    }
+
+    private static void VerifyCompoundInside()
+    {
+        var points = new Vector2[12];
+        for (var i = 0; i < points.Length; i++) points[i] = new Vector2(12, 0).Rotated(Mathf.Tau * i / points.Length);
+        using var polygon = new ConvexPolygonShape { Points = points };
+        using var circle = new CircleShape { Radius = 3 };
+        var space = PhysicsServer.SpaceCreate(); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        using var ray = PhysicsRayQueryParameters.Create(Vector2.Zero, new(0, -40));
+        try
+        {
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
+            PhysicsServer.BodyAddShape(body, polygon.GetRID()); PhysicsServer.BodySetSpace(body, space);
+            PhysicsServer.AreaAddShape(area, polygon.GetRID()); PhysicsServer.AreaSetSpace(area, space);
+            var view = PhysicsServer.SpaceGetDirectState(space);
+            for (var i = 0; i < 2; i++)
+            {
+                ray.CollideWithBodies = i == 0; ray.CollideWithAreas = i == 1;
+                Check(view.IntersectRay(ray) is null, "An inside start skips every piece of a logical compound shape, including internal seams.");
+                ray.HitFromInside = true;
+                Check(view.IntersectRay(ray) is { ShapeIndex: 0, Normal: var normal, Position: var position } && normal == Vector2.Zero && position == Vector2.Zero,
+                    "An enabled compound inside hit returns the origin once.");
+                ray.HitFromInside = false;
+            }
+            ray.CollideWithBodies = true; ray.CollideWithAreas = false;
+            PhysicsServer.BodyAddShape(body, circle.GetRID(), new(0, new(0, -30)));
+            Check(view.IntersectRay(ray) is { ShapeIndex: 1 }, "Skipping an inside slot still tests another slot of the same collider.");
+            ray.From = new(0, 40); ray.To = new(0, -40);
+            Check(view.IntersectRay(ray) is { ShapeIndex: 0, Position.Y: > 11 and < 13 }, "An outside ray still hits the compound outer boundary.");
+            for (var i = 0; i < 32; i++) view.IntersectRay(ray);
+            var bytes = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) view.IntersectRay(ray);
+            Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Warmed compound ray queries allocate zero managed bytes.");
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(space); }
     }
 
     private static void Check(bool condition, string message)

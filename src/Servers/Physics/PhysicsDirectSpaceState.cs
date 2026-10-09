@@ -72,6 +72,8 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     /// <summary>Finds the nearest eligible collider along a ray.</summary>
     /// <param name="parameters">Global endpoints, filtering and exclusion options.</param>
     /// <returns>The nearest typed hit, or null when the ray finds none.</returns>
+    /// <remarks>Origin containment applies to the complete logical shape, including compound polygon pieces.
+    /// Inside hits are skipped unless enabled; enabled inside hits use the origin and a zero normal.</remarks>
     /// <exception cref="ArgumentNullException">Parameters are null.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
     /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
@@ -198,20 +200,29 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         {
             var shape = shapes[index];
             if (!Eligible(shape, mask, excluded, out var tag)) continue;
+            // The backend appends each logical slot's pieces contiguously. An internal seam is not a new shape.
+            var first = index;
+            while (index + 1 < shapes.Count && b2Shape_GetUserData(shapes[index + 1]).GetRef<PhysicsFixtureTag>() is { } next &&
+                   next.ColliderRID == tag.ColliderRID && next.ShapeIndex == tag.ShapeIndex) index++;
             var startsInside = b2Shape_TestPoint(shape, input.origin);
+            for (var piece = first + 1; piece <= index && !startsInside; piece++)
+                startsInside = b2Shape_TestPoint(shapes[piece], input.origin);
             if (startsInside && !hitFromInside) continue;
-            var output = startsInside ? default : b2Shape_RayCast(shape, input);
-            if (!startsInside && !output.hit) continue;
-            var fraction = startsInside ? 0 : output.fraction;
-            if (fraction > bestFraction || fraction == bestFraction && best is { } prior &&
-                (tag.ColliderRID > prior.ColliderRID || tag.ColliderRID == prior.ColliderRID && tag.ShapeIndex >= prior.ShapeIndex))
-                continue;
-            bestFraction = fraction;
-            var point = startsInside ? from : new Vector2(output.point.X * PhysicsSpace.UnitsPerMeter,
-                output.point.Y * PhysicsSpace.UnitsPerMeter);
-            var normal = startsInside ? Vector2.Zero : new Vector2(output.normal.X, output.normal.Y);
-            best = new PhysicsRayResult(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
-                tag.ShapeIndex, point, normal);
+            for (var piece = first; piece <= (startsInside ? first : index); piece++)
+            {
+                var output = startsInside ? default : b2Shape_RayCast(shapes[piece], input);
+                if (!startsInside && !output.hit) continue;
+                var fraction = startsInside ? 0 : output.fraction;
+                if (fraction > bestFraction || fraction == bestFraction && best is { } prior &&
+                    (tag.ColliderRID > prior.ColliderRID || tag.ColliderRID == prior.ColliderRID && tag.ShapeIndex >= prior.ShapeIndex))
+                    continue;
+                bestFraction = fraction;
+                var point = startsInside ? from : new Vector2(output.point.X * PhysicsSpace.UnitsPerMeter,
+                    output.point.Y * PhysicsSpace.UnitsPerMeter);
+                var normal = startsInside ? Vector2.Zero : new Vector2(output.normal.X, output.normal.Y);
+                best = new PhysicsRayResult(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
+                    tag.ShapeIndex, point, normal);
+            }
         }
     }
 

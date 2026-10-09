@@ -110,6 +110,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         slot.PreviousOnBody = -1; slot.NextOnBody = _slots[body.Index].FirstShape;
         if (slot.NextOnBody >= 0) _shapeSlots[slot.NextOnBody].PreviousOnBody = index;
         _slots[body.Index].FirstShape = index;
+        ResetQueryIdentity(index);
         ShapeCount++; MarkShape(index); _treeTopologyDirty = true;
         return new(index, slot.Generation, _identity);
     }

@@ -2514,7 +2514,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_ray(PhysicsRayQueryParameters2D:)"
       ],
       "state": "Implemented",
-      "reason": "Nearest typed ray hit preserves collider RID/object/instance ID, stable shape-owner index, position, normal, exclusions, masks, Area flags and inside behavior (ADR 0063, PhysicsQueryTests)."
+      "reason": "Nearest typed ray hit preserves collider RID/object/instance ID, stable shape-owner index, position, normal, exclusions, masks, Area flags and complete logical-slot inside behavior, including compound polygon seams (ADR 0063, PhysicsQueryTests). Independent resident GPU ray/point queries execute internally; public GPU-world binding remains open."
     },
     {
       "godot": [

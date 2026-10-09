@@ -6,6 +6,7 @@ Last updated: 2026-10-09
 
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
+[world queries](../../src/Servers/Physics/GPUPhysicsBodyStore.Queries.cs),
 [mass](../../src/Servers/Physics/GPUPhysicsBodyStore.Mass.cs),
 [Area fields](../../src/Servers/Physics/GPUPhysicsBodyStore.Fields.cs),
 [kinematic targets](../../src/Servers/Physics/GPUPhysicsBodyStore.Kinematic.cs),
@@ -37,6 +38,8 @@ and network replay remain open. See [resident contact response](../components/gp
 
 | Operation | Contract |
 | --- | --- |
+| `Query`, `SetQueryIdentity` | Batched resident ray/point queries with authored logical identities, layer/body/sensor/canvas filters, exclusion spans and stable capped results. Flushes edits without simulation, retains device geometry and leaves unused caller tails unchanged. See [queries](../components/gpu-resident-queries.md). |
+| `QuerySubmissionCount`, `QuerySpatialSubmissionCount` | Search submissions and separate query-only tree preparation; neither enumerates simulation pairs. |
 | `Add(BodyDefinition)` | Validate finite authored values, allocate a generation-qualified slot and queue its initial device record. |
 | `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes, joints and live exception edges immediately; queue device removal. Reuse gets a fresh generation. |
 | `SetMode`, `GetMode` | Change/read the authored solver role without replacing handles or attachments. Nondynamic transitions clear motion, RigidLinear clears angular motion, and dynamic restoration retains configured mass/forces/CCD. |

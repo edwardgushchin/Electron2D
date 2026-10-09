@@ -56,7 +56,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             PairCount = count; break;
         }
         CommitGeometry();
-        _pairBodyVersion = _bodyVersion; _pairShapeVersion = _shapeVersion;
+        _pairBodyVersion = _boundsBodyVersion = _bodyVersion; _pairShapeVersion = _boundsShapeVersion = _shapeVersion;
         return PairCount;
     }
 
@@ -148,7 +148,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         target?.Dispose(); target = replacement; capacity = next;
     }
 
-    private int DispatchSpatial(bool retry)
+    private int DispatchSpatial(bool retry, bool pairs = true)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident spatial work");
@@ -193,13 +193,13 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     uniformBytes += RefitResidentTree(command); _refitsSinceSort = 0;
                 }
             }
-            uniformBytes += SpatialPass(command, 4, _shapeHighWater);
+            if (pairs) uniformBytes += SpatialPass(command, 4, _shapeHighWater);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident pair summary");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
             UploadBytes += 8 + vertexBytes + geometryBytes + shapeBytes; UniformBytes += uniformBytes; ReadbackBytes += 8;
-            GeometryUploadBytes += vertexBytes + geometryBytes; ShapeUploadBytes += shapeBytes; BroadPhaseSubmissionCount++;
+            GeometryUploadBytes += vertexBytes + geometryBytes; ShapeUploadBytes += shapeBytes; if (pairs) BroadPhaseSubmissionCount++; else QuerySpatialSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident pair summary");
             uint count;

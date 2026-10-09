@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceState
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 **Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
@@ -36,7 +36,7 @@ PhysicsRayResult? nearest = direct?.IntersectRay(ray);
 
 ## Query behavior
 
-Both methods honor all 32 layer bits, RID exclusions and independent body/Area flags. They test collider layers even if that collider's own collision mask is zero. Ray hits carry a global position and outward normal; an enabled origin-inside hit uses the ray origin and zero normal. A zero-length ray or a query with no eligible colliders returns null/empty. Point queries test filled circle, capsule and polygon interiors; hollow edges have no point interior. Several backend fixtures belonging to one direct CollisionShape or CollisionPolygon owner produce one point result. Ray ties choose the lowest collider RID and shape-owner index; point results sort by those keys before limiting `maxResults`. Negative maximum throws `ArgumentOutOfRangeException`.
+Both methods honor all 32 layer bits, RID exclusions and independent body/Area flags. They test collider layers even if that collider's own collision mask is zero. Ray hits carry a global position and outward normal; an enabled origin-inside hit uses the ray origin and zero normal. Containment is tested over every piece of a logical compound slot before casting, so an inside start cannot hit an internal polygon seam. Skipping that slot leaves other slots of the same collider eligible. A zero-length ray or a query with no eligible colliders returns null/empty. Point queries test filled circle, capsule and polygon interiors; hollow edges have no point interior. Several backend fixtures belonging to one direct CollisionShape or CollisionPolygon owner produce one point result. Ray ties choose the lowest collider RID and shape-owner index; point results sort by those keys before limiting `maxResults`. Negative maximum throws `ArgumentOutOfRangeException`.
 
 Shape operations share [PhysicsShapeQueryParameters](PhysicsShapeQueryParameters.md). `IntersectShape` includes geometry crossed by `Motion`, sorts by collider RID and direct shape-owner index, deduplicates compound pieces and then applies `maxResults`. `CastMotion` ignores a collider already intersecting the query at its origin and returns eight-refinement safe/unsafe fractions around the earliest new collision. `CollideShape` returns query point then collider point for each contact, applies the pair cap after RID/index ordering, and returns an empty array on a miss. `GetRestInfo` returns null on a miss and reports the deepest contact with collider point, normal directed toward the query and velocity at that point. Query shapes and server fixtures are live; geometry edits are prepared before querying. Invalid or stale shape RIDs reject the query. Negative result caps throw `ArgumentOutOfRangeException`; a zero cap returns an empty array. All shape operations reject off-owner or in-step access.
 

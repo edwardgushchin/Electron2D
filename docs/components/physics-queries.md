@@ -18,6 +18,8 @@ concrete world/body references and fixture traversal belong to PhysicsColliderBa
 The same adapter version qualifies queued callbacks across same-world reentry.
 The adapter still uses the current Box2D world; independent GPU binding remains open.
 
+[Independent resident ray/point queries](gpu-resident-queries.md) now execute internally on GPU; public direct-space views still use CPU. CPU origin-inside tests now cover the complete logical compound slot before casting, avoiding false hits on internal polygon seams. Other collider slots remain eligible. PhysicsQueryTests covers the regression for body/Area queries and warmed zero managed allocation.
+
 ## Runtime flow
 
 A SceneTree registers its existing Box2D space when the first scene collider enters or a CanvasItem asks for World. Each CollisionObject owns a stable RID from construction to disposal; fixture rebuilds attach that RID and a shape-owner index to all generated backend pieces. The server also creates explicit spaces, bodies, Areas and shapes. A server collider may attach to an explicit space or the SceneTree space. Explicit spaces advance through `SpaceStep`; a SceneTree advances its own space in the fixed physics lane. Freeing a resource removes its registry entry without reusing the numeric RID.

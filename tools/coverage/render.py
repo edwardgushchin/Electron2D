@@ -675,6 +675,8 @@ def render():
             updated = "2026-10-07"
         if name in {"StaticBody2D", "AnimatableBody2D", "PhysicsDirectBodyState2D", "PhysicsServer2D", "RigidBody2D", "Area2D", "Joint2D", "PinJoint2D", "Shape2D", "WorldBoundaryShape2D", "PhysicsDirectBodyState2DExtension", "PhysicsDirectSpaceState2D", "PhysicsDirectSpaceState2DExtension", "PhysicsPointQueryParameters2D", "PhysicsServer2DExtension", "PhysicsServer2DManager", "Viewport", "CollisionObject2D", "PhysicsBody2D"}:
             updated = "2026-10-08"
+        if name == "PhysicsDirectSpaceState2D":
+            updated = "2026-10-09"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":
             if page not in page_text:
