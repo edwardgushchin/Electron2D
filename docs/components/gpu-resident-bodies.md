@@ -42,6 +42,7 @@ the independent GPU objective is satisfied.
 | Growth | Copy prior body slots GPU-to-GPU; no body download/upload reconstruction. Record copied bytes and wait for resource replacement. |
 | Integration-only unchanged tick | 8-byte status reset upload, 32-byte compute uniform and 8-byte error/activity-result download. No body-state traffic. |
 | Explicit selected read | 16-byte generation/store-qualified request and 64-byte pose/velocity/sleep/field result per requested body, plus status and dispatch uniforms. |
+| Optional changed publication | Device comparison/history; eight reset/status bytes each direction, 16 uniform bytes and 80 bytes downloaded per changed body, with a second wait only for nonempty output. See [generation semantics and measured costs](gpu-body-publication.md). |
 | Per-tick fence wait | Required by this synchronous stage's finite-result/error publication contract. Its measured time is recorded separately from total submission/map/dispatch work. |
 
 At 65,536 slots, body/center/transient-force/target/field payload is 9.5 MiB and retained CPU metadata/command payload is

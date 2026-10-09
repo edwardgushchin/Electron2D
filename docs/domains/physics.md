@@ -319,3 +319,8 @@ The GPU fix removes the former zero-as-wildcard behavior; public GPU-world bindi
 remains open.
 
 [Object associations](../components/physics-object-bindings.md) now connect typed Body/Area object assignment, sampled IDs and weak targets across direct/scene queries, motion, contacts and monitoring. Public GPU-world binding, actual tile collider generation and networking remain open.
+
+[Changed GPU body publication](../components/gpu-body-publication.md) compares observable
+state on device and publishes generation-qualified changes/removals to the Smash developer
+window, avoiding downloads for unchanged bodies. This is a single-consumer latest-state
+stream; public-world binding, lifecycle event logs and network replay remain open.

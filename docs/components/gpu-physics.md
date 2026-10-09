@@ -27,6 +27,11 @@ resident body store to an interactive window and MultiMesh publication. Its expl
 pose readback, controls and native smoke checks are documented there; it does not
 add public backend selection or replace the regular example's CPU physics.
 
+[Changed body publication](gpu-body-publication.md) now compares observable state on
+the device and delivers compact generation-qualified updates to that window. It
+avoids per-publication downloads of unchanged bodies, while retaining explicit
+selected reads for consumers requiring a fresh full snapshot.
+
 ## Native verification observation (2026-10-08)
 
 During body-configuration extraction, the full GPU suite passed its physics and

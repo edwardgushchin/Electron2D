@@ -57,6 +57,7 @@ internal static class GPUPhysicsSmashPreview
         private GPUPhysicsBodyStore? _world;
         private Body[] _bodies = [];
         private State[] _states = [];
+        private GPUPhysicsBodyStore.BodyChange[] _changes = [];
         private Vector2[] _homes = [];
         private float[] _instances = [];
         private bool _paused = true, _step;
@@ -157,6 +158,7 @@ internal static class GPUPhysicsSmashPreview
                 world.Step(0, Vector2.Zero);
                 if (Value(0) == 0) for (var i = 1; i < _bodies.Length; i++) world.SetSleeping(_bodies[i], true);
                 _world = world;
+                _changes = new GPUPhysicsBodyStore.BodyChange[world.BodySlotCount];
                 Publish(); _physicsMS = _readMS = 0; _readBytes = 0; Pause(!launch);
             }
             catch { world.Dispose(); _world = null; throw; }
@@ -202,12 +204,18 @@ internal static class GPUPhysicsSmashPreview
         private void Publish()
         {
             var start = Stopwatch.GetTimestamp(); var bytes = _world!.ReadbackBytes;
-            _world.Read(_bodies, _states);
+            var count = _world.ReadChanges(_changes);
             _readBytes = _world.ReadbackBytes - bytes;
             _readMS = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
-            _moved = 0;
-            for (var i = 0; i < _states.Length; i++)
+            var displayed = 0;
+            foreach (ref readonly var change in _changes.AsSpan(0, count))
             {
+                var i = (int)change.Index;
+                if (i >= _states.Length) continue; // Static enclosure bodies have no rendered instances.
+                if (change.Alive == 0 || change.Generation != _bodies[i].Generation)
+                    throw new InvalidOperationException("GPU Smash body identity changed unexpectedly.");
+                if (i > 0 && change.PreviousGeneration != 0 && _states[i].Position.DistanceSquaredTo(_homes[i]) > Scale * Scale) _moved--;
+                _states[i] = change.State;
                 ref readonly var state = ref _states[i];
                 if (!state.Position.IsFinite() || !float.IsFinite(state.Velocity.X) || !float.IsFinite(state.Velocity.Y) || !float.IsFinite(state.Velocity.Z) || !float.IsFinite(state.Pose.Z) || !float.IsFinite(state.Pose.W))
                     throw new InvalidOperationException("GPU Smash produced nonfinite state.");
@@ -222,8 +230,10 @@ internal static class GPUPhysicsSmashPreview
                 data[4] = state.Pose.W * size; data[5] = state.Pose.Z * size; data[6] = 0; data[7] = state.Pose.Y / Scale;
                 data[8] = color.R; data[9] = color.G; data[10] = color.B; data[11] = color.A;
                 if (i > 0 && state.Position.DistanceSquaredTo(_homes[i]) > Scale * Scale) _moved++;
+                displayed++;
             }
             _maxMoved = Math.Max(_maxMoved, _moved);
+            if (displayed == 0) return;
             _mesh.Buffer = _instances; _mesh.CustomAABB = new(0, 0, Field.Size.X, Field.Size.Y);
             _visual.QueueRedraw();
         }

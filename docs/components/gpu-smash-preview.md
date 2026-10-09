@@ -1,6 +1,6 @@
 # Independent GPU Smash preview
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 ## Launch
 
@@ -56,13 +56,15 @@ CPU contact mirror or second CPU solver. Four static device boundaries retain
 fragments within the clipped playfield. Geometry and masses follow the original
 Smash proportions, including its 20 scene-unit scale factor.
 
-After each simulation step, one explicit `Read` obtains all displayed body poses
-and velocities into retained arrays. The consumer needs these records to publish
-MultiMesh instances, determine motion colors and perform pointer picking. Rendering
-then uploads its instance buffer. This is an early visible consumer, not a GPU-to-GPU
-render publication path. The HUD separates elapsed simulation time from the explicit
-state-read time/bytes; both timings include owner-thread waits and are not GPU timestamp
-queries. At 9,601 displayed bodies the current 48-byte snapshot read is about 450 KiB.
+After each simulation step, `ReadChanges` obtains only changed body states, including
+sleep/wake and identity, into a retained scratch array. The consumer retains display
+poses/velocities for MultiMesh instances, motion colors and pointer picking. Only
+changed instance records are rewritten; no visible changes means no instance-buffer
+upload. A nonempty update still uses the ordinary full MultiMesh buffer upload.
+This is not a GPU-to-GPU render publication path. The HUD separates simulation time
+from explicit state-read time/bytes, including owner-thread waits. Records are 80 bytes
+each, plus eight count/status bytes; unchanged bodies produce no records. See
+[publication storage, waits and measurements](gpu-body-publication.md).
 
 The preview caps catch-up to one physics interval per display frame, preserving
 input responsiveness under overload. Simulation can run slower than wall-clock time.
@@ -91,3 +93,8 @@ contact points and 9,600 moved fragments across its actions. Initial/impact/grab
 captures were visually inspected for a solid wall, clipped fragments, readable controls
 and a single selection outline. These are native interaction/visual checks, not a
 controlled sustained-performance benchmark or a full physics API acceptance test.
+
+After changed-state publication, the 9,600-fragment smoke run passed again on
+2026-10-09 (`/tmp/e2d-changes-smash.log`, 27,109 peak contact points). Impact/final
+captures were inspected; the [publication report](gpu-body-publication.md) records
+the observed frame-rate limitation separately from readback measurements.
