@@ -2179,8 +2179,8 @@
       "godot": [
         "class:SeparationRayShape2D"
       ],
-      "state": "Partial",
-      "reason": "Directed resource, queries, Area sensing and body/character motion execute. Required trigger: alternative directed solver manifolds before constraint creation, including ordinary dynamic impulses, friction/restitution, sleep and contact reports; these enter that integration first slice (ADR 0068, SeparationRayShapeTests)."
+      "state": "Implemented",
+      "reason": "Directed resource, queries, Area sensing and body/character motion execute; alternative CPU solver manifolds provide ordinary impulses/materials, normalized mass, sleep and contact reports/events. Six-family, coupled momentum, one-way/CCD and warmed zero-allocation checks execute (ADR 0068, SeparationRayShapeTests, SeparationRayDynamicsTests). Public independent GPU binding remains a separate world-integration gap."
     },
     {
       "godot": [
@@ -2591,7 +2591,7 @@
         "PhysicsServer2D::method:area_set_transform(RID:,Transform2D:)"
       ],
       "state": "Implemented",
-      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; internal joint bias/compliance/force/correction policies now execute; common public CPU joint policies now execute and the stage-hosted GPU path honors them; public CPU/scene/server CCD, public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
+      "reason": "Real shared Box2D spaces and current shape families execute through typed RID creation, assignment, filtering and lifetime; BodyMode keeps numeric identities (ADR 0063, PhysicsQueryTests). Independent GPU body/geometry storage, normalized automatic/custom mass profiles, center-aware integration, complete broad-phase pairs and narrow-phase contacts, material/impulse response, pin/groove/spring constraints, joint collision vetoes and warm history execute internally; device connected sleep/wake and an unchanged inactive-world skip also execute internally; independent per-body ray/full-shape CCD and impact intervals now execute; internal joint bias/compliance/force/correction policies now execute; common public CPU joint policies now execute and the stage-hosted GPU path honors them; public CPU/scene/server CCD now executes; independent public sleep/contact-event publication, public GPU-world integration and the complete physical contract remain open."
     },
     {
       "godot": [
@@ -2608,7 +2608,7 @@
         "PhysicsServer2D::method:shape_get_data(RID:)"
       ],
       "state": "Partial",
-      "reason": "Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary is absent; dynamic separation-ray impulse/material/contact response remains incomplete. Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068)."
+      "reason": "Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary is absent; directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068)."
     },
     {
       "godot": [
@@ -3312,7 +3312,7 @@
         "RigidBody2D::property:continuous_cd"
       ],
       "state": "Partial",
-      "reason": "Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding and complete dynamic separation-ray/boundary shape response."
+      "reason": "Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding and world-boundary shape response."
     },
     {
       "state": "Implemented",

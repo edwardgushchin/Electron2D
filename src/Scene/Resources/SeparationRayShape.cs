@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>A directed ray that separates its endpoint from intersecting collision surfaces.</summary>
 /// <remarks>The caller owns this resource. Body motion and sensing use directed separation contacts.
-/// Ray and point queries cannot intersect it. Its zero-density sensor fixture contributes no inertia;
-/// ordinary dynamic solver separation impulses and contact reports remain incomplete.</remarks>
+/// Ray and point queries cannot intersect it. Body constraints use directed contacts with ordinary
+/// material impulses, sleep and reporting. The ray contributes no geometric mass or rotational inertia.</remarks>
 public sealed class SeparationRayShape : Shape
 {
     private float _length = 20f;

@@ -24,6 +24,7 @@ namespace Box2D.NET
 
         public B2Filter filter;
         public B2UserData userData;
+        internal b2ManifoldFcn manifoldOverride;
 
         // TODO: @ikpil, check union
         public B2ShapeUnion us;

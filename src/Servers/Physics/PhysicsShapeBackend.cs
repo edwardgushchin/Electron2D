@@ -21,7 +21,7 @@ internal static class PhysicsShapeBackend
     internal static void ValidateAndCachePolygon(ConvexPolygonShape shape, ReadOnlySpan<Vector2> points) =>
         PolygonHulls.AddOrUpdate(shape, BuildHulls(points));
 
-    private static B2Hull[] GetHulls(Shape shape, ReadOnlySpan<Vector2> points)
+    internal static B2Hull[] GetHulls(Shape shape, ReadOnlySpan<Vector2> points)
     {
         var polygon = (ConvexPolygonShape)shape;
         if (PolygonHulls.TryGetValue(polygon, out var hulls)) return hulls;
@@ -64,8 +64,14 @@ internal static class PhysicsShapeBackend
             case Kind.ConvexPolygon:
                 var position = ToBackend(localPosition);
                 var rotation = new B2Rot(MathF.Cos(localRotation), MathF.Sin(localRotation));
-                foreach (ref readonly var hull in GetHulls(shape, geometry.Points).AsSpan())
-                    fixtures.Add(b2CreatePolygonShape(bodyID, definition, b2MakeOffsetPolygon(hull, position, rotation)));
+                var hulls = GetHulls(shape, geometry.Points);
+                for (var i = 0; i < hulls.Length; i++)
+                {
+                    var pieceDefinition = definition;
+                    if (definition.userData.GetRef<PhysicsFixtureTag>() is { Compound: not null } compoundTag)
+                        pieceDefinition.userData = new B2UserData(compoundTag with { CompoundPiece = i });
+                    fixtures.Add(b2CreatePolygonShape(bodyID, pieceDefinition, b2MakeOffsetPolygon(hulls[i], position, rotation)));
+                }
                 break;
             case Kind.ConcavePolygon:
                 for (var index = 0; index < geometry.Points.Length; index += 2)
@@ -81,7 +87,7 @@ internal static class PhysicsShapeBackend
                     throw new InvalidOperationException("A separation ray requires a tagged collision owner.");
                 var settings = definition;
                 settings.userData = new B2UserData(tag with { SeparationRay = new(from, to, geometry.SlideOnSlope) });
-                settings.isSensor = true; settings.density = 0; settings.enablePreSolveEvents = false;
+                settings.density = 0; settings.manifoldOverride = PhysicsSeparationRay.SolverContact;
                 fixtures.Add(CreateSegmentOrPoint(bodyID, settings, from, to));
                 break;
             default: throw new NotSupportedException("The shape has no CPU geometry integration.");

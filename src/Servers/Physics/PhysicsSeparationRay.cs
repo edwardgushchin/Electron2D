@@ -7,6 +7,46 @@ namespace Electron2D;
 
 internal static class PhysicsSeparationRay
 {
+    // Receives body-local fixture geometry and returns world-space normals/points with origin-relative anchors.
+    internal static B2Manifold SolverContact(B2Shape a, in B2Transform poseA, B2Shape b, in B2Transform poseB, ref B2SimplexCache cache)
+        => SolverContact(a, poseA, b, poseB, 0);
+
+    internal static B2Manifold SolverContact(B2Shape a, in B2Transform poseA, B2Shape b, in B2Transform poseB, float margin)
+    {
+        var tagA = a.userData.GetRef<PhysicsFixtureTag>(); var tagB = b.userData.GetRef<PhysicsFixtureTag>();
+        var rayA = tagA?.SeparationRay; var rayB = tagB?.SeparationRay;
+        if ((rayA is null) == (rayB is null)) return default;
+        var flip = rayA is null; var ray = (rayA ?? rayB)!.Value;
+        var rayPose = flip ? poseB : poseA; var otherPose = flip ? poseA : poseB;
+        var other = flip ? a : b; var tag = flip ? tagA : tagB;
+        var worldRay = WorldProxy(ray, rayPose, default);
+        B2Manifold contact;
+        if (tag is { Compound: { } contour })
+        {
+            if (!contour.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(ConvexPolygonShape));
+            var local = contour.LocalPose;
+            var pose = b2MulTransforms(otherPose, new B2Transform(PhysicsShapeBackend.ToBackend(local.Origin), new B2Rot(MathF.Cos(local.Rotation), MathF.Sin(local.Rotation))));
+            var scenePose = new Transform(new(pose.q.c, pose.q.s), new(-pose.q.s, pose.q.c), new(pose.p.X * PhysicsSpace.UnitsPerMeter, pose.p.Y * PhysicsSpace.UnitsPerMeter));
+            if (PhysicsShapeCollision.FullMotionRegionContains(contour.Points, scenePose, Vector2.Zero, 0, worldRay.points[0])) return default;
+            // ponytail: scan cached partitions to select one outer entry; add a contour cast if measured large-hull cost warrants it.
+            var hulls = PhysicsShapeBackend.GetHulls(source, contour.Points);
+            contact = default; var selected = -1;
+            for (var i = 0; i < hulls.Length; i++)
+            {
+                var candidate = Contact(worldRay, ray.SlideOnSlope, new B2ShapeProxy { points = hulls[i].points, count = hulls[i].count }, pose, default, margin);
+                if (candidate.pointCount != 0 && (selected < 0 || candidate.points[0].separation < contact.points[0].separation))
+                { contact = candidate; selected = i; }
+            }
+            if (selected != tag.CompoundPiece) return default;
+        }
+        else contact = Contact(worldRay, ray.SlideOnSlope, B2Shapes.b2MakeShapeDistanceProxy(other), otherPose, default, margin);
+        if (contact.pointCount == 0) return contact;
+        if (flip) contact.normal = -contact.normal;
+        ref var point = ref contact.points[0];
+        point.anchorA = point.point - poseA.p; point.anchorB = point.point - poseB.p;
+        return contact;
+    }
+
     internal const float MinimumFacingProjection = 1e-6f;
     internal static B2Manifold PairContact(in B2ShapeProxy query, bool? queryRay,
         in B2ShapeProxy other, in B2Transform otherTransform, SeparationRayData? otherRay,

@@ -48,8 +48,21 @@ an independent GPU implementation or a throughput claim.
 - [0065: One-way scene-body contacts](../decisions/physics.md#adr-0065)
 - [0066: Direct scene collision polygons](../decisions/physics.md#adr-0066)
 
-SeparationRayShape defaults to length 20 and SlideOnSlope false, reports padded drawing bounds, duplicates independently and contributes a zero-density sensor fixture with exact directed metadata. Query/body-motion and Area sensing use the special kernel under [ADR 0068](../decisions/physics.md#adr-0068); ray/point queries exclude it. Rays contribute no inertia. Ordinary dynamic ray response remains an exact required solver integration gap. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) verifies current behavior and that remaining boundary.
+SeparationRayShape defaults to length 20 and SlideOnSlope false, reports padded drawing bounds, duplicates independently and contributes a zero-density fixture with exact directed metadata. Query/body-motion and Area sensing use the special kernel under [ADR 0068](../decisions/physics.md#adr-0068); ray/point queries exclude it. CPU body fixtures now supply directed manifolds before ordinary material/constraint/history processing. Areas retain sensors; rays have no geometric mass or rod inertia. Full convex targets reject origin containment and select only the earliest entry partition. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) preserves queries and character motion; [SeparationRayDynamicsTests](../../tests/Electron2D.Tests/SeparationRayDynamicsTests.cs) checks directed/reversed six-family contacts, slope policy, friction/bounce, coupled mass/impulses, sleep, live edits, one-way/CCD, scene events and zero all-thread managed allocation across 128 warmed active frames. The old CPU-hosted GPU experiment retains these custom manifolds on the host and uploads the resulting constraints; this does not establish independent GPU acceptance. Native allocation, other platforms and rendered acceptance remain unverified.
 
 Standalone Shape methods test two resources without registering server RIDs or creating a world. The internal PhysicsShapeCollision kernel uses original scene-unit support geometry, independently swept convex regions, separating axes and clipped boundary supports. Full convex contours retain their external boundary rather than fixture partitions; concave/ray pairs retain their pinned special-motion rules. Its private per-thread buffers reuse proxy and hull capacity without retaining resources. [ShapeCollisionTests](../../tests/Electron2D.Tests/ShapeCollisionTests.cs) verifies active/full-contour/empty-contact calls without warmed managed allocation, under [ADR 0069](../decisions/physics.md#adr-0069).
 
 [CollisionObject shape-owner groups](../classes/CollisionObject.md#createshapeowner) unify manual borrowed resources and direct collision children. Sorted group IDs are separate from append-order global logical shape slots; structural removals reindex later slots. Body/Area preparation uses slot resource revisions, owner pose/policy and shared native fixture construction. Arbitrary weak owner identity reaches KinematicCollision results. ShapeOwnerTests verifies query/motion/solver/sensor integration and warmed zero managed allocation under [ADR 0071](../decisions/physics.md#adr-0071).
+
+Directed-ray microbenchmark on Linux/.NET 10 (1/60 s, one awake supported body,
+one static floor, 128 warmup and 128 measured whole public SpaceStep calls):
+
+| Path | p50 / p95 / p99, ms | Managed bytes over 128 steps |
+| --- | --- | --- |
+| CPU, dummy video | 0.0047 / 0.0047 / 0.0049 | 0 |
+| CPU host with GPU stages, Vulkan/RTX 3090 Ti | 0.2317 / 0.2520 / 0.2680 | 0 |
+
+Logs: `/tmp/electron2d-ray-collider.log` and `/tmp/electron2d-ray-gpu-suite.log`.
+The stage measurement includes host-directed contact generation and constraint
+upload; it does not measure the independent GPU backend or establish large-world
+speedups. Scene rendering, native allocations and networking are outside this probe.

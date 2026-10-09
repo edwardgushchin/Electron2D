@@ -70,7 +70,7 @@ mixed external CPU allocation/free events replay serially. Slots/request/result/
 mutation/state records occupy 32/64/80/48/32 bytes. `CreatedContactCount` and
 `ContactPoolSnapshotCount` are cumulative; `ContactPoolUploadBytes` counts only
 pool snapshots/mutations, excluding request and result transfers. Disposal
-preserves another host's callbacks. CPU worlds retain native contact creation.
+preserves another host's callbacks. CPU worlds retain native contact creation. Directed per-shape manifold overrides admit otherwise unsupported segment pairs with preserved input order. Their manifolds/material/history classification execute on the CPU host through the common contact updater, then upload as explicit solver constraints; they never consume the ordinary GPU manifold cache. This is part of the old stage experiment, not the independent device backend or a fallback after device failure.
 
 Creation also sorts endpoints by body ID/pair ordinal on GPU and computes next/
 previous links, insertion-time counts and final heads. A separate pass commits

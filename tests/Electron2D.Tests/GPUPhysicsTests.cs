@@ -24,6 +24,7 @@ internal static partial class GPUPhysicsTests
         PhysicsServerJointTests.VerifyFrameReattachment(true);
         PhysicsJointPolicyTests.Run(true);
         PhysicsCCDTests.Run(true);
+        SeparationRayDynamicsTests.Run(true);
         VerifyWorld(false); VerifyWorld(true);
         VerifyWorld(true, true);
         VerifyWorld(true, pairFailure: true);

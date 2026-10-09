@@ -19,7 +19,7 @@ support face. Full-shape mode keeps all solver pieces and their rotational arcs.
 Sensors do not block, reciprocal masks and explicit body/joint exceptions apply,
 and one-way side policy remains consistent with the current contact episode.
 A CCD-disabled neighbour keeps its setting while receiving ordinary collision
-impulses from a protected body.
+impulses from a protected body. Directed rays validate the full authored ray manifold at the impact pose, including when CastRay has reduced the sweep to a support point. Compound targets choose one outer entry; containment and ray-ray pairs do not become solid segments. SeparationRayDynamicsTests exercises a 6000 u/s ray against a 0.2-unit floor at 1/60 s in both modes, accepting one unit of endpoint error for the CPU solver slop and impact advancement.
 
 ## Solved motion and remaining time
 
@@ -67,9 +67,9 @@ rest of the tick through ordinary contact response.
 
 The checked CPU path covers circles, rectangles, capsules, segments, full convex
 resources and paired concave segments within their existing geometry tolerances.
-Ray mode is deliberately approximate. Complete dynamic SeparationRayShape response
-and WorldBoundaryShape remain open owning shape capabilities; they are not
-certified by this CCD slice. The independent resident GPU store now uses the same
+Ray mode is deliberately approximate. SeparationRayDynamicsTests now verifies
+directed dynamic response and axial ray/full-shape CCD. WorldBoundaryShape remains
+an open owning shape capability and is not certified by this CCD slice. The independent resident GPU store now uses the same
 public enum and retains its own device CCD implementation, but public independent
 world selection/binding is still open.
 

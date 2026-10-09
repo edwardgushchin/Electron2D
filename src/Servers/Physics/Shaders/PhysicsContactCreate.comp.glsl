@@ -102,8 +102,9 @@ void main()
         Created result = Created(ContactSlot(ivec4(-1),uvec4(0)),vec4(0),ivec4(-1,0,0,0),ivec4(-1,-1,0,0));
         int ta = rankType(r.a.z), tb = rankType(r.b.z);
         if (ta < 0 || ta > 4 || tb < 0 || tb > 4) { atomicMax(pool.z, 5); created[index] = result; return; }
-        if (ta >= 3 && tb >= 3) { created[index] = result; return; }
-        if (ta < tb)
+        bool customPair = ta >= 3 && tb >= 3;
+        if (customPair && ((r.flags.x | r.flags.y) & 4u) == 0u) { created[index] = result; return; }
+        if (!customPair && ta < tb)
         {
             ivec4 temp = r.a; r.a = r.b; r.b = temp;
             r.material = r.material.zwxy; r.flags = r.flags.yxwz;

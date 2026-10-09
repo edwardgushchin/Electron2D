@@ -127,7 +127,11 @@ internal static class PhysicsMass
         proxies.Clear();
         var world = b2GetWorldFromId(b2Body_GetWorld(body));
         for (var index = 0; index < shapes.Count; index++)
-            if (!b2Shape_IsSensor(shapes[index])) proxies.Add(b2MakeShapeDistanceProxy(b2GetShape(world, shapes[index])));
+        {
+            var shape = b2GetShape(world, shapes[index]);
+            if (shape.sensorIndex == B2_NULL_INDEX && shape.userData.GetRef<PhysicsFixtureTag>()?.SeparationRay is null)
+                proxies.Add(b2MakeShapeDistanceProxy(shape));
+        }
         var result = Calculate(proxies, mass, inertia, customCenter);
         var minExtent = B2_HUGE;
         var maxExtent = 0f;

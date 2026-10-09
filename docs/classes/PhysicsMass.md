@@ -24,7 +24,7 @@ CPU adapters; GPU consumers receive engine-valued Properties.
 | `Calculate(proxies, mass, inertia, customCenter)` | Normalize solid area to configured mass, or use length-weighted thin rods when no solid area exists. Apply the parallel-axis theorem at the selected center; explicit inertia remains independent of mass/shape changes. Empty/point-only automatic geometry has zero center and inertia. |
 | `Apply(body, shapes, mass, inertia, center, proxies)` | Resolve current CPU fixtures, validate center-relative extents and apply mass data; mask inverse values for nondynamic roles, retain the resolved profile and complete deferred fixture mass work. |
 | `Properties(Mass, Inertia, Center)` | Immutable resolved engine values in kilograms, kg·scene-unit² and body-local scene units. |
-| `Geometry.Clear()` / `Append(shape, pose, sensor)` | Reuse one authoring scratch object, retaining all primitive extents and only mass-contributing solid/rod proxies. Sensors and rays contribute no mass. Borrowed resources are not owned. |
+| `Geometry.Clear()` / `Append(shape, pose, sensor)` | Reuse one authoring scratch object, retaining all primitive extents and only mass-contributing solid/rod proxies. Sensors and rays contribute no geometric mass. CPU fixture-based Apply explicitly excludes directed metadata even when the ray is a solid solver fixture. Borrowed resources are not owned. |
 | `Geometry.Calculate(mass, inertia, center)` | Return Properties after the common normalization and extent validation; explicit authored inertia remains exact. No body/world, live pose/velocity mirror or GPU readback is created. |
 
 Geometry scratch is caller-owned and reused sequentially on its physics owner.

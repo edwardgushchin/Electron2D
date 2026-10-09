@@ -17,7 +17,8 @@ backend hull arrays themselves. Public APIs and geometry units are unchanged.
 
 | Operation | Contract |
 | --- | --- |
-| `AppendToBody` | Apply a slot's local pose and definition, append its concrete fixtures, preserve sub-tolerance capsule/segment fallback and separation-ray sensor metadata. |
+| `GetHulls` | Borrow the compiled convex partitions from the weak resource cache; directed solver contacts use their stable ordinal to select one outer entry. |
+| `AppendToBody` | Apply a slot's local pose and definition, append its concrete fixtures, preserve sub-tolerance capsule/segment fallback and directed ray metadata/manifold hooks and compound partition ordinals. |
 | `AppendQueryProxies` | Append each local convex or hollow query piece in backend units; callers retain transform, margin, exclusions and mass policy. |
 | `ValidateAndCachePolygon` | Validate and compile the entire candidate before replacing its cached hulls. The resource commits its copied points immediately afterward, before Changed notifications. |
 | `ToBackend` | Convert scene-unit vectors at backend call sites without coupling the Shape base class to vendor vectors. |

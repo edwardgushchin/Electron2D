@@ -147,6 +147,7 @@ namespace Box2D.NET
             shape.material = def.material;
             shape.filter = def.filter;
             shape.userData = def.userData;
+            shape.manifoldOverride = def.manifoldOverride;
             shape.enlargedAABB = false;
             shape.enableSensorEvents = def.enableSensorEvents;
             shape.enableContactEvents = def.enableContactEvents;

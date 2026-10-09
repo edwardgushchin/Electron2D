@@ -362,8 +362,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     TypeB = (int)b.type,
                     SetB = world.bodies.data[b.bodyId].setIndex,
                     Material = new(a.material.friction, a.material.restitution, b.material.friction, b.material.restitution),
-                    FlagsA = (a.enableContactEvents ? 1u : 0u) | (a.enablePreSolveEvents ? 2u : 0u),
-                    FlagsB = (b.enableContactEvents ? 1u : 0u) | (b.enablePreSolveEvents ? 2u : 0u),
+                    FlagsA = (a.enableContactEvents ? 1u : 0u) | (a.enablePreSolveEvents ? 2u : 0u) | (a.manifoldOverride is not null ? 4u : 0u),
+                    FlagsB = (b.enableContactEvents ? 1u : 0u) | (b.enablePreSolveEvents ? 2u : 0u) | (b.manifoldOverride is not null ? 4u : 0u),
                     MaterialA = (uint)(a.material.userMaterialId & 3),
                     MaterialB = (uint)(b.material.userMaterialId & 3)
                 };
@@ -381,8 +381,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var request = _contactRequestStorage.Data[i]; var result = _contactCreationStorage.Data[i];
             if (!b2GetContactOrder((B2ShapeType)request.TypeA, (B2ShapeType)request.TypeB, out var swap))
             {
-                if (result.ID != -1) throw new InvalidOperationException("GPU created an unsupported contact pair.");
-                continue;
+                if (((request.FlagsA | request.FlagsB) & 4) == 0)
+                {
+                    if (result.ID != -1) throw new InvalidOperationException("GPU created an unsupported contact pair.");
+                    continue;
+                }
+                swap = false;
             }
             var id = accepted < free ? pool.freeArray.data[free - accepted - 1] : next + accepted - free;
             var generation = id < world.contacts.count ? world.contacts.data[id].generation : 0;

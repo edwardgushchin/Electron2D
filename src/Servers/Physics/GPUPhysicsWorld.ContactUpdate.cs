@@ -59,6 +59,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         var world = context.world;
         var contact = context.contacts[i];
+        if (world.shapes.data[contact.shapeIdA].manifoldOverride is not null || world.shapes.data[contact.shapeIdB].manifoldOverride is not null)
+        {
+            // This CPU-hosted stage experiment retains custom host manifolds; the independent store owns device ray geometry.
+            b2CollideTask(i, i + 1, (uint)threadIndex, context);
+            return;
+        }
         var previous = contact.simFlags;
         var flags = ((uint)_manifoldStorage.Data[i].Normal.W >> 2) << 16;
         if ((flags & (uint)B2ContactSimFlags.b2_simDisjoint) == 0)

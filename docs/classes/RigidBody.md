@@ -158,7 +158,7 @@ SceneTree owns the backend world and handle; the body owns no public handle and 
 
 Tile-map virtual body reporting and continuous collision modes remain incomplete on [RigidBody2D coverage](../coverage/classes/RigidBody2D.md). [ADRs 0057 and 0058](../decisions/physics.md#adr-0058) record force and contact boundaries.
 
-A [SeparationRayShape](SeparationRayShape.md) sensor contributes zero inertia and is excluded from the segment-only thin-rod fallback. Ordinary dynamic ray impulses and contact reporting remain incomplete; the class coverage records the required solver manifold integration.
+A [SeparationRayShape](SeparationRayShape.md) contributes zero geometric inertia and is explicitly excluded from the segment-only thin-rod fallback. Its directed manifold participates in ordinary material/impulse solving, sleep and contact reporting. An authored mass or inertia remains effective; SeparationRayDynamicsTests verifies coupled momentum, reports and scene events.
 
 ## Custom integration
 

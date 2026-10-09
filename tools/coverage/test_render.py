@@ -249,9 +249,9 @@ def main():
     separation_rows = [row for row in pages[CLASS_PAGES / "SeparationRayShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(separation_rows) == 3
-    assert sum(" | Implemented | " in row for row in separation_rows) == 2
-    assert " | Partial | " in class_rows["SeparationRayShape2D"]
-    assert "alternative directed solver manifolds" in class_rows["SeparationRayShape2D"]
+    assert sum(" | Implemented | " in row for row in separation_rows) == 3
+    assert " | Implemented | " in class_rows["SeparationRayShape2D"]
+    assert "SeparationRayDynamicsTests" in class_rows["SeparationRayShape2D"]
     for name, count in (("RID", 11), ("PhysicsRayQueryParameters2D", 9)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -482,7 +482,7 @@ def main():
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
     for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name

@@ -9,7 +9,7 @@ internal static class SeparationRayShapeTests
         VerifyShapeFamilies();
         VerifyMotionAndSnap();
         VerifyArea();
-        VerifyDynamicBoundary();
+        SeparationRayDynamicsTests.Run();
         Console.WriteLine("Separation ray resource, directed queries, recovery, snap and allocation checks passed.");
     }
 
@@ -248,24 +248,6 @@ internal static class SeparationRayShapeTests
     private static void Check(bool condition, string message)
     {
         if (!condition) throw new InvalidOperationException(message);
-    }
-
-    private static void VerifyDynamicBoundary()
-    {
-        using var ray = new SeparationRayShape();
-        using var rectangle = new RectangleShape { Size = new(200, 10) };
-        var root = new Node();
-        var floor = new StaticBody { Position = new(0, 40) };
-        floor.AddChild(new CollisionShape { Shape = rectangle });
-        var body = new RigidBody { GravityScale = 0, LinearVelocity = new(0, 60), CanSleep = false };
-        body.AddChild(new CollisionShape { Shape = ray });
-        root.AddChild(floor); root.AddChild(body);
-        using var tree = new SceneTree(root);
-        body.ApplyTorqueImpulse(100);
-        for (var frame = 0; frame < 60; frame++) tree.PhysicsFrame(1d / 60);
-        Check(body.AngularVelocity == 0, "A separation ray contributes zero rotational inertia.");
-        // This guards the documented current boundary; replace with impulse-response checks when the solver supports ray manifolds.
-        Check(body.GlobalPosition.Y > 50, "Current ray sensor fixtures do not supply ordinary rigid-body separation impulses.");
     }
 
     private static void Reject<T>(Action action) where T : Exception

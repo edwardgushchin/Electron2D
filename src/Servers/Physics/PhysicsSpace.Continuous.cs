@@ -112,6 +112,9 @@ internal sealed partial class PhysicsSpace
         if (!b2ShouldShapesCollide(sa.filter, sb.filter) || !b2ShouldBodiesCollide(world, world.bodies.data[sa.bodyId], world.bodies.data[sb.bodyId])) return;
         var ta = sa.userData.GetRef<PhysicsFixtureTag>(); var tb = sb.userData.GetRef<PhysicsFixtureTag>();
         if (ta is null || tb is null || PhysicsServer.Service.BodiesExcepted(ta.ColliderRID, tb.ColliderRID)) return;
+        if (ta.SeparationRay is not null && tb.SeparationRay is not null ||
+            ta.SeparationRay is { } rayA && b2LengthSquared(rayA.To - rayA.From) == 0 ||
+            tb.SeparationRay is { } rayB && b2LengthSquared(rayB.To - rayB.From) == 0) return;
         if ((ta.OneWay is not null || tb.OneWay is not null) && CurrentContinuousSide(a.ID, b.ID) == false) return;
         var input = new B2TOIInput
         {
@@ -141,6 +144,15 @@ internal sealed partial class PhysicsSpace
         if (hit.state == B2TOIState.b2_toiStateFailed) throw new InvalidOperationException("Continuous collision did not converge.");
         if (hit.state is B2TOIState.b2_toiStateSeparated or B2TOIState.b2_toiStateUnknown) return;
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);
+        var xa = b2GetSweepTransform(input.sweepA, hit.fraction); var xb = b2GetSweepTransform(input.sweepB, hit.fraction);
+        if (ta.SeparationRay is not null || tb.SeparationRay is not null)
+        {
+            // CastRay may have reduced either proxy to a support point. Directed validation needs the complete authored ray.
+            var world = b2GetWorldFromId(_worldID);
+            var directed = PhysicsSeparationRay.SolverContact(b2GetShape(world, a.ID), xa, b2GetShape(world, b.ID), xb, B2Constants.B2_LINEAR_SLOP);
+            if (directed.pointCount == 0) return;
+            hit.normal = directed.normal;
+        }
         if (hit.state == B2TOIState.b2_toiStateOverlapped || hit.fraction <= 0)
         {
             var va = input.sweepA.c2 - input.sweepA.c1; var vb = input.sweepB.c2 - input.sweepB.c1;
@@ -167,14 +179,8 @@ internal sealed partial class PhysicsSpace
             return;
         }
         if (hit.fraction >= 1) return;
-        var xa = b2GetSweepTransform(input.sweepA, hit.fraction); var xb = b2GetSweepTransform(input.sweepB, hit.fraction);
         if (CurrentContinuousSide(a.ID, b.ID) != true &&
             (!ContinuousSide(ta.OneWay, xa.q, hit.normal, true) || !ContinuousSide(tb.OneWay, xb.q, hit.normal, false))) return;
-        if (ta.SeparationRay is not null || tb.SeparationRay is not null)
-        {
-            var pa = WorldProxy(input.proxyA, xa, default);
-            if (PhysicsSeparationRay.PairContact(pa, ta.SeparationRay?.SlideOnSlope, input.proxyB, xb, tb.SeparationRay, default, B2Constants.B2_LINEAR_SLOP).pointCount == 0) return;
-        }
         _continuousFraction = MathF.Min(_continuousFraction, hit.fraction);
     }
 

@@ -14,6 +14,7 @@ namespace Box2D.NET
     {
         /// Use this to store application specific shape data.
         public B2UserData userData;
+        internal b2ManifoldFcn manifoldOverride;
 
         /// The surface material for this shape.
         public B2SurfaceMaterial material;

@@ -762,7 +762,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ScrollContainer](classes/ScrollContainer.md) | Container | Implemented | 39 |
 | [SegmentShape2D](classes/SegmentShape2D.md) | Shape2D | Implemented | 2 |
 | [Semaphore](classes/Semaphore.md) | RefCounted | Blocked | 3 |
-| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Partial | 2 |
+| [SeparationRayShape2D](classes/SeparationRayShape2D.md) | Shape2D | Implemented | 2 |
 | [SeparationRayShape3D](classes/SeparationRayShape3D.md) | Shape3D | Excluded | 2 |
 | [Separator](classes/Separator.md) | Control | Blocked | 2 |
 | [Shader](classes/Shader.md) | Resource | Partial | 13 |

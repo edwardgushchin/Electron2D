@@ -302,12 +302,12 @@ Caller-driven grounded and floating characters can move along current shapes, sn
 - Add a second character-only collision world: it would split RID identity, shape owners, masks and Area fields from the shared SceneTree space.
 
 <a id="adr-0068"></a>
-## ADR 0068: Directed separation rays in queries and body motion
+## ADR 0068: Directed separation rays in queries, body motion and solver contacts
 
-Last updated: 2026-09-30
+Last updated: 2026-10-09
 
 - Status: Accepted
-- Scope: SeparationRayShape resource, directed sensing and shared body-motion contact
+- Scope: SeparationRayShape resource, directed sensing, shared body-motion and dynamic contact
 - Depends on: [0054](#adr-0054), [0061](#adr-0061), [0063](#adr-0063), [0067](#adr-0067)
 
 ### Context
@@ -317,13 +317,13 @@ Character floor behavior requires a directed ray resource. The current Box2D.NET
 ### Decision
 
 - Expose Length=20 and SlideOnSlope=false. Accept finite nonnegative length within the backend squared-distance range; zero contributes no contact. Preserve padded drawing bounds, independent copies and exact indexed geometry metadata.
-- Use a zero-density sensor fixture for registration. Route direct shape queries, Area overlap scans and body motion through one directed native ray-cast kernel. Ray/point queries exclude these fixtures. Reject containment, back-facing hits and ray-ray pairs. Extend margin and positive axial motion along the ray; sliding follows the surface normal, otherwise separation opposes the axis. The swept ordinary convex region is the union of initial/final primitives and swept edges, avoiding the eight-vertex hull ceiling.
-- Include rays in recovery regardless of the flag. Include sliding rays in motion automatically; non-sliding rays require CollideSeparationRay, which snap enables. Preserve reciprocal filters, exceptions, exclusions, shape indices and point velocity. Reconstruct the collider contact point from the manifold, including ordinary contacts. A touching ray moving outward does not block motion. Sensor rays do not receive thin-rod inertia.
-- Keep the ray class Partial for ordinary dynamic impulses and contact reports. Trigger: solver integration that accepts the directed alternative manifold before constraint creation and includes friction/restitution, mass, sleep and reporting. Those checks belong in that integration's first ray slice. This is a required gap, not an exclusion or permanent sensor-only product decision. Vendored feature changes remain outside the authorized allocation/optimization patch scope.
+- Use a zero-density fixture for registration, retaining sensor behavior only for Areas. Supply a directed alternative manifold before body constraint creation through an internal per-shape callback; preserve native material, warm-start, sleep, filtering and report handling. Route direct shape queries, Area overlap scans and body motion through one directed native ray-cast kernel. Ray/point queries exclude these fixtures. Reject containment, back-facing hits and ray-ray pairs. Extend margin and positive axial motion along the ray; sliding follows the surface normal, otherwise separation opposes the axis. The swept ordinary convex region is the union of initial/final primitives and swept edges, avoiding the eight-vertex hull ceiling.
+- Include rays in recovery regardless of the flag. Include sliding rays in motion automatically; non-sliding rays require CollideSeparationRay, which snap enables. Preserve reciprocal filters, exceptions, exclusions, shape indices and point velocity. Reconstruct the collider contact point from the manifold, including ordinary contacts. A touching ray moving outward does not block motion. Rays do not receive thin-rod inertia.
+- The CPU-hosted GPU stage experiment retains custom manifold generation on the host and uploads those constraints explicitly; this is not independent GPU acceptance or a failure fallback. The independent GPU store owns device ray geometry. Public independent-GPU binding remains required under ADR 0054.
 
 ### Consequences and verification
 
-Character ray floors, ray-specific body tests and direct/Area sensing execute in the registered world. SeparationRayShapeTests checks every existing shape family, forward/reverse casts, short/zero rays, policy, copying/server state, recovery, snap and 64 warmed body queries with zero managed allocation. A dynamic ray-only probe passes through a floor and retains zero inertia, recording the remaining response boundary. Native allocation, other platforms and owner visual acceptance remain unverified.
+Character ray floors, ray-specific body tests and direct/Area sensing execute in the registered world. SeparationRayShapeTests checks every existing shape family, forward/reverse casts, short/zero rays, policy, copying/server state, recovery, snap and 64 warmed body queries with zero managed allocation. SeparationRayDynamicsTests verifies six-family forward/reverse contacts, compound containment, slope normals, friction/restitution, coupled mass/impulses, zero geometric inertia, sleep, geometry edits, one-way/CCD and scene contact events. The active CPU and CPU-hosted GPU stage probes allocate zero all-thread managed bytes across 128 measured frames after 128 warmup frames. Native allocation, other platforms and owner visual acceptance remain unverified.
 
 ### Rejected alternatives
 
@@ -349,7 +349,7 @@ Direct-space queries execute against registered scene/server fixtures. Resource-
 - Use original scene-unit dimensions for primitive support geometry, avoiding round-trip rounding at exact touching. Build each convex swept hull from its original and displaced vertices and retain the linked circle/capsule radius. Test edge and rounded-corner separating axes. Reuse the span hull builder behind Geometry.ConvexHull and double orientation intermediates. A full ConvexPolygonShape contour stays one collision region regardless of backend fixture partitioning; concave resources remain hollow segment collections with the accepted short-segment point fallback.
 - Return global boundary pairs in caller/other order, capped at sixteen. The difference from the first point to the second gives separation normal and depth. Retain deeper pairs when capacity is reached; exact edge touching may return true without a nonzero separating contact. Arrays are caller-owned; empty results share an empty array. Reuse private per-thread proxy and hull buffers after warmup; no user resource is retained by those buffers.
 - Preserve the pinned special pairs: two concave resources or two rays do not collide; concave motion is ignored in either operand. Ray pairs reject containment and use only the ray's own axial motion, ignoring counterpart motion. Reuse the directed native kernel for native-sized target hulls and clip the full convex boundary above that hull limit. Choose the nearest surface crossing across concave pieces.
-- Leave Shape.Draw and CustomSolverBias Blocked by renderer RID drawing and verified per-shape contact-softness integration. Standalone collision does not supply those prerequisites or complete ordinary dynamic ray response.
+- Leave Shape.Draw and CustomSolverBias Blocked by renderer RID drawing and verified per-shape contact-softness integration. Standalone collision does not supply those prerequisites; ordinary directed body response is owned by ADR 0068.
 
 ### Consequences and verification
 

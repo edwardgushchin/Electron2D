@@ -164,13 +164,13 @@ namespace Box2D.NET
             B2_ASSERT(0 <= type1 && type1 < B2ShapeType.b2_shapeTypeCount);
             B2_ASSERT(0 <= type2 && type2 < B2ShapeType.b2_shapeTypeCount);
 
-            if (s_registers[(int)type1, (int)type2].fcn == null)
+            if (s_registers[(int)type1, (int)type2].fcn == null && shapeA.manifoldOverride == null && shapeB.manifoldOverride == null)
             {
                 // For example, no segment vs segment collision
                 return;
             }
 
-            if (s_registers[(int)type1, (int)type2].primary == false)
+            if (s_registers[(int)type1, (int)type2].fcn != null && s_registers[(int)type1, (int)type2].primary == false)
             {
                 // flip order
                 b2CreateContact(world, shapeB, shapeA);
@@ -560,12 +560,15 @@ namespace Box2D.NET
         internal static bool b2UpdateContact(B2World world, B2ContactSim contactSim, B2Shape shapeA, in B2Transform transformA, B2Vec2 centerOffsetA,
             B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB, B2Manifold[] generatedManifolds = null, int generatedIndex = 0)
         {
+            // Directed/custom contacts retain ordinary material, history and solver handling.
+            b2ManifoldFcn custom = shapeA.manifoldOverride ?? shapeB.manifoldOverride;
+            if (custom != null) generatedManifolds = null;
             // Save old manifold
             B2Manifold oldManifold = generatedManifolds == null ? contactSim.manifold : default;
 
             // Compute new manifold
             if (generatedManifolds == null) contactSim.generatedManifoldVersion = 0;
-            b2ManifoldFcn fcn = s_registers[(int)shapeA.type, (int)shapeB.type].fcn;
+            b2ManifoldFcn fcn = custom ?? s_registers[(int)shapeA.type, (int)shapeB.type].fcn;
             contactSim.manifold = generatedManifolds == null
                 ? fcn(shapeA, transformA, shapeB, transformB, ref contactSim.cache) : generatedManifolds[generatedIndex];
 
