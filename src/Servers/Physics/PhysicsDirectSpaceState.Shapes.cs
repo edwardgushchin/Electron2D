@@ -41,6 +41,7 @@ public sealed partial class PhysicsDirectSpaceState
     private readonly List<ShapeCandidate> _shapeCandidates = [];
     private readonly List<PhysicsShapeResult> _shapeHits = [];
     private bool? _queryRaySlide;
+    private bool _queryCompoundConvex;
     private float _queryMargin;
 
     private readonly record struct ShapeCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
@@ -125,7 +126,7 @@ public sealed partial class PhysicsDirectSpaceState
 
     /// <summary>Finds safe and unsafe fractions of a shape's requested global motion.</summary>
     /// <param name="parameters">A live query shape, pose, motion, margin and filters.</param>
-    /// <returns>(1, 1) when no new collision occurs; initial overlaps are ignored.</returns>
+    /// <returns>(1, 1) when no new collision occurs; initial overlaps are ignored across every piece of each logical collider shape.</returns>
     public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
@@ -133,6 +134,7 @@ public sealed partial class PhysicsDirectSpaceState
         if ((motion.X == 0 && motion.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
             return (1, 1);
         var world = b2GetWorldFromId(space.WorldID);
+        RemoveInitiallyOverlappingSlots(world);
         var bestSafe = 1f;
         var bestUnsafe = 1f;
         foreach (var candidate in _shapeCandidates)
@@ -145,8 +147,6 @@ public sealed partial class PhysicsDirectSpaceState
                 var query = _queryProxies[piece];
                 if (_queryRaySlide is not null || candidate.Tag.SeparationRay is not null)
                 {
-                    if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
-                            candidate.Tag.SeparationRay, default, _queryMargin).pointCount != 0) continue;
                     if (PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, otherTransform,
                             candidate.Tag.SeparationRay, motion * bestSafe, _queryMargin).pointCount == 0) continue;
                     var lowRay = 0f;
@@ -163,7 +163,6 @@ public sealed partial class PhysicsDirectSpaceState
                     bestUnsafe = highRay;
                     continue;
                 }
-                if (Overlaps(query, other, otherTransform)) continue;
                 if (!SweepsInto(query, other, otherTransform, motion, bestSafe)) continue;
                 var low = 0f;
                 var high = bestSafe;
@@ -183,6 +182,61 @@ public sealed partial class PhysicsDirectSpaceState
         return (bestSafe, bestUnsafe);
     }
 
+    private int CandidateGroupEnd(int first)
+    {
+        var tag = _shapeCandidates[first].Tag; var end = first + 1;
+        while (end < _shapeCandidates.Count && _shapeCandidates[end].Tag.ColliderRID == tag.ColliderRID && _shapeCandidates[end].Tag.ShapeIndex == tag.ShapeIndex) end++;
+        return end;
+    }
+
+    private void RemoveInitiallyOverlappingSlots(B2World world)
+    {
+        var kept = 0;
+        for (var first = 0; first < _shapeCandidates.Count;)
+        {
+            var end = CandidateGroupEnd(first);
+            var overlaps = false;
+            for (var i = first; i < end && !overlaps; i++)
+            {
+                var candidate = _shapeCandidates[i]; var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
+                var pose = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
+                foreach (var query in _queryProxies)
+                {
+                    overlaps = _queryRaySlide is not null || candidate.Tag.SeparationRay is not null
+                        ? PhysicsSeparationRay.PairContact(query, _queryRaySlide, other, pose, candidate.Tag.SeparationRay, default, _queryMargin).pointCount != 0
+                        : Overlaps(query, other, pose);
+                    if (overlaps) break;
+                }
+            }
+            // A logical shape's internal decomposition seams must not stop an already-overlapping query.
+            if (!overlaps) for (var i = first; i < end; i++) _shapeCandidates[kept++] = _shapeCandidates[i];
+            first = end;
+        }
+        if (kept < _shapeCandidates.Count) _shapeCandidates.RemoveRange(kept, _shapeCandidates.Count - kept);
+    }
+
+    private void RemoveContainedRaySlots(B2Vec2 motion)
+    {
+        if (_queryRaySlide is null && !_queryCompoundConvex || _queryProxies.Count == 0) return;
+        var kept = 0;
+        for (var first = 0; first < _shapeCandidates.Count;)
+        {
+            var tag = _shapeCandidates[first].Tag; var end = CandidateGroupEnd(first);
+            var inside = false;
+            if (_queryRaySlide is not null && end - first > 1 && b2Shape_GetType(_shapeCandidates[first].ShapeID) == B2ShapeType.b2_polygonShape)
+                for (var i = first; i < end && !inside; i++) inside = b2Shape_TestPoint(_shapeCandidates[i].ShapeID, _queryProxies[0].points[0]);
+            if (_queryCompoundConvex && tag.SeparationRay is { } ray)
+            {
+                var pose = b2Body_GetTransform(b2Shape_GetBody(_shapeCandidates[first].ShapeID));
+                var origin = PhysicsSeparationRay.WorldProxy(ray, pose, default).points[0];
+                foreach (var query in _queryProxies) if (PhysicsSeparationRay.ContainsSweptRegion(query, origin, motion)) { inside = true; break; }
+            }
+            if (!inside) for (var i = first; i < end; i++) _shapeCandidates[kept++] = _shapeCandidates[i];
+            first = end;
+        }
+        if (kept < _shapeCandidates.Count) _shapeCandidates.RemoveRange(kept, _shapeCandidates.Count - kept);
+    }
+
     private PhysicsSpace PrepareShapeQuery(PhysicsShapeQueryParameters parameters)
     {
         ThrowIfDisposed();
@@ -193,6 +247,7 @@ public sealed partial class PhysicsDirectSpaceState
         _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();
         PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
+        _queryCompoundConvex = shape is ConvexPolygonShape && _queryProxies.Count > 1;
         var transform = parameters.Transform;
         var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
         var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;
@@ -226,6 +281,7 @@ public sealed partial class PhysicsDirectSpaceState
             if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
                 AddCandidates(collider.BackendShapes, mask, excluded);
         }
+        RemoveContainedRaySlots(PhysicsShapeBackend.ToBackend(parameters.Motion));
         return space;
     }
 

@@ -7,7 +7,7 @@ Last updated: 2026-10-09
 GPUPhysicsBodyStore.Query performs batched world ray and point queries against
 current resident geometry, without a CPU solver world or a CPU pose/bounds mirror.
 This internal path is not connected to PhysicsDirectSpaceState yet. Public spaces
-still use Box2D.NET. Shape sweeps, motion recovery, public canvas association,
+still use Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. Body-motion recovery, public canvas association,
 picking, backend selection and event/network projection remain open.
 
 Each resident shape contains a complete authored Shape, including large convex

@@ -9,6 +9,7 @@ internal static class PhysicsShapeQueryTests
         VerifyContactsAndRestInfo();
         VerifyContactPairFamilies();
         VerifyCompoundAndHollowQueries();
+        VerifyCompoundInitialCast();
         VerifySceneShapeQueries();
         VerifyCallerOwnedResults();
         Console.WriteLine("Physics shape-query overlap, motion, contacts and rest checks passed.");
@@ -315,6 +316,42 @@ internal static class PhysicsShapeQueryTests
             PhysicsServer.FreeRID(shapeRID);
         }
         PhysicsServer.FreeRID(space);
+    }
+
+    private static void VerifyCompoundInitialCast()
+    {
+        var points = new Vector2[12]; for (var i = 0; i < points.Length; i++) points[i] = new Vector2(20, 0).Rotated(-i * Mathf.Tau / points.Length);
+        using var polygon = new ConvexPolygonShape { Points = points }; using var circle = new CircleShape { Radius = 10 };
+        var space = PhysicsServer.SpaceCreate(); var body = PhysicsServer.BodyCreate();
+        using var query = new PhysicsShapeQueryParameters { Shape = circle, Transform = new(0, new(0, -25)), Motion = new(0, 80) };
+        try
+        {
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(body, polygon.GetRID()); PhysicsServer.BodySetSpace(body, space);
+            var view = PhysicsServer.SpaceGetDirectState(space);
+            Check(view.CastMotion(query) == (1, 1), "An initial compound overlap cannot hit an internal decomposition seam.");
+            PhysicsServer.BodyAddShape(body, circle.GetRID(), new(0, new(0, 40)));
+            var cast = view.CastMotion(query); Check(cast.SafeFraction is > .5f and < .7f, "Ignoring the initially overlapping slot retains another slot of the same body.");
+            for (var i = 0; i < 64; i++) view.CastMotion(query);
+            var bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) view.CastMotion(query);
+            Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Compound initial-overlap filtering reuses storage.");
+            using var ray = new SeparationRayShape { Length = 20 };
+            query.Shape = ray; query.Transform = new(0, new(0, -10)); query.Motion = Vector2.Zero;
+            Check(view.IntersectShape(query).Length == 0 && view.CollideShape(query).Length == 0 && view.GetRestInfo(query) is null,
+                "A directed query from inside a compound polygon cannot hit its internal seam.");
+            query.Shape = polygon; query.Transform = new(0, new(0, 10)); query.CollisionMask = 2;
+            query.Exclude = [body];
+            // A separate ray-only owner isolates reverse containment from ordinary polygon contacts.
+            var rayBody = PhysicsServer.BodyCreate();
+            try
+            {
+                PhysicsServer.BodySetMode(rayBody, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(rayBody, ray.GetRID());
+                PhysicsServer.BodySetCollisionLayer(rayBody, 2); PhysicsServer.BodySetSpace(rayBody, space);
+                Check(view.IntersectShape(query).Length == 0 && view.CollideShape(query).Length == 0 && view.GetRestInfo(query) is null,
+                    "A ray origin inside a compound query cannot hit another query piece's internal seam.");
+            }
+            finally { PhysicsServer.FreeRID(rayBody); }
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
 
     private static void VerifyCompoundAndHollowQueries()

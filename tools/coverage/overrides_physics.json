@@ -2531,7 +2531,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures (ADR 0063, PhysicsShapeQueryTests)."
+      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures. Initial overlaps and directed containment treat complete compound slots, excluding internal seams (ADR 0063, PhysicsShapeQueryTests). Independent resident GPU kernels execute; public GPU-world binding remains open."
     },
     {
       "godot": [

@@ -25,9 +25,34 @@ internal static class PhysicsSeparationRay
         in B2Vec2 motion)
     {
         if (motion.X == 0 && motion.Y == 0) return Contact(ray, slide, query, b2Transform_identity, default);
+        Span<B2ShapeProxy> pieces = stackalloc B2ShapeProxy[10];
+        var count = SweptPieces(query, motion, pieces);
+        var best = default(B2Manifold);
+        for (var index = 0; index < count; index++)
+        {
+            var piece = pieces[index];
+            // A composite cast must reject containment in any piece before selecting another piece's entry.
+            if (Contains(piece, ray.points[0])) return default;
+            var contact = Contact(ray, slide, piece, b2Transform_identity, default);
+            if (contact.pointCount != 0 && (best.pointCount == 0 ||
+                contact.points[0].separation < best.points[0].separation)) best = contact;
+        }
+        return best;
+    }
+
+    internal static bool ContainsSweptRegion(in B2ShapeProxy query, in B2Vec2 point, in B2Vec2 motion)
+    {
+        if (motion.X == 0 && motion.Y == 0) return Contains(query, point);
+        Span<B2ShapeProxy> pieces = stackalloc B2ShapeProxy[10];
+        var count = SweptPieces(query, motion, pieces);
+        for (var i = 0; i < count; i++) if (Contains(pieces[i], point)) return true;
+        return false;
+    }
+
+    private static int SweptPieces(in B2ShapeProxy query, in B2Vec2 motion, Span<B2ShapeProxy> pieces)
+    {
         // The swept convex region is the union of the initial/final shape and each swept edge.
         // Reuse native primitives without exceeding their eight-vertex hull capacity.
-        Span<B2ShapeProxy> pieces = stackalloc B2ShapeProxy[10];
         var count = 0;
         if (query.count == 1)
             pieces[count++] = b2MakeProxy(query.points[0], query.points[0] + motion, 2, query.radius);
@@ -41,17 +66,7 @@ internal static class PhysicsSeparationRay
             for (var index = 0; index < edgeCount; index++)
                 pieces[count++] = SweptEdge(query.points[index], query.points[(index + 1) % query.count], motion, query.radius);
         }
-        var best = default(B2Manifold);
-        for (var index = 0; index < count; index++)
-        {
-            var piece = pieces[index];
-            // A composite cast must reject containment in any piece before selecting another piece's entry.
-            if (Contains(piece, ray.points[0])) return default;
-            var contact = Contact(ray, slide, piece, b2Transform_identity, default);
-            if (contact.pointCount != 0 && (best.pointCount == 0 ||
-                contact.points[0].separation < best.points[0].separation)) best = contact;
-        }
-        return best;
+        return count;
     }
 
     private static B2ShapeProxy SweptEdge(in B2Vec2 a, in B2Vec2 b, in B2Vec2 motion, float radius)

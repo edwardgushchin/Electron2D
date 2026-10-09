@@ -290,6 +290,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         _spatialPipeline?.Dispose(); _residentTreePipeline?.Dispose();
         _verticesGPU?.Dispose(); _geometryGPU?.Dispose(); _shapesGPU?.Dispose(); _proxiesGPU?.Dispose(); _nodesGPU?.Dispose(); _orderGPU?.Dispose(); _pairsGPU?.Dispose(); _spatialSummary?.Dispose();
         _vertexEditsGPU?.Dispose(); _geometryEditsGPU?.Dispose(); _shapeEditsGPU?.Dispose(); _spatialUpload?.Dispose(); _spatialDownload?.Dispose();
+        foreach (var entry in _geometryEntries) entry.Source = null;
         _geometryByResource.Clear(); _geometryEntries.Clear(); Array.Clear(_shapeSlots);
     }
 }
