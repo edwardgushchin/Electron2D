@@ -14,12 +14,19 @@ internal static class WaterPlaygroundTests
         Check(water.Count == 65536 && !water.Duck.IsValid() && !water.Boat.IsValid(), "Water precedes both toys.");
         Check(water.ActiveCount == 0, "Water is released progressively instead of starting as a block.");
         var elapsed = Stopwatch.StartNew();
+        var appeared = new bool[WaterSimulation.FishCount + 2];
         for (var frame = 0; frame < 1200; frame++)
         {
             water.Step(1d / 60);
             if (frame % 60 == 59)
                 Console.WriteLine($"t={water.Time:F1} min={water.Positions.Min(p => p.Y):F1} max={water.Positions.Max(p => p.Y):F1} above={water.Positions.Count(p => p.Y < 0)} duck={water.DuckPose.Origin} boat={water.BoatPose.Origin} step={water.StepMS:F2}ms elapsed={elapsed.ElapsedMilliseconds}");
             CheckContained(water);
+            for (var slot = 0; slot < appeared.Length; slot++)
+                if (water.ActorExists(slot) && !appeared[slot])
+                {
+                    Check(water.ActorBounds(slot).End.Y < water.EntryY, "Each toy and fish starts entirely above its entry edge.");
+                    appeared[slot] = true;
+                }
             if (frame == 789) Check(water.FishBody(0).IsValid() && water.FishPose(0).Origin.Y < 100 && !water.FishInWater(0), "The first fish falls visibly through air before swimming.");
             if (frame == 179) Check(!water.Duck.IsValid() && !water.Boat.IsValid(), "No early toy spawn.");
             if (frame == 599) Check(water.Duck.IsValid() && !water.Boat.IsValid(), "Duck falls before the boat.");
@@ -53,7 +60,7 @@ internal static class WaterPlaygroundTests
         Check(water.FishPose(0).Origin.Y < fishBefore.Y - 100, "A submerged fish can be lifted out of the water.");
         water.MovePointer(new(-300, -300));
         for (var i = 0; i < 80; i++) { water.Step(1d / 60); CheckContained(water); }
-        Check(water.ActorBounds(2).Position.X < 15 && water.ActorBounds(2).Position.Y < 15, "Out-of-window dragging reaches the edge without clipping the fish.");
+        Check(water.ActorBounds(2).Position.X < 15 && water.ActorBounds(2).End.Y < -150, "Dragging can lift a fish above the open top while retaining the side wall.");
         water.EndDrag();
         var surface = new WaterSurface(); surface.Update(water);
         Check(surface.VertexCount > 0 && surface.VertexCount < 160000, "Density reconstruction uses compact continuous geometry.");
@@ -76,13 +83,22 @@ internal static class WaterPlaygroundTests
         Engine.MaxFPS = 144;
         using var font = new FontFile { Data = File.ReadAllBytes(System.IO.Path.Combine(AppContext.BaseDirectory, "Assets", "IBMPlexSans-Regular.ttf")) };
         using var window = new WaterWindow(font) { Unfocusable = true };
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_WATER_PORTRAIT") == "1") window.Size = new(480, 800);
+        var appeared = new bool[WaterSimulation.FishCount + 2];
         var directory = System.IO.Path.GetFullPath("bin/water-playground/" + method);
         Directory.CreateDirectory(directory);
         var phase = 0; var interaction = 0; var dragStart = Vector2.Zero; var boatOrigin = Vector2.Zero; var fishOrigin = Vector2.Zero; var pausedTime = 0d; var pausedDuck = Transform.Identity; var pausedParticle = Vector2.Zero; var snapshot = Array.Empty<Vector2>();
         void AfterDraw()
         {
             var time = window.Simulation.Time;
-            if (phase == 0 && time > .6 || phase == 1 && time > 4 || phase == 2 && time > 9.8 || phase == 3 && time > 13.2 || phase == 4 && time > 20)
+            if (interaction < 105)
+                for (var slot = 0; slot < appeared.Length; slot++)
+                    if (window.Simulation.ActorExists(slot) && !appeared[slot])
+                    {
+                        Check((window.ViewTransform * window.Simulation.ActorBounds(slot)).End.Y < 0, "A new toy or fish is fully outside the rendered top edge, including portrait views.");
+                        appeared[slot] = true;
+                    }
+            if (phase == 0 && time > .6 || phase == 1 && time > 4 || phase == 2 && time > 9.8 || phase == 3 && time > 13.5 || phase == 4 && time > 20)
             {
                 using var image = RenderingServer.Service!.Readback();
                 image.SavePNG(System.IO.Path.Combine(directory, $"{phase:00}.png"));
@@ -151,8 +167,11 @@ internal static class WaterPlaygroundTests
         }
         void CheckView()
         {
-            Check((window.ViewTransform * Vector2.Zero).IsZeroApprox() && (window.ViewTransform * window.Simulation.Size).IsEqualApprox((Vector2)window.Size), "The fixed world fills the complete client area with no inset pool or cropping.");
-            Check(window.ToWorld((Vector2)window.Size).IsEqualApprox(window.Simulation.Size), "Pointer mapping follows non-uniform resize.");
+            Check((window.ViewTransform * new Vector2(0, window.Simulation.Size.Y)).IsEqualApprox(new(0, window.Size.Y)) &&
+                (window.ViewTransform * window.Simulation.Size).IsEqualApprox((Vector2)window.Size), "Both bottom corners stay at the viewport edges without side gutters.");
+            Check(Mathf.IsEqualApprox(window.ViewTransform.X.Length(), window.ViewTransform.Y.Length()) &&
+                Mathf.IsZeroApprox(window.ViewTransform.X.Dot(window.ViewTransform.Y)), "Resize and fullscreen preserve shape proportions with one orthogonal scale.");
+            Check(window.ToWorld((Vector2)window.Size).IsEqualApprox(window.Simulation.Size), "Pointer mapping follows the bottom-anchored uniform view.");
             CheckContained(window.Simulation);
             if (window.Paused) Check(snapshot.SequenceEqual(window.Simulation.Positions) && window.Simulation.DuckPose == pausedDuck, "Resize and fullscreen preserve every world coordinate.");
         }
@@ -169,7 +188,7 @@ internal static class WaterPlaygroundTests
             if (water.ActorExists(slot))
             {
                 var b = water.ActorBounds(slot);
-                Check(b.Position.X >= -0.01f && b.Position.Y >= -0.01f && b.End.X <= water.Size.X + .01f && b.End.Y <= water.Size.Y + .01f, "The entire rotated sprite, including sail, beak and tail, stays in view.");
+                Check(b.Position.X >= -0.01f && b.End.X <= water.Size.X + .01f && b.End.Y <= water.Size.Y + .01f, "Complete rotated sprites stay inside the side and bottom walls; the top is open.");
             }
     }
 

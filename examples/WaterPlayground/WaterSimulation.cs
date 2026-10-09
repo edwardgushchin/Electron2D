@@ -53,6 +53,7 @@ internal sealed partial class WaterSimulation : IDisposable
     }
     internal Vector2[] Positions { get; }
     internal Vector2 Size => WorldSize;
+    internal float EntryY { get; set; }
     internal double Time { get; private set; }
     internal RID Duck => _actors[0];
     internal RID Boat => _actors[1];
@@ -126,7 +127,7 @@ internal sealed partial class WaterSimulation : IDisposable
     }
     internal void BeginDrag(Vector2 position)
     {
-        _held = true; _pointer = position.Clamp(Vector2.Zero, Size); _dragged = default;
+        _held = true; _pointer = ConstrainPointer(position); _dragged = default;
         for (var slot = 0; slot < BodyCount; slot++)
         {
             var body = _actors[slot];
@@ -137,7 +138,8 @@ internal sealed partial class WaterSimulation : IDisposable
             }
         }
     }
-    internal void MovePointer(Vector2 position) => _pointer = position.Clamp(Vector2.Zero, Size);
+    private Vector2 ConstrainPointer(Vector2 position) => new(Math.Clamp(position.X, 0, Size.X), Math.Min(position.Y, Size.Y));
+    internal void MovePointer(Vector2 position) => _pointer = ConstrainPointer(position);
     internal void EndDrag() { _held = false; _dragged = default; }
     internal void Step(double delta)
     {
@@ -145,20 +147,20 @@ internal sealed partial class WaterSimulation : IDisposable
         var start = Stopwatch.GetTimestamp(); Time += delta; Emit();
         if (Time >= PourDuration + 1 && !Duck.IsValid())
         {
-            _actors[0] = Body(new(Size.X * .34f, 86), Own(new CapsuleShape { Radius = 32, Height = 108 }), 6);
+            _actors[0] = Body(new(Size.X * .34f, SpawnY(0)), Own(new CapsuleShape { Radius = 32, Height = 108 }), 6);
             PhysicsServer.BodySetShapeTransform(Duck, 0, new Transform(MathF.PI / 2, new(-5, 0)));
             PhysicsServer.BodyAddShape(Duck, Own(new CircleShape { Radius = 27 }).GetRID(), new Transform(0, new(31, -32)));
             PhysicsServer.BodySetCenterOfMass(Duck, new(-5, 10)); PhysicsServer.BodySetAngularDamp(Duck, .5f);
         }
         if (Time >= PourDuration + 3 && !Boat.IsValid())
         {
-            _actors[1] = Body(new(Size.X * .69f, 144), Own(new ConvexPolygonShape { Points = Hull }), 10);
+            _actors[1] = Body(new(Size.X * .69f, SpawnY(1)), Own(new ConvexPolygonShape { Points = Hull }), 10);
             PhysicsServer.BodySetCenterOfMass(Boat, new(0, 18)); PhysicsServer.BodySetAngularDamp(Boat, .5f);
         }
         for (var fish = 0; fish < FishCount; fish++)
             if (Time >= PourDuration + 5 + fish * .3 && !FishBody(fish).IsValid())
             {
-                var body = Body(new(Size.X * (.16f + .13f * fish), 42), Own(new CapsuleShape { Radius = 10, Height = 34 }), 6.5f);
+                var body = Body(new(Size.X * (.16f + .13f * fish), SpawnY(fish + 2)), Own(new CapsuleShape { Radius = 10, Height = 34 }), 6.5f);
                 PhysicsServer.BodySetShapeTransform(body, 0, new Transform(MathF.PI / 2, Vector2.Zero));
                 PhysicsServer.BodySetAngularDamp(body, 2);
                 _actors[fish + 2] = body;
@@ -216,6 +218,7 @@ internal sealed partial class WaterSimulation : IDisposable
         StepMS = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
     }
     internal static Rect2 LocalBounds(int slot) => slot == 0 ? new(-74, -64, 152, 110) : slot == 1 ? new(-86, -118, 172, 148) : new(-32, -16, 64, 32);
+    private float SpawnY(int slot) => EntryY - LocalBounds(slot).End.Y - 24;
     internal Rect2 ActorBounds(int slot) => Pose(_actors[slot]) * LocalBounds(slot);
     internal bool ActorExists(int slot) => _actors[slot].IsValid();
     private void ContainBodies()
@@ -226,8 +229,7 @@ internal sealed partial class WaterSimulation : IDisposable
             var state = PhysicsServer.BodyGetDirectState(body)!; var bounds = state.Transform * LocalBounds(slot); var shift = Vector2.Zero;
             if (bounds.Position.X < 3) shift.X = 3 - bounds.Position.X;
             else if (bounds.End.X > Size.X - 3) shift.X = Size.X - 3 - bounds.End.X;
-            if (bounds.Position.Y < 3) shift.Y = 3 - bounds.Position.Y;
-            else if (bounds.End.Y > Size.Y - 3) shift.Y = Size.Y - 3 - bounds.End.Y;
+            if (bounds.End.Y > Size.Y - 3) shift.Y = Size.Y - 3 - bounds.End.Y;
             if (shift == Vector2.Zero) continue;
             var pose = state.Transform; pose.Origin += shift;
             var velocity = state.LinearVelocity;

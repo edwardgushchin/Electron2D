@@ -82,8 +82,9 @@ internal sealed class WaterWindow : Window
     }
     private void FitWorld()
     {
-        var size = (Vector2)Size;
-        ViewTransform = new Transform(0, size / Simulation.Size, 0, Vector2.Zero);
+        var scale = Size.X / Simulation.Size.X;
+        ViewTransform = new Transform(0, new Vector2(scale, scale), 0, new Vector2(0, Size.Y - Simulation.Size.Y * scale));
+        Simulation.EntryY = Math.Min(0, ToWorld(Vector2.Zero).Y);
         _world.Transform = ViewTransform;
         _cpu.Position = new(Size.X - 176, 20); _gpu.Position = new(Size.X - 96, 20);
     }
@@ -101,7 +102,7 @@ internal sealed class WaterWindow : Window
     internal void Reset()
     {
         var gpu = Simulation.UseGPU; Simulation.Dispose(); Simulation = new(); if (gpu) Simulation.SetUseGPU(true, _device);
-        Paused = false; _held = false; Surface.Update(Simulation); _waterDrawing.QueueRedraw();
+        Paused = false; _held = false; FitWorld(); Surface.Update(Simulation); _waterDrawing.QueueRedraw();
     }
     protected override void OnPhysicsProcess(double delta)
     {
@@ -111,11 +112,11 @@ internal sealed class WaterWindow : Window
     protected override void OnProcess(double delta) { _drawing.QueueRedraw(); _hud.QueueRedraw(); }
     protected override void OnInput(InputEvent input)
     {
-        if (input is InputEventMouseMotion motion) { _pointer = ToWorld(motion.Position).Clamp(Vector2.Zero, Simulation.Size); Simulation.MovePointer(_pointer); }
+        if (input is InputEventMouseMotion motion) { _pointer = ToWorld(motion.Position); Simulation.MovePointer(_pointer); }
         if (input is InputEventMouseButton { ButtonIndex: MouseButton.Left } button)
         {
             if (button.Pressed && (new Rect2(_cpu.Position, _cpu.Size).HasPoint(button.Position) || new Rect2(_gpu.Position, _gpu.Size).HasPoint(button.Position))) return;
-            _pointer = ToWorld(button.Position).Clamp(Vector2.Zero, Simulation.Size); _held = button.Pressed;
+            _pointer = ToWorld(button.Position); _held = button.Pressed;
             if (_held) Simulation.BeginDrag(_pointer); else Simulation.EndDrag();
         }
         if (input is not InputEventKey { Pressed: true, Echo: false } key) return;
