@@ -7,6 +7,7 @@
 // Compare to SDL_CPUPauseInstruction
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using static Box2D.NET.B2Tables;
 using static Box2D.NET.B2Arrays;
@@ -44,8 +45,6 @@ namespace Box2D.NET
         private static readonly b2TaskCallback FinalizeBodiesTask = b2FinalizeBodiesTask;
         private static readonly b2TaskCallback BulletBodyTask = b2BulletBodyTask;
         // todo testing
-        public const int ITERATIONS = 1;
-        public const int RELAX_ITERATIONS = 1;
 
         public const float B2_CORE_FRACTION = 0.25f;
 
@@ -952,13 +951,13 @@ public enum b2SolverBlockType
             return blocksPerWorker * workerIndex + b2MinInt(remainder, workerIndex);
         }
 
-        internal static void b2ExecuteStage(B2SolverStage stage, B2StepContext context, int previousSyncIndex, int syncIndex, int workerIndex)
+        internal static void b2ExecuteStage(B2SolverStage stage, B2StepContext context, long previousSyncIndex, long syncIndex, int workerIndex)
         {
             int completedCount = 0;
             ArraySegment<B2SolverBlock> blocks = stage.blocks;
             int blockCount = stage.blockCount;
 
-            int expectedSyncIndex = previousSyncIndex;
+            long expectedSyncIndex = previousSyncIndex;
 
             int startIndex = GetWorkerStartIndex(workerIndex, blockCount, context.workerCount);
             if (startIndex == B2_NULL_INDEX)
@@ -970,7 +969,7 @@ public enum b2SolverBlockType
 
             int blockIndex = startIndex;
 
-            while (b2AtomicCompareExchangeInt(ref blocks[blockIndex].syncIndex, expectedSyncIndex, syncIndex) == true)
+            while (Interlocked.CompareExchange(ref blocks[blockIndex].syncIndex, syncIndex, expectedSyncIndex) == expectedSyncIndex)
             {
                 B2_ASSERT(stage.type != B2SolverStageType.b2_stagePrepareContacts || syncIndex < 2);
 
@@ -1000,7 +999,7 @@ public enum b2SolverBlockType
 
                 expectedSyncIndex = previousSyncIndex;
 
-                if (b2AtomicCompareExchangeInt(ref blocks[blockIndex].syncIndex, expectedSyncIndex, syncIndex) == false)
+                if (Interlocked.CompareExchange(ref blocks[blockIndex].syncIndex, syncIndex, expectedSyncIndex) != expectedSyncIndex)
                 {
                     break;
                 }
@@ -1013,7 +1012,7 @@ public enum b2SolverBlockType
             b2AtomicFetchAddInt(ref stage.completionCount, completedCount);
         }
 
-        internal static void b2ExecuteMainStage(B2SolverStage stage, B2StepContext context, uint syncBits)
+        internal static void b2ExecuteMainStage(B2SolverStage stage, B2StepContext context, long syncBits)
         {
             if (context.world.integrateBodyStage != null &&
                 (stage.type == B2SolverStageType.b2_stageIntegrateVelocities || stage.type == B2SolverStageType.b2_stageIntegratePositions))
@@ -1045,11 +1044,11 @@ public enum b2SolverBlockType
             }
             else
             {
-                b2AtomicStoreU32(ref context.atomicSyncBits, syncBits);
+                Volatile.Write(ref context.atomicSyncBits, syncBits);
 
-                int syncIndex = (int)((syncBits >> 16) & 0xFFFF);
+                long syncIndex = syncBits >> 16;
                 B2_ASSERT(syncIndex > 0);
-                int previousSyncIndex = syncIndex - 1;
+                long previousSyncIndex = syncIndex - 1;
 
                 b2ExecuteStage(stage, context, previousSyncIndex, syncIndex, workerIndex);
 
@@ -1076,6 +1075,8 @@ public enum b2SolverBlockType
             int workerIndex = workerContext.workerIndex;
             B2StepContext context = workerContext.context;
             int activeColorCount = context.activeColorCount;
+            ref var overflow = ref context.graph.colors[B2_OVERFLOW_INDEX];
+            int iterations = activeColorCount > 0 || overflow.contactSims.count > 0 || overflow.jointSims.count > 0 ? context.world.solverIterations : 0;
             ArraySegment<B2SolverStage> stages = context.stages;
             ref B2Profile profile = ref context.world.profile;
 
@@ -1103,26 +1104,26 @@ public enum b2SolverBlockType
 
                 ulong ticks = b2GetTicks();
 
-                int bodySyncIndex = 1;
+                long bodySyncIndex = 1;
                 int stageIndex = 0;
 
                 // This stage loops over all awake joints
-                uint jointSyncIndex = 1;
-                uint syncBits = (jointSyncIndex << 16) | (uint)stageIndex;
+                long jointSyncIndex = 1;
+                long syncBits = (jointSyncIndex << 16) | (uint)stageIndex;
                 B2_ASSERT(stages[stageIndex].type == B2SolverStageType.b2_stagePrepareJoints);
                 b2ExecuteMainStage(stages[stageIndex], context, syncBits);
                 stageIndex += 1;
                 jointSyncIndex += 1;
 
                 // This stage loops over all contact constraints
-                uint contactSyncIndex = 1;
+                long contactSyncIndex = 1;
                 syncBits = (contactSyncIndex << 16) | (uint)stageIndex;
                 B2_ASSERT(stages[stageIndex].type == B2SolverStageType.b2_stagePrepareContacts);
                 b2ExecuteMainStage(stages[stageIndex], context, syncBits);
                 stageIndex += 1;
                 contactSyncIndex += 1;
 
-                int graphSyncIndex = 1;
+                long graphSyncIndex = 1;
 
                 // Single-threaded overflow work. These constraints don't fit in the graph coloring.
                 b2PrepareOverflowJoints(context);
@@ -1134,12 +1135,12 @@ public enum b2SolverBlockType
                 for (int i = 0; i < subStepCount; ++i)
                 {
                     // stage index restarted each iteration
-                    // syncBits still increases monotonically because the upper bits increase each iteration
+                    // syncBits still increases monotonically because the upper 48 bits increase each iteration
                     int iterStageIndex = stageIndex;
                     context.solverElapsed = i * context.h;
 
                     // integrate velocities
-                    syncBits = (uint)((bodySyncIndex << 16) | iterStageIndex);
+                    syncBits = (bodySyncIndex << 16) | (uint)iterStageIndex;
                     B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageIntegrateVelocities);
                     b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                     iterStageIndex += 1;
@@ -1153,7 +1154,7 @@ public enum b2SolverBlockType
 
                     for (int colorIndex = 0; colorIndex < activeColorCount; ++colorIndex)
                     {
-                        syncBits = (uint)((graphSyncIndex << 16) | iterStageIndex);
+                        syncBits = (graphSyncIndex << 16) | (uint)iterStageIndex;
                         B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageWarmStart);
                         b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                         iterStageIndex += 1;
@@ -1166,15 +1167,17 @@ public enum b2SolverBlockType
                     // solve constraints
                     bool useBias = true;
 
-                    for (int j = 0; j < ITERATIONS; ++j)
+                    int solveStart = iterStageIndex;
+                    for (int j = 0; j < iterations; ++j)
                     {
+                        iterStageIndex = solveStart;
                         // Overflow constraints have lower priority
                         b2SolveOverflowJoints(context, useBias);
                         b2SolveOverflowContacts(context, useBias);
 
                         for (int colorIndex = 0; colorIndex < activeColorCount; ++colorIndex)
                         {
-                            syncBits = (uint)((graphSyncIndex << 16) | iterStageIndex);
+                            syncBits = (graphSyncIndex << 16) | (uint)iterStageIndex;
                             B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageSolve);
                             b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                             iterStageIndex += 1;
@@ -1187,7 +1190,7 @@ public enum b2SolverBlockType
 
                     // integrate positions
                     B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageIntegratePositions);
-                    syncBits = (uint)((bodySyncIndex << 16) | iterStageIndex);
+                    syncBits = (bodySyncIndex << 16) | (uint)iterStageIndex;
                     b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                     iterStageIndex += 1;
                     bodySyncIndex += 1;
@@ -1197,14 +1200,16 @@ public enum b2SolverBlockType
                     // relax constraints
                     context.solverElapsed = (i + 1) * context.h;
                     useBias = false;
-                    for (int j = 0; j < RELAX_ITERATIONS; ++j)
+                    int relaxStart = iterStageIndex;
+                    for (int j = 0; j < iterations; ++j)
                     {
+                        iterStageIndex = relaxStart;
                         b2SolveOverflowJoints(context, useBias);
                         b2SolveOverflowContacts(context, useBias);
 
                         for (int colorIndex = 0; colorIndex < activeColorCount; ++colorIndex)
                         {
-                            syncBits = (uint)((graphSyncIndex << 16) | iterStageIndex);
+                            syncBits = (graphSyncIndex << 16) | (uint)iterStageIndex;
                             B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageRelax);
                             b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                             iterStageIndex += 1;
@@ -1219,7 +1224,7 @@ public enum b2SolverBlockType
 
                 // advance the stage according to the sub-stepping tasks just completed
                 // integrate velocities / warm start / solve / integrate positions / relax
-                stageIndex += 1 + activeColorCount + ITERATIONS * activeColorCount + 1 + RELAX_ITERATIONS * activeColorCount;
+                stageIndex += 1 + activeColorCount + activeColorCount + 1 + activeColorCount;
 
                 // Restitution
                 {
@@ -1228,7 +1233,7 @@ public enum b2SolverBlockType
                     int iterStageIndex = stageIndex;
                     for (int colorIndex = 0; colorIndex < activeColorCount; ++colorIndex)
                     {
-                        syncBits = (uint)((graphSyncIndex << 16) | iterStageIndex);
+                        syncBits = (graphSyncIndex << 16) | (uint)iterStageIndex;
                         B2_ASSERT(stages[iterStageIndex].type == B2SolverStageType.b2_stageRestitution);
                         b2ExecuteMainStage(stages[iterStageIndex], context, syncBits);
                         iterStageIndex += 1;
@@ -1249,22 +1254,22 @@ public enum b2SolverBlockType
                 profile.storeImpulses += b2GetMillisecondsAndReset(ref ticks);
 
                 // Signal workers to finish
-                b2AtomicStoreU32(ref context.atomicSyncBits, uint.MaxValue);
+                Volatile.Write(ref context.atomicSyncBits, long.MaxValue);
 
                 B2_ASSERT(stageIndex + 1 == context.stageCount);
                 return;
             }
 
             // Worker spins and waits for work
-            uint lastSyncBits = 0;
+            long lastSyncBits = 0;
             // ulong maxSpinTime = 10;
             while (true)
             {
                 // Spin until main thread bumps changes the sync bits. This can waste significant time overall, but it is necessary for
                 // parallel simulation with graph coloring.
-                uint syncBits;
+                long syncBits;
                 int spinCount = 0;
-                while ((syncBits = b2AtomicLoadU32(ref context.atomicSyncBits)) == lastSyncBits)
+                while ((syncBits = Volatile.Read(ref context.atomicSyncBits)) == lastSyncBits)
                 {
                     if (spinCount > 5)
                     {
@@ -1288,7 +1293,7 @@ public enum b2SolverBlockType
                     }
                 }
 
-                if (syncBits == uint.MaxValue)
+                if (syncBits == long.MaxValue)
                 {
                     // sentinel hit
                     break;
@@ -1297,10 +1302,10 @@ public enum b2SolverBlockType
                 int stageIndex = (int)(syncBits & 0xFFFF);
                 B2_ASSERT(stageIndex < context.stageCount);
 
-                int syncIndex = (int)((syncBits >> 16) & 0xFFFF);
+                long syncIndex = syncBits >> 16;
                 B2_ASSERT(syncIndex > 0);
 
-                int previousSyncIndex = syncIndex - 1;
+                long previousSyncIndex = syncIndex - 1;
 
                 B2SolverStage stage = stages[stageIndex];
                 b2ExecuteStage(stage, context, previousSyncIndex, syncIndex, workerIndex);
@@ -1608,11 +1613,11 @@ public enum b2SolverBlockType
                 // b2_stageWarmStart
                 stageCount += activeColorCount;
                 // b2_stageSolve
-                stageCount += ITERATIONS * activeColorCount;
+                stageCount += activeColorCount;
                 // b2_stageIntegratePositions
                 stageCount += 1;
                 // b2_stageRelax
-                stageCount += RELAX_ITERATIONS * activeColorCount;
+                stageCount += activeColorCount;
                 // b2_stageRestitution
                 stageCount += activeColorCount;
                 // b2_stageStoreImpulses
@@ -1653,7 +1658,7 @@ public enum b2SolverBlockType
                     block.startIndex = i * bodyBlockSize;
                     block.count = (short)bodyBlockSize;
                     block.blockType = (short)B2SolverBlockType.b2_bodyBlock;
-                    b2AtomicStoreInt(ref block.syncIndex, 0);
+                    Interlocked.Exchange(ref block.syncIndex, 0);
                 }
 
                 bodyBlocks[bodyBlockCount - 1].count = (short)(awakeBodyCount - (bodyBlockCount - 1) * bodyBlockSize);
@@ -1665,7 +1670,7 @@ public enum b2SolverBlockType
                     block.startIndex = i * jointBlockSize;
                     block.count = (short)jointBlockSize;
                     block.blockType = (int)B2SolverBlockType.b2_jointBlock;
-                    b2AtomicStoreInt(ref block.syncIndex, 0);
+                    Interlocked.Exchange(ref block.syncIndex, 0);
                 }
 
                 if (jointBlockCount > 0)
@@ -1680,7 +1685,7 @@ public enum b2SolverBlockType
                     block.startIndex = i * contactBlockSize;
                     block.count = (short)contactBlockSize;
                     block.blockType = (int)B2SolverBlockType.b2_contactBlock;
-                    b2AtomicStoreInt(ref block.syncIndex, 0);
+                    Interlocked.Exchange(ref block.syncIndex, 0);
                 }
 
                 if (contactBlockCount > 0)
@@ -1706,7 +1711,7 @@ public enum b2SolverBlockType
                         block.startIndex = j * colorJointBlockSize;
                         block.count = (short)colorJointBlockSize;
                         block.blockType = (short)B2SolverBlockType.b2_graphJointBlock;
-                        b2AtomicStoreInt(ref block.syncIndex, 0);
+                        Interlocked.Exchange(ref block.syncIndex, 0);
                     }
 
                     if (colorJointBlockCount > 0)
@@ -1724,7 +1729,7 @@ public enum b2SolverBlockType
                         block.startIndex = j * colorContactBlockSize;
                         block.count = (short)colorContactBlockSize;
                         block.blockType = (short)B2SolverBlockType.b2_graphContactBlock;
-                        b2AtomicStoreInt(ref block.syncIndex, 0);
+                        Interlocked.Exchange(ref block.syncIndex, 0);
                     }
 
                     if (colorContactBlockCount > 0)
@@ -1777,17 +1782,14 @@ public enum b2SolverBlockType
                 }
 
                 // Solve graph
-                for (int j = 0; j < ITERATIONS; ++j)
+                for (int i = 0; i < activeColorCount; ++i)
                 {
-                    for (int i = 0; i < activeColorCount; ++i)
-                    {
-                        stage.type = B2SolverStageType.b2_stageSolve;
-                        stage.blocks = graphColorBlocks[i];
-                        stage.blockCount = colorJointBlockCounts[i] + colorContactBlockCounts[i];
-                        stage.colorIndex = activeColorIndices[i];
-                        b2AtomicStoreInt(ref stage.completionCount, 0);
-                        stage = stages[++stageIdx];
-                    }
+                    stage.type = B2SolverStageType.b2_stageSolve;
+                    stage.blocks = graphColorBlocks[i];
+                    stage.blockCount = colorJointBlockCounts[i] + colorContactBlockCounts[i];
+                    stage.colorIndex = activeColorIndices[i];
+                    b2AtomicStoreInt(ref stage.completionCount, 0);
+                    stage = stages[++stageIdx];
                 }
 
                 // Integrate positions
@@ -1799,17 +1801,14 @@ public enum b2SolverBlockType
                 stage = stages[++stageIdx];
 
                 // Relax constraints
-                for (int j = 0; j < RELAX_ITERATIONS; ++j)
+                for (int i = 0; i < activeColorCount; ++i)
                 {
-                    for (int i = 0; i < activeColorCount; ++i)
-                    {
-                        stage.type = B2SolverStageType.b2_stageRelax;
-                        stage.blocks = graphColorBlocks[i];
-                        stage.blockCount = colorJointBlockCounts[i] + colorContactBlockCounts[i];
-                        stage.colorIndex = activeColorIndices[i];
-                        b2AtomicStoreInt(ref stage.completionCount, 0);
-                        stage = stages[++stageIdx];
-                    }
+                    stage.type = B2SolverStageType.b2_stageRelax;
+                    stage.blocks = graphColorBlocks[i];
+                    stage.blockCount = colorJointBlockCounts[i] + colorContactBlockCounts[i];
+                    stage.colorIndex = activeColorIndices[i];
+                    b2AtomicStoreInt(ref stage.completionCount, 0);
+                    stage = stages[++stageIdx];
                 }
 
                 // Restitution
@@ -1852,7 +1851,7 @@ public enum b2SolverBlockType
                 stepContext.workerCount = workerCount;
                 stepContext.stageCount = stageCount;
                 stepContext.stages = stages;
-                b2AtomicStoreU32(ref stepContext.atomicSyncBits, 0);
+                Volatile.Write(ref stepContext.atomicSyncBits, 0);
 
                 world.profile.prepareStages = b2GetMillisecondsAndReset(ref prepareTicks);
                 b2TracyCZoneEnd(B2TracyCZone.prepare_stages);

@@ -88,6 +88,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var settings = ProjectSettings.Service;
         SleepSettings = PhysicsSleepSettings.FromProject(); SleepSettings.Validate();
         ContactSettings = PhysicsContactSettings.FromProject(); ContactSettings.Validate();
+        SolverIterations = settings.GetWithOverrideCore(ProjectSettings.Physics2DSolverIterations);
         ConstraintDefaultBias = settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultConstraintBias);
         DefaultAreaFields = new(settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravity),
             settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravityVector))
@@ -111,6 +112,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _worldID = b2CreateWorld(definition);
         var world = b2GetWorldFromId(_worldID);
         world.sleepAngularThreshold = SleepSettings.AngularThreshold; world.timeToSleep = SleepSettings.TimeToSleep;
+        world.solverIterations = SolverIterations;
         world.contactBias = ContactSettings.Bias; world.contactAllowedPenetration = ContactSettings.AllowedPenetration * MetersPerUnit;
         _tasks.Bind(world);
         world.workerCount = 1;

@@ -18,6 +18,6 @@ namespace Box2D.NET
         public short blockType; // b2SolverBlockType
 
         // todo consider false sharing of this atomic
-        public B2AtomicInt syncIndex;
+        public long syncIndex;
     }
 }

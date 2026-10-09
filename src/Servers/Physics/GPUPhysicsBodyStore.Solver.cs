@@ -28,15 +28,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal readonly double[] SolverPassMS = new double[7];
 
     /// <summary>Advances resident force/contact/pose stages and connected sleep, skipping device-confirmed unchanged inactive worlds.</summary>
-    internal void Simulate(float delta, Vector2 gravity, int substeps = 4, int iterations = 16,
+    internal void Simulate(float delta, Vector2 gravity, int substeps = 4, int? iterations = null,
         float margin = 2, float? allowedPenetration = null, float? correctionFactor = null,
         float maxCorrectionSpeed = 200, float bounceThreshold = 100) =>
         SimulateFields(delta, new FieldParameters(gravity, 1), substeps, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
 
-    internal void SimulateFields(float delta, in FieldParameters defaults, int substeps = 4, int iterations = 16,
+    internal void SimulateFields(float delta, in FieldParameters defaults, int substeps = 4, int? iterations = null,
         float margin = 2, float? allowedPenetration = null, float? correctionFactor = null,
         float maxCorrectionSpeed = 200, float bounceThreshold = 100)
     {
+        var sweeps = iterations ?? _solverIterations;
         var penetration = allowedPenetration ?? _contactSettings.AllowedPenetration;
         var bias = correctionFactor ?? _contactSettings.Bias;
         EnsureAccess(); ValidateFields(defaults);
@@ -44,9 +45,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!float.IsFinite(delta) || delta < 0 || substeps < 1) throw new ArgumentOutOfRangeException(nameof(delta));
         if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var h = delta / substeps;
-        ValidateSolver(delta == 0 ? 1 : h, iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
+        ValidateSolver(delta == 0 ? 1 : h, sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
         _contactTickDuration = delta; _jointTickBias = correctionFactor ?? _constraintDefaultBias;
-        RememberSleepSolver(iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
+        RememberSleepSolver(sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
         PrepareMasses();
         if (_highWater == 0) return;
         if (delta == 0) { Step(0, default); return; }
@@ -62,8 +63,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             {
                 var dampingDelta = substep == 0 ? delta : 0;
                 Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta, beginTick: substep == 0, resolvedFields: resolved);
-                SolveConstraintsCore(h, iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, gravity, dampingDelta: dampingDelta);
-                if ((_ccdBodyCount > 0 || _kinematicBodyCount > 0) && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
+                SolveConstraintsCore(h, sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, gravity, dampingDelta: dampingDelta);
+                if ((_ccdBodyCount > 0 || _kinematicBodyCount > 0) && ShapeCount > 0) AdvanceContinuous(h, gravity, sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
                 else Submit(h, default, default, default, 4, _hasPositionCorrections, endTick: substep == substeps - 1);
                 _hasPositionCorrections = false;
             }
@@ -75,15 +76,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
 
     /// <summary>Solves current contacts, pins, grooves and axial springs on the device without advancing poses.</summary>
-    internal void SolveConstraints(float delta, int iterations = 16, float margin = 2,
+    internal void SolveConstraints(float delta, int? iterations = null, float margin = 2,
         float? allowedPenetration = null, float? correctionFactor = null, float maxCorrectionSpeed = 200, float bounceThreshold = 100)
     {
+        var sweeps = iterations ?? _solverIterations;
         var penetration = allowedPenetration ?? _contactSettings.AllowedPenetration;
         var bias = correctionFactor ?? _contactSettings.Bias;
-        EnsureAccess(); ValidateSolver(delta, iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
+        EnsureAccess(); ValidateSolver(delta, sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold);
         _contactTickDuration = delta; _jointTickBias = correctionFactor ?? _constraintDefaultBias;
         BeginContactReports();
-        try { SolveConstraintsCore(delta, iterations, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, null); EndContactReports(); }
+        try { SolveConstraintsCore(delta, sweeps, margin, penetration, bias, maxCorrectionSpeed, bounceThreshold, null); EndContactReports(); }
         catch { _failed = true; throw; }
     }
 

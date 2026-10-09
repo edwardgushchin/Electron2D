@@ -291,3 +291,9 @@ binding and the other contact/iteration settings remain open.
 shares validated defaults, live policy propagation and inherited shape storage across
 CPU and independent GPU solvers under [ADR 0098](../decisions/physics-contacts.md#adr-0098).
 Public independent-GPU world selection and networking remain open.
+
+[Solver iteration settings](../components/physics-contact-policy.md#solver-iterations)
+now control contact and joint convergence through typed project/world operations on
+CPU and the independent GPU store. Default sixteen, live wake semantics, shared
+numerical/temporal checks and bounded CPU stage storage replace the fixed one-pass
+CPU policy. Public independent-GPU binding remains open.

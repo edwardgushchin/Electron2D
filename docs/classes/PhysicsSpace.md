@@ -108,3 +108,9 @@ attachments read the current policy. The shared [sleep report](../components/phy
 records exact threshold/delay semantics and scene/server verification.
 
 World contact settings capture validated project bias/slack and feed native contact preparation with the outer tick duration. Typed edits wake dynamic bodies without rebuilding fixtures. See [contact policy](../components/physics-contact-policy.md).
+
+SolverIterations captures the typed project setting when the world is created and
+feeds both scalar overflow and colored SIMD contacts/joints. SetSolverIterations
+validates before changing native policy and shares WakeDynamicBodies with contact
+settings. The internal raw backend default remains one for isolated diagnostics;
+Electron2D world creation explicitly applies its captured setting (default sixteen).

@@ -56,7 +56,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `StepFields`, `SimulateFields` | Integration-only/full-step variants accepting directional or point world defaults with signed damping. Plain vector-gravity calls retain zero default damping. |
 | `FieldSubmissionCount`, `FieldMS`, `FieldWaitMS` | Field reduction batches and inclusive membership/definition/reduction time plus its included waits. |
 | `Step` | Flush pending edits and integrate live bodies on GPU. Static poses stay fixed, kinematics ignore forces/gravity, rigid bodies use mass/inertia/gravity/signed damping, RigidLinear locks rotation. |
-| `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Damping is applied once before the outer tick's force integration; default-force omission preserves contacts and impulses. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
+| `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Damping is applied once before the outer tick's force integration; default-force omission preserves contacts and impulses. Defaults: four substeps, captured project iteration count (sixteen), margin 2, captured contact slack/bias (0.3/0.8), correction speed 200 and bounce threshold 100 in scene units. Inherited joint bias remains separately captured (0.2). |
 | `SolveConstraints` | Solve contacts, pins, grooves and springs together and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
 | `AddJoint`, `SetJoint`, `GetJointDefinition`, `RemoveJoint` | Own generation-safe device connections and authored settings, validated local frames, per-joint bias/softness/force/correction policies and independent collision vetoes; endpoint removal unlinks dependent joints. See [resident joints](../components/gpu-resident-joints.md). |
 | `SetCollisionException`, `HasCollisionException` | Retain directed live-body exceptions; either direction vetoes solid pairs. Joint contributions remain independent and sensors retain directional masks. Endpoint removal unlinks incoming/outgoing edges; see [resident exceptions](../components/gpu-resident-exceptions.md). |
@@ -207,3 +207,10 @@ sleep wins. Unchanged settings retain state. [World sleep policy](../components/
 records the per-edit transfer cost and shared CPU checks.
 
 ContactPolicy captures shared world defaults and queues ordinary wake commands on edits. Shape policy uses an existing device word and an independent epoch; no vertex or pose mirror is introduced. Solver uniforms are 80 bytes and carry the nominal-tick exponent and separate inherited joint bias. See [contact policy](../components/physics-contact-policy.md).
+
+GetSolverIterations/SetSolverIterations expose the internal captured world policy.
+Simulate, SimulateFields and SolveConstraints use it when their optional iterations
+argument is absent; an explicit diagnostic argument affects only that call.
+Changed world counts use ordered dynamic wake commands, preserving a later explicit
+sleep edit. Equal/invalid writes do not invalidate history or wake bodies. Counts
+flow unchanged into CCD continuations; force/time budgets remain separate.

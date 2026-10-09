@@ -1376,3 +1376,13 @@ must survive conversion. Both are registered built-ins and support feature overr
 Each world captures current values at construction. Existing worlds use the typed
 [PhysicsServer](PhysicsServer.md#world-contact-correction) setters instead. Shape zero
 bias inherits the world; slack controls correction only, not contact creation.
+
+<a id="physics2dsolveriterations"></a>
+## `Physics2DSolverIterations`
+
+`public static ProjectSetting<int> Physics2DSolverIterations { get; }` is the
+registered built-in `physics/2d/solver/solver_iterations`, default sixteen. It accepts
+positive integers and supports feature overrides. New CPU and independent GPU worlds
+capture it; existing worlds retain their count until their typed world setter is
+called. The count controls contact/joint sweeps, not time substeps. See
+[PhysicsServer](PhysicsServer.md#solver-iteration-count) for semantics and errors.

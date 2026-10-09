@@ -90,3 +90,74 @@ The resident loop uploads 472 B of buffers and 27,604 B of uniforms and reads
 `/tmp/electron2d-contact-policy-collider.log` and
 `/tmp/electron2d-contact-policy-gpu-suite.log`. This deliberately tiny case exposes
 submission overhead; it is not a large-world CPU/GPU performance comparison.
+
+## Solver iterations
+
+SpaceGetSolverIterations and SpaceSetSolverIterations use a positive integer, sampled
+from Physics2DSolverIterations (default sixteen). Existing worlds retain their count
+when project defaults change. Invalid/equal values preserve prior state; a changed
+count wakes dynamics and resets quiet timers. An explicit sleep written afterward
+wins. Owner/solver/lifetime validation applies to both accessors.
+
+The count controls complete contact and joint sweeps within each time substep.
+CPU repeats correction-enabled solving and relaxation separately; the independent
+GPU repeats its coupled physical/position constraint passes. Integration, force
+consumption, restitution and nominal joint/CCD budgets do not repeat per sweep.
+Different algorithms need not converge equally fast at the same count.
+
+CPU keeps one descriptor per stage/color and reuses it for all sweeps. Block claims
+and cancellation use 64-bit atomics with a 48-bit phase ordinal, avoiding wrap at
+65,536 phases without a policy clamp or per-iteration storage. Raw private backend
+worlds keep one sweep for diagnostic controls; public world creation applies the
+captured setting. Resident optional per-call iterations remain diagnostic overrides
+and do not change the stored world value or its getter.
+
+PhysicsSolverIterationTests runs the same eight-body contact and pin-chain cases on
+CPU, stage GPU and resident GPU. Initial momentum is 60 kg*u/s and the converged
+common speed is 7.5 u/s. After a 1/60-second tick, 128 sweeps must reduce RMS velocity
+error below 40% of the one-sweep result and below 0.5 u/s; this latter bound is under
+7% of the equilibrium speed. Momentum error is below 0.03 kg*u/s. A separate free
+body moving at 40 u/s advances 0.8 u over 0.02 seconds within 0.00003 u at 1/16/128
+sweeps, checking that iteration count does not multiply time. The same free-body
+check accepts int.MaxValue sweeps: worlds without contacts/joints skip the empty
+iteration loop entirely. The prior attempted
+32-sweep common convergence budget was insufficient for the resident Jacobi chain
+(1.601325 u/s contact RMS); the convergence test uses 128 on every path instead of
+assuming CPU and GPU convergence rates match.
+
+A CPU-only 256-body/128-pair check executes 8193 sweeps per each of four substeps,
+with multiple graph work blocks and more than 65,535 phases. Storage prepared at
+one sweep remains sufficient, and the measured high-count step allocates zero
+managed bytes. Worker failure cancellation is covered separately by PhysicsParallelTests.
+
+Small-world measurements use 256 active bodies in 32 eight-circle rows, shared
+4 u/s velocity, no gravity/friction/correction, four substeps, 128 warmup and 128
+samples per count. These are controlled iteration-cost probes with all bodies and
+contacts retained, not large-world GPU speedup or window-FPS acceptance.
+
+Linux/.NET 10 Release, Vulkan/NVIDIA GeForce RTX 3090 Ti, 256-body probe:
+
+| Path | Sweeps | p50 / p95 / p99, ms | Managed bytes / 128 ticks |
+| --- | --- | --- | --- |
+| Public CPU, dummy video | 1 | 0.1136 / 0.1450 / 0.1550 | 0 |
+| Public CPU, dummy video | 16 | 0.3670 / 0.4000 / 0.4055 | 0 |
+| Public CPU, dummy video | 32 | 0.6443 / 0.6900 / 0.7388 | 0 |
+| CPU host/GPU stages | 1 | 0.4677 / 0.7663 / 0.9880 | 0 |
+| CPU host/GPU stages | 16 | 2.0894 / 2.4477 / 2.5976 | 0 |
+| CPU host/GPU stages | 32 | 3.9832 / 4.3127 / 4.4319 | 0 |
+| Independent resident GPU | 1 | 1.6085 / 2.2604 / 3.2013 | 0 |
+| Independent resident GPU | 16 | 2.1984 / 2.8653 / 3.7316 | 0 |
+| Independent resident GPU | 32 | 2.8541 / 3.5612 / 4.5762 | 0 |
+
+Resident upload/readback remain 160/160 B per tick at all counts, with no pose reads
+in the measurement loop. Uniform traffic is 7,480 / 17,080 / 27,320 B and included
+mean wait is 1.0334 / 1.3143 / 1.6409 ms at 1/16/32 sweeps. CPU's 8193-sweep step
+completed in 64.065 ms with zero managed bytes. Contact/pin RMS error at 128 sweeps:
+CPU and stage GPU about 0.000002 u/s, resident GPU 0.071448 / 0.028477 u/s. These
+figures establish convergence and expose small-workload dispatch cost; equal counts
+do not promise equal numerical work or GPU acceleration. Logs:
+`/tmp/e2d-iterations-final-cpu.log`, `/tmp/e2d-iterations-final-stages.log`,
+`/tmp/e2d-iterations-final-resident.log`. CPU/GPU broad suites and parallel failure
+checks passed; focused checks were repeated after the empty-iteration optimization. Native allocation,
+other devices/platforms, real-window FPS, public GPU selection and network acceptance
+remain unverified by this iteration-setting slice.

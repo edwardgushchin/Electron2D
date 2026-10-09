@@ -225,6 +225,11 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<float> Physics2DContactMaxAllowedPenetration { get; } =
         new("physics/2d/solver/contact_max_allowed_penetration", .3f, PhysicsContactSettings.ValidPenetration);
 
+    /// <summary>Defines the number of contact and joint solver sweeps per simulation substep.</summary>
+    /// <value>physics/2d/solver/solver_iterations; defaults to sixteen and accepts positive integers. Each new world captures feature overrides.</value>
+    public static ProjectSetting<int> Physics2DSolverIterations { get; } =
+        new("physics/2d/solver/solver_iterations", 16, value => value > 0);
+
     /// <summary>Defines the positional correction fraction inherited by joints whose bias is zero.</summary>
     /// <value>physics/2d/solver/default_constraint_bias; defaults to 0.2 and accepts finite values from zero to one. Sampled when a physics space is created.</value>
     public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; } =

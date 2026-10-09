@@ -353,3 +353,8 @@ PhysicsSleepPolicyTests verifies public policy behavior on this path separately 
 the independent GPU store.
 
 The legacy contact solver packs mixed correction rate/slack in contact-input padding. Its 80-byte step uniform includes elapsed virtual-surface time; CPU and GPU use the same displacement when relaxing contact impulses. See [contact policy](../components/physics-contact-policy.md).
+
+The legacy solver repeats complete contact/joint biased and relaxation sweeps using
+the CPU world's configured positive solverIterations. Preparation, velocity/position
+integration and restitution retain their original cadence. This path still uses
+CPU world ownership; the independent store has its own iteration loop.

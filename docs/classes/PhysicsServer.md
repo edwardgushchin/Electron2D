@@ -673,3 +673,21 @@ ArgumentException, InvalidOperationException and ArgumentOutOfRangeException res
 before mutation. Inactive worlds remain configurable. Source:
 [ContactPolicy.API](../../src/Servers/Physics/PhysicsServer.ContactPolicy.API.cs).
 See [contact policy](../components/physics-contact-policy.md) for backend limits.
+
+## Solver iteration count
+
+| Signature | Contract |
+| --- | --- |
+| `public static int SpaceGetSolverIterations(RID space)` | Current positive sweep count, initially the captured project value. |
+| `public static void SpaceSetSolverIterations(RID space, int value)` | Sets contact and joint sweeps per scheduled substep. |
+
+The project default is sixteen. This count controls convergence work independently
+of time integration and substep count. CPU performs that many biased and relaxation
+sweeps; resident GPU uses its physical/position iteration loop. Higher counts do not
+multiply force or correction budgets. Positive integer requests are retained without
+clamping; large requests can be expensive. Nonpositive values throw
+ArgumentOutOfRangeException before mutation. A changed count wakes dynamics and
+resets quiet timers; equal writes preserve them. These operations use the same
+RID, owner-thread and solver-phase guards as world contact settings, including
+inactive spaces and scene-owned RIDs. Source: [ContactPolicy.API](../../src/Servers/Physics/PhysicsServer.ContactPolicy.API.cs).
+See [solver settings](../components/physics-contact-policy.md#solver-iterations).

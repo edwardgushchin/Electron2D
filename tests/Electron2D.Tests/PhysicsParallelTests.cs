@@ -54,7 +54,7 @@ internal static class PhysicsParallelTests
             var failed = scheduler.Enqueue(static (_, _, _, _) => throw new ArithmeticException("probe"), 3, 1, worker, null!);
             try { scheduler.Finish(failed, null!); throw new Exception("Worker failure was ignored."); }
             catch (InvalidOperationException ex) when (ex.InnerException is ArithmeticException) { }
-            Check(worker.context.workerFailure is ArithmeticException && B2Atomics.b2AtomicLoadU32(ref worker.context.atomicSyncBits) == uint.MaxValue,
+            Check(worker.context.workerFailure is ArithmeticException && Volatile.Read(ref worker.context.atomicSyncBits) == long.MaxValue,
                 "Solver failure publishes cancellation to waiting workers.");
             scheduler.Finish(scheduler.Enqueue(Fill, values.Length, 16, values, null!), null!);
             Check(values.All(value => value == 161), "All failed task ranges finish and storage remains reusable.");

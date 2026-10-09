@@ -113187,6 +113187,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetSolverIterations(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetSolverIterations",
+    "signature": "public static System.Int32 SpaceGetSolverIterations(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceIsActive(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -113367,6 +113386,30 @@
       {
         "name": "value",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetSolverIterations(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetSolverIterations",
+    "signature": "public static System.Void SpaceSetSolverIterations(Electron2D.RID space, System.Int32 value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -183395,6 +183438,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DSolverIterations()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DSolverIterations",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E Physics2DSolverIterations { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

@@ -100,7 +100,7 @@ internal sealed class PhysicsTaskScheduler : IDisposable
                     if (work.Context is B2WorkerContext worker)
                     {
                         Interlocked.CompareExchange(ref worker.context.workerFailure, ex, null);
-                        B2Atomics.b2AtomicStoreU32(ref worker.context.atomicSyncBits, uint.MaxValue);
+                        Volatile.Write(ref worker.context.atomicSyncBits, long.MaxValue);
                     }
                 }
                 finally { if (Interlocked.Decrement(ref work.Parent.Remaining) == 0) work.Parent.Done.Set(); }

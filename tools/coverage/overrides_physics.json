@@ -1219,6 +1219,11 @@
       "godot": "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxAllowedPenetration()",
       "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/solver_iterations",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DSolverIterations()",
+      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Public independent-GPU binding remains open."
     }
   ],
   "extras": [
@@ -2093,6 +2098,16 @@
       "electron2d": "method:Electron2D.Shape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "reason": "Shared shape copying preserves inherited custom solver bias; concrete hooks publish geometry revisions.",
       "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetSolverIterations(Electron2D.RID)",
+      "reason": "Concrete typed integer branch of the space-parameter dispatcher; owner/phase guards, world capture and convergence behavior execute.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetSolverIterations(Electron2D.RID,System.Int32)",
+      "reason": "Concrete typed integer branch of the space-parameter dispatcher; owner/phase guards, world capture and convergence behavior execute.",
+      "adr": "ADRs 0004, 0098"
     }
   ],
   "statusGroups": [
@@ -3495,7 +3510,7 @@
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
       "state": "Partial",
-      "reason": "Typed constraint bias, sleep thresholds/duration and contact bias/allowed penetration execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089/0098). Contact recycling/max separation and solver iteration settings remain open; public independent-GPU binding remains open."
+      "reason": "Typed constraint bias, sleep thresholds/duration contact bias/allowed penetration and solver iterations execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089/0098). Contact recycling/max separation remain open; public independent-GPU binding remains open."
     },
     {
       "godot": [
@@ -3594,6 +3609,20 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0098: numeric selector represented by typed SpaceGetContactMaxAllowedPenetration/SpaceSetContactMaxAllowedPenetration; actual contact correction executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/solver_iterations"
+      ],
+      "state": "Implemented",
+      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Public independent-GPU binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_SOLVER_ITERATIONS"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0098: numeric selector represented by typed positive integer SpaceGetSolverIterations/SpaceSetSolverIterations; actual contact and joint iteration behavior executes."
     }
   ]
 }

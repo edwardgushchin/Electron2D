@@ -2,6 +2,23 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    /// <summary>Gets the number of contact and joint solver sweeps per simulation substep.</summary>
+    /// <param name="space">A live scene-owned or server-created physics space.</param>
+    /// <returns>A positive count sampled from project settings when the space was created, initially sixteen.</returns>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static int SpaceGetSolverIterations(RID space) => Service.SpaceGetSolverIterationsCore(space);
+
+    /// <summary>Sets the number of contact and joint solver sweeps per simulation substep.</summary>
+    /// <param name="space">A live scene-owned or server-created physics space.</param>
+    /// <param name="value">A positive number of sweeps. Higher counts increase convergence work and step cost.</param>
+    /// <remarks>The setting does not change the number of time substeps, elapsed time, force or correction budgets.
+    /// A changed value wakes dynamics and resets quiet timers; an equal value preserves them.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The count is not positive.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static void SpaceSetSolverIterations(RID space, int value) => Service.SpaceSetSolverIterationsCore(space, value);
+
     /// <summary>Gets the world's outer-tick contact correction fraction.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The current value as a fraction in [0,1], initially sampled from project defaults.</returns>

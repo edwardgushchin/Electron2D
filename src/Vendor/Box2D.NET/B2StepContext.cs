@@ -116,8 +116,8 @@ namespace Box2D.NET
         // todo padding to prevent false sharing
         public B2FixedArray64<byte> dummy1;
 
-        // sync index (16-bits) | stage type (16-bits)
-        public B2AtomicU32 atomicSyncBits;
+        // sync index (48-bits) | stage index (16-bits)
+        public long atomicSyncBits;
 
         public B2FixedArray64<byte> dummy2;
     }
