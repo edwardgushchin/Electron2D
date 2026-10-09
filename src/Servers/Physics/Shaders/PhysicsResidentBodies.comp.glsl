@@ -4,7 +4,7 @@
 layout(local_size_x = 64) in;
 
 struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; vec4 transientForce; vec4 target; };
-struct Snapshot { vec4 pose; vec4 velocity; float clock; uint flags; uvec2 padding; };
+struct Snapshot { vec4 pose; vec4 velocity; vec4 fields; float clock; uint flags; uvec2 padding; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Corrections { vec4 corrections[]; };
@@ -14,6 +14,7 @@ layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
 layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
 layout(std430,set=1,binding=4) buffer TransientForces { vec4 transientForces[]; };
 layout(std430,set=1,binding=5) buffer Targets { vec4 targets[]; };
+layout(std430,set=1,binding=6) buffer Fields { vec4 fields[]; };
 layout(std140, set = 2, binding = 0) uniform Settings { vec4 step; uvec4 control; };
 
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
@@ -29,9 +30,9 @@ void main()
         Command c = commands[i];
         uint index = c.header.x, generation = c.header.y, mask = c.header.z;
         if (index >= control.z) { fail(1u); return; }
-        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 32, 0)); centers[index]=vec2(0); transientForces[index]=vec4(0); targets[index]=vec4(0); return; }
+        if ((mask & 2u) != 0u) { bodies[index] = ResidentBody(vec4(0), vec4(0), vec4(0), vec4(0), vec4(0), uvec4(generation, 0, 32, 0)); centers[index]=vec2(0); transientForces[index]=vec4(0); targets[index]=vec4(0); fields[index]=vec4(0); return; }
         ResidentBody b;
-        if ((mask & 1u) != 0u) { b = c.body; centers[index] = c.center.xy; targets[index]=vec4(0); }
+        if ((mask & 1u) != 0u) { b = c.body; centers[index] = c.center.xy; targets[index]=vec4(0); fields[index]=vec4(0); }
         else
         {
             b = bodies[index];
@@ -49,7 +50,7 @@ void main()
         if ((mask & 8192u) != 0u)
         {
             b.force.w=c.body.force.w;b.properties.zw=c.body.properties.zw;
-            b.flags.z=(b.flags.z&~1028u)|(c.body.flags.z&1028u);
+            b.flags.z=(b.flags.z&~50180u)|(c.body.flags.z&50180u);
         }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
@@ -75,6 +76,12 @@ void main()
     {
         ResidentBody b = bodies[i];
         if (b.flags.w == 0u) return;
+        vec4 selected=fields[i];
+        if((control.w&1u)!=0u&&(control.w&4u)==0u)
+        {
+            if(!resolveBodyFields(b,selected,vec4(step.xy,0,0),step.w)){fail(2u);return;}
+            fields[i]=selected;
+        }
         vec4 pending=transientForces[i];
         // Select once at outer-tick entry. A sleeper woken by this tick's contacts
         // retains its queued force until the next tick, as does a static body.
@@ -99,7 +106,7 @@ void main()
         float dt = step.z;
         if (control.x != 4u && b.flags.y >= 2u)
         {
-            bodyForces(b,dt,step.xy,step.w,pending.w!=0?pending.xyz:vec3(0));
+            bodyForces(b,dt,selected,step.w,pending.w!=0?pending.xyz:vec3(0));
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
         if (control.x != 3u)
@@ -131,6 +138,6 @@ void main()
         if (request.x >= control.z) { fail(1u); return; }
         ResidentBody b = bodies[request.x];
         if (b.flags.w == 0u || b.flags.x != request.y) { fail(1u); return; }
-        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz+b.surface.xyz,0), b.velocity.w, b.flags.z, uvec2(b.flags.y,0));
+        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz+b.surface.xyz,0), fields[request.x], b.velocity.w, b.flags.z, uvec2(b.flags.y,0));
     }
 }

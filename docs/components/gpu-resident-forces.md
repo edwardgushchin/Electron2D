@@ -47,13 +47,13 @@ new generation empty. Capacity growth copies pending input GPU-to-GPU.
 | --- | --- |
 | Device transient force | 16 bytes per retained body: force xy, torque and outer-tick eligibility. No CPU mirror. |
 | Coalesced body command | Now 176 bytes with kinematic target/surface input; appended vec4 carries only unsubmitted force additions. Successful submission clears CPU staging. |
-| Device body / selected snapshot | Now 96 / 48 bytes after kinematic surface motion; transient input remains outside the hot body record. |
-| CPU body metadata | Now 104 bytes with authored surface velocity per reserved slot. It contains configuration and identity, not submitted pending-force totals. |
+| Device body / selected snapshot | Now 96 / 64 bytes with resolved field publication; transient input remains outside the hot body record. |
+| CPU body metadata | Now 112 bytes with authored surface velocity/damping modes per reserved slot. It contains configuration and identity, not submitted pending-force totals. |
 | Ordinary tick | Existing body passes perform eligibility and consumption. No additional dispatch, fence, status traffic or state readback. |
 | Growth | Additional 16 bytes per prior body copied device-to-device; counted in DeviceCopyBytes. |
 
 At 65,536 slots the additional device force buffer and command capacity each cost
-1 MiB; CPU metadata plus pending commands now totals 18,350,080 bytes (17.5 MiB) after [kinematic target storage](gpu-resident-kinematic.md).
+1 MiB; CPU metadata plus pending commands now totals 18,874,368 bytes (18 MiB) after [kinematic target storage](gpu-resident-kinematic.md).
 The side buffer is bound only to body integration/edits and sleep-wake integration,
 not to the iterative contact/joint kernels. This avoids expanding their hot body
 record for an input they do not use.

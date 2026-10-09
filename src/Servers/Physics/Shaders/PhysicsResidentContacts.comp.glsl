@@ -141,10 +141,11 @@ void main()
     Geometry ga=geometries[sa.owner.z],gb=geometries[sb.owner.z];
     if(bodyA.flags.x!=sa.owner.y||bodyB.flags.x!=sb.owner.y||bodyA.flags.w==0u||bodyB.flags.w==0u||ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}
     if(ga.data.y==0u||gb.data.y==0u)return;
-    sensor=((sa.policy.w|sb.policy.w)&2u)!=0u;contactLimit=sensor?0:tolerances.x;
+    sensor=((sa.policy.w|sb.policy.w)&2u)!=0u;contactLimit=sensor?tolerances.w:tolerances.x;
     shapeA=sa;shapeB=sb;oneWay=!sensor&&((sa.policy.w|sb.policy.w)&4u)!=0u;
     oneWayRevisions=uvec4(sa.revision.x,sb.revision.x,ga.revision,gb.revision);
-    if((ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
+    if((!sensor&&ga.data.z==5u&&gb.data.z==5u)||(ga.data.z==6u&&gb.data.z==6u))return;
+    if(sensor&&(ga.data.z==6u||gb.data.z==6u))contactLimit=0;
     if(ga.data.z==6u){rayContact(sa,ga,bodyA,sb,gb,bodyB,false);return;}
     if(gb.data.z==6u){rayContact(sb,gb,bodyB,sa,ga,bodyA,true);return;}
     uint na=ga.data.z==5u?ga.data.y/2u:1u,nb=gb.data.z==5u?gb.data.y/2u:1u;

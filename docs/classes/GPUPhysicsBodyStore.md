@@ -7,6 +7,7 @@ Last updated: 2026-10-09
 **Source:** [GPUPhysicsBodyStore.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.cs),
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
 [mass](../../src/Servers/Physics/GPUPhysicsBodyStore.Mass.cs),
+[Area fields](../../src/Servers/Physics/GPUPhysicsBodyStore.Fields.cs),
 [kinematic targets](../../src/Servers/Physics/GPUPhysicsBodyStore.Kinematic.cs),
 [live body parameters](../../src/Servers/Physics/GPUPhysicsBodyStore.Parameters.cs),
 [sleep](../../src/Servers/Physics/GPUPhysicsBodyStore.Sleep.cs),
@@ -39,10 +40,13 @@ and network replay remain open. See [resident contact response](../components/gp
 | `Add(BodyDefinition)` | Validate finite authored values, allocate a generation-qualified slot and queue its initial device record. |
 | `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes, joints and live exception edges immediately; queue device removal. Reuse gets a fresh generation. |
 | `SetMode`, `GetMode` | Change/read the authored solver role without replacing handles or attachments. Nondynamic transitions clear motion, RigidLinear clears angular motion, and dynamic restoration retains configured mass/forces/CCD. |
-| `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, resolved signed damping, dynamic rotation lock and default-force omission. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
+| `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, authored signed damping and its Combine/Replace modes, dynamic rotation lock and default-force omission. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
 | `ApplyForce` | Accumulate resolved world-axis transient force and center torque until the next eligible outer tick. Static/sleeping entry retains it; kinematic or omitted integration consumes it. See [lifetime, traffic and error boundaries](../components/gpu-resident-forces.md). |
 | `SetKinematicTarget` | Replace the pending world destination for a kinematic body. Reads/zero-time work retain it; target derivation and continuous path response execute on device. See [kinematic targets](../components/gpu-resident-kinematic.md). |
+| `SetAreaFields`, `RemoveAreaFields` | Bind/remove authored Area profiles on static sensor owners; current membership, independent priority channels, field changes and body policy execute on GPU. See [resident fields](../components/gpu-resident-fields.md). |
+| `StepFields`, `SimulateFields` | Integration-only/full-step variants accepting directional or point world defaults with signed damping. Plain vector-gravity calls retain zero default damping. |
+| `FieldSubmissionCount`, `FieldMS`, `FieldWaitMS` | Field reduction batches and inclusive membership/definition/reduction time plus its included waits. |
 | `Step` | Flush pending edits and integrate live bodies on GPU. Static poses stay fixed, kinematics ignore forces/gravity, rigid bodies use mass/inertia/gravity/signed damping, RigidLinear locks rotation. |
 | `Simulate` | Split force/contact/pose substeps with physical impulse solving and separate penetration correction. Damping is applied once before the outer tick's force integration; default-force omission preserves contacts and impulses. Defaults: four substeps, sixteen iterations, margin 2, allowed penetration 0.5, correction factor 0.2, correction speed 200 and bounce threshold 100 in scene units. |
 | `SolveConstraints` | Solve contacts, pins, grooves and springs together and prepare correction scratch without advancing pose. Warm history remains device-local and versioned. |
@@ -56,7 +60,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `SetCCDMode`, `GetCCDMode` | Internal Disabled/CastRay/CastShape policy with independent GPU swept bounds, contact intervals and no CPU trajectory mirror; see [CCD](../components/gpu-resident-ccd.md). |
 | `CCDQueryCount`, `CCDIntervalCount`, `CCDWaitMS` | TOI dispatches, split/refinement intervals and TOI summary waits. |
 | `ActiveSimulationBodyCount` | Last completed simulation count of awake dynamics and moving nondynamic surfaces. Version-checked zero enables an unchanged idle-world skip. |
-| `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities/sleep, role and effective lock/omission flags. The record remains 48 bytes. |
+| `Read` | Validate caller-owned handles and destination, flush edits without advancing time and gather only requested poses/velocities/sleep, role and effective lock/omission flags. The record is now 64 bytes including last resolved gravity/damping and initialization state. |
 | `AddShape`, `RemoveShape` | Borrow a shared Shape resource, retain one GPU geometry record per resource and a generation-qualified attachment per shape slot. Body deletion invalidates attachments; resource disposal makes their bounds inactive. |
 | `SetShapePose`, `SetShapeFilter` | Coalesce unit-scale local placement and 32-bit layer/mask/sensor edits. |
 | `FindPairs` | Flush authored edits without advancing time; derive bounds from device poses, refit/sort the device tree and retain complete canonical shape pairs on GPU. Return only count/error status. An optional nonnegative scene-unit margin expands both bounds by half the margin. Reuse unchanged results; grow/retry an immutable batch on overflow. |
@@ -134,7 +138,7 @@ centers, profile/impulse order, resource revisions and zero-allocation warm edit
 AuthoredBodyCapacityBytes measures only retained CPU body-slot/command payload.
 Local centers use a separate 8-byte device record and no hot full-state mirror.
 
-GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime in 48 bytes. It is internal state publication, not public event delivery.
+GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime; the current 64-byte record also includes resolved fields. It is internal state publication, not public event delivery.
 
 
 GPUPhysicsJointPolicyTests checks internal per-joint bias, vector correction/force
@@ -156,3 +160,7 @@ Static/kinematic velocity is now virtual surface motion. SetPose teleports and
 cancels pending targets; Snapshot.Velocity combines actual target travel with
 virtual motion. GPUPhysicsKinematicTests verifies this against the public CPU
 contract and checks target/idle/continuous/contact/joint behavior and allocation.
+
+GPUPhysicsFieldTests compares priority, point/damping/body modes, actual geometry,
+wake/lifetime/error behavior against public CPU operations and measures a complete
+4,096-receiver field population with zero warmed owner-thread allocations.

@@ -29,31 +29,39 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     /// <summary>Advances resident force/contact/pose stages and connected sleep, skipping device-confirmed unchanged inactive worlds.</summary>
     internal void Simulate(float delta, Vector2 gravity, int substeps = 4, int iterations = 16,
         float margin = 2, float allowedPenetration = 0.5f, float correctionFactor = 0.2f,
+        float maxCorrectionSpeed = 200, float bounceThreshold = 100) =>
+        SimulateFields(delta, new FieldParameters(gravity, 1), substeps, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
+
+    internal void SimulateFields(float delta, in FieldParameters defaults, int substeps = 4, int iterations = 16,
+        float margin = 2, float allowedPenetration = 0.5f, float correctionFactor = 0.2f,
         float maxCorrectionSpeed = 200, float bounceThreshold = 100)
     {
-        EnsureAccess();
-        if (!float.IsFinite(delta) || delta < 0 || !gravity.IsFinite() || substeps < 1) throw new ArgumentOutOfRangeException(nameof(delta));
+        EnsureAccess(); ValidateFields(defaults);
+        var gravity = defaults.GravityPoint ? Vector2.Zero : defaults.GravityVector * defaults.Gravity;
+        if (!float.IsFinite(delta) || delta < 0 || substeps < 1) throw new ArgumentOutOfRangeException(nameof(delta));
+        if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
         var h = delta / substeps;
         ValidateSolver(delta == 0 ? 1 : h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
         RememberSleepSolver(iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold);
         PrepareMasses();
         if (_highWater == 0) return;
         if (delta == 0) { Step(0, default); return; }
-        if (_sleepGravityKnown && _sleepGravity != gravity) _wakeAllSleep = true;
-        _sleepGravity = gravity; _sleepGravityKnown = true;
         if (ActiveSimulationBodyCount == 0 && !_wakeAllSleep && _pendingCount == 0 &&
+            _steppedDefaults == defaults && _steppedFieldVersion == _fieldVersion &&
             _sleepBodyVersion == _bodyVersion && _sleepShapeVersion == _shapeVersion && _sleepGeometryEpoch == Shape.GeometryEpoch) return;
         try
         {
+            var resolved = PrepareFields(defaults, delta, margin);
             for (var substep = 0; substep < substeps; substep++)
             {
                 var dampingDelta = substep == 0 ? delta : 0;
-                Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta, beginTick: substep == 0);
+                Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta, beginTick: substep == 0, resolvedFields: resolved);
                 SolveConstraintsCore(h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, gravity, dampingDelta: dampingDelta);
                 if ((_ccdBodyCount > 0 || _kinematicBodyCount > 0) && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
                 else Submit(h, default, default, default, 4, _hasPositionCorrections, endTick: substep == substeps - 1);
                 _hasPositionCorrections = false;
             }
+            _steppedDefaults = defaults; _steppedFieldVersion = _fieldVersion;
             _sleepBodyVersion = _bodyVersion; _sleepShapeVersion = _shapeVersion; _sleepGeometryEpoch = Shape.GeometryEpoch;
         }
         catch { _failed = true; throw; }

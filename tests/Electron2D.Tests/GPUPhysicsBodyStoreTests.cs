@@ -57,7 +57,7 @@ internal static class GPUPhysicsBodyStoreTests
         var uploads = store.UploadBytes; var readbacks = store.ReadbackBytes;
         store.Read(handles.AsSpan(0, 1), state);
         Near(state[0].Position, new(42, 43), 0, "Sparse pose edit");
-        Check(store.UploadBytes - uploads == 8 + 176 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
+        Check(store.UploadBytes - uploads == 8 + 176 + 16 && store.ReadbackBytes - readbacks == 8 + 64,
             "One edit and one requested body transfer only their command, handle, result and status.");
 
         var copies = store.DeviceCopyBytes;
@@ -122,7 +122,7 @@ internal static class GPUPhysicsBodyStoreTests
         var snapshots = new GPUPhysicsBodyStore.Snapshot[count];
         readback = store.ReadbackBytes; upload = store.UploadBytes;
         store.Read(handles.AsSpan(0, 2), snapshots);
-        Check(store.ReadbackBytes - readback == 8 + 2 * 48 && store.UploadBytes - upload == 8 + 2 * 16,
+        Check(store.ReadbackBytes - readback == 8 + 2 * 64 && store.UploadBytes - upload == 8 + 2 * 16,
             "Explicit readback downloads only the requested two bodies.");
         var travel = new Vector2(0.25f, 0.5f) * ((warmup + samples) / 120f);
         // Diagnostic full read is outside the measured step window and validates every dispatched body.

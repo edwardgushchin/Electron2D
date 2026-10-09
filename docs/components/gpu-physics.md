@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-09
 
+[Resident Area fields](gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection remains open.
+
 [Kinematic target/surface separation](gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
 
 Built-in compute bytecode is generated from the versioned GLSL/include sources at

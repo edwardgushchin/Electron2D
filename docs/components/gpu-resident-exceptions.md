@@ -46,7 +46,7 @@ upload exception records nor rebuild the table.
 
 | Storage or transfer | Payload and purpose |
 | --- | --- |
-| CPU body metadata | 104 bytes per slot after live integration and surface policies, including one incident-exception list head; no solved poses or velocities. |
+| CPU body metadata | 112 bytes per slot after live integration, damping-mode and surface policies, including one incident-exception list head; no solved poses or velocities. |
 | CPU exception slot | 40 bytes for authored endpoint indices/generations, incident/free links and journal flags, plus the directed-key dictionary and retained dirty-index storage. |
 | Exception scatter | 32 bytes per changed slot; body wake edits share their existing coalesced 176-byte command. |
 | Device authored exception | 16 bytes per retained exception slot. Growth preserves records GPU-to-GPU. |

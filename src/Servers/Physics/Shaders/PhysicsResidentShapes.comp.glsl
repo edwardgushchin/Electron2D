@@ -46,12 +46,18 @@ bool excepted(uint a,uint b)
 }
 bool accept(uint aIndex, uint bIndex)
 {
-    if (bIndex <= aIndex) return false;
+    if (bIndex == aIndex) return false;
     Shape a=shapes[aIndex], b=shapes[bIndex];
     if (a.owner.x == b.owner.x) return false;
     bool sensorA=(a.policy.w&2u)!=0u, sensorB=(b.policy.w&2u)!=0u;
     if (sensorA || sensorB)
+    {
+        // Body queries own mixed pairs, so a large Area cannot serialize a whole receiver population.
+        if(sensorA&&!sensorB)return false;
+        if(sensorA&&sensorB&&bIndex<aIndex)return false;
         return (sensorA && (a.policy.z&b.policy.y)!=0u) || (sensorB && (b.policy.z&a.policy.y)!=0u);
+    }
+    if(bIndex<aIndex)return false;
     if (excepted(a.owner.x,b.owner.x)) return false;
     if (bodies[a.owner.x].flags.y<2u && bodies[b.owner.x].flags.y<2u) return false;
     return (a.policy.z&b.policy.y)!=0u && (b.policy.z&a.policy.y)!=0u;
@@ -98,7 +104,7 @@ void main()
     Proxy query=proxies[i];
     if(query.data.z==0)return;
     Shape a=shapes[i];
-    int types=(query.data.x==2 || (a.policy.w&2u)!=0u)?7:12;
+    int types=(a.policy.w&2u)!=0u?8:query.data.x==2?7:12;
     int at=1;
     while(at!=0)
     {
@@ -112,7 +118,11 @@ void main()
                 // ponytail: a global counter can serialize dense worlds; use per-query counts/prefix scan if measured contention dominates.
                 uint index=atomicAdd(summary.y,1u);
                 if(index==0xffffffffu)fail(4u);
-                if(index<counts.w) pairs[index]=uvec4(i,uint(n.shape),a.policy.x,shapes[n.shape].policy.x);
+                if(index<counts.w)
+                {
+                    uint first=min(i,uint(n.shape)),second=max(i,uint(n.shape));
+                    pairs[index]=uvec4(first,second,shapes[first].policy.x,shapes[second].policy.x);
+                }
             }
         }
         while(at>1 && (at&1)!=0)at/=2;

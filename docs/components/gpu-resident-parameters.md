@@ -6,11 +6,11 @@ Last updated: 2026-10-09
 
 GPUPhysicsBodyStore now changes body roles and integration policies in place.
 The internal `SetMode`/`GetMode` pair uses PhysicsServer.BodyMode;
-`SetIntegrationPolicy`/`GetIntegrationPolicy` retain scalar gravity, resolved
-signed linear/angular damping, a dynamic rotation lock and default-force omission.
+`SetIntegrationPolicy`/`GetIntegrationPolicy` retain gravity scale, authored signed
+linear/angular damping with independent Combine/Replace modes, a dynamic rotation
+lock and default-force omission.
 These are executable device settings, with comparisons against the public CPU
-contract. The independent public scene/server adapter, Area field reduction,
-public transient-force projection and explicit direct-state IntegrateForces remain open.
+contract. The independent public scene/server adapter, public Area/force projection and explicit direct-state IntegrateForces remain open.
 No public declarations or coverage states change in this stage.
 
 Changing mode preserves the body handle, pose, authored mass/center/inertia,
@@ -51,12 +51,12 @@ an earlier wake. Initial policy edits preserve the other creation flags, includi
 can-sleep and CCD. Invalid enum/nonfinite input rejects before authoring changes;
 stale, foreign, wrong-thread, disposed and failed-store guards are unchanged.
 
-The 48-byte selected Snapshot now uses a reserved word for the actual role and
+The selected Snapshot (now 64 bytes with [resolved fields](gpu-resident-fields.md)) uses a reserved word for the actual role and
 reports effective rotation lock/omission through its existing flags. CPU retains
 only authored integration configuration, never a current velocity/pose mirror.
-Metadata is now 104 bytes per retained body including authored surface velocity; command/device-body/snapshot
-sizes are now 176/96/48 bytes. At 65,536 bodies the metadata/command capacity is
-18,350,080 bytes (17.5 MiB), excluding shapes, joints and driver/object overhead.
+Metadata is now 112 bytes per retained body including authored surface velocity and damping modes; command/device-body/snapshot
+sizes are now 176/96/64 bytes. At 65,536 bodies the metadata/command capacity is
+18,874,368 bytes (18 MiB), excluding shapes, joints and driver/object overhead.
 
 ## Damping cadence
 

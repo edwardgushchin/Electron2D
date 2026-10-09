@@ -40,7 +40,7 @@ Contacts use actual plus virtual point velocity for normal, tangent and restitut
 response. Pins, grooves and axial springs use actual motion alone: a conveyor does
 not move the anchor. Surface edits wake touching sleepers through the existing
 connected graph. Selected Snapshot.Velocity publishes the combined observable
-channel in the unchanged 48-byte record. Scene queries and contact-event snapshots
+channel in the now 64-byte record with resolved fields. Scene queries and contact-event snapshots
 still require their normal public backend adapter.
 
 Moving kinematics participate in full-shape continuous sweeps against dynamic
@@ -59,14 +59,14 @@ Simulate supplies contact, joint, sleep and continuous response.
 | --- | --- |
 | Device body | 96 bytes, previously 80; a vec4 stores configured linear/angular surface velocity used by contacts. |
 | Device target | 16 bytes per retained slot; authoritative pending destination, copied on growth without a CPU pose mirror. Existing body flags mark pending/consuming state. |
-| CPU slot | 104 bytes, previously 88; retains authored surface configuration for mode changes, never current target travel or solved pose/velocity. |
+| CPU slot | Now 112 bytes including damping modes; retains authored surface configuration for mode changes, never current target travel or solved pose/velocity. |
 | Coalesced body command | 176 bytes, previously 144; includes the surface body field and latest target. Consumed staging entries are cleared. |
-| Snapshot | Unchanged 48 bytes; pose, combined velocity, role and sleep/policy flags. |
+| Snapshot | Now 64 bytes; pose, combined velocity, resolved fields, role and sleep/policy flags. |
 | Growth | Copies 136 bytes per prior slot for body, center, transient force and target, counted in DeviceCopyBytes. |
 
-At 65,536 slots, device body/center/force/target payload is 8.5 MiB; retained CPU
-metadata/command capacity is 18,350,080 bytes (17.5 MiB). Device command/request/result
-scratch and upload/download transfer payloads are each 15 MiB, plus their status
+At 65,536 slots, device body/center/force/target/field payload is 9.5 MiB; retained CPU
+metadata/command capacity is 18,874,368 bytes (18 MiB). Device command/request/result
+scratch and upload/download transfer payloads are each 16 MiB, plus their status
 headers. These are payload capacities, excluding driver/object overhead and other
 physics buffers. Body target setup/consumption uses existing dispatches and fences;
 fast-path CCD uses its already documented status/fraction waits. No full body read

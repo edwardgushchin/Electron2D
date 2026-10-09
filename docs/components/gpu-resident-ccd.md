@@ -108,10 +108,10 @@ contact/event snapshot.
 ## Storage, transfer and native limits
 
 The hot device body is now 96 B with independent surface velocity; CCD mode fits existing flag bits. Commands are now
-176 B after transient-force and kinematic target input; selected snapshots remain 48 B. CPU slots are now 104 B, retaining the authored CCD
-enum, surface velocity, integration policy and an incident-exception list head in addition
+176 B after transient-force and kinematic target input; selected snapshots are now 64 B with resolved fields. CPU slots are now 112 B, retaining the authored CCD
+enum, surface velocity, integration/damping-mode policy and an incident-exception list head in addition
 to their prior configuration; there is no evolving body/trajectory mirror. At
-65,536 slots the CPU slot/command payload is 17.5 MiB, measured by
+65,536 slots the CPU slot/command payload is 18 MiB, measured by
 AuthoredBodyCapacityBytes.
 Swept bounds and candidate pairs reuse existing retained device buffers. Each
 nonempty TOI query adds an 8-B status/fraction reset and 8-B result readback at one

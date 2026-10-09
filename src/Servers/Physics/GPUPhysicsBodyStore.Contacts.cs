@@ -26,15 +26,19 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private RenderHandle? _contactPipeline, _contactsGPU;
     private int _contactCapacity;
     private long _contactPairVersion = -1;
-    private float _contactMargin;
+    private float _contactMargin, _contactSensorMargin;
     internal int ContactPointCount { get; private set; }
     internal long ContactCapacityRetries { get; private set; }
     internal long ContactSubmissionCount { get; private set; }
 
-    internal int FindContacts(float margin = 0)
+    internal int FindContacts(float margin = 0, float sensorMargin = 0)
     {
-        var pairs = FindPairs(margin); _contactMargin = margin;
-        if (_contactPairVersion == BroadPhaseSubmissionCount) return ContactPointCount;
+        EnsureAccess();
+        if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
+        if (!float.IsFinite(sensorMargin) || sensorMargin < 0) throw new ArgumentOutOfRangeException(nameof(sensorMargin));
+        var pairs = FindPairs(MathF.Max(margin, sensorMargin));
+        if (_contactPairVersion == BroadPhaseSubmissionCount && _contactMargin == margin && _contactSensorMargin == sensorMargin) return ContactPointCount;
+        _contactMargin = margin; _contactSensorMargin = sensorMargin;
         if (pairs == 0) { _oneWayHistoryCount = 0; ContactPointCount = 0; _contactPairVersion = BroadPhaseSubmissionCount; return 0; }
         _contactPipeline ??= _context.CreatePipeline("PhysicsResidentContacts.comp.spv");
         Grow(ref _contactsGPU, ref _contactCapacity, 1, sizeof(ContactPoint), false);
@@ -100,7 +104,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Capacity = (uint)_contactCapacity,
                 Shapes = (uint)_shapeHighWater,
                 Bodies = (uint)_highWater,
-                Tolerances = new(margin, 0.5f, 0.00001f, 0),
+                Tolerances = new(margin, 0.5f, 0.00001f, _contactSensorMargin),
                 HistoryCount = (uint)_oneWayHistoryCount,
                 HistoryCapacity = (uint)_oneWayHistoryTableCapacity,
                 NextCapacity = (uint)_oneWayNextCapacity,

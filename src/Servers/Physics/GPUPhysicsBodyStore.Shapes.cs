@@ -90,7 +90,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal ShapeHandle AddShape(BodyHandle body, Shape geometry, Transform? localPose = null,
         uint layer = 1, uint mask = uint.MaxValue, bool sensor = false, float friction = 1, float bounce = 0)
     {
-        Validate(body); ArgumentNullException.ThrowIfNull(geometry);
+        Validate(body); ValidateFieldShape(body.Index, sensor); ArgumentNullException.ThrowIfNull(geometry);
         ObjectDisposedException.ThrowIf(geometry.IsDisposed, geometry);
         ValidateMaterial(friction, bounce);
         var pose = localPose ?? Transform.Identity; ValidateShapePose(pose);
@@ -139,6 +139,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         Validate(shape);
         ref var slot = ref _shapeSlots[shape.Index];
+        ValidateFieldShape(slot.Body.Index, sensor);
         if (slot.Layer == layer && slot.Mask == mask && slot.Sensor == sensor) return;
         var massChanged = slot.Sensor != sensor;
         slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor; MarkShape(shape.Index, massChanged);

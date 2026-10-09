@@ -2,9 +2,9 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
-    /// <summary>Authored scalar gravity and resolved signed damping; omission skips default forces, not constraints or impulses.</summary>
+    /// <summary>Authored scalar gravity and signed body damping; omission skips default forces, not constraints or impulses.</summary>
     internal readonly record struct IntegrationPolicy(float GravityScale = 1, float LinearDamp = 0, float AngularDamp = 0,
-        bool LockRotation = false, bool OmitForceIntegration = false);
+        bool LockRotation = false, bool OmitForceIntegration = false, RigidBody.DampMode LinearDampMode = RigidBody.DampMode.Combine, RigidBody.DampMode AngularDampMode = RigidBody.DampMode.Combine);
     private const uint ModeEdit = 4096, PolicyEdit = 8192, ClearAngular = 16384;
     internal PhysicsServer.BodyMode GetMode(BodyHandle body) { Validate(body); return _slots[body.Index].Mode; }
     internal IntegrationPolicy GetIntegrationPolicy(BodyHandle body) { Validate(body); return _slots[body.Index].Integration; }
@@ -14,6 +14,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         Validate(body);
         if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
+        if (mode != PhysicsServer.BodyMode.Static && _areaFields.ContainsKey(body.Index)) throw new InvalidOperationException("An Area field owner must remain static.");
         ref var slot = ref _slots[body.Index];
         if (slot.Mode == mode) return;
         if (slot.CCDMode != CCDMode.Disabled)
@@ -53,7 +54,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 
     private static void ValidateIntegrationPolicy(in IntegrationPolicy policy)
     {
-        if (!float.IsFinite(policy.GravityScale) || !float.IsFinite(policy.LinearDamp) || !float.IsFinite(policy.AngularDamp))
+        if (!float.IsFinite(policy.GravityScale) || !float.IsFinite(policy.LinearDamp) || !float.IsFinite(policy.AngularDamp) || !Enum.IsDefined(policy.LinearDampMode) || !Enum.IsDefined(policy.AngularDampMode))
             throw new ArgumentOutOfRangeException(nameof(policy));
     }
     private static bool RotationLocked(in Slot slot) => slot.Mode >= PhysicsServer.BodyMode.Rigid &&
@@ -69,6 +70,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         ref var command = ref Edit(index); command.Mask |= PolicyEdit;
         command.Body.Force.W = policy.GravityScale;
         command.Body.Properties.Z = policy.LinearDamp; command.Body.Properties.W = policy.AngularDamp;
-        command.Body.Locks = (command.Body.Locks & ~1028u) | (RotationLocked(slot) ? 4u : 0u) | (policy.OmitForceIntegration ? 1024u : 0u);
+        command.Body.Locks = (command.Body.Locks & ~50180u) | (RotationLocked(slot) ? 4u : 0u) | (policy.OmitForceIntegration ? 1024u : 0u) | (policy.LinearDampMode == RigidBody.DampMode.Replace ? 16384u : 0u) | (policy.AngularDampMode == RigidBody.DampMode.Replace ? 32768u : 0u);
     }
 }

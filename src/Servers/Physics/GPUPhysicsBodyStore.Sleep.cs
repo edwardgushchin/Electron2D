@@ -9,8 +9,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     /// <summary>Internal linear/angular quiet thresholds in scene units/s and rad/s, followed by the quiet duration in seconds.</summary>
     internal readonly record struct SleepSettings(float LinearThreshold = 2, float AngularThreshold = 0.13962634f, float TimeToSleep = 0.5f);
     private SleepSettings _sleepSettings = new(2, 0.13962634f, 0.5f);
-    private bool _wakeAllSleep, _sleepGravityKnown;
-    private Vector2 _sleepGravity;
+    private bool _wakeAllSleep;
     private (int, float, float, float, float, float)? _sleepSolverPolicy;
     private long _sleepBodyVersion = -1, _sleepShapeVersion = -1, _sleepGeometryEpoch = -1;
     /// <summary>Last completed simulation count of awake dynamics and moving nondynamic surfaces; negative before first publication.</summary>
@@ -112,9 +111,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 4);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin resident sleep graph");
         SDL.BindGPUComputePipeline(compute, _sleepPipeline!.DangerousGetHandle());
-        var inputs = stackalloc nint[5] { _contactsGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
-            (_jointsGPU ?? _shapesGPU).DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _transientForces!.DangerousGetHandle() };
-        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 5);
+        var inputs = stackalloc nint[6] { _contactsGPU!.DangerousGetHandle(), _shapesGPU!.DangerousGetHandle(),
+            (_jointsGPU ?? _shapesGPU).DangerousGetHandle(), _positionCorrectionsGPU!.DangerousGetHandle(), _transientForces!.DangerousGetHandle(), _resolvedFields!.DangerousGetHandle() };
+        SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 6);
         settings.Stage = stage; settings.Count = (uint)count;
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SleepUniforms));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

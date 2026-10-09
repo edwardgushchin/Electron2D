@@ -81,7 +81,7 @@ this internal component; this optimization does not authorize skipping them.
 | Existing device body | Now 96 B including separate virtual surface velocity; unused velocity.w now holds the quiet clock, flag bits hold sleep policy/state and pending wake. |
 | Component graph | 16 B per retained body slot: parent, aggregate flags, minimum-clock bits, generation. |
 | Prior/current edges | 16 B per retained contact-point-plus-joint-slot capacity; endpoint indices/generations. No CPU graph mirror. |
-| Selected Snapshot | 48 B: unchanged exposed pose/velocity vectors plus quiet clock, sleep flags and padding. Read only requested bodies. |
+| Selected Snapshot | Now 64 B: pose/velocity vectors, resolved gravity/damping, quiet clock, sleep flags and padding. Read only requested bodies. |
 | Body status | 8 B: numerical error and final active-body count. Shared command/read fence; no new sleep readback or wait. |
 
 At 65,536 body slots the graph adds 1 MiB. Edge storage follows the retained
