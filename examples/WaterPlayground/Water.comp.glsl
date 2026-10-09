@@ -109,12 +109,11 @@ void main() {
     for(int y=max(0,grid.y-1);y<=min(int(rows)-1,grid.y+1);y++)
     for(int x=max(0,grid.x-1);x<=min(int(columns)-1,grid.x+1);x++)
     for(int j=heads[y*int(columns)+x];j!=-1;j=next[j]) {
-        for(int mirror=0;mirror<((state.x<h || state.x>world.x-h || state.y>world.y-h || state.y<h)?5:1);mirror++) {
+        for(int mirror=0;mirror<((state.x<h || state.x>world.x-h || state.y>world.y-h)?4:1);mirror++) {
         if(op==6 && mirror>0)continue;
         vec2 neighbor=source[j].xy;
         if(mirror==1){if(state.x>=h)continue;neighbor.x=-neighbor.x;}
         if(mirror==2){if(state.x<=world.x-h)continue;neighbor.x=2*world.x-neighbor.x;}
-        if(mirror==4){if(state.y>=h)continue;neighbor.y=-neighbor.y;}
         if(mirror==3){if(state.y<=world.y-h)continue;neighbor.y=2*world.y-neighbor.y;}
         vec2 offset=state.xy-neighbor;float r2=dot(offset,offset);if(r2>=h2)continue;
         float q=h2-r2,weight=kernel*q*q*q;sum+=m*weight;
@@ -130,12 +129,12 @@ void main() {
     vec2 position=state.xy;float radius=sqrt(m/material.y)*.45;
     if(op==3) {
         correction*=.25;float lengthCorrection=length(correction);if(lengthCorrection>h*.2)correction*=h*.2/lengthCorrection;
-        position=clamp(position+correction,vec2(radius),world.xy-vec2(radius));
+        position+=correction;position.x=clamp(position.x,radius,world.x-radius);position.y=min(position.y,world.y-radius);
         for(int body=0;body<int(bodyCount);body++) {
             uint address=uint(body)*uint(material.z)+id;vec4 action=reaction[address];
             project(position,poses[body],motions[body],details[body].x,body,action);reaction[address]=action;
         }
-        position=clamp(position,vec2(radius),world.xy-vec2(radius));
+        position.x=clamp(position.x,radius,world.x-radius);position.y=min(position.y,world.y-radius);
         destination[id]=vec4(position,state.zw);
     } else {
         velocity+=viscosity*.1;
@@ -143,9 +142,9 @@ void main() {
             uint address=uint(body)*uint(material.z)+id;vec4 action=reaction[address];
             collide(position,velocity,poses[body],motions[body],details[body].x,body,action);reaction[address]=action;
         }
-        position=clamp(position,vec2(radius),world.xy-vec2(radius));
+        position.x=clamp(position.x,radius,world.x-radius);position.y=min(position.y,world.y-radius);
         if((position.x<=radius && velocity.x<0)||(position.x>=world.x-radius && velocity.x>0))velocity.x=0;
-        if((position.y<=radius && velocity.y<0)||(position.y>=world.y-radius && velocity.y>0))velocity.y=0;
+        if(position.y>=world.y-radius && velocity.y>0)velocity.y=0;
         destination[id]=vec4(position,velocity);
     }
 }

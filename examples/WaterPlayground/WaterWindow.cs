@@ -86,6 +86,7 @@ internal sealed class WaterWindow : Window
         ViewTransform = new Transform(0, new Vector2(scale, scale), 0, new Vector2(0, Size.Y - Simulation.Size.Y * scale));
         Simulation.EntryY = Math.Min(0, ToWorld(Vector2.Zero).Y);
         _world.Transform = ViewTransform;
+        Surface.Update(Simulation); _waterDrawing.QueueRedraw();
         _cpu.Position = new(Size.X - 176, 20); _gpu.Position = new(Size.X - 96, 20);
     }
     internal Vector2 ToWorld(Vector2 screen) => ViewTransform.AffineInverse() * screen;
@@ -102,7 +103,7 @@ internal sealed class WaterWindow : Window
     internal void Reset()
     {
         var gpu = Simulation.UseGPU; Simulation.Dispose(); Simulation = new(); if (gpu) Simulation.SetUseGPU(true, _device);
-        Paused = false; _held = false; FitWorld(); Surface.Update(Simulation); _waterDrawing.QueueRedraw();
+        Paused = false; _held = false; FitWorld();
     }
     protected override void OnPhysicsProcess(double delta)
     {

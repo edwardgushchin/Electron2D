@@ -9,6 +9,8 @@ internal static class WaterPlaygroundTests
     {
         PhysicsSolverStorageTests.Run();
         using var device = RenderingServer.CreateLocalRenderingDevice();
+        CheckOpenTop(device, false);
+        CheckOpenTop(device, true);
         using var water = new WaterSimulation();
         water.SetUseGPU(true, device);
         Check(water.Count == 65536 && !water.Duck.IsValid() && !water.Boat.IsValid(), "Water precedes both toys.");
@@ -21,6 +23,7 @@ internal static class WaterPlaygroundTests
             if (frame % 60 == 59)
                 Console.WriteLine($"t={water.Time:F1} min={water.Positions.Min(p => p.Y):F1} max={water.Positions.Max(p => p.Y):F1} above={water.Positions.Count(p => p.Y < 0)} duck={water.DuckPose.Origin} boat={water.BoatPose.Origin} step={water.StepMS:F2}ms elapsed={elapsed.ElapsedMilliseconds}");
             CheckContained(water);
+            if (frame == 0) Check(water.ActiveCount > 0 && water.Positions.Take(water.ActiveCount).All(p => p.Y + 8 < water.EntryY), "The first water particles and their reconstructed edge start offscreen.");
             for (var slot = 0; slot < appeared.Length; slot++)
                 if (water.ActorExists(slot) && !appeared[slot])
                 {
@@ -74,6 +77,21 @@ internal static class WaterPlaygroundTests
         Console.WriteLine($"Water playground checks passed; {water.Count} particles, {water.Volume:F2} m3.");
     }
 
+    private static void CheckOpenTop(RenderingDevice device, bool gpu)
+    {
+        using var water = new WaterSimulation(256) { EntryY = -1600 };
+        water.SetUseGPU(gpu, device);
+        for (var i = 0; i < 3; i++) water.Step(1d / 60);
+        Check(water.ActiveCount > 0 && water.Positions[0].Y < water.EntryY, "The neighbor grid supports offscreen births above its initial extent in both backends.");
+        water.SetUseGPU(false);
+        water.LaunchFirstParticleForTest();
+        water.SetUseGPU(gpu);
+        for (var i = 0; i < 12; i++) { water.Step(1d / 60); CheckContained(water); }
+        Check(water.Positions[0].Y < -20, "An upward-moving droplet crosses the former ceiling in both backends.");
+        for (var i = 0; i < 60; i++) { water.Step(1d / 60); CheckContained(water); }
+        Check(water.Positions[0].Y > 100 && water.ActiveCount == (int)(water.Time / WaterSimulation.PourDuration * water.Count), "Escaped water falls back without deletion or respawn.");
+    }
+
     internal static void RunNative()
     {
         WaterWindow.ConfigurePresentation();
@@ -91,6 +109,8 @@ internal static class WaterPlaygroundTests
         void AfterDraw()
         {
             var time = window.Simulation.Time;
+            if (time > 0 && time < .02)
+                Check(window.Simulation.Positions.Take(window.Simulation.ActiveCount).All(p => (window.ViewTransform * (p + new Vector2(0, 8))).Y < 0), "The initial water batch is hidden above the visible top, including a portrait view.");
             if (interaction < 105)
                 for (var slot = 0; slot < appeared.Length; slot++)
                     if (window.Simulation.ActorExists(slot) && !appeared[slot])
@@ -106,6 +126,12 @@ internal static class WaterPlaygroundTests
                 phase++;
                 if (phase == 4) window.Size = new(1920, 1080);
 
+            }
+            if (phase == 1 && time > .4 && time < .7 && window.Simulation.EntryY < -100)
+            {
+                var visibleWaterAboveOrigin = false;
+                foreach (var vertex in window.Surface.Vertices) if (vertex.Y < -50) visibleWaterAboveOrigin = true;
+                Check(visibleWaterAboveOrigin, "The falling water surface is drawn in the visible air above the original world origin.");
             }
             if (phase < 5) return;
             if (interaction == 0) { Check(window.SwimmingFishCount == 6, "Six physical fish swim after falling into the basin."); CheckView(); }
@@ -182,7 +208,7 @@ internal static class WaterPlaygroundTests
         for (var i = 0; i < water.ActiveCount; i++)
         {
             var p = water.Positions[i];
-            Check(p.IsFinite() && p.X >= 0 && p.Y >= 0 && p.X <= water.Size.X && p.Y <= water.Size.Y, "Every active particle stays inside all four world edges.");
+            Check(p.IsFinite() && p.X >= 0 && p.X <= water.Size.X && p.Y <= water.Size.Y, "Every active particle stays inside the side and bottom walls; the top is open.");
         }
         for (var slot = 0; slot < WaterSimulation.FishCount + 2; slot++)
             if (water.ActorExists(slot))
@@ -201,4 +227,17 @@ internal static class WaterPlaygroundTests
     private static void NativeKey(SDL.Scancode code)
     { var e = new SDL.Event { Key = new() { Type = SDL.EventType.KeyDown, WindowID = NativeWindow(), Down = true, Scancode = code, Key = SDL.GetKeyFromScancode(code, SDL.Keymod.None, true) } }; Check(SDL.PushEvent(ref e), "Key down"); e.Key.Type = SDL.EventType.KeyUp; e.Key.Down = false; Check(SDL.PushEvent(ref e), "Key up"); }
     private static void Check(bool value, string message) { if (!value) throw new Exception(message); }
+}
+
+namespace Electron2D.Examples.WaterPlayground
+{
+    internal sealed partial class WaterSimulation
+    {
+        // A deterministic physical initial condition, compiled only into the executable checks.
+        internal void LaunchFirstParticleForTest()
+        {
+            _state[0] = new(Size.X * .005f, .2f, 0, -4);
+            Capture();
+        }
+    }
 }

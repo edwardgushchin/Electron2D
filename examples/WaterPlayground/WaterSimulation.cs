@@ -17,7 +17,8 @@ internal sealed partial class WaterSimulation : IDisposable
     private const int BodyCount = FishCount + 2;
     private readonly RID[] _actors = new RID[BodyCount];
     private readonly float[] _fishDirections = [1, -1, 1, -1, 1, -1];
-    private readonly int[] _wetCells = new int[58 * 40];
+    private int[] _wetCells = [];
+    private int _wetTop, _wetRows;
     internal RID FishBody(int index) => _actors[index + 2];
     internal Transform FishPose(int index) => Pose(_actors[index + 2]);
     internal float FishDirection(int index) => _fishDirections[index];
@@ -36,7 +37,7 @@ internal sealed partial class WaterSimulation : IDisposable
     private readonly float[] _density, _lambda;
     private readonly int[] _next;
     private int _columns, _rows;
-    private float _gridTop;
+    private float _gridTop, _minimumY;
     private int[] _heads = [];
     private readonly float _mass, _h;
     private RID _dragged;
@@ -99,7 +100,8 @@ internal sealed partial class WaterSimulation : IDisposable
             var x = center + (i % columns - (columns - 1) * .5f) * Spacing + jitter;
             var jitterY = ((unchecked(hash * 277803737u) >> 16) / 65535f - .5f) * Spacing * .7f;
             var age = (float)(Time - born);
-            var y = 8 + age * speed + 490 * age * age + jitterY;
+            var y = EntryY - 64 - Spacing + age * speed + 490 * age * age + jitterY;
+            _minimumY = Math.Min(_minimumY, y * .01f);
             _state[i] = new(x * .01f, y * .01f, .2f * MathF.Cos(born * 1.4f), (speed + 980 * age) * .01f);
         }
         if (UseGPU && ActiveCount > before)
@@ -120,10 +122,19 @@ internal sealed partial class WaterSimulation : IDisposable
         _wallShapes[0].Size = new(size.X + 80, 40); _wallShapes[1].Size = _wallShapes[2].Size = new(40, size.Y * 6);
         PhysicsServer.BodySetTransform(_walls[0], new Transform(0, new(size.X / 2, size.Y + 20)));
         PhysicsServer.BodySetTransform(_walls[1], new Transform(0, new(-20, 0))); PhysicsServer.BodySetTransform(_walls[2], new Transform(0, new(size.X + 20, 0)));
-        _gridTop = 0;
         _columns = (int)MathF.Ceiling(size.X * .01f / _h);
-        _rows = (int)MathF.Ceiling((size.Y * .01f - _gridTop) / _h) + 2;
+        ResizeGrid(-size.Y * .01f);
+    }
+    private void ResizeGrid(float top)
+    {
+        // ponytail: dense storage grows with flight height; use sparse cells if large offscreen excursions become a target.
+        _gridTop = top;
+        _rows = (int)MathF.Ceiling((Size.Y * .01f - top) / _h) + 2;
         _heads = new int[checked(_columns * _rows)];
+        _wetTop = (int)MathF.Floor(top * 5) * 20;
+        _wetRows = ((int)Size.Y - _wetTop) / 20 + 1;
+        _wetCells = new int[checked(58 * _wetRows)];
+        if (_device is not null) CreateBuffers();
     }
     internal void BeginDrag(Vector2 position)
     {
@@ -145,6 +156,11 @@ internal sealed partial class WaterSimulation : IDisposable
     {
         if (!double.IsFinite(delta) || delta <= 0 || delta > 1d / 30) throw new ArgumentOutOfRangeException(nameof(delta));
         var start = Stopwatch.GetTimestamp(); Time += delta; Emit();
+        if (_minimumY < _gridTop + 2 * _h)
+        {
+            ResizeGrid(Math.Min(_gridTop * 2, _minimumY - 4 * _h - 2));
+            Capture();
+        }
         if (Time >= PourDuration + 1 && !Duck.IsValid())
         {
             _actors[0] = Body(new(Size.X * .34f, SpawnY(0)), Own(new CapsuleShape { Radius = 32, Height = 108 }), 6);
@@ -241,9 +257,9 @@ internal sealed partial class WaterSimulation : IDisposable
     internal bool FishInWater(int index)
     {
         var body = FishBody(index); if (!body.IsValid()) return false;
-        var p = FishPose(index).Origin; var x = (int)(p.X / 20); var y = (int)(p.Y / 20); var particles = 0;
+        var p = FishPose(index).Origin; var x = (int)(p.X / 20); var y = (int)MathF.Floor((p.Y - _wetTop) / 20); var particles = 0;
         for (var dy = -1; dy <= 1; dy++) for (var dx = -1; dx <= 1; dx++)
-                if ((uint)(x + dx) < 58 && (uint)(y + dy) < 40) particles += _wetCells[(y + dy) * 58 + x + dx];
+                if ((uint)(x + dx) < 58 && (uint)(y + dy) < _wetRows) particles += _wetCells[(y + dy) * 58 + x + dx];
         return particles * Spacing * Spacing > 1100;
     }
     private void Swim(float interval)
@@ -285,11 +301,13 @@ internal sealed partial class WaterSimulation : IDisposable
     { if (body.IsValid()) { PhysicsServer.BodyApplyCentralImpulse(body, new(impulse.X * 100, impulse.Y * 100)); PhysicsServer.BodyApplyTorqueImpulse(body, impulse.Z * 10000); } }
     private void Capture()
     {
-        Array.Clear(_wetCells);
+        Array.Clear(_wetCells); _minimumY = 0;
         for (var i = 0; i < ActiveCount; i++)
         {
             var p = Positions[i] = XY(_state[i]) * 100;
-            var x = Math.Clamp((int)(p.X / 20), 0, 57); var y = Math.Clamp((int)(p.Y / 20), 0, 39); _wetCells[y * 58 + x]++;
+            _minimumY = Math.Min(_minimumY, _state[i].Y + Math.Min(0, _state[i].W) / 30);
+            var x = Math.Clamp((int)(p.X / 20), 0, 57); var y = (int)MathF.Floor((p.Y - _wetTop) / 20);
+            if ((uint)y < _wetRows) _wetCells[y * 58 + x]++;
         }
     }
     private static Vector2 XY(Float4 v) => new(v.X, v.Y);
@@ -305,7 +323,6 @@ internal sealed partial class WaterSimulation : IDisposable
         var neighbor = XY(_state[j]); offset = default;
         if (mirror == 1) { if (position.X >= _h) return false; neighbor.X = -neighbor.X; }
         if (mirror == 2) { if (position.X <= Size.X * .01f - _h) return false; neighbor.X = Size.X * .02f - neighbor.X; }
-        if (mirror == 4) { if (position.Y >= _h) return false; neighbor.Y = -neighbor.Y; }
         if (mirror == 3) { if (position.Y <= Size.Y * .01f - _h) return false; neighbor.Y = Size.Y * .02f - neighbor.Y; }
         offset = position - neighbor; return true;
     }
@@ -316,7 +333,7 @@ internal sealed partial class WaterSimulation : IDisposable
         for (var cy = Math.Max(0, y - 1); cy <= Math.Min(_rows - 1, y + 1); cy++)
             for (var cx = Math.Max(0, x - 1); cx <= Math.Min(_columns - 1, x + 1); cx++)
                 for (var j = _heads[cy * _columns + cx]; j != -1; j = _next[j])
-                    for (var mirror = 0; mirror < (XY(_state[i]).X < _h || XY(_state[i]).X > Size.X * .01f - _h || XY(_state[i]).Y > Size.Y * .01f - _h || XY(_state[i]).Y < _h ? 5 : 1); mirror++)
+                    for (var mirror = 0; mirror < (XY(_state[i]).X < _h || XY(_state[i]).X > Size.X * .01f - _h || XY(_state[i]).Y > Size.Y * .01f - _h ? 4 : 1); mirror++)
                     {
                         var offset = XY(_state[i]) - XY(_state[j]); if (mirror != 0 && !NeighborOffset(XY(_state[i]), j, mirror, out offset)) continue; var r2 = offset.LengthSquared(); if (r2 >= h2) continue;
                         var q = h2 - r2; sum += _mass * kernel * q * q * q;
@@ -334,7 +351,7 @@ internal sealed partial class WaterSimulation : IDisposable
         for (var cy = Math.Max(0, y - 1); cy <= Math.Min(_rows - 1, y + 1); cy++)
             for (var cx = Math.Max(0, x - 1); cx <= Math.Min(_columns - 1, x + 1); cx++)
                 for (var j = _heads[cy * _columns + cx]; j != -1; j = _next[j])
-                    for (var mirror = 0; mirror < (XY(_state[i]).X < _h || XY(_state[i]).X > Size.X * .01f - _h || XY(_state[i]).Y > Size.Y * .01f - _h || XY(_state[i]).Y < _h ? 5 : 1); mirror++)
+                    for (var mirror = 0; mirror < (XY(_state[i]).X < _h || XY(_state[i]).X > Size.X * .01f - _h || XY(_state[i]).Y > Size.Y * .01f - _h ? 4 : 1); mirror++)
                     {
                         var offset = position - XY(_state[j]); if (mirror != 0 && !NeighborOffset(position, j, mirror, out offset)) continue; var r2 = offset.LengthSquared(); if (r2 >= h2 || r2 < 1e-10f) continue;
                         var distance = MathF.Sqrt(r2); var q = h2 - r2; var ratio = kernel * q * q * q / reference;
@@ -343,10 +360,10 @@ internal sealed partial class WaterSimulation : IDisposable
                         correction += (_lambda[i] + _lambda[j] + artificial) * grad;
                     }
         position += (correction * .25f).LimitLength(_h * .2f); var radius = Spacing * .0045f;
-        position.X = Math.Clamp(position.X, radius, Size.X * .01f - radius); position.Y = Math.Clamp(position.Y, radius, Size.Y * .01f - radius);
+        position.X = Math.Clamp(position.X, radius, Size.X * .01f - radius); position.Y = Math.Min(position.Y, Size.Y * .01f - radius);
         for (var slot = 0; slot < BodyCount; slot++)
             Project(ref position, _settings.Poses[slot], _settings.Motions[slot], _settings.Details[slot].X, slot, ref _reactions[slot * Count + i]);
-        position = position.Clamp(new(radius, radius), Size * .01f - new Vector2(radius, radius));
+        position.X = Math.Clamp(position.X, radius, Size.X * .01f - radius); position.Y = Math.Min(position.Y, Size.Y * .01f - radius);
         _scratch[i] = new(position.X, position.Y, state.Z, state.W);
     }
     private void Finish(int i)
@@ -365,9 +382,9 @@ internal sealed partial class WaterSimulation : IDisposable
         for (var slot = 0; slot < BodyCount; slot++)
             Collide(ref position, ref velocity, _settings.Poses[slot], _settings.Motions[slot], _settings.Details[slot].X, slot, ref _reactions[slot * Count + i]);
         var radius = Spacing * .0045f;
-        position = position.Clamp(new(radius, radius), Size * .01f - new Vector2(radius, radius));
+        position.X = Math.Clamp(position.X, radius, Size.X * .01f - radius); position.Y = Math.Min(position.Y, Size.Y * .01f - radius);
         if (position.X <= radius && velocity.X < 0 || position.X >= Size.X * .01f - radius && velocity.X > 0) velocity.X = 0;
-        if (position.Y <= radius && velocity.Y < 0 || position.Y >= Size.Y * .01f - radius && velocity.Y > 0) velocity.Y = 0;
+        if (position.Y >= Size.Y * .01f - radius && velocity.Y > 0) velocity.Y = 0;
         _scratch[i] = new(position.X, position.Y, velocity.X, velocity.Y);
     }
     private void Project(ref Vector2 p, Float4 pose, Float4 motion, float inverseInertia, int slot, ref Float4 impulse)
