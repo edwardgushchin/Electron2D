@@ -28,6 +28,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         definition.angularVelocity = configuration.AngularVelocity;
         definition.gravityScale = configuration.GravityScale;
         definition.enableSleep = configuration.CanSleep;
+        definition.sleepThreshold = space.SleepSettings.LinearThreshold * PhysicsSpace.MetersPerUnit;
         definition.isAwake = !configuration.Sleeping;
         definition.motionLocks.angularZ = configuration.LockRotation || configuration.Mode == PhysicsServer.BodyMode.RigidLinear;
         BodyID = b2CreateBody(space.WorldID, definition);

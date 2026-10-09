@@ -148,3 +148,8 @@ WorldBoundaryShape contributes no geometric area, centroid or polar inertia. The
 configured mass and explicit inertia remain effective for dynamic boundary owners.
 Analytic contacts, sleep and boundary edits/removal reuse ordinary body policies;
 WorldBoundaryTests exercises these on CPU and in the independent GPU store.
+
+World sleep policy now exposes separate linear/angular thresholds and duration,
+shared by scene and server bodies. Angular qualification no longer depends on body
+radius. Policy changes wake dynamics without replacing body/view identity; scene
+sleep transitions remain once-only. See [World sleep policy](physics-sleep.md).

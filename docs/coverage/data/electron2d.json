@@ -113028,6 +113028,63 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetBodyAngularVelocitySleepThreshold",
+    "signature": "public static System.Single SpaceGetBodyAngularVelocitySleepThreshold(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetBodyLinearVelocitySleepThreshold",
+    "signature": "public static System.Single SpaceGetBodyLinearVelocitySleepThreshold(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetBodyTimeToSleep(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetBodyTimeToSleep",
+    "signature": "public static System.Single SpaceGetBodyTimeToSleep(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -113102,6 +113159,78 @@
       {
         "name": "active",
         "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetBodyAngularVelocitySleepThreshold",
+    "signature": "public static System.Void SpaceSetBodyAngularVelocitySleepThreshold(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetBodyLinearVelocitySleepThreshold",
+    "signature": "public static System.Void SpaceSetBodyLinearVelocitySleepThreshold(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetBodyTimeToSleep(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetBodyTimeToSleep",
+    "signature": "public static System.Void SpaceSetBodyTimeToSleep(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -183019,6 +183148,45 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "Physics2DDefaultLinearDamp",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultLinearDamp { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DSleepThresholdAngular()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DSleepThresholdAngular",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DSleepThresholdAngular { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DSleepThresholdLinear()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DSleepThresholdLinear",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DSleepThresholdLinear { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DTimeBeforeSleep()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DTimeBeforeSleep",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DTimeBeforeSleep { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

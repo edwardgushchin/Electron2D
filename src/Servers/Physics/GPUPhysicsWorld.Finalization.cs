@@ -48,7 +48,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
             {
                 Pose = new(sim.center.X, sim.center.Y, sim.transform.q.c, sim.transform.q.s),
                 Geometry = new(sim.localCenter.X, sim.localCenter.Y, sim.minExtent, sim.maxExtent),
-                Sleep = new(body.sleepTime, body.sleepThreshold, 0, 0),
+                Sleep = new(body.sleepTime, body.sleepThreshold, world.sleepAngularThreshold, 0),
                 BodyID = sim.bodyId,
                 Generation = body.generation,
                 Flags = body.flags,
@@ -70,7 +70,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         var settings = stackalloc uint[8]
         {
             BitConverter.SingleToUInt32Bits(context.dt), BitConverter.SingleToUInt32Bits(context.inv_dt),
-            BitConverter.SingleToUInt32Bits(B2Constants.B2_TIME_TO_SLEEP), 0, (uint)count,
+            BitConverter.SingleToUInt32Bits(context.world.timeToSleep), 0, (uint)count,
             (context.world.enableSleep ? 1u : 0) | (context.world.enableContinuous ? 2u : 0), 0, 0
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)settings, 32);
@@ -85,8 +85,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
             var simFlags = (uint)_data[i].Flags.X;
             if (result.bodyId != input.BodyID || result.generation != input.Generation || result.padding != 0 || (result.state & ~7u) != 0 ||
                 (result.state & 4u) != ((result.state & 2u) == 0 ? input.Options & 4u : 0) ||
-                (result.sleepTime != 0 && (!context.world.enableSleep || (input.Options & 2u) == 0 || result.sleepTime != input.Sleep.X + context.dt)) ||
-                (result.state & 2u) != (result.sleepTime < B2Constants.B2_TIME_TO_SLEEP ? 2u : 0) ||
+                (result.sleepTime != 0 && (!context.world.enableSleep || (input.Options & 2u) == 0 || result.sleepTime != MathF.Min(float.MaxValue, input.Sleep.X + context.dt))) ||
+                (result.state & 2u) != (result.sleepTime <= context.world.timeToSleep ? 2u : 0) ||
                 result.bodyFlags != ((input.Flags & ~104u) | (simFlags & 96u)) ||
                 result.simFlags != ((simFlags & ~104u) | ((result.state & 1u) != 0 ? 8u : 0)) ||
                 ((result.state & 1u) != 0 && ((input.Options & 1u) == 0 || !context.world.enableContinuous)) ||

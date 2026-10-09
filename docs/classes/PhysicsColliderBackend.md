@@ -95,3 +95,8 @@ origins inside the complete contour or its swept region before selecting pieces.
 The fixture tag borrows the contour weakly; shared resource collision scratch stays
 allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
 both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).
+
+Attach reads the current space's linear quiet threshold when creating its CPU body.
+World angular threshold and quiet duration are shared by existing/new attachments;
+[PhysicsSleepPolicyTests](../../tests/Electron2D.Tests/PhysicsSleepPolicyTests.cs)
+checks settings, body-size independence and scene/server behavior.

@@ -55,6 +55,9 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<Vector2> Physics2DDefaultGravityVector { get; }`](#p-electron2d-projectsettings-physics2ddefaultgravityvector) | Default 2D gravity direction, (0, 1) without normalization. |
 | [`public static ProjectSetting<float> Physics2DDefaultLinearDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultlineardamp) | Default 2D linear damping, 0.1/s. |
 | [`public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; }`](#physics2ddefaultconstraintbias) | Default joint positional correction fraction, 0.2. |
+| [`public static ProjectSetting<float> Physics2DSleepThresholdLinear { get; }`](#physics2dsleepthresholdlinear) | World linear sleep threshold, 2 scene units/s. |
+| [`public static ProjectSetting<float> Physics2DSleepThresholdAngular { get; }`](#physics2dsleepthresholdangular) | World angular sleep threshold, 0.13962634 rad/s. |
+| [`public static ProjectSetting<float> Physics2DTimeBeforeSleep { get; }`](#physics2dtimebeforesleep) | World quiet duration, 0.5 s. |
 | [`public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; }`](#p-electron2d-projectsettings-physics2ddefaultangulardamp) | Default 2D angular damping, 1/s. |
 | [`public static ProjectSetting<int> MaxPhysicsStepsPerFrame { get; }`](#p-electron2d-projectsettings-maxphysicsstepsperframe) | Defines the maximum fixed-step callbacks processed during one frame. |
 | [`public static ProjectSetting<double> PhysicsJitterFix { get; }`](#p-electron2d-projectsettings-physicsjitterfix) | Defines the finite non-negative fixed-step boundary tolerance. |
@@ -1337,3 +1340,24 @@ Graph controls consume the permanent `InputUIGraphDuplicate`, `InputUIGraphDelet
 ### `Physics2DDefaultConstraintBias`
 
 `public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; }` exposes physics/2d/solver/default_constraint_bias, initial 0.2, accepting only finite [0,1]. Each new physics space samples its current feature override. Existing spaces retain their captured value; PhysicsServer.SpaceSetConstraintDefaultBias changes one live space. Joint.Bias=0 inherits that space value. The registry includes the setting as a built-in key and preserves it through project settings storage.
+
+<a id="physics2dsleepthresholdlinear"></a>
+<a id="physics2dsleepthresholdangular"></a>
+<a id="physics2dtimebeforesleep"></a>
+### Physics2DSleepThresholdLinear, Physics2DSleepThresholdAngular and Physics2DTimeBeforeSleep
+
+Each is a `public static ProjectSetting<float>` get-only key:
+
+| Key | Storage name | Default / units |
+| --- | --- | --- |
+| `Physics2DSleepThresholdLinear` | `physics/2d/sleep_threshold_linear` | 2 scene units/s |
+| `Physics2DSleepThresholdAngular` | `physics/2d/sleep_threshold_angular` | 0.13962634 rad/s |
+| `Physics2DTimeBeforeSleep` | `physics/2d/time_before_sleep` | 0.5 s |
+
+Values must be finite and nonnegative; positive linear values must remain nonzero
+after backend unit conversion. New worlds sample current feature overrides. Existing
+worlds preserve captured values; use the corresponding PhysicsServer.SpaceSetBody...
+operations to change them. Zero speed thresholds disable automatic sleep, while
+zero time permits it after a positive quiet interval. CPU and independent resident
+GPU creation share the same capture helper. PhysicsSleepPolicyTests verifies capture,
+new/existing world distinction and live behavior.

@@ -2,14 +2,14 @@
 
 Last updated: 2026-10-09
 
-[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding and missing shape-family response remain open.
+[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding remains open; built-in boundary and directed-ray response now execute.
 
 [Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public
-GPU-world selection/binding remains open; declaration coverage is unchanged.
+GPU-world selection/binding remains open.
 
 [Resident shape queries](../components/gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding remains open.
 
@@ -39,7 +39,8 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 
 | Component | Production types | State |
 | --- | --- | --- |
-| [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape collision methods execute; directed ray solver impulses/materials/sleep execute; world boundaries, custom solver bias and debug color remain incomplete |
+| [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape collision methods execute; directed ray solver impulses/materials/sleep execute; analytic world boundaries now execute; custom solver bias and debug color remain incomplete |
+| [World sleep policy](../components/physics-sleep.md) | [`PhysicsSleepSettings`](../classes/PhysicsSleepSettings.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`ProjectSettings`](../classes/ProjectSettings.md) | Typed project/world thresholds and duration, separate speed checks, ordered wakes and zero warmed allocation; public GPU binding remains open |
 | [Scene physics bodies](../components/physics-bodies.md) | [`CollisionObject`](../classes/CollisionObject.md), [`PhysicsBody`](../classes/PhysicsBody.md), [`KinematicCollision`](../classes/KinematicCollision.md), [`CharacterBody`](../classes/CharacterBody.md), [`CharacterMotionMode`](../classes/CharacterMotionMode.md), [`CharacterPlatformOnLeave`](../classes/CharacterPlatformOnLeave.md), [`RigidBody`](../classes/RigidBody.md), [`StaticBody`](../classes/StaticBody.md), [`AnimatableBody`](../classes/AnimatableBody.md), [`PhysicsMaterial`](../classes/PhysicsMaterial.md) | Dynamic/static/kinematic motion, grounded/floating character sliding, platform carry, body sweeps, contacts, forces, fields and filtering executable; wider body/server contracts incomplete |
 | [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md), [`GrooveJoint`](../classes/GrooveJoint.md), [`DampedSpringJoint`](../classes/DampedSpringJoint.md) | Shared scene/server joint RIDs, revolute/guide/spring kernels, collision suppression, angular limits and motor executable; positional bias/correction caps and pin softness execute; debug drawing remains incomplete |
 | [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs execute; collider canvas filtering and wider server methods remain incomplete |
@@ -279,3 +280,9 @@ public GPU binding remains open. [WorldBoundaryTests](../../tests/Electron2D.Tes
 checks far-away contacts, lifetime, sleep/edit/removal and zero warmed managed
 allocation. [Measured overhead and traffic](../components/physics-shapes.md#infinite-world-boundaries)
 do not establish large-scene throughput or rendered acceptance.
+
+[World sleep policy](../components/physics-sleep.md) supplies typed project defaults
+and public per-space linear/angular quiet thresholds plus duration. Public CPU and
+independent GPU tests share strict threshold/delay semantics, body-size independence,
+ordered wakes, invalid-state preservation and warmed allocation. Public GPU-world
+binding and the other contact/iteration settings remain open.

@@ -1189,6 +1189,21 @@
       "godot": "ProjectSettings::property:physics/2d/solver/default_constraint_bias",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DDefaultConstraintBias()",
       "reason": "Typed project default is sampled with feature overrides at space creation; the zero-bias joint inherits the current space value (ADR 0087)."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/sleep_threshold_linear",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DSleepThresholdLinear()",
+      "reason": "ADR 0089: typed project default sampled at world creation by shared CPU and independent GPU sleep policy; PhysicsSleepPolicyTests verifies captured/live behavior."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/sleep_threshold_angular",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DSleepThresholdAngular()",
+      "reason": "ADR 0089: typed project default sampled at world creation by shared CPU and independent GPU sleep policy; PhysicsSleepPolicyTests verifies captured/live behavior."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/time_before_sleep",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DTimeBeforeSleep()",
+      "reason": "ADR 0089: typed project default sampled at world creation by shared CPU and independent GPU sleep policy; PhysicsSleepPolicyTests verifies captured/live behavior."
     }
   ],
   "extras": [
@@ -1983,6 +1998,36 @@
       "electron2d": "method:Electron2D.WorldBoundaryShape.GetRect()",
       "reason": "Finite normalized editing marker for infinite geometry; never used as collision bounds.",
       "adr": "ADRs 0003, 0013, 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(Electron2D.RID)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(Electron2D.RID)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyTimeToSleep(Electron2D.RID)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyTimeToSleep(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
+      "adr": "ADRs 0004, 0087, 0089"
     }
   ],
   "statusGroups": [
@@ -3385,7 +3430,7 @@
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
       "state": "Partial",
-      "reason": "SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias execute the joint correction fraction with validation, owner/phase guards and inherited-joint waking. Other applicable sleep/contact/iteration space parameters remain open and enter their owning solver-policy slices."
+      "reason": "Typed constraint-bias and linear/angular sleep threshold/duration pairs execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089, PhysicsJointPolicyTests, PhysicsSleepPolicyTests). Contact recycling/separation/penetration/bias and solver iteration settings remain open; independent public GPU world binding remains open."
     },
     {
       "godot": [
@@ -3414,6 +3459,48 @@
       ],
       "state": "Implemented",
       "reason": "Analytic infinite half-plane resource, typed creation/data/lifetime, logical ShapeType identities, CPU scene/server response/sensing/sleep and internal GPU contact/query/CCD paths execute (ADR 0054, WorldBoundaryTests, shared GPU query matrices). Custom preserves only its enum identity; extension geometry and public GPU binding remain separate open capabilities."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/sleep_threshold_linear"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0089: numeric selector represented by typed SpaceGetBodyLinearVelocitySleepThreshold/SpaceSetBodyLinearVelocitySleepThreshold; actual sleep behavior executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/sleep_threshold_angular"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0089: numeric selector represented by typed SpaceGetBodyAngularVelocitySleepThreshold/SpaceSetBodyAngularVelocitySleepThreshold; actual sleep behavior executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/time_before_sleep"
+      ],
+      "state": "Implemented",
+      "reason": "Typed finite nonnegative default, built-in registry storage, world capture and separate quiet threshold/duration behavior execute on CPU and independent GPU (ADR 0089, PhysicsSleepPolicyTests). Public GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_TIME_TO_SLEEP"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0089: numeric selector represented by typed SpaceGetBodyTimeToSleep/SpaceSetBodyTimeToSleep; actual sleep behavior executes."
     }
   ]
 }

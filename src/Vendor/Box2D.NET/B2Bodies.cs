@@ -914,10 +914,8 @@ namespace Box2D.NET
             // Early out if the body is asleep already and the desired movement is small
             if (body.setIndex != (int)B2SolverSetType.b2_awakeSet)
             {
-                float maxVelocity = b2Length(linearVelocity) + b2AbsFloat(angularVelocity) * sim.maxExtent;
-
-                // Return if velocity would be sleepy
-                if (maxVelocity < body.sleepThreshold)
+                // Return if both requested velocities would be quiet.
+                if (b2Length(linearVelocity) < body.sleepThreshold && b2AbsFloat(angularVelocity) < world.sleepAngularThreshold)
                 {
                     return;
                 }

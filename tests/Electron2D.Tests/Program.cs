@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SLEEP_POLICY_GPU") == "1") { PhysicsSleepPolicyTests.RunResident(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SLEEP_POLICY") == "1") { PhysicsSleepPolicyTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY_GPU") == "1") { WorldBoundaryTests.RunResident(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY") == "1") { WorldBoundaryTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RAY_DYNAMICS") == "1") { SeparationRayDynamicsTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
@@ -40,7 +42,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1
     PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run();
     PhysicsBodyStateTests.Run(); PhysicsServerForceTests.Run(); PhysicsServerStateTests.Run(); PhysicsBodyParameterTests.Run();
     PhysicsSurfaceVelocityTests.Run(); PhysicsContactImpulseTests.Run();
-    PhysicsServerJointTests.Run(); PhysicsJointPolicyTests.Run(); WorldTests.Run();
+    PhysicsServerJointTests.Run(); PhysicsJointPolicyTests.Run(); PhysicsSleepPolicyTests.Run(); WorldTests.Run();
     AnimatableBodyTests.Run(); CharacterBodyTests.Run(); RigidFreezeModeTests.Run(); PhysicalBoneTests.Run();
     Console.WriteLine("Shared collider backend passed: bodies/areas, geometry, materials, mass, views, joints, worlds, motion modes and physical bones.");
     return;
@@ -643,6 +645,7 @@ PhysicsServerJointTests.Run();
 PhysicsJointPolicyTests.Run();
 PhysicsServerShapeSlotTests.Run();
 PhysicsActivityTests.Run();
+PhysicsSleepPolicyTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();

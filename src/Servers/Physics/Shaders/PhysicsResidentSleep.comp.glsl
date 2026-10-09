@@ -160,10 +160,10 @@ void main()
         ResidentBody b=bodies[i];uint r=root(i,control.z);if(r==none)return;
         bool asleep=(b.flags.z&16u)!=0u;
         vec3 motion=b.velocity.xyz,correction=corrections[i].xyz;
-        bool eligible=(b.flags.z&8u)==0u&&length(motion.xy)<=policy.x&&abs(motion.z)<=policy.y&&
-            length(correction.xy)<=policy.x&&abs(correction.z)<=policy.y;
+        bool eligible=(b.flags.z&8u)==0u&&length(motion.xy)<policy.x&&abs(motion.z)<policy.y&&
+            length(correction.xy)<policy.x&&abs(correction.z)<policy.y;
         if(!finite4(vec4(motion,0))||!finite4(vec4(correction,0))){fail();return;}
-        float clock=asleep?policy.z:eligible?min(policy.z,b.velocity.w+policy.w):0;
+        float clock=asleep?b.velocity.w:eligible?min(3.402823466e38,b.velocity.w+policy.w):0;
         bodies[i].velocity.w=clock;
         atomicMin(graph[r].z,floatBitsToUint(clock));
         if(!asleep&&!eligible)atomicOr(graph[r].y,4u);
@@ -175,7 +175,7 @@ void main()
         if(dynamicBody(i))
         {
             uint r=root(i,control.z);if(r==none)return;
-            if((graph[r].y&4u)==0u&&uintBitsToFloat(graph[r].z)>=policy.z)
+            if((graph[r].y&4u)==0u&&uintBitsToFloat(graph[r].z)>policy.z)
             {b.flags.z|=16u;b.velocity.xyz=vec3(0);bodies[i]=b;}
             if((b.flags.z&16u)==0u)atomicAdd(awakeCount,1u);
         }

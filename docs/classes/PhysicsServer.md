@@ -4,7 +4,8 @@ Last updated: 2026-10-09
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
-Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Physics/PhysicsServer.API.cs).
+Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Physics/PhysicsServer.API.cs)
+and [`PhysicsServer.Sleep.API.cs`](../../src/Servers/Physics/PhysicsServer.Sleep.API.cs).
 
 ## Description
 
@@ -625,3 +626,28 @@ its logical authored geometry, independent of compiled fixture decomposition or
 short-shape fallbacks. See [ShapeType](PhysicsServer.ShapeType.md) for numeric values
 and [WorldBoundaryShape](WorldBoundaryShape.md) for geometry/lifetime/verification.
 The Custom identity does not provide an extension factory.
+
+## World sleep settings
+
+| Signature | Value and default |
+| --- | --- |
+| `public static float SpaceGetBodyLinearVelocitySleepThreshold(RID space)` | Scene units/s; project default 2. |
+| `public static void SpaceSetBodyLinearVelocitySleepThreshold(RID space, float value)` | Sets the finite nonnegative linear threshold. |
+| `public static float SpaceGetBodyAngularVelocitySleepThreshold(RID space)` | Radians/s; project default 0.13962634. |
+| `public static void SpaceSetBodyAngularVelocitySleepThreshold(RID space, float value)` | Sets the finite nonnegative angular threshold. |
+| `public static float SpaceGetBodyTimeToSleep(RID space)` | Seconds; project default 0.5. |
+| `public static void SpaceSetBodyTimeToSleep(RID space, float value)` | Sets the finite nonnegative quiet duration. |
+
+Each new world captures ProjectSettings feature overrides. Existing worlds retain
+their settings. Both speeds must be strictly below the thresholds for longer than
+the duration. Zero velocity thresholds disable automatic sleep; zero duration needs
+one eligible positive interval. A changed value wakes dynamics and resets timers;
+equal writes do neither. Explicit sleep and CanSleep remain independent. Positive
+linear thresholds must survive backend unit conversion.
+
+All six operations reject stale/wrong RIDs with ArgumentException and non-owner or
+in-solver access with InvalidOperationException. Setters reject invalid values with
+ArgumentOutOfRangeException before mutation. Inactive worlds allow configuration;
+post-solver callbacks can change future intervals, retaining committed changes if
+a later callback fails. Scene RIDs share exactly the same operations. See
+[World sleep policy](../components/physics-sleep.md) for tests and measurements.

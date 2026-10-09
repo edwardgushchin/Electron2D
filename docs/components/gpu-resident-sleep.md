@@ -12,7 +12,8 @@ body/shape/joint edits wake affected bodies. Ordered pending commands retain the
 latest explicit sleep/velocity/impulse action. Constant force remains configured
 while asleep. Static and kinematic roles do not enter dynamic sleep.
 
-Simulate evaluates automatic sleep using independently configurable finite,
+Simulate evaluates automatic sleep using shared PhysicsSleepSettings sampled from
+project defaults at creation, with independently configurable finite,
 nonnegative linear/angular thresholds and a quiet interval. Initial internal values
 are 2 scene units/s, 0.13962634 rad/s and 0.5 s. These are internal solver settings;
 they do not close the missing public SpaceParameter integration. Step remains the
@@ -172,3 +173,10 @@ actual 16-byte integration+broad and 24-byte integration+broad+narrow transfers;
 the following full run passes without dropping either status or activity data.
 
 [Resident CCD](gpu-resident-ccd.md) retains one sleep-age update per scheduled substep across its internal impact intervals. Its mode edit wakes the affected body and invalidates the inactive-world guard through the ordinary command/version path.
+
+Thresholds are strict: speed equality stays awake, and quiet time must exceed the
+configured duration. A zero speed threshold disables automatic sleep. Changed settings
+use ordered per-body wake commands rather than a deferred global wake flag, preserving
+later explicit sleep and synchronous zero-time reads. The existing world-policy tests
+now use positive speed thresholds for zero-duration eligibility. See the shared
+[sleep policy report](physics-sleep.md) for CPU comparisons and edit traffic.

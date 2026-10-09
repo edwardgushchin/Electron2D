@@ -200,6 +200,21 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<float> Physics2DDefaultAngularDamp { get; } =
         new("physics/2d/default_angular_damp", 1f, float.IsFinite);
 
+    /// <summary>Defines the world's linear quiet threshold in scene units per second.</summary>
+    /// <value>physics/2d/sleep_threshold_linear; defaults to 2. New worlds sample feature overrides; existing worlds retain their settings.</value>
+    public static ProjectSetting<float> Physics2DSleepThresholdLinear { get; } =
+        new("physics/2d/sleep_threshold_linear", 2f, PhysicsSleepSettings.ValidLinear);
+
+    /// <summary>Defines the world's angular quiet threshold in radians per second.</summary>
+    /// <value>physics/2d/sleep_threshold_angular; defaults to 0.13962634. New worlds sample feature overrides; existing worlds retain their settings.</value>
+    public static ProjectSetting<float> Physics2DSleepThresholdAngular { get; } =
+        new("physics/2d/sleep_threshold_angular", 0.13962634f, PhysicsSleepSettings.ValidNonnegative);
+
+    /// <summary>Defines the world's quiet duration before automatic sleep in seconds.</summary>
+    /// <value>physics/2d/time_before_sleep; defaults to 0.5. New worlds sample feature overrides; existing worlds retain their settings.</value>
+    public static ProjectSetting<float> Physics2DTimeBeforeSleep { get; } =
+        new("physics/2d/time_before_sleep", 0.5f, PhysicsSleepSettings.ValidNonnegative);
+
     /// <summary>Defines the positional correction fraction inherited by joints whose bias is zero.</summary>
     /// <value>physics/2d/solver/default_constraint_bias; defaults to 0.2 and accepts finite values from zero to one. Sampled when a physics space is created.</value>
     public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; } =

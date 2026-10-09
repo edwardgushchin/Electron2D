@@ -6,9 +6,7 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
-    /// <summary>Internal linear/angular quiet thresholds in scene units/s and rad/s, followed by the quiet duration in seconds.</summary>
-    internal readonly record struct SleepSettings(float LinearThreshold = 2, float AngularThreshold = 0.13962634f, float TimeToSleep = 0.5f);
-    private SleepSettings _sleepSettings = new(2, 0.13962634f, 0.5f);
+    private PhysicsSleepSettings _sleepSettings = PhysicsSleepSettings.FromProject();
     private bool _wakeAllSleep;
     private (int, float, float, float, float, float)? _sleepSolverPolicy;
     private long _sleepBodyVersion = -1, _sleepShapeVersion = -1, _sleepGeometryEpoch = -1;
@@ -24,15 +22,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal Float4 Policy, Gravity;
     }
 
-    internal SleepSettings GetSleepSettings() { EnsureAccess(); return _sleepSettings; }
-    internal void SetSleepSettings(in SleepSettings settings)
+    internal PhysicsSleepSettings GetSleepSettings() { EnsureAccess(); return _sleepSettings; }
+    internal void SetSleepSettings(in PhysicsSleepSettings settings)
     {
         EnsureAccess();
-        if (!float.IsFinite(settings.LinearThreshold) || settings.LinearThreshold < 0 ||
-            !float.IsFinite(settings.AngularThreshold) || settings.AngularThreshold < 0 ||
-            !float.IsFinite(settings.TimeToSleep) || settings.TimeToSleep < 0) throw new ArgumentOutOfRangeException(nameof(settings));
+        settings.Validate();
         if (_sleepSettings == settings) return;
-        _sleepSettings = settings; if (Count > 0) _wakeAllSleep = true;
+        _sleepSettings = settings;
+        // Preserve ordered authoring: later explicit sleep must win over this policy wake.
+        for (var i = 0; i < _highWater; i++)
+            if (_slots[i].Alive && _slots[i].Mode >= PhysicsServer.BodyMode.Rigid) Wake(i);
     }
     internal bool GetCanSleep(BodyHandle body) { Validate(body); return _slots[body.Index].CanSleep; }
     internal void SetCanSleep(BodyHandle body, bool value)

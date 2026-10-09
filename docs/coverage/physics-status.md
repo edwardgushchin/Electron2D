@@ -37,7 +37,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 5 | 1 | 1 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 129 | 14 | 4 | 22 | 46 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 129 | 14 | 4 | 19 | 49 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 0 | 141 | 0 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 0 | 0 | 3 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 547 | 55 | 221 | 23 | 46 |
+| **Total** | | 547 | 55 | 221 | 20 | 49 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -166,9 +166,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2D::enum_value:ProcessInfo.INFO_ACTIVE_OBJECTS`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:ProcessInfo.INFO_COLLISION_PAIRS`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:ProcessInfo.INFO_ISLAND_COUNT`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_ANGULAR_VELOCITY_SLEEP_THRESHOLD`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_LINEAR_VELOCITY_SLEEP_THRESHOLD`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_BODY_TIME_TO_SLEEP`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_DEFAULT_BIAS`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_MAX_SEPARATION`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
@@ -194,8 +191,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2D::method:get_process_info(int:PhysicsServer2D.ProcessInfo)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:shape_get_data(RID:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:shape_set_data(RID:,Variant:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
-| [`PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)`](classes/PhysicsServer2D.md) | Partial | SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias execute the joint correction fraction with validation, owner/phase guards and inherited-joint waking. Other applicable sleep/contact/iteration space parameters remain open and enter their owning solver-policy slices. |
-| [`PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)`](classes/PhysicsServer2D.md) | Partial | SpaceGetConstraintDefaultBias/SpaceSetConstraintDefaultBias execute the joint correction fraction with validation, owner/phase guards and inherited-joint waking. Other applicable sleep/contact/iteration space parameters remain open and enter their owning solver-policy slices. |
+| [`PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)`](classes/PhysicsServer2D.md) | Partial | Typed constraint-bias and linear/angular sleep threshold/duration pairs execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089, PhysicsJointPolicyTests, PhysicsSleepPolicyTests). Contact recycling/separation/penetration/bias and solver iteration settings remain open; independent public GPU world binding remains open. |
+| [`PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)`](classes/PhysicsServer2D.md) | Partial | Typed constraint-bias and linear/angular sleep threshold/duration pairs execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089, PhysicsJointPolicyTests, PhysicsSleepPolicyTests). Contact recycling/separation/penetration/bias and solver iteration settings remain open; independent public GPU world binding remains open. |
 | [`class:PhysicsServer2DExtension`](classes/PhysicsServer2DExtension.md) | Blocked | Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). |
 | [`PhysicsServer2DExtension::method:_area_add_shape(RID:,RID:,Transform2D:,bool:)`](classes/PhysicsServer2DExtension.md) | Blocked | Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). |
 | [`PhysicsServer2DExtension::method:_area_attach_canvas_instance_id(RID:,int:)`](classes/PhysicsServer2DExtension.md) | Blocked | Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). |
@@ -645,13 +642,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 0 | 0 | 4 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 6 | 3 | 14 | 1 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 9 | 3 | 11 | 1 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 1 | 1 | 0 | 1 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 0 | 0 | 4 | 0 | 0 |
-| **Total** | | 7 | 11 | 58 | 2 | 0 |
+| **Total** | | 10 | 11 | 55 | 2 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -674,14 +671,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`ProjectSettings::property:debug/shapes/collision/shape_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
-| [`ProjectSettings::property:physics/2d/sleep_threshold_angular`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
-| [`ProjectSettings::property:physics/2d/sleep_threshold_linear`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/solver/contact_max_separation`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/solver/contact_recycle_radius`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/solver/default_contact_bias`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/solver/solver_iterations`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
-| [`ProjectSettings::property:physics/2d/time_before_sleep`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/common/enable_object_picking`](classes/ProjectSettings.md) | Unimplemented | Trigger: next core timing-settings slice in ProjectSettings (ADRs 0016 and 0019). |
 | [`ProjectSettings::property:physics/common/max_physics_steps_per_frame`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |

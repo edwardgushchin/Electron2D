@@ -1,6 +1,6 @@
 # GPUPhysicsWorld
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 Device and offline pipeline ownership now use [GPUPhysicsDevice](GPUPhysicsDevice.md).
 The separate [GPUPhysicsBodyStore](GPUPhysicsBodyStore.md) develops resident body
@@ -345,3 +345,9 @@ hosted GPU-stage experiment leaves boundary/ray custom manifold publication on t
 host; independent GPUPhysicsBodyStore uses device plane contacts instead.
 [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks both
 paths, with [measurements and limits](../components/physics-shapes.md#infinite-world-boundaries).
+
+The legacy stage finalizer now receives world angular sleep threshold and quiet
+duration along with each body's linear threshold. It preserves independent speed
+checks without shape-radius weighting; layouts remain 64-byte input/32-byte uniforms.
+PhysicsSleepPolicyTests verifies public policy behavior on this path separately from
+the independent GPU store.

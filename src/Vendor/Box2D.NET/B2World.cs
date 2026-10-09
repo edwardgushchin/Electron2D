@@ -137,6 +137,7 @@ namespace Box2D.NET
         public float contactSpeed;
         public float contactHertz;
         public float contactDampingRatio;
+        internal float sleepAngularThreshold, timeToSleep;
 
         public b2FrictionCallback frictionCallback;
         public b2RestitutionCallback restitutionCallback;
@@ -264,6 +265,7 @@ namespace Box2D.NET
             restitutionThreshold = 0.0f;
             maxLinearSpeed = 0.0f;
             contactSpeed = 0.0f;
+            sleepAngularThreshold = timeToSleep = 0;
             contactHertz = 0.0f;
             contactDampingRatio = 0.0f;
 

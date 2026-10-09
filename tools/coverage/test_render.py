@@ -318,10 +318,13 @@ def main():
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("world_boundary_shape_create", "shape_get_type"))
+    for setting in ("sleep_threshold_linear", "sleep_threshold_angular", "time_before_sleep"):
+        assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines()
+                                            if row.startswith("| [`property") and f"physics/2d/{setting}" in row)
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 129, "Partial": 14, "Unimplemented": 22, "Blocked": 4, "Excluded": 46}
+                "Implemented": 129, "Partial": 14, "Unimplemented": 19, "Blocked": 4, "Excluded": 49}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

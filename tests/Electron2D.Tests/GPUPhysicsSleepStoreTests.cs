@@ -38,7 +38,7 @@ internal static class GPUPhysicsSleepStoreTests
         s.SetCanSleep(b, true); s.SetVelocity(b, new(3, 0), 0); Settle(s);
         Check(!Read(s, b).Sleeping, "Linear threshold prevents sleep.");
         s.SetVelocity(b, Vector2.Zero, 0.2f); Settle(s); Check(!Read(s, b).Sleeping, "Angular threshold prevents sleep.");
-        s.SetSleepSettings(new(0, 0, 0)); s.SetVelocity(b, new(1, 0), 0); s.Simulate(0.01f, Vector2.Zero);
+        s.SetSleepSettings(new(0.5f, 0.1f, 0)); s.SetVelocity(b, new(1, 0), 0); s.Simulate(0.01f, Vector2.Zero);
         Check(!Read(s, b).Sleeping, "Zero delay never sleeps a moving body.");
         s.SetVelocity(b, Vector2.Zero, 0); s.Simulate(0.01f, Vector2.Zero); Check(Read(s, b).Sleeping, "Zero delay sleeps an eligible body.");
         var settings = s.GetSleepSettings(); Reject<ArgumentOutOfRangeException>(() => s.SetSleepSettings(new(float.NaN, 1, 1)));

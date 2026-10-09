@@ -729,19 +729,21 @@ namespace Box2D.NET
                     B2_ASSERT(b2IsValidVec2(v)); B2_ASSERT(b2IsValidFloat(w));
                     sim.center = b2Add(sim.center, state.deltaPosition);
                     sim.transform.q = b2NormalizeRot(b2MulRot(state.deltaRotation, sim.transform.q));
-                    // Sleep observes velocity at the farthest point and weighted position correction.
-                    float maxVelocity = b2Length(v) + b2AbsFloat(w) * sim.maxExtent;
-                    float maxDeltaPosition = b2Length(state.deltaPosition) + b2AbsFloat(state.deltaRotation.s) * sim.maxExtent;
-                    float sleepVelocity = b2MaxFloat(maxVelocity, 0.5f * invTimeStep * maxDeltaPosition);
+                    float linearSpeed = b2Length(v);
+                    float maxVelocity = linearSpeed + b2AbsFloat(w) * sim.maxExtent;
+                    // Sleep thresholds are independent of body size; unfinished position correction also keeps the body awake.
+                    bool quiet = linearSpeed < body.sleepThreshold && b2AbsFloat(w) < world.sleepAngularThreshold &&
+                        0.5f * invTimeStep * b2Length(state.deltaPosition) < body.sleepThreshold &&
+                        0.5f * invTimeStep * b2AbsFloat(state.deltaRotation.s) < world.sleepAngularThreshold;
                     sim.transform.p = b2Sub(sim.center, b2RotateVector(sim.transform.q, sim.localCenter));
                     body.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
                     body.flags |= (sim.flags & (uint)(B2BodyFlags.b2_isSpeedCapped | B2BodyFlags.b2_hadTimeOfImpact));
                     sim.flags &= ~((uint)B2BodyFlags.b2_isFast | (uint)B2BodyFlags.b2_isSpeedCapped | (uint)B2BodyFlags.b2_hadTimeOfImpact);
-                    bool sleepy = enableSleep && body.enableSleep && !(sleepVelocity > body.sleepThreshold);
-                    body.sleepTime = sleepy ? body.sleepTime + timeStep : 0.0f;
+                    bool sleepy = enableSleep && body.enableSleep && quiet;
+                    body.sleepTime = sleepy ? MathF.Min(float.MaxValue, body.sleepTime + timeStep) : 0.0f;
                     isFast = !sleepy && body.type == B2BodyType.b2_dynamicBody && enableContinuous && maxVelocity * timeStep > 0.5f * sim.minExtent;
                     if (isFast) sim.flags |= (uint)B2BodyFlags.b2_isFast;
-                    keepAwake = body.sleepTime < B2_TIME_TO_SLEEP;
+                    keepAwake = !sleepy || body.sleepTime <= world.timeToSleep;
                     wantsSplit = island.constraintRemoveCount > 0;
                 }
 

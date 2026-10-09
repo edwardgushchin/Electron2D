@@ -50,7 +50,7 @@ internal static partial class GPUPhysicsTests
                 Near(sim.transform.p.X, actual.position.X); Near(sim.transform.p.Y, actual.position.Y);
                 Near(sim.transform.q.c, actual.rotation.c); Near(sim.transform.q.s, actual.rotation.s);
                 Near(state.linearVelocity.X, actual.linearVelocity.X); Near(state.linearVelocity.Y, actual.linearVelocity.Y); Near(state.angularVelocity, actual.angularVelocity);
-                var bits = body.sleepTime < B2Constants.B2_TIME_TO_SLEEP ? 2u : world.islands.data[body.islandId].constraintRemoveCount > 0 ? 4u : 0;
+                var bits = body.sleepTime <= world.timeToSleep ? 2u : world.islands.data[body.islandId].constraintRemoveCount > 0 ? 4u : 0;
                 if (actual.sleepTime != body.sleepTime || actual.bodyFlags != body.flags || actual.simFlags != sim.flags || actual.state != bits)
                     throw new Exception("GPU finalization sleep/flags differ from the CPU finalizer.");
             }

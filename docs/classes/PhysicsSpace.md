@@ -100,3 +100,9 @@ hosted GPU-stage experiment leaves boundary/ray custom manifold publication on t
 host; independent GPUPhysicsBodyStore uses device plane contacts instead.
 [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks both
 paths, with [measurements and limits](../components/physics-shapes.md#infinite-world-boundaries).
+
+SleepSettings captures the three project sleep defaults. SetSleepSettings validates
+owner/phase and all values before publication; changed values update native angular/time
+fields and existing body linear thresholds, restart timers and wake dynamics. New
+attachments read the current policy. The shared [sleep report](../components/physics-sleep.md)
+records exact threshold/delay semantics and scene/server verification.

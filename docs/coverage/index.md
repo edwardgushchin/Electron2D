@@ -548,3 +548,11 @@ The [physical bone slice](../components/skeletal-animation.md#physics-driven-bon
 ## Owned palettes and mesh skin integration
 
 The [mesh palette slice](../components/meshes.md#server-palettes-and-foureight-skin-records) adds stable scene canvas identity, all seven palette/attachment operations and actual typed four/eight skin storage/stride/partial-region/rendering. The complete shared ArrayFormat family follows the Mesh semantics under ADR 0051; unavailable attributes/morph/compression retain exact triggers and renderer heterogeneous selectors follow the existing typed-data exclusion. Fresh scenes retain geometry/material aliases; hardware buffers, generic owned canvas authoring, native allocator/platform/owner acceptance remain separate.
+
+The sleep-threshold/time branches of SpaceParameter now execute through typed
+SpaceGet/SetBodyLinearVelocitySleepThreshold, BodyAngularVelocitySleepThreshold and
+BodyTimeToSleep pairs. Their selector constants are Excluded as typed adaptations;
+three project-default rows are Implemented. The overall space parameter dispatcher
+remains Partial for contact and iteration settings. [PhysicsSleepPolicyTests](../../tests/Electron2D.Tests/PhysicsSleepPolicyTests.cs)
+checks CPU/public and internal GPU behavior; [measurements](../components/physics-sleep.md)
+do not certify public GPU selection or large-world speedup.

@@ -198,3 +198,10 @@ manifolds, ray/point/shape/body-motion queries and translating/rotating CCD use 
 plane equation. WorldBoundaryTests additionally verifies sensors, sleeping support,
 resource edits and removal. See the [boundary report](../components/physics-shapes.md#infinite-world-boundaries).
 Public scene/server backend binding remains separate work.
+
+GetSleepSettings and SetSleepSettings now use shared PhysicsSleepSettings, sampled
+from project defaults at store creation. Thresholds and duration use strict comparisons;
+zero speed thresholds disable automatic sleep. Changed policy queues ordinary ordered
+wake commands for live dynamics, so zero-time reads see the wake and a later explicit
+sleep wins. Unchanged settings retain state. [World sleep policy](../components/physics-sleep.md)
+records the per-edit transfer cost and shared CPU checks.
