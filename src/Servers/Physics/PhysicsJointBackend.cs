@@ -8,17 +8,24 @@ using static Box2D.NET.B2WheelJoints;
 
 namespace Electron2D;
 
-/// <summary>Owns the current CPU joint attachment and adapts shared engine settings to solver operations.</summary>
+/// <summary>Owns the selected physics joint attachment and adapts shared engine settings to solver operations.</summary>
 internal sealed partial class PhysicsJointBackend
 {
     private PhysicsSpace? _space;
     private B2BodyId BodyAID, BodyBID;
     private B2Transform _localFrameA, _localFrameB;
     internal B2JointId ID { get; private set; }
-    internal bool IsAttached => ID.index1 != 0;
+    internal bool IsAttached => ID.index1 != 0 || _gpuJoint.Generation != 0;
 
     internal static Transform SampleLocalFrame(PhysicsColliderBackend? body, Transform pose, Vector2 point, float angle)
     {
+        if (body?.Space?.GPUStore is not null)
+        {
+            var sampled = body.GetPose(); var current = new Transform(sampled.Rotation, Vector2.One, 0, sampled.Position);
+            var pointLocal = current.AffineInverse() * point;
+            PhysicsJointRuntime.ValidateExtent(pointLocal.Length());
+            return new Transform(angle - sampled.Rotation, Vector2.One, 0, pointLocal);
+        }
         var attached = body?.Space is not null;
         var local = attached ? b2Body_GetLocalPoint(body!.BodyID, PhysicsShapeBackend.ToBackend(point)) :
             PhysicsShapeBackend.ToBackend(pose.AffineInverse() * point);
@@ -35,6 +42,7 @@ internal sealed partial class PhysicsJointBackend
     internal void Attach(PhysicsSpace space, PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
     {
         if (IsAttached) throw new InvalidOperationException("A joint already has a backend attachment.");
+        if (space.GPUStore is not null) { AttachGPU(space, first, second, settings); return; }
         var definition = b2DefaultJointDef();
         _localFrameA = ToBackend(settings.FrameA); _localFrameB = ToBackend(settings.FrameB);
         BodyAID = first.BodyID; BodyBID = second?.BodyID ?? space.GetJointWorldBody();
@@ -71,6 +79,7 @@ internal sealed partial class PhysicsJointBackend
 
     internal void ApplySolverPolicy(PhysicsJointRuntime settings)
     {
+        if (_space?.GPUStore is not null) { SetGPUJoint(GPUDefinition(settings)); return; }
         var world = B2Worlds.b2GetWorld(ID.world0);
         var joint = b2GetJointSim(world, b2GetJointFullId(world, ID));
         var bias = settings.Bias == 0 ? _space!.ConstraintDefaultBias : settings.Bias;
@@ -99,24 +108,33 @@ internal sealed partial class PhysicsJointBackend
 
     internal void Detach()
     {
-        if (IsAttached && _space?.HasBackendFailure != true) b2DestroyJoint(ID, wakeAttached: true);
+        if (_gpuJoint.Generation != 0)
+        {
+            if (_space?.HasBackendFailure != true) _space!.GPUStore!.RemoveJoint(_gpuJoint);
+            _gpuJoint = default; _gpuDefinition = default;
+        }
+        else if (IsAttached && _space?.HasBackendFailure != true) b2DestroyJoint(ID, wakeAttached: true);
         ID = default; BodyAID = BodyBID = default;
         _localFrameA = _localFrameB = default;
         _pointA = _pointB = _pendingImpulse = default;
         _space = null;
     }
 
-    internal void SetCollideConnected(bool value) => b2Joint_SetCollideConnected(ID, value);
+    internal void SetCollideConnected(bool value) { if (_space?.GPUStore is not null) SetGPUJoint(_gpuDefinition with { DisableCollision = !value }); else b2Joint_SetCollideConnected(ID, value); }
     internal void SetPinLimits(bool enabled, float lower, float upper)
     {
+        if (_space?.GPUStore is not null) { SetGPUJoint(_gpuDefinition with { LimitEnabled = enabled, LowerAngle = enabled ? lower : 0, UpperAngle = enabled ? upper : 0 }); return; }
         if (enabled) b2RevoluteJoint_SetLimits(ID, lower, upper);
         b2RevoluteJoint_EnableLimit(ID, enabled);
     }
-    internal void SetPinMotorEnabled(bool value) => b2RevoluteJoint_EnableMotor(ID, value);
-    internal void SetPinMotorVelocity(float value) => b2RevoluteJoint_SetMotorSpeed(ID, value);
-    internal void SetPinMotorMaxTorque(float value) => b2RevoluteJoint_SetMaxMotorTorque(ID, value);
-    internal void SetGrooveLimits(float lower, float upper) =>
-        b2WheelJoint_SetLimits(ID, lower * PhysicsSpace.MetersPerUnit, upper * PhysicsSpace.MetersPerUnit);
+    internal void SetPinMotorEnabled(bool value) { if (_space?.GPUStore is not null) SetGPUJoint(_gpuDefinition with { MotorEnabled = value }); else b2RevoluteJoint_EnableMotor(ID, value); }
+    internal void SetPinMotorVelocity(float value) { if (_space?.GPUStore is not null) SetGPUJoint(_gpuDefinition with { MotorVelocity = value }); else b2RevoluteJoint_SetMotorSpeed(ID, value); }
+    internal void SetPinMotorMaxTorque(float value) { if (_space?.GPUStore is not null) SetGPUJoint(_gpuDefinition with { MotorMaxTorque = value }); else b2RevoluteJoint_SetMaxMotorTorque(ID, value); }
+    internal void SetGrooveLimits(float lower, float upper)
+    {
+        if (_space?.GPUStore is not null) SetGPUJoint(_gpuDefinition with { LowerTranslation = lower, UpperTranslation = upper });
+        else b2WheelJoint_SetLimits(ID, lower * PhysicsSpace.MetersPerUnit, upper * PhysicsSpace.MetersPerUnit);
+    }
 
     private static B2Transform ToBackend(Transform frame) =>
         new(PhysicsShapeBackend.ToBackend(frame.Origin), new B2Rot(frame.X.X, frame.X.Y));

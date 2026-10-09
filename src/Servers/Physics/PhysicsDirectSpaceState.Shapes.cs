@@ -89,6 +89,15 @@ public sealed partial class PhysicsDirectSpaceState
         var space = PrepareShapeQuery(parameters);
         var hits = _shapeHits;
         hits.Clear();
+        if (space.GPUStore is not null)
+        {
+            foreach (ref readonly var hit in space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Intersect, space.GPUStore.ShapeCount))
+            {
+                var owner = space.GPUQueryOwner(hit.Collider);
+                hits.Add(new(owner.RID, owner.SceneOwner, owner.ObjectIdentity, hit.LogicalShape));
+            }
+            return hits;
+        }
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return hits;
         var world = b2GetWorldFromId(space.WorldID);
         var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
@@ -136,6 +145,11 @@ public sealed partial class PhysicsDirectSpaceState
     public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
+        if (space.GPUStore is not null)
+        {
+            var hits = space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Cast, 1);
+            return hits.IsEmpty ? (1, 1) : (hits[0].SafeFraction, hits[0].UnsafeFraction);
+        }
         var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         if ((motion.X == 0 && motion.Y == 0) || _queryProxies.Count == 0 || _shapeCandidates.Count == 0)
             return (1, 1);
@@ -251,6 +265,7 @@ public sealed partial class PhysicsDirectSpaceState
         ArgumentNullException.ThrowIfNull(parameters);
         var space = PhysicsServer.Service.GetSceneSpace(_spaceRID);
         space.PrepareForQuery();
+        if (space.GPUStore is not null) return space;
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
         _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
         _queryProxies.Clear();

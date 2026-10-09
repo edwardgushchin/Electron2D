@@ -71,6 +71,14 @@ void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
     uint stage=control.x;
+    if(stage==10u)
+    {
+        if(bodies[i].flags.x!=graph[i].w)return;
+        uint r=root(i,previous.y);
+        if(r!=none&&(graph[r].y&2u)!=0u)wake(i,true);
+        bodies[i].flags.z&=~32u;
+        return;
+    }
     if(stage==0u){graph[i].y=0u;graph[i].z=none;return;}
     if(stage==1u)
     {

@@ -7,15 +7,13 @@ Last updated: 2026-10-09
 GPUPhysicsBodyStore can opt into completed-tick contact reports without creating a
 CPU solver world or downloading all manifolds. CaptureContactReports defaults to
 false. ReadContactReports takes retained caller spans of body handles, per-body
-limits and destinations. This is an internal prerequisite for the shared public
-world/direct-state adapter; public PhysicsSpace still uses CPU. Scene/RID event
-projection, callback delivery and portable network snapshots remain open.
+limits and destinations. The [shared public GPU adapter](physics-backends.md) now uses these reports for direct-state contacts and queued scene/server callbacks. Portable network snapshots and full family conformance remain open.
 
 Reports carry observed shape/body indices and generations, world positions,
 receiver-facing normal, world-axis impulse, final point velocities and greatest
-observed depth. These local identities are not wire IDs or public RIDs. The future
-adapter must resolve them to retained common identities and logical shape indices,
-apply contact-limit assignment invalidation and preserve the existing callback/event
+observed depth. These local identities are not wire IDs or public RIDs. The public
+adapter resolves them to retained common identities and logical shape indices,
+applies contact-limit assignment invalidation and preserves the existing callback/event
 sequence under [ADR 0070](../decisions/physics.md#adr-0070).
 
 ## Frame accumulation

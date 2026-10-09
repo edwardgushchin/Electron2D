@@ -7,6 +7,7 @@ internal sealed partial class PhysicsColliderBackend
     private long _shapePolicyEpoch = -1;
     internal void PrepareContactPolicy()
     {
+        if (GPU is not null) return; // The resident store observes shared shape policy revisions.
         if (Space is null || _shapePolicyEpoch == Shape.SolverPolicyEpoch) return;
         var changed = false;
         foreach (var id in _shapes)

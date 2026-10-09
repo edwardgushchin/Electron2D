@@ -10,7 +10,7 @@ The internal `SetMode`/`GetMode` pair uses PhysicsServer.BodyMode;
 linear/angular damping with independent Combine/Replace modes, a dynamic rotation
 lock and default-force omission.
 These are executable device settings, with comparisons against the public CPU
-contract. The independent public scene/server adapter, public Area/force projection and explicit direct-state IntegrateForces remain open.
+contract. The [public scene/server adapter](physics-backends.md) now supplies roles, Area fields and forces. Full parameter-family conformance on that path remains open.
 No public declarations or coverage states change in this stage.
 
 Changing mode preserves the body handle, pose, authored mass/center/inertia,
@@ -20,8 +20,7 @@ motion; restoring Rigid leaves it zero until another action supplies it. A
 same-mode write is harmless. Static velocities represent virtual surface motion;
 kinematic velocities now configure a separate virtual channel alongside
 [device-derived target travel](gpu-resident-kinematic.md). Targets ignore forces/
-impulses; only actual travel moves geometry and joint anchors. The public scene/
-server adapter remains open.
+impulses; only actual travel moves geometry and joint anchors. The public scene/server adapter now separates actual target travel from virtual surface velocity.
 
 The authored rotation lock is effective on dynamic roles; nondynamic modes retain
 the setting without suppressing their commanded/virtual angular velocity.

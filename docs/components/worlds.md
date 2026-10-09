@@ -1,8 +1,14 @@
 # Canvas and physics worlds
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 A World combines one stable logical rendering canvas with one lazily created registered physics space. Viewport.World selects that runtime; CanvasItem.GetWorld resolves the nearest viewport's selection, or a SceneTree fallback in a viewport-free scene. FindWorld returns the live local world. Each ordinary viewport starts independently. Assigning another viewport's World shares scene canvas content and physics queries/simulation; null assignment creates a fresh independent default, matching the pinned viewport setter. CanvasLayer canvases keep their explicit viewport scope.
+
+World can explicitly select CPU or GPU physics independently of rendering, with
+optional startup-only CPU fallback. Requested/actual choice and fallback reason
+are observable. Parameterless creation and fresh default viewport worlds use CPU.
+Duplicates share selection with the runtime. See [backend selection](physics-backends.md)
+for execution, failure and verification limits.
 
 ## Runtime and ownership
 

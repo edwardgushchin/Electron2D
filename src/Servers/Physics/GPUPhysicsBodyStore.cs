@@ -81,6 +81,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     private int _highWater, _free = -1, _pendingCount;
     private long _bodyVersion;
     private bool _disposed, _failed;
+    internal bool HasFailed => _failed;
     internal int Count { get; private set; }
     internal string Driver => _context.Driver;
     internal string DeviceName => _context.DeviceName;
@@ -171,14 +172,17 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         Wake(body.Index);
     }
 
-    internal void SetVelocity(BodyHandle body, Vector2 linear, float angular)
+    internal void SetVelocity(BodyHandle body, Vector2 linear, float angular) => SetVelocityCore(body, linear, angular, true);
+    internal void SetSolverVelocity(BodyHandle body, Vector2 linear, float angular) => SetVelocityCore(body, linear, angular, false);
+
+    private void SetVelocityCore(BodyHandle body, Vector2 linear, float angular, bool surfaceForNondynamic)
     {
         Validate(body);
         if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
         if (RotationLocked(_slots[body.Index])) angular = 0;
         ref var command = ref Edit(body.Index); command.Mask = (command.Mask | Velocity) & ~ClearAngular;
         var value = new Float4(linear.X, linear.Y, angular, 0);
-        if (_slots[body.Index].Mode < PhysicsServer.BodyMode.Rigid)
+        if (surfaceForNondynamic && _slots[body.Index].Mode < PhysicsServer.BodyMode.Rigid)
         {
             value.W = _slots[body.Index].Surface.W;
             _slots[body.Index].Surface = value; command.Body.Surface = value; command.Mask |= SurfaceEdit;

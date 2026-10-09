@@ -2,19 +2,21 @@
 
 Last updated: 2026-10-09
 
-[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding and missing shape-family response remain open.
+[Public backend selection and shared worlds](physics-backends.md) now connect the independent resident implementation to PhysicsServer and World. CPU remains the default. Startup-only fallback is explicit and observable; GPU worlds create no CPU solver. The linked report records public-path tests, transfer costs and incomplete acceptance.
 
-[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
+[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the independent public backend now receives the same CCD policy. Full cross-backend shape-family acceptance remains open.
 
-[Resident shape queries](gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding remains open.
+[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion and CharacterBody now route to these kernels; full CharacterBody conformance remains open.
 
-[Resident ray and point queries](gpu-resident-queries.md) now search current device geometry with stable logical result caps, masks, exclusions and authored canvas filtering. Query-only tree preparation skips simulation pair generation; the public world/query adapter remains open.
+[Resident shape queries](gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU direct-space and scene casts now use these kernels.
 
-[Resident contact publication](gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public direct-state/event projection remains open.
+[Resident ray and point queries](gpu-resident-queries.md) now search current device geometry with stable logical result caps, masks, exclusions and authored canvas filtering. Query-only tree preparation skips simulation pair generation; the public GPU world/query adapter now uses these kernels.
 
-[Resident Area fields](gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection remains open.
+[Resident contact publication](gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public GPU direct-state/contact-event projection now uses these reports.
 
-[Kinematic target/surface separation](gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
+[Resident Area fields](gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection now executes through the shared world.
+
+[Kinematic target/surface separation](gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server target and surface adapters now use the resident store.
 
 Built-in compute bytecode is generated from the versioned GLSL/include sources at
 runtime build time and embedded from `obj/`; generated `.spv` files are no longer
@@ -31,6 +33,8 @@ add public backend selection or replace the regular example's CPU physics.
 the device and delivers compact generation-qualified updates to that window. It
 avoids per-publication downloads of unchanged bodies, while retaining explicit
 selected reads for consumers requiring a fresh full snapshot.
+
+Public PhysicsSpace/scene integration now also consumes this stream.
 
 ## Native verification observation (2026-10-08)
 
@@ -58,7 +62,7 @@ response, device warm history and separate pose correction. Its update/gather
 kernels use separate hot impulse storage and precomputed contact Jacobians; the
 linked report distinguishes ordinary timing from opt-in fenced pass diagnostics. [Resident joints](gpu-resident-joints.md) add independent
 pin/groove/spring response, persistent history and collision vetoes. Shared [mass profiles](gpu-resident-mass.md) now supply automatic/custom centers
-and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. [Resident CCD](gpu-resident-ccd.md) now executes ray/full-shape trajectory checks and impact intervals internally. [Resident joint policies](gpu-resident-joints.md#joint-solver-policies) now execute bias, linear anchor softness and force/correction caps. Public CPU/stage-GPU joint policies now execute. [Explicit body exceptions](gpu-resident-exceptions.md) now share resident joint filtering with device generations, incident removal and connected waking; [One-way episodes](gpu-resident-one-way.md) now retain piece-level accepted/rejected sides on GPU and participate in ordinary/continuous response; [Live body parameters](gpu-resident-parameters.md) now update role, gravity, signed damping, rotation lock and omission through sparse device edits with CPU field/mode checks; [Transient forces](gpu-resident-forces.md) now retain single-tick input and eligibility on GPU across substeps, sleep and CCD; independent public selection/publication remain unconnected; historical full-stage results below still refer
+and moments to device motion and constraints. [Connected sleep and wake](gpu-resident-sleep.md) now execute independently with a version-checked inactive-world skip. [Resident CCD](gpu-resident-ccd.md) now executes ray/full-shape trajectory checks and impact intervals internally. [Resident joint policies](gpu-resident-joints.md#joint-solver-policies) now execute bias, linear anchor softness and force/correction caps. Public CPU/stage-GPU joint policies now execute. [Explicit body exceptions](gpu-resident-exceptions.md) now share resident joint filtering with device generations, incident removal and connected waking; [One-way episodes](gpu-resident-one-way.md) now retain piece-level accepted/rejected sides on GPU and participate in ordinary/continuous response; [Live body parameters](gpu-resident-parameters.md) now update role, gravity, signed damping, rotation lock and omission through sparse device edits with CPU field/mode checks; [Transient forces](gpu-resident-forces.md) now retain single-tick input and eligibility on GPU across substeps, sleep and CCD; independent public selection/publication now execute through the shared world; historical full-stage results below still refer
 to the older Box2D-hosted experiment.
 
 The compute device/pipeline lifetime is shared through GPUPhysicsDevice. Compute-only
@@ -81,19 +85,22 @@ readback, mirror and wait. Public semantic, invariant, stability and lifetime
 tests with justified numerical tolerances govern acceptance. Extending the
 existing host mirrors is not the architecture for the independent backend.
 The audit records the known transfer costs, unmeasured costs and remaining
-backend extraction work. No public selector or full GPU world is claimed here.
+conformance work. The public selector and independent GPU world now execute; full product acceptance is still open.
 
 [ADR 0054](../decisions/physics.md#adr-0054) selects a full GPU world alongside the
 managed CPU compatibility backend. Implementation is in progress. The existing
-public physics API still selects CPU; no production GPU/fallback selector has
-been exposed yet.
+public physics API defaults to CPU and now exposes explicit GPU selection with configurable startup fallback.
 
-The required selector lets a game developer deliberately choose CPU/Box2D.NET
+The selector lets a game developer deliberately choose CPU/Box2D.NET
 or GPU for the application's goals. CPU is a first-class backend even on a
 GPU-capable device. Automatic startup fallback is a separate configurable
 policy; requested and actual selection must be observable. Physics backend
 choice is independent of the renderer. Live migration of an existing world
 is not yet implemented or claimed.
+
+## Historical CPU-hosted stage experiment
+
+The following stage descriptions and measurements retain their original host architecture. They do not describe the independent public GPU backend above.
 
 `GPUPhysicsWorld` executes velocity/delta-pose integration and the colored and
 overflow contact solver: warm start, speculative/soft bias, one/two contact

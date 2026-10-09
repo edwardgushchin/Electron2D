@@ -73,7 +73,7 @@ internal sealed partial class PhysicsSpace
         {
             // A partially committed GPU interval cannot be replayed through the compatibility solver.
             _gpuFailure = failure;
-            _tasks.Drain();
+            _tasks!.Drain();
             var world = b2GetWorldFromId(_worldID);
             world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();

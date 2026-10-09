@@ -12,7 +12,14 @@ internal sealed class WorldRuntime
     internal RID NavigationMap { get { lock (_gate) { EnsureAlive(); if (!_navigationMap.IsValid()) { _navigationMap = NavigationServer.Service.CreateMap(this); NavigationServer.MapSetActive(_navigationMap, true); } return _navigationMap; } } }
     internal readonly RenderingCanvasRuntime Canvas;
     internal bool Alive => Volatile.Read(ref _alive);
-    internal WorldRuntime(bool sceneOwned) { SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this); }
+    internal PhysicsServer.Backend RequestedBackend { get; }
+    private readonly bool _allowCPUFallback;
+    internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false)
+    {
+        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        RequestedBackend = backend; _allowCPUFallback = allowCPUFallback;
+        SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this);
+    }
     internal void Retain() { lock (_gate) { EnsureAlive(); _resources++; } }
     internal void EnsureAlive() { if (!Alive) throw new ArgumentException("The world identity has expired."); }
     internal void ValidateOwner(SceneTree tree)
@@ -32,7 +39,7 @@ internal sealed class WorldRuntime
                 EnsureAlive();
                 if (ExistingSpace is null)
                 {
-                    var space = new PhysicsSpace();
+                    var space = new PhysicsSpace(RequestedBackend, _allowCPUFallback);
                     try { _spaceRID = PhysicsServer.Service.RegisterSceneSpace(space); ExistingSpace = space; }
                     catch { space.Dispose(); throw; }
                 }

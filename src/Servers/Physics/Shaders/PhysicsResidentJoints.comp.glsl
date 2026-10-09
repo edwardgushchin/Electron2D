@@ -140,7 +140,7 @@ void main()
         }
         if((history.w&1u)==0u&&(j.identity.z&2u)!=0u&&j.motorSpring.y>0)
         {
-            float cap=j.motorSpring.y*time.x;
+            float cap=min(maximum,j.motorSpring.y*(time.x*10000.0));
             emitRow(base+4u,j,ma,mb,vec2(0),1,1,j.motorSpring.x,0,vec2(-cap,cap),savedImpulse(old,4u,ratio),true);
         }
         return;

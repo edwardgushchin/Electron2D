@@ -12,7 +12,7 @@ joint solver or evolving joint-state mirror participates. This extends the
 internal backend component, not a selectable PhysicsServer implementation.
 
 Per-joint bias, pin-anchor softness and general impulse/correction caps now execute
-in this internal component. Their [CPU implementation and shared public parameters](physics-joint-policies.md) now execute, including the stage GPU host. Independent public-world adapters, full queries/events, portable checkpoints and network replay remain open.
+in this internal component. Their [CPU implementation and shared public parameters](physics-joint-policies.md) now execute, including the stage GPU host. [Independent public-world adapters](physics-backends.md), queries and events now execute; full joint-policy conformance, portable checkpoints and network replay remain open.
 
 ## Ownership and authoring
 
@@ -139,7 +139,7 @@ at the violated one. The analytic bias check caught that pre-existing defect; bo
 groove and pin angular stops now share the corrected rule.
 
 These semantics follow the accepted policy boundary in [ADR 0087](../decisions/physics-joints.md#adr-0087).
-The CPU/native and common scene/server projections now execute as documented in [joint policies](physics-joint-policies.md); independent public-world integration remains open.
+The CPU/native and common scene/server projections now execute as documented in [joint policies](physics-joint-policies.md); independent public-world integration now executes; complete policy-family acceptance on that path remains open.
 
 ## Verification
 

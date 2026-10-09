@@ -9,9 +9,7 @@ surface motion, following [ADR 0060](../decisions/physics.md#adr-0060),
 [ADR 0070](../decisions/physics.md#adr-0070) and
 [ADR 0075](../decisions/physics.md#adr-0075). Target velocity derivation, trajectory
 sweeps, pose integration and contact/joint response execute on the device.
-This remains an internal backend component. Public PhysicsSpace still selects CPU;
-scene synchronization, CharacterBody carry/query publication, public GPU selection
-and networking/replay are not connected by this stage.
+The [public GPU world adapter](physics-backends.md) now connects target/surface channels, scene poses and queries. Full CharacterBody carry conformance and networking/replay remain open.
 
 BodyDefinition velocity and SetVelocity use physical velocity for dynamic roles,
 and configured virtual surface velocity for static/kinematic roles. The latter

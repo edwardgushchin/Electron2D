@@ -1556,3 +1556,8 @@ Structural child order changes now notify the active renderer to republish regis
 
 
 Externally associated physics bodies observe this node’s tree entry/exit while attached. Membership updates scene contact/overlap signals even while raw bodies remain in their space. Reverse observers are removed on detach/rebind and cleared at disposal; throwing handlers do not replay committed transitions. See [object associations](../components/physics-object-bindings.md).
+
+During active-tree disposal, internal exit handlers may disable both internal
+processing lanes without passing the ordinary disposed-object mutation guard.
+The exception is limited to owner-thread tree exit and disabling; reenabling or
+mutating a disposed node remains rejected. RayCast and ShapeCast disposal exercise it.

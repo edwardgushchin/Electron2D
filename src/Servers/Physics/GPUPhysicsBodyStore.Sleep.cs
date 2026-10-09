@@ -53,6 +53,34 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         command.Mask = (command.Mask | 256 | Velocity) & ~(128u | Impulse);
         command.Body.Velocity = default; command.Impulse = default;
     }
+    internal void WakeConnected(BodyHandle body) { Validate(body); Wake(body.Index, structural: true); }
+
+    /// <summary>Publishes queued wake propagation through the last solved device graph without advancing time or applying forces.</summary>
+    internal unsafe void PublishExternalWakes()
+    {
+        EnsureAccess(); Step(0, default);
+        if (_sleepGraphBodies == 0) return;
+        var command = SDL.AcquireGPUCommandBuffer(Device);
+        if (command == 0) throw GPUPhysicsDevice.Failure("acquire immediate wake publication");
+        try
+        {
+            var settings = SleepParameters(0);
+            SleepPass(command, settings, 0, _sleepGraphBodies, _status!);
+            SleepPass(command, settings, 1, _sleepEdgeCount, _status!);
+            SleepPass(command, settings, 10, _sleepGraphBodies, _status!);
+            var copy = SDL.BeginGPUCopyPass(command);
+            if (copy == 0) throw GPUPhysicsDevice.Failure("begin immediate wake status");
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _download!.DangerousGetHandle() });
+            SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command); ReadbackBytes += 8;
+            var mapped = SDL.MapGPUTransferBuffer(Device, _download.DangerousGetHandle(), false);
+            if (mapped == 0) throw GPUPhysicsDevice.Failure("map immediate wake status");
+            try { if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU wake publication returned invalid state."); }
+            finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
+            _failed = false;
+        }
+        finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
+    }
+
     private void Wake(int index, bool structural = false)
     {
         ref var command = ref Edit(index);

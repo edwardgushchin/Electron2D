@@ -15,8 +15,10 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal B2BodyId BodyID { get; private set; }
     internal long AttachmentVersion { get; private set; }
     internal IReadOnlyList<B2ShapeId> Shapes => _shapes;
+    internal int ShapeCount => GPU is null ? _shapes.Count : GPUShapes.Count;
     internal float CollisionPriority { get; private set; } = 1;
-    internal ulong CanvasInstanceID { get; set; }
+    private ulong _canvasInstanceID;
+    internal ulong CanvasInstanceID { get => _canvasInstanceID; set { _canvasInstanceID = value; RefreshGPUIdentity(); } }
     internal ObjectIdentity ObjectIdentity { get; private set; } = sceneOwner?.BorrowIdentity() ?? default;
 
     internal void AttachObject(ElectronObject? value)
@@ -27,7 +29,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         var identity = value?.BorrowIdentity() ?? default;
         if (identity.ID == ObjectIdentity.ID) return;
         if (Space is not null) ExternalObjectNode()?.RemovePhysicsObjectBinding(this);
-        ObjectIdentity = identity;
+        ObjectIdentity = identity; RefreshGPUIdentity();
         if (Space is not null) ExternalObjectNode()?.AddPhysicsObjectBinding(this);
     }
 
@@ -41,6 +43,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal void SetCollisionPriority(float value)
     {
         Space?.EnsureQueryAccess(); ValidateCollisionPriority(value); CollisionPriority = value;
+        GPU?.SetCollisionPriority(GPUHandle, value);
     }
 
     internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
@@ -48,6 +51,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         if (Space is not null) throw new InvalidOperationException("A collider already belongs to a physics world.");
         if (ObjectIdentity.Target is Node node) { node.Tree?.EnsureOwnerThread(); node.EnsurePhysicsObjectAccess(); }
         var version = checked(AttachmentVersion + 1);
+        if (space.GPUStore is not null) { AttachGPU(space, position, rotation, configuration, version); return; }
         var definition = b2DefaultBodyDef();
         definition.type = BodyType(configuration.Mode);
         definition.position = PhysicsShapeBackend.ToBackend(position);
@@ -69,8 +73,12 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
 
     // Motion-role matching intentionally ignores rotation locks; callers retain
     // their own lock/freeze restoration policy when changing the role.
-    internal bool HasMotionMode(PhysicsServer.BodyMode mode) => b2Body_GetType(BodyID) == BodyType(mode);
-    internal void SetMotionMode(PhysicsServer.BodyMode mode) => b2Body_SetType(BodyID, BodyType(mode));
+    internal bool HasMotionMode(PhysicsServer.BodyMode mode) => GPU is { } gpu ? BodyType(gpu.GetMode(GPUHandle)) == BodyType(mode) : b2Body_GetType(BodyID) == BodyType(mode);
+    internal void SetMotionMode(PhysicsServer.BodyMode mode)
+    {
+        if (GPU is { } gpu) { gpu.SetMode(GPUHandle, mode); _gpuSurfaceLinear = default; _gpuSurfaceAngular = 0; Space!.InvalidateGPUStates(); }
+        else b2Body_SetType(BodyID, BodyType(mode));
+    }
 
     private static B2BodyType BodyType(PhysicsServer.BodyMode mode) => mode switch
     {
@@ -84,7 +92,13 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     {
         if (Space is null) return;
         ExternalObjectNode()?.RemovePhysicsObjectBinding(this);
-        if (!Space.HasBackendFailure) b2DestroyBody(BodyID);
+        if (GPU is { } gpu)
+        {
+            foreach (var shape in GPUShapes) shape.Query?.Dispose();
+            if (!Space.HasBackendFailure) gpu.Remove(GPUHandle);
+            Space.UnregisterGPUCollider(this); GPUShapes.Clear(); GPUHandle = default; GPUStateValid = false;
+        }
+        else if (!Space.HasBackendFailure) b2DestroyBody(BodyID);
         _shapes.Clear();
         _world = null; _body = null; _savedPose = default;
         BodyID = default;
@@ -100,6 +114,17 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
+        if (GPU is not null)
+        {
+            GPUSensor = sensor; GPUMask = mask;
+            ClearGPUShapes();
+            for (var index = 0; index < slots.Count; index++)
+            {
+                var slot = slots[index];
+                if (slot.Active) AddGPUShape(slot.Shape, slot.Transform, index, sensor, layer, mask, friction, bounce, sensor ? null : slot.OneWay);
+            }
+            return;
+        }
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
         for (var index = 0; index < slots.Count; index++)
         {
@@ -113,6 +138,19 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     {
         foreach (var slot in slots)
             if (!slot.Disabled) PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
+        if (GPU is not null)
+        {
+            GPUSensor = sensor; GPUMask = mask;
+            ClearGPUShapes();
+            for (var index = 0; index < slots.Count; index++)
+            {
+                var slot = slots[index];
+                if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
+                var oneWay = !sensor && slot.OneWay ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
+                AddGPUShape(slot.Shape.Geometry, slot.LocalTransform, index, sensor, layer, mask, friction, bounce, oneWay);
+            }
+            return;
+        }
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
         for (var index = 0; index < slots.Count; index++)
         {

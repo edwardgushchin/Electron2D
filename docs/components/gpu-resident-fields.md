@@ -11,16 +11,14 @@ accept explicit world defaults; existing Step/Simulate vector-gravity calls rema
 zero-default-damping controls and also apply registered Areas. Body policies now
 use RigidBody.DampMode.Combine/Replace for each authored damping coefficient.
 This implements the internal reduction required by
-[ADR 0056](../decisions/physics-fields.md#adr-0056). Public PhysicsSpace still uses
-CPU: scene/server GPU projection, event delivery, direct-state manual integration
-and networking remain open. No public declarations or coverage states change.
+[ADR 0056](../decisions/physics-fields.md#adr-0056). The [public GPU world](physics-backends.md) now projects scene/server Areas, publishes resolved fields and dispatches common events. Full family conformance and networking remain open. No public declarations or coverage states change.
 
 ## Membership and reduction
 
 Authored Area profiles sort by descending integer priority, then stable registration
 order. A profile change preserves that order; removal/rebinding gets a new order.
 Only profiles with at least one enabled channel enter the device table. The public
-adapter must retain the common world's stable Area traversal order when registering
+adapter retains the common world's stable Area traversal order when registering
 mixed scene/server objects. Registration/configuration are CPU authoring data;
 there is no host mirror of overlap membership or resolved body fields.
 

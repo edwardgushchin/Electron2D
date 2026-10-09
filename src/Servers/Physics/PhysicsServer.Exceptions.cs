@@ -101,9 +101,21 @@ public sealed partial class PhysicsServer
     {
         if (ResolveSceneObject(body) is PhysicsBody sceneBody)
         {
+            sceneBody.Space?.InvalidateGPUExceptions();
+            if (sceneBody.Space?.GPUStore is not null) return;
             sceneBody.MarkShapesDirty();
             return;
         }
-        GetCollider(body, isArea: false).MarkShapesDirty();
+        var collider = GetCollider(body, isArea: false);
+        collider.Space?.InvalidateGPUExceptions();
+        if (collider.Space?.GPUStore is null) collider.MarkShapesDirty();
+    }
+
+    internal void ObserveGPUExceptions(PhysicsSpace space)
+    {
+        lock (_registryGate)
+        {
+            foreach (var pair in _bodyExceptions) foreach (var target in pair.Value) space.ObserveGPUException(pair.Key, target);
+        }
     }
 }

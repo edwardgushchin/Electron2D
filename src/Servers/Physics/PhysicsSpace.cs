@@ -27,7 +27,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         EnsureQueryAccess(); PhysicsJointRuntime.ValidateBias(value);
         if (ConstraintDefaultBias == value) return;
-        ConstraintDefaultBias = value;
+        ConstraintDefaultBias = value; GPUStore?.SetConstraintDefaultBias(value);
         foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
     }
     private readonly List<Area> _areas = [];
@@ -39,14 +39,15 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly Dictionary<(ulong, ulong), OneWayPair> _oneWayPairs = [];
     private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly B2WorldId _worldID;
-    private readonly PhysicsTaskScheduler _tasks;
+    private readonly PhysicsTaskScheduler? _tasks;
     private GPUPhysicsWorld? _gpuWorld;
     private Exception? _gpuFailure;
 
-    // Internal during GPU-world bring-up; the production backend selector follows full-world integration.
+    // Historical CPU-hosted stage controls; public GPU spaces use the independent resident store.
     internal GPUPhysicsWorld EnableGPUIntegration()
     {
         EnsureQueryAccess();
+        if (GPUStore is not null) throw new InvalidOperationException("GPU stage controls require a CPU-hosted world.");
         if (_gpuWorld is not null) return _gpuWorld;
         var gpu = new GPUPhysicsWorld();
         b2GetWorldFromId(_worldID).integrateBodyStage = gpu.Integrate;
@@ -83,8 +84,14 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
     private readonly record struct OneWayPair(bool Allowed, long SeenStep);
 
-    internal PhysicsSpace()
+    internal PhysicsServer.Backend RequestedBackend { get; }
+    internal PhysicsServer.Backend ActualBackend => GPUStore is null ? PhysicsServer.Backend.CPU : PhysicsServer.Backend.GPU;
+    internal string? BackendFallbackReason { get; }
+
+    internal PhysicsSpace(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false)
     {
+        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        RequestedBackend = backend;
         var settings = ProjectSettings.Service;
         SleepSettings = PhysicsSleepSettings.FromProject(); SleepSettings.Validate();
         ContactSettings = PhysicsContactSettings.FromProject(); ContactSettings.Validate();
@@ -99,6 +106,21 @@ internal sealed partial class PhysicsSpace : IDisposable
         };
         _defaultGravity = DefaultAreaFields.ComputeGravity(Transform.Identity, Vector2.Zero);
         if (!_defaultGravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
+        if (backend == PhysicsServer.Backend.GPU)
+        {
+            try
+            {
+                GPUStore = new();
+                GPUStore.SetSleepSettings(SleepSettings); GPUStore.SetContactSettings(ContactSettings);
+                GPUStore.SetSolverIterations(SolverIterations); GPUStore.SetConstraintDefaultBias(ConstraintDefaultBias);
+            }
+            catch (Exception error) when (allowCPUFallback && error is InvalidOperationException or NotSupportedException or DllNotFoundException or EntryPointNotFoundException)
+            {
+                GPUStore?.Dispose(); GPUStore = null; BackendFallbackReason = error.Message;
+            }
+            catch { GPUStore?.Dispose(); throw; }
+            if (GPUStore is not null) return;
+        }
         var definition = b2DefaultWorldDef();
         definition.gravity = PhysicsShapeBackend.ToBackend(_defaultGravity);
         definition.restitutionThreshold = 0;
@@ -128,7 +150,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         IsActive = active;
     }
 
-    internal B2WorldId WorldID => _worldID;
+    internal B2WorldId WorldID => GPUStore is null ? _worldID : throw new InvalidOperationException("This physics space has no CPU solver world.");
     internal IReadOnlyList<PhysicsBody> Bodies => _bodies;
     internal IReadOnlyList<Area> Areas => _areas;
 
@@ -141,6 +163,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         {
             if (!area.AudioBusOverride || (area.CollisionLayer & mask) == 0 ||
                 selected is not null && area.PhysicsRID >= selected.PhysicsRID) continue;
+            if (GPUStore is not null) { if (GPUAreaContainsPoint(area, position, mask)) selected = area; continue; }
             var shapes = area.BackendShapes;
             for (var i = 0; i < shapes.Count; i++)
                 if (b2Shape_TestPoint(shapes[i], point)) { selected = area; break; }
@@ -148,7 +171,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
-    internal bool HasBackendFailure => _gpuFailure is not null || _continuousFailure is not null;
+    internal bool HasBackendFailure => _gpuFailure is not null || _continuousFailure is not null || GPUStore?.HasFailed == true;
 
     internal void EnsureReleaseAccess()
     {
@@ -161,7 +184,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureQueryAccess()
     {
         EnsureReleaseAccess();
-        if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
+        if (GPUStore?.HasFailed == true) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.");
+        if (GPUStore is null && b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
         if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);
     }
@@ -175,6 +199,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var body in _bodies) body.PrepareBackend();
         foreach (var area in _areas) area.PrepareBackend();
         foreach (var collider in _serverColliders) collider.PrepareBackend();
+        SyncGPUExceptions();
     }
 
     internal void PrepareMonitoringCapacity()
@@ -184,30 +209,31 @@ internal sealed partial class PhysicsSpace : IDisposable
         _contactBodies.Clear();
         foreach (var body in _bodies)
         {
-            shapes += body.BackendShapes.Count;
+            shapes += body.Backend.ShapeCount;
             if (body is not RigidBody rigid) continue;
             var limit = rigid.MaxContactsReported;
             contactEvents += checked(limit * 4);
             if (limit > 0 || rigid.ContactMonitor) _contactBodies.Add(rigid);
         }
-        foreach (var area in _areas) shapes += area.BackendShapes.Count;
-        foreach (var collider in _serverColliders) shapes += collider.BackendShapes.Count;
+        foreach (var area in _areas) shapes += area.Backend.ShapeCount;
+        foreach (var collider in _serverColliders) shapes += collider.Backend.ShapeCount;
         var overlapEvents = 0; var serverEvents = 0;
         foreach (var area in _areas)
         {
-            var pairs = checked(area.BackendShapes.Count * shapes);
+            var pairs = checked(area.Backend.ShapeCount * shapes);
             area.PrepareOverlaps(objects, pairs); overlapEvents += checked(pairs * 4);
             if (PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID) is { } runtime) { runtime.Prepare(pairs); serverEvents += checked(pairs * 2); }
         }
         foreach (var collider in _serverColliders)
             if (collider.IsArea && PhysicsServer.Service.FindAreaRuntime(collider.RID) is { } runtime)
             {
-                var pairs = checked(collider.BackendShapes.Count * shapes);
+                var pairs = checked(collider.Backend.ShapeCount * shapes);
                 runtime.Prepare(pairs); serverEvents += checked(pairs * 2);
             }
         _contactEvents.EnsureCapacity(contactEvents); _sleepEvents.EnsureCapacity(_bodies.Count);
         _overlapEvents.EnsureCapacity(overlapEvents); _serverAreaEvents.EnsureCapacity(serverEvents);
         _fieldAreas.EnsureCapacity(_areas.Count + _serverColliders.Count);
+        if (GPUStore is not null) return;
         var world = b2GetWorldFromId(_worldID);
         foreach (var sensor in world.sensors.data.AsSpan(0, world.sensors.count))
         {
@@ -220,6 +246,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     private void PrepareSolverCapacity()
     {
+        if (GPUStore is not null) { PrepareGPUCapacity(); return; }
         var world = b2GetWorldFromId(_worldID);
         var count = world.bodyIdPool.nextIndex;
         var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
@@ -434,6 +461,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         EnsureQueryAccess();
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
+        if (GPUStore is not null) { StepGPU(delta); return; }
         _stepping = true;
         List<Exception>? errors = null;
         var solverAdvanced = false;
@@ -450,7 +478,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             RecordStepPhase(1, ref profileMark);
             var hasKinematicBodies = PrepareBodyStates(delta);
             var world = b2GetWorldFromId(_worldID);
-            world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
+            world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks!.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
             world.contactBiasDuration = (float)delta;
             StepKinematicPaths(delta, hasKinematicBodies);
@@ -474,7 +502,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             else
             {
                 var end = _bodies.Count * (world.workerCount - 1) / world.workerCount;
-                var contactTask = _tasks.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), this, this);
+                var contactTask = _tasks!.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), this, this);
                 try { CollectBodyContactRange(end, _bodies.Count, 0, this); }
                 finally { if (contactTask is not null) _tasks.Finish(contactTask, this); }
             }
@@ -514,16 +542,19 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
-        _tasks.Dispose();
+        _tasks?.Dispose();
         if (_continuousTree is not null) Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(_continuousTree);
         _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear(); _continuousBoundaries.Clear();
         _continuousForces.Clear(); _continuousJointBudgets.Clear();
         _continuousBodies.Capacity = _continuousShapes.Capacity = _continuousProxies.Capacity = _continuousBoundaries.Capacity = 0;
         _continuousForces.Capacity = _continuousJointBudgets.Capacity = 0; _continuousFinalize = null;
-        b2GetWorldFromId(_worldID).integrateBodyStage = null!;
-        b2GetWorldFromId(_worldID).solveConstraints = null!;
-        b2GetWorldFromId(_worldID).generateManifolds = null!;
-        b2GetWorldFromId(_worldID).findBroadPhasePairs = null!;
+        if (GPUStore is null)
+        {
+            b2GetWorldFromId(_worldID).integrateBodyStage = null!;
+            b2GetWorldFromId(_worldID).solveConstraints = null!;
+            b2GetWorldFromId(_worldID).generateManifolds = null!;
+            b2GetWorldFromId(_worldID).findBroadPhasePairs = null!;
+        }
         _gpuWorld?.Dispose();
         foreach (var joint in _joints) joint.DetachBackend();
         _joints.Clear();
@@ -550,7 +581,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         _sleepEvents.Clear();
         _oneWayPairs.Clear();
         _staleOneWayPairs.Clear();
-        b2DestroyWorld(_worldID);
+        if (GPUStore is null) b2DestroyWorld(_worldID);
+        else ReleaseGPUState();
         _disposed = true;
     }
 

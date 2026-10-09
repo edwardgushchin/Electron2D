@@ -2,6 +2,17 @@ namespace Electron2D;
 
 internal sealed unsafe partial class GPUPhysicsBodyStore
 {
+    internal void SetSurfaceVelocity(BodyHandle body, Vector2 linear, float angular)
+    {
+        Validate(body);
+        if (!linear.IsFinite() || !float.IsFinite(angular)) throw new ArgumentOutOfRangeException(nameof(linear));
+        ref var slot = ref _slots[body.Index];
+        if (slot.Surface.X == linear.X && slot.Surface.Y == linear.Y && slot.Surface.Z == angular) return;
+        slot.Surface = new(linear.X, linear.Y, angular, slot.Surface.W);
+        ref var command = ref Edit(body.Index); command.Mask |= SurfaceEdit; command.Body.Surface = slot.Surface;
+        Wake(body.Index, structural: true);
+    }
+
     private const uint SurfaceEdit = 65536, TargetEdit = 131072, CancelTarget = 262144;
     private int _kinematicBodyCount;
 

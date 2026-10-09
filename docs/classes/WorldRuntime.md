@@ -1,12 +1,16 @@
 # WorldRuntime
 
-Last updated: 2026-10-07
+Last updated: 2026-10-09
 
 - Visibility: internal
 - Source: [WorldRuntime.cs](../../src/Scene/Resources/WorldRuntime.cs)
 - Component: [Canvas and physics worlds](../components/worlds.md)
 
 ## Description
+
+Retains the requested physics backend and startup-fallback policy until lazy space
+creation. Public wrappers expose the requested choice separately from the created
+space's actual backend and diagnostic; duplicates share the same selection and runtime.
 
 Retains complete world identity independently of public resource wrappers: canvas, lazy registered physics space, resource references, scene driver lease and default-scene expiration policy. Lifetime changes share a cold gate; Alive uses a volatile read from the canvas registry to avoid inverse lock acquisition. It borrows no native backend handle into the public API. Physical access and world-binding changes keep the existing PhysicsSpace thread/callback guards.
 

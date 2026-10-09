@@ -1940,6 +1940,12 @@ public partial class Node : ElectronObject
 
     internal void SetInternalProcessing(bool processEnabled, bool physicsProcessEnabled)
     {
+        if (IsDisposed && _isExitingTree && !processEnabled && !physicsProcessEnabled)
+        {
+            Tree?.EnsureOwnerThread();
+            _internalProcessEnabled = _internalPhysicsProcessEnabled = false;
+            return;
+        }
         EnsureMutable();
         _internalProcessEnabled = processEnabled;
         _internalPhysicsProcessEnabled = physicsProcessEnabled;

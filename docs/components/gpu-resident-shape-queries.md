@@ -127,6 +127,6 @@ WorldBoundaryShape participates analytically in both query argument positions,
 including far-away half-plane contacts, normal/distance transforms and ray pairs.
 The shared shape and body-motion matrices now include this geometry. Direct-space
 shape queries retain initial overlap during motion; body-motion recovery/casts
-retain their own directed-ray policy. Public independent-GPU binding remains open.
+retain their own directed-ray policy. The [public GPU world adapter](physics-backends.md) now uses these kernels; full family conformance remains open.
 
 ObjectID now travels with each selected result, adding 16 B per record. The [object association report](physics-object-bindings.md) records the new transfer measurement and snapshot/lifetime checks.

@@ -14,6 +14,16 @@ internal sealed partial class PhysicsSpace
     {
         // ponytail: Scan registered bodies for platform velocity; index by RID if large-world profiling needs it.
         EnsureQueryAccess();
+        if (GPUStore is not null)
+        {
+            if (_gpuRIDColliders.TryGetValue((ulong)rid.GetID(), out var backend) && !backend.GPUSensor)
+            {
+                velocity = backend.GetPointVelocity(point - backend.GetPose().Position);
+                var owners = PhysicsServer.Service.BodyRuntime(rid).Owners;
+                layer = owners.Scene?.EffectiveCollisionLayer ?? owners.Server!.CollisionLayer; return true;
+            }
+            velocity = default; layer = 0; return false;
+        }
         for (var index = 0; index < _bodies.Count; index++)
         {
             var body = _bodies[index];
@@ -45,6 +55,7 @@ internal sealed partial class PhysicsSpace
         RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
     {
         PrepareForQuery();
+        if (GPUStore is not null) return GPUTestMotion(ownerRID, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
         _motionCandidates.Clear();
         foreach (var other in _bodies)
             if (other.GetRID() != ownerRID)

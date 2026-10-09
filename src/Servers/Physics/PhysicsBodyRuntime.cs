@@ -77,6 +77,15 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         ActiveBeforeStep = !backend.HasMotionMode(PhysicsServer.BodyMode.Static) && backend.IsAwake;
         if (backend.HasMotionMode(PhysicsServer.BodyMode.Static) || backend.IsDynamic && !ActiveBeforeStep) return;
         var rigid = scene as RigidBody;
+        if (Space?.GPUStore is not null)
+        {
+            if (!(rigid?.CustomIntegrator ?? OmitForces))
+            {
+                if (PendingForce != Vector2.Zero) backend.ApplyCentralForce(PendingForce, false);
+                if (PendingTorque != 0 && !RotationLocked) backend.ApplyTorque(PendingTorque, false);
+            }
+            PendingForce = default; PendingTorque = 0; return;
+        }
         if (rigid?.CustomIntegrator ?? OmitForces)
         {
             backend.SetGravityScale(0); backend.ClearTransientForces();

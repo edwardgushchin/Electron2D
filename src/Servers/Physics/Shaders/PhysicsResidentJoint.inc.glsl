@@ -4,7 +4,7 @@ struct ResidentJoint
     uvec4 identity; // Body generations, flags (limit/motor/collision veto), padding.
     vec4 frameA; vec4 frameB; // Local anchor xy and sampled rotation basis zw.
     vec4 limits; // Translation lower/upper, angle lower/upper.
-    vec4 motorSpring; // Motor speed, scene-unit torque cap, rest length, stiffness.
+    vec4 motorSpring; // Motor speed, torque cap in N*m, rest length, stiffness.
     vec4 policy; // Axial damping; remaining fields reserved.
     vec4 solverPolicy; // Bias (zero inherits), correction speed cap, force cap, pin anchor softness.
 };

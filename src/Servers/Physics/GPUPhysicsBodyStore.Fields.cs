@@ -44,13 +44,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal double FieldMS { get; private set; }
     internal double FieldWaitMS { get; private set; }
 
-    internal void SetAreaFields(BodyHandle area, in FieldParameters fields)
+    internal void SetAreaFields(BodyHandle area, in FieldParameters fields, uint? traversalOrder = null)
     {
         Validate(area); ValidateFields(fields);
         if (_slots[area.Index].Mode != PhysicsServer.BodyMode.Static) throw new InvalidOperationException("An Area field owner must be static.");
         for (var shape = _slots[area.Index].FirstShape; shape >= 0; shape = _shapeSlots[shape].NextOnBody)
             ValidateFieldShape(area.Index, _shapeSlots[shape].Sensor, attachingArea: true);
-        var order = _areaFields.TryGetValue(area.Index, out var previous) ? previous.Order : checked(++_fieldOrder);
+        var exists = _areaFields.TryGetValue(area.Index, out var previous);
+        var order = traversalOrder ?? (exists ? previous.Order : checked(++_fieldOrder));
         var value = PackFields(fields, (uint)area.Index, area.Generation, order);
         if (_areaFields.ContainsKey(area.Index) && previous.Equals(value)) return;
         _activeAreaCount += (value.HasOverrides ? 1 : 0) - (previous.HasOverrides ? 1 : 0);

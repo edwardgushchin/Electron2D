@@ -4,8 +4,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     private PhysicsContactSettings _contactSettings = PhysicsContactSettings.FromProject();
     private float _contactTickDuration, _jointTickBias;
-    private readonly float _constraintDefaultBias = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultConstraintBias);
+    private float _constraintDefaultBias = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultConstraintBias);
     private int _solverIterations = ProjectSettings.GetWithOverride(ProjectSettings.Physics2DSolverIterations);
+    internal void SetConstraintDefaultBias(float value)
+    {
+        EnsureAccess(); PhysicsJointRuntime.ValidateBias(value);
+        if (_constraintDefaultBias == value) return;
+        _constraintDefaultBias = value; _wakeAllSleep = true;
+    }
+
     internal int GetSolverIterations() { EnsureAccess(); return _solverIterations; }
     internal void SetSolverIterations(int value)
     {

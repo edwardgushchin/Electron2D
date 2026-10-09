@@ -8,11 +8,11 @@ Last updated: 2026-10-09
 
 ## Description and internal flow
 
-One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owned colliders. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
+One owner-thread CPU or independent GPU world shared by scene bodies/Areas/joints and caller-owned colliders. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
 
 | State/operation | Contract |
 | --- | --- |
-| `PhysicsSpace()` | Native world, retained task scheduler and sampled default fields; initially inactive. |
+| `PhysicsSpace(Backend backend = CPU, bool allowCPUFallback = false)` | Selected CPU world or resident GPU store with sampled defaults; initially inactive. CPU alone owns the retained task scheduler. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
 | `bool IsActive { get; private set; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
@@ -26,9 +26,8 @@ One owner-thread Box2D world shared by scene bodies/Areas/joints and caller-owne
 
 An internally enabled GPU-stage failure releases solver scratch/lock ownership,
 marks the space failed and rejects later stepping/queries rather than replaying
-a partially committed interval on CPU. Disposal remains available. This failure
-path belongs to the incomplete [GPU world](../components/gpu-physics.md), not a
-new public backend or fallback selector.
+a partially committed interval on CPU. Disposal remains available. The independent GPU store uses the same fail-closed policy. Public startup
+selection and fallback are described in [physics backends](../components/physics-backends.md).
 
 ## Invariants and verification
 
@@ -130,3 +129,7 @@ retains one-way/exclusion rules, query identity and motion/reporting semantics.
 
 
 ObjectTreeChanged publishes scene monitor visibility changes for external Node bindings independently of physical body lifetime. Raw Area callbacks retain physical pair semantics. See [object associations](../components/physics-object-bindings.md).
+
+The independent path is implemented by the GPU partials beside this source: scene/server
+publication, selected contact reports, Area geometry queries, body motion and authored
+exceptions. Its observable host caches and waits are documented in the backend component.

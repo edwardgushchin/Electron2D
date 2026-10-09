@@ -1138,52 +1138,52 @@
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetBias(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetBias(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxBias(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxBias(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxForce(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxForce(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetSoftness(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetSoftness(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
-      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; public independent-GPU binding remains open."
+      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetConstraintDefaultBias(Electron2D.RID,System.Single)",
-      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; public independent-GPU binding remains open."
+      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/default_constraint_bias",
@@ -1208,47 +1208,47 @@
     {
       "godot": "Shape2D::property:custom_solver_bias",
       "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/default_contact_bias",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DDefaultContactBias()",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxAllowedPenetration()",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/solver_iterations",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DSolverIterations()",
-      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Public independent-GPU binding remains open."
+      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/contact_recycle_radius",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactRecycleRadius()",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/contact_max_separation",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxSeparation()",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "CollisionObject2D::property:collision_priority",
       "electron2d": "property:Electron2D.CollisionObject.CollisionPriority()",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_collision_priority(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCollisionPriority(Electron2D.RID,System.Single)",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_attach_canvas_instance_id(RID:,int:)",
@@ -1278,22 +1278,22 @@
     {
       "godot": "PhysicsServer2D::method:body_attach_object_instance_id(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_object_instance_id(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetObjectInstanceID(Electron2D.RID)",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:area_attach_object_instance_id(RID:,int:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:area_get_object_instance_id(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetObjectInstanceID(Electron2D.RID)",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)",
@@ -2223,6 +2223,61 @@
       "electron2d": "property:Electron2D.PhysicsRestInfo.ColliderObject()",
       "reason": "Complete typed projection of the sampled collider object field, including raw server associations; existing Collider property retains physical scene convenience and ColliderID retains the sampled ID.",
       "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsServer.Backend",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "constructor:Electron2D.World..ctor(Electron2D.PhysicsServer.Backend,System.Boolean)",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PhysicsServer.Backend.CPU()",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "enumValue:Electron2D.PhysicsServer.Backend.GPU()",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceCreate(Electron2D.PhysicsServer.Backend,System.Boolean)",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBackend(Electron2D.RID)",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBackendFallbackReason(Electron2D.RID)",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetRequestedBackend(Electron2D.RID)",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "property:Electron2D.World.PhysicsBackend()",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "property:Electron2D.World.PhysicsFallbackReason()",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "property:Electron2D.World.RequestedPhysicsBackend()",
+      "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
+      "adr": "ADR 0054"
     }
   ],
   "statusGroups": [
@@ -2944,14 +2999,14 @@
         "Joint2D::property:bias"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
         "PinJoint2D::property:softness"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3096,7 +3151,7 @@
         "Shape2D::property:custom_solver_bias"
       ],
       "state": "Implemented",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3495,7 +3550,7 @@
         "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3610,7 +3665,7 @@
         "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3625,7 +3680,7 @@
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
       "state": "Implemented",
-      "reason": "All nine parameter capabilities execute through concrete typed getters/setters: contact recycling, maximum separation/penetration, contact/constraint bias, sleep thresholds/duration and solver iterations. CPU and independent GPU policies have shared behavior, lifetime and allocation tests (ADRs 0087/0089/0098). Public independent-GPU binding remains open."
+      "reason": "All nine parameter capabilities execute through concrete typed getters/setters: contact recycling, maximum separation/penetration, contact/constraint bias, sleep thresholds/duration and solver iterations. CPU and independent GPU policies have shared behavior, lifetime and allocation tests (ADRs 0087/0089/0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3702,7 +3757,7 @@
         "ProjectSettings::property:physics/2d/solver/default_contact_bias"
       ],
       "state": "Implemented",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3716,7 +3771,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration"
       ],
       "state": "Implemented",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3730,7 +3785,7 @@
         "ProjectSettings::property:physics/2d/solver/solver_iterations"
       ],
       "state": "Implemented",
-      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Public independent-GPU binding remains open."
+      "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3744,7 +3799,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_recycle_radius"
       ],
       "state": "Implemented",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3758,7 +3813,7 @@
         "ProjectSettings::property:physics/2d/solver/contact_max_separation"
       ],
       "state": "Implemented",
-      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3774,7 +3829,7 @@
         "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)"
       ],
       "state": "Implemented",
-      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
@@ -3791,28 +3846,28 @@
         "PhysicsServer2D::method:body_attach_object_instance_id(RID:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
         "PhysicsServer2D::method:body_get_object_instance_id(RID:)"
       ],
       "state": "Implemented",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
         "PhysicsServer2D::method:area_attach_object_instance_id(RID:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     },
     {
       "godot": [
         "PhysicsServer2D::method:area_get_object_instance_id(RID:)"
       ],
       "state": "Implemented",
-      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
     }
   ]
 }

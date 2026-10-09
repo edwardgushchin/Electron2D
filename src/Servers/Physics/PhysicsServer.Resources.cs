@@ -38,10 +38,10 @@ public sealed partial class PhysicsServer
         _ => throw new NotSupportedException("The geometry has no registered shape type.")
     };
 
-    internal RID SpaceCreateCore()
+    internal RID SpaceCreateCore(Backend backend = Backend.CPU, bool allowCPUFallback = false)
     {
         ThrowIfDisposed();
-        var space = new PhysicsSpace();
+        var space = new PhysicsSpace(backend, allowCPUFallback);
         var rid = RID.Allocate();
         space.RID = rid;
         lock (_registryGate)

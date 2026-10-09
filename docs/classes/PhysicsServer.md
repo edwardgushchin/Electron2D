@@ -6,12 +6,14 @@ Last updated: 2026-10-09
 
 Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Physics/PhysicsServer.API.cs)
 and [`PhysicsServer.Sleep.API.cs`](../../src/Servers/Physics/PhysicsServer.Sleep.API.cs).
+Explicit CPU/GPU selection and startup diagnostics are in
+[`PhysicsServer.Backends.cs`](../../src/Servers/Physics/PhysicsServer.Backends.cs).
 
 ## Description
 
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
-The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's existing Box2D world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the seven implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
+The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's selected CPU/GPU world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the seven implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
 ## Example
 
@@ -33,6 +35,11 @@ PhysicsServer.FreeRID(space);
 ```
 
 ## API summary
+
+`SpaceCreate(Backend backend, bool allowCPUFallback = false)` selects a CPU or GPU
+space implementation independently of rendering. `SpaceGetRequestedBackend`,
+`SpaceGetBackend` and `SpaceGetBackendFallbackReason` read startup metadata.
+Parameterless creation remains CPU. See [backend lifetime and verified scope](../components/physics-backends.md).
 
 | Member | Contract |
 | --- | --- |

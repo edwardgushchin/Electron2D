@@ -2,24 +2,24 @@
 
 Last updated: 2026-10-09
 
-[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding remains open; built-in boundary and directed-ray response now execute.
+[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public GPU binding now executes; complete family conformance remains open; built-in boundary and directed-ray response now execute.
 
-[Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
+[Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. The public GPU motion adapter now executes; full CharacterBody conformance remains open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public
-GPU-world selection/binding remains open.
+GPU-world selection/binding now executes through the shared adapter.
 
-[Resident shape queries](../components/gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding remains open.
+[Resident shape queries](../components/gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU queries now execute through the shared world.
 
-[Resident ray and point queries](../components/gpu-resident-queries.md) now search current device geometry with stable logical result caps, masks, exclusions and authored canvas filtering. Query-only tree preparation skips simulation pair generation; the public world/query adapter remains open.
+[Resident ray and point queries](../components/gpu-resident-queries.md) now search current device geometry with stable logical result caps, masks, exclusions and authored canvas filtering. Query-only tree preparation skips simulation pair generation; the public world/query adapter now executes.
 
-[Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public direct-state/event projection remains open.
+[Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public GPU direct-state/event projection now executes.
 
-[Resident Area fields](../components/gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection remains open.
+[Resident Area fields](../components/gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection now executes.
 
-[Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
+[Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes; full conformance remains open.
 
 ## Physical skeletal integration
 
@@ -40,7 +40,7 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 | Component | Production types | State |
 | --- | --- | --- |
 | [Collision shapes](../components/physics-shapes.md) | [`Shape`](../classes/Shape.md), [`CircleShape`](../classes/CircleShape.md), [`CapsuleShape`](../classes/CapsuleShape.md), [`SegmentShape`](../classes/SegmentShape.md), [`ConvexPolygonShape`](../classes/ConvexPolygonShape.md), [`ConcavePolygonShape`](../classes/ConcavePolygonShape.md), [`RectangleShape`](../classes/RectangleShape.md), [`CollisionShape`](../classes/CollisionShape.md), [`CollisionPolygon`](../classes/CollisionPolygon.md), [`PolygonBuildMode`](../classes/PolygonBuildMode.md) | Reusable shapes, borrowed placement, owned solid/hollow scene polygons, live fixture updates and one-way body-contact direction and motion-recovery margin executable; standalone Shape collision methods execute; directed ray solver impulses/materials/sleep execute; analytic world boundaries now execute; custom solver bias and debug color remain incomplete |
-| [World sleep policy](../components/physics-sleep.md) | [`PhysicsSleepSettings`](../classes/PhysicsSleepSettings.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`ProjectSettings`](../classes/ProjectSettings.md) | Typed project/world thresholds and duration, separate speed checks, ordered wakes and zero warmed allocation; public GPU binding remains open |
+| [World sleep policy](../components/physics-sleep.md) | [`PhysicsSleepSettings`](../classes/PhysicsSleepSettings.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`ProjectSettings`](../classes/ProjectSettings.md) | Typed project/world thresholds and duration, separate speed checks, ordered wakes and zero warmed allocation; public GPU binding now executes; full conformance remains open |
 | [Scene physics bodies](../components/physics-bodies.md) | [`CollisionObject`](../classes/CollisionObject.md), [`PhysicsBody`](../classes/PhysicsBody.md), [`KinematicCollision`](../classes/KinematicCollision.md), [`CharacterBody`](../classes/CharacterBody.md), [`CharacterMotionMode`](../classes/CharacterMotionMode.md), [`CharacterPlatformOnLeave`](../classes/CharacterPlatformOnLeave.md), [`RigidBody`](../classes/RigidBody.md), [`StaticBody`](../classes/StaticBody.md), [`AnimatableBody`](../classes/AnimatableBody.md), [`PhysicsMaterial`](../classes/PhysicsMaterial.md) | Dynamic/static/kinematic motion, grounded/floating character sliding, platform carry, body sweeps, contacts, forces, fields and filtering executable; wider body/server contracts incomplete |
 | [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md), [`GrooveJoint`](../classes/GrooveJoint.md), [`DampedSpringJoint`](../classes/DampedSpringJoint.md) | Shared scene/server joint RIDs, revolute/guide/spring kernels, collision suppression, angular limits and motor executable; positional bias/correction caps and pin softness execute; debug drawing remains incomplete |
 | [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs execute; collider canvas filtering and wider server methods remain incomplete |
@@ -94,11 +94,11 @@ not implemented functionality or a replacement for those tables.
 
 `DampedSpringJoint : Joint : Entity` connects sampled body-local anchors through Hooke force and axial drag. Its native filter joint owns island/collision linkage while Box2D retains integration and contact solving. Spring responses include rotational anchor leverage, pure damping, equal opposite impulse and preflight of all springs before application. Each kinematic world interval uses its actual duration; there is one outer scene callback/event cycle. See [physics joint decisions](../decisions/physics-joints.md#adr-0086).
 
-Each scene CollisionObject registers one opaque RID, independent of Box2D fixture IDs. SceneTree registers its lazily created world with PhysicsServer; a server-only body or Area can attach to that same space, and an independent server space can be stepped explicitly. CanvasItem.GetWorld returns the SceneTree's shared World physics view. Ray, point and shape queries prepare pending scene geometry, test collider layers independent of their masks, honor RID exclusions, and return typed results with both collider RID and stable shape-owner index. Shape resources lazily borrow a server RID for direct queries; geometry edits update their server fixtures before querying and disposal releases that RID. Direct shape overlap includes motion, casts return safe/unsafe fractions, and contact/rest queries expose typed manifold results. Server-only results have no scene Collider. Query scans are linear in current fixtures, and attached queries require the space owner thread outside a solver step.
+Each scene CollisionObject registers one opaque RID, independent of Box2D fixture IDs. SceneTree registers its lazily created world with PhysicsServer; a server-only body or Area can attach to that same space, and an independent server space can be stepped explicitly. CanvasItem.GetWorld returns the SceneTree's shared World physics view. Ray, point and shape queries prepare pending scene geometry, test collider layers independent of their masks, honor RID exclusions, and return typed results with both collider RID and stable shape-owner index. Shape resources lazily borrow a server RID for direct queries; geometry edits update their server fixtures before querying and disposal releases that RID. Direct shape overlap includes motion, casts return safe/unsafe fractions, and contact/rest queries expose typed manifold results. Server-only results have no scene Collider. CPU query scans are linear in current fixtures; GPU queries traverse resident geometry, and attached queries require the space owner thread outside a solver step.
 
 Body motion queries use the same registered space and current body fixtures but apply reciprocal response filters. A test pose recovers from initial penetration, then sweeps to the first eligible body contact. Safe/unsafe fractions and contact data retain both direct shape-owner indices; scene `MoveAndCollide` applies only safe travel. One-way child margins govern accepted recovery depth. Server `BodyTestMotion` leaves the body in place and accepts RID/instance exclusions. Separation rays always participate in recovery; motion includes sliding rays automatically and non-sliding rays when CollideSeparationRay is true. Character snap enables that flag under [ADR 0068](../decisions/physics.md#adr-0068).
 
-Body collision-exception lists use stable scene/server RIDs. Either body's entry suppresses a pair from ordinary solver contacts and body motion tests while Area sensing stays independent. A list edit rebuilds the owner's fixtures before a later query or step so active contacts adopt the new rule. Scene enumeration returns an insertion-order copy with null entries for server-only or freed RIDs.
+Body collision-exception lists use stable scene/server RIDs. Either body's entry suppresses a pair from ordinary solver contacts and body motion tests while Area sensing stays independent. A list edit updates the selected backend before a later query or step so active contacts adopt the new rule; GPU changes retain existing shape handles. Scene enumeration returns an insertion-order copy with null entries for server-only or freed RIDs.
 
 One scene unit maps to 0.01 Box2D meters. Typed project defaults provide downward gravity 980 scene units/s² and linear/angular damping 0.1/1 per second, sampled when a physics world is created. The scene physics callback lane runs first; current area/body shape overlaps then resolve gravity and damping by descending priority, and persistent body force/torque joins the accumulator before a four-substep backend step. Body damping applies `max(0, 1 - delta * totalDamp)` before force integration. Linear forces/impulses convert by 0.01 and torque/angular impulses by 0.0001. Updated positions and velocities reach scene nodes through one unit-scale global transform. AnimatableBody sends a kinematic target before the solver and optionally presents its solved pose afterward. CharacterBody derives a target from caller-driven slide motion; direct queries see its new pose immediately, while the fixed solver derives contact velocity from the previous solved pose. Current touching manifolds then produce capped contact-point counts and object-level transitions; sleep and contact callbacks precede area monitoring events, timers, tweens and interpolation capture. Bodies and areas register on tree entry and leave on exit/disposal. Shape, collision-filter and material edits rebuild fixtures before the next step or direct query. Shape and material resources remain caller-owned.
 
@@ -106,10 +106,9 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 Direct body views now keep backend-neutral contact values and current-attachment
 validation; backend reads, unit conversion and contact traversal reside in
-PhysicsBodyRuntime. This is the first extraction from public consumers, not a
-replacement of the current CPU world or completion of the independent GPU path.
+PhysicsColliderBackend. Both CPU and independent GPU worlds now use this attachment boundary.
 
-Scene bodies, Areas and raw server colliders now share PhysicsColliderBackend body/fixture ownership. It centralizes creation, filtering/material/tag setup, transform validation and failure-aware destruction; current execution still uses Box2D. This is a further extraction step, not independent GPU completion.
+Scene bodies, Areas and raw server colliders now share PhysicsColliderBackend body/fixture ownership. It centralizes creation, filtering/material/tag setup, transform validation and failure-aware destruction; execution selects CPU fixtures or independent resident GPU handles. Full cross-family conformance remains open.
 
 Initial body configuration and scene motion roles now use engine values and
 PhysicsServer.BodyMode. The shared collider adapter owns vendor definition/unit
@@ -146,7 +145,7 @@ and opt-in fenced diagnostics do not establish public-backend or window-FPS acce
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server and scene body travel, typed local/collider shape identities, instance exclusions, reciprocal masks, one-way recovery and deep-overlap stopping, plus warmed unchanged motion tests without managed allocation. Native allocation, other platforms and owner visual acceptance remain unverified.
 
-[CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks grounded/floating branches, floor/wall/ceiling classification, slope/ceiling/wall controls, slide caps, snap, platform floor/wall masks and departure policies, Area gravity, PackedScene, immediate query pose, fixed-step backend synchronization and warmed idle slides without managed allocation. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) verifies ray sliding/snap and directed/reverse queries. [SeparationRayDynamicsTests](../../tests/Electron2D.Tests/SeparationRayDynamicsTests.cs) now verifies ordinary CPU directed manifolds, materials, mass/impulse transfer, sleep, events and warmed zero allocation under [ADR 0068](../decisions/physics.md#adr-0068). Public independent-GPU binding remains open.
+[CharacterBodyTests](../../tests/Electron2D.Tests/CharacterBodyTests.cs) checks grounded/floating branches, floor/wall/ceiling classification, slope/ceiling/wall controls, slide caps, snap, platform floor/wall masks and departure policies, Area gravity, PackedScene, immediate query pose, fixed-step backend synchronization and warmed idle slides without managed allocation. [SeparationRayShapeTests](../../tests/Electron2D.Tests/SeparationRayShapeTests.cs) verifies ray sliding/snap and directed/reverse queries. [SeparationRayDynamicsTests](../../tests/Electron2D.Tests/SeparationRayDynamicsTests.cs) now verifies ordinary CPU directed manifolds, materials, mass/impulse transfer, sleep, events and warmed zero allocation under [ADR 0068](../decisions/physics.md#adr-0068). Public independent-GPU binding now executes; complete family conformance remains open.
 
 [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server RID lists, regular contacts, active-pair edits, motion-test filtering, stale targets, thread ownership and warmed steady frames without managed allocation. Native allocator and other platforms remain unverified.
 
@@ -271,12 +270,12 @@ impulses, and applies the same bounded deepest-point selection to direct state a
 RigidBody monitoring. PhysicsContactImpulseTests checks momentum and allocation;
 virtual tile identities remain separate from this completed reporting behavior.
 
-Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Internal [GPU CCD](../components/gpu-resident-ccd.md) now executes per-body ray/full-shape sweeps and impact intervals. [Resident joint policies](../components/gpu-resident-joints.md#joint-solver-policies) execute internally. Public backend selection, independent GPU joint-policy adapters, CCD adapters, sleep/contact-event publication and network replay remain open.
+Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Internal [GPU CCD](../components/gpu-resident-ccd.md) now executes per-body ray/full-shape sweeps and impact intervals. [Resident joint policies](../components/gpu-resident-joints.md#joint-solver-policies) execute internally. Public backend selection, independent GPU joint/CCD adapters and sleep/contact-event publication now execute. Full conformance and network replay remain open.
 
 [WorldBoundaryShape](../classes/WorldBoundaryShape.md) supplies an analytic infinite
 half-plane throughout CPU scene/server collision, Area sensing, queries and CCD.
 The independent GPU store implements matching geometry and shared query contracts;
-public GPU binding remains open. [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs)
+public GPU binding now executes; full conformance remains open. [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs)
 checks far-away contacts, lifetime, sleep/edit/removal and zero warmed managed
 allocation. [Measured overhead and traffic](../components/physics-shapes.md#infinite-world-boundaries)
 do not establish large-scene throughput or rendered acceptance.
@@ -284,43 +283,45 @@ do not establish large-scene throughput or rendered acceptance.
 [World sleep policy](../components/physics-sleep.md) supplies typed project defaults
 and public per-space linear/angular quiet thresholds plus duration. Public CPU and
 independent GPU tests share strict threshold/delay semantics, body-size independence,
-ordered wakes, invalid-state preservation and warmed allocation. Public GPU-world
-binding and the other contact/iteration settings remain open.
+ordered wakes, invalid-state preservation and warmed allocation. Public GPU-world binding and contact/iteration settings now execute. Full family conformance remains open.
 
 [World and shape contact correction](../components/physics-contact-policy.md) now
 shares validated defaults, live policy propagation and inherited shape storage across
 CPU and independent GPU solvers under [ADR 0098](../decisions/physics-contacts.md#adr-0098).
-Public independent-GPU world selection and networking remain open.
+Public independent-GPU world selection now executes; networking remains open.
 
 [Solver iteration settings](../components/physics-contact-policy.md#solver-iterations)
 now control contact and joint convergence through typed project/world operations on
 CPU and the independent GPU store. Default sixteen, live wake semantics, shared
 numerical/temporal checks and bounded CPU stage storage replace the fixed one-pass
-CPU policy. Public independent-GPU binding remains open.
+CPU policy. Public independent-GPU binding now executes; complete family conformance remains open.
 
 [Contact history limits](../components/physics-contact-policy.md#contact-history-limits)
 complete the typed space-parameter family: recycle radius and maximum separation
 control local-anchor impulse reuse on CPU and independent GPU, while fresh geometry,
-queries and event identities remain unchanged. Public GPU world binding and the
+queries and event identities remain unchanged. Public GPU world binding now executes; the
 remaining physics/server/networking capabilities are still open.
 
 [Collision priority](../components/physics-contact-policy.md#collision-priority)
 now weights penetration recovery through scene/server body operations and independent
 resident GPU motion queries. Storage, owner/step validation and live edits preserve
-collider identity and physical sleep/impulses. Public independent-GPU world binding
-and the other audited requirements remain open.
+collider identity and physical sleep/impulses. Public independent-GPU world binding now executes; complete family conformance and the other audited requirements remain open.
 
 
 [Canvas association](../components/physics-queries.md#canvas-association) now connects
 Body/Area attach/get operations, scene CanvasLayer entry/exit and exact point-query
 filtering, including default zero and full 64-bit keys. Shared/independent worlds,
 reparenting, live edits, raw colliders and warmed allocation have CPU/GPU checks.
-The GPU fix removes the former zero-as-wildcard behavior; public GPU-world binding
-remains open.
+The GPU fix removes the former zero-as-wildcard behavior; public GPU-world binding now executes; full canvas-family conformance remains open.
 
-[Object associations](../components/physics-object-bindings.md) now connect typed Body/Area object assignment, sampled IDs and weak targets across direct/scene queries, motion, contacts and monitoring. Public GPU-world binding, actual tile collider generation and networking remain open.
+[Object associations](../components/physics-object-bindings.md) now connect typed Body/Area object assignment, sampled IDs and weak targets across direct/scene queries, motion, contacts and monitoring. Public GPU-world binding now executes; actual tile collider generation and networking remain open.
 
 [Changed GPU body publication](../components/gpu-body-publication.md) compares observable
-state on device and publishes generation-qualified changes/removals to the Smash developer
-window, avoiding downloads for unchanged bodies. This is a single-consumer latest-state
-stream; public-world binding, lifecycle event logs and network replay remain open.
+state on device and publishes generation-qualified changes/removals into common world
+caches, avoiding downloads for unchanged bodies. This is a single-consumer latest-state
+stream; lifecycle event logs and network replay remain open.
+
+[Backend selection and shared worlds](../components/physics-backends.md) now expose
+CPU/GPU World and server-space creation, startup fallback diagnostics, independent
+resident body/shape/joint attachments and common query/event publication. Complete
+conformance, performance and networking acceptance remain open.

@@ -15,8 +15,7 @@ definition. Step and SolveConstraints remain their existing partial-stage contro
 
 This is an internal independent GPU implementation under
 [ADR 0054](../decisions/physics.md#adr-0054). [Public CPU CCD modes](cpu-continuous-collision.md) now execute through scene/server
-settings, and this store reuses the shared public CCDMode enum. Independent GPU
-world selection, public contact/event projection and networking remain open.
+settings, and this store reuses the shared public CCDMode enum. [Independent GPU world selection](physics-backends.md) and public contact/event projection now execute. Full CCD-family conformance and networking remain open.
 
 The pinned [reference API](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RigidBody2D.xml)
 defines disabled, ray and shape prediction. Its

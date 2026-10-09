@@ -11,8 +11,24 @@ public sealed class World : Resource
     private bool _released;
     /// <summary>Creates a caller-owned world with an independent logical canvas and lazy physics space.</summary>
     public World() : this(new WorldRuntime(sceneOwned: false)) { }
+    /// <summary>Creates a world with an explicitly selected lazy physics implementation.</summary>
+    /// <param name="backend">CPU or GPU physics, independently of the renderer.</param>
+    /// <param name="allowCPUFallback">Allows CPU startup if the requested GPU cannot initialize.</param>
+    /// <exception cref="ArgumentOutOfRangeException">The backend value is unknown.</exception>
+    /// <remarks>The device is initialized only on first physics access. Duplicates share the same selected runtime.</remarks>
+    public World(PhysicsServer.Backend backend, bool allowCPUFallback = false) : this(new WorldRuntime(false, backend, allowCPUFallback)) { }
     internal World(WorldRuntime runtime) { _runtime = runtime; runtime.Retain(); }
     internal WorldRuntime Runtime => _runtime;
+    /// <summary>Gets the requested physics implementation without initializing it.</summary>
+    /// <value>The original CPU or GPU choice.</value>
+    public PhysicsServer.Backend RequestedPhysicsBackend { get { ThrowIfDisposed(); _runtime.EnsureAlive(); return _runtime.RequestedBackend; } }
+    /// <summary>Gets the selected implementation, initializing the physics space if needed.</summary>
+    /// <value>The actual CPU or GPU implementation after startup policy is applied.</value>
+    /// <exception cref="InvalidOperationException">GPU startup fails with fallback disabled.</exception>
+    public PhysicsServer.Backend PhysicsBackend { get { ThrowIfDisposed(); return _runtime.Space.ActualBackend; } }
+    /// <summary>Gets the GPU startup failure that caused CPU fallback, initializing physics if needed.</summary>
+    /// <value>A diagnostic message, or null when fallback did not occur.</value>
+    public string? PhysicsFallbackReason { get { ThrowIfDisposed(); return _runtime.Space.BackendFallbackReason; } }
     /// <summary>Gets this world's stable borrowed canvas identity, independent of native startup.</summary>
     /// <value>The canvas used by every viewport selecting this world.</value>
     /// <exception cref="ArgumentException">The scene-owned world expired.</exception>

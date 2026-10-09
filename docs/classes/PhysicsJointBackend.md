@@ -48,3 +48,11 @@ the motor angle within the configured limit plus 0.05 rad solver tolerance.
 This is not independent GPU acceptance or a new throughput measurement.
 
 The [public joint policies](../components/physics-joint-policies.md) now include bias, pin linear softness and common force/correction caps. Native joint copy/clear and GPU stage packets preserve the policy; spring preflight caps the combined impulse before validating all resulting velocities.
+
+## Independent GPU attachment
+
+The adapter also owns resident pin/groove/spring handles. It samples local frames
+in scene units, carries the same motor/bias/force/softness settings and retains
+common RID and reattachment lifetime. Springs execute in the device solver.
+Single-body pins use the GPU world-anchor representation without a hidden CPU body.
+See [backend selection](../components/physics-backends.md).

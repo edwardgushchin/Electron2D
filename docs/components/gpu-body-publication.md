@@ -23,8 +23,7 @@ The [Smash developer window](gpu-smash-preview.md) consumes this stream, updates
 retained CPU display/picking records and rewrites only changed instance records.
 An empty visible update does not upload another MultiMesh buffer. Its retained
 display state is needed by CPU pointer picking and ordinary MultiMesh rendering;
-it is not fed back into the solver. Public PhysicsSpace selection, scene-body
-publication and networking remain open.
+it is not fed back into the solver. [Public PhysicsSpace selection and scene-body publication](physics-backends.md) now also consume this stream; networking remains open.
 
 ## Storage and synchronization
 

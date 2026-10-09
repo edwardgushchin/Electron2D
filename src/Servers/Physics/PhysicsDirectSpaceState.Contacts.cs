@@ -65,7 +65,7 @@ public sealed partial class PhysicsDirectSpaceState
     public Vector2[] CollideShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
-        var contacts = CollectShapeContacts(parameters);
+        var contacts = CollectShapeContacts(parameters, maxResults);
         var count = Math.Min(maxResults, contacts.Count);
         if (count == 0) return [];
         var result = new Vector2[count * 2];
@@ -84,7 +84,7 @@ public sealed partial class PhysicsDirectSpaceState
     /// <exception cref="ObjectDisposedException">The view or required shape/parameters are disposed.</exception>
     public int CollideShape(PhysicsShapeQueryParameters parameters, Span<Vector2> results)
     {
-        var contacts = CollectShapeContacts(parameters);
+        var contacts = CollectShapeContacts(parameters, results.Length / 2);
         var count = Math.Min(results.Length / 2, contacts.Count);
         CopyShapeContacts(contacts, results, count);
         return count;
@@ -99,11 +99,17 @@ public sealed partial class PhysicsDirectSpaceState
         }
     }
 
-    private List<ContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters)
+    private List<ContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters, int limit)
     {
         var space = PrepareShapeQuery(parameters);
         var contacts = _contactPairs;
         contacts.Clear();
+        if (space.GPUStore is not null)
+        {
+            foreach (ref readonly var hit in space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Contacts, limit))
+                contacts.Add(new(space.GPUQueryOwner(hit.Collider).RID, hit.LogicalShape, (int)hit.Piece, hit.QueryPoint, hit.ColliderPoint));
+            return contacts;
+        }
         if (_queryProxies.Count == 0 || _shapeCandidates.Count == 0) return contacts;
         var world = b2GetWorldFromId(space.WorldID);
         var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
@@ -143,6 +149,13 @@ public sealed partial class PhysicsDirectSpaceState
     public PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters)
     {
         var space = PrepareShapeQuery(parameters);
+        if (space.GPUStore is not null)
+        {
+            var hits = space.GPUShapeQuery(parameters, GPUPhysicsBodyStore.ShapeQueryMode.Rest, 1);
+            if (hits.IsEmpty) return null;
+            ref readonly var hit = ref hits[0]; var owner = space.GPUQueryOwner(hit.Collider);
+            return new(owner.RID, owner.SceneOwner, owner.ObjectIdentity, hit.LogicalShape, hit.ColliderPoint, hit.Normal, hit.Velocity);
+        }
         var world = b2GetWorldFromId(space.WorldID);
         var motion = PhysicsShapeBackend.ToBackend(parameters.Motion);
         PhysicsRestInfo? best = null;

@@ -308,13 +308,27 @@ internal static partial class GPUPhysicsTests
     private static void VerifyDeviceLifetime(string rendering)
     {
         var previous = ProjectSettings.GetWithOverride(ProjectSettings.RenderingMethod);
+        var previousFPS = Engine.MaxFPS;
         ProjectSettings.Set(ProjectSettings.RenderingMethod, rendering);
+        Engine.MaxFPS = 60;
         GPUPhysicsWorld? gpu = null;
         var context = Context(1); context.states[0] = new() { deltaRotation = new(1, 0), linearVelocity = new(1, 0) };
         context.sims[0] = new();
-        using var window = new Window { Size = new(512, 384) };
-        var frames = 0;
-        Action rendered = () => { if (++frames == 3) window.Tree!.Quit(); };
+        using var residentWorld = new World(PhysicsServer.Backend.GPU);
+        using var cpuWorld = new World(PhysicsServer.Backend.CPU);
+        using var window = new Window { Size = new(512, 384), World = residentWorld };
+        var residentBody = new RigidBody { Name = "Resident", GravityScale = 0, LinearVelocity = new(60, 0) };
+        var cpuViewport = new SubViewport { Name = "CPU", World = cpuWorld, Size = new(32, 32) };
+        var cpuBody = new RigidBody { GravityScale = 0, LinearVelocity = new(60, 0) };
+        window.AddChild(residentBody); cpuViewport.AddChild(cpuBody); window.AddChild(cpuViewport);
+        var frames = 0; var publicWorldsAdvanced = false;
+        Action rendered = () =>
+        {
+            if (++frames != 3) return;
+            publicWorldsAdvanced = residentBody.Position.X > 0 && cpuBody.Position.X > 0 &&
+                residentWorld.PhysicsBackend == PhysicsServer.Backend.GPU && cpuWorld.PhysicsBackend == PhysicsServer.Backend.CPU;
+            window.Tree!.Quit();
+        };
         window.Ready += _ =>
         {
             gpu = new GPUPhysicsWorld();
@@ -326,6 +340,8 @@ internal static partial class GPUPhysicsTests
         try
         {
             if (Engine.Run(window) != 0 || frames != 3 || gpu is null) throw new InvalidOperationException("The native device lifetime host did not finish.");
+            if (!publicWorldsAdvanced)
+                throw new InvalidOperationException("Public CPU/GPU worlds must advance independently of the active renderer.");
             // The renderer has closed its handle. The compute host must still own a usable device reference.
             gpu.Integrate(B2SolverStageType.b2_stageIntegratePositions, context);
             if (gpu.DispatchCount != 2 || context.states[0].deltaPosition.X <= 0)
@@ -334,7 +350,7 @@ internal static partial class GPUPhysicsTests
         finally
         {
             if (RenderingServer.IsAvailable) RenderingServer.FramePostDraw -= rendered;
-            gpu?.Dispose(); ProjectSettings.Set(ProjectSettings.RenderingMethod, previous);
+            gpu?.Dispose(); ProjectSettings.Set(ProjectSettings.RenderingMethod, previous); Engine.MaxFPS = previousFPS;
             if (activate is null) SDL3.SDL.ResetHint(SDL3.SDL.Hints.WindowActivateWhenShown);
             else SDL3.SDL.SetHint(SDL3.SDL.Hints.WindowActivateWhenShown, activate);
         }

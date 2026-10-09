@@ -12,7 +12,9 @@ internal sealed partial class PhysicsSpace
         EnsureQueryAccess();
         if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
         if (SolverIterations == value) return;
-        SolverIterations = value; b2GetWorldFromId(_worldID).solverIterations = value;
+        SolverIterations = value;
+        if (GPUStore is not null) { GPUStore.SetSolverIterations(value); InvalidateGPUStates(); return; }
+        b2GetWorldFromId(_worldID).solverIterations = value;
         WakeDynamicBodies();
     }
 
@@ -20,7 +22,9 @@ internal sealed partial class PhysicsSpace
     internal void SetContactSettings(in PhysicsContactSettings settings)
     {
         EnsureQueryAccess(); settings.Validate(); if (ContactSettings == settings) return;
-        ContactSettings = settings; var world = b2GetWorldFromId(_worldID);
+        ContactSettings = settings;
+        if (GPUStore is not null) { GPUStore.SetContactSettings(settings); InvalidateGPUStates(); return; }
+        var world = b2GetWorldFromId(_worldID);
         world.contactRecycleRadius = settings.RecycleRadius * MetersPerUnit; world.contactMaxSeparation = settings.MaxSeparation * MetersPerUnit;
         world.contactBias = settings.Bias; world.contactAllowedPenetration = settings.AllowedPenetration * MetersPerUnit;
         WakeDynamicBodies();

@@ -35,9 +35,9 @@ Last updated: 2026-10-09
 Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,
 edits, automatic/custom mass profiles, center-aware integration, shared geometry, broad-phase pairs and narrow-phase contact
-points, material response, contact impulses, pin/groove/spring solving and warm history. It is not yet
-selectable through PhysicsServer; independent GPU public joint integration, public state/event publication
-and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
+points, material response, contact impulses, pin/groove/spring solving and warm history. PhysicsServer and World now select it through the shared attachment adapters;
+[backend integration](../components/physics-backends.md) documents publication and
+verification limits. Complete conformance, performance and network replay remain open. See [resident contact response](../components/gpu-contact-solver.md).
 
 | Operation | Contract |
 | --- | --- |
@@ -127,7 +127,7 @@ feature stability, complete concave-piece output and failed-state rejection afte
 nonfinite device intermediates. Moving grids verify every point against actual GPU
 poses outside the timed window; details and measured transfer costs are in the
 component report. Joint collision vetoes and explicit live-body exceptions now execute on the device;
-public GPU exception projection and sensor/contact event publication remain unconnected. Contact
+public GPU exception projection and sensor/contact event publication now execute through PhysicsSpace. Contact
 impulses/material response and warm history now execute through the solver component.
 
 GPUPhysicsSolverStoreTests covers analytic momentum/energy/inertia, signed materials,
@@ -150,13 +150,12 @@ centers, profile/impulse order, resource revisions and zero-allocation warm edit
 AuthoredBodyCapacityBytes measures only retained CPU body-slot/command payload.
 Local centers use a separate 8-byte device record and no hot full-state mirror.
 
-GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime; the current 64-byte record also includes resolved fields. It is internal state publication, not public event delivery.
+GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime; the current 64-byte record also includes resolved fields. PhysicsSpace consumes it before public sleep/contact callbacks.
 
 
 GPUPhysicsJointPolicyTests checks internal per-joint bias, vector correction/force
 caps, inverse-mass pin softness, shared physical/correction budgets, original
-substep budgeting through CCD, rejected edits and warmed allocation. The independent GPU
-public-world adapter remains open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).
+substep budgeting through CCD, rejected edits and warmed allocation. The independent GPU public-world adapter now executes; full policy-family conformance remains open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).
 
 GPUPhysicsExceptionStoreTests verifies directed and joint contributions, sensor policy,
 endpoint reuse, connected wakeup, contact-history retirement and both CCD modes.
@@ -193,8 +192,7 @@ shared public momentum/reporting contract and the internal publication lifecycle
 The shared public CCDMode now supplies the scene/server setting and resident GPU
 configuration. CPU worlds inspect solved motion before publication and preserve
 remaining tick time and nominal force/joint budgets through impact continuations.
-The runtime stores policy across attachments and roles; independent GPU world
-binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).
+The runtime stores policy across attachments and roles and projects it into the selected CPU or independent GPU world. See [implementation and verification](../components/cpu-continuous-collision.md).
 
 WorldBoundaryShape is retained as an analytic plane (geometry kind 7). Its tree
 flag bypasses finite bounds; free-side support culling limits candidates. Device
@@ -239,3 +237,8 @@ The motion shader reuses geometry call sites across overlap, ray refinement and
 impact phases to reduce cold driver compilation. Query precision, recovery passes,
 buffers and transfers are unchanged; [motion-query verification](../components/gpu-resident-motion-queries.md#cold-pipeline-preparation)
 separates startup cost from warmed query throughput.
+
+Shared-world adapters can set an explicit stable Area traversal rank, separate
+actual solver velocity from virtual surface velocity, update default joint bias,
+and publish external wake propagation without advancing time. These internal
+operations preserve existing direct-store defaults.

@@ -8,6 +8,12 @@ internal sealed partial class PhysicsColliderBackend
 {
     internal void SetSurfaceVelocity(Vector2 linear, float angular)
     {
+        if (GPU is { } gpu)
+        {
+            if (_gpuSurfaceLinear == linear && _gpuSurfaceAngular == angular) return;
+            gpu.SetSurfaceVelocity(GPUHandle, linear, angular);
+            _gpuSurfaceLinear = linear; _gpuSurfaceAngular = angular; Space!.InvalidateGPUStates(); return;
+        }
         var id = BodyID;
         var world = b2GetWorld(id.world0);
         if (world.locked) throw new InvalidOperationException("Surface velocity cannot change inside the solver.");

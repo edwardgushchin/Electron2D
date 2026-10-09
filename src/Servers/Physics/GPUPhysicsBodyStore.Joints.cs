@@ -129,7 +129,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         foreach (var value in (ReadOnlySpan<float>)[d.FrameA.Origin.Length(), d.FrameB.Origin.Length(), d.LowerTranslation, d.UpperTranslation, d.RestLength])
             PhysicsJointRuntime.ValidateExtent(value);
         if (!float.IsFinite(d.LowerAngle) || !float.IsFinite(d.UpperAngle) || d.LimitEnabled && (d.LowerAngle < -0.99f * MathF.PI || d.UpperAngle > 0.99f * MathF.PI || d.LowerAngle > d.UpperAngle) ||
-            d.LowerTranslation > d.UpperTranslation || !float.IsFinite(d.MotorVelocity) || !float.IsFinite(d.MotorMaxTorque * 10_000) || d.MotorMaxTorque < 0 ||
+            d.LowerTranslation > d.UpperTranslation || !float.IsFinite(d.MotorVelocity) || !float.IsFinite(d.MotorMaxTorque) || d.MotorMaxTorque < 0 ||
             d.RestLength < 0 || !float.IsFinite(d.Stiffness) || d.Stiffness < 0 || !float.IsFinite(d.Damping) || d.Damping < 0 ||
             !float.IsFinite(d.Bias) || d.Bias < 0 || d.Bias > 1 || !float.IsFinite(d.MaxBias) || d.MaxBias < 0 ||
             !float.IsFinite(d.MaxForce) || d.MaxForce < 0 || !float.IsFinite(d.Softness) || d.Softness < 0)
@@ -195,7 +195,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                         FrameA = new(d.FrameA.Origin.X, d.FrameA.Origin.Y, d.FrameA.X.X, d.FrameA.X.Y),
                         FrameB = new(d.FrameB.Origin.X, d.FrameB.Origin.Y, d.FrameB.X.X, d.FrameB.X.Y),
                         Limits = new(d.LowerTranslation, d.UpperTranslation, d.LowerAngle, d.UpperAngle),
-                        MotorSpring = new(d.MotorVelocity, d.MotorMaxTorque * 10_000, d.RestLength, d.Stiffness),
+                        MotorSpring = new(d.MotorVelocity, d.MotorMaxTorque, d.RestLength, d.Stiffness),
                         Policy = new(d.Damping, 0, 0, 0),
                         SolverPolicy = new(d.Bias, d.MaxBias, d.MaxForce, d.Softness)
                     }

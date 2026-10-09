@@ -111,3 +111,12 @@ or vendor state edit is required; motion candidates capture the current value.
 
 
 ObjectIdentity retains the authored weak instance association independently of the physical scene owner and body/fixture lifetime. AttachObject preserves solver state and validates before replacement. External Node membership observation exists only while attached. See [object associations](../components/physics-object-bindings.md).
+
+## Independent GPU attachment
+
+The same adapter now owns either CPU fixtures or resident GPU body/shape handles,
+selected by its PhysicsSpace. GPU paths retain RID/object/canvas and logical shape
+identity, mass/policy/force state, sampled direct contacts and attachment versions.
+A 64-byte observable cache serves scene/server getters; shared epoch invalidation
+avoids a per-edit scan. Immediate wake publication uses the solved device graph.
+See [shared backend flow and limits](../components/physics-backends.md).

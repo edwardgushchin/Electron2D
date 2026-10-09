@@ -73,7 +73,7 @@ internal sealed partial class PhysicsSpace
         catch (Exception failure)
         {
             _continuousFailure = failure;
-            _tasks.Drain(); world.locked = false;
+            _tasks!.Drain(); world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();
             throw;

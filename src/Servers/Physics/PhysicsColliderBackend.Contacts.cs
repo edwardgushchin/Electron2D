@@ -8,6 +8,7 @@ internal sealed partial class PhysicsColliderBackend
 {
     internal void CaptureViewContacts(PhysicsDirectBodyState view, int limit)
     {
+        if (GPU is not null) { Space!.CaptureGPUViewContacts(this, view, limit); return; }
         if (limit == 0 || Space!.CaptureFrameContacts(this, view, BodyID, limit)) return;
         var world = _world!;
         for (var key = _body!.headContactKey; key != B2Constants.B2_NULL_INDEX;)

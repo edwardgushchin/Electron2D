@@ -6,12 +6,11 @@ Last updated: 2026-10-09
 
 GPUPhysicsBodyStore.Query performs batched world ray and point queries against
 current resident geometry, without a CPU solver world or a CPU pose/bounds mirror.
-This internal path is not connected to PhysicsDirectSpaceState yet. Public spaces
-still use Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. [Body-motion recovery](gpu-resident-motion-queries.md) also executes internally. Public canvas association now works on the CPU host; independent GPU-world binding, picking, backend selection and event/network projection remain open.
+PhysicsDirectSpaceState now selects this path for public GPU worlds; CPU spaces retain Box2D.NET. [Resident shape sweeps/contact/rest queries](gpu-resident-shape-queries.md) now execute internally. [Body-motion recovery](gpu-resident-motion-queries.md) also executes internally. The [shared world adapter](physics-backends.md) now supplies public canvas association, backend selection and event projection. Full picking and networking remain open.
 
 Each resident shape contains a complete authored Shape, including large convex
 contours or all paired concave segments. SetQueryIdentity assigns its logical
-collider key, shape index and canvas association. A future public adapter supplies
+collider key, shape index and canvas association. The public adapter supplies
 retained RIDs and logical slots; default untagged store keys use local body/shape
 slots. Returned physical indices and generations qualify the live attachment and
 are neither public RIDs nor portable network identities. Mapping metadata remains
@@ -24,7 +23,7 @@ on the CPU because it is authored identity, not simulated state.
   flags are independent. Explicit collider exclusions use batched ranges. Point canvas
   selection uses exact 64-bit equality, including zero for the default canvas. Rays
   ignore canvas association. PhysicsCanvasTests compares this with public CPU
-  queries; public independent-GPU binding remains open.
+  queries; PhysicsGPUSpaceTests additionally exercises public GPU binding.
 - Rays return the nearest hit; exact fraction ties sort by collider key and logical
   slot. Point results sort and deduplicate by those keys before applying each cap.
   The final physical-index tie is internal. Keys compare as unsigned 64-bit values;
