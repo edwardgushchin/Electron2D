@@ -6838,6 +6838,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsCheckpoint",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "PhysicsCheckpoint",
+    "signature": "public sealed class Electron2D.PhysicsCheckpoint",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsDirectBodyState",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsDirectBodyState",
@@ -109014,6 +109029,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsCheckpoint.Capture()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "Capture",
+    "signature": "public System.Void Capture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsCheckpoint.Dispose()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "Dispose",
+    "signature": "public virtual System.Void Dispose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsCheckpoint.Restore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "Restore",
+    "signature": "public System.Void Restore()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectBodyState.AddConstantCentralForce(Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectBodyState",
@@ -113737,6 +113791,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceCreateCheckpoint(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceCreateCheckpoint",
+    "signature": "public static Electron2D.PhysicsCheckpoint SpaceCreateCheckpoint(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsCheckpoint",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceGetBackend(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -113981,6 +114054,25 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetTick(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetTick",
+    "signature": "public static System.UInt64 SpaceGetTick(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -181818,6 +181910,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsCheckpoint.IsDisposed()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "IsDisposed",
+    "signature": "public System.Boolean IsDisposed { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsCheckpoint.Tick()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsCheckpoint",
+    "name": "Tick",
+    "signature": "public System.UInt64 Tick { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
     "value": null
   },
   {

@@ -67,7 +67,7 @@ the GPU checkpoint's circle workload is different and is not a comparison.
 
 The internal [common-world layer](physics-space-checkpoints.md) additionally captures
 CPU scene/server attachment and observer state under fixed configuration. Portable
-identity, lifecycle rewind, shared public capture/apply, CPU-server/GPU-client reconciliation and separate-process
+identity, lifecycle rewind, portable authoritative capture/apply, CPU-server/GPU-client reconciliation and separate-process
 network validation are still required. Backend-private replay passing here does
 not close those requirements or establish cross-platform deterministic replay.
 
@@ -84,3 +84,7 @@ the measured work and zero-byte assertions are unchanged. Runtime frame code and
 policy are unchanged. The temporary solver probes were removed. Evidence:
 `/tmp/e2d-spring-alloc-failure.nettrace`, `/tmp/e2d-gc-counter-repro.log`,
 `/tmp/e2d-gc-counter-controls.log`.
+
+The common layer is now available to game code through the public
+[PhysicsCheckpoint](../classes/PhysicsCheckpoint.md) factory and world-local tick.
+Its storage remains same-world and cannot serve as a wire payload.

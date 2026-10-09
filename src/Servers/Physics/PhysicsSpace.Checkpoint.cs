@@ -47,6 +47,7 @@ internal sealed partial class PhysicsSpace
         private int _debugCount;
         private bool _aggregate, _wake;
         private long _step, _epoch, _publication;
+        private ulong _tick;
         private float _delta;
         private Vector2 _defaultGravity;
         private Statistics _statistics;
@@ -55,6 +56,16 @@ internal sealed partial class PhysicsSpace
             PhysicsContactSettings Contacts, int Iterations, float Bias);
         private static Configuration Settings(PhysicsSpace s) => new(ReplayFields(s.DefaultAreaFields), s.SleepSettings, s.ContactSettings, s.SolverIterations, s.ConstraintDefaultBias);
         internal Checkpoint(PhysicsSpace space) => _space = space;
+        internal bool IsDisposed => _space is null;
+        internal ulong CapturedTick
+        {
+            get
+            {
+                Space.EnsureQueryAccess();
+                if (!_valid) throw new InvalidOperationException("The checkpoint has no completed capture.");
+                return _tick;
+            }
+        }
         internal long DeviceCapacityBytes { get { Space.EnsureCheckpointAccess(); return _gpu?.DeviceCapacityBytes ?? 0; } }
 
         internal void Capture()
@@ -92,6 +103,7 @@ internal sealed partial class PhysicsSpace
             PhysicsReplayCopy.Buffer<int>(s._frameContactHeads, ref _heads); PhysicsReplayCopy.Buffer<int>(s._frameContactTails, ref _tails);
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports); PhysicsReplayCopy.Map(s._gpuReportRanges, _ranges);
             PhysicsReplayCopy.Buffer<Vector2>(s._debugContacts.AsSpan(0, s._debugContactCount), ref _debug); _debugCount = s._debugContactCount;
+            _tick = s.Tick;
             _defaultGravity = s._defaultGravity;
             _configuration = Settings(s); _step = s._contactStep; _delta = s.LastStep; _statistics = s.PublishedStatistics;
             _aggregate = s._aggregateContactImpulses; _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
@@ -128,6 +140,7 @@ internal sealed partial class PhysicsSpace
                 PhysicsReplayCopy.List(_contacts, s._frameContacts); PhysicsReplayCopy.Map(_indices, s._frameContactIndices);
                 PhysicsReplayCopy.Buffer<int>(_heads, ref s._frameContactHeads); PhysicsReplayCopy.Buffer<int>(_tails, ref s._frameContactTails);
                 PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports); PhysicsReplayCopy.Map(_ranges, s._gpuReportRanges);
+                s.Tick = _tick;
                 s._defaultGravity = _defaultGravity;
                 s._aggregateContactImpulses = _aggregate; s._contactStep = _step; s.LastStep = _delta;
                 s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s._gpuWakePending = _wake;

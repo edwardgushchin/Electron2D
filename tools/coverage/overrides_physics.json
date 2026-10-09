@@ -2458,6 +2458,38 @@
       "electron2d": "method:Electron2D.Joint.OnNotification(System.Int32)",
       "reason": "Overrides the inherited node notification to record authored pin/groove/spring geometry before user drawing through the existing canvas. No new callback capability.",
       "adr": "ADRs 0004/0028/0100"
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsCheckpoint",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsCheckpoint.Capture()",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsCheckpoint.Dispose()",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsCheckpoint.Restore()",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceCreateCheckpoint(Electron2D.RID)",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetTick(Electron2D.RID)",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsCheckpoint.IsDisposed()",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsCheckpoint.Tick()",
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
     }
   ],
   "statusGroups": [

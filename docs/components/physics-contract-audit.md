@@ -178,8 +178,9 @@ A separate internal [CPU checkpoint](cpu-checkpoints.md) now restores persistent
 solver/contact/sleep/joint/sensor state with stable authored identities. The internal
 [common-world checkpoint](physics-space-checkpoints.md) now also restores attached
 scene/server forces, targets, observer contacts and overlap history without callbacks.
-Public capture/apply, portable state, lifecycle rewind and network
-reconciliation remain absent; these foundations close none of the complete
+The public `PhysicsCheckpoint` factory and world-local tick counter now expose
+that local replay point to game code. Portable authoritative capture/apply,
+lifecycle rewind and network reconciliation remain absent; these foundations close none of the complete
 integration rows below.
 
 | Required integration | Existing prerequisite | Open acceptance |
@@ -187,7 +188,7 @@ integration rows below.
 | Dedicated authority | Headless SceneTree stepping and CPU physics; transports do not require a renderer | Separate CPU server process with no window/renderer and GPU unavailable; command ownership/validation and fixed tick acknowledgements. |
 | Portable identity/lifecycle | SceneMultiplayer has source/spawn IDs and typed codecs; RIDs are process-local | Explicit physics network identity across processes and correction, create/despawn generations, control transfer and late-join world state; never serialize vendor IDs or RIDs as identity. |
 | Authoritative snapshots | Typed property encode/decode and packet budgets | Complete body/contact/one-way-side/sleep/joint state semantics, public capture/apply, validation and atomic error handling, backend-neutral wire payload, measured GPU publication. Pose/velocity property replication alone is insufficient. |
-| Prediction/correction | Fixed scene physics lane and public forces/state operations | Bounded tick/input/state history, acknowledgement pruning, restore/replay of unconfirmed inputs and divergence recovery on CPU and GPU; documented numerical/reproducibility bounds. |
+| Prediction/correction | Fixed scene physics lane, public forces/state operations and tick-qualified local PhysicsCheckpoint | Bounded tick/input/state history, acknowledgement pruning, restore/replay of unconfirmed inputs and divergence recovery on CPU and GPU; documented numerical/reproducibility bounds. |
 | Remote presentation | Existing transform interpolation infrastructure | Snapshot-buffer interpolation for remote objects and correction smoothing separated from authoritative/locally predicted physical state. |
 | Events | Current owner-thread physical event ordering | Distinguish predicted/confirmed events and retain stable event identity across replay so collisions/triggers do not repeat game effects; reconcile despawn and authority changes. |
 | Network testing/performance | Existing socket/ENet/replication tests and bounded buffers | Separate server/client processes under delay, jitter, loss and reordering; CPU-server/GPU-client collisions, joints, sleep/wake, late join and correction; executable public example; snapshot bytes, history memory and replay latency/allocation measurements. |
@@ -195,7 +196,8 @@ integration rows below.
 These capabilities extend the physics objective beyond reference declaration
 coverage. They stay open here even if the generated API ledger eventually has no
 open rows. [ADR 0094](../decisions/networking.md#adr-0094) and ADR 0054 record the
-required integration; no new public API is declared by this documentation slice.
+required integration; the public local-checkpoint prerequisite does not close the
+portable authoritative networking rows.
 
 ## Acceptance and continuation
 

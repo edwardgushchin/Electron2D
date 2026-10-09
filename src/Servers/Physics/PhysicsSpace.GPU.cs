@@ -204,6 +204,7 @@ internal sealed partial class PhysicsSpace
             RecordStepPhase(2, ref profileMark);
             intervalSubmissions = GPUStore!.SubmissionCount; intervalEntered = true;
             GPUStore.SimulateFields((float)delta, GPUFields(DefaultAreaFields));
+            Tick++;
             CaptureDebugContacts();
             RecordStepPhase(3, ref profileMark);
             var statistics = new Statistics(GPUStore.PublishedActiveBodyCount, GPUStore.PairCount, GPUStore.PublishedIslandCount);

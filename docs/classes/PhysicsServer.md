@@ -779,3 +779,12 @@ backend work, including sensor candidates and deferred native island splitting.
 
 [Performance](Performance.md) exposes the same samples. Both are permanent named
 Engine services. See [implementation and verification](../components/physics-statistics.md).
+
+## Tick-qualified local history
+
+`SpaceGetTick(space)` reports the world-local simulation tick. Active positive
+intervals, including empty ones, advance once; skipped intervals do not.
+`SpaceCreateCheckpoint(space)` returns a captured [PhysicsCheckpoint](PhysicsCheckpoint.md)
+that restores this tick together with local simulation/observer state. It is not a
+portable network snapshot. See [local checkpoints](../components/physics-space-checkpoints.md)
+for timing, error and ownership boundaries.

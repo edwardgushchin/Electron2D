@@ -380,6 +380,9 @@ now restores managed contact, joint, sleep, sensor and spatial history with stab
 object identities. The internal [common-world checkpoint](../components/physics-space-checkpoints.md)
 connects both kernels to scene/server backing state, pending forces/targets, direct
 contact views and overlap history, with silent pose restoration and fixed-configuration
-guards. These verify local same-world replay only. Public world snapshots,
+guards. `PhysicsServer.SpaceCreateCheckpoint` now exposes that local state as a
+public `PhysicsCheckpoint`, paired with `SpaceGetTick`; empty active intervals
+advance, skipped intervals retain time, and restoring rewinds only its world.
+These verify local same-world replay only. Portable authoritative snapshots,
 topology/lifecycle rewind, portable identity, network correction and
 predicted/confirmed event handling remain open.

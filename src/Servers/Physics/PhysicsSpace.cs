@@ -77,6 +77,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool _dispatchingContacts;
     private bool _disposed;
     private long _contactStep;
+    internal ulong Tick { get; private set; }
     private int _preparedBodyCapacity;
     private int _preparedSleepCapacity;
 
@@ -463,9 +464,11 @@ internal sealed partial class PhysicsSpace : IDisposable
         EnsureQueryAccess();
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
+        if (Tick == ulong.MaxValue) throw new InvalidOperationException("The physics world tick counter is exhausted.");
         ResetDebugContacts();
         if (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)
         {
+            Tick++; LastStep = (float)delta;
             PhysicsServer.Service.PublishStatistics(this, default);
             return;
         }
@@ -491,7 +494,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             world.contactBiasDuration = (float)delta;
             StepKinematicPaths(delta, hasKinematicBodies);
             RecordStepPhase(3, ref profileMark);
-            solverAdvanced = true; CaptureDebugContacts();
+            solverAdvanced = true; Tick++; CaptureDebugContacts();
             foreach (var collider in _serverColliders) collider.CompleteMotion();
             foreach (var body in _bodies)
             {

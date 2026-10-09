@@ -130,7 +130,11 @@ must remain coherent across correction. The wire contract is backend-neutral;
 local replay storage can remain backend-private and must not require identical
 CPU/GPU internal state or cross-platform bitwise determinism.
 
-These are required capabilities, not current replication behavior. Acceptance
+The first executable public prerequisite is a world-local, tick-qualified
+`PhysicsCheckpoint` under ADR 0054. Its counter is independent of packet sequences
+and its state is backend-private; never transmit a local checkpoint or RID as a
+portable authority snapshot. Snapshot decoding, validation, correction and event
+confirmation remain required integration, not current replication behavior. Acceptance
 requires separate server/client processes, a CPU server with no GPU/window,
 GPU clients, controlled latency/jitter/loss/reordering, joint/contact and sleep
 scenarios, divergence recovery and an executable example. Measure wire bytes,

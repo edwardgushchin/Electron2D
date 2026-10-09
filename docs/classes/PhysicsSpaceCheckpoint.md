@@ -20,3 +20,7 @@ guards; `PhysicsReplayCopy` provides reusable collection copies. Per-family inte
 replay records keep private fields in their owning classes. No user callbacks,
 script fields or portable identifiers are cloned. See the component for event,
 hierarchy, lifecycle and networking boundaries.
+
+The game-facing owner is [PhysicsCheckpoint](PhysicsCheckpoint.md), created by
+`PhysicsServer.SpaceCreateCheckpoint`; this internal point also retains the captured
+world tick for that API.

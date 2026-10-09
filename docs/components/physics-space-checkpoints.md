@@ -2,11 +2,42 @@
 
 Last updated: 2026-10-10
 
-The internal `PhysicsSpace.Checkpoint` connects [CPU solver history](cpu-checkpoints.md)
+The public `PhysicsCheckpoint`, created by `PhysicsServer.SpaceCreateCheckpoint`,
+uses the internal `PhysicsSpace.Checkpoint` to connect [CPU solver history](cpu-checkpoints.md)
 and [GPU resident history](gpu-checkpoints.md) to attached scene/server state. It is
 one reusable rewind point in the same live world, with fixed identities and authored
-configuration. No public API or wire format is introduced. This is a prerequisite
+configuration. No wire format is introduced. This is a prerequisite
 for the open networking work in the [contract audit](physics-contract-audit.md).
+
+## Public tick contract
+
+`PhysicsServer.SpaceGetTick(space)` starts at zero and advances once per active,
+positive-duration world interval, including an empty world. Local/global suspension
+and zero duration leave it unchanged. A solved interval retains its tick when a
+result callback throws. Counter exhaustion rejects before running another interval.
+The counter is independent of scene frames and network packet sequences. It does
+not enforce a fixed duration; a fixed-tick game passes the same duration each time.
+
+The public point exposes `Tick`, `IsDisposed`, `Capture`, `Restore` and `Dispose`.
+Capture retains the actual world tick; restore rewinds it together with simulation
+state. Other worlds, scene clocks, timers and script state retain their current
+values. Both scene-owned and server-owned spaces use the same API. Expired RIDs,
+foreign-thread access and callback/in-progress-frame capture reject. A source world
+releases its points, after which public operations fail as disposed. The engine
+never recovers a failed GPU world by replaying its checkpoint on CPU.
+
+```csharp
+using var point = PhysicsServer.SpaceCreateCheckpoint(world.Space);
+ulong confirmedTick = point.Tick;
+// Apply numbered input and advance the scene/world at the fixed game step.
+point.Restore(); // Simulation and this world's tick return to confirmedTick.
+// The caller restores game state and replays the still-unconfirmed input.
+```
+
+This is an executable local history prerequisite. Portable authoritative state,
+network identities, input ownership/acknowledgement, lifecycle rewind and confirmed
+events remain open in the contract audit. A checkpoint cannot be sent to another
+process or applied to a different backend/world.
 
 ## State and boundaries
 
@@ -48,7 +79,10 @@ bone runtime follows its rigid-body state; skeleton/gameplay state is not cloned
 
 ## Checks and measurements
 
-`ELECTRON2D_TEST_SPACE_CHECKPOINT=cpu` or `gpu` runs the same common-world suite.
+`ELECTRON2D_TEST_PUBLIC_CHECKPOINT=cpu` or `gpu` exercises the public factory,
+numbered-input replay, empty/inactive/zero intervals, callback failure and tick
+visibility, independent worlds, lifetime/thread rejection and warmed zero allocation.
+`ELECTRON2D_TEST_SPACE_CHECKPOINT=cpu` or `gpu` runs the underlying common-world suite.
 CPU is also included in the default test runner. Checks cover scene and server
 contacts/direct views, scene and server Area history, callback-silent restore,
 no invented enter on the first restored interval, reproducible exits, pending
@@ -69,8 +103,8 @@ allocation counters must remain zero. A blocking collection before warmup avoids
 the runtime accounting issue documented in [CPU checkpoints](cpu-checkpoints.md).
 These measurements include the common layer and backend copy/fence, but exclude
 simulation, rendering and network traffic. They do not establish GPU simulation
-speedup or a bounded network-history budget. The remaining public capture/apply,
-portable identity, lifecycle rewind and separate-process CPU authority/GPU client
+speedup or a bounded network-history budget. The remaining portable capture/apply,
+network identity, lifecycle rewind and separate-process CPU authority/GPU client
 acceptance stay open.
 
 On the local Linux/.NET 10.0.1 host, the final focused runs measured:

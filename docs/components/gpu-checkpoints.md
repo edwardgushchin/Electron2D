@@ -101,5 +101,9 @@ capture/apply and lifecycle-aware local/wire histories must build on or replace
 this internal boundary; none of those audit rows is closed by this component.
 
 The internal [common-world layer](physics-space-checkpoints.md) now accompanies
-resident history with scene/server backing state and observer histories. Public
-capture/apply, portable snapshots and networking remain open.
+resident history with scene/server backing state and observer histories. Portable authoritative
+capture/apply and snapshots and networking remain open.
+
+Game code can use the common layer through
+[PhysicsCheckpoint](../classes/PhysicsCheckpoint.md), with the captured world tick.
+This local storage remains device-owned and cannot be sent as a network snapshot.
