@@ -538,6 +538,18 @@ public class Entity : CanvasItem
         return canvas.GetGlobalTransform().AffineInverse() * global;
     }
 
+    internal void EnsurePhysicsReplayAccess()
+    {
+        EnsureMutable();
+        if (Tree?.IsInPhysicsFrame == true) throw new InvalidOperationException("Physics checkpoints require a completed scene physics frame.");
+    }
+
+    internal void RestorePhysicsPose(Transform global)
+    {
+        _transform = ToLocalTransform(global, Parent, TopLevel);
+        InvalidatePhysicsReplayTransform();
+    }
+
     private void SetTransform(Transform transform)
     {
         EnsureFinite(transform, nameof(transform));

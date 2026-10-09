@@ -119,5 +119,11 @@ internal sealed class PhysicsShapePairTracker
         _removed.Clear();
     }
 
+    internal void CopyTo(PhysicsShapePairTracker destination)
+    {
+        destination.Clear(); destination.Prepare(_current.Count);
+        foreach (var pair in _current) destination._current.Add(pair);
+    }
+
     internal void Clear() { _current.Clear(); _next.Clear(); _counts.Clear(); _removed.Clear(); }
 }

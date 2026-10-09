@@ -84,6 +84,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_CCD") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_SLEEP") == "1") { GPUPhysicsSleepStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_MASS") == "1") { GPUPhysicsMassStoreTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_RESIDENT_BODY") == "1") { GPUPhysicsBodyStoreTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SPACE_CHECKPOINT") is { } checkpointMode) { PhysicsSpaceCheckpointTests.Run(checkpointMode == "gpu"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CPU_CHECKPOINT") == "1") { CPUPhysicsCheckpointTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CHECKPOINT") == "1") { GPUPhysicsCheckpointTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PHYSICS") == "1") { GPUPhysicsTests.Run(); return; }
@@ -667,6 +668,7 @@ NodeUniqueNameTests.Run();
 NodeReplacementTests.Run();
 PhysicsInterpolationTests.Run();
 PhysicsBodyTests.Run();
+PhysicsSpaceCheckpointTests.Run();
 CPUPhysicsCheckpointTests.Run();
 PinJointTests.Run();
 GrooveJointTests.Run();

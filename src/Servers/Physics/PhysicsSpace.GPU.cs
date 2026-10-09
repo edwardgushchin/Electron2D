@@ -76,6 +76,8 @@ internal sealed partial class PhysicsSpace
         foreach (var backend in _gpuColliders.Values) backend.CompleteGPUStatePublication();
     }
 
+    internal static GPUPhysicsBodyStore.FieldParameters ReplayFields(PhysicsAreaFields fields) => GPUFields(fields);
+
     private static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
         new(fields.GravityVector, fields.Gravity, fields.GravityPoint, fields.GravityPointUnitDistance, fields.LinearDamp, fields.AngularDamp,
             fields.GravitySpaceOverride, fields.LinearDampSpaceOverride, fields.AngularDampSpaceOverride, fields.Priority);

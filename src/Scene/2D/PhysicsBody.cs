@@ -3,7 +3,7 @@ using Box2D.NET;
 namespace Electron2D;
 
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
-public abstract class PhysicsBody : CollisionObject
+public abstract partial class PhysicsBody : CollisionObject
 {
     private readonly List<ulong> _appliedShapeRevisions = [];
     private Vector2 _lastPosition;

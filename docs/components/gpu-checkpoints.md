@@ -99,3 +99,7 @@ serialize a world, separate predicted/confirmed events, capture CPU state, recon
 across backends or provide the required multi-process network example. Public
 capture/apply and lifecycle-aware local/wire histories must build on or replace
 this internal boundary; none of those audit rows is closed by this component.
+
+The internal [common-world layer](physics-space-checkpoints.md) now accompanies
+resident history with scene/server backing state and observer histories. Public
+capture/apply, portable snapshots and networking remain open.

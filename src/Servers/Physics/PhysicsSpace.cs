@@ -172,7 +172,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
-    internal bool HasBackendFailure => _gpuFailure is not null || _continuousFailure is not null || GPUStore?.HasFailed == true;
+    internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || _continuousFailure is not null || GPUStore?.HasFailed == true;
 
     internal void EnsureReleaseAccess()
     {
@@ -185,6 +185,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureQueryAccess()
     {
         EnsureReleaseAccess();
+        if (_checkpointFailure is not null) throw new InvalidOperationException("Physics checkpoint restore failed; dispose this world before creating a replacement.", _checkpointFailure);
         if (GPUStore?.HasFailed == true) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.");
         if (GPUStore is null && b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
         if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
@@ -550,6 +551,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
+        while (_checkpoints.Count > 0) _checkpoints[^1].Dispose();
         _debugContacts = []; _debugContactLimit = _debugContactCount = 0;
         _tasks?.Dispose();
         if (_continuousTree is not null) Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(_continuousTree);

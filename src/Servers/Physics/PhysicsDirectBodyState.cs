@@ -311,6 +311,8 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     }
 
     internal void BeginContactSnapshot() => _contactCount = 0;
+    internal void RestoreContacts(ReadOnlySpan<Contact> contacts)
+    { PrepareContacts(contacts.Length); contacts.CopyTo(_contacts); _contactCount = contacts.Length; }
 
     internal int SelectContactSlot(float depth, int limit)
     {

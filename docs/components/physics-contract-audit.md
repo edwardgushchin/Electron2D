@@ -175,8 +175,10 @@ Changed-body publications are observable latest state, not replay history. An
 internal [GPU checkpoint](gpu-checkpoints.md) now restores device-local motion,
 forces, contacts, sleep and joint history within a fixed authored configuration.
 A separate internal [CPU checkpoint](cpu-checkpoints.md) now restores persistent
-solver/contact/sleep/joint/sensor state with stable authored identities. Public
-scene/server capture/apply, portable state, lifecycle rewind and network
+solver/contact/sleep/joint/sensor state with stable authored identities. The internal
+[common-world checkpoint](physics-space-checkpoints.md) now also restores attached
+scene/server forces, targets, observer contacts and overlap history without callbacks.
+Public capture/apply, portable state, lifecycle rewind and network
 reconciliation remain absent; these foundations close none of the complete
 integration rows below.
 

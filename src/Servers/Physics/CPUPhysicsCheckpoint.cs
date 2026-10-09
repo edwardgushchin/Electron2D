@@ -20,7 +20,7 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
         Copy(source, _saved!, true); Copy(source, _saved!, false); _valid = true;
     }
 
-    internal void Restore()
+    internal void ValidateRestore()
     {
         var destination = Check();
         if (!_valid) throw new InvalidOperationException("The checkpoint has no completed capture.");
@@ -33,6 +33,12 @@ internal sealed class CPUPhysicsCheckpoint : IDisposable
             !ReferenceEquals(saved.preSolveContext, destination.preSolveContext) || saved.customFilterFcn != destination.customFilterFcn ||
             !ReferenceEquals(saved.customFilterContext, destination.customFilterContext))
             throw new InvalidOperationException("CPU checkpoint callbacks and task configuration must still match.");
+    }
+
+    internal void Restore()
+    {
+        ValidateRestore();
+        var destination = Check(); var saved = _saved!;
         // Reserve every nested destination before overwriting any live logical state.
         Copy(saved, destination, true); Copy(saved, destination, false);
     }

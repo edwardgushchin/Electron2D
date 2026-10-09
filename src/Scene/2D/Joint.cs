@@ -148,6 +148,8 @@ public abstract class Joint : Entity
         _dirty = true;
     }
 
+    internal bool HasPendingReplayConfiguration => _dirty;
+
     internal void PrepareBackend()
     {
         var space = _space;

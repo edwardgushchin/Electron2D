@@ -567,6 +567,16 @@ public abstract partial class CanvasItem : Node
     /// <exception cref="Exception">A visibility notification or event handler throws after visibility changes.</exception>
     public void Hide() => Visible = false;
 
+    internal void InvalidatePhysicsReplayTransform()
+    {
+        if (ServerState is { } state) state.Transform = null;
+        _globalTransformInvalid = true; _interpolationValid = false;
+        Tree?.CancelTransformNotification(this);
+        for (var i = 0; i < GetChildCount(includeInternal: true); i++)
+            if (GetChild(i, includeInternal: true) is CanvasItem { TopLevel: false } child && !child.IsDisposed)
+                child.InvalidatePhysicsReplayTransform();
+    }
+
     private void PropagateGlobalTransformChanged()
     {
         if (_globalTransformInvalid) return;

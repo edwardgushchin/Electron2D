@@ -377,6 +377,9 @@ An internal [GPU replay checkpoint](../components/gpu-checkpoints.md) now retain
 resident body/force/contact/sleep/joint history without CPU state readback for an
 unchanged authored configuration. An internal [CPU solver checkpoint](../components/cpu-checkpoints.md)
 now restores managed contact, joint, sleep, sensor and spatial history with stable
-object identities. These verify local backend replay only. Public world snapshots,
+object identities. The internal [common-world checkpoint](../components/physics-space-checkpoints.md)
+connects both kernels to scene/server backing state, pending forces/targets, direct
+contact views and overlap history, with silent pose restoration and fixed-configuration
+guards. These verify local same-world replay only. Public world snapshots,
 topology/lifecycle rewind, portable identity, network correction and
 predicted/confirmed event handling remain open.

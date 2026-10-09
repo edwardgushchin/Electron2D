@@ -125,11 +125,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Copy(restore: false); _valid = true;
         }
 
-        internal void Restore()
+        internal void ValidateRestore()
         {
             Check(); Store.EnsureAccess();
             if (!_valid) throw new InvalidOperationException("The checkpoint has no completed capture.");
             ValidateConfiguration();
+        }
+
+        internal void Restore()
+        {
+            ValidateRestore();
             var s = Store;
             try
             {

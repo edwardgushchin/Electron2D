@@ -22,6 +22,7 @@ One owner-thread CPU or independent GPU world shared by scene bodies/Areas/joint
 | `LastStep`, cached body-state callback list | Last actual interval and generation-aware delivery; skipped intervals retain data. |
 | `Add` / `Remove` scene/server objects | Native membership, dependent joint/monitor lifetime and identity. |
 | `GetJointWorldBody()` | Hidden shape-free world anchor for single-body server pin. |
+| `CreateCheckpoint()` | Capture a reusable same-world CPU/GPU rewind point including attached observer state; restore validates configuration and silently resets physics poses. See [local world checkpoints](../components/physics-space-checkpoints.md). |
 | `Dispose()` | Destroy joints before bodies/world, join retained workers, detach caller configuration and invalidate views. |
 
 An internally enabled GPU-stage failure releases solver scratch/lock ownership,

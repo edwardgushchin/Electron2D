@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>A manually moved kinematic body whose motion influences dynamic contacts.</summary>
 /// <remarks>With <see cref="SyncToPhysics"/> enabled, a new transform is presented after the next nonzero
 /// fixed step. The body borrows child collision shapes and its inherited surface material.</remarks>
-public sealed class AnimatableBody : StaticBody
+public sealed partial class AnimatableBody : StaticBody
 {
     private static readonly PropertyDescriptor[] AnimatableProperties =
     [

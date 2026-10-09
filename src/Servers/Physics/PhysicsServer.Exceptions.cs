@@ -33,6 +33,15 @@ public sealed partial class PhysicsServer
         InvalidateBodyContacts(body);
     }
 
+    internal void CopyReplayExceptions(RID body, List<RID> destination)
+    {
+        lock (_registryGate) { destination.Clear(); if (_bodyExceptions.TryGetValue(body, out var source)) { destination.EnsureCapacity(source.Count); foreach (var item in source) destination.Add(item); } }
+    }
+    internal bool ReplayExceptionsMatch(RID body, List<RID> saved)
+    {
+        lock (_registryGate) { if (!_bodyExceptions.TryGetValue(body, out var source)) return saved.Count == 0; return System.Runtime.InteropServices.CollectionsMarshal.AsSpan(source).SequenceEqual(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(saved)); }
+    }
+
     internal RID[] GetBodyCollisionExceptions(RID body)
     {
         ThrowIfDisposed();

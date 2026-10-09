@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Retains joint identity, sampled engine frames, settings and common scene/server lifetime.</summary>
-internal sealed class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsServer.JointType? declaredType = null)
+internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, PhysicsServer.JointType? declaredType = null)
 {
     internal RID RID { get; } = rid;
     internal WeakReference<Joint>? Scene { get; } = scene is null ? null : new(scene);

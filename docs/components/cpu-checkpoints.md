@@ -65,8 +65,9 @@ log: `/tmp/e2d-cpu-checkpoint-verified-full.log`.
 These timings cover checkpoints only, not simulation, network correction or FPS;
 the GPU checkpoint's circle workload is different and is not a comparison.
 
-CPU scene/server attachment state, portable identity, lifecycle rewind, shared
-public capture/apply, CPU-server/GPU-client reconciliation and separate-process
+The internal [common-world layer](physics-space-checkpoints.md) additionally captures
+CPU scene/server attachment and observer state under fixed configuration. Portable
+identity, lifecycle rewind, shared public capture/apply, CPU-server/GPU-client reconciliation and separate-process
 network validation are still required. Backend-private replay passing here does
 not close those requirements or establish cross-platform deterministic replay.
 

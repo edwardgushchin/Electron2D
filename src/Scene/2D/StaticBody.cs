@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>A stationary collision body that constrains simulated dynamic bodies.</summary>
-public class StaticBody : PhysicsBody
+public partial class StaticBody : PhysicsBody
 {
     private static readonly PropertyDescriptor[] BodyProperties =
     [

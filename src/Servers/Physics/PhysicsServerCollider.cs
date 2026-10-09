@@ -9,7 +9,7 @@ internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeome
     internal bool OwnsGeometry { get; } = ownsGeometry;
 }
 
-internal sealed class PhysicsServerCollider(RID rid, bool isArea)
+internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 {
     private readonly List<ShapeSlot> _slots = [];
     private readonly PhysicsColliderBackend _backend = new(rid);
