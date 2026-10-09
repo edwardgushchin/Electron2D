@@ -117,8 +117,8 @@ internal static class GPUPhysicsCCDStoreTests
         }
         using (var s = new Store())
         {
-            var a = Body(s, new(20, 0), ccd: CCD.CastShape); var k = Body(s, speed: new(4000, 0), mode: Mode.Kinematic);
-            s.AddShape(a, circle, friction: 0); s.AddShape(k, circle, friction: 0); Tick(s);
+            var a = Body(s, new(20, 0), ccd: CCD.CastShape); var k = Body(s, mode: Mode.Kinematic);
+            s.AddShape(a, circle, friction: 0); s.AddShape(k, circle, friction: 0); s.SetKinematicTarget(k, new(80, 0), 0); Tick(s);
             Near(Read(s, k).Position.X, 80, 0.01f, "Kinematic target velocity integrates its full interval");
             Check(Read(s, a).Position.X > 81.9f && Read(s, a).Velocity.X > 3999, "A fast kinematic peer wakes and pushes a CCD body.");
         }
@@ -126,9 +126,11 @@ internal static class GPUPhysicsCCDStoreTests
         foreach (var rotatingTarget in new[] { false, true })
         {
             using var s = new Store();
-            var rod = Body(s, ccd: rotatingTarget ? CCD.Disabled : CCD.CastShape, mode: rotatingTarget ? Mode.Kinematic : Mode.Rigid, angular: MathF.PI / 0.02f);
+            var rod = Body(s, ccd: rotatingTarget ? CCD.Disabled : CCD.CastShape, mode: rotatingTarget ? Mode.Kinematic : Mode.Rigid, angular: rotatingTarget ? 0 : MathF.PI / 0.02f);
             var point = Body(s, new(0, 8), ccd: rotatingTarget ? CCD.CastShape : CCD.Disabled, mode: rotatingTarget ? Mode.Rigid : Mode.Static);
-            s.AddShape(rod, bar, friction: 0); s.AddShape(point, target, friction: 0); Tick(s);
+            s.AddShape(rod, bar, friction: 0); s.AddShape(point, target, friction: 0);
+            if (rotatingTarget) s.SetKinematicTarget(rod, Vector2.Zero, MathF.PI - 0.000001f);
+            Tick(s);
             Check(s.CCDIntervalCount > 0, "The rotational arc is detected even when both endpoint poses miss.");
             if (!rotatingTarget) Check(Read(s, rod).Velocity.Z < MathF.PI / 0.02f - 1, "Rotational contact changes the dynamic rod's angular motion.");
             else Check(Read(s, point).Velocity.X < -1, "Rotating kinematic geometry pushes the stationary CCD body.");

@@ -94,7 +94,7 @@ void main()
         if(sa.policy.x!=p.pair.z||sb.policy.x!=p.pair.w||ai>=control.z||bi>=control.z){fail();return;}
         ResidentBody a=bodies[ai],b=bodies[bi];
         if(a.flags.x!=sa.owner.y||b.flags.x!=sb.owner.y||a.flags.w==0u||b.flags.w==0u){fail();return;}
-        bool continuous=(a.flags.y>=2u&&(a.flags.z&768u)!=0u)||(b.flags.y>=2u&&(b.flags.z&768u)!=0u);
+        bool continuous=(continuousMode(a)|continuousMode(b))!=0u;
         float contactThreshold=continuous?policy.w:0;
         if(p.normal.z>contactThreshold&&continuous){constraints[i]=c;return;}
         vec2 ma=inverseMass(a),mb=inverseMass(b);

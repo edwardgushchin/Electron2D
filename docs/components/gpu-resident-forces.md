@@ -46,14 +46,14 @@ new generation empty. Capacity growth copies pending input GPU-to-GPU.
 | Storage or operation | Cost and purpose |
 | --- | --- |
 | Device transient force | 16 bytes per retained body: force xy, torque and outer-tick eligibility. No CPU mirror. |
-| Coalesced body command | 144 bytes, formerly 128; appended vec4 carries only unsubmitted force additions. Successful submission clears CPU staging. |
-| Device body / selected snapshot | Unchanged 80 / 48 bytes. Solver/contact hot layouts do not grow. |
-| CPU body metadata | Unchanged 88 bytes per reserved slot. It contains configuration and identity, not submitted pending-force totals. |
+| Coalesced body command | Now 176 bytes with kinematic target/surface input; appended vec4 carries only unsubmitted force additions. Successful submission clears CPU staging. |
+| Device body / selected snapshot | Now 96 / 48 bytes after kinematic surface motion; transient input remains outside the hot body record. |
+| CPU body metadata | Now 104 bytes with authored surface velocity per reserved slot. It contains configuration and identity, not submitted pending-force totals. |
 | Ordinary tick | Existing body passes perform eligibility and consumption. No additional dispatch, fence, status traffic or state readback. |
 | Growth | Additional 16 bytes per prior body copied device-to-device; counted in DeviceCopyBytes. |
 
 At 65,536 slots the additional device force buffer and command capacity each cost
-1 MiB; CPU metadata plus pending commands totals 15,204,352 bytes (14.5 MiB).
+1 MiB; CPU metadata plus pending commands now totals 18,350,080 bytes (17.5 MiB) after [kinematic target storage](gpu-resident-kinematic.md).
 The side buffer is bound only to body integration/edits and sleep-wake integration,
 not to the iterative contact/joint kernels. This avoids expanding their hot body
 record for an input they do not use.
@@ -92,7 +92,7 @@ through its impact intervals and the next tick; pin linear speed stays within
 
 The force-edit workload contains 4,096 awake bodies without shapes/contacts,
 four substeps and a sixteen-iteration setting; one body's force is edited each tick. It has 128 warmup and 128 measured
-ticks. First focused Linux/.NET 10/Vulkan run on NVIDIA GeForce RTX 3090 Ti:
+ticks. Historical force-stage focused run before kinematic target storage, Linux/.NET 10/Vulkan on NVIDIA GeForce RTX 3090 Ti:
 p50 0.7033 ms, p95 1.4321 ms, p99 2.4283 ms, mean fence wait 0.5326 ms.
 Owner-thread managed allocation is zero. Each tick uploads 240 bytes (one 144-byte
 edit plus 96-byte status resets) and downloads 96-byte status, with no body read.

@@ -127,7 +127,9 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             if(time==0)
             {
                 float curvature=bound*tolerances.w*max(wa,wb);
-                float speed=closingSpeed(testA,testB,va,vb,ca,cb,axis.normal,rayA,rayB)*tolerances.w;
+                // Residual closing is a contact constraint, so it includes prescribed surface motion.
+                // Geometric sampling and first-impact advancement above still use actual motion only.
+                float speed=closingSpeed(testA,testB,va+startA.surface.xyz,vb+startB.surface.xyz,ca,cb,axis.normal,rayA,rayB)*tolerances.w;
                 float allowance=0.5*max(gap,0.25*tolerances.x);
                 float discriminant=speed*speed+2*curvature*allowance;
                 if(!finite2(vec2(curvature,discriminant))){fail();return 1;}
@@ -162,7 +164,7 @@ void main()
     if(((sa.policy.w|sb.policy.w)&2u)!=0u)return;
     ResidentBody startA=bodies[sa.owner.x],startB=bodies[sb.owner.x];
     if(startA.flags.x!=sa.owner.y||startB.flags.x!=sb.owner.y||startA.flags.w==0u||startB.flags.w==0u){fail();return;}
-    uint modeA=startA.flags.y>=2u?(startA.flags.z>>8)&3u:0u,modeB=startB.flags.y>=2u?(startB.flags.z>>8)&3u:0u;
+    uint modeA=continuousMode(startA),modeB=continuousMode(startB);
     if((modeA|modeB)==0u)return;
     Geometry ga=geometries[sa.owner.z],gb=geometries[sb.owner.z];
     if(ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}

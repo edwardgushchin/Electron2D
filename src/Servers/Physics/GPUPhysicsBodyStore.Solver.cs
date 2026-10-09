@@ -50,7 +50,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 var dampingDelta = substep == 0 ? delta : 0;
                 Submit(h, gravity, default, default, 3, dampingDelta: dampingDelta, beginTick: substep == 0);
                 SolveConstraintsCore(h, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, gravity, dampingDelta: dampingDelta);
-                if (_ccdBodyCount > 0 && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
+                if ((_ccdBodyCount > 0 || _kinematicBodyCount > 0) && ShapeCount > 0) AdvanceContinuous(h, gravity, iterations, margin, allowedPenetration, correctionFactor, maxCorrectionSpeed, bounceThreshold, substep == substeps - 1);
                 else Submit(h, default, default, default, 4, _hasPositionCorrections, endTick: substep == substeps - 1);
                 _hasPositionCorrections = false;
             }
@@ -98,7 +98,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Bodies = (uint)_highWater,
                 Points = (uint)constraintCount,
                 Time = new(delta, 1 / delta, correctionFactor, maxCorrectionSpeed),
-                Policy = new(allowedPenetration, bounceThreshold, _previousSolveDelta > 0 ? delta / _previousSolveDelta : 0, MathF.Max(contactThreshold, _ccdBodyCount > 0 ? 4 * CCDTolerance : 0)),
+                Policy = new(allowedPenetration, bounceThreshold, _previousSolveDelta > 0 ? delta / _previousSolveDelta : 0, MathF.Max(contactThreshold, _ccdBodyCount > 0 || _kinematicBodyCount > 0 ? 4 * CCDTolerance : 0)),
                 HistoryCapacity = (uint)_solverHistoryTableCapacity,
                 PreviousPoints = (uint)_previousPointCount,
                 ContactPoints = (uint)ContactPointCount,

@@ -107,11 +107,11 @@ contact/event snapshot.
 
 ## Storage, transfer and native limits
 
-The hot device body remains 80 B; CCD mode fits existing flag bits. Commands are now
-144 B after transient-force input; selected snapshots remain 48 B. CPU slots are now 88 B, retaining the authored CCD
-enum, integration policy and an incident-exception list head in addition
+The hot device body is now 96 B with independent surface velocity; CCD mode fits existing flag bits. Commands are now
+176 B after transient-force and kinematic target input; selected snapshots remain 48 B. CPU slots are now 104 B, retaining the authored CCD
+enum, surface velocity, integration policy and an incident-exception list head in addition
 to their prior configuration; there is no evolving body/trajectory mirror. At
-65,536 slots the CPU slot/command payload is 14.5 MiB, measured by
+65,536 slots the CPU slot/command payload is 17.5 MiB, measured by
 AuthoredBodyCapacityBytes.
 Swept bounds and candidate pairs reuse existing retained device buffers. Each
 nonempty TOI query adds an 8-B status/fraction reset and 8-B result readback at one
@@ -222,3 +222,12 @@ collision response after removal; no separate CCD-only exception list is kept.
 history and transformed direction. Rotating rejected episodes publish their
 separation boundary before a possible later solid-side impact. The sweep uniform
 is now 48 bytes; the existing scalar status/fraction readback and fence are reused.
+
+Moving [kinematic targets](gpu-resident-kinematic.md) now trigger full-shape
+trajectory checks even against a dynamic peer with Disabled CCD. Virtual surface
+velocity remains separate and does not expand bounds or enter trajectory samples.
+
+Residual closing at an already processed impact now includes virtual surface
+velocity, like the contact solver. This prevents refinement from exhausting its
+budget when a configured surface cancels geometric normal motion. Geometric
+samples, swept bounds and first-impact advancement still exclude virtual motion.

@@ -17,6 +17,6 @@ vec2 rotate(vec2 q,vec2 p) {return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
 vec2 angular(float w,vec2 p) {return vec2(-w*p.y,w*p.x);}
 bool finite4(vec4 v) {return !any(isnan(v))&&!any(isinf(v));}
 vec2 inverseMass(ResidentBody b) {return b.flags.y>=2u&&(b.flags.z&16u)==0u?vec2(b.properties.x,(b.flags.z&4u)==0u?b.properties.y:0):vec2(0);}
-vec2 velocity(ResidentBody b,vec2 r) {return b.velocity.xy+angular(b.velocity.z,r);}
+vec2 velocity(ResidentBody b,vec2 r) {return b.velocity.xy+b.surface.xy+angular(b.velocity.z+b.surface.z,r);}
 
-ResidentBody worldBody() {return ResidentBody(vec4(0,0,1,0),vec4(0),vec4(0),vec4(0),uvec4(0,0,0,1));}
+ResidentBody worldBody() {return ResidentBody(vec4(0,0,1,0),vec4(0),vec4(0),vec4(0),vec4(0),uvec4(0,0,0,1));}

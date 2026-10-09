@@ -67,7 +67,7 @@ internal static class GPUPhysicsBodyParameterTests
         s.SetMode(b, Mode.Static); s.SetVelocity(b, new(12, -3), 5); s.Step(0.1f, new(0, 980)); var stationary = Read(s, b);
         Near(stationary.Position, new(10, 20), 0, "Static velocity remains virtual surface motion");
         Near(stationary.Velocity.Z, 5, 0, "Static angular surface velocity is retained");
-        s.SetMode(b, Mode.Kinematic); s.SetVelocity(b, new(12, -3), 0); s.ApplyImpulse(b, new(1000, 1000), 1000); s.Step(0.1f, new(0, 980));
+        s.SetMode(b, Mode.Kinematic); s.SetVelocity(b, new(12, -3), 0); s.ApplyImpulse(b, new(1000, 1000), 1000); s.SetKinematicTarget(b, new(11.2f, 19.7f), 0.4f); s.Step(0.1f, new(0, 980));
         Near(Read(s, b).Position, new(11.2f, 19.7f), 0.0001f, "Kinematic motion ignores gravity and impulses after a live transition");
     }
     private static void VerifyOrderedEdits()
@@ -128,9 +128,9 @@ internal static class GPUPhysicsBodyParameterTests
         s.Simulate(0.02f, Vector2.Zero, substeps: 1, margin: 0);
         Check(Read(s, b).Position.X < 20 && s.CCDIntervalCount > 0, "A static-to-rigid transition activates its retained CCD mode.");
         Near(Read(s, b).Velocity.Y, 96, 0.001f, "CCD impact intervals do not apply outer-tick damping again");
-        var queries = s.CCDQueryCount; s.SetMode(b, Mode.Kinematic); s.SetPose(b, Vector2.Zero, 0); s.SetVelocity(b, new(3000, 0), 0);
+        var queries = s.CCDQueryCount; s.SetMode(b, Mode.Kinematic); s.SetPose(b, Vector2.Zero, 0); s.SetKinematicTarget(b, new(60, 0), 0);
         s.Simulate(0.02f, Vector2.Zero, substeps: 1, margin: 0);
-        Check(s.CCDQueryCount == queries && Read(s, b).Position.X > 59, "Nondynamic transition disables trajectory CCD without discarding its authored setting.");
+        Check(s.GetCCDMode(b) == Store.CCDMode.CastShape && s.CCDQueryCount == queries && Read(s, b).Position.X > 59, "Kinematic targets retain configured CCD but do not collide with static peers.");
     }
     private static void VerifyFailures()
     {
@@ -162,8 +162,8 @@ internal static class GPUPhysicsBodyParameterTests
         var samples = new double[128]; var upload = s.UploadBytes; var readback = s.ReadbackBytes; var wait = s.WaitMS; var allocation = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); Tick(i); samples[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
         allocation = GC.GetAllocatedBytesForCurrentThread() - allocation;
-        Check(allocation == 0 && s.UploadBytes - upload == 128 * (144 + 96) && s.ReadbackBytes - readback == 128 * 96,
-            "Live role/policy/velocity edits share one 144-byte command, never download states and allocate zero managed bytes after warmup.");
+        Check(allocation == 0 && s.UploadBytes - upload == 128 * (176 + 96) && s.ReadbackBytes - readback == 128 * 96,
+            "Live role/policy/velocity edits share one 176-byte command, never download states and allocate zero managed bytes after warmup.");
         Array.Sort(samples);
         Console.WriteLine($"Resident body parameters: 4096 bodies, 128 warmup/128 samples, 4 substeps/16 iterations; p50={samples[64]:F4}, p95={samples[121]:F4}, p99={samples[126]:F4} ms, wait={(s.WaitMS - wait) / 128:F4} ms; {allocation} managed B, upload={(s.UploadBytes - upload) / 128}, readback={(s.ReadbackBytes - readback) / 128} B/tick; {s.Driver}, {s.DeviceName}.");
     }

@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-09
 
+[Kinematic target/surface separation](gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
+
 ## Baseline and scope
 
 Source baseline: local `main` at `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.

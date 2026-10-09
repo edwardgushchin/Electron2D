@@ -18,11 +18,22 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (slot.Mode == mode) return;
         if (slot.CCDMode != CCDMode.Disabled)
             _ccdBodyCount += (mode >= PhysicsServer.BodyMode.Rigid ? 1 : 0) - (slot.Mode >= PhysicsServer.BodyMode.Rigid ? 1 : 0);
+        var previousMode = slot.Mode;
+        _kinematicBodyCount += (mode == PhysicsServer.BodyMode.Kinematic ? 1 : 0) - (previousMode == PhysicsServer.BodyMode.Kinematic ? 1 : 0);
         slot.Mode = mode;
         ref var command = ref Edit(body.Index);
         command.Mask |= ModeEdit; command.Body.Mode = (uint)mode;
         if (mode < PhysicsServer.BodyMode.Rigid) SetVelocity(body, Vector2.Zero, 0);
-        else if (RotationLocked(slot)) ClearAngularMotion(body.Index);
+        else
+        {
+            if (previousMode < PhysicsServer.BodyMode.Rigid)
+            {
+                var surface = slot.Surface; SetVelocity(body, new(surface.X, surface.Y), surface.Z);
+                slot.Surface = default; command.Body.Surface = default; command.Mask |= SurfaceEdit;
+            }
+            if (RotationLocked(slot)) ClearAngularMotion(body.Index);
+        }
+        CancelKinematicTarget(body.Index);
         WriteIntegrationPolicy(body.Index);
         // A mode transition retires contact identities while retaining the authored shape handles.
         for (var shape = slot.FirstShape; shape >= 0; shape = _shapeSlots[shape].NextOnBody) MarkShape(shape, false);

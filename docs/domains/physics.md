@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-09
 
+[Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
+
 ## Physical skeletal integration
 
 [PhysicalBone](../classes/PhysicalBone.md) adds real skeletal rigid bodies with inherited forces, freeze, contacts and authored joints. Static followers use effective zero collision filters while preserving configured filters; the idle modification consumer publishes solved poses to the rig.

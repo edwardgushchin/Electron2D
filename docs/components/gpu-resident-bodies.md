@@ -17,7 +17,8 @@ component now also has [resident pin/groove/spring joints](gpu-resident-joints.m
 and [directed collision exceptions](gpu-resident-exceptions.md), plus
 [latched one-way contact episodes](gpu-resident-one-way.md) and
 [live role/integration policy changes](gpu-resident-parameters.md) and
-[single-tick transient forces](gpu-resident-forces.md).
+[single-tick transient forces](gpu-resident-forces.md), plus
+[kinematic targets and virtual surfaces](gpu-resident-kinematic.md).
 It is not a complete physics backend: independent GPU public joint adapters,
 scene/server selection/publication and networking remain open. [Resident CCD](gpu-resident-ccd.md) now executes internally. Automatic/custom [mass profiles](gpu-resident-mass.md) now use shared authoring
 geometry and center-aware device motion/constraint preparation. [Connected sleep/wake](gpu-resident-sleep.md) now executes on GPU. Step
@@ -30,20 +31,21 @@ the independent GPU objective is satisfied.
 
 | Storage/transfer | Purpose and current cost |
 | --- | --- |
-| Device bodies | 80 bytes per retained slot; authoritative pose, velocity, force, mass/damping and generation/role data. |
+| Device bodies | 96 bytes per retained slot; authoritative pose, actual/surface velocity, force, mass/damping and generation/role data. |
 | Device local centers | 8 bytes per retained slot; read during integration and constraint preparation, copied on growth. |
-| CPU slot metadata | 88-byte payload per slot for generation, free-list, pending-command routing, shape/joint/exception identity, authored role/integration/mass profiles and resolved geometry; no live poses or velocities. |
+| Device targets | 16 bytes per retained slot; pending kinematic world pose with no CPU pose mirror. |
+| CPU slot metadata | 104-byte payload per slot for generation, free-list, pending-command routing, shape/joint/exception identity, authored surface/role/integration/mass profiles and resolved geometry; no live poses or velocities. |
 | Device transient forces | 16 bytes per retained slot; pending linear force, torque and eligibility, with no host mirror. |
-| Pending edit staging | 144 bytes per reserved command. At most one coalesced command per slot; entries are cleared after successful publication. Allocation follows capacity growth, not every frame. |
+| Pending edit staging | 176 bytes per reserved command. At most one coalesced command per slot; entries are cleared after successful publication. Allocation follows capacity growth, not every frame. |
 | Growth | Copy prior body slots GPU-to-GPU; no body download/upload reconstruction. Record copied bytes and wait for resource replacement. |
 | Integration-only unchanged tick | 8-byte status reset upload, 32-byte compute uniform and 8-byte error/activity-result download. No body-state traffic. |
 | Explicit selected read | 16-byte generation/store-qualified request and 48-byte pose/velocity/sleep result per requested body, plus status and dispatch uniforms. |
 | Per-tick fence wait | Required by this synchronous stage's finite-result/error publication contract. Its measured time is recorded separately from total submission/map/dispatch work. |
 
-At 65,536 slots, body/center/transient-force payload is 6.5 MiB and retained CPU metadata/command payload is
-14.5 MiB; consumed command storage contains no live-state mirror. GPU command/request/
-result scratch payload totals 13 MiB plus the eight-byte status. Upload/download transfer
-capacity totals 13 MiB plus sixteen bytes. These are payload capacities, excluding
+At 65,536 slots, body/center/transient-force/target payload is 8.5 MiB and retained CPU metadata/command payload is
+17.5 MiB; consumed command storage contains no live-state mirror. GPU command/request/
+result scratch payload totals 15 MiB plus the eight-byte status. Upload/download transfer
+capacity totals 15 MiB plus sixteen bytes. These are payload capacities, excluding
 object/driver overhead. Further asynchronous publication requires an explicit
 error/freshness contract, rather than silently removing the wait.
 

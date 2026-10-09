@@ -16,7 +16,7 @@ internal static class GPUPhysicsBodyStoreTests
         var dynamicBody = store.Add(new(PhysicsServer.BodyMode.Rigid, new(10, 20), 0, new(3, 0), 0.2f,
             Mass: 2, Inertia: 3, GravityScale: 0.5f, ConstantForce: new(4, 0), ConstantTorque: 6));
         var stationary = store.Add(new(PhysicsServer.BodyMode.Static, new(70, 80), 0.7f, new(9, 8), 3));
-        var kinematic = store.Add(new(PhysicsServer.BodyMode.Kinematic, new(2, 3), 0, new(5, -2), 0));
+        var kinematic = store.Add(new(PhysicsServer.BodyMode.Kinematic, new(2, 3), 0, Vector2.Zero, 0));
         var locked = store.Add(new(PhysicsServer.BodyMode.RigidLinear, new(0, 0), 0, new(0, 0), 8, Inertia: 1, GravityScale: 0));
         var damped = store.Add(new(PhysicsServer.BodyMode.Rigid, Vector2.Zero, 0, new(4, 3), 1,
             Inertia: 1, GravityScale: 0, LinearDamp: 10, AngularDamp: 5));
@@ -25,7 +25,7 @@ internal static class GPUPhysicsBodyStoreTests
         GPUPhysicsBodyStore.BodyHandle[] handles = [dynamicBody, stationary, kinematic, locked, damped, amplified];
         var state = new GPUPhysicsBodyStore.Snapshot[handles.Length];
         const float dt = 1f / 120;
-        for (var i = 0; i < 120; i++) store.Step(dt, new(0, 100));
+        for (var i = 0; i < 120; i++) { store.SetKinematicTarget(kinematic, new(2 + 5 * dt * (i + 1), 3 - 2 * dt * (i + 1)), 0); store.Step(dt, new(0, 100)); }
         store.Read(handles, state);
         var accelerationTime = dt * dt * 120 * 121 / 2;
         // Semi-implicit Euler with constant acceleration; tolerances allow float accumulation
@@ -34,7 +34,7 @@ internal static class GPUPhysicsBodyStoreTests
         Near(new(state[0].Velocity.X, state[0].Velocity.Y), new(5, 50), 0.001f, "Resident velocity");
         Check(MathF.Abs(state[0].Rotation - (0.2f + 2 * accelerationTime)) < 0.001f, "Angular torque and rotation integrate on the device.");
         Near(state[1].Position, new(70, 80), 0, "Static pose does not integrate stored velocity");
-        Near(state[2].Position, new(7, 1), 0.001f, "Kinematic velocity ignores gravity");
+        Near(state[2].Position, new(7, 1), 0.001f, "Kinematic targets ignore gravity");
         Check(state[3].Rotation == 0 && state[3].Velocity.Z == 0, "RigidLinear keeps rotation locked.");
 
         Near(new(state[4].Velocity.X, state[4].Velocity.Y), new Vector2(4, 3) * MathF.Pow(1 - dt * 10, 120), 0.00001f,
@@ -57,7 +57,7 @@ internal static class GPUPhysicsBodyStoreTests
         var uploads = store.UploadBytes; var readbacks = store.ReadbackBytes;
         store.Read(handles.AsSpan(0, 1), state);
         Near(state[0].Position, new(42, 43), 0, "Sparse pose edit");
-        Check(store.UploadBytes - uploads == 8 + 144 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
+        Check(store.UploadBytes - uploads == 8 + 176 + 16 && store.ReadbackBytes - readbacks == 8 + 48,
             "One edit and one requested body transfer only their command, handle, result and status.");
 
         var copies = store.DeviceCopyBytes;

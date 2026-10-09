@@ -18,9 +18,10 @@ constant forces, configured CCD and attached shapes, joints and exceptions.
 A real Static or Kinematic transition clears motion. RigidLinear clears angular
 motion; restoring Rigid leaves it zero until another action supplies it. A
 same-mode write is harmless. Static velocities represent virtual surface motion;
-kinematic velocities in this internal store represent commanded motion and ignore
-forces/impulses. The eventual adapter must preserve the public distinction between
-kinematic target motion and independently authored surface velocity.
+kinematic velocities now configure a separate virtual channel alongside
+[device-derived target travel](gpu-resident-kinematic.md). Targets ignore forces/
+impulses; only actual travel moves geometry and joint anchors. The public scene/
+server adapter remains open.
 
 The authored rotation lock is effective on dynamic roles; nondynamic modes retain
 the setting without suppressing their commanded/virtual angular velocity.
@@ -32,8 +33,8 @@ normal projection when attaching this backend.
 
 ## Ordered edits and state lifetime
 
-All changes share the 144-byte per-body command (128 before
-[transient force storage](gpu-resident-forces.md)). Mode/policy fields have
+All changes share the 176-byte per-body command (including
+[transient force](gpu-resident-forces.md) and [kinematic target](gpu-resident-kinematic.md) input). Mode/policy fields have
 separate masks from pose, velocity, force and mass edits. Angular clearing is an
 ordered side effect: lock then unlock cannot resurrect old spin, while a later
 explicit unlocked velocity or impulse can supply new spin. A transient
@@ -53,9 +54,9 @@ stale, foreign, wrong-thread, disposed and failed-store guards are unchanged.
 The 48-byte selected Snapshot now uses a reserved word for the actual role and
 reports effective rotation lock/omission through its existing flags. CPU retains
 only authored integration configuration, never a current velocity/pose mirror.
-Metadata grows from 72 to 88 bytes per retained body; command/device-body/snapshot
-sizes are now 144/80/48 bytes. At 65,536 bodies the metadata/command capacity is
-15,204,352 bytes (14.5 MiB), excluding shapes, joints and driver/object overhead.
+Metadata is now 104 bytes per retained body including authored surface velocity; command/device-body/snapshot
+sizes are now 176/96/48 bytes. At 65,536 bodies the metadata/command capacity is
+18,350,080 bytes (17.5 MiB), excluding shapes, joints and driver/object overhead.
 
 ## Damping cadence
 
@@ -96,7 +97,8 @@ omission still resolves collisions and that a restored dynamic endpoint keeps it
 joint/shape/exception identity. Sleep, numeric rollback, foreign/thread guards,
 nonfinite device failure and disposal are exercised. A thin-wall CCD case activates
 retained CCD after Static→Rigid, keeps collision-tangential velocity 96 ± 0.001 after
-the once-per-tick damping factor, and stops CCD scheduling after Kinematic entry.
+the once-per-tick damping factor, and preserves the no-response rule between kinematic and static peers.
+Moving kinematic/dynamic pairs now use their own continuous target path.
 
 The historical residency run before transient-force storage has 4,096 bodies, four substeps and sixteen solver
 iterations. Each tick switches one body through Static→Rigid, changes its policy

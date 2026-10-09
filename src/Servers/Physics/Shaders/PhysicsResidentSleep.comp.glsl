@@ -126,8 +126,8 @@ void main()
         if(e.y!=none)
         {
             ResidentBody ba=bodies[e.x],bb=bodies[e.y];
-            wakeA=a&&!b&&((bb.flags.z&32u)!=0u||bb.velocity.xyz!=vec3(0));
-            wakeB=b&&!a&&((ba.flags.z&32u)!=0u||ba.velocity.xyz!=vec3(0));
+            wakeA=a&&!b&&((bb.flags.z&32u)!=0u||bb.velocity.xyz!=vec3(0)||bb.surface.xyz!=vec3(0));
+            wakeB=b&&!a&&((ba.flags.z&32u)!=0u||ba.velocity.xyz!=vec3(0)||ba.surface.xyz!=vec3(0));
         }
         if(i>=control.w)
         {
@@ -178,6 +178,6 @@ void main()
             {b.flags.z|=16u;b.velocity.xyz=vec3(0);bodies[i]=b;}
             if((b.flags.z&16u)==0u)atomicAdd(awakeCount,1u);
         }
-        else if(b.velocity.xyz!=vec3(0))atomicAdd(awakeCount,1u);
+        else if(b.velocity.xyz!=vec3(0)||b.surface.xyz!=vec3(0))atomicAdd(awakeCount,1u);
     }
 }

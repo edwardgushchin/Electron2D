@@ -21,6 +21,7 @@ void main()
     bool joint=c.tangent.y!=0;
     // A stationary surface can move contact points, but not the pin/guide's fixed anchor.
     if(joint){if(a.flags.y==0u)a.velocity=vec4(0);if(b.flags.y==0u)b.velocity=vec4(0);}
+    else {a.velocity.xyz+=a.surface.xyz;b.velocity.xyz+=b.surface.xyz;}
     vec2 relative=b.velocity.xy-a.velocity.xy,n=c.normal.xy,t=vec2(n.y,-n.x);
     float vn=dot2(relative,n)+b.velocity.z*c.normal.w-a.velocity.z*c.normal.z;
     float vt=dot2(relative,t)+b.velocity.z*c.tangent.w-a.velocity.z*c.tangent.z;

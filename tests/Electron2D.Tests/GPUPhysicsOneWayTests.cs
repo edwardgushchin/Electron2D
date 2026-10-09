@@ -69,8 +69,7 @@ internal static class GPUPhysicsOneWayTests
         var platform = Body(moving, mode: Mode.Kinematic); var shape = moving.AddShape(platform, floor);
         moving.SetShapeOneWay(shape, new(true, Vector2.Down, 1));
         var rider = Body(moving, new(0, -1)); moving.AddShape(rider, ball);
-        moving.SetVelocity(platform, new(0, -10), 0);
-        for (var i = 0; i < 30; i++) moving.Simulate(1f / 120, Vector2.Zero);
+        for (var i = 0; i < 30; i++) { moving.SetKinematicTarget(platform, new(0, -10f * (i + 1) / 120), 0); moving.Simulate(1f / 120, Vector2.Zero); }
         Check(Read(moving, rider).Position.Y < -3 && Read(moving, rider).Velocity.Y < -9, "Moving one-way platform pushes an already supported rider.");
     }
     private static void VerifyPiecesAndSensors()
@@ -115,7 +114,7 @@ internal static class GPUPhysicsOneWayTests
             s.SetShapeOneWay(surface, new(true, Vector2.Down, 1));
             var b = Body(s, new(5, 0.5f)); s.AddShape(b, ball, friction: 0); s.SetCCDMode(b, Store.CCDMode.CastShape);
             Check(s.FindContacts(margin) == 0 && s.OneWayPairCount == 1, "Rotating CCD starts in a rejected overlap.");
-            s.SetVelocity(platform, Vector2.Zero, MathF.PI / 0.05f);
+            s.SetKinematicTarget(platform, Vector2.Zero, MathF.PI - 0.000001f);
             s.Simulate(0.05f, Vector2.Zero, substeps: 1, iterations: 32, margin: margin);
             var state = Read(s, b);
             Console.WriteLine($"Rotating one-way CCD: margin={margin}, velocity={state.Velocity}, intervals={s.CCDIntervalCount}.");
