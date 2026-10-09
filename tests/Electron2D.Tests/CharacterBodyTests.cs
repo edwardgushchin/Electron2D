@@ -1,8 +1,10 @@
 using Electron2D;
 
-internal static class CharacterBodyTests
+internal sealed class CharacterBodyTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new CharacterBodyTests(backend).RunCore();
+
+    private void RunCore()
     {
         VerifyDefaultsAndGroundedMotion();
         VerifyWallCeilingAndFloating();
@@ -18,14 +20,14 @@ internal static class CharacterBodyTests
         VerifyWallBlockingAndSlideLimit();
         VerifySlopedCeilingOption();
         VerifyFreeMotionAndLifecycle();
-        Console.WriteLine("CharacterBody grounded, floating, snap and platform checks passed.");
+        Console.WriteLine($"CharacterBody grounded, floating, snap and platform checks passed on {backend}.");
     }
 
-    private static void VerifyDefaultsAndGroundedMotion()
+    private void VerifyDefaultsAndGroundedMotion()
     {
         using var bodyShape = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody { Name = "Character" };
         var local = new CollisionShape { Shape = bodyShape };
         character.AddChild(local);
@@ -76,9 +78,9 @@ internal static class CharacterBodyTests
         character.GetSlideCollision(0, reusable);
         Check(reusable.GetColliderRID() == first.GetColliderRID() && reusable.GetPosition() == first.GetPosition(), "Reusable indexed slide matches the copied snapshot.");
         for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
-        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        var allocated = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 128; i++) { character.GetSlideCollision(0, reusable); character.GetLastSlideCollision(reusable); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Both warmed reusable slide getters allocate zero bytes.");
+        Check(GC.GetTotalAllocatedBytes(true) == allocated, "Both warmed reusable slide getters allocate zero bytes.");
         Reject<ArgumentNullException>(() => character.GetLastSlideCollision(null!));
         Reject<ArgumentOutOfRangeException>(() => character.GetSlideCollision(-1, reusable));
         local.Scale = new(2, 1);
@@ -90,12 +92,12 @@ internal static class CharacterBodyTests
         local.Scale = Vector2.One;
     }
 
-    private static void VerifyWallCeilingAndFloating()
+    private void VerifyWallCeilingAndFloating()
     {
         using var circle = new CircleShape();
         using var wallShape = new RectangleShape { Size = new(20, 200) };
         using var ceilingShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody { Name = "Character", PhysicsProcessEnabled = true };
         character.AddChild(new CollisionShape { Shape = circle });
         var wall = new StaticBody { Name = "Wall", Position = new(100, 0) };
@@ -123,11 +125,11 @@ internal static class CharacterBodyTests
             "Floating movement slides along the wall without floor or ceiling classification.");
     }
 
-    private static void VerifyFloorSnapAndPlatform()
+    private void VerifyFloorSnapAndPlatform()
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -166,16 +168,16 @@ internal static class CharacterBodyTests
         Check(character.GetSlideCollisionCount() > 0,
             "The warmed stationary loop below retains an active floor contact.");
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var allocatedBefore = GC.GetAllocatedBytesForCurrentThread();
+        var allocatedBefore = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var allocated = GC.GetAllocatedBytesForCurrentThread() - allocatedBefore;
+        var allocated = GC.GetTotalAllocatedBytes(true) - allocatedBefore;
         Check(allocated == 0,
             $"Warmed stationary character slide calls allocate no managed bytes: {allocated}.");
     }
 
-    private static void VerifyValidationAndPacking()
+    private void VerifyValidationAndPacking()
     {
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody { Name = "PackedCharacter" };
         root.AddChild(character); character.Owner = root;
         Reject<ArgumentOutOfRangeException>(() => character.GetSlideCollision(0));
@@ -226,11 +228,11 @@ internal static class CharacterBodyTests
             "PackedScene restores the exact character type and all stored options without transient contacts.");
     }
 
-    private static void VerifyFixedLaneBackendSync()
+    private void VerifyFixedLaneBackendSync()
     {
         using var characterShape = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new DrivenCharacter
         {
             Name = "Character",
@@ -253,7 +255,7 @@ internal static class CharacterBodyTests
             "A character moving inside the fixed lane leaves its scene pose and solver fixture aligned.");
     }
 
-    private static void VerifyPlatformLeavePolicies()
+    private void VerifyPlatformLeavePolicies()
     {
         var add = DepartPlatform(CharacterPlatformOnLeave.AddVelocity, new(10, 0));
         var none = DepartPlatform(CharacterPlatformOnLeave.DoNothing, new(10, 0));
@@ -264,12 +266,12 @@ internal static class CharacterBodyTests
             $"Platform leave policy results: add={add}, none={none}, upward={upward}.");
     }
 
-    private static (bool OnFloor, Vector2 Velocity) DepartPlatform(
+    private (bool OnFloor, Vector2 Velocity) DepartPlatform(
         CharacterPlatformOnLeave policy, Vector2 platformShift)
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -298,7 +300,7 @@ internal static class CharacterBodyTests
         return (character.IsOnFloor(), character.Velocity);
     }
 
-    private static void VerifyFloatingSlideThreshold()
+    private void VerifyFloatingSlideThreshold()
     {
         var sliding = FloatTowardWall(0);
         var stopped = FloatTowardWall(Mathf.Pi);
@@ -306,11 +308,11 @@ internal static class CharacterBodyTests
             $"Floating wall threshold: sliding={sliding}, stopped={stopped}.");
     }
 
-    private static (float Y, int Count) FloatTowardWall(float threshold)
+    private (float Y, int Count) FloatTowardWall(float threshold)
     {
         using var circle = new CircleShape();
         using var wallShape = new RectangleShape { Size = new(20, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "FloatingCharacter",
@@ -329,7 +331,7 @@ internal static class CharacterBodyTests
         return (character.GlobalPosition.Y, character.GetSlideCollisionCount());
     }
 
-    private static void VerifyFloorSlopeSpeed()
+    private void VerifyFloorSlopeSpeed()
     {
         var ordinary = SlideUpSlope(constantSpeed: false);
         var constant = SlideUpSlope(constantSpeed: true);
@@ -340,7 +342,7 @@ internal static class CharacterBodyTests
             $"Floor slope speed variants: ordinary={ordinary}, constant={constant}.");
     }
 
-    private static (float X, float Y, bool OnFloor) SlideUpSlope(bool constantSpeed)
+    private (float X, float Y, bool OnFloor) SlideUpSlope(bool constantSpeed)
     {
         using var circle = new CircleShape();
         using var slope = new SegmentShape
@@ -348,7 +350,7 @@ internal static class CharacterBodyTests
             A = new(-100, 20),
             B = new(100, -20)
         };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -369,7 +371,7 @@ internal static class CharacterBodyTests
         return (character.GlobalPosition.X, character.GlobalPosition.Y, character.IsOnFloor());
     }
 
-    private static void VerifyDirectionalClassification()
+    private void VerifyDirectionalClassification()
     {
         var narrow = FallOntoSlope(0.1f);
         var wide = FallOntoSlope(0.5f);
@@ -378,7 +380,7 @@ internal static class CharacterBodyTests
 
         using var circle = new CircleShape();
         using var wallShape = new RectangleShape { Size = new(20, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "SidewaysCharacter",
@@ -397,11 +399,11 @@ internal static class CharacterBodyTests
             "A rightward up direction treats the left wall as a floor.");
     }
 
-    private static (bool Floor, bool Wall) FallOntoSlope(float maxAngle)
+    private (bool Floor, bool Wall) FallOntoSlope(float maxAngle)
     {
         using var circle = new CircleShape();
         using var slope = new SegmentShape { A = new(-100, 20), B = new(100, -20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -419,7 +421,7 @@ internal static class CharacterBodyTests
         return (character.IsOnFloor(), character.IsOnWall());
     }
 
-    private static void VerifyWallPlatformLayers()
+    private void VerifyWallPlatformLayers()
     {
         var ignored = FollowMovingWall(0);
         var followed = FollowMovingWall(1);
@@ -427,11 +429,11 @@ internal static class CharacterBodyTests
             $"Wall platform masks: ignored={ignored}, followed={followed}.");
     }
 
-    private static float FollowMovingWall(uint layers)
+    private float FollowMovingWall(uint layers)
     {
         using var circle = new CircleShape();
         using var wallShape = new RectangleShape { Size = new(20, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -458,11 +460,11 @@ internal static class CharacterBodyTests
         return character.GlobalPosition.Y;
     }
 
-    private static void VerifyCharacterGravityArea()
+    private void VerifyCharacterGravityArea()
     {
         using var circle = new CircleShape();
         using var fieldShape = new RectangleShape { Size = new(200, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody { Name = "Character" };
         character.AddChild(new CollisionShape { Shape = circle });
         var area = new Area
@@ -485,7 +487,7 @@ internal static class CharacterBodyTests
             "Disabling the field restores the sampled world gravity for a character.");
     }
 
-    private static void VerifyWallBlockingAndSlideLimit()
+    private void VerifyWallBlockingAndSlideLimit()
     {
         var blocked = RunFloorWall(blockOnWall: true);
         var free = RunFloorWall(blockOnWall: false);
@@ -499,12 +501,12 @@ internal static class CharacterBodyTests
             $"Maximum slide count: one={one}, four={four}.");
     }
 
-    private static (bool OnFloor, Vector2 LastMotion) RunFloorWall(bool blockOnWall)
+    private (bool OnFloor, Vector2 LastMotion) RunFloorWall(bool blockOnWall)
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var wallShape = new RectangleShape { Size = new(20, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -527,12 +529,12 @@ internal static class CharacterBodyTests
         return (character.IsOnFloor(), character.GetLastMotion());
     }
 
-    private static int RunCornerSlide(int maxSlides)
+    private int RunCornerSlide(int maxSlides)
     {
         using var circle = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var wallShape = new RectangleShape { Size = new(20, 200) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -552,7 +554,7 @@ internal static class CharacterBodyTests
         return character.GetSlideCollisionCount();
     }
 
-    private static void VerifySlopedCeilingOption()
+    private void VerifySlopedCeilingOption()
     {
         var sliding = HitSlopedCeiling(slideOnCeiling: true);
         var stopped = HitSlopedCeiling(slideOnCeiling: false);
@@ -561,7 +563,7 @@ internal static class CharacterBodyTests
             $"Sloped ceiling option: sliding={sliding}, stopped={stopped}.");
     }
 
-    private static (bool Ceiling, Vector2 Velocity) HitSlopedCeiling(bool slideOnCeiling)
+    private (bool Ceiling, Vector2 Velocity) HitSlopedCeiling(bool slideOnCeiling)
     {
         using var circle = new CircleShape();
         using var ceilingShape = new SegmentShape
@@ -569,7 +571,7 @@ internal static class CharacterBodyTests
             A = new(-100, -20),
             B = new(100, 20)
         };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody
         {
             Name = "Character",
@@ -587,10 +589,10 @@ internal static class CharacterBodyTests
         return (character.IsOnCeiling(), character.Velocity);
     }
 
-    private static void VerifyFreeMotionAndLifecycle()
+    private void VerifyFreeMotionAndLifecycle()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var character = new CharacterBody { Name = "Character", Velocity = new(60, 0) };
         character.AddChild(new CollisionShape { Shape = circle });
         root.AddChild(character);
@@ -612,10 +614,10 @@ internal static class CharacterBodyTests
             "Tree reentry clears transient contacts while retaining stored desired velocity.");
         character.Velocity = Vector2.Zero;
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) character.MoveAndSlide();
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed idle character slide calls allocate no managed bytes on the owner thread.");
+        Check(GC.GetTotalAllocatedBytes(true) - before == 0,
+            "Warmed idle character slide calls allocate no managed bytes across managed threads.");
     }
 
     private sealed class DrivenCharacter : CharacterBody

@@ -1,19 +1,21 @@
 using Electron2D;
 
-internal static class AnimatableBodyTests
+internal sealed class AnimatableBodyTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new AnimatableBodyTests(backend).RunCore();
+
+    private void RunCore()
     {
         VerifySynchronizedPlatformMotion();
         VerifyModesAndSceneState();
-        Console.WriteLine("Animatable-body kinematic motion, synchronization and scene checks passed.");
+        Console.WriteLine($"Animatable-body kinematic motion, synchronization and scene checks passed on {backend}.");
     }
 
-    private static void VerifySynchronizedPlatformMotion()
+    private void VerifySynchronizedPlatformMotion()
     {
         using var platformShape = new RectangleShape { Size = new(120, 20) };
         using var riderShape = new RectangleShape { Size = new(20, 20) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var platform = new AnimatableBody { Position = new(0, 100) };
         platform.AddChild(new CollisionShape { Shape = platformShape });
         var rider = new RigidBody { Position = new(0, 80), CanSleep = false, LockRotation = true };
@@ -41,22 +43,22 @@ internal static class AnimatableBodyTests
         Check(MathF.Abs(platform.GlobalPosition.X - 60) < 0.2f && rider.GlobalPosition.X > 5,
             "Platform velocity transfers through contact without the platform being pushed by the rider.");
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetTotalAllocatedBytes(true);
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetTotalAllocatedBytes(true) - before == 0,
             "Warmed stationary kinematic contact frames allocate no managed memory.");
         for (var frame = 61; frame <= 124; frame++)
         {
             platform.Position = new(frame, 100);
             tree.PhysicsFrame(1d / 60);
         }
-        before = GC.GetAllocatedBytesForCurrentThread();
+        before = GC.GetTotalAllocatedBytes(true);
         for (var frame = 125; frame <= 188; frame++)
         {
             platform.Position = new(frame, 100);
             tree.PhysicsFrame(1d / 60);
         }
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
+        Check(GC.GetTotalAllocatedBytes(true) - before == 0,
             "Warmed moving kinematic contact frames allocate no managed memory.");
 
         platform.SyncToPhysics = false;
@@ -68,10 +70,10 @@ internal static class AnimatableBodyTests
             "The unsynchronized visual transform stays at its target after backend motion.");
     }
 
-    private static void VerifyModesAndSceneState()
+    private void VerifyModesAndSceneState()
     {
         using var geometry = new CapsuleShape();
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var body = new AnimatableBody();
         body.AddChild(new CollisionShape { Shape = geometry });
         root.AddChild(body);

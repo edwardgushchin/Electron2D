@@ -154,5 +154,4 @@ despite returning success and valid bytecode; no compiler-policy change is shipp
 
 The focused geometry matrix, collision-priority checks and complete GPU suite pass
 without changing tolerances, iteration counts or workload sizes. Cold creation still
-takes seconds on this device. Public independent-GPU binding, startup selection,
-full-world performance and networking remain open acceptance work.
+takes seconds on this device. Public independent-GPU binding and startup selection now execute. The [shared scene checks](physics-backends.md#public-scene-motion-conformance) exercise character sliding, platforms and ray snap on both backends. Full-world performance and networking remain open acceptance work.

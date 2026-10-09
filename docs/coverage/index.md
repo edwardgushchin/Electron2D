@@ -4,8 +4,7 @@ Last updated: 2026-10-09
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
-queued callbacks and views validate a per-collider attachment version. Public
-GPU-world selection/binding remains open.
+queued callbacks and views validate a per-collider attachment version. Public GPU-world selection/binding now executes; [shared scene motion checks](../components/physics-backends.md#public-scene-motion-conformance) cover characters, platforms, frozen bodies and directed rays.
 
 [WorldBoundaryShape](../classes/WorldBoundaryShape.md) now supplies an analytic infinite
 half-plane with CPU scene/server and internal GPU response, sensing, queries and CCD.
@@ -16,13 +15,15 @@ sleep/edit/removal, far-away geometry and zero warmed managed allocation; the
 [component report](../components/physics-shapes.md#infinite-world-boundaries) records
 tiny-world timing/traffic and keeps public GPU/large-world/rendered acceptance open.
 
-[Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public direct-state/event projection remains open.
+[Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public direct-state/event projection now executes; complete family conformance remains open.
 
-[Resident Area fields](../components/gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection remains open.
+[Resident Area fields](../components/gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection now executes; complete family conformance remains open.
 
-[Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration remains open.
+[Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes, with shared character/platform/freeze/surface checks.
 
 [Physics audit](../components/physics-contract-audit.md) and the [generated physics declaration ledger](physics-status.md) track the CPU and independent GPU objective against the current pin, including inherited API and cross-domain consumers. Existing Implemented rows are not independent GPU acceptance.
+
+The following paragraph records the historical CPU-hosted stage experiment. The independent public backend is described in [backend selection](../components/physics-backends.md).
 
 The internal [GPU physics stage](../components/gpu-physics.md) now executes resident GPU AABB hierarchy construction/refitting/traversal, built-in pair filtering with incremental resident shape/joint metadata and GPU-maintained resident contact lookup, GPU contact ID allocation/initialization with generation-checked resident slots and deterministic resident adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists and compact publication and disconnected-island splitting, collision-batch constraint coloring with ordered sleeping-set wakes, fused body-pose/sleep-eligibility/fast-body finalization, lazy resident manifold-shape geometry and complete built-in contact updates (materials, state flags and mass-relative anchors). Pair search retains complete grow-and-retry candidate output and exact CPU pair/custom-filter order checks. CPU query/CCD tree mirrors and publication ranking, adjacency mirror, authoring graph coloring and island changes, external edit handling and backend selection remain incomplete GPU-world obligations. User callbacks deliberately remain on the owner thread. Full host graph validation now reads independent packed CPU liveness/membership flags; snapshot/journal updates replace repeated native-object scans without trusting GPU output or removing list checks. No public declaration coverage is closed by this internal stage.
 

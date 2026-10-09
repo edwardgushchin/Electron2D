@@ -1,6 +1,6 @@
 # AnimatableBody
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [StaticBody](StaticBody.md), [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -64,3 +64,8 @@ motion to contact and point-query velocity. They never add displacement to the
 manual target. Kinematic subdivision uses actual target travel only.
 PhysicsSurfaceVelocityTests verifies linear/angular surface state, target motion
 and character platform carry on CPU/GPU.
+
+
+[Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
+now run AnimatableBodyTests with explicit backend selection. The linked record
+separates verified motion/lifetime/allocation cases from remaining physics coverage.

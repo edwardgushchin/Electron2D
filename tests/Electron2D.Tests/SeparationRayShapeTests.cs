@@ -1,19 +1,20 @@
 using Electron2D;
 
-internal static class SeparationRayShapeTests
+internal sealed class SeparationRayShapeTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new SeparationRayShapeTests(backend).RunCore();
+    private void RunCore()
     {
         VerifyResource();
         VerifyQueries();
         VerifyShapeFamilies();
         VerifyMotionAndSnap();
         VerifyArea();
-        SeparationRayDynamicsTests.Run();
-        Console.WriteLine("Separation ray resource, directed queries, recovery, snap and allocation checks passed.");
+        SeparationRayDynamicsTests.Run(backend);
+        Console.WriteLine($"Separation ray resource, directed queries, recovery, snap and allocation checks passed on {backend}.");
     }
 
-    private static void VerifyResource()
+    private void VerifyResource()
     {
         using var ray = new SeparationRayShape();
         var padding = MathF.Sqrt(0.5f) * 4;
@@ -47,10 +48,10 @@ internal static class SeparationRayShapeTests
         Reject<ObjectDisposedException>(() => _ = copy.GetRect());
     }
 
-    private static void VerifyQueries()
+    private void VerifyQueries()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var floor = PhysicsServer.BodyCreate();
         var floorRID = PhysicsServer.RectangleShapeCreate();
         using var rectangle = new RectangleShape { Size = new(200, 10) };
@@ -124,18 +125,18 @@ internal static class SeparationRayShapeTests
         Check(direct.CastMotion(solidQuery).SafeFraction is > 0.42f and < 0.43f,
             "A moving polygon sweeps against a stationary separation ray.");
         for (var index = 0; index < 64; index++) { direct.CastMotion(solidQuery); direct.GetRestInfo(solidQuery); }
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetTotalAllocatedBytes(true);
         for (var index = 0; index < 64; index++) { direct.CastMotion(solidQuery); direct.GetRestInfo(solidQuery); }
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed reverse ray casts/rest queries allocate no managed bytes.");
+        Check(GC.GetTotalAllocatedBytes(true) == before, "Warmed reverse ray casts/rest queries allocate no managed bytes.");
         PhysicsServer.FreeRID(holder); PhysicsServer.FreeRID(rayRID); PhysicsServer.FreeRID(floor);
         PhysicsServer.FreeRID(floorRID); PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyMotionAndSnap()
+    private void VerifyMotionAndSnap()
     {
         using var ray = new SeparationRayShape();
         using var ground = new RectangleShape { Size = new(200, 10) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var floor = new StaticBody { Position = new(0, 30) };
         floor.AddChild(new CollisionShape { Shape = ground });
         var mover = new CharacterBody { FloorSnapLength = 10 };
@@ -186,16 +187,16 @@ internal static class SeparationRayShapeTests
         Check(PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result) && result.GetTravel().Y < -4,
             "Committed ray edit reaches motion fixtures despite a failed Changed subscriber.");
         for (var index = 0; index < 64; index++) PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetTotalAllocatedBytes(true);
         for (var index = 0; index < 64; index++) PhysicsServer.BodyTestMotion(mover.GetRID(), parameters, result);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed ray recovery queries allocate no managed bytes.");
+        Check(GC.GetTotalAllocatedBytes(true) == before, "Warmed ray recovery queries allocate no managed bytes.");
     }
 
-    private static void VerifyArea()
+    private void VerifyArea()
     {
         using var ray = new SeparationRayShape { Length = 30 };
         using var rectangle = new RectangleShape { Size = new(200, 10) };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var area = new Area();
         area.AddChild(new CollisionShape { Shape = ray });
         var body = new StaticBody { Position = new(0, 25) };
@@ -205,15 +206,15 @@ internal static class SeparationRayShapeTests
         tree.PhysicsFrame(1d / 60);
         Check(area.OverlapsBody(body), "Area ray detects a directed surface crossing.");
         for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var before = GC.GetTotalAllocatedBytes(true);
         for (var index = 0; index < 64; index++) tree.PhysicsFrame(1d / 60);
-        Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed directed Area frames allocate no managed bytes.");
+        Check(GC.GetTotalAllocatedBytes(true) == before, "Warmed directed Area frames allocate no managed bytes.");
         area.Position = new(0, 23);
         tree.PhysicsFrame(1d / 60);
         Check(!area.OverlapsBody(body), "Area ray starting inside solid does not overlap.");
     }
 
-    private static void VerifyShapeFamilies()
+    private void VerifyShapeFamilies()
     {
         using var ray = new SeparationRayShape { Length = 30 };
         using var circle = new CircleShape { Radius = 5 };
@@ -222,7 +223,7 @@ internal static class SeparationRayShapeTests
         using var concave = new ConcavePolygonShape();
         concave.Segments = [new(-5, 0), new(5, 0)];
         using var convex = new ConvexPolygonShape { Points = [new(-5, -5), new(5, -5), new(5, 5), new(-5, 5)] };
-        var root = new Node();
+        using var world = new World(backend); var root = new SubViewport { World = world };
         var body = new StaticBody { Position = new(0, 25) };
         var collision = new CollisionShape { Shape = circle };
         body.AddChild(collision); root.AddChild(body);

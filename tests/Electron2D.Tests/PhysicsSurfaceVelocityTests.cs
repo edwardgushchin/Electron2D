@@ -1,21 +1,23 @@
 using Box2D.NET;
 using Electron2D;
 
-internal static class PhysicsSurfaceVelocityTests
+internal sealed class PhysicsSurfaceVelocityTests(bool gpu, PhysicsServer.Backend backend)
 {
-    internal static void Run(bool gpu = false)
+    internal static void Run(bool gpu = false) => new PhysicsSurfaceVelocityTests(gpu, PhysicsServer.Backend.CPU).RunCore();
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsSurfaceVelocityTests(false, backend).RunCore();
+    private void RunCore()
     {
         using var computeLifetime = gpu ? new GPUPhysicsWorld() : null;
         VerifyStorageAndLifecycle();
         foreach (var mode in new[] { 0, 1, 2 }) VerifyResponse(gpu, mode);
         VerifyServer(gpu);
         VerifyAnimatedAndCharacter(gpu);
-        Console.WriteLine($"Stationary linear/angular surfaces passed on {(gpu ? "GPU" : "CPU")}: response, queries, waking, lifecycle, packing and warmed allocation.");
+        Console.WriteLine($"Stationary linear/angular surfaces passed on {(gpu ? "CPU host/GPU stages" : backend.ToString())}: response, queries, waking, lifecycle, packing and warmed allocation.");
     }
 
-    private static void VerifyStorageAndLifecycle()
+    private void VerifyStorageAndLifecycle()
     {
-        using var root = new Node { Name = "Root" };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { Name = "Root", World = selectedWorld };
         var floor = new StaticBody { Name = "Floor" }; root.AddChild(floor); floor.Owner = root;
         Check(floor.ConstantLinearVelocity == Vector2.Zero && floor.ConstantAngularVelocity == 0, "Surface defaults.");
         floor.ConstantLinearVelocity = new(30, -4); floor.ConstantAngularVelocity = .5f;
@@ -29,9 +31,12 @@ internal static class PhysicsSurfaceVelocityTests
         Near(view.LinearVelocity, new(30, -4)); Near(view.AngularVelocity, .5f);
         Near(view.GetVelocityAtLocalPosition(new(20, 0)), new(30, 6));
         Task.Run(() => Reject<InvalidOperationException>(() => floor.ConstantAngularVelocity = 2)).GetAwaiter().GetResult();
-        var world = B2Worlds.b2GetWorldFromId(floor.Space!.WorldID); world.locked = true;
-        try { Reject<InvalidOperationException>(() => floor.ConstantLinearVelocity = Vector2.One); }
-        finally { world.locked = false; }
+        if (backend == PhysicsServer.Backend.CPU)
+        {
+            var world = B2Worlds.b2GetWorldFromId(floor.Space!.WorldID); world.locked = true;
+            try { Reject<InvalidOperationException>(() => floor.ConstantLinearVelocity = Vector2.One); }
+            finally { world.locked = false; }
+        }
         root.RemoveChild(floor); Reject<ObjectDisposedException>(() => _ = view.LinearVelocity);
         root.AddChild(floor);
         using var next = PhysicsServer.BodyGetDirectState(floor.GetRID())!;
@@ -42,9 +47,9 @@ internal static class PhysicsSurfaceVelocityTests
         floor.Dispose(); Reject<ObjectDisposedException>(() => floor.ConstantAngularVelocity = 0);
     }
 
-    private static void VerifyResponse(bool gpu, int mode)
+    private void VerifyResponse(bool gpu, int mode)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(10000, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(10000, 20) };
         using var box = new RectangleShape { Size = new(20, 20) };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100) };
         var body = new RigidBody { Name = "Box", Position = new(mode == 2 ? -100 : 0, 80), LockRotation = true, MaxContactsReported = 4 };
@@ -84,9 +89,9 @@ internal static class PhysicsSurfaceVelocityTests
         else Check(body.Position.Y < 65 && body.LinearVelocity.Y < -5, $"Normal/angular surface response: {body.Position}, {body.LinearVelocity}.");
     }
 
-    private static void VerifyServer(bool gpu)
+    private void VerifyServer(bool gpu)
     {
-        var space = PhysicsServer.SpaceCreate(); var floor = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate();
         var shape = PhysicsServer.RectangleShapeCreate();
         try
         {
@@ -111,9 +116,9 @@ internal static class PhysicsSurfaceVelocityTests
         finally { PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(shape); PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyAnimatedAndCharacter(bool gpu)
+    private void VerifyAnimatedAndCharacter(bool gpu)
     {
-        using var root = new Node(); using var floorShape = new RectangleShape { Size = new(1000, 20) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; using var floorShape = new RectangleShape { Size = new(1000, 20) };
         using var circle = new CircleShape { Radius = 10 };
         var floor = new AnimatableBody { Name = "Floor", Position = new(0, 100), ConstantLinearVelocity = new(60, 0), ConstantAngularVelocity = 0 };
         var character = new CharacterBody { Name = "Character", Position = new(0, 78), Velocity = new(0, 600), PhysicsProcessEnabled = true };

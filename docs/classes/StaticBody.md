@@ -1,6 +1,6 @@
 # StaticBody
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [AnimatableBody](AnimatableBody.md)
 
@@ -91,3 +91,8 @@ rejection, raw server lifecycle/mode changes, packing and 64 warmed contact fram
 with zero all-thread managed allocation on Linux/.NET 10/Vulkan. Native allocation,
 other platforms and owner visual acceptance are unverified. [ADR 0075](../decisions/physics.md#adr-0075)
 owns the stationary surface channel.
+
+
+[Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
+now run PhysicsSurfaceVelocityTests with explicit backend selection. The linked record
+separates verified motion/lifetime/allocation cases from remaining physics coverage.

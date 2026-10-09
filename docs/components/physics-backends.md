@@ -144,3 +144,61 @@ receivers, persistent native allocation and actual FPS need separate performance
 acceptance. Local logs: `/tmp/e2d-gpu-binding-candidate-focused.log`,
 `/tmp/e2d-gpu-binding-cpu.log`, `/tmp/e2d-gpu-binding-fullgpu2.log`, and
 `/tmp/e2d-gpu-binding-candidate-coverage.log`.
+
+
+## Public scene motion conformance
+
+`ELECTRON2D_TEST_GPU_MOTION_SCENES=1` invokes the same existing assertions with
+explicit CPU and GPU World/SpaceCreate selection. It is also included in the full
+GPU suite. CPU-only stage controls stay separate. These tests exercise the public
+scene/server path, not only internal resident kernels; no fallback is enabled.
+The common scenarios passed on Linux/.NET 10.0.1/Vulkan on 2026-10-09 without a
+solver change or weaker numerical tolerances.
+
+| Shared suite | Executed contract |
+| --- | --- |
+| CharacterBodyTests | Grounded/floating motion, floors/walls/ceilings, slope/ceiling options, slide limits, floor snap, platform layer masks/departure/carry, Area gravity, same-frame queries, fixed-lane poses, packing, failures and reentry. |
+| AnimatableBodyTests | Resting/moving riders, deferred/immediate presentation, exact targets, zero time, rotation, listener failure, invalid scale/skew, threading, packing and reentry. |
+| RigidFreezeModeTests | Frozen static/kinematic roles, retained mass/lock, target/idle velocity, moderate/fast moving contacts, force duration and one callback per outer tick, disable override, packing and failure guards. Backend-neutral role checks are diagnostic alongside physical behavior. |
+| WorldTests | Duplicate identity, shared once-per-tick stepping, queries/Areas/joints, CPU-default to explicit GPU world and back, stale views/membership, listener/geometry failure recovery and retained caller-world lifetime. Default scene-owned worlds remain CPU; this does not claim all GPU-to-GPU viewport combinations. |
+| PhysicsSurfaceVelocityTests | Stationary linear/angular surfaces, friction and normal response, wakeup, point/contact velocities, animated target plus surface channel, character carry, raw body mode/reattachment and lifetime. The injected CPU solver-lock flag check remains CPU-only; public owner/pose-phase guards run in the shared scene suites. |
+| SeparationRayShapeTests / SeparationRayDynamicsTests | Directed and reverse queries against current finite shape families, containment, slope policies, recovery and character snap, Area sensing, material response, momentum/impulses, explicit inertia, live edits, sleep, masks/exceptions/one-way, CastRay/CastShape and scene events. |
+
+Existing tolerances are preserved. Character position bands distinguish safe
+obstacle response from tunnelling and verify classification/normal separately;
+platform carry accepts 8–12 units for a prescribed 10-unit move. Kinematic target
+checks use 0.02 scene units, with 0.01 rad presentation and 0.1–0.15 rad/s angular
+velocity allowance for the CPU angle decoder. Direct ray contacts use 0.01-unit
+point tolerance; cast intervals bracket analytic fractions 0.5 and 0.425 within
+0.01, covering the existing eight-refinement resolution. Coupled ray momentum
+allows 0.02 of 600 kg*u/s, equal/opposite impulses allow 0.02 kg*u/s and the
+integrated 360 kg*u/s transfer allows 2 kg*u/s. These assert physical invariants
+and public outcomes rather than backend traversal or bitwise identity.
+
+Warm allocation checks now use precise process-wide managed allocation counters
+for both backends: character slides/reusable snapshots, idle/moving platforms,
+frozen motion, world lookups, reverse ray casts/rest/recovery, directed Areas,
+active surface contacts and directed solver steps. The checked 64/128-frame
+windows allocate zero bytes across managed threads. Caller-created copied
+results, initial capacity growth, native drivers and cross-platform allocation
+are outside these checks. This closes these concrete public-path verification
+gaps; the remaining contract, networking and broad performance goal stays open.
+
+
+Verification receipt: `/tmp/e2d-gpu-motion-final.log` contains the final shared
+matrix, including stale direct-state rejection across successful and failed-listener
+world transfers. `/tmp/e2d-gpu-motion-fullgpu.log` contains the full GPU suite,
+including both native renderer lifetime hosts. Release/API/wiki checks passed in
+an isolated snapshot of this physics change; the main checkout contained concurrent
+unrelated example/rendering work, including a temporarily absent WaterSurface.GPU.cs.
+No production physics change was needed for the checked behavior.
+
+The diagnostic two-body workload (one awake supported ray, one floor, eight
+configured contact slots per body, 4 substeps/16 iterations, dt 1/60 s, final 128
+warmup/128 samples) measured complete SpaceStep p50/p95/p99 of
+0.0175/0.0177/0.0206 ms on CPU and 4.4904/10.2662/11.1360 ms on GPU. Both allocated
+zero all-thread managed bytes. GPU upload/readback/uniforms were
+256/1,512/17,332 bytes per tick, with 4.1068 ms mean device wait. This includes
+public state/contact publication; it excludes construction, rendering and native
+allocation. These tiny-world diagnostics ran on the shared desktop and do not
+replace the controlled massive-scene comparison or establish rendered FPS.

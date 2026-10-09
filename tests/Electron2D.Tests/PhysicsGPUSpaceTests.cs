@@ -3,6 +3,17 @@ using Electron2D;
 
 internal static class PhysicsGPUSpaceTests
 {
+    internal static void RunMotionScenes()
+    {
+        using var device = new GPUPhysicsBodyStore();
+        foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+        {
+            CharacterBodyTests.Run(backend); AnimatableBodyTests.Run(backend);
+            RigidFreezeModeTests.Run(backend); WorldTests.Run(backend);
+            PhysicsSurfaceVelocityTests.Run(backend); SeparationRayShapeTests.Run(backend);
+        }
+    }
+
     internal static void Run()
     {
         if (Environment.GetEnvironmentVariable("ELECTRON2D_GPU_SPACE_NO_DEVICE") == "1") { VerifyUnavailable(); return; }

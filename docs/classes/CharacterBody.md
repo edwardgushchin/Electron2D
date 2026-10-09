@@ -1,6 +1,6 @@
 # CharacterBody
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -79,7 +79,7 @@ The subclass needs a live collision child and `PhysicsProcessEnabled = true`. Gr
 
 Requires an attached SceneTree and its owner thread. It prepares current body/Area fixtures before replacing the previous contact snapshot, so a preparation failure leaves the prior snapshot and pose intact. It first applies accepted platform carry, then sweeps up to `MaxSlides` times. Grounded mode classifies contacts against `UpDirection`, stops downward motion on a floor when configured, projects remainder along a surface, applies constant-speed slope adjustment and optionally snaps a previously grounded body back to a downward slope. Floating mode treats every hit as a wall and respects `WallMinSlideAngle`. A zero or blocked motion can still report initial recovery when `SafeMargin` reaches a body. The return value is true if any contact was recorded. A missing collision returns false and leaves the slide list empty.
 
-The SceneTree prepares the visible character pose for direct queries immediately after movement. During the following fixed solver step, Box2D receives a kinematic target measured from the preceding solved pose so its contact velocity remains available to other bodies. The character snapshot itself remains scene-owned and is not rewritten by backend integration. `GetPositionDelta()` reads current global position minus the start position of the last call; `GetRealVelocity()` uses the actual delta of that call. With no delivered frame yet, the first call uses 1/60 second; a zero delivered delta yields zero real velocity.
+The SceneTree prepares the visible character pose for direct queries immediately after movement. During the following fixed solver step, the selected backend receives a kinematic target measured from the preceding solved pose so its contact velocity remains available to other bodies. The character snapshot itself remains scene-owned and is not rewritten by backend integration. `GetPositionDelta()` reads current global position minus the start position of the last call; `GetRealVelocity()` uses the actual delta of that call. With no delivered frame yet, the first call uses 1/60 second; a zero delivered delta yields zero real velocity.
 
 ### `ApplyFloorSnap()` and contact getters
 
@@ -101,3 +101,8 @@ PhysicsServer linear/angular state is low-level contact velocity, independent of
 this body's desired movement Velocity. It supplies virtual surface motion beside
 actual manual target travel and survives removal/reentry. It is not an additional
 packed scene property. See [typed state](PhysicsServer.md#body-state).
+
+
+[Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
+now run CharacterBodyTests with explicit backend selection. The linked record
+separates verified motion/lifetime/allocation cases from remaining physics coverage.

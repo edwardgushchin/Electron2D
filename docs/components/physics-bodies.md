@@ -85,7 +85,7 @@ Logical shape-pair monitoring now uses a shared PhysicsShapePairTracker and comm
 [Resident GPU mass](gpu-resident-mass.md) now reuses the same authoring calculation
 without a CPU solver world. Rotated detached profiles and attached CPU fixtures use
 the same authored unit basis; analytic asymmetric polygon/line tests cover this
-consistency. Public GPU-world selection remains unconnected.
+consistency. Public GPU-world selection now executes; complete mass-family conformance remains open.
 
 [RigidBody](../classes/RigidBody.md#centerofmassmode) stores automatic/custom local center and zero/explicit scene-unit inertia. Typed [PhysicsServer](../classes/PhysicsServer.md) mass methods execute for scene and server identities, using one-kilogram normalization instead of raw fixture density. The internal [PhysicsMass](../../src/Servers/Physics/PhysicsMass.cs) calculation validates before profile/native commit, measures native solid primitives independently of body density, applies parallel-axis inertia or the segment-only rod fallback, and refreshes native shape extents around the selected center. The body runtime retains configured values and resolved geometry separately from static inverse values. Mode/reset property-list callbacks run after commit; profile changes leave scene origin and velocity unchanged. [PhysicsMassProfileTests](../../tests/Electron2D.Tests/PhysicsMassProfileTests.cs) covers force response, shared lifecycle, numeric/thread/phase rejection and 64 warmed changes plus solver frames with zero managed allocation on Linux/.NET 10. Native allocation, other platforms and owner acceptance remain unverified. [ADR 0073](../decisions/physics-mass.md#adr-0073) owns the mass policy and typed parameter projection.
 

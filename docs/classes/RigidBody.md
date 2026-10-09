@@ -248,3 +248,8 @@ independent GPU public binding and missing shape-family behavior remain open.
 
 
 Contact monitoring uses sampled bound object identity, including Entity owners of raw bodies. Existing Node signals and Entity arrays retain their types. Several physical RIDs identifying one instance contribute one object entry/exit; node departure/reentry is observed immediately. See [object associations](../components/physics-object-bindings.md).
+
+
+[Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
+now run RigidFreezeModeTests with explicit backend selection. The linked record
+separates verified motion/lifetime/allocation cases from remaining physics coverage.
