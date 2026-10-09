@@ -302,14 +302,9 @@ The GPU suite's unchanged 65,536-obstacle/256-query workload measured
 owner/all-thread managed allocation. This larger measurement covers queries, not
 full simulation or window FPS; evidence is `/tmp/e2d-priority-final-gpu-suite.log`.
 
-Cold pipeline preparation is a separate unresolved backend cost. The diagnostic
-`ELECTRON2D_TEST_PHYSICS_PIPELINE=/absolute/file.spv` loads the offline program through
-the normal GPUPhysicsDevice/ShaderCompiler path and releases the pipeline. Fresh
-processes with `__GL_SHADER_DISK_CACHE=0` measured 134,340.63 ms for the motion shader
-from parent c9193423 and 136,650.00 ms for this shader; device startup was
-730.28/670.08 ms separately. Both sources used the repository's Vulkan 1.0 compiler
-recipe. Logs: `/tmp/e2d-priority-pipeline-baseline.log` and
-`/tmp/e2d-priority-pipeline-current.log`. This is one comparison on the stated
-machine, not a cross-device guarantee. The long preparation already existed before
-priority support; moving scratch storage and extracting per-pair collection did
-not resolve it. It must be addressed before full independent-GPU readiness.
+Cold pipeline preparation is measured separately from these warmed queries. The
+original priority rollout measured 134,340.63 ms before priority support and
+136,650.00 ms after it. Sharing geometry call sites in the motion shader now reduces
+that cost without changing weighted recovery or its device-only scratch. See the
+[current cold-pipeline measurements](gpu-resident-motion-queries.md#cold-pipeline-preparation)
+for the comparison method, rejected candidates and remaining startup limits.

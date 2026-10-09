@@ -73,16 +73,21 @@ bool recovered=false,blocked=false;
 Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin,bool requireOverlap)
 {
     pairContact=Contact(vec2(0),vec2(0),0,false);pairSecond=pairContact;contactLimit=2;
-    if(a.boundary||b.boundary)
+    bool boundary=a.boundary||b.boundary;
+    if(boundary)
     {
         if(a.boundary&&b.boundary)return pairContact;
         if(ga.data.z==6u){vec2 axis=vertex(a,1u)-vertex(a,0u);if(axis==vec2(0))return pairContact;a.extension=normalized(axis)*margin;}
         if(gb.data.z==6u&&vertex(b,1u)==vertex(b,0u))return pairContact;
-        a.pose.xy+=extension;vec2 normal;
-        if(!requireOverlap||queryDistance(a,b,vec2(0),vec2(0),normal)-a.radius-b.radius<=0.05)ordinary(a,b,uvec2(0));
+        a.pose.xy+=extension;
     }
-    else if(ga.data.z==6u){if(gb.data.z!=6u)directedQuery(a,b,vec2(0),margin,ga.parameters.y!=0,false,extension,0u,0u,true);}
-    else if(gb.data.z==6u)directedQuery(b,a,extension,0,gb.parameters.y!=0,true,vec2(0),0u,0u,true);
+    if(!boundary&&(ga.data.z==6u||gb.data.z==6u))
+    {
+        if(ga.data.z==6u&&gb.data.z==6u)return pairContact;
+        bool flip=gb.data.z==6u;
+        directedQuery(flip?b:a,flip?a:b,flip?extension:vec2(0),flip?0:margin,
+            (flip?gb.parameters.y:ga.parameters.y)!=0,flip,flip?vec2(0):extension,0u,0u,true);
+    }
     else
     {
         vec2 normal;
@@ -116,44 +121,64 @@ void movingPair(Hull a,Hull b,Geometry ga,Geometry gb)
 {
     vec2 motion=q.motionMargin.xy;
     if((shapeB.policy.w&4u)!=0u&&dot2(motion,passDirection())<=0)return;
-    Contact initial=evaluate(a,b,ga,gb,vec2(0),0,true);
-    if(ga.data.z==6u||gb.data.z==6u)
+    bool directed=ga.data.z==6u||gb.data.z==6u,requireOverlap=true;
+    // Keep one geometry call site across phases to limit driver inlining and cold compilation.
+    const uint initialPhase=0u,reachPhase=1u,bisectPhase=2u,rayImpactPhase=3u,shapeImpactPhase=4u;
+    uint phase=initialPhase,refinements=0u;
+    float low=0,high=0,margin=0,middle=0;vec2 extension=vec2(0),normal=vec2(0);
+    Hull probe=a;Contact initial,full;
+    [[dont_unroll]] for(;;)
     {
-        Contact full=evaluate(a,b,ga,gb,motion*safe,0,true);if(!full.valid)return;
-        if(initial.valid&&initial.depth<=0.05&&dot2(motion,initial.normal)>=-0.0001)return;
-        float low=0,high=initial.valid?0:safe;
-        if(!initial.valid)
-            [[dont_unroll]] for(uint step=0u;step<8u;step++)
+        Contact contact=evaluate(probe,b,ga,gb,extension,margin,requireOverlap);
+        if(phase==initialPhase)
+        {
+            initial=contact;
+            if(directed){extension=motion*safe;phase=reachPhase;continue;}
+            if(contact.valid)
             {
-                float middle=(low+high)*0.5;Contact test=evaluate(a,b,ga,gb,motion*middle,0,true);
-                if(test.valid)high=middle;else low=middle;
+                if((contact.depth>0.05||dot2(motion,contact.normal)<-0.0001)&&oneWayContact(contact))
+                {safe=unsafeFraction=0;motionResult=snapshot(contact);blocked=true;}
+                return;
             }
+            if(safe==0)return;
+            float fraction;
+            if(!querySweep(a,b,motion*safe,vec2(0),max(0.5,a.radius+b.radius-0.5),0.25,fraction,normal))return;
+            low=max(0,ceil(fraction*256)-1)/256*safe;high=min(safe,low+safe/256);
+            if(low>=safe)return;
+            safe=low;unsafeFraction=high;
+            probe.pose.xy+=min(1,high+1/length(motion))*motion;
+            requireOverlap=false;phase=shapeImpactPhase;continue;
+        }
+        if(phase==shapeImpactPhase)
+        {
+            if(!contact.valid)
+            {
+                uint unused;vec2 toward=querySupportVertex(probe,normal),point=support(b,-normal,toward,unused)-b.radius*normal;
+                contact=Contact(point,-normal,0,true);
+            }
+            motionResult=snapshot(contact);blocked=true;return;
+        }
+        if(phase==rayImpactPhase)
+        {
+            if(!contact.valid)contact=full;
+            if(!oneWayContact(contact))return;
+            safe=low;unsafeFraction=high;motionResult=snapshot(contact);blocked=true;return;
+        }
+        if(phase==reachPhase)
+        {
+            full=contact;if(!full.valid)return;
+            if(initial.valid&&initial.depth<=0.05&&dot2(motion,initial.normal)>=-0.0001)return;
+            high=initial.valid?0:safe;
+            if(!initial.valid){middle=(low+high)*0.5;extension=motion*middle;phase=bisectPhase;continue;}
+        }
+        else
+        {
+            if(contact.valid)high=middle;else low=middle;
+            if(++refinements<8u){middle=(low+high)*0.5;extension=motion*middle;continue;}
+        }
         if(low>=safe&&blocked)return;
-        Hull impact=a;impact.pose.xy+=high*motion;
-        Contact contact=evaluate(impact,b,ga,gb,vec2(0),q.motionMargin.z,true);if(!contact.valid)contact=full;
-        if(!oneWayContact(contact))return;
-        safe=low;unsafeFraction=high;motionResult=snapshot(contact);blocked=true;return;
+        probe.pose.xy+=high*motion;extension=vec2(0);margin=q.motionMargin.z;phase=rayImpactPhase;
     }
-    if(initial.valid)
-    {
-        if((initial.depth>0.05||dot2(motion,initial.normal)<-0.0001)&&oneWayContact(initial))
-        {safe=unsafeFraction=0;motionResult=snapshot(initial);blocked=true;}
-        return;
-    }
-    if(safe==0)return;
-    float fraction;vec2 normal;
-    if(!querySweep(a,b,motion*safe,vec2(0),max(0.5,a.radius+b.radius-0.5),0.25,fraction,normal))return;
-    float low=max(0,ceil(fraction*256)-1)/256*safe,high=min(safe,low+safe/256);
-    if(low>=safe)return;
-    safe=low;unsafeFraction=high;
-    Hull impact=a;impact.pose.xy+=min(1,high+1/length(motion))*motion;
-    Contact contact=evaluate(impact,b,ga,gb,vec2(0),0,false);
-    if(!contact.valid)
-    {
-        uint unused;vec2 toward=querySupportVertex(impact,normal),point=support(b,-normal,toward,unused)-b.radius*normal;
-        contact=Contact(point,-normal,0,true);
-    }
-    motionResult=snapshot(contact);blocked=true;
 }
 vec4 queryBounds(Shape shape,Geometry g,bool recovering)
 {

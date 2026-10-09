@@ -43,6 +43,13 @@ The batch preserves unused output tails and validates owner thread, lifetime,
 generation, finite unit-scale pose, motion, margin, ranges and destination capacity.
 GPU failure poisons the store; queries never replay through CPU.
 
+The motion shader shares one geometry evaluation call site across initial overlap,
+directed reach, eight bisection refinements and final impact. Boundary and finite
+ordinary geometry share one manifold call; either directed-ray argument uses one
+directed-query call. This limits repeated expansion during driver compilation.
+Recovery still makes four passes with the same plane cap; contact tolerances,
+shape families, GPU buffers and host transfers are unchanged.
+
 ## CPU corrections found by comparison
 
 Backend pieces of a large convex polygon previously produced opposite recovery
@@ -94,22 +101,58 @@ it does not measure full simulation, dynamic refit cost, native allocations or
 window FPS. Other platforms, public backend integration and user acceptance
 remain unverified.
 
-On Linux/.NET 10, Vulkan, NVIDIA GeForce RTX 3090 Ti, the final focused run measured
-p50/p95/p99 **0.9236/1.1029/1.2147 ms** per 256-query batch, with mean wait
-**0.9186 ms**, **22,536/33,800 upload/readback bytes per batch**, and **0/0
+On Linux/.NET 10, Vulkan, NVIDIA GeForce RTX 3090 Ti, the focused run after sharing
+shader call sites measured p50/p95/p99 **1.1254/1.4306/1.5208 ms** per 256-query batch,
+with mean wait **1.1113 ms**, **22,536/33,800 upload/readback bytes per batch**, and **0/0
 owner/all-thread managed bytes** over the measured interval. Evidence:
-`/tmp/electron2d-motion-query-focused-final2.log`. Timing includes all requested
+`/tmp/e2d-motion-cold-tests.log`. Timing includes all requested
 queries and their recovery work; the world population is not reduced for measurement.
 
-The complete GPU suite and all 37 CPU collider groups pass on this revision:
-`ELECTRON2D_TEST_GPU_PHYSICS=1` and `ELECTRON2D_TEST_COLLIDER_BACKEND=1` with the
-same Release runner (`/tmp/electron2d-motion-query-gpu.log`,
-`/tmp/electron2d-motion-query-cpu.log`). These cover the shared directed-query
-extraction and existing failure/lifetime/renderer-independence boundaries;
-they do not establish public independent-GPU or networking acceptance.
+The complete GPU suite also passed with the same Release runner:
+`ELECTRON2D_TEST_GPU_PHYSICS=1` (`/tmp/e2d-motion-full-gpu.log`), including failure,
+lifetime and both renderer-independence paths. The focused selector also runs public
+CPU PhysicsMotionTests and SeparationRayShapeTests. All 37 CPU collider groups
+passed during the earlier shared directed-query extraction
+(`/tmp/electron2d-motion-query-cpu.log`); that broad CPU run was not repeated for
+this shader-only change. These checks do not establish public independent-GPU or
+networking acceptance.
 
 WorldBoundaryShape participates analytically in both query argument positions,
 including far-away half-plane contacts, normal/distance transforms and ray pairs.
 The shared shape and body-motion matrices now include this geometry. Direct-space
 shape queries retain initial overlap during motion; body-motion recovery/casts
 retain their own directed-ray policy. Public independent-GPU binding remains open.
+
+## Cold pipeline preparation
+
+`ELECTRON2D_TEST_PHYSICS_PIPELINE=/absolute/file.spv` loads an offline program through
+the production GPUPhysicsDevice/ShaderCompiler path, times pipeline creation and
+releases it. Device startup is timed separately. On the machine above, sequential
+fresh processes with `__GL_SHADER_DISK_CACHE=0` produced:
+
+| Motion shader | Samples | Pipeline creation, ms |
+| --- | --- | --- |
+| Before call-site sharing, f9f92da4 | 1 | 124,723.38 |
+| Shared call sites | 3 | 12,863.22 / 13,711.77 / 15,887.83 (min / median / max) |
+
+The new median is about 9.1 times faster than that baseline. Device startup took
+301.48–555.52 ms in the new processes and 411.13 ms in the baseline process. Both
+programs used the pinned Vulkan 1.0 offline recipe without optimization-flag changes;
+SPIR-V sizes were 151,524 and 150,344 bytes respectively. The log records full
+artifact hashes: `/tmp/e2d-motion-cold-serial.log`. This is cold creation of one
+pipeline, not whole-world startup, simulation throughput or a cross-device guarantee.
+Earlier parent measurements of 134–137 seconds are consistent with the same large
+baseline cost but are separate runs.
+
+Sharing only the outer recovery/motion scan did not reduce compilation time and
+was discarded. Sharing initial/reach/refinement/impact geometry calls reduced it;
+sharing the ordinary and directed evaluator branches reduced it further. The
+original four-pass recovery loop remains. Folding recovery into the same phase
+loop was slower than the selected version and was discarded. An offline `-Os`
+experiment on the original source emitted repeated optimizer ID-overflow errors
+despite returning success and valid bytecode; no compiler-policy change is shipped.
+
+The focused geometry matrix, collision-priority checks and complete GPU suite pass
+without changing tolerances, iteration counts or workload sizes. Cold creation still
+takes seconds on this device. Public independent-GPU binding, startup selection,
+full-world performance and networking remain open acceptance work.

@@ -231,3 +231,8 @@ surface-velocity edits preserve it. Priority-only batches do not advance spatial
 version, wake bodies or retire solver history. Motion recovery keeps at most 32
 weighted planes in a 512-byte/request device-only output-buffer tail and normalizes large weights without a
 subnormal reciprocal. This adds no CPU physical-state mirror or contact readback.
+
+The motion shader reuses geometry call sites across overlap, ray refinement and
+impact phases to reduce cold driver compilation. Query precision, recovery passes,
+buffers and transfers are unchanged; [motion-query verification](../components/gpu-resident-motion-queries.md#cold-pipeline-preparation)
+separates startup cost from warmed query throughput.
