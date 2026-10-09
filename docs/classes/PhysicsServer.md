@@ -500,7 +500,7 @@ PhysicsServer.FreeRID(space);
 <a id="spaceisactive"></a>
 **SpaceIsActive:** Return the local flag, even while the global server is suspended. It does not report effective scene ProcessMode or SceneTree.Paused. Reads require owner-thread access outside solver stepping. Wrong/stale RID throws ArgumentException; off-owner/in-solver access throws InvalidOperationException.
 
-[PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks native motion/spring and pending-force behavior, inactive queries, defaults, callback/timer continuation, phase/thread/lifetime guards, callback failure and 64 warmed global/local cycles with skipped/active frames without managed allocation on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance remain unverified. [ADR 0089](../decisions/physics-activity.md#adr-0089) defines this profile. ProcessInfo counters remain a separate verification/integration slice.
+[PhysicsActivityTests](../../tests/Electron2D.Tests/PhysicsActivityTests.cs) checks native motion/spring and pending-force behavior, inactive queries, defaults, callback/timer continuation, phase/thread/lifetime guards, callback failure and 64 warmed global/local cycles with skipped/active frames without managed allocation on Linux/.NET 10. Native allocations, other platforms and owner visual acceptance remain unverified. [ADR 0089](../decisions/physics-activity.md#adr-0089) defines this profile. [ProcessInfo counters](#statistics) now publish completed CPU/GPU steps.
 
 <a id="body-state"></a>
 ## Typed body state
@@ -762,3 +762,20 @@ CPU/GPU comparisons and the remaining public GPU-world boundary.
 
 
 BodyAttachObject and AreaAttachObject borrow a live ElectronObject (null clears). BodyGetObjectInstanceID and AreaGetObjectInstanceID retain the assigned numeric identity. See the [object association contract](../components/physics-object-bindings.md) for scene/server ownership, guards, snapshots and events.
+
+<a id="statistics"></a>
+## Completed-step statistics
+
+`public static int GetProcessInfo(ProcessInfo processInfo)` reads one of
+[ActiveObjects, CollisionPairs or IslandCount](PhysicsServer.ProcessInfo.md) from
+currently active registered worlds. CPU and GPU worlds contribute once each;
+shared viewports do not multiply a world. Samples publish after a successful
+positive step, before user callbacks. Local deactivation removes a contribution;
+reactivation, global suspension and zero elapsed time retain its previous sample.
+Freeing a world removes it. Reads are safe on any thread and issue no GPU work or
+managed allocation. Invalid selectors throw ArgumentOutOfRangeException; summed
+integer overflow throws OverflowException. Candidate/island totals reflect actual
+backend work, including sensor candidates and deferred native island splitting.
+
+[Performance](Performance.md) exposes the same samples. Both are permanent named
+Engine services. See [implementation and verification](../components/physics-statistics.md).

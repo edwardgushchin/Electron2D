@@ -142,12 +142,13 @@ internal sealed partial class PhysicsSpace : IDisposable
         b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
     }
 
-    internal bool IsActive { get; private set; }
+    private bool _isActive;
+    internal bool IsActive => Volatile.Read(ref _isActive);
 
     internal void SetActive(bool active)
     {
         EnsureQueryAccess();
-        IsActive = active;
+        Volatile.Write(ref _isActive, active);
     }
 
     internal B2WorldId WorldID => GPUStore is null ? _worldID : throw new InvalidOperationException("This physics space has no CPU solver world.");
@@ -459,8 +460,13 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         EnsureQueryAccess();
-        if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0 || (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)) return;
+        if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
+        if (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)
+        {
+            PhysicsServer.Service.PublishStatistics(this, default);
+            return;
+        }
         if (GPUStore is not null) { StepGPU(delta); return; }
         _stepping = true;
         List<Exception>? errors = null;
@@ -516,6 +522,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             ScanAreas();
             ScanAreaMonitors();
             CaptureBodyStates();
+            PublishStatistics();
             RecordStepPhase(6, ref profileMark);
         }
         catch (Exception error) { (errors ??= []).Add(error); }

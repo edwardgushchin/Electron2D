@@ -37,7 +37,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 7 | 0 | 0 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 141 | 12 | 0 | 8 | 54 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 146 | 12 | 0 | 3 | 54 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 0 | 141 | 0 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 0 | 0 | 3 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 563 | 52 | 215 | 8 | 54 |
+| **Total** | | 568 | 52 | 215 | 3 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -155,14 +155,10 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsDirectSpaceState2DExtension::method:is_body_excluded_from_query(RID:)`](classes/PhysicsDirectSpaceState2DExtension.md) | Blocked | Trigger: typed backend-extensible direct-space queries and exclusion helpers with shared result/lifetime semantics (ADR 0054). |
 | [`class:PhysicsServer2D`](classes/PhysicsServer2D.md) | Partial | Space/body/Area/shape RID lifetime, selected typed state operations and direct ray/point access execute; other server operations retain family-specific backend and typed-result triggers (ADR 0063). |
 | [`PhysicsServer2D::enum:CCDMode`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
-| [`PhysicsServer2D::enum:ProcessInfo`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum:SpaceParameter`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::enum_value:CCDMode.CCD_MODE_CAST_RAY`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::enum_value:CCDMode.CCD_MODE_CAST_SHAPE`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::enum_value:CCDMode.CCD_MODE_DISABLED`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
-| [`PhysicsServer2D::enum_value:ProcessInfo.INFO_ACTIVE_OBJECTS`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::enum_value:ProcessInfo.INFO_COLLISION_PAIRS`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::enum_value:ProcessInfo.INFO_ISLAND_COUNT`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:area_add_shape(RID:,RID:,Transform2D:,bool:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:body_add_shape(RID:,RID:,Transform2D:,bool:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:body_get_collision_layer(RID:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
@@ -170,7 +166,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2D::method:body_get_continuous_collision_detection_mode(RID:)`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::method:body_set_continuous_collision_detection_mode(RID:,int:PhysicsServer2D.CCDMode)`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::method:free_rid(RID:)`](classes/PhysicsServer2D.md) | Partial | Scene-owned identities and explicit spaces/bodies/Areas/shapes/joints have tested lifetime (PhysicsQueryTests, PhysicsServerJointTests). WorldBoundary creation/data/free/lifetime now execute (WorldBoundaryTests); backend extension resources still require verification (ADRs 0054 and 0063). |
-| [`PhysicsServer2D::method:get_process_info(int:PhysicsServer2D.ProcessInfo)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:shape_get_data(RID:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`PhysicsServer2D::method:shape_set_data(RID:,Variant:)`](classes/PhysicsServer2D.md) | Partial | Typed Shape resources and local transforms execute for circle, rectangle, capsule, segment, convex/concave polygons and directed separation rays. WorldBoundary now executes as an analytic half-plane with scene/server and internal GPU verification (WorldBoundaryTests); directed separation-ray impulses, materials, sleep and contact response now execute (SeparationRayDynamicsTests). Backend extension geometry must preserve the same contract (ADRs 0004, 0054, 0063 and 0068). |
 | [`class:PhysicsServer2DExtension`](classes/PhysicsServer2DExtension.md) | Blocked | Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). |
@@ -620,14 +615,14 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
-| [Performance](classes/Performance.md) | [Object](classes/Object.md) | 0 | 0 | 4 | 0 | 0 |
+| [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
 | [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 14 | 3 | 6 | 1 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 1 | 1 | 0 | 1 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 0 | 0 | 4 | 0 | 0 |
-| **Total** | | 15 | 11 | 50 | 2 | 0 |
+| **Total** | | 18 | 12 | 46 | 2 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -640,10 +635,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Engine::property:physics_jitter_fix`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Engine::property:physics_ticks_per_second`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Engine::property:time_scale`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Performance::enum_value:Monitor.PHYSICS_2D_ACTIVE_OBJECTS`](classes/Performance.md) | Blocked | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). |
-| [`Performance::enum_value:Monitor.PHYSICS_2D_COLLISION_PAIRS`](classes/Performance.md) | Blocked | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). |
-| [`Performance::enum_value:Monitor.PHYSICS_2D_ISLAND_COUNT`](classes/Performance.md) | Blocked | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). |
-| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Blocked | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). |
+| [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests. Other monitor producers and custom-monitor registration/lifecycle remain absent; only the three functioning physics selectors are exposed. |
 | [`ProjectSettings::property:debug/shapes/collision/contact_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:debug/shapes/collision/draw_2d_outlines`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:debug/shapes/collision/max_contacts_displayed`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |

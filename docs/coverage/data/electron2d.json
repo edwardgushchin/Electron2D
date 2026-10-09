@@ -6775,6 +6775,39 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.Performance",
+    "kind": "type",
+    "declaringType": "Electron2D.Performance",
+    "name": "Performance",
+    "signature": "public sealed class Electron2D.Performance",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.Performance.Monitor",
+    "kind": "type",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "Monitor",
+    "signature": "public enum Electron2D.Performance.Monitor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicalBone",
     "kind": "type",
     "declaringType": "Electron2D.PhysicalBone",
@@ -7011,6 +7044,24 @@
     "declaringType": "Electron2D.PhysicsServer.JointType",
     "name": "JointType",
     "signature": "public enum Electron2D.PhysicsServer.JointType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsServer.ProcessInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsServer.ProcessInfo",
+    "name": "ProcessInfo",
+    "signature": "public enum Electron2D.PhysicsServer.ProcessInfo",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -32073,6 +32124,45 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.Performance.Monitor.PhysicsActiveObjects()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "PhysicsActiveObjects",
+    "signature": "public const Electron2D.Performance.Monitor PhysicsActiveObjects = 17",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "17"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.PhysicsCollisionPairs()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "PhysicsCollisionPairs",
+    "signature": "public const Electron2D.Performance.Monitor PhysicsCollisionPairs = 18",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "18"
+  },
+  {
+    "id": "enumValue:Electron2D.Performance.Monitor.PhysicsIslandCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Performance.Monitor",
+    "name": "PhysicsIslandCount",
+    "signature": "public const Electron2D.Performance.Monitor PhysicsIslandCount = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Performance.Monitor",
+    "value": "19"
+  },
+  {
     "id": "enumValue:Electron2D.PhysicsInterpolationMode.Inherit()",
     "kind": "enumValue",
     "declaringType": "Electron2D.PhysicsInterpolationMode",
@@ -32266,6 +32356,45 @@
     "parameters": [],
     "returnType": "Electron2D.PhysicsServer.JointType",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ProcessInfo.ActiveObjects()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ProcessInfo",
+    "name": "ActiveObjects",
+    "signature": "public const Electron2D.PhysicsServer.ProcessInfo ActiveObjects = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ProcessInfo",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ProcessInfo.CollisionPairs()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ProcessInfo",
+    "name": "CollisionPairs",
+    "signature": "public const Electron2D.PhysicsServer.ProcessInfo CollisionPairs = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ProcessInfo",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.PhysicsServer.ProcessInfo.IslandCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.ProcessInfo",
+    "name": "IslandCount",
+    "signature": "public const Electron2D.PhysicsServer.ProcessInfo IslandCount = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ProcessInfo",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.PhysicsServer.ShapeType.Capsule()",
@@ -108397,6 +108526,38 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Performance.GetMonitor(Electron2D.Performance.Monitor)",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "GetMonitor",
+    "signature": "public static System.Double GetMonitor(Electron2D.Performance.Monitor monitor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "monitor",
+        "type": "Electron2D.Performance.Monitor",
+        "default": null
+      }
+    ],
+    "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Performance.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.Performance",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicalBone.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicalBone",
@@ -112579,6 +112740,25 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.GetProcessInfo(Electron2D.PhysicsServer.ProcessInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "GetProcessInfo",
+    "signature": "public static System.Int32 GetProcessInfo(Electron2D.PhysicsServer.ProcessInfo processInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "processInfo",
+        "type": "Electron2D.PhysicsServer.ProcessInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {

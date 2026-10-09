@@ -12,6 +12,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private long _sleepBodyVersion = -1, _sleepShapeVersion = -1, _sleepGeometryEpoch = -1;
     /// <summary>Last completed simulation count of awake dynamics and moving nondynamic surfaces; negative before first publication.</summary>
     internal int ActiveSimulationBodyCount { get; private set; } = -1;
+    internal int PublishedActiveBodyCount { get; private set; }
+    internal int PublishedIslandCount { get; private set; }
     private RenderHandle? _sleepPipeline, _sleepGraphGPU, _sleepEdgesGPU;
     private int _sleepGraphCapacity, _sleepEdgeCapacity, _sleepGraphBodies, _sleepEdgeCount;
     [StructLayout(LayoutKind.Sequential)]

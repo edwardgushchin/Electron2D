@@ -1054,3 +1054,10 @@ CanvasMesh retained geometry now has its [class page](classes/CanvasMesh.md); [C
 | Domain | Component | Type | Source | Current behavior |
 | --- | --- | --- | --- | --- |
 | [Display](domains/display.md) | [Display server](components/display-server.md) | [DisplayServer.VSyncMode](classes/DisplayServer.VSyncMode.md) | [DisplayServer.VSync.cs](../src/Servers/Display/DisplayServer.VSync.cs) | Main-window presentation mode identities, applied policy readback and explicit supported-mode fallback |
+
+| Domain | Component | Type | Source | Status | Current behavior |
+| --- | --- | --- | --- | --- | --- |
+| [Core](domains/core.md) | [Physics statistics](components/physics-statistics.md) | [Performance](classes/Performance.md) | [Performance.cs](../src/Core/Config/Performance.cs) | Current | Permanent static diagnostics service; three physical producers, remaining monitor family open. |
+| [Core](domains/core.md) | [Physics statistics](components/physics-statistics.md) | [Performance.Monitor](classes/Performance.Monitor.md) | [Performance.cs](../src/Core/Config/Performance.cs) | Current | Stable selectors for completed physical counts. |
+| [Physics](domains/physics.md) | [Physics statistics](components/physics-statistics.md) | [PhysicsServer.ProcessInfo](classes/PhysicsServer.ProcessInfo.md) | [PhysicsServer.Statistics.cs](../src/Servers/Physics/PhysicsServer.Statistics.cs) | Current | Active bodies, candidates and constraint islands across active worlds. |
+| [Physics](domains/physics.md) | [Physics statistics](components/physics-statistics.md) | [PhysicsSpace.Statistics / SensorStatisticsQuery](classes/PhysicsSpace.md#statistics-publication) | [PhysicsSpace.Statistics.cs](../src/Servers/Physics/PhysicsSpace.Statistics.cs) | Internal | Completed snapshot and allocation-free native sensor-query context. |

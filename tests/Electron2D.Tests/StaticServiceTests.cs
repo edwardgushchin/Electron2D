@@ -5,7 +5,7 @@ internal static class StaticServiceTests
 {
     internal static void Run()
     {
-        Type[] services = [typeof(Engine), typeof(OS), typeof(ProjectSettings), typeof(Input), typeof(InputMap), typeof(ThemeDB), typeof(AudioServer), typeof(PhysicsServer), typeof(DisplayServer), typeof(RenderingServer)];
+        Type[] services = [typeof(Engine), typeof(OS), typeof(ProjectSettings), typeof(Input), typeof(InputMap), typeof(ThemeDB), typeof(AudioServer), typeof(PhysicsServer), typeof(Performance), typeof(DisplayServer), typeof(RenderingServer)];
         foreach (var type in services)
         {
             Check(type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static) is null, $"{type.Name} hides its service accessor.");
@@ -38,7 +38,7 @@ internal static class StaticServiceTests
         Reject(() => RenderingServer.GetCurrentRenderingMethod());
         Reject(() => RenderingServer.FramePostDraw += Noop);
         Reject(() => RenderingServer.FramePostDraw -= Noop);
-        Console.WriteLine("Static service API checks passed: ten services, retained state and isolated registries.");
+        Console.WriteLine("Static service API checks passed: eleven services, retained state and isolated registries.");
     }
 
     internal static void RunNative()

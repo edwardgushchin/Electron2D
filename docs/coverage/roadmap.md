@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1416 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 1339 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1419 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 1358 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -20,6 +20,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Node](classes/Node.md) | 58 | 63 |
 | [Window](classes/Window.md) | 35 | 57 |
 | [Object](classes/Object.md) | 32 | 22 |
+| [Performance](classes/Performance.md) | 24 | 2 |
 | [RDShaderSPIRV](classes/RDShaderSPIRV.md) | 18 | 4 |
 | [Engine](classes/Engine.md) | 16 | 18 |
 | [FontFile](classes/FontFile.md) | 15 | 1 |
@@ -30,9 +31,9 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [TranslationServer](classes/TranslationServer.md) | 9 | 21 |
 | [Control](classes/Control.md) | 8 | 60 |
 | [SceneTree](classes/SceneTree.md) | 8 | 19 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | 8 | 11 |
 | [AnimationPlayer](classes/AnimationPlayer.md) | 5 | 0 |
 | [Font](classes/Font.md) | 4 | 0 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | 3 | 11 |
 | [FileAccess](classes/FileAccess.md) | 2 | 66 |
 | [Resource](classes/Resource.md) | 2 | 22 |
 | [Viewport](classes/Viewport.md) | 2 | 14 |
@@ -102,8 +103,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 8 |
 | Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028). | 7 |
-| Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
+| Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
 | ADR 0094: Requires a WebRTC backend with ICE/STUN/TURN, SDP, DTLS/SCTP and data-channel state/ownership, plus native/browser packaging. Managed extension hooks follow the executable typed owner. | 4 |
 | Trigger: a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021). | 4 |

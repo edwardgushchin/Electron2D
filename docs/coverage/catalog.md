@@ -603,7 +603,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Path3D](classes/Path3D.md) | Node3D | Excluded | 4 |
 | [PathFollow2D](classes/PathFollow2D.md) | Node2D | Implemented | 7 |
 | [PathFollow3D](classes/PathFollow3D.md) | Node3D | Excluded | 16 |
-| [Performance](classes/Performance.md) | Object | Blocked | 74 |
+| [Performance](classes/Performance.md) | Object | Partial | 74 |
 | [PhysicalBone2D](classes/PhysicalBone2D.md) | RigidBody2D | Implemented | 7 |
 | [PhysicalBone3D](classes/PhysicalBone3D.md) | PhysicsBody3D | Excluded | 32 |
 | [PhysicalBoneSimulator3D](classes/PhysicalBoneSimulator3D.md) | SkeletonModifier3D | Excluded | 5 |

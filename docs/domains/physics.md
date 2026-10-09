@@ -325,3 +325,12 @@ stream; lifecycle event logs and network replay remain open.
 CPU/GPU World and server-space creation, startup fallback diagnostics, independent
 resident body/shape/joint attachments and common query/event publication. Complete
 conformance, performance and networking acceptance remain open.
+
+## Completed-step diagnostics
+
+[Physics statistics](../components/physics-statistics.md) publishes active body,
+collision candidate and active constraint-island counts through PhysicsServer and
+Performance. CPU and independent GPU worlds use their actual solver state; shared
+worlds count once, inactive worlds are omitted, and cached reads neither allocate
+nor synchronize a device. Public CPU/GPU and headless CPU lifetime/error checks are
+recorded in the component; this does not close the remaining physics/network goal.

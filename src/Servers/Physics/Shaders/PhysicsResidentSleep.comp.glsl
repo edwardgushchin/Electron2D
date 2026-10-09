@@ -17,7 +17,7 @@ layout(std430,set=1,binding=0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=1,binding=1) buffer Graph { uvec4 graph[]; };
 // Endpoints and generations retained to wake former neighbours after removal/teleport/filter edits.
 layout(std430,set=1,binding=2) buffer Edges { uvec4 edges[]; };
-layout(std430,set=1,binding=3) buffer Status { uint status; uint awakeCount; };
+layout(std430,set=1,binding=3) buffer Status { uint status; uint awakeCount; uint activeBodies; uint activeIslands; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 control; uvec4 previous; vec4 policy; vec4 gravity; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status,1u);}
@@ -117,7 +117,11 @@ void main()
         if(e.x>=control.z||(e.y!=none&&e.y>=control.z)){fail();return;}
         if(bodies[e.x].flags.x!=e.z||bodies[e.x].flags.w==0u||
             (e.y!=none&&(bodies[e.y].flags.x!=e.w||bodies[e.y].flags.w==0u))){fail();return;}
-        if(dynamicBody(e.x)&&dynamicBody(e.y))unite(e.x,e.y);
+        bool a=dynamicBody(e.x),b=dynamicBody(e.y);
+        // Mark incidence locally; every constrained component root has an incident edge.
+        if(a)atomicOr(graph[e.x].y,8u);
+        if(b)atomicOr(graph[e.y].y,8u);
+        if(a&&b)unite(e.x,e.y);
         return;
     }
     if(stage==5u)
@@ -164,6 +168,7 @@ void main()
     }
     if(stage==8u)
     {
+        if(i==0u){activeBodies=0u;activeIslands=0u;}
         if(!dynamicBody(i))return;
         ResidentBody b=bodies[i];uint r=root(i,control.z);if(r==none)return;
         bool asleep=(b.flags.z&16u)!=0u;
@@ -185,8 +190,16 @@ void main()
             uint r=root(i,control.z);if(r==none)return;
             if((graph[r].y&4u)==0u&&uintBitsToFloat(graph[r].z)>policy.z)
             {b.flags.z|=16u;b.velocity.xyz=vec3(0);bodies[i]=b;}
-            if((b.flags.z&16u)==0u)atomicAdd(awakeCount,1u);
+            if((b.flags.z&16u)==0u)
+            {
+                atomicAdd(awakeCount,1u);atomicAdd(activeBodies,1u);
+                if(i==r&&(graph[r].y&8u)!=0u)atomicAdd(activeIslands,1u);
+            }
         }
-        else if(b.velocity.xyz!=vec3(0)||b.surface.xyz!=vec3(0))atomicAdd(awakeCount,1u);
+        else
+        {
+            if(b.flags.y==1u)atomicAdd(activeBodies,1u);
+            if(b.velocity.xyz!=vec3(0)||b.surface.xyz!=vec3(0))atomicAdd(awakeCount,1u);
+        }
     }
 }

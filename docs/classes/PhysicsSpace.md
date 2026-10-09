@@ -14,7 +14,7 @@ One owner-thread CPU or independent GPU world shared by scene bodies/Areas/joint
 | --- | --- |
 | `PhysicsSpace(Backend backend = CPU, bool allowCPUFallback = false)` | Selected CPU world or resident GPU store with sampled defaults; initially inactive. CPU alone owns the retained task scheduler. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
-| `bool IsActive { get; private set; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
+| `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `EnsureWorldBindingChange()`, `EnsureWorldRelease()` | Binding changes reject a failed GPU world; releasing its last resource still permits cleanup. Both preserve owner/solver/live-body-callback guards. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |
@@ -133,3 +133,14 @@ ObjectTreeChanged publishes scene monitor visibility changes for external Node b
 The independent path is implemented by the GPU partials beside this source: scene/server
 publication, selected contact reports, Area geometry queries, body motion and authored
 exceptions. Its observable host caches and waits are documented in the backend component.
+
+## Statistics publication
+
+[PhysicsSpace.Statistics.cs](../../src/Servers/Physics/PhysicsSpace.Statistics.cs)
+retains an internal `Statistics(Active, Pairs, Islands)` value. The private
+`SensorStatisticsQuery` value carries native tree-query state without allocations.
+CPU publishes after body capture; GPU captures the final resident counters before
+query/report work and publishes after completed body capture. Empty active positive
+steps clear the sample. The PhysicsServer registry gate protects publication and
+aggregation. Local activation uses a volatile flag so diagnostics can read it
+without entering a foreign owner's solver. See [Physics statistics](../components/physics-statistics.md).

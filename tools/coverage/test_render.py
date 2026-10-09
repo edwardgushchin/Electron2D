@@ -321,10 +321,15 @@ def main():
     for setting in ("sleep_threshold_linear", "sleep_threshold_angular", "time_before_sleep", "solver/default_contact_bias", "solver/contact_max_allowed_penetration", "solver/solver_iterations", "solver/contact_recycle_radius", "solver/contact_max_separation"):
         assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines()
                                             if row.startswith("| [`property") and f"physics/2d/{setting}" in row)
+    performance_rows = pages[CLASS_PAGES / "Performance.md"].splitlines()
+    assert all(" | Implemented | " in next(row for row in performance_rows if f"enum_value PHYSICS_2D_{name} " in row)
+               for name in ("ACTIVE_OBJECTS", "COLLISION_PAIRS", "ISLAND_COUNT"))
+    assert " | Partial | " in next(row for row in performance_rows if "method get_monitor(" in row)
+    assert " | Partial | " in next(row for row in performance_rows if "class Performance" in row)
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 141, "Partial": 12, "Unimplemented": 8, "Blocked": 0, "Excluded": 54}
+                "Implemented": 146, "Partial": 12, "Unimplemented": 3, "Blocked": 0, "Excluded": 54}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_attach_canvas_instance_id", "body_get_canvas_instance_id",
                             "area_attach_canvas_instance_id", "area_get_canvas_instance_id"))

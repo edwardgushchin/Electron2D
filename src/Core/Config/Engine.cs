@@ -101,6 +101,10 @@ public sealed partial class Engine : ElectronObject
         _singletonNames.Add(nameof(NavigationServer));
         _singletons.Add(nameof(AudioServer), AudioServer.Service);
         _singletonNames.Add(nameof(AudioServer));
+        _singletons.Add(nameof(PhysicsServer), PhysicsServer.Service);
+        _singletonNames.Add(nameof(PhysicsServer));
+        _singletons.Add(nameof(Performance), Performance.Service);
+        _singletonNames.Add(nameof(Performance));
     }
 
     internal static Engine Service => SharedInstance;
@@ -325,7 +329,9 @@ public sealed partial class Engine : ElectronObject
             string.Equals(name, nameof(ResourceLoader), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceSaver), StringComparison.Ordinal) ||
             string.Equals(name, nameof(ResourceUID), StringComparison.Ordinal) ||
-            string.Equals(name, nameof(AudioServer), StringComparison.Ordinal))
+            string.Equals(name, nameof(AudioServer), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(PhysicsServer), StringComparison.Ordinal) ||
+            string.Equals(name, nameof(Performance), StringComparison.Ordinal))
         {
             throw new InvalidOperationException($"The built-in {name} singleton cannot be unregistered.");
         }

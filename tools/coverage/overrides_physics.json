@@ -1299,6 +1299,61 @@
       "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)",
       "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderObject`1(System.Int32)",
       "reason": "Generic typed projection returns the sampled assigned object of any ElectronObject role; the existing nongeneric accessor preserves physical scene-collider convenience (ADR 0063)."
+    },
+    {
+      "godot": "PhysicsServer2D::enum:ProcessInfo",
+      "electron2d": "T:Electron2D.PhysicsServer.ProcessInfo",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "PhysicsServer2D::method:get_process_info(int:PhysicsServer2D.ProcessInfo)",
+      "electron2d": "method:Electron2D.PhysicsServer.GetProcessInfo(Electron2D.PhysicsServer.ProcessInfo)",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "class:Performance",
+      "electron2d": "T:Electron2D.Performance",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "Performance::enum:Monitor",
+      "electron2d": "T:Electron2D.Performance.Monitor",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "Performance::method:get_monitor(int:Performance.Monitor)",
+      "electron2d": "method:Electron2D.Performance.GetMonitor(Electron2D.Performance.Monitor)",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "PhysicsServer2D::enum_value:ProcessInfo.INFO_ACTIVE_OBJECTS",
+      "electron2d": "enumValue:Electron2D.PhysicsServer.ProcessInfo.ActiveObjects()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.PHYSICS_2D_ACTIVE_OBJECTS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.PhysicsActiveObjects()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "PhysicsServer2D::enum_value:ProcessInfo.INFO_COLLISION_PAIRS",
+      "electron2d": "enumValue:Electron2D.PhysicsServer.ProcessInfo.CollisionPairs()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.PHYSICS_2D_COLLISION_PAIRS",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.PhysicsCollisionPairs()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "PhysicsServer2D::enum_value:ProcessInfo.INFO_ISLAND_COUNT",
+      "electron2d": "enumValue:Electron2D.PhysicsServer.ProcessInfo.IslandCount()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": "Performance::enum_value:Monitor.PHYSICS_2D_ISLAND_COUNT",
+      "electron2d": "enumValue:Electron2D.Performance.Monitor.PhysicsIslandCount()",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
     }
   ],
   "extras": [
@@ -2278,6 +2333,11 @@
       "electron2d": "property:Electron2D.World.RequestedPhysicsBackend()",
       "reason": "Explicit library-host physics backend choice, lazy world ownership, startup-only fallback and observable requested/actual implementation under ADR 0054; independent of rendering and never a post-step CPU replay. Verified by PhysicsGPUSpaceTests.",
       "adr": "ADR 0054"
+    },
+    {
+      "electron2d": "method:Electron2D.Performance.ValidateDisposal()",
+      "reason": "ADR 0095: retained Engine service rejects consumer disposal before identity or object lifetime changes.",
+      "adr": "ADR 0095"
     }
   ],
   "statusGroups": [
@@ -3868,6 +3928,146 @@
       ],
       "state": "Implemented",
       "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum:ProcessInfo",
+        "PhysicsServer2D::method:get_process_info(int:PhysicsServer2D.ProcessInfo)",
+        "PhysicsServer2D::enum_value:ProcessInfo.INFO_ACTIVE_OBJECTS",
+        "Performance::enum_value:Monitor.PHYSICS_2D_ACTIVE_OBJECTS",
+        "PhysicsServer2D::enum_value:ProcessInfo.INFO_COLLISION_PAIRS",
+        "Performance::enum_value:Monitor.PHYSICS_2D_COLLISION_PAIRS",
+        "PhysicsServer2D::enum_value:ProcessInfo.INFO_ISLAND_COUNT",
+        "Performance::enum_value:Monitor.PHYSICS_2D_ISLAND_COUNT"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests."
+    },
+    {
+      "godot": [
+        "Performance::enum:Monitor",
+        "Performance::method:get_monitor(int:Performance.Monitor)",
+        "class:Performance"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests. Other monitor producers and custom-monitor registration/lifecycle remain absent; only the three functioning physics selectors are exposed."
+    },
+    {
+      "godot": [
+        "Performance::enum:MonitorType",
+        "Performance::enum_value:MonitorType.MONITOR_TYPE_MEMORY",
+        "Performance::enum_value:MonitorType.MONITOR_TYPE_PERCENTAGE",
+        "Performance::enum_value:MonitorType.MONITOR_TYPE_QUANTITY",
+        "Performance::enum_value:MonitorType.MONITOR_TYPE_TIME",
+        "Performance::method:add_custom_monitor(StringName:,Callable:,Array:,int:Performance.MonitorType)",
+        "Performance::method:get_custom_monitor(StringName:)",
+        "Performance::method:get_custom_monitor_names()",
+        "Performance::method:get_custom_monitor_types()",
+        "Performance::method:get_monitor_modification_time()",
+        "Performance::method:has_custom_monitor(StringName:)",
+        "Performance::method:remove_custom_monitor(StringName:)"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: typed custom monitor callback/argument registration, MonitorType metadata, monotonic modification time, name/type queries, removal, reentrancy and failure/lifetime semantics in one custom-monitor slice."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.AUDIO_OUTPUT_LATENCY"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: adapt the existing AudioServer latency producer to Performance without opening a device or crossing its owner thread during diagnostic reads."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.MEMORY_MESSAGE_BUFFER_MAX",
+        "Performance::enum_value:Monitor.MEMORY_STATIC",
+        "Performance::enum_value:Monitor.MEMORY_STATIC_MAX",
+        "Performance::enum_value:Monitor.OBJECT_COUNT",
+        "Performance::enum_value:Monitor.OBJECT_NODE_COUNT",
+        "Performance::enum_value:Monitor.OBJECT_ORPHAN_NODE_COUNT",
+        "Performance::enum_value:Monitor.OBJECT_RESOURCE_COUNT"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: implement managed/native allocation and live object/node/resource accounting with explicit sample lifetime; integrate these producers as a complete diagnostic family, without constant-return counters."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.MONITOR_MAX"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0051: internal enum cardinality sentinel is not a selectable diagnostic; managed validation uses the actual declared values."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.NAVIGATION_2D_ACTIVE_MAPS",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_AGENT_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_CONNECTION_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_FREE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_EDGE_MERGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_LINK_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_OBSTACLE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_POLYGON_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_2D_REGION_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_ACTIVE_MAPS",
+        "Performance::enum_value:Monitor.NAVIGATION_AGENT_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_EDGE_CONNECTION_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_EDGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_EDGE_FREE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_EDGE_MERGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_LINK_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_OBSTACLE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_POLYGON_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_REGION_COUNT"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: complete NavigationServer topology/agent process-statistics snapshot under ADR 0097, then integrate the navigation and aggregate diagnostic selectors in its first Performance slice."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.NAVIGATION_3D_ACTIVE_MAPS",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_AGENT_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_EDGE_CONNECTION_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_EDGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_EDGE_FREE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_EDGE_MERGE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_LINK_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_OBSTACLE_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_POLYGON_COUNT",
+        "Performance::enum_value:Monitor.NAVIGATION_3D_REGION_COUNT",
+        "Performance::enum_value:Monitor.PHYSICS_3D_ACTIVE_OBJECTS",
+        "Performance::enum_value:Monitor.PHYSICS_3D_COLLISION_PAIRS",
+        "Performance::enum_value:Monitor.PHYSICS_3D_ISLAND_COUNT"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004: strictly two-dimensional engine; no 3D physics or navigation diagnostic producer."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_CANVAS",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_DRAW",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_MESH",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SPECIALIZATION",
+        "Performance::enum_value:Monitor.PIPELINE_COMPILATIONS_SURFACE",
+        "Performance::enum_value:Monitor.RENDER_BUFFER_MEM_USED",
+        "Performance::enum_value:Monitor.RENDER_TEXTURE_MEM_USED",
+        "Performance::enum_value:Monitor.RENDER_TOTAL_DRAW_CALLS_IN_FRAME",
+        "Performance::enum_value:Monitor.RENDER_TOTAL_OBJECTS_IN_FRAME",
+        "Performance::enum_value:Monitor.RENDER_TOTAL_PRIMITIVES_IN_FRAME",
+        "Performance::enum_value:Monitor.RENDER_VIDEO_MEM_USED"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: renderer-owned frame submission, pipeline compilation and device-memory accounting with backend capability semantics, then expose the corresponding Performance producers in that integration."
+    },
+    {
+      "godot": [
+        "Performance::enum_value:Monitor.TIME_FPS",
+        "Performance::enum_value:Monitor.TIME_NAVIGATION_PROCESS",
+        "Performance::enum_value:Monitor.TIME_PHYSICS_PROCESS",
+        "Performance::enum_value:Monitor.TIME_PROCESS"
+      ],
+      "state": "Unimplemented",
+      "reason": "Trigger: wire completed Engine frame timings and committed navigation timings to Performance with explicit reset, headless and independent-host sampling semantics."
     }
   ]
 }

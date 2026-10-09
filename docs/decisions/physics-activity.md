@@ -15,7 +15,7 @@ Last updated: 2026-10-09
 - SpaceStep remains the explicit host operation for caller-owned worlds; SceneTree advances only its own world. Both enter the same PhysicsSpace.Step gate. Simulation requires local active=true, global active=true and a nonzero delta. Inactive intervals do not prepare/apply forces, run native solver/body callbacks, update contact/sensor snapshots or consume queued one-step force. They preserve native handles, body state, joints, cached direct views and previous interval data. Skipped time is not accumulated; reactivation integrates only the supplied current delta.
 - Queries, configuration and resource cleanup remain available while inactive. Query preparation applies pending geometry/poses independently of simulation. Scene physics callbacks, timers/tweens, frame counters and input/render lanes continue according to existing SceneTree policy. SceneTree.Paused/process modes remain distinct: world suspension changes the solver lane, not scene scheduling.
 - The global policy is an atomic process-wide value and can change on any thread, without touching native state. Each world samples it at its own interval boundary. A running interval completes, including its queued deliveries; a callback toggle affects later intervals/worlds. Local world reads/writes require that world's owner and reject while its solver is running. A post-solver body callback may change local policy for later intervals. Global suspension does not overwrite local flags.
-- No public global activity getter or inactive compatibility state is added. No additional simulation loop, backlog timer or vendor change is introduced. ProcessInfo statistics remain a separate integration: publication over independently host-stepped worlds and active constraint-island/contact definitions need verified backend mapping before exposure.
+- No public global activity getter or inactive compatibility state is added. No additional simulation loop or backlog timer is introduced. Completed-step statistics follow the publication contract below.
 
 ### Verification and limits
 
@@ -62,3 +62,42 @@ owner/solver guards, post-solver failure, scene events, live view lifetime and w
 allocation. Existing GPUPhysicsSleepStoreTests retains connected contact/joint
 sleep, support-removal wake, generation and explicit-command coverage. See the
 [component report](../components/physics-sleep.md).
+
+
+### Completed-step process statistics
+
+- PhysicsServer.ProcessInfo and GetProcessInfo expose active objects, collision pairs
+  and active constraint islands. Performance supplies the same three physics monitors
+  through its retained static service. Other Performance producers/custom monitors
+  remain explicit coverage gaps; do not declare unsupported selectable values or
+  constant-return placeholders. Monitor values retain their pinned 17/18/19 identities.
+- The pinned [server](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp)
+  accumulates completed active spaces, while its
+  [stepper](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_step_2d.cpp)
+  groups active constraints. Electron2D permits independent host steps, so each world
+  publishes its latest complete positive step before body/event callbacks. Queries
+  sum snapshots of currently active registered worlds; sharing a World counts once.
+  Creation and empty-step publication yield zero. Local deactivation omits that
+  world's snapshot, reactivation restores it until the next completed step. Global
+  suspension and zero elapsed time preserve published values. Freeing a world removes
+  it; a failed unpublished solver interval leaves its previous sample intact.
+- Active objects are awake nonstatic bodies, including kinematic bodies. Areas and
+  static virtual surfaces are excluded. Constraint islands count active dynamic
+  groups containing physical contacts or joints; unconstrained bodies and sensor
+  processing are not solver islands. Sleeping components do not count.
+- Collision pairs describe backend work, not contact points or gameplay events. CPU
+  reports retained contact candidates plus sensor AABB candidates from the existing
+  native broad phase; GPU reports
+  filtered tree candidates, including sensors. Native decomposition, broad-phase
+  padding and speculative scheduling may change these diagnostic values across
+  backends. Island grouping likewise follows each actual solver, including deferred
+  splitting of disconnected groups; exact private graph
+  agreement is not a public promise. This adapts the pinned implementation's moving
+  Area constraint bookkeeping to this engine's separate sensor-query lane.
+- Statistics reads may run on any thread, invoke no user code, perform no GPU work
+  and allocate no managed memory. Publication/aggregation uses the existing server
+  registry gate and never acquires a foreign world or device owner. GPU reductions
+  reuse the resident sleep graph and return two counters alongside the final existing
+  status read; no body/graph mirror or additional fence is introduced. CPU reads its
+  retained solver sets/islands and queries sensor AABBs against its existing trees. Document transfer cost and verification
+  on both real implementations before marking the mapped declarations implemented.

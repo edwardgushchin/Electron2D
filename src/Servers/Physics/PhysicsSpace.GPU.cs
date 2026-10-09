@@ -169,6 +169,7 @@ internal sealed partial class PhysicsSpace
             SyncGPUExceptions(); PrepareGPUReports();
             intervalSubmissions = GPUStore!.SubmissionCount; intervalEntered = true;
             GPUStore.SimulateFields((float)delta, GPUFields(DefaultAreaFields));
+            var statistics = new Statistics(GPUStore.PublishedActiveBodyCount, GPUStore.PairCount, GPUStore.PublishedIslandCount);
             PublishGPU(); ReadGPUReports(); advanced = true;
             foreach (var body in _serverColliders)
             {
@@ -190,6 +191,7 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _bodies)
                 if (body is RigidBody rigid) { if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid); rigid.QueueContactChanges(_contactEvents); }
             ScanGPUAreas(); CaptureBodyStates();
+            PhysicsServer.Service.PublishStatistics(this, statistics);
         }
         catch (Exception error)
         {

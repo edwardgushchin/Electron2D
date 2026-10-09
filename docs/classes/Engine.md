@@ -483,3 +483,11 @@ Engine permanently registers OS as a retained service and rejects its unregistra
 ## Navigation map integration
 
 World.NavigationMap now lazily owns an active borrowed map in the same runtime lifetime as canvas/physics. Scene NavigationRegion nodes and server-owned regions use that same map storage; the physics lane commits staged topology. NavigationServer is available through Engine named-service lookup. [The navigation contract](../components/navigation-maps.md) records implemented behavior and remaining dependencies.
+
+## Physics diagnostic services
+
+The permanent named service list includes `PhysicsServer` and `Performance` after
+`AudioServer`. `GetSingleton` returns their retained objects; disposal and
+`UnregisterSingleton` reject. Public operations remain static under ADR 0095.
+[Physics statistics](../components/physics-statistics.md) reads completed CPU/GPU
+samples without starting the renderer or acquiring a world owner thread.
