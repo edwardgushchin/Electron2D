@@ -1136,6 +1136,7 @@ public enum b2SolverBlockType
                     // stage index restarted each iteration
                     // syncBits still increases monotonically because the upper bits increase each iteration
                     int iterStageIndex = stageIndex;
+                    context.solverElapsed = i * context.h;
 
                     // integrate velocities
                     syncBits = (uint)((bodySyncIndex << 16) | iterStageIndex);
@@ -1194,6 +1195,7 @@ public enum b2SolverBlockType
                     profile.integratePositions += b2GetMillisecondsAndReset(ref ticks);
 
                     // relax constraints
+                    context.solverElapsed = (i + 1) * context.h;
                     useBias = false;
                     for (int j = 0; j < RELAX_ITERATIONS; ++j)
                     {

@@ -69,6 +69,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(Physics2DSleepThresholdLinear, isBasic: false);
         RegisterInternal(Physics2DSleepThresholdAngular, isBasic: false);
         RegisterInternal(Physics2DTimeBeforeSleep, isBasic: false);
+        RegisterInternal(Physics2DDefaultContactBias, isBasic: false);
+        RegisterInternal(Physics2DContactMaxAllowedPenetration, isBasic: false);
         RegisterInternal(Physics2DDefaultConstraintBias, isBasic: false);
         RegisterInternal(MaxPhysicsStepsPerFrame, isBasic: false);
         RegisterInternal(PhysicsJitterFix, isBasic: false);
@@ -1157,6 +1159,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, Physics2DSleepThresholdLinear) ||
         ReferenceEquals(setting, Physics2DSleepThresholdAngular) ||
         ReferenceEquals(setting, Physics2DTimeBeforeSleep) ||
+        ReferenceEquals(setting, Physics2DDefaultContactBias) ||
+        ReferenceEquals(setting, Physics2DContactMaxAllowedPenetration) ||
         ReferenceEquals(setting, Physics2DDefaultConstraintBias) ||
         ReferenceEquals(setting, MaxPhysicsStepsPerFrame) ||
         ReferenceEquals(setting, PhysicsJitterFix) ||

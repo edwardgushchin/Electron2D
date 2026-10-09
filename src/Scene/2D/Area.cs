@@ -207,6 +207,7 @@ public sealed partial class Area : CollisionObject
     internal void PrepareBackend()
     {
         if (Space is null) return;
+        Backend.PrepareContactPolicy();
         ValidatePhysicsTransform();
         if (!_shapesDirty)
             for (var index = 0; index < ShapeSlots.Count; index++)

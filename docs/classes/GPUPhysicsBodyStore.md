@@ -205,3 +205,5 @@ zero speed thresholds disable automatic sleep. Changed policy queues ordinary or
 wake commands for live dynamics, so zero-time reads see the wake and a later explicit
 sleep wins. Unchanged settings retain state. [World sleep policy](../components/physics-sleep.md)
 records the per-edit transfer cost and shared CPU checks.
+
+ContactPolicy captures shared world defaults and queues ordinary wake commands on edits. Shape policy uses an existing device word and an independent epoch; no vertex or pose mirror is introduced. Solver uniforms are 80 bytes and carry the nominal-tick exponent and separate inherited joint bias. See [contact policy](../components/physics-contact-policy.md).

@@ -100,3 +100,5 @@ Attach reads the current space's linear quiet threshold when creating its CPU bo
 World angular threshold and quiet duration are shared by existing/new attachments;
 [PhysicsSleepPolicyTests](../../tests/Electron2D.Tests/PhysicsSleepPolicyTests.cs)
 checks settings, body-size independence and scene/server behavior.
+
+Contact-policy preparation compares Shape.SolverPolicyEpoch separately from geometry. Weak fixture sources refresh per-shape bias without shape IDs, mass or history changes; changed policy wakes the body and touching neighbours. Body, Area and server-collider preparation share this path.

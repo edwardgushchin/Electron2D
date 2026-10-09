@@ -156,16 +156,17 @@ internal static class PhysicsCCDTests
     {
         using var ball = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 100) };
         foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
-        {
-            using var f = new Fixture(gpu); var a = f.Add(ball, velocity: new(3000, 0), ccd: mode); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
-            PhysicsServer.BodySetBounce(a, .5f); PhysicsServer.BodySetBounce(b, .5f); PhysicsServer.BodySetFriction(a, 0); PhysicsServer.BodySetFriction(b, 0);
-            PhysicsServer.BodySetMaxContactsReported(a, 8); f.Step(); using var state = PhysicsServer.BodyGetDirectState(a)!;
-            var impulse = Vector2.Zero; for (var i = 0; i < state.GetContactCount(); i++) impulse += state.GetContactImpulse(i);
-            Console.WriteLine($"CCD bounce {mode}: {state.Transform.Origin}, {state.LinearVelocity}, impulse={impulse}");
-            Check(MathF.Abs(state.LinearVelocity.X + 3000) < 1 && state.Transform.Origin.X < -15,
-                "Restitution preserves incoming speed and consumes the rest of the tick.");
-            Check(impulse.DistanceTo(new(-6000, 0)) < 2, "The frame contact snapshot contains the complete physical impulse.");
-        }
+            foreach (var bias in new[] { 0f, .8f, 1f })
+            {
+                using var f = new Fixture(gpu); PhysicsServer.SpaceSetContactDefaultBias(f.Space, bias); var a = f.Add(ball, velocity: new(3000, 0), ccd: mode); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
+                PhysicsServer.BodySetBounce(a, .5f); PhysicsServer.BodySetBounce(b, .5f); PhysicsServer.BodySetFriction(a, 0); PhysicsServer.BodySetFriction(b, 0);
+                PhysicsServer.BodySetMaxContactsReported(a, 8); f.Step(); using var state = PhysicsServer.BodyGetDirectState(a)!;
+                var impulse = Vector2.Zero; for (var i = 0; i < state.GetContactCount(); i++) impulse += state.GetContactImpulse(i);
+                Console.WriteLine($"CCD bounce {mode}, bias={bias}: {state.Transform.Origin}, {state.LinearVelocity}, impulse={impulse}");
+                Check(MathF.Abs(state.LinearVelocity.X + 3000) < 1 && state.Transform.Origin.X < -15,
+                    "Restitution preserves incoming speed and consumes the rest of the tick.");
+                Check(impulse.DistanceTo(new(-6000, 0)) < 2, "The frame contact snapshot contains the complete physical impulse.");
+            }
     }
     private static void VerifyJointMotion(bool gpu)
     {

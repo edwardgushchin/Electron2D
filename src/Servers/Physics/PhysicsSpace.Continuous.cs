@@ -2,6 +2,7 @@ using System.Runtime.InteropServices;
 using Box2D.NET;
 using static Box2D.NET.B2Bodies;
 using static Box2D.NET.B2Distances;
+using static Box2D.NET.B2Contacts;
 using static Box2D.NET.B2DynamicTrees;
 using static Box2D.NET.B2MathFunction;
 using static Box2D.NET.B2Shapes;
@@ -40,6 +41,26 @@ internal sealed partial class PhysicsSpace
         var world = context.world; var sim = PhysicsColliderBackend.Simulation(backend.BodyID);
         var body = b2GetBodyFullId(world, backend.BodyID);
         var state = body.setIndex == (int)B2SolverSetType.b2_awakeSet ? context.states[body.localIndex] : null;
+        // Restitution runs after position integration. A separating correction cannot
+        // consume the entire interval while the new bounce velocity waits for the next one.
+        if (mode != CCDMode.Disabled && backend.IsDynamic && state is not null)
+        {
+            for (var key = body.headContactKey; key != B2Constants.B2_NULL_INDEX;)
+            {
+                var contact = world.contacts.data[key >> 1]; var edge = key & 1;
+                key = contact.edges[edge].nextKey;
+                var solved = b2GetContactSim(world, contact);
+                if (solved.solvedStep != world.stepIndex || solved.restitution <= 0) continue;
+                for (var j = 0; j < solved.manifold.pointCount; j++)
+                {
+                    var point = solved.manifold.points[j];
+                    if (point.normalVelocity >= -world.restitutionThreshold || point.totalNormalImpulse <= 0) continue;
+                    var peer = b2GetBodySim(world, world.bodies.data[contact.edges[edge ^ 1].bodyId]);
+                    var extent = MathF.Max(MathF.Min(sim.minExtent, peer.minExtent), B2Constants.B2_LINEAR_SLOP);
+                    _continuousNearStep = MathF.Min(_continuousNearStep, .25f * extent / -point.normalVelocity);
+                }
+            }
+        }
         var displacement = state?.deltaPosition ?? default;
         var rotation = state is null ? sim.transform.q : b2NormalizeRot(b2MulRot(state.deltaRotation, sim.transform.q));
         var sweep = new B2Sweep(sim.localCenter, sim.center, sim.center + displacement, sim.transform.q, rotation);

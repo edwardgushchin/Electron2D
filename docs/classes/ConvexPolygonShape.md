@@ -65,3 +65,13 @@ checked Linux/.NET 10 runtime.
 Direct [shape queries](PhysicsDirectSpaceState.md) test all convex pieces while returning one shape-owner hit per collider; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers a twelve-vertex query.
 
 Inherited [Shape collision methods](Shape.md#collide) now test posed resources and independently swept regions without a SceneTree. ShapeCollisionTests verifies this family under [ADR 0069](../decisions/physics.md#adr-0069), including caller/other boundary-point ordering, lifetime and the sixteen-pair cap.
+
+Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copied
+alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
+geometry revision, including in-place copying into a resource with existing borrowers.
+PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.
+
+<a id="getpropertydescriptors"></a>
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` combines
+inherited resource/policy descriptors with this shape's authored geometry for storage.
+The built-in resource file registry constructs this concrete shape on load.

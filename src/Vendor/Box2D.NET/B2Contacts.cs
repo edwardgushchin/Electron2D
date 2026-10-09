@@ -117,6 +117,10 @@ namespace Box2D.NET
         private static B2Manifold b2BoundaryManifold(B2Shape a, in B2Transform poseA, B2Shape b, in B2Transform poseB, ref B2SimplexCache cache) =>
             B2Boundaries.Contact(B2Shapes.b2MakeShapeDistanceProxy(a), poseA, B2Shapes.b2MakeShapeDistanceProxy(b), poseB);
 
+        internal static float ContactBias(B2World world, B2Shape a, B2Shape b) => a.customSolverBias == 0
+            ? b.customSolverBias == 0 ? world.contactBias : b.customSolverBias
+            : b.customSolverBias == 0 ? a.customSolverBias : .5f * (a.customSolverBias + b.customSolverBias);
+
         internal static void b2AddType(b2ManifoldFcn fcn, B2ShapeType type1, B2ShapeType type2)
         {
             B2_ASSERT(0 <= type1 && type1 < B2ShapeType.b2_shapeTypeCount);
@@ -577,6 +581,7 @@ namespace Box2D.NET
             contactSim.manifold = generatedManifolds == null
                 ? fcn(shapeA, transformA, shapeB, transformB, ref contactSim.cache) : generatedManifolds[generatedIndex];
 
+            contactSim.solverBias = ContactBias(world, shapeA, shapeB);
             // Keep these updated in case the values on the shapes are modified
             contactSim.friction = world.frictionCallback(shapeA.material.friction, shapeA.material.userMaterialId,
                 shapeB.material.friction, shapeB.material.userMaterialId);

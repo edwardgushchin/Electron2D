@@ -26,7 +26,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [StructLayout(LayoutKind.Sequential)]
     private struct SolverStep
     {
-        internal Float4 Values, Control, Solve, Preparation;
+        internal Float4 Values, Control, Solve, Preparation, Motion;
     }
     private readonly Storage<Contact> _contactStorage;
     private B2World? _solvedWorld;
@@ -94,11 +94,13 @@ internal sealed unsafe partial class GPUPhysicsWorld
             ExecuteSolverStage(command, ref settings, 10, 0, jointCount, false, count, context);
             for (var substep = 0; substep < context.subStepCount; substep++)
             {
+                settings.Motion.X = substep * context.h;
                 ExecuteSolverStage(command, ref settings, 0, 0, count, false, count, context);
                 ExecuteConstraints(command, ref settings, context, 2, 6, count);
                 for (var iteration = 0; iteration < B2Solvers.ITERATIONS; iteration++)
                     ExecuteConstraints(command, ref settings, context, 3, 7, count);
                 ExecuteSolverStage(command, ref settings, 1, 0, count, false, count, context);
+                settings.Motion.X = (substep + 1) * context.h;
                 for (var iteration = 0; iteration < B2Solvers.RELAX_ITERATIONS; iteration++)
                     ExecuteConstraints(command, ref settings, context, 4, 8, count);
             }
@@ -212,8 +214,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     Material = new(c.friction, c.tangentSpeed, c.rollingResistance, c.restitution),
                     Warm = source >= 0 ? default : new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
                     Source = new(source, m.rollingImpulse, p1.id, p2.id),
-                    SurfaceA = new(c.surfaceLinearA.X, c.surfaceLinearA.Y, c.surfaceAngularA, 0),
-                    SurfaceB = new(c.surfaceLinearB.X, c.surfaceLinearB.Y, c.surfaceAngularB, 0),
+                    SurfaceA = new(c.surfaceLinearA.X, c.surfaceLinearA.Y, c.surfaceAngularA, c.solverBias >= 0 ? B2ContactSolvers.ContactCorrection(context, c.solverBias).biasRate : -1),
+                    SurfaceB = new(c.surfaceLinearB.X, c.surfaceLinearB.Y, c.surfaceAngularB, context.world.contactAllowedPenetration),
                     Offset = offset
                 };
             }

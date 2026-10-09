@@ -106,3 +106,5 @@ owner/phase and all values before publication; changed values update native angu
 fields and existing body linear thresholds, restart timers and wake dynamics. New
 attachments read the current policy. The shared [sleep report](../components/physics-sleep.md)
 records exact threshold/delay semantics and scene/server verification.
+
+World contact settings capture validated project bias/slack and feed native contact preparation with the outer tick duration. Typed edits wake dynamic bodies without rebuilding fixtures. See [contact policy](../components/physics-contact-policy.md).

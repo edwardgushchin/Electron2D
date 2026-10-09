@@ -68888,6 +68888,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ConcavePolygonShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConcavePolygonShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ConcavePolygonShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -71524,6 +71537,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -113104,6 +113130,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetContactDefaultBias(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetContactDefaultBias",
+    "signature": "public static System.Single SpaceGetContactDefaultBias(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetContactMaxAllowedPenetration(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetContactMaxAllowedPenetration",
+    "signature": "public static System.Single SpaceGetContactMaxAllowedPenetration(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceGetDirectState(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -113243,6 +113307,54 @@
     "declaringType": "Electron2D.PhysicsServer",
     "name": "SpaceSetConstraintDefaultBias",
     "signature": "public static System.Void SpaceSetConstraintDefaultBias(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetContactDefaultBias(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetContactDefaultBias",
+    "signature": "public static System.Void SpaceSetContactDefaultBias(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetContactMaxAllowedPenetration(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetContactMaxAllowedPenetration",
+    "signature": "public static System.Void SpaceSetContactMaxAllowedPenetration(Electron2D.RID space, System.Single value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -129601,6 +129713,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SeparationRayShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SeparationRayShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.SeparationRayShape",
@@ -130201,6 +130326,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shape.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.Shape",
@@ -130217,6 +130381,19 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {
@@ -157777,6 +157954,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.WorldBoundaryShape.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.WorldBoundaryShape.GetRect()",
     "kind": "method",
     "declaringType": "Electron2D.WorldBoundaryShape",
@@ -183091,6 +183281,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.Physics2DContactMaxAllowedPenetration()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DContactMaxAllowedPenetration",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DContactMaxAllowedPenetration { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.Physics2DDefaultAngularDamp()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -183109,6 +183312,19 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "Physics2DDefaultConstraintBias",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultConstraintBias { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DDefaultContactBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DDefaultContactBias",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DDefaultContactBias { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -185753,6 +185969,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Shader",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.Shape.CustomSolverBias()",
+    "kind": "property",
+    "declaringType": "Electron2D.Shape",
+    "name": "CustomSolverBias",
+    "signature": "public System.Single CustomSolverBias { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

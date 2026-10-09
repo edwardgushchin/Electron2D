@@ -73,7 +73,7 @@ Queries can run on any thread while resources remain unchanged and alive. Privat
 
 ## Limits and verification
 
-Circle and rectangle bounds, validation and copying are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs); [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks the capsule; [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks off-center line bounds and fixtures; [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) checks compound solid contours; [ConcavePolygonShapeTests](../../tests/Electron2D.Tests/ConcavePolygonShapeTests.cs) checks hollow paired contours. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks borrowed RID lifetime, edits and direct query geometry. [ShapeCollisionTests](../../tests/Electron2D.Tests/ShapeCollisionTests.cs) checks static and swept contacts, all ordinary family pairings, rounded corners, contact order/depth, whole convex boundaries, hollow/special pairs, sixteen-deepest-pair retention, invalid/disposed inputs, callback-failure edits and off-thread queries. Sixty-four warmed active, full-contour and empty-contact queries each allocate zero managed bytes on Linux/.NET 10. Successful contact arrays allocate caller-owned output. Native allocation, large-world throughput, other platforms and owner visual acceptance remain unverified. Canvas debug drawing requires renderer resource identity; custom solver bias requires a verified backend mapping. See [ADR 0063](../decisions/physics.md#adr-0063) for direct query ownership.
+Circle and rectangle bounds, validation and copying are checked in [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs); [CapsuleShapeTests](../../tests/Electron2D.Tests/CapsuleShapeTests.cs) checks the capsule; [SegmentShapeTests](../../tests/Electron2D.Tests/SegmentShapeTests.cs) checks off-center line bounds and fixtures; [ConvexPolygonShapeTests](../../tests/Electron2D.Tests/ConvexPolygonShapeTests.cs) checks compound solid contours; [ConcavePolygonShapeTests](../../tests/Electron2D.Tests/ConcavePolygonShapeTests.cs) checks hollow paired contours. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks borrowed RID lifetime, edits and direct query geometry. [ShapeCollisionTests](../../tests/Electron2D.Tests/ShapeCollisionTests.cs) checks static and swept contacts, all ordinary family pairings, rounded corners, contact order/depth, whole convex boundaries, hollow/special pairs, sixteen-deepest-pair retention, invalid/disposed inputs, callback-failure edits and off-thread queries. Sixty-four warmed active, full-contour and empty-contact queries each allocate zero managed bytes on Linux/.NET 10. Successful contact arrays allocate caller-owned output. Native allocation, large-world throughput, other platforms and owner visual acceptance remain unverified. Canvas debug drawing still requires renderer resource identity. Custom solver bias follows the contact policy below. See [ADR 0063](../decisions/physics.md#adr-0063) for direct query ownership.
 
 ## Physics identity and server-owned views
 
@@ -95,3 +95,26 @@ collide; other geometry separates along its normal. Standalone resource motion
 ignores boundary displacement and tests the other shape at its endpoint, taking
 precedence over separation-ray motion rules. WorldBoundaryTests verifies this
 policy; direct-space queries retain their separate swept-query semantics.
+
+## Contact correction and stored policy
+
+<a id="customsolverbias"></a>
+`public float CustomSolverBias { get; set; }` defaults to zero (inherit the world).
+A single nonzero bias overrides the world; two nonzero biases use their arithmetic
+mean. Values must be finite in [0,1]. Disposed resources reject access. Invalid
+writes throw ArgumentOutOfRangeException before mutation; equal writes are silent.
+Changed policy emits Changed but preserves geometry revision, RID, mass and fixtures.
+The policy epoch publishes before callbacks, so a throwing observer cannot hide an
+already committed edit. Borrowers observe it on their next preparation and wake
+contact neighbours. Queries and sensors do not apply penetration correction.
+
+<a id="getpropertydescriptors"></a>
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` extends
+Resource storage with CustomSolverBias. Concrete geometry descriptors call this base.
+
+<a id="copycustomstateto"></a>
+`protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource, Resource> copyAlways, Func<Resource, Resource> copyNormally)`
+copies inherited policy; each built-in geometry hook calls it and publishes its
+geometry revision. Duplicate, in-place copy and .e2dres persistence preserve policy
+for all eight built-in shape families. [Contact correction](../components/physics-contact-policy.md)
+documents world settings, backend behavior and PhysicsContactPolicyTests.

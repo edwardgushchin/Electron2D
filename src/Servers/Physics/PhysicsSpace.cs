@@ -87,6 +87,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         var settings = ProjectSettings.Service;
         SleepSettings = PhysicsSleepSettings.FromProject(); SleepSettings.Validate();
+        ContactSettings = PhysicsContactSettings.FromProject(); ContactSettings.Validate();
         ConstraintDefaultBias = settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultConstraintBias);
         DefaultAreaFields = new(settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravity),
             settings.GetWithOverrideCore(ProjectSettings.Physics2DDefaultGravityVector))
@@ -110,6 +111,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _worldID = b2CreateWorld(definition);
         var world = b2GetWorldFromId(_worldID);
         world.sleepAngularThreshold = SleepSettings.AngularThreshold; world.timeToSleep = SleepSettings.TimeToSleep;
+        world.contactBias = ContactSettings.Bias; world.contactAllowedPenetration = ContactSettings.AllowedPenetration * MetersPerUnit;
         _tasks.Bind(world);
         world.workerCount = 1;
         b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
@@ -446,6 +448,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             var world = b2GetWorldFromId(_worldID);
             world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
+            world.contactBiasDuration = (float)delta;
             StepKinematicPaths(delta, hasKinematicBodies);
             RecordStepPhase(3, ref profileMark);
             solverAdvanced = true;

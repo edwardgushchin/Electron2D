@@ -15,7 +15,7 @@ state without this class's Box2D stage contexts; it is not yet a complete world.
 The developing GPU-world host currently executes velocity and delta-pose
 integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, contact-driven island merging/unlinking and disconnected-island splitting, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
-80-byte body records and 32-byte integration/64-byte solver uniforms have matching compute layouts.
+80-byte body records and 32-byte integration/80-byte solver uniforms have matching compute layouts.
 Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
 inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
@@ -351,3 +351,5 @@ duration along with each body's linear threshold. It preserves independent speed
 checks without shape-radius weighting; layouts remain 64-byte input/32-byte uniforms.
 PhysicsSleepPolicyTests verifies public policy behavior on this path separately from
 the independent GPU store.
+
+The legacy contact solver packs mixed correction rate/slack in contact-input padding. Its 80-byte step uniform includes elapsed virtual-surface time; CPU and GPU use the same displacement when relaxing contact impulses. See [contact policy](../components/physics-contact-policy.md).

@@ -119,6 +119,8 @@ namespace Box2D.NET
                     constraint.softness = contactSoftness;
                 }
 
+                if (contactSim.solverBias >= 0) constraint.softness = ContactCorrection(context, contactSim.solverBias);
+
                 // copy mass into constraint to avoid cache misses during sub-stepping
                 constraint.invMassA = mA;
                 constraint.invIA = iA;
@@ -308,7 +310,10 @@ namespace Box2D.NET
                     // compute current separation
                     // this is subject to round-off error if the anchor is far from the body center of mass
                     B2Vec2 ds = b2Add(dp, b2Sub(b2RotateVector(dqB, rB), b2RotateVector(dqA, rA)));
-                    float s = cp.baseSeparation + b2Dot(ds, normal);
+                    // Virtual surfaces contribute displacement at the contact without moving their body pose.
+                    B2Vec2 surface = constraint.surfaceLinearB + b2CrossSV(constraint.surfaceAngularB, rB) -
+                        constraint.surfaceLinearA - b2CrossSV(constraint.surfaceAngularA, rA);
+                    float s = cp.baseSeparation + b2Dot(ds + context.solverElapsed * surface, normal);
 
                     float velocityBias = 0.0f;
                     float massScale = 1.0f;
@@ -320,7 +325,7 @@ namespace Box2D.NET
                     }
                     else if (useBias)
                     {
-                        velocityBias = b2MaxFloat(softness.massScale * softness.biasRate * s, -contactSpeed);
+                        velocityBias = b2MaxFloat(softness.massScale * softness.biasRate * MathF.Min(0, s + context.world.contactAllowedPenetration), -contactSpeed);
                         massScale = softness.massScale;
                         impulseScale = softness.impulseScale;
                     }
@@ -1245,6 +1250,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                         constraint.rollingResistance[j] = contactSim.rollingResistance;
                         constraint.rollingImpulse[j] = warmStartScale * manifold.rollingImpulse;
 
+                        if (contactSim.solverBias >= 0) soft = ContactCorrection(context, contactSim.solverBias);
                         constraint.biasRate[j] = soft.biasRate;
                         constraint.massScale[j] = soft.massScale;
                         constraint.impulseScale[j] = soft.impulseScale;
@@ -1465,6 +1471,22 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
             b2TracyCZoneEnd(B2TracyCZone.warm_start_contact);
         }
 
+        private static B2FloatW SurfaceSeparation(ref B2ContactConstraintSIMD c, B2Vec2W a, B2Vec2W b, float elapsed)
+        {
+            var x = b2SubW(b2SubW(c.surfaceLinearB.X, b2MulW(c.surfaceAngularB, b.Y)),
+                b2SubW(c.surfaceLinearA.X, b2MulW(c.surfaceAngularA, a.Y)));
+            var y = b2SubW(b2AddW(c.surfaceLinearB.Y, b2MulW(c.surfaceAngularB, b.X)),
+                b2AddW(c.surfaceLinearA.Y, b2MulW(c.surfaceAngularA, a.X)));
+            return b2MulW(b2AddW(b2MulW(x, c.normal.X), b2MulW(y, c.normal.Y)), b2SplatW(elapsed));
+        }
+
+        internal static B2Softness ContactCorrection(B2StepContext context, float bias)
+        {
+            var duration = context.world.contactBiasDuration > 0 ? context.world.contactBiasDuration : context.dt;
+            var fraction = 1 - MathF.Pow(1 - bias, context.h / duration);
+            return new B2Softness(fraction * context.inv_h, 1, 0);
+        }
+
         internal static void b2SolveContactsTask(int startIndex, int endIndex, B2StepContext context, int colorIndex, bool useBias)
         {
             b2TracyCZoneNC(B2TracyCZone.solve_contact, "Solve Contact", B2HexColor.b2_colorAliceBlue, true);
@@ -1473,6 +1495,7 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
             Span<B2ContactConstraintSIMD> constraints = context.graph.colors[colorIndex].simdConstraints;
             B2FloatW inv_h = b2SplatW(context.inv_h);
             B2FloatW contactSpeed = b2SplatW(-context.world.contactSpeed);
+            B2FloatW penetration = b2SplatW(context.world.contactAllowedPenetration);
             B2FloatW oneW = b2SplatW(1.0f);
 
             for (int i = startIndex; i < endIndex; ++i)
@@ -1516,12 +1539,13 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     // this is subject to round-off error if the anchor is far from the body center of mass
                     B2Vec2W ds = new B2Vec2W(b2AddW(dp.X, b2SubW(rsB.X, rsA.X)), b2AddW(dp.Y, b2SubW(rsB.Y, rsA.Y)));
                     B2FloatW s = b2AddW(b2DotW(c.normal, ds), c.baseSeparation1);
+                    s = b2AddW(s, SurfaceSeparation(ref c, c.anchorA1, c.anchorB1, context.solverElapsed));
 
                     // Apply speculative bias if separation is greater than zero, otherwise apply soft constraint bias
                     // The contactSpeed is meant to limit stiffness, not increase it.
                     B2FloatW mask = b2GreaterThanW(s, b2ZeroW());
                     B2FloatW specBias = b2MulW(s, inv_h);
-                    B2FloatW softBias = b2MaxW(b2MulW(biasRate, s), contactSpeed);
+                    B2FloatW softBias = b2MaxW(b2MulW(biasRate, b2MinW(b2AddW(s, penetration), b2ZeroW())), contactSpeed);
 
                     // todo try b2MaxW(softBias, specBias);
                     B2FloatW bias = b2BlendW(softBias, specBias, mask);
@@ -1568,10 +1592,11 @@ static void b2ScatterBodies( b2BodyState* states, int* indices, const b2BodyStat
                     // compute current separation
                     B2Vec2W ds = new B2Vec2W(b2AddW(dp.X, b2SubW(rsB.X, rsA.X)), b2AddW(dp.Y, b2SubW(rsB.Y, rsA.Y)));
                     B2FloatW s = b2AddW(b2DotW(c.normal, ds), c.baseSeparation2);
+                    s = b2AddW(s, SurfaceSeparation(ref c, c.anchorA2, c.anchorB2, context.solverElapsed));
 
                     B2FloatW mask = b2GreaterThanW(s, b2ZeroW());
                     B2FloatW specBias = b2MulW(s, inv_h);
-                    B2FloatW softBias = b2MaxW(b2MulW(biasRate, s), contactSpeed);
+                    B2FloatW softBias = b2MaxW(b2MulW(biasRate, b2MinW(b2AddW(s, penetration), b2ZeroW())), contactSpeed);
                     B2FloatW bias = b2BlendW(softBias, specBias, mask);
 
                     B2FloatW pointMassScale = b2BlendW(massScale, oneW, mask);

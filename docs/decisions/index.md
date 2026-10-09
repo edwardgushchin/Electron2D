@@ -23,6 +23,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Typed 2D meshes and skeletal palettes | [mesh.md](mesh.md) | 0092 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053, 0097 |
 | CPU and independent GPU physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
+| Physics contact correction | [physics-contacts.md](physics-contacts.md) | 0098 |
 | Physics world activity | [physics-activity.md](physics-activity.md) | 0089 |
 | Physics indexed geometry | [physics-shape-slots.md](physics-shape-slots.md) | 0088 |
 | Physics joints | [physics-joints.md](physics-joints.md) | 0084, 0085, 0086, 0087 |

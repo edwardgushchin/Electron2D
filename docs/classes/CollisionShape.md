@@ -44,7 +44,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 <a id="shape"></a>
 ### `Shape`
 
-Accepts a live CircleShape, CapsuleShape, SegmentShape, ConvexPolygonShape, ConcavePolygonShape, RectangleShape or null. A disposed shape throws before assignment. The old resource's change/disposal listeners are removed and the new one's installed; the node does not dispose either. Successful assignment marks its parent's fixtures dirty and refreshes configuration warnings. A Changed callback failure from a warning observer may propagate after assignment.
+Accepts a live CircleShape, CapsuleShape, SegmentShape, ConvexPolygonShape, ConcavePolygonShape, RectangleShape or null. A disposed shape throws before assignment. The old resource's disposal listener is removed and the new one's installed; geometry and solver policy use separate revision epochs; the node does not dispose either. Successful assignment marks its parent's fixtures dirty and refreshes configuration warnings. A Changed callback failure from a warning observer may propagate after assignment.
 
 <a id="disabled"></a>
 ### `Disabled`

@@ -69,3 +69,13 @@ far-away infinite response and queries, Area membership, contact events, sleep,
 live edits, removal and translating/rotating CCD. Shared GPU shape/motion matrices
 exercise both argument positions. The [component report](../components/physics-shapes.md#infinite-world-boundaries)
 records measured allocation, traffic and remaining acceptance limits.
+
+Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copied
+alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
+geometry revision, including in-place copying into a resource with existing borrowers.
+PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.
+
+<a id="getpropertydescriptors"></a>
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` combines
+inherited resource/policy descriptors with this shape's authored geometry for storage.
+The built-in resource file registry constructs this concrete shape on load.

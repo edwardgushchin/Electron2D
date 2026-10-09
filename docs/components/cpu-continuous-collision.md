@@ -117,3 +117,5 @@ The complete 38-group CPU collider runner and full GPU suite pass on this source
 `/tmp/electron2d-cpu-ccd-gpu-final3.log`). The GPU suite includes the public CCD
 checks through its experimental host and the separate independent resident CCD
 suite; no public independent-GPU or multiplayer acceptance is implied.
+
+Restitution contact points with incoming closing speed also bound the initial impact interval, even when positional correction is already separating. This lets outgoing velocity consume the remainder. PhysicsCCDTests checks ray/full-shape bounce at bias 0, 0.8 and 1 with full impulse accounting.

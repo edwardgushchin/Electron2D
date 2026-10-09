@@ -286,3 +286,8 @@ and public per-space linear/angular quiet thresholds plus duration. Public CPU a
 independent GPU tests share strict threshold/delay semantics, body-size independence,
 ordered wakes, invalid-state preservation and warmed allocation. Public GPU-world
 binding and the other contact/iteration settings remain open.
+
+[World and shape contact correction](../components/physics-contact-policy.md) now
+shares validated defaults, live policy propagation and inherited shape storage across
+CPU and independent GPU solvers under [ADR 0098](../decisions/physics-contacts.md#adr-0098).
+Public independent-GPU world selection and networking remain open.

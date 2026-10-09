@@ -59,6 +59,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
     {
         var world = context.world;
         var contact = context.contacts[i];
+        contact.solverBias = B2Contacts.ContactBias(world, world.shapes.data[contact.shapeIdA], world.shapes.data[contact.shapeIdB]);
         if (world.shapes.data[contact.shapeIdA].manifoldOverride is not null || world.shapes.data[contact.shapeIdB].manifoldOverride is not null ||
             world.shapes.data[contact.shapeIdA].type == B2ShapeType.b2_boundaryShape || world.shapes.data[contact.shapeIdB].type == B2ShapeType.b2_boundaryShape)
         {

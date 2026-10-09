@@ -110,3 +110,11 @@ measured loop. Logs: `/tmp/electron2d-boundary-cpu.log`,
 These are tiny-world overhead/allocation probes, not large-world speedup or 60 FPS
 acceptance. Native allocation, window rendering, network behavior, other platforms
 and public independent-GPU binding remain unverified or unimplemented as applicable.
+
+## Solver policy and storage
+
+All built-in shapes inherit stored CustomSolverBias. Policy edits use a separate
+epoch, retaining geometry/fixture IDs, mass and contact history. Concrete copy hooks
+publish geometry revisions; convex in-place copies refresh the compiled hull through
+the Points setter. All eight shapes round-trip through the built-in resource file
+registry. See [contact correction](physics-contact-policy.md).

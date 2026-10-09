@@ -63,12 +63,21 @@ public sealed class ConcavePolygonShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<ConcavePolygonShape, Vector2[]>(nameof(Segments), s => s.Segments, (s, v) => s.Segments = v, _ => [], stored: true);
+    }
+
+    /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new ConcavePolygonShape();
 
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         ((ConcavePolygonShape)target)._segments = (Vector2[])_segments.Clone();
+        ((Shape)target).EmitGeometryChanged();
     }
 }

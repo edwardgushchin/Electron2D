@@ -27,6 +27,14 @@ internal static class GPUPhysicsJointPolicyTests
             var a = groove ? Body(s, mode: Mode.Static) : b;
             var d = new Store.JointDefinition(groove ? Kind.Groove : Kind.Pin, a, groove ? b : default, Transform.Identity, Transform.Identity);
             var joint = s.AddJoint(d);
+            foreach (var contactBias in new[] { 0f, 1f })
+            {
+                s.SetContactSettings(new(contactBias, .3f)); s.SetPose(b, origin, 0);
+                s.Simulate(.01f, Vector2.Zero, substeps: 1, iterations: 64, maxCorrectionSpeed: 100_000);
+                Near(Read(s, b).Position, origin * (1 - ProjectSettings.GetWithOverride(ProjectSettings.Physics2DDefaultConstraintBias)),
+                    .0002f, "Contact policy does not change inherited joint bias");
+            }
+            s.SetPose(b, origin, 0);
             Step(s); Near(Read(s, b).Position, origin * 0.9f, 0.0002f, "Zero bias inherits the world correction fraction");
             s.SetJoint(joint, d with { Bias = 0.25f }); s.SetPose(b, origin, 0); Step(s);
             Near(Read(s, b).Position, origin * 0.75f, 0.0002f, "Per-joint bias controls position correction");

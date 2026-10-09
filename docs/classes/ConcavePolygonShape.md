@@ -60,3 +60,13 @@ Resource duplication copies endpoint storage independently. A CollisionShape bor
 Direct [shape queries](PhysicsDirectSpaceState.md) test only paired hollow edges, so a body wholly inside them yields no overlap; [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers interior and edge cases.
 
 Inherited [Shape collision methods](Shape.md#collide) now test posed resources and independently swept regions without a SceneTree. ShapeCollisionTests verifies this family under [ADR 0069](../decisions/physics.md#adr-0069), including caller/other boundary-point ordering, lifetime and the sixteen-pair cap.
+
+Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copied
+alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
+geometry revision, including in-place copying into a resource with existing borrowers.
+PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.
+
+<a id="getpropertydescriptors"></a>
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` combines
+inherited resource/policy descriptors with this shape's authored geometry for storage.
+The built-in resource file registry constructs this concrete shape on load.

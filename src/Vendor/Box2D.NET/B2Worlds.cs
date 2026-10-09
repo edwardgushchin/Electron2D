@@ -213,6 +213,7 @@ namespace Box2D.NET
             world.contactHertz = def.contactHertz;
             world.contactDampingRatio = def.contactDampingRatio;
             world.sleepAngularThreshold = 0.13962634f; world.timeToSleep = B2_TIME_TO_SLEEP;
+            world.contactBias = -1; world.contactAllowedPenetration = world.contactBiasDuration = 0;
 
             if (def.frictionCallback == null)
             {

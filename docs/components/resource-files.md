@@ -86,3 +86,9 @@ Script archives store editable source text and a stable compiled type ID resolve
 ## Particle resources
 
 The connected CPU particle scene schema registers CPUParticles, Curve, Gradient and CanvasItemMaterial. Scalar curves retain exact bounded point/tangent/mode and limit records in a versioned byte-array property; gradients store arrays and interpolation policies. The ordinary reference table preserves shared curve aliases, and material blend/sheet configuration is copied independently. Fresh-process checks load and execute the particle scene with no process-local factory or live particle cache. ShaderMaterial storage remains its separate schema dependency.
+
+All eight built-in Shape resource types have concrete registry factories and stored
+geometry descriptors, including convex/concave polygons, separation rays and world
+boundaries. Shape.CustomSolverBias is inherited storage. PhysicsContactPolicyTests
+checks same-process save/load alongside duplicate and in-place copy; this check alone
+does not establish fresh-process editor authoring acceptance.

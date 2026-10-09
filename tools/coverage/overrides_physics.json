@@ -1178,12 +1178,12 @@
     {
       "godot": "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "Typed concrete world operations cover joint bias, sleep and contact correction under ADRs 0087, 0089 and 0098. The dispatcher remains Partial for remaining selectors; public independent-GPU binding remains open."
     },
     {
       "godot": "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetConstraintDefaultBias(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; full independent GPU public-world selection remains open."
+      "reason": "Typed concrete world operations cover joint bias, sleep and contact correction under ADRs 0087, 0089 and 0098. The dispatcher remains Partial for remaining selectors; public independent-GPU binding remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/default_constraint_bias",
@@ -1204,6 +1204,21 @@
       "godot": "ProjectSettings::property:physics/2d/time_before_sleep",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DTimeBeforeSleep()",
       "reason": "ADR 0089: typed project default sampled at world creation by shared CPU and independent GPU sleep policy; PhysicsSleepPolicyTests verifies captured/live behavior."
+    },
+    {
+      "godot": "Shape2D::property:custom_solver_bias",
+      "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/default_contact_bias",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DDefaultContactBias()",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxAllowedPenetration()",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
     }
   ],
   "extras": [
@@ -2028,6 +2043,56 @@
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyTimeToSleep(Electron2D.RID,System.Single)",
       "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
       "adr": "ADRs 0004, 0087, 0089"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactDefaultBias(Electron2D.RID)",
+      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactDefaultBias(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxAllowedPenetration(Electron2D.RID)",
+      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactMaxAllowedPenetration(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.GetPropertyDescriptors()",
+      "reason": "Inherited solver policy and concrete geometry participate in resource storage and .e2dres round trips.",
+      "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.ConvexPolygonShape.GetPropertyDescriptors()",
+      "reason": "Inherited solver policy and concrete geometry participate in resource storage and .e2dres round trips.",
+      "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.ConcavePolygonShape.GetPropertyDescriptors()",
+      "reason": "Inherited solver policy and concrete geometry participate in resource storage and .e2dres round trips.",
+      "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.SeparationRayShape.GetPropertyDescriptors()",
+      "reason": "Inherited solver policy and concrete geometry participate in resource storage and .e2dres round trips.",
+      "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.WorldBoundaryShape.GetPropertyDescriptors()",
+      "reason": "Inherited solver policy and concrete geometry participate in resource storage and .e2dres round trips.",
+      "adr": "ADRs 0013, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Shared shape copying preserves inherited custom solver bias; concrete hooks publish geometry revisions.",
+      "adr": "ADRs 0013, 0098"
     }
   ],
   "statusGroups": [
@@ -2771,7 +2836,7 @@
         "class:Shape2D"
       ],
       "state": "Partial",
-      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; internal GPU contact response and warm history execute; complete public GPU-world ownership/integration remain open. Draw requires renderer RID drawing and CustomSolverBias requires verified per-shape contact-softness integration (ADRs 0063, 0069; ShapeCollisionTests)."
+      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; internal GPU contact response and warm history execute; complete public GPU-world ownership/integration remain open. CustomSolverBias now executes under ADR 0098 with shared world policy and storage. Draw still requires renderer RID drawing (ADRs 0063, 0069; ShapeCollisionTests, PhysicsContactPolicyTests)."
     },
     {
       "godot": [
@@ -2900,8 +2965,8 @@
       "godot": [
         "Shape2D::property:custom_solver_bias"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: per-shape contact correction bias in both CPU and independent GPU solvers, preserving parameter meaning with verified response (ADR 0054)."
+      "state": "Implemented",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
     },
     {
       "godot": [
@@ -3430,7 +3495,7 @@
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
       "state": "Partial",
-      "reason": "Typed constraint-bias and linear/angular sleep threshold/duration pairs execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089, PhysicsJointPolicyTests, PhysicsSleepPolicyTests). Contact recycling/separation/penetration/bias and solver iteration settings remain open; independent public GPU world binding remains open."
+      "reason": "Typed constraint bias, sleep thresholds/duration and contact bias/allowed penetration execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089/0098). Contact recycling/max separation and solver iteration settings remain open; public independent-GPU binding remains open."
     },
     {
       "godot": [
@@ -3501,6 +3566,34 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0089: numeric selector represented by typed SpaceGetBodyTimeToSleep/SpaceSetBodyTimeToSleep; actual sleep behavior executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/default_contact_bias"
+      ],
+      "state": "Implemented",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_DEFAULT_BIAS"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0098: numeric selector represented by typed SpaceGetContactDefaultBias/SpaceSetContactDefaultBias; actual contact correction executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/contact_max_allowed_penetration"
+      ],
+      "state": "Implemented",
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_MAX_ALLOWED_PENETRATION"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0098: numeric selector represented by typed SpaceGetContactMaxAllowedPenetration/SpaceSetContactMaxAllowedPenetration; actual contact correction executes."
     }
   ]
 }

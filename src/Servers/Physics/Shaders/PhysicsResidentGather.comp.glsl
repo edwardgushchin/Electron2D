@@ -9,7 +9,7 @@ layout(std430,set=0,binding=2) readonly buffer Impulses { ContactImpulse impulse
 layout(std430,set=1,binding=0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=1,binding=1) buffer Corrections { vec4 corrections[]; };
 layout(std430,set=1,binding=2) buffer Status { uvec2 status; };
-layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; };
+layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
 void main()

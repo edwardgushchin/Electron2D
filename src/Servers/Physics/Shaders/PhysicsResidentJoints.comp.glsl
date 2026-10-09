@@ -12,7 +12,7 @@ layout(std430,set=1,binding=1) buffer Constraints { Constraint constraints[]; };
 layout(std430,set=1,binding=2) buffer Impulses { ContactImpulse impulses[]; };
 layout(std430,set=1,binding=3) buffer Heads { uvec2 heads[]; };
 layout(std430,set=1,binding=4) buffer Status { uvec2 status; };
-layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; };
+layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 const float maximum=3.402823466e38;
 void fail(){atomicOr(status.x,1u);}
@@ -32,7 +32,7 @@ float savedImpulse(JointState state,uint row,float ratio) {return ratio*(row<4u?
 float impulseCap(ResidentJoint j) {return j.solverPolicy.z==maximum?maximum:min(maximum,j.solverPolicy.z*time.x);}
 vec2 limitedCorrection(vec2 error,ResidentJoint j)
 {
-    float factor=j.solverPolicy.x==0?time.z:j.solverPolicy.x;
+    float factor=j.solverPolicy.x==0?correctionPolicy.y:j.solverPolicy.x;
     vec2 speed=-factor*time.y*error;float size=length(speed),cap=min(time.w,j.solverPolicy.y);
     if(!finite4(vec4(speed,size,0))){fail();return vec2(0);}
     return size>cap?speed*(cap/size):speed;
@@ -118,7 +118,7 @@ void main()
     float ratio=old.epochs==epochs&&old.last.y>0?min(1,time.x/old.last.y):0;
     states[i].epochs=epochs;
     if(history.w==0u)states[i].budget=vec4(impulseCap(j),0,0,0);
-    float bias=j.solverPolicy.x==0?time.z:j.solverPolicy.x;
+    float bias=j.solverPolicy.x==0?correctionPolicy.y:j.solverPolicy.x;
     float maxBias=min(time.w,j.solverPolicy.y);
     if(j.ids.y==0u)
     {

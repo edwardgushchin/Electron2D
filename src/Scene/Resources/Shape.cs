@@ -5,6 +5,40 @@ namespace Electron2D;
 /// scene owner slot is borrowed from that server RID and cannot be disposed separately; data replacement retires that view.</remarks>
 public abstract partial class Shape : Resource
 {
+    private float _customSolverBias;
+    private static long _solverPolicyEpoch;
+    internal static long SolverPolicyEpoch => Volatile.Read(ref _solverPolicyEpoch);
+
+    /// <summary>Gets or sets this shape's contact correction fraction, or zero to inherit the world's default.</summary>
+    /// <value>A finite fraction from zero to one; zero by default.</value>
+    /// <remarks>One nonzero shape bias overrides the world; two nonzero biases are averaged.
+    /// The fraction is distributed over substeps within the nominal physics tick. It affects positional correction,
+    /// not restitution or query margins. Edits preserve geometry and are observed before the next query or step,
+    /// waking affected bodies. Equal writes are silent. This borrowed resource must remain live and unchanged during a step.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside [0,1].</exception>
+    /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
+    public float CustomSolverBias
+    {
+        get { ThrowIfDisposed(); return _customSolverBias; }
+        set
+        {
+            ThrowIfDisposed(); if (!PhysicsContactSettings.ValidBias(value)) throw new ArgumentOutOfRangeException(nameof(value));
+            if (_customSolverBias == value) return;
+            _customSolverBias = value; Interlocked.Increment(ref _solverPolicyEpoch); EmitChanged();
+        }
+    }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<Shape, float>(nameof(CustomSolverBias), s => s.CustomSolverBias, (s, v) => s.CustomSolverBias = v, _ => 0f, stored: true);
+    }
+    /// <inheritdoc />
+    protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
+        Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource) =>
+        ((Shape)target).CustomSolverBias = _customSolverBias;
+
     private ulong _revision;
     private static long _geometryEpoch;
     internal static long GeometryEpoch => Volatile.Read(ref _geometryEpoch);
@@ -126,7 +160,9 @@ public sealed class CircleShape : Shape
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         ((CircleShape)target)._radius = _radius;
+        ((Shape)target).EmitGeometryChanged();
     }
 }
 
@@ -222,8 +258,10 @@ public sealed class CapsuleShape : Shape
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         ((CapsuleShape)target)._radius = _radius;
         ((CapsuleShape)target)._height = _height;
+        ((Shape)target).EmitGeometryChanged();
     }
 }
 
@@ -298,8 +336,10 @@ public sealed class SegmentShape : Shape
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         ((SegmentShape)target)._a = _a;
         ((SegmentShape)target)._b = _b;
+        ((Shape)target).EmitGeometryChanged();
     }
 
     private static void ValidateEndpoint(Vector2 value, Vector2 other)
@@ -355,6 +395,8 @@ public sealed class RectangleShape : Shape
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         ((RectangleShape)target)._size = _size;
+        ((Shape)target).EmitGeometryChanged();
     }
 }

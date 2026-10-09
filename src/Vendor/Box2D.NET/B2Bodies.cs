@@ -655,7 +655,7 @@ namespace Box2D.NET
 
             if (body.inertia > 0.0f)
             {
-                bodySim.invInertia = 1.0f / body.inertia;
+                bodySim.invInertia = (body.flags & (uint)B2BodyFlags.b2_lockAngularZ) == 0 ? 1.0f / body.inertia : 0.0f;
             }
             else
             {
@@ -1482,8 +1482,9 @@ namespace Box2D.NET
             bodySim.center = center;
             bodySim.center0 = center;
 
-            bodySim.invMass = body.mass > 0.0f ? 1.0f / body.mass : 0.0f;
-            bodySim.invInertia = body.inertia > 0.0f ? 1.0f / body.inertia : 0.0f;
+            bodySim.invMass = body.type == B2BodyType.b2_dynamicBody && body.mass > 0.0f ? 1.0f / body.mass : 0.0f;
+            bodySim.invInertia = body.type == B2BodyType.b2_dynamicBody && body.inertia > 0.0f &&
+                (body.flags & (uint)B2BodyFlags.b2_lockAngularZ) == 0 ? 1.0f / body.inertia : 0.0f;
         }
 
         public static B2MassData b2Body_GetMassData(B2BodyId bodyId)
@@ -1878,6 +1879,10 @@ namespace Box2D.NET
                 B2BodySim bodySim = b2GetBodySim(world, body);
                 bodySim.flags &= ~(uint)B2BodyFlags.b2_allLocks;
                 bodySim.flags |= newFlags;
+                // Constraints and impulses must see the lock, not only the final angular-velocity clamp.
+                bodySim.invInertia = body.type == B2BodyType.b2_dynamicBody && body.inertia > 0 && !locks.angularZ ? 1 / body.inertia : 0;
+                b2WakeBody(world, body);
+                bodySim = b2GetBodySim(world, body);
 
                 B2BodyState state = b2GetBodyState(world, body);
 

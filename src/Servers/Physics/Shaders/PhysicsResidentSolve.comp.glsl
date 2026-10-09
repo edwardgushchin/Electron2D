@@ -20,7 +20,7 @@ layout(std430,set=1,binding=4) buffer HistoryRecords { History records[]; };
 layout(std430,set=1,binding=5) buffer HistoryTable { uint table[]; };
 layout(std430,set=1,binding=6) buffer Corrections { vec4 corrections[]; };
 layout(std430,set=1,binding=7) buffer Impulses { ContactImpulse impulses[]; };
-layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; };
+layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
 uint flags(vec2 material) {return (material.x<0?1u:0u)|(material.y<0?2u:0u);}
@@ -105,7 +105,10 @@ void main()
         vec2 material=mixSurfaceMaterial(abs(sa.material.xy),abs(sb.material.xy),flags(sa.material.xy),flags(sb.material.xy),80u);
         float vn=dot2(velocity(b,rb)-velocity(a,ra),n);
         float target=p.normal.z>0?-p.normal.z*time.y:0;
-        float correction=min(time.w,time.z*max(-p.normal.z-policy.x,0)*time.y);
+        float firstBias=uintBitsToFloat(sa.revision.y),secondBias=uintBitsToFloat(sb.revision.y);
+        float bias=firstBias==0?(secondBias==0?time.z:secondBias):secondBias==0?firstBias:0.5*(firstBias+secondBias);
+        float fraction=1-pow(1-bias,correctionPolicy.x);
+        float correction=min(time.w,fraction*max(-p.normal.z-policy.x,0)*time.y);
         if(p.normal.z<=contactThreshold&&vn< -policy.y)target=max(target,-material.y*vn);
         c.normal=vec4(n,an,bn);c.tangent=vec4(material.x,0,at,bt);
         c.parameters=vec4(kn>0?1/kn:0,kt>0?1/kt:0,target,correction);

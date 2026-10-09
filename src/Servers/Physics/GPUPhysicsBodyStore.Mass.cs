@@ -36,6 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void PrepareMasses()
     {
+        PrepareShapePolicies();
         if (_massEpoch != Shape.GeometryEpoch)
         {
             for (var i = 0; i < _shapeHighWater; i++)

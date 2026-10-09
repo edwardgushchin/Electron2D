@@ -65,13 +65,21 @@ public sealed class ConvexPolygonShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<ConvexPolygonShape, Vector2[]>(nameof(Points), s => s.Points, (s, v) => s.Points = v, _ => [], stored: true);
+    }
+
+    /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new ConvexPolygonShape();
 
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         var copy = (ConvexPolygonShape)target;
-        copy._points = (Vector2[])_points.Clone();
+        copy.Points = _points;
     }
 }

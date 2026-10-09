@@ -115,10 +115,13 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         definition.userData = new B2UserData(new PhysicsFixtureTag(rid, index, oneWay)
         {
             SceneOwner = _sceneOwner,
+            Source = new(shape),
             Compound = shape is ConvexPolygonShape polygon && polygon.GetGeometry().Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES
                 ? new(new(polygon), transform) : null
         });
         definition.enablePreSolveEvents = !definition.isSensor && (oneWay is not null || PhysicsServer.Service.HasBodyCollisionExceptions(rid));
+        var first = _shapes.Count;
         PhysicsShapeBackend.AppendToBody(shape, BodyID, transform.Origin, transform.Rotation, definition, _shapes);
+        for (var i = first; i < _shapes.Count; i++) b2GetShape(_world!, _shapes[i]).customSolverBias = shape.CustomSolverBias;
     }
 }

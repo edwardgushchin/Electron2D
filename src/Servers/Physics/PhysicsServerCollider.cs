@@ -47,6 +47,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void PrepareBackend()
     {
+        _backend.PrepareContactPolicy();
         if (_shapesDirty) RebuildShapes();
     }
 

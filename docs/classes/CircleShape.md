@@ -66,3 +66,8 @@ Returns the typed properties exposed to tooling before validation.
 Overrides append or replace descriptors; they must not yield null entries.
 
 Returns: The descriptor sequence. The base sequence exposes identity, lifetime, and translation state.
+
+Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copied
+alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
+geometry revision, including in-place copying into a resource with existing borrowers.
+PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.

@@ -329,7 +329,7 @@ authoring merges remain CPU work. `SplitIslandCount`, `SplitComponentCount` and
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
-208 and 192 bytes; solver uniforms occupy 64 bytes. GPU/transfer buffers retain
+208 and 192 bytes; solver uniforms occupy 80 bytes, including elapsed virtual-surface time. GPU/transfer buffers retain
 capacity. Colored groups execute in parallel without shared dynamic-body writes;
 overflow preserves serial joint/contact order. The earlier
 `EnableGPUIntegration` entry remains a numeric development check.

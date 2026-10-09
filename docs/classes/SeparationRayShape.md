@@ -68,3 +68,13 @@ Inherited [Shape collision methods](Shape.md#collide) now test posed resources a
 WorldBoundaryShape takes precedence over ordinary ray surface-entry policy: a
 nonzero ray inside the solid half-plane separates toward its free normal. Zero rays
 still produce no contact. Shared boundary/ray query matrices verify both orders.
+
+Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copied
+alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
+geometry revision, including in-place copying into a resource with existing borrowers.
+PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.
+
+<a id="getpropertydescriptors"></a>
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` combines
+inherited resource/policy descriptors with this shape's authored geometry for storage.
+The built-in resource file registry constructs this concrete shape on load.

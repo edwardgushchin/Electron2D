@@ -35,6 +35,7 @@ namespace Box2D.NET
         internal ulong solvedStep;
         internal B2Vec2 surfaceLinearA, surfaceLinearB;
         internal float surfaceAngularA, surfaceAngularB;
+        internal float solverBias = -1;
 
         // Positive version identifies generated GPU geometry; negative version identifies a completed GPU solve.
         // The indexed source survives graph copies and is checked against its owner world.
@@ -82,6 +83,7 @@ namespace Box2D.NET
             generatedManifoldVersion = other.generatedManifoldVersion;
             generatedManifoldIndex = other.generatedManifoldIndex;
 
+            solverBias = other.solverBias;
             friction = other.friction;
             restitution = other.restitution;
             rollingResistance = other.rollingResistance;

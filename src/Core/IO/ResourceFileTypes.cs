@@ -65,6 +65,10 @@ public static partial class ResourceFileTypes
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
         RegisterResource("SegmentShape", CreateSegmentFileResource);
         RegisterResource("RectangleShape", CreateRectangleFileResource);
+        RegisterResource("ConvexPolygonShape", CreateConvexPolygonFileResource);
+        RegisterResource("ConcavePolygonShape", CreateConcavePolygonFileResource);
+        RegisterResource("SeparationRayShape", CreateSeparationRayFileResource);
+        RegisterResource("WorldBoundaryShape", CreateWorldBoundaryFileResource);
         ResourceFileCodecs.Prepare();
         RegisterResourceArray<Font>();
     }
@@ -106,6 +110,10 @@ public static partial class ResourceFileTypes
     private static ImageTexture CreateImageTexture() => new();
     private static AtlasTexture CreateAtlasTexture() => new();
     private static CircleShape CreateCircleFileResource() => new();
+    private static ConvexPolygonShape CreateConvexPolygonFileResource() => new();
+    private static ConcavePolygonShape CreateConcavePolygonFileResource() => new();
+    private static SeparationRayShape CreateSeparationRayFileResource() => new();
+    private static WorldBoundaryShape CreateWorldBoundaryFileResource() => new();
     private static CapsuleShape CreateCapsuleFileResource() => new();
     private static SegmentShape CreateSegmentFileResource() => new();
     private static RectangleShape CreateRectangleFileResource() => new();

@@ -89,6 +89,7 @@ public abstract class PhysicsBody : CollisionObject
     internal void PrepareBackend()
     {
         if (Space is null) return;
+        Backend.PrepareContactPolicy();
         var transform = GlobalTransform;
         var geometryEpoch = Shape.GeometryEpoch;
         if (!_shapesDirty && geometryEpoch == _preparedGeometryEpoch && transform == _preparedTransform &&

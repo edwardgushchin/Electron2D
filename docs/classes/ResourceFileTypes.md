@@ -117,3 +117,8 @@ Built-in factories now include CPUParticles, scalar Curve, Gradient and CanvasIt
 NavigationAgent is a registered typed Node factory. Twenty-five source descriptors persist through PackedScene fresh-process reconstruction; agent RID, runtime map override, current query result and progression state are not archive fields.
 
 NavigationObstacle persists five source properties through its registered scene factory; Radius/Vertices/Velocity feed actual shared avoidance after reconstruction.
+
+The built-in shape registrations include ConvexPolygonShape, ConcavePolygonShape,
+SeparationRayShape and WorldBoundaryShape beside the four primitive types. Their
+stored geometry and inherited CustomSolverBias use ordinary descriptors and exact
+concrete factories; PhysicsContactPolicyTests exercises all eight .e2dres round trips.

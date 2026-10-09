@@ -56,11 +56,21 @@ public sealed class WorldBoundaryShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<WorldBoundaryShape, Vector2>(nameof(Normal), s => s.Normal, (s, v) => s.Normal = v, _ => Vector2.Up, stored: true);
+        yield return new PropertyDescriptor<WorldBoundaryShape, float>(nameof(Distance), s => s.Distance, (s, v) => s.Distance = v, _ => 0f, stored: true);
+    }
+
+    /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new WorldBoundaryShape();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         var copy = (WorldBoundaryShape)target; copy._normal = _normal; copy._distance = _distance;
+        ((Shape)target).EmitGeometryChanged();
     }
 }

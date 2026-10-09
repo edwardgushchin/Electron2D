@@ -13,6 +13,7 @@ internal sealed record PhysicsFixtureTag(RID ColliderRID, int ShapeIndex, OneWay
     }
     internal CompoundContour? Compound { get; init; }
     internal int CompoundPiece { get; init; }
+    internal WeakReference<Shape>? Source { get; init; }
     internal WeakReference<CollisionObject>? SceneOwner { get; init; }
     internal CollisionObject? SceneObject => SceneOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
 }

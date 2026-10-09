@@ -26,7 +26,7 @@ namespace Box2D.NET
 
         internal void Reset()
         {
-            dt = inv_dt = h = inv_h = 0;
+            dt = inv_dt = h = inv_h = solverElapsed = 0;
             subStepCount = 0;
             contactSoftness = staticSoftness = default;
             restitutionThreshold = maxLinearVelocity = 0;
@@ -64,6 +64,7 @@ namespace Box2D.NET
         // sub-step
         public float h;
         public float inv_h;
+        internal float solverElapsed;
 
         public int subStepCount;
 

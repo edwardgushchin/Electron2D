@@ -215,6 +215,16 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<float> Physics2DTimeBeforeSleep { get; } =
         new("physics/2d/time_before_sleep", 0.5f, PhysicsSleepSettings.ValidNonnegative);
 
+    /// <summary>Defines the world's default outer-tick contact correction fraction.</summary>
+    /// <value>physics/2d/solver/default_contact_bias; defaults to .8. New worlds sample feature overrides.</value>
+    public static ProjectSetting<float> Physics2DDefaultContactBias { get; } =
+        new("physics/2d/solver/default_contact_bias", .8f, PhysicsContactSettings.ValidBias);
+
+    /// <summary>Defines the world's allowed contact penetration before positional correction, in scene units.</summary>
+    /// <value>physics/2d/solver/contact_max_allowed_penetration; defaults to .3. New worlds sample feature overrides.</value>
+    public static ProjectSetting<float> Physics2DContactMaxAllowedPenetration { get; } =
+        new("physics/2d/solver/contact_max_allowed_penetration", .3f, PhysicsContactSettings.ValidPenetration);
+
     /// <summary>Defines the positional correction fraction inherited by joints whose bias is zero.</summary>
     /// <value>physics/2d/solver/default_constraint_bias; defaults to 0.2 and accepts finite values from zero to one. Sampled when a physics space is created.</value>
     public static ProjectSetting<float> Physics2DDefaultConstraintBias { get; } =

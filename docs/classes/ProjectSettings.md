@@ -1361,3 +1361,18 @@ operations to change them. Zero speed thresholds disable automatic sleep, while
 zero time permits it after a positive quiet interval. CPU and independent resident
 GPU creation share the same capture helper. PhysicsSleepPolicyTests verifies capture,
 new/existing world distinction and live behavior.
+
+## Contact correction defaults
+
+<a id="physics2ddefaultcontactbias"></a>
+`public static ProjectSetting<float> Physics2DDefaultContactBias { get; }` defines
+`physics/2d/solver/default_contact_bias`, default 0.8, finite in [0,1].
+
+<a id="physics2dcontactmaxallowedpenetration"></a>
+`public static ProjectSetting<float> Physics2DContactMaxAllowedPenetration { get; }`
+defines `physics/2d/solver/contact_max_allowed_penetration`, default 0.3 scene units.
+It accepts finite nonnegative distances within the backend range; nonzero values
+must survive conversion. Both are registered built-ins and support feature overrides.
+Each world captures current values at construction. Existing worlds use the typed
+[PhysicsServer](PhysicsServer.md#world-contact-correction) setters instead. Shape zero
+bias inherits the world; slack controls correction only, not contact creation.

@@ -153,3 +153,5 @@ World sleep policy now exposes separate linear/angular thresholds and duration,
 shared by scene and server bodies. Angular qualification no longer depends on body
 radius. Policy changes wake dynamics without replacing body/view identity; scene
 sleep transitions remain once-only. See [World sleep policy](physics-sleep.md).
+
+Rotation lock now masks CPU solver inverse inertia at mass updates and lock changes, with authored inertia restored on unlock. Normal/angular virtual surfaces contribute displacement to contact separation so relaxation preserves transferred physical momentum. [Contact correction](physics-contact-policy.md) covers the shared policy and regression checks.

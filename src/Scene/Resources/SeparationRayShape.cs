@@ -54,14 +54,24 @@ public sealed class SeparationRayShape : Shape
     }
 
     /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
+    {
+        foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<SeparationRayShape, float>(nameof(Length), s => s.Length, (s, v) => s.Length = v, _ => 20f, stored: true);
+        yield return new PropertyDescriptor<SeparationRayShape, bool>(nameof(SlideOnSlope), s => s.SlideOnSlope, (s, v) => s.SlideOnSlope = v, _ => false, stored: true);
+    }
+
+    /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new SeparationRayShape();
 
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode,
         Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
     {
+        base.CopyCustomStateTo(target, deep, subresourceMode, duplicateSubresource, forceDuplicateSubresource);
         var copy = (SeparationRayShape)target;
         copy._length = _length;
         copy._slideOnSlope = _slideOnSlope;
+        ((Shape)target).EmitGeometryChanged();
     }
 }

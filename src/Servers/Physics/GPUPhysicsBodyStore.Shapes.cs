@@ -26,7 +26,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Generation, Layer, Mask, Revision;
         internal int NextFree, PreviousOnBody, NextOnBody;
         internal bool Alive, Sensor, Dirty;
-        internal float Friction, Bounce;
+        internal float Friction, Bounce, SolverBias;
         internal OneWaySettings OneWay;
     }
     [StructLayout(LayoutKind.Sequential)]
@@ -50,7 +50,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Body, BodyGeneration, Geometry, GeometryGeneration;
         internal uint Generation, Layer, Mask, Flags;
         internal Vector2 Material;
-        internal uint Revision, Padding;
+        internal uint Revision;
+        internal float SolverBias;
         internal Float4 OneWay;
     }
     [StructLayout(LayoutKind.Sequential)]
@@ -106,7 +107,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         slot.Friction = friction; slot.Bounce = bounce;
         slot.OneWay = new(false, Vector2.Down, 1);
         slot.Body = body; slot.Pose = pose; slot.Layer = layer; slot.Mask = mask; slot.Sensor = sensor;
-        slot.Geometry = RetainGeometry(geometry);
+        slot.Geometry = RetainGeometry(geometry); slot.SolverBias = geometry.CustomSolverBias;
         slot.PreviousOnBody = -1; slot.NextOnBody = _slots[body.Index].FirstShape;
         if (slot.NextOnBody >= 0) _shapeSlots[slot.NextOnBody].PreviousOnBody = index;
         _slots[body.Index].FirstShape = index;
@@ -170,11 +171,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
             throw new ArgumentException("GPU shape placement requires a finite unit-scale pose.", nameof(pose));
     }
-    private void MarkShape(int index, bool massChanged = true)
+    private void MarkShape(int index, bool massChanged = true, bool revise = true)
     {
         Wake(_shapeSlots[index].Body.Index, true);
         if (massChanged) MarkMass(_shapeSlots[index].Body.Index);
-        _shapeSlots[index].Revision++;
+        if (revise) _shapeSlots[index].Revision++;
         if (!_shapeSlots[index].Dirty) { _dirtyShapes.Add(index); _shapeSlots[index].Dirty = true; }
         _shapeVersion++;
     }
@@ -229,6 +230,21 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             _freeVertices.RemoveAt(i); i = 0;
         }
         _freeVertices.Add((start, count));
+    }
+
+    private long _shapePolicyEpoch = -1;
+    private void PrepareShapePolicies()
+    {
+        if (_shapePolicyEpoch == Shape.SolverPolicyEpoch) return;
+        for (var i = 0; i < _shapeHighWater; i++)
+        {
+            ref var slot = ref _shapeSlots[i];
+            if (!slot.Alive || slot.Geometry?.Source is not { IsDisposed: false } source) continue;
+            var bias = source.CustomSolverBias;
+            if (slot.SolverBias == bias) continue;
+            slot.SolverBias = bias; MarkShape(i, massChanged: false, revise: false);
+        }
+        _shapePolicyEpoch = Shape.SolverPolicyEpoch;
     }
 
     private void PrepareGeometry()
@@ -309,7 +325,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     Flags = 1u | (slot.Sensor ? 2u : 0u) | (slot.OneWay.Enabled ? 4u : 0u),
                     OneWay = new(slot.OneWay.Direction.X, slot.OneWay.Direction.Y, slot.OneWay.Margin, 0),
                     Material = new(slot.Friction, slot.Bounce),
-                    Revision = slot.Revision
+                    Revision = slot.Revision,
+                    SolverBias = slot.SolverBias
                 };
             _shapeEdits[i] = edit;
         }

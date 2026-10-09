@@ -258,8 +258,9 @@ internal static partial class GPUPhysicsTests
         }
         for (var i = 0; i < c.subStepCount; i++)
         {
+            c.solverElapsed = i * c.h;
             B2Solvers.b2IntegrateVelocitiesTask(0, c.states.Length, c); Constraints(true, true); Constraints(false, true);
-            B2Solvers.b2IntegratePositionsTask(0, c.states.Length, c); Constraints(false, false);
+            B2Solvers.b2IntegratePositionsTask(0, c.states.Length, c); c.solverElapsed = (i + 1) * c.h; Constraints(false, false);
         }
         B2ContactSolvers.b2ApplyOverflowRestitution(c);
         for (var color = 0; color < B2Constants.B2_GRAPH_COLOR_COUNT - 1; color++)

@@ -651,3 +651,25 @@ ArgumentOutOfRangeException before mutation. Inactive worlds allow configuration
 post-solver callbacks can change future intervals, retaining committed changes if
 a later callback fails. Scene RIDs share exactly the same operations. See
 [World sleep policy](../components/physics-sleep.md) for tests and measurements.
+
+## World contact correction
+
+| Signature | Contract |
+| --- | --- |
+| `public static float SpaceGetContactDefaultBias(RID space)` | Current fallback correction fraction. |
+| `public static void SpaceSetContactDefaultBias(RID space, float value)` | Finite [0,1], default 0.8 from project settings. |
+| `public static float SpaceGetContactMaxAllowedPenetration(RID space)` | Current correction slack in scene units. |
+| `public static void SpaceSetContactMaxAllowedPenetration(RID space, float value)` | Finite nonnegative representable distance, project default 0.3. |
+
+New worlds sample feature overrides; existing worlds retain their policy. Changed
+settings wake dynamic bodies and reset quiet timers; equal writes do neither.
+Slack leaves shallow contacts reportable and does not change collision filtering,
+friction or bounce. Shape nonzero biases override the world as described in
+[Shape](Shape.md#customsolverbias). Correction is distributed across solver intervals.
+
+These typed operations require a live space RID, its owner thread and a non-solver
+phase, like the sleep settings above. Invalid RID, phase/thread and value errors use
+ArgumentException, InvalidOperationException and ArgumentOutOfRangeException respectively,
+before mutation. Inactive worlds remain configurable. Source:
+[ContactPolicy.API](../../src/Servers/Physics/PhysicsServer.ContactPolicy.API.cs).
+See [contact policy](../components/physics-contact-policy.md) for backend limits.

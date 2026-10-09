@@ -16,7 +16,7 @@ layout(std430, set = 0, binding = 0) readonly buffer Inputs { ContactInput input
 layout(std430, set = 0, binding = 1) readonly buffer Manifolds { Manifold manifolds[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Fallbacks { Manifold fallbacks[]; };
 layout(std430, set = 0, binding = 3) readonly buffer Matched { ContactHistory matched[]; };
-layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; vec4 preparation; };
+layout(std140, set = 2, binding = 0) uniform Step { vec4 step; vec4 control; vec4 solve; vec4 preparation; vec4 motion; };
 
 float cross2(vec2 a, vec2 b) { precise float r = a.x * b.y - a.y * b.x; return r; }
 float dot2(vec2 a, vec2 b) { precise float r = a.x * b.x + a.y * b.y; return r; }
@@ -96,7 +96,8 @@ void prepareContact(uint index)
         else if (c.mass.y < c.mass.x) ratio = max(0.5, c.mass.y / c.mass.x);
         hertz *= ratio; damping *= ratio;
     }
-    c.soft.xyz = makeSoft(hertz, damping);
+    c.soft.xyz = packet.surfaceA.w>=0 ? vec3(packet.surfaceA.w,1,0) : makeSoft(hertz, damping);
+    c.soft.w = packet.surfaceB.w;
     precise float k = c.mass.z + c.mass.w;
     c.rolling.y = k > 0 ? divideRefined(1.0, k) : 0;
     float warm = (uint(preparation.w) & 1u) != 0 ? 1 : 0;
@@ -158,12 +159,13 @@ void contactPoint(inout vec3 a, inout vec3 b, Contact c, vec4 anchors, vec4 para
     else
     {
         precise vec2 ds = (bb.delta.xy - ba.delta.xy) + (rotate(bb.delta.zw, rb) - rotate(ba.delta.zw, ra));
-        precise float separation = dot2(n, ds) + params.z;
+        precise vec2 surface = relativeVelocity(c.surfaceA.xyz,c.surfaceB.xyz,ra,rb);
+        precise float separation = dot2(n, ds + motion.x * surface) + params.z;
         precise float bias = 0; precise float massScale = 1; precise float impulseScale = 0;
         if (separation > 0) bias = separation * solve.y;
         else if (stage == 3)
         {
-            bias = max(c.soft.y * c.soft.x * separation, -solve.z);
+            bias = max(c.soft.y * c.soft.x * min(0,separation+c.soft.w), -solve.z);
             massScale = c.soft.y; impulseScale = c.soft.z;
         }
         impulse = params.x * (massScale * vn + bias) + impulseScale * impulses.x;

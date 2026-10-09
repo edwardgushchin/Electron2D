@@ -147,6 +147,7 @@ namespace Box2D.NET
             shape.bodyId = body.id;
             shape.type = shapeType;
             shape.density = def.density;
+            shape.customSolverBias = 0;
             shape.material = def.material;
             shape.filter = def.filter;
             shape.userData = def.userData;

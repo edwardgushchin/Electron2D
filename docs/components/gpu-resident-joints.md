@@ -106,7 +106,7 @@ joint's history and budget. Reused slots start with the new definition.
 
 | Value | Default | Executing meaning |
 | --- | --- | --- |
-| Bias | 0 | Zero uses Simulate/SolveConstraints correctionFactor. Otherwise the value is the fraction of anchor/limit error requested for correction in one scheduled substep. |
+| Bias | 0 | Zero uses captured project constraint bias (default 0.2), independently of contact policy; an explicitly supplied diagnostic correctionFactor overrides it. Otherwise the value is the fraction of anchor/limit error requested for correction in one scheduled substep. |
 | MaxBias | float.MaxValue | Maximum positional correction speed, also bounded by the shared maxCorrectionSpeed guard. Linear anchor/groove correction uses vector length in scene units/s; angular stops use rad/s. Zero suppresses positional recovery while retaining physical velocity constraints. |
 | MaxForce | float.MaxValue | Unlimited sentinel, or a per-second budget: linear kg·scene-unit/s² and a separate pure-angular kg·scene-unit²/s² channel use the same authored scalar. The budget for a scheduled substep is MaxForce times its duration. MotorMaxTorque remains the additional N·m motor-only cap. |
 | Softness | 0 | Pin linear-anchor compliance in inverse-kilogram units. Each effective inverse mass gains softness, and the iteration subtracts softness times accumulated impulse. Zero retains the rigid anchor. It does not create an angular spring or affect groove/spring roles. |

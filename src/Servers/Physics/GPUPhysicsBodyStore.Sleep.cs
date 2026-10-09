@@ -8,7 +8,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 {
     private PhysicsSleepSettings _sleepSettings = PhysicsSleepSettings.FromProject();
     private bool _wakeAllSleep;
-    private (int, float, float, float, float, float)? _sleepSolverPolicy;
+    private (int, float, float, float, float, float, float)? _sleepSolverPolicy;
     private long _sleepBodyVersion = -1, _sleepShapeVersion = -1, _sleepGeometryEpoch = -1;
     /// <summary>Last completed simulation count of awake dynamics and moving nondynamic surfaces; negative before first publication.</summary>
     internal int ActiveSimulationBodyCount { get; private set; } = -1;
@@ -61,7 +61,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     }
     private void RememberSleepSolver(int iterations, float margin, float penetration, float correction, float speed, float bounce)
     {
-        var policy = (iterations, margin, penetration, correction, speed, bounce);
+        var policy = (iterations, margin, penetration, correction, speed, bounce, _jointTickBias);
         if (_sleepSolverPolicy.HasValue && _sleepSolverPolicy.Value != policy) _wakeAllSleep = true;
         _sleepSolverPolicy = policy;
     }

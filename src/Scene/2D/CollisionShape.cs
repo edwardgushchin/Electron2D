@@ -170,18 +170,15 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     private void AttachShapeEvents(Shape? shape)
     {
         if (shape is null) return;
-        shape.Changed += OnShapeChanged;
         shape.Disposed += OnShapeDisposed;
     }
 
     private void DetachShapeEvents(Shape? shape)
     {
         if (shape is null) return;
-        shape.Changed -= OnShapeChanged;
         shape.Disposed -= OnShapeDisposed;
     }
 
-    private void OnShapeChanged(Resource _) => _owner?.MarkShapesDirty();
 
     private void OnShapeDisposed(ElectronObject _)
     {
