@@ -1274,6 +1274,31 @@
       "godot": "PhysicsPointQueryParameters2D::property:canvas_instance_id",
       "electron2d": "property:Electron2D.PhysicsPointQueryParameters.CanvasInstanceID()",
       "reason": "Exact unsigned 64-bit canvas association, including zero for the default canvas, matches scene/server metadata (ADR 0063, PhysicsCanvasTests)."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_attach_object_instance_id(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_object_instance_id(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetObjectInstanceID(Electron2D.RID)",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_attach_object_instance_id(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:area_get_object_instance_id(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetObjectInstanceID(Electron2D.RID)",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderObject`1(System.Int32)",
+      "reason": "Generic typed projection returns the sampled assigned object of any ElectronObject role; the existing nongeneric accessor preserves physical scene-collider convenience (ADR 0063)."
     }
   ],
   "extras": [
@@ -1443,7 +1468,7 @@
     },
     {
       "electron2d": "property:Electron2D.PhysicsRestInfo.Collider()",
-      "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
+      "reason": "Preserved physical scene-collider convenience alongside the complete sampled ColliderObject association; does not fabricate a node for raw server bodies.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
@@ -1478,7 +1503,7 @@
     },
     {
       "electron2d": "property:Electron2D.PhysicsShapeResult.Collider()",
-      "reason": "Typed projection of the Collider field in a direct-space result dictionary.",
+      "reason": "Preserved physical scene-collider convenience alongside the complete sampled ColliderObject association; does not fabricate a node for raw server bodies.",
       "adr": "ADRs 0001, 0004, 0063"
     },
     {
@@ -1618,7 +1643,7 @@
     },
     {
       "electron2d": "property:Electron2D.PhysicsPointResult.Collider()",
-      "reason": "Typed projection of the collider object in a point-result dictionary; null for server-only colliders.",
+      "reason": "Preserved physical scene-collider convenience alongside the complete sampled ColliderObject association; does not fabricate a node for raw server bodies.",
       "adr": "ADRs 0001, 0063"
     },
     {
@@ -1638,7 +1663,7 @@
     },
     {
       "electron2d": "property:Electron2D.PhysicsRayResult.Collider()",
-      "reason": "Typed projection of the collider object in a ray-result dictionary; null for server-only colliders.",
+      "reason": "Preserved physical scene-collider convenience alongside the complete sampled ColliderObject association; does not fabricate a node for raw server bodies.",
       "adr": "ADRs 0001, 0063"
     },
     {
@@ -2178,6 +2203,26 @@
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactMaxSeparation(Electron2D.RID,System.Single)",
       "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
       "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRayResult.ColliderObject()",
+      "reason": "Complete typed projection of the sampled collider object field, including raw server associations; existing Collider property retains physical scene convenience and ColliderID retains the sampled ID.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsPointResult.ColliderObject()",
+      "reason": "Complete typed projection of the sampled collider object field, including raw server associations; existing Collider property retains physical scene convenience and ColliderID retains the sampled ID.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsShapeResult.ColliderObject()",
+      "reason": "Complete typed projection of the sampled collider object field, including raw server associations; existing Collider property retains physical scene convenience and ColliderID retains the sampled ID.",
+      "adr": "ADRs 0001, 0004, 0063"
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsRestInfo.ColliderObject()",
+      "reason": "Complete typed projection of the sampled collider object field, including raw server associations; existing Collider property retains physical scene convenience and ColliderID retains the sampled ID.",
+      "adr": "ADRs 0001, 0004, 0063"
     }
   ],
   "statusGroups": [
@@ -2358,7 +2403,7 @@
         "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)"
       ],
       "state": "Partial",
-      "reason": "Scene CollisionObject identity and null server-only objects execute; virtual tile collider identity requires the typed tile-body integration first slice (ADRs 0063, 0070)."
+      "reason": "Physical scene-collider access and generic sampled object associations execute for scene/server bodies, including replacement, disposal and weak lifetime (PhysicsObjectBindingTests). Virtual tile collider identity still requires tile-body generation and lookup (ADRs 0063, 0070)."
     },
     {
       "godot": [
@@ -2722,7 +2767,7 @@
         "class:PhysicsDirectSpaceState2D"
       ],
       "state": "Partial",
-      "reason": "All six direct-space query methods and exact point canvas filtering execute for current geometry. Object-instance binding, tile result owners, public independent-GPU integration and extensions remain open (ADRs 0054/0063)."
+      "reason": "All six direct-space query methods and exact point canvas filtering execute for current geometry. Object association now executes through weak sampled identities; actual tile collision generation/lookup, public independent-GPU integration and extensions remain open (ADRs 0054/0063)."
     },
     {
       "godot": [
@@ -2736,7 +2781,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"
       ],
       "state": "Partial",
-      "reason": "Typed ordered/deduplicated point results, array/span caps, exact canvas identity, masks and exclusions execute for scene/server colliders and internally on independent GPU. Arbitrary object-instance attachment and tile ownership remain open on the result family (ADR 0063, PhysicsCanvasTests)."
+      "reason": "Typed ordered/deduplicated point results, array/span caps, exact canvas identity, masks and exclusions execute for scene/server colliders and internally on independent GPU. Actual tile collision generation/lookup and public independent-GPU binding remain open (ADR 0063, PhysicsCanvasTests)."
     },
     {
       "godot": [
@@ -3740,6 +3785,34 @@
       ],
       "state": "Implemented",
       "reason": "Scene/server body and Area canvas association is retained without fixture rebuild or wake; entry/exit/reparent projects CanvasLayer identity. Point queries use exact equality, including zero, with matching resident GPU behavior. Kind/lifetime/thread/solver guards and warmed allocations are checked by PhysicsCanvasTests (ADR 0063). Public GPU-world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_attach_object_instance_id(RID:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_get_object_instance_id(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:area_attach_object_instance_id(RID:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:area_get_object_instance_id(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "Typed borrowed object association captures InstanceID plus a weak target; null clears, disposed targets reject, rebinding preserves sampled query/contact identities. Scene/server lifecycle and callback behavior execute in PhysicsObjectBindingTests under ADR 0063; independent GPU public-world binding remains open."
     }
   ]
 }

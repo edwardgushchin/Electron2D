@@ -322,7 +322,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         body.DetachBackend();
         if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
         if (body is RigidBody removed) removed.ClearContactState();
-        foreach (var rigid in _contactBodies) rigid.ForgetContact(body, _contactEvents);
+        foreach (var rigid in _contactBodies) rigid.ForgetContact(body.PhysicsRID, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
         ForgetAreaMonitors(body.PhysicsRID);
         DispatchEvents();
@@ -392,6 +392,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         else if (!_serverColliders.Remove(collider)) return;
         if (collider.IsArea) _serverAreaCount--;
         if (!collider.IsArea) foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(collider.RID);
+        foreach (var rigid in _contactBodies) rigid.ForgetContact(collider.RID, _contactEvents);
         foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
         ForgetAreaMonitors(collider.RID);
         collider.DetachBackend();
@@ -638,7 +639,7 @@ internal sealed partial class PhysicsSpace : IDisposable
                 var remote = otherShapes[remoteIndex];
                 var remoteTag = b2Shape_GetUserData(remote).GetRef<PhysicsFixtureTag>();
                 if (remoteTag is not null && ShapePairOverlaps(local, remote))
-                    area.Observe(new(rid, other, isArea, remoteTag.ShapeIndex, localTag.ShapeIndex));
+                    area.Observe(new(rid, remoteTag.ObjectIdentity, isArea, remoteTag.ShapeIndex, localTag.ShapeIndex));
             }
         }
     }

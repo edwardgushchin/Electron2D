@@ -213,3 +213,6 @@ sleep event; native transitions still emit normally. Raw kinematic Transform wri
 queue the latest target after the initial pose, matching BodySetTransform; getter
 reads remain the current native pose. Numeric and solver-lock guards reject before
 changes. See [typed body state](PhysicsServer.md#body-state).
+
+
+GetContactColliderObject<T>(int contactIndex), where T : ElectronObject, returns the live assigned object sampled with that contact. The existing nongeneric method retains physical scene-collider convenience. The sampled instance ID survives target disposal and rebind. See [object associations](../components/physics-object-bindings.md).

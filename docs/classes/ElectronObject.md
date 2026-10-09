@@ -463,3 +463,6 @@ The class has no finalizer. Derived SDL resource types must put native handles i
 ## Verification
 
 [`tests/Electron2D.Tests/Program.cs`](../../tests/Electron2D.Tests/Program.cs) verifies identity, diagnostics, notification dispatch, pre-delete state access on the disposing thread, concurrent idempotent disposal, property-list and script-change event delivery, duplicate subscription/removal, typed event connections, typed property behavior, translation delegation, and invalid access after disposal.
+
+
+Internal BorrowIdentity lazily caches one weak reference per used object. Borrowers copy its immutable instance ID and weak reference without rooting the target; disposal makes resolution null immediately. [ObjectIdentity](ObjectIdentity.md) introduces no public registry or finalizer.

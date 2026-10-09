@@ -11,10 +11,11 @@ namespace Electron2D;
 /// <summary>A typed collider result from a direct shape-overlap query.</summary>
 public readonly struct PhysicsShapeResult
 {
-    internal PhysicsShapeResult(RID rid, CollisionObject? collider, int shapeIndex)
+    internal PhysicsShapeResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex)
     {
         ColliderRID = rid;
         Collider = collider;
+        Identity = identity;
         ShapeIndex = shapeIndex;
     }
 
@@ -26,9 +27,13 @@ public readonly struct PhysicsShapeResult
     /// <value>The live scene object when one exists.</value>
     public CollisionObject? Collider { get; }
 
-    /// <summary>Gets the scene object instance ID, or zero for a server-only collider.</summary>
-    /// <value>A managed instance ID or zero.</value>
-    public ulong ColliderID => Collider?.InstanceID ?? 0;
+    /// <summary>Gets the sampled object association ID, including server-bound objects.</summary>
+    /// <value>The sampled instance ID, or zero when unassigned.</value>
+    public ulong ColliderID => Identity.ID;
+    internal ObjectIdentity Identity { get; }
+    /// <summary>Gets the live object instance sampled with this hit, including server-bound objects.</summary>
+    /// <value>The weakly borrowed instance, or null after disposal/collection or when unassigned.</value>
+    public ElectronObject? ColliderObject => Identity.Target;
 
     /// <summary>Gets the stable direct shape-owner index.</summary>
     /// <value>An index unchanged by compound fixture rebuilds.</value>
@@ -104,7 +109,7 @@ public sealed partial class PhysicsDirectSpaceState
                 else if (!Overlaps(query, other, otherTransform) &&
                          !SweepsInto(query, other, otherTransform, motion, 1f)) continue;
                 hits.Add(new(candidate.Tag.ColliderRID,
-                    PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID),
+                    PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID), candidate.Tag.ObjectIdentity,
                     candidate.Tag.ShapeIndex));
                 break;
             }

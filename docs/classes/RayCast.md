@@ -10,7 +10,7 @@ Last updated: 2026-10-05
 
 ## Description
 
-A spatial ray from its local origin to `TargetPosition` that caches the nearest eligible collider. An enabled RayCast samples in its internal fixed physics lane and holds that result until the next eligible physics frame; `ForceRaycastUpdate()` samples immediately, even while disabled. Its endpoint follows the full global transform, including rotation and scale. A direct CollisionObject parent is excluded by default. The current scene and server share one [World](World.md) solver/query view. A server-only hit has a valid collider RID and null scene object.
+A spatial ray from its local origin to `TargetPosition` that caches the nearest eligible collider. An enabled RayCast samples in its internal fixed physics lane and holds that result until the next eligible physics frame; `ForceRaycastUpdate()` samples immediately, even while disabled. Its endpoint follows the full global transform, including rotation and scale. A direct CollisionObject parent is excluded by default. The current scene and server share one [World](World.md) solver/query view. A raw hit retains its collider RID and can report an explicitly assigned object instance.
 
 ## Example
 
@@ -41,7 +41,7 @@ The snippet assumes `player` is an attached collision body. The ray is also usab
 | `public bool GetCollisionMaskValue(int layerNumber)` / `SetCollisionMaskValue(int layerNumber, bool value)` | — | One-based layer bit from 1 through 32. |
 | `public void ForceRaycastUpdate()` | — | Sample now regardless of Enabled; requires an attached world. |
 | `public bool IsColliding()` | false | Latest automatic or forced collision flag. |
-| `public ElectronObject? GetCollider()` | null | Live scene object; null on miss, server-only hit or disposed object. |
+| `public ElectronObject? GetCollider()` | null | Live sampled object association; null on miss, unassigned or disposed/collected target. |
 | `public RID GetColliderRID()` | empty | Last hit RID; cleared by a miss, retained by disabling. |
 | `public int GetColliderShape()` | 0 | Last direct shape-owner index; zero before hit or after miss. |
 | `public Vector2 GetCollisionPoint()` / `GetCollisionNormal()` | zero | Last hit point/normal, retained after a miss or disable. |
@@ -87,8 +87,13 @@ Uses the current scene transform, target, masks and exception set immediately, e
 <a id="resultmethods"></a>
 ### Cached result methods
 
-`IsColliding()` reports the last sample or immediate disabled state. On a hit, collider RID, shape index, point and normal update together. On a miss, `IsColliding` becomes false and RID/shape reset to empty/zero, while point and normal retain their last hit values. `GetCollider()` resolves the retained RID to a currently live scene object and returns null if it has been disposed or only a server body/Area exists. Attached result reads require the scene owner thread. The typed return permits future non-CollisionObject scene owners, such as tile collision nodes, but those virtual-body mappings remain incomplete in [coverage](../coverage/classes/RayCast2D.md).
+`IsColliding()` reports the last sample or immediate disabled state. On a hit, collider RID, shape index, point and normal update together. On a miss, `IsColliding` becomes false and RID/shape reset to empty/zero, while point and normal retain their last hit values. `GetCollider()` resolves the sampled weak object association and returns null when unassigned, disposed or collected; later body rebinding does not change the cached target. Attached result reads require the scene owner thread. The typed return permits future non-CollisionObject scene owners, such as tile collision nodes, but those virtual-body mappings remain incomplete in [coverage](../coverage/classes/RayCast2D.md).
 
 ## Lifecycle and limits
 
 The node owns no backend shape or separate solver world. Internal physics processing follows Node pause and process-priority rules. Disabling or leaving a tree stops automatic queries; leaving a CollisionObject parent also removes its automatic RID exception so reparenting does not suppress the former parent. A detached node retains its last snapshot, but cannot force a query until reattached. [RayCastTests](../../tests/Electron2D.Tests/RayCastTests.cs) checks defaults, bit bounds, PackedScene state, first-frame and forced sampling, pause, exclusion changes and reparenting, Area/body filtering, inside hits, stale result fields, callback failure, server-only RIDs, owner-thread guards and 64 warmed active frames with zero managed allocation on Linux/.NET 8. Physics debug-gizmo drawing and virtual tile collision-object results remain separate dependencies. Native allocator, other platforms and owner visual acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+Assigned object identity is sampled with each query result, including raw server objects.
+Rebinding does not retarget earlier results; disposal/collection makes object resolution null
+without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).

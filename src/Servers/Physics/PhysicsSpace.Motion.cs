@@ -234,13 +234,13 @@ internal sealed partial class PhysicsSpace
                 travel, remainder, safe, unsafeFraction, false);
 
         var rid = contact.Candidate.Tag.ColliderRID;
-        var scene = PhysicsServer.Service.ResolveSceneObject(rid);
+        var identity = contact.Candidate.Tag.ObjectIdentity;
         var candidateBody = b2Shape_GetBody(contact.Candidate.ShapeID);
         var velocity = b2Body_GetWorldPointVelocity(candidateBody, contact.Point);
-        return new(ownerRID, rid, scene?.InstanceID ?? 0, contact.LocalShape,
+        return new(ownerRID, rid, identity.ID, contact.LocalShape,
             contact.Candidate.Tag.ShapeIndex, ToScene(contact.Point),
             new(contact.Normal.X, contact.Normal.Y), contact.Depth * UnitsPerMeter,
-            ToScene(velocity), travel, remainder, safe, unsafeFraction, true);
+            ToScene(velocity), travel, remainder, safe, unsafeFraction, true, identity);
     }
 
     private static B2Manifold MotionRayContact(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,
@@ -305,8 +305,8 @@ internal sealed partial class PhysicsSpace
             if (tag is null || tag.ColliderRID == ownerRID || Array.IndexOf(excludedBodies, tag.ColliderRID) >= 0 ||
                 PhysicsServer.Service.BodiesExcepted(ownerRID, tag.ColliderRID))
                 continue;
-            var scene = PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID);
-            if (scene is not null && Array.IndexOf(excludedObjects, scene.InstanceID) >= 0) continue;
+            var identity = tag.ObjectIdentity;
+            if (identity.ID != 0 && Array.IndexOf(excludedObjects, identity.ID) >= 0) continue;
             var filter = b2Shape_GetFilter(shape);
             var eligible = false;
             for (var ownIndex = 0; ownIndex < ownShapes.Count; ownIndex++)

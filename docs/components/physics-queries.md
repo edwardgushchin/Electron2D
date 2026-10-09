@@ -140,7 +140,7 @@ whole-step GPU advantage or window FPS. Evidence: `/tmp/e2d-canvas-cpu.log` and
 Run `ELECTRON2D_TEST_PHYSICS_CANVAS=1` or
 `ELECTRON2D_TEST_PHYSICS_CANVAS_GPU=1` with the Release test runner; the complete
 collider and GPU suites also include the respective checks. Public independent-GPU
-binding, object-instance attachment, tile owners, picking and networking remain
+binding, tile collision generation, picking and networking remain
 open. Native allocations, other devices/platforms and rendered acceptance were
 not measured by these headless tests.
 
@@ -148,3 +148,5 @@ The complete collider suite and complete GPU suite passed after integration:
 `ELECTRON2D_TEST_COLLIDER_BACKEND=1` and `ELECTRON2D_TEST_GPU_PHYSICS=1` with
 `tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll`.
 Logs: `/tmp/e2d-canvas-colliders.log`, `/tmp/e2d-canvas-full-gpu.log`.
+
+[Object associations](physics-object-bindings.md) now supply typed Body/Area bindings and sampled weak identities across queries, motion, contacts and scene/server monitoring.

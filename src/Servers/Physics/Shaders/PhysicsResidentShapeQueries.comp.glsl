@@ -7,7 +7,7 @@ layout(local_size_x=64) in;
 struct Node { vec4 bounds; int typeMask; int proxy; int hasCategory; int shape; };
 struct Mapping { uvec4 identity; uvec4 canvas; };
 struct Query { vec4 ray; uvec4 policy; uvec4 extra; vec4 rotationMargin; uvec4 geometry; };
-struct Hit { uvec4 identity; uvec4 owner; vec4 points; vec4 contact; vec4 motion; };
+struct Hit { uvec4 identity; uvec4 owner; vec4 points; vec4 contact; vec4 motion; uvec4 objectID; };
 layout(std430,set=0,binding=0) readonly buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=0,binding=1) readonly buffer Vertices { vec2 vertices[]; };
 layout(std430,set=0,binding=2) readonly buffer Geometries { Geometry geometries[]; };
@@ -61,7 +61,7 @@ void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
     vec2 velocity=(activeShape.policy.w&2u)!=0u?vec2(0):speed.xy+speed.z*vec2(-relative.y,relative.x);
     float safe=mode==3u?max(0,ceil(activeFraction*256)-1)/256:0,unsafe=mode==3u?min(1,safe+1.0/256):0;
     if(!finite2(pointA)||!finite2(pointB)||!finite2(normal)||!finite2(velocity)||!finite2(vec2(depth,activeFraction))){fail();return;}
-    hits[offset+position]=Hit(activeKey,uvec4(activeShape.policy.x,activeShape.owner.xy,features.z),vec4(pointA,pointB),vec4(-normal,depth,activeFraction),vec4(velocity,safe,unsafe));
+    hits[offset+position]=Hit(activeKey,uvec4(activeShape.policy.x,activeShape.owner.xy,features.z),vec4(pointA,pointB),vec4(-normal,depth,activeFraction),vec4(velocity,safe,unsafe),uvec4(mappings[activeKey.w].canvas.zw,0,0));
     used=(mode==2u||mode==3u)?1u:min(used+1u,limit);
 }
 #include "PhysicsResidentManifold.inc.glsl"

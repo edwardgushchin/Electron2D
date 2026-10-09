@@ -17,6 +17,22 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal IReadOnlyList<B2ShapeId> Shapes => _shapes;
     internal float CollisionPriority { get; private set; } = 1;
     internal ulong CanvasInstanceID { get; set; }
+    internal ObjectIdentity ObjectIdentity { get; private set; } = sceneOwner?.BorrowIdentity() ?? default;
+
+    internal void AttachObject(ElectronObject? value)
+    {
+        Space?.EnsureQueryAccess();
+        if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
+        if (value is Node node) { node.Tree?.EnsureOwnerThread(); node.EnsurePhysicsObjectAccess(); }
+        var identity = value?.BorrowIdentity() ?? default;
+        if (identity.ID == ObjectIdentity.ID) return;
+        if (Space is not null) ExternalObjectNode()?.RemovePhysicsObjectBinding(this);
+        ObjectIdentity = identity;
+        if (Space is not null) ExternalObjectNode()?.AddPhysicsObjectBinding(this);
+    }
+
+    private Node? ExternalObjectNode() => ObjectIdentity.RawTarget is Node node &&
+        !(_sceneOwner is { } weak && weak.TryGetTarget(out var scene) && ReferenceEquals(scene, node)) ? node : null;
 
     internal static void ValidateCollisionPriority(float value)
     {
@@ -30,6 +46,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
     {
         if (Space is not null) throw new InvalidOperationException("A collider already belongs to a physics world.");
+        if (ObjectIdentity.Target is Node node) { node.Tree?.EnsureOwnerThread(); node.EnsurePhysicsObjectAccess(); }
         var version = checked(AttachmentVersion + 1);
         var definition = b2DefaultBodyDef();
         definition.type = BodyType(configuration.Mode);
@@ -47,6 +64,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         _body = b2GetBodyFullId(_world, BodyID);
         _savedPose = b2GetBodyTransformQuick(_world, _body);
         Space = space; AttachmentVersion = version;
+        ExternalObjectNode()?.AddPhysicsObjectBinding(this);
     }
 
     // Motion-role matching intentionally ignores rotation locks; callers retain
@@ -65,6 +83,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal void Detach()
     {
         if (Space is null) return;
+        ExternalObjectNode()?.RemovePhysicsObjectBinding(this);
         if (!Space.HasBackendFailure) b2DestroyBody(BodyID);
         _shapes.Clear();
         _world = null; _body = null; _savedPose = default;
@@ -125,6 +144,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     {
         definition.userData = new B2UserData(new PhysicsFixtureTag(rid, index, oneWay)
         {
+            Owner = this,
             SceneOwner = _sceneOwner,
             Source = new(shape),
             Compound = shape is ConvexPolygonShape polygon && polygon.GetGeometry().Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES

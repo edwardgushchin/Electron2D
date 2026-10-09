@@ -44,7 +44,7 @@ if (cast.IsColliding()) Console.WriteLine(cast.GetCollisionNormal(0));
 | `public bool GetCollisionMaskValue(int layerNumber)` / `SetCollisionMaskValue(int layerNumber, bool value)` | — | Read/write a one-based layer bit from 1 through 32. |
 | `public void ForceShapecastUpdate()` | — | Sample now regardless of `Enabled`; requires a live attached world and Shape. |
 | `public bool IsColliding()` / `GetCollisionCount()` | false / 0 | Cached collision flag and number of cached contacts. |
-| `public ElectronObject? GetCollider(int index)` | — | Live scene collider, or null for server-only/freed colliders. |
+| `public ElectronObject? GetCollider(int index)` | — | Live sampled object association, or null when unassigned/disposed/collected. |
 | `public RID GetColliderRID(int index)` / `GetColliderShape(int index)` | — | Cached RID and stable direct shape-owner index. |
 | `public Vector2 GetCollisionPoint(int index)` / `GetCollisionNormal(int index)` | — | Cached global collider contact point and outward normal. |
 | `public float GetClosestCollisionSafeFraction()` / `GetClosestCollisionUnsafeFraction()` | 0 / 0 | Last motion bracket; one/one on a moving miss. |
@@ -64,8 +64,13 @@ if (cast.IsColliding()) Console.WriteLine(cast.GetCollisionNormal(0));
 
 `ForceShapecastUpdate()` queries the current shared physics space immediately. It calls the direct motion cast once to find the earliest new collision. When that fraction is below one, it moves the query shape just inside the first impact so backend contact tolerance yields stable points. It then queries rest contacts at that fixed pose, excluding each returned collider RID, up to `MaxResults`. With a zero target it samples only current overlap and leaves fractions at zero; with a moving miss it stores fractions `(1, 1)`. A detached call, missing/disposed Shape, wrong owner thread, world-step call or invalid active transform rejects before replacing the prior cached results. The query reuses its parameter, exclusion and result storage after warmup.
 
-`GetCollisionCount()` and `CollisionResult` expose the held contacts. The array is a copy; each value carries collider RID, shape-owner index, global point and normal, and point velocity. The array getter resolves scene collider references at read time, so a disposed or server-only object appears as null/zero without changing the cached RID. Indexed getters throw `ArgumentOutOfRangeException` for a missing index. `GetCollider()` also resolves the cached RID against current scene ownership. Attached reads require the scene owner thread. `GetClosestCollisionSafeFraction()` and `GetClosestCollisionUnsafeFraction()` return the last bracket without sampling.
+`GetCollisionCount()` and `CollisionResult` expose the held contacts. The array is a copy; each value carries collider RID, shape-owner index, global point and normal, and point velocity. The array getter resolves live physical scene references separately from sampled object identity. A disposed assigned object resolves to null while its cached instance ID and RID remain. Indexed getters throw `ArgumentOutOfRangeException` for a missing index. `GetCollider()` resolves the weak object association captured by the sample, so later rebinding does not retarget it. Attached reads require the scene owner thread. `GetClosestCollisionSafeFraction()` and `GetClosestCollisionUnsafeFraction()` return the last bracket without sampling.
 
 ## Verification and limits
 
 [ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) checks defaults, invalid writes, PackedScene, first-frame and automatic samples, pause, fixture failure/recovery, multiple colliders and caps, parent/RID exceptions, Area/body/layer filters, zero motion, rotation, server-only RID lifetime, disabled force updates, owner-thread errors and 64 warmed active frames with zero managed allocation on Linux/.NET 8. Physics debug-gizmo drawing and virtual tile collision-object projections remain [coverage gaps](../coverage/classes/ShapeCast2D.md). Native allocator, other platforms and owner visual acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+Assigned object identity is sampled with each query result, including raw server objects.
+Rebinding does not retarget earlier results; disposal/collection makes object resolution null
+without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).

@@ -18,7 +18,7 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     private int _callbackDepth;
     internal readonly record struct Contact(RID Collider, ulong ColliderID, int LocalShape, int ColliderShape,
         Vector2 LocalPoint, Vector2 ColliderPoint, Vector2 Normal, Vector2 LocalVelocity, Vector2 ColliderVelocity, Vector2 Impulse,
-        float Depth, WeakReference<CollisionObject>? ColliderOwner)
+        float Depth, WeakReference<CollisionObject>? ColliderOwner, ObjectIdentity Identity = default)
     {
         internal CollisionObject? SceneCollider => ColliderOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
     }
@@ -217,6 +217,12 @@ public sealed class PhysicsDirectBodyState : ElectronObject
     /// <returns>Gets a live scene collider, or null for a server-only or released object.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is outside the retained snapshot.</exception>
     public CollisionObject? GetContactColliderObject(int contactIndex) { return PhysicsServer.Service.ResolveSceneObject(At(contactIndex).Collider); }
+
+    /// <summary>Returns the sampled, weakly borrowed object association of a retained contact.</summary>
+    /// <typeparam name="T">The desired engine-object type.</typeparam>
+    /// <param name="contactIndex">Index in the completed contact snapshot.</param>
+    /// <returns>The live assigned object of that type, or null if absent, incompatible, disposed or collected.</returns>
+    public T? GetContactColliderObject<T>(int contactIndex) where T : ElectronObject => At(contactIndex).Identity.Target as T;
 
     /// <summary>Sets the persistent global force, replacing the previous value.</summary>
     /// <param name="force">Finite force in scene units times kilograms per squared second.</param>

@@ -1682,6 +1682,7 @@ public partial class Node : ElectronObject
     /// <exception cref="InvalidOperationException">This node is in lifecycle or notification delivery, its parent is exiting or propagating a notification, it is an active tree root, or disposal is attempted off the owner thread.</exception>
     protected override void ValidateDisposal()
     {
+        EnsurePhysicsObjectAccess();
         if (_notificationPropagationDepth != 0 || (Parent?._notificationPropagationDepth ?? 0) != 0)
             throw new InvalidOperationException("A node cannot be disposed during notification propagation through its parent.");
 
@@ -1773,6 +1774,7 @@ public partial class Node : ElectronObject
             Renamed = null;
             TreeEntered = null;
             TreeExiting = null;
+            _physicsObjectBindings?.Clear(); _physicsObjectBindings = null;
             TreeExited = null;
             Ready = null;
             ReplacingBy = null;
@@ -1994,6 +1996,7 @@ public partial class Node : ElectronObject
 
     internal void EnterTree(SceneTree tree)
     {
+        EnsurePhysicsObjectAccess();
         EnsureSceneFactoryComplete();
         EnsureSceneActivationAvailable();
 
@@ -2049,6 +2052,9 @@ public partial class Node : ElectronObject
         {
             CollectException(ref errors, error);
         }
+
+        try { NotifyPhysicsObjectBindings(entering: true); }
+        catch (Exception error) { CollectException(ref errors, error); }
 
         var parent = Parent;
 
@@ -2193,6 +2199,7 @@ public partial class Node : ElectronObject
 
     internal void ExitTree(SceneTree tree)
     {
+        EnsurePhysicsObjectAccess();
         if (_isEnteringTree)
             throw new InvalidOperationException($"Node '{Name}' cannot exit a SceneTree while it is still entering.");
 
@@ -2226,6 +2233,9 @@ public partial class Node : ElectronObject
             }
 
             try { OnTreeMembershipChanged(entering: false); }
+            catch (Exception error) { CollectException(ref errors, error); }
+
+            try { NotifyPhysicsObjectBindings(entering: false); }
             catch (Exception error) { CollectException(ref errors, error); }
 
             try

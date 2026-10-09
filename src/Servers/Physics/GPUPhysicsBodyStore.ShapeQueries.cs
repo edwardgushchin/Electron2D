@@ -40,6 +40,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal int LogicalShape;
         internal uint Shape, ShapeGeneration, Body, BodyGeneration, Piece;
         internal Float4 Points, Contact, Motion;
+        internal ulong ObjectID, Padding;
         internal readonly Vector2 QueryPoint => new(Points.X, Points.Y);
         internal readonly Vector2 ColliderPoint => new(Points.Z, Points.W);
         internal readonly Vector2 Normal => new(Contact.X, Contact.Y);

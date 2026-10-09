@@ -110,3 +110,5 @@ suite and the 37-suite CPU collider group passed on this host; logs are
 `/tmp/electron2d-world-query-gpu.log` and `/tmp/electron2d-world-query-cpu.log`.
 The full run measured query p50/p95/p99 0.0680/0.0747/0.0913 ms with the same
 zero managed allocation and transfer counts.
+
+Ray/point results now preserve the sampled 64-bit object ID in existing record padding, without changing the 64-byte stride. See [object associations](physics-object-bindings.md).

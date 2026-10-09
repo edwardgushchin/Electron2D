@@ -127,3 +127,6 @@ up to 32 deepest accepted contact planes and applies normalized weighted project
 over four attempts; compound convex fixtures contribute their full contour once.
 The fixed stack buffer avoids managed allocation. [Collision priority](../components/physics-contact-policy.md#collision-priority)
 retains one-way/exclusion rules, query identity and motion/reporting semantics.
+
+
+ObjectTreeChanged publishes scene monitor visibility changes for external Node bindings independently of physical body lifetime. Raw Area callbacks retain physical pair semantics. See [object associations](../components/physics-object-bindings.md).

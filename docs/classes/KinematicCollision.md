@@ -43,3 +43,8 @@ if (hit is not null) Console.WriteLine(hit.GetNormal());
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks scene/server identities, direct shape-owner lookup, contact angle/normal/point, safe travel and remainder, test-only movement and recovery. Virtual tile collision owners remain [Partial](../coverage/classes/KinematicCollision2D.md); native allocation, other platforms and owner acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+
+Assigned object identity is sampled with each query result, including raw server objects.
+Rebinding does not retarget earlier results; disposal/collection makes object resolution null
+without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).

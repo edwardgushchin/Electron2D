@@ -31,12 +31,12 @@ public sealed class KinematicCollision : ElectronObject
             .GetShapeNode(_data.LocalShape);
     }
 
-    /// <summary>Returns the live scene collider, if any.</summary>
-    /// <returns>A scene object or null for a freed or server-only body.</returns>
-    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer.Service.ResolveSceneObject(_data.ColliderRID); }
+    /// <summary>Returns the live object association captured with this collision.</summary>
+    /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
+    public ElectronObject? GetCollider() { ThrowIfDisposed(); return _data.ColliderIdentity.Target; }
 
     /// <summary>Returns the sampled collider instance ID.</summary>
-    /// <returns>Zero for a server-only body.</returns>
+    /// <returns>Zero when no object was associated at sampling time.</returns>
     public ulong GetColliderID() { ThrowIfDisposed(); return _data.ColliderID; }
 
     /// <summary>Returns the sampled collider RID.</summary>

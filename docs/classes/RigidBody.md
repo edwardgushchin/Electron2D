@@ -245,3 +245,6 @@ freeze, detachment and packing. Undefined values reject before mutation. CPU
 trajectory checks include solved motor/contact motion and preserve remaining time
 and complete frame impulses. Ray mode can miss off-ray/rotational features; the
 independent GPU public binding and missing shape-family behavior remain open.
+
+
+Contact monitoring uses sampled bound object identity, including Entity owners of raw bodies. Existing Node signals and Entity arrays retain their types. Several physical RIDs identifying one instance contribute one object entry/exit; node departure/reentry is observed immediately. See [object associations](../components/physics-object-bindings.md).

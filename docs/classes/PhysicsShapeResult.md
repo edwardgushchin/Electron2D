@@ -23,13 +23,18 @@ foreach (var hit in direct.IntersectShape(query))
 | --- | --- |
 | `public RID ColliderRID { get; }` | Stable scene/server collider identity at query time. |
 | `public CollisionObject? Collider { get; }` | Scene collider, or null for a server-only collider. |
-| `public ulong ColliderID { get; }` | Scene instance ID, or zero for a server-only collider. |
+| `public ulong ColliderID { get; }` | Sampled assigned instance ID, or zero when unassigned. |
 | `public int ShapeIndex { get; }` | Direct collider shape-owner index, stable across fixture rebuilds. |
 
 ## Property descriptions
 
-`ColliderRID` and `ShapeIndex` form the result sort and deduplication key. `Collider` is a borrowed scene reference and may later be disposed. `ColliderID` is obtained from that reference; server-only hits retain their RID and index while exposing null and zero for the scene fields.
+`ColliderRID` and `ShapeIndex` form the result sort and deduplication key. `Collider` is a borrowed scene reference and may later be disposed. `ColliderID` is sampled from the object association independently of the physical scene reference; raw colliders can report an assigned object through ColliderObject.
 
 ## Verification
 
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks scene/server identities, compound deduplication, sorting/filtering and direct query caps. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+ColliderObject returns the live weakly borrowed instance assigned at sampling time; ColliderID
+retains its sampled ID even after disposal or rebinding. Collider remains physical scene-collider
+convenience. See [object associations](../components/physics-object-bindings.md).

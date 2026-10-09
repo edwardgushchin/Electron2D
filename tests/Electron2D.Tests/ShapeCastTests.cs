@@ -145,8 +145,8 @@ internal static class ShapeCastTests
         Reject<InvalidOperationException>(() => cast.ForceShapecastUpdate());
         floor.Dispose();
         Check(cast.GetCollider(0) is null && cast.CollisionResult[0].Collider is null &&
-              cast.CollisionResult[0].ColliderID == 0,
-            "Cached typed results resolve a disposed scene collider as null while retaining its RID.");
+              cast.CollisionResult[0].ColliderID == floor.InstanceID && cast.CollisionResult[0].ColliderObject is null,
+            "Cached typed results resolve a disposed collider as null while retaining its sampled RID and instance ID.");
         cast.Dispose();
     }
 

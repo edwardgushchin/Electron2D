@@ -6,7 +6,7 @@ layout(local_size_x=64) in;
 struct Node { vec4 bounds; int typeMask; int proxy; int hasCategory; int shape; };
 struct Mapping { uvec4 identity; uvec4 canvas; };
 struct Query { vec4 ray; uvec4 policy; uvec4 extra; };
-struct Hit { uvec4 identity; uvec4 owner; vec4 pointNormal; vec4 fraction; };
+struct Hit { uvec4 identity; uvec4 owner; vec4 pointNormal; uvec4 details; };
 layout(std430,set=0,binding=0) readonly buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=0,binding=1) readonly buffer Vertices { vec2 vertices[]; };
 layout(std430,set=0,binding=2) readonly buffer Geometries { Geometry geometries[]; };
@@ -130,7 +130,7 @@ void main()
                     {
                         uvec4 key=uvec4(mapping.identity.xyz,index);uint position=used;
                         if(ray)
-                        {position=0u;if(used!=0u&&(fraction>hits[q.policy.w].fraction.x||(fraction==hits[q.policy.w].fraction.x&&!lessKey(key,hits[q.policy.w].identity))))found=false;}
+                        {position=0u;if(used!=0u&&(fraction>uintBitsToFloat(hits[q.policy.w].details.x)||(fraction==uintBitsToFloat(hits[q.policy.w].details.x)&&!lessKey(key,hits[q.policy.w].identity))))found=false;}
                         else
                         {
                             position=0u;while(position<used&&lessKey(hits[q.policy.w+position].identity,key))position++;
@@ -142,7 +142,7 @@ void main()
                             if(!ray)for(uint j=min(used,q.policy.z-1u);j>position;j--)hits[q.policy.w+j]=hits[q.policy.w+j-1u];
                             vec2 point=q.ray.xy+(ray?fraction*q.ray.zw:vec2(0));
                             if(!finite2(point)||!finite2(normal)||!finite2(vec2(fraction))){fail();return;}
-                            hits[q.policy.w+position]=Hit(key,uvec4(s.policy.x,s.owner.xy,0),vec4(point,normal),vec4(fraction,0,0,0));
+                            hits[q.policy.w+position]=Hit(key,uvec4(s.policy.x,s.owner.xy,0),vec4(point,normal),uvec4(floatBitsToUint(fraction),0,mapping.canvas.zw));
                             used=ray?1u:min(used+1u,q.policy.z);
                         }
                     }

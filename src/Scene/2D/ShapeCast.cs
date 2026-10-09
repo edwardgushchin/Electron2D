@@ -222,14 +222,14 @@ public sealed class ShapeCast : Entity
     /// <returns>False before a hit, after a miss, or immediately after disabling.</returns>
     public bool IsColliding() { EnsureReadable(); return _collided; }
 
-    /// <summary>Returns the currently live scene collider at a cached result index.</summary>
+    /// <summary>Returns the live object association captured at a cached result index.</summary>
     /// <param name="index">Zero-based cached contact index.</param>
-    /// <returns>A scene object, or null for a server-only or disposed collider.</returns>
+    /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
     /// <exception cref="ArgumentOutOfRangeException">The index is not present in the last snapshot.</exception>
     public ElectronObject? GetCollider(int index)
     {
         var result = Result(index);
-        return PhysicsServer.Service.ResolveSceneObject(result.ColliderRID);
+        return result.ColliderObject;
     }
 
     /// <summary>Returns a cached collider RID.</summary>
@@ -268,7 +268,7 @@ public sealed class ShapeCast : Entity
             {
                 var hit = results[index];
                 results[index] = new PhysicsRestInfo(hit.ColliderRID,
-                    PhysicsServer.Service.ResolveSceneObject(hit.ColliderRID), hit.ShapeIndex,
+                    PhysicsServer.Service.ResolveSceneObject(hit.ColliderRID), hit.Identity, hit.ShapeIndex,
                     hit.Point, hit.Normal, hit.LinearVelocity);
             }
             return results;

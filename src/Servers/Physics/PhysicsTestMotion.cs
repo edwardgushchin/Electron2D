@@ -3,7 +3,7 @@ namespace Electron2D;
 internal readonly record struct MotionResultData(
     RID OwnerRID, RID ColliderRID, ulong ColliderID, int LocalShape, int ColliderShape,
     Vector2 Point, Vector2 Normal, float Depth, Vector2 ColliderVelocity,
-    Vector2 Travel, Vector2 Remainder, float SafeFraction, float UnsafeFraction, bool Collided);
+    Vector2 Travel, Vector2 Remainder, float SafeFraction, float UnsafeFraction, bool Collided, ObjectIdentity ColliderIdentity = default);
 
 /// <summary>Configures a body motion test in a registered two-dimensional physics space.</summary>
 public sealed class PhysicsTestMotionParameters : ElectronObject
@@ -87,8 +87,8 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
         set { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(value); _excludeBodies = (RID[])value.Clone(); }
     }
 
-    /// <summary>Gets or sets copied scene object instance-ID exclusions.</summary>
-    /// <value>Empty by default. Server-only bodies have no instance ID.</value>
+    /// <summary>Gets or sets copied object association instance-ID exclusions.</summary>
+    /// <value>Empty by default. Unassigned bodies have no object instance ID.</value>
     public ulong[] ExcludeObjects
     {
         get { ThrowIfDisposed(); return (ulong[])_excludeObjects.Clone(); }
@@ -106,12 +106,12 @@ public sealed class PhysicsTestMotionResult : ElectronObject
 
     internal void Set(in MotionResultData data) { ThrowIfDisposed(); _data = data; }
 
-    /// <summary>Returns a live scene collider, or null for a server-only or freed body.</summary>
-    /// <returns>A scene object or null.</returns>
-    public ElectronObject? GetCollider() { ThrowIfDisposed(); return PhysicsServer.Service.ResolveSceneObject(_data.ColliderRID); }
+    /// <summary>Returns the live object association captured by the motion test.</summary>
+    /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
+    public ElectronObject? GetCollider() { ThrowIfDisposed(); return _data.ColliderIdentity.Target; }
 
-    /// <summary>Returns the sampled collider instance ID, or zero for server-only.</summary>
-    /// <returns>The scene instance ID or zero.</returns>
+    /// <summary>Returns the sampled object association ID, including server-bound instances.</summary>
+    /// <returns>The sampled object instance ID or zero.</returns>
     public ulong GetColliderID() { ThrowIfDisposed(); return _data.ColliderID; }
 
     /// <summary>Returns the sampled collider RID.</summary>

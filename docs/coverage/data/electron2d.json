@@ -108877,6 +108877,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderObject\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyState",
+    "name": "GetContactColliderObject",
+    "signature": "public T GetContactColliderObject\u003CT\u003E(System.Int32 contactIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "contactIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectBodyState.GetContactColliderPosition(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectBodyState",
@@ -109496,6 +109515,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.AreaAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaAttachObject",
+    "signature": "public static System.Void AreaAttachObject(Electron2D.RID area, Electron2D.ElectronObject instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "instance",
+        "type": "Electron2D.ElectronObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.AreaClearShapes(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -109753,6 +109796,25 @@
       }
     ],
     "returnType": "Electron2D.Area.SpaceOverride",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.AreaGetObjectInstanceID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "AreaGetObjectInstanceID",
+    "signature": "public static System.UInt64 AreaGetObjectInstanceID(Electron2D.RID area)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "area",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -110712,6 +110774,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyAttachObject(Electron2D.RID,Electron2D.ElectronObject)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyAttachObject",
+    "signature": "public static System.Void BodyAttachObject(Electron2D.RID body, Electron2D.ElectronObject instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "instance",
+        "type": "Electron2D.ElectronObject",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyClearShapes(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -111140,6 +111226,25 @@
       }
     ],
     "returnType": "Electron2D.PhysicsServer.BodyMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodyGetObjectInstanceID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetObjectInstanceID",
+    "signature": "public static System.UInt64 BodyGetObjectInstanceID(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -181498,6 +181603,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PhysicsPointResult.ColliderObject()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsPointResult",
+    "name": "ColliderObject",
+    "signature": "public Electron2D.ElectronObject ColliderObject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.PhysicsPointResult.ColliderRID()",
     "kind": "property",
     "declaringType": "Electron2D.PhysicsPointResult",
@@ -181641,6 +181759,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.PhysicsRayResult.ColliderObject()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRayResult",
+    "name": "ColliderObject",
+    "signature": "public Electron2D.ElectronObject ColliderObject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.PhysicsRayResult.ColliderRID()",
     "kind": "property",
     "declaringType": "Electron2D.PhysicsRayResult",
@@ -181716,6 +181847,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsRestInfo.ColliderObject()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsRestInfo",
+    "name": "ColliderObject",
+    "signature": "public Electron2D.ElectronObject ColliderObject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
     "value": null
   },
   {
@@ -181924,6 +182068,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsShapeResult.ColliderObject()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsShapeResult",
+    "name": "ColliderObject",
+    "signature": "public Electron2D.ElectronObject ColliderObject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
     "value": null
   },
   {

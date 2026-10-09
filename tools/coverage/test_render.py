@@ -324,7 +324,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 137, "Partial": 12, "Unimplemented": 12, "Blocked": 0, "Excluded": 54}
+                "Implemented": 141, "Partial": 12, "Unimplemented": 8, "Blocked": 0, "Excluded": 54}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_attach_canvas_instance_id", "body_get_canvas_instance_id",
                             "area_attach_canvas_instance_id", "area_get_canvas_instance_id"))

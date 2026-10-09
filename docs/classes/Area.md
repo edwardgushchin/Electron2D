@@ -178,3 +178,6 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+
+Explicitly bound Entity/Area instances participate in typed overlap arrays and events even for raw server colliders. Object events deduplicate shared owners; node departure/reentry changes scene visibility immediately while physical pair callbacks remain unchanged. See [object associations](../components/physics-object-bindings.md).

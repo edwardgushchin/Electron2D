@@ -6,10 +6,11 @@ namespace Electron2D;
 /// <summary>A typed result for the nearest ray hit in a two-dimensional physics space.</summary>
 public readonly struct PhysicsRayResult
 {
-    internal PhysicsRayResult(RID rid, CollisionObject? collider, int shapeIndex, Vector2 position, Vector2 normal)
+    internal PhysicsRayResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex, Vector2 position, Vector2 normal)
     {
         ColliderRID = rid;
         Collider = collider;
+        Identity = identity;
         ShapeIndex = shapeIndex;
         Position = position;
         Normal = normal;
@@ -21,9 +22,13 @@ public readonly struct PhysicsRayResult
     /// <summary>Gets the scene collider, or null for a server-only collider.</summary>
     /// <value>The scene object when one exists.</value>
     public CollisionObject? Collider { get; }
-    /// <summary>Gets the scene object's instance ID, or zero for a server-only collider.</summary>
-    /// <value>A managed scene instance ID or zero.</value>
-    public ulong ColliderID => Collider?.InstanceID ?? 0;
+    /// <summary>Gets the sampled object association ID, including server-bound objects.</summary>
+    /// <value>The sampled instance ID, or zero when unassigned.</value>
+    public ulong ColliderID => Identity.ID;
+    internal ObjectIdentity Identity { get; }
+    /// <summary>Gets the live object instance sampled with this hit, including server-bound objects.</summary>
+    /// <value>The weakly borrowed instance, or null after disposal/collection or when unassigned.</value>
+    public ElectronObject? ColliderObject => Identity.Target;
     /// <summary>Gets the collider's stable shape-owner index.</summary>
     /// <value>The direct owner slot, unchanged by fixture rebuild.</value>
     public int ShapeIndex { get; }
@@ -38,10 +43,11 @@ public readonly struct PhysicsRayResult
 /// <summary>A typed collider and shape-owner result for a point query.</summary>
 public readonly struct PhysicsPointResult
 {
-    internal PhysicsPointResult(RID rid, CollisionObject? collider, int shapeIndex)
+    internal PhysicsPointResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex)
     {
         ColliderRID = rid;
         Collider = collider;
+        Identity = identity;
         ShapeIndex = shapeIndex;
     }
 
@@ -51,9 +57,13 @@ public readonly struct PhysicsPointResult
     /// <summary>Gets the scene collider, or null for a server-only collider.</summary>
     /// <value>The scene object when one exists.</value>
     public CollisionObject? Collider { get; }
-    /// <summary>Gets the scene object's instance ID, or zero for a server-only collider.</summary>
-    /// <value>A managed scene instance ID or zero.</value>
-    public ulong ColliderID => Collider?.InstanceID ?? 0;
+    /// <summary>Gets the sampled object association ID, including server-bound objects.</summary>
+    /// <value>The sampled instance ID, or zero when unassigned.</value>
+    public ulong ColliderID => Identity.ID;
+    internal ObjectIdentity Identity { get; }
+    /// <summary>Gets the live object instance sampled with this hit, including server-bound objects.</summary>
+    /// <value>The weakly borrowed instance, or null after disposal/collection or when unassigned.</value>
+    public ElectronObject? ColliderObject => Identity.Target;
     /// <summary>Gets the collider's stable shape-owner index.</summary>
     /// <value>The direct owner slot, unchanged by fixture rebuild.</value>
     public int ShapeIndex { get; }
@@ -220,7 +230,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
                 var point = startsInside ? from : new Vector2(output.point.X * PhysicsSpace.UnitsPerMeter,
                     output.point.Y * PhysicsSpace.UnitsPerMeter);
                 var normal = startsInside ? Vector2.Zero : new Vector2(output.normal.X, output.normal.Y);
-                best = new PhysicsRayResult(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID),
+                best = new PhysicsRayResult(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID), tag.ObjectIdentity,
                     tag.ShapeIndex, point, normal);
             }
         }
@@ -235,7 +245,7 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         {
             var shape = shapes[index];
             if (!Eligible(shape, mask, excluded, out var tag) || !b2Shape_TestPoint(shape, point)) continue;
-            hits.Add(new(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID), tag.ShapeIndex));
+            hits.Add(new(tag.ColliderRID, PhysicsServer.Service.ResolveSceneObject(tag.ColliderRID), tag.ObjectIdentity, tag.ShapeIndex));
         }
     }
 

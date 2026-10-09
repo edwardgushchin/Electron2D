@@ -18,3 +18,6 @@ PhysicsMotionTests verifies full-contour recovery and directed containment;
 GPUPhysicsMotionQueryTests compares the corresponding resident implementation.
 
 The Source weak reference identifies the authored Shape for solver-policy updates. It does not extend resource lifetime; policy edits retain the fixture tag and logical index.
+
+
+Owner borrows the shared collider adapter for current object association. Query/contact publication samples ObjectIdentity before callbacks; SceneOwner remains physical scene convenience. See [object associations](../components/physics-object-bindings.md).

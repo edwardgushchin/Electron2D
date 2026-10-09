@@ -34,6 +34,7 @@ public sealed class RayCast : Entity
     private bool _hitFromInside;
     private bool _collided;
     private RID _colliderRID;
+    private ObjectIdentity _colliderIdentity;
     private int _colliderShape;
     private Vector2 _collisionPoint;
     private Vector2 _collisionNormal;
@@ -181,13 +182,13 @@ public sealed class RayCast : Entity
     /// <returns>False before the first sample, after a miss, or immediately after disabling.</returns>
     public bool IsColliding() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _collided; }
 
-    /// <summary>Returns the last sampled scene collider when it is still alive.</summary>
-    /// <returns>A scene object, or null for a miss, server-only collider, or disposed scene object.</returns>
+    /// <summary>Returns the live object association captured by the last ray sample.</summary>
+    /// <returns>The borrowed instance, or null for a miss or an unassigned, disposed or collected target.</returns>
     public ElectronObject? GetCollider()
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        return PhysicsServer.Service.ResolveSceneObject(_colliderRID);
+        return _colliderIdentity.Target;
     }
 
     /// <summary>Returns the RID retained from the most recent hit.</summary>
@@ -220,7 +221,7 @@ public sealed class RayCast : Entity
         if (result is { } hit)
         {
             _collided = true;
-            _colliderRID = hit.ColliderRID;
+            _colliderRID = hit.ColliderRID; _colliderIdentity = hit.Identity;
             _colliderShape = hit.ShapeIndex;
             _collisionPoint = hit.Position;
             _collisionNormal = hit.Normal;
@@ -228,7 +229,7 @@ public sealed class RayCast : Entity
         else
         {
             _collided = false;
-            _colliderRID = default;
+            _colliderRID = default; _colliderIdentity = default;
             _colliderShape = 0;
         }
     }

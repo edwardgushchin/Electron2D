@@ -11,11 +11,12 @@ namespace Electron2D;
 /// <summary>A typed closest contact for a shape at rest in a physics space.</summary>
 public readonly struct PhysicsRestInfo
 {
-    internal PhysicsRestInfo(RID rid, CollisionObject? collider, int shapeIndex, Vector2 point,
+    internal PhysicsRestInfo(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex, Vector2 point,
         Vector2 normal, Vector2 linearVelocity)
     {
         ColliderRID = rid;
         Collider = collider;
+        Identity = identity;
         ShapeIndex = shapeIndex;
         Point = point;
         Normal = normal;
@@ -28,9 +29,13 @@ public readonly struct PhysicsRestInfo
     /// <summary>Gets the live scene collider, or null for a server-only collider.</summary>
     /// <value>A scene object when one exists.</value>
     public CollisionObject? Collider { get; }
-    /// <summary>Gets the scene object instance ID, or zero for a server-only collider.</summary>
-    /// <value>A managed instance ID or zero.</value>
-    public ulong ColliderID => Collider?.InstanceID ?? 0;
+    /// <summary>Gets the sampled object association ID, including server-bound objects.</summary>
+    /// <value>The sampled instance ID, or zero when unassigned.</value>
+    public ulong ColliderID => Identity.ID;
+    internal ObjectIdentity Identity { get; }
+    /// <summary>Gets the live object instance sampled with this hit, including server-bound objects.</summary>
+    /// <value>The weakly borrowed instance, or null after disposal/collection or when unassigned.</value>
+    public ElectronObject? ColliderObject => Identity.Target;
     /// <summary>Gets the collider's direct shape-owner index.</summary>
     /// <value>The index remains stable across fixture rebuilds.</value>
     public int ShapeIndex { get; }
@@ -165,7 +170,7 @@ public sealed partial class PhysicsDirectSpaceState
                         b2Body_GetWorldPointVelocity(bodyID, colliderPoint);
                     bestDepth = depth;
                     best = new PhysicsRestInfo(candidate.Tag.ColliderRID,
-                        PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID),
+                        PhysicsServer.Service.ResolveSceneObject(candidate.Tag.ColliderRID), candidate.Tag.ObjectIdentity,
                         candidate.Tag.ShapeIndex, ToScene(colliderPoint),
                         new(-manifold.normal.X, -manifold.normal.Y),
                         new(velocity.X * PhysicsSpace.UnitsPerMeter,

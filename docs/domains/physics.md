@@ -316,4 +316,6 @@ Body/Area attach/get operations, scene CanvasLayer entry/exit and exact point-qu
 filtering, including default zero and full 64-bit keys. Shared/independent worlds,
 reparenting, live edits, raw colliders and warmed allocation have CPU/GPU checks.
 The GPU fix removes the former zero-as-wildcard behavior; public GPU-world binding
-and arbitrary object-instance attachment remain open.
+remains open.
+
+[Object associations](../components/physics-object-bindings.md) now connect typed Body/Area object assignment, sampled IDs and weak targets across direct/scene queries, motion, contacts and monitoring. Public GPU-world binding, actual tile collider generation and networking remain open.

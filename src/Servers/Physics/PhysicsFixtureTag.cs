@@ -15,5 +15,7 @@ internal sealed record PhysicsFixtureTag(RID ColliderRID, int ShapeIndex, OneWay
     internal int CompoundPiece { get; init; }
     internal WeakReference<Shape>? Source { get; init; }
     internal WeakReference<CollisionObject>? SceneOwner { get; init; }
+    internal PhysicsColliderBackend? Owner { get; init; }
+    internal ObjectIdentity ObjectIdentity => Owner?.ObjectIdentity ?? default;
     internal CollisionObject? SceneObject => SceneOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
 }

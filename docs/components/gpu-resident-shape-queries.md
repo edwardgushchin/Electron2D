@@ -24,7 +24,7 @@ results and exclusions. Physical slots/generations remain internal attachments,
 not network identities. Pending world poses and geometry are prepared without a
 simulation advance. The same tree preparation/cache, failure state and batch
 submission path serve ray/point and shape queries. Byte capacities allow their
-48/80-byte inputs and 64/80/128-byte outputs to alternate safely.
+48/80-byte inputs and 64/96/128-byte outputs to alternate safely.
 [Body-motion queries](gpu-resident-motion-queries.md) now reuse this driver and the
 shared directed-contact include for supplied-pose recovery and sweeps.
 
@@ -79,7 +79,7 @@ These corrections preserve public signatures and the existing containment rules.
 
 ## Cost and verification
 
-A shape request uploads 80 bytes; each capped result reserves 80 bytes, plus a
+A shape request uploads 80 bytes; each capped result reserves 96 bytes, plus a
 4-byte count and the batch's 8-byte status exchange. Mapping/geometry edits add
 authored-data traffic only when dirty. One result fence includes capped segments,
 so no second count-discovery fence or complete state readback is needed. The center
@@ -128,3 +128,5 @@ including far-away half-plane contacts, normal/distance transforms and ray pairs
 The shared shape and body-motion matrices now include this geometry. Direct-space
 shape queries retain initial overlap during motion; body-motion recovery/casts
 retain their own directed-ray policy. Public independent-GPU binding remains open.
+
+ObjectID now travels with each selected result, adding 16 B per record. The [object association report](physics-object-bindings.md) records the new transfer measurement and snapshot/lifetime checks.

@@ -57,7 +57,7 @@ internal sealed partial class PhysicsSpace
                 var remote = otherShapes[remoteIndex];
                 var tag = b2Shape_GetUserData(remote).GetRef<PhysicsFixtureTag>();
                 if (tag is not null && ShapePairOverlaps(local, remote))
-                    receiver.Pairs.Observe(new(otherRID, other, isArea, tag.ShapeIndex, localTag.ShapeIndex));
+                    receiver.Pairs.Observe(new(otherRID, tag.ObjectIdentity, isArea, tag.ShapeIndex, localTag.ShapeIndex));
             }
         }
     }

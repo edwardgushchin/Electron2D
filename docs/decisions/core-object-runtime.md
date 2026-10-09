@@ -29,6 +29,8 @@ Godot objects use engine-managed validity and explicit `free()`. Electron2D runs
 - a typed `Disposed` event after successful cleanup;
 - `ThrowIfDisposed()` for live-object preconditions.
 
+An internal ObjectIdentity pairs the immutable instance ID with a lazily cached BCL weak reference. A consumer copies this value when sampling identity; retargeting that consumer does not mutate previous samples. Resolution returns null immediately when deterministic disposal begins or after collection. The cache belongs to the target object, introduces no process-wide strong registry and adds no finalizer; physics object association under ADR 0063 is its first consumer.
+
 The base uses atomic state transitions so concurrent disposal runs cleanup at most once. It has no finalizer. Native handles must be owned by `SafeHandle`-derived wrappers, whose finalization protects against missed disposal without putting every engine object on the finalizer queue.
 
 ### Consequences

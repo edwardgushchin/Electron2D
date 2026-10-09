@@ -196,7 +196,7 @@ All live scene/server Area RIDs are accepted; pose/layer/monitorable setters use
 
 Registration resets both histories even for the same delegate; null clears without synthetic exits, and current overlaps enter again at the next nonzero scan. Scene-owned overlap arrays/events remain independent and mandatory; an external observer is not its replacement and can observe while scene Monitoring is false. Snapshot state commits before dispatch; failures continue later events and do not replay. Own receiver configuration mutation from a raw or scene overlap callback rejects, while reads are allowed. Epoch changes suppress stale queued callbacks. Other collider removal/free emits retained exits immediately; removal from an entry callback suppresses stale later entries and safely delivers departures.
 
-Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Server field parameters and remaining shape/object-instance operations retain their own coverage gaps; native allocation, large-world performance, other platforms and owner acceptance remain unverified.
+Receiver detach clears history silently and retains configuration for reentry. Receiver free/world disposal clears history/event storage; cleanup of a freed other collider completes even if its departure callbacks throw. Wrong-kind/freed RID and off-owner/solver-owned access reject. [PhysicsAreaMonitorTests](../../tests/Electron2D.Tests/PhysicsAreaMonitorTests.cs) verifies payload/filter/lifetime/errors and 64 warmed active entry/exit cycles with zero managed allocation. [ADR 0077](../decisions/physics-monitoring.md#adr-0077) records the ownership adaptation. Server field parameters and remaining extension and process-info operations retain their own coverage gaps; native allocation, large-world performance, other platforms and owner acceptance remain unverified.
 
 ## Typed Area fields and space defaults
 
@@ -752,3 +752,6 @@ Point queries compare exact equality before result caps. This filter does not
 change physical collisions, Area overlaps, ray/shape casts or coordinates.
 [Canvas verification](../components/physics-queries.md#canvas-association) records
 CPU/GPU comparisons and the remaining public GPU-world boundary.
+
+
+BodyAttachObject and AreaAttachObject borrow a live ElectronObject (null clears). BodyGetObjectInstanceID and AreaGetObjectInstanceID retain the assigned numeric identity. See the [object association contract](../components/physics-object-bindings.md) for scene/server ownership, guards, snapshots and events.

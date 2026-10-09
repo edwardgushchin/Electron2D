@@ -23,7 +23,7 @@ if (rest is { } contact) Console.WriteLine(contact.Normal);
 | --- | --- |
 | `public RID ColliderRID { get; }` | Collider identity at query time. |
 | `public CollisionObject? Collider { get; }` | Scene collider, or null for a server-only collider. |
-| `public ulong ColliderID { get; }` | Scene instance ID, or zero for server-only. |
+| `public ulong ColliderID { get; }` | Sampled assigned instance ID, or zero when unassigned. |
 | `public int ShapeIndex { get; }` | Direct shape-owner index. |
 | `public Vector2 Point { get; }` | Contact point on the collider in global scene units. |
 | `public Vector2 Normal { get; }` | Global unit direction pointing away from the collider. |
@@ -31,8 +31,13 @@ if (rest is { } contact) Console.WriteLine(contact.Normal);
 
 ## Property descriptions
 
-`ColliderRID` and `ShapeIndex` preserve identity across compound backend fixtures. `Collider` and `ColliderID` expose the optional scene object; an explicit server collider has no scene object. `Point` lies on that collider's contact surface. `Normal` points toward the query shape. `LinearVelocity` includes angular motion at `Point` for a body and is zero for an Area sensor.
+`ColliderRID` and `ShapeIndex` preserve identity across compound backend fixtures. `Collider` exposes the physical scene object; ColliderObject and ColliderID expose the sampled assigned instance independently. `Point` lies on that collider's contact surface. `Normal` points toward the query shape. `LinearVelocity` includes angular motion at `Point` for a body and is zero for an Area sensor.
 
 ## Verification
 
 [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) covers static, moving, server-only and scene collider contacts, body/Area filtering, sweep contacts, finite normals and warmed managed allocation. Native allocator and other platforms are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+ColliderObject returns the live weakly borrowed instance assigned at sampling time; ColliderID
+retains its sampled ID even after disposal or rebinding. Collider remains physical scene-collider
+convenience. See [object associations](../components/physics-object-bindings.md).

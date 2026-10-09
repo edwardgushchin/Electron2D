@@ -40,10 +40,10 @@ internal sealed partial class PhysicsColliderBackend
         var b = point + normal * (separation * 0.5f);
         var local = first ? a : b;
         var remote = first ? b : a;
-        view.StoreContact(slot, new(other.ColliderRID, other.SceneObject?.InstanceID ?? 0,
+        view.StoreContact(slot, new(other.ColliderRID, other.ObjectIdentity.ID,
             own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
             new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
             ToScene(Space!.SolvedPointVelocity(BodyID, local)), ToScene(Space.SolvedPointVelocity(collider, remote)),
-            ToScene(first ? -impulse : impulse), depth, other.SceneOwner));
+            ToScene(first ? -impulse : impulse), depth, other.SceneOwner, other.ObjectIdentity));
     }
 }

@@ -108,3 +108,6 @@ CollisionPriority retains the shared scene/server recovery weight (default one)
 across Attach/Detach and role edits. SetCollisionPriority validates finite positive
 input and the current world's owner/step boundary. No fixture rebuild, body wake
 or vendor state edit is required; motion candidates capture the current value.
+
+
+ObjectIdentity retains the authored weak instance association independently of the physical scene owner and body/fixture lifetime. AttachObject preserves solver state and validates before replacement. External Node membership observation exists only while attached. See [object associations](../components/physics-object-bindings.md).

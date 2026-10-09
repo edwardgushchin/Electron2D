@@ -19,7 +19,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal uint Shape, ShapeGeneration, Body, BodyGeneration, Padding;
         internal Float4 PointNormal;
         internal float Fraction;
-        internal uint Padding1, Padding2, Padding3;
+        internal uint Padding1;
+        internal ulong ObjectID;
         internal readonly Vector2 Position => new(PointNormal.X, PointNormal.Y);
         internal readonly Vector2 Normal => new(PointNormal.Z, PointNormal.W);
     }

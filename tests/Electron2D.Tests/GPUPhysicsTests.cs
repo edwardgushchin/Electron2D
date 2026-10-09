@@ -49,6 +49,7 @@ internal static partial class GPUPhysicsTests
         GPUPhysicsReportTests.Run();
         GPUPhysicsQueryTests.Run();
         PhysicsCanvasTests.Run(true);
+        PhysicsObjectBindingTests.Run(true);
         GPUPhysicsShapeQueryTests.Run();
         GPUPhysicsMotionQueryTests.Run();
         GPUPhysicsMassStoreTests.Run();

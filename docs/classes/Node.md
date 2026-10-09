@@ -1553,3 +1553,6 @@ See [resource-file contracts](../components/resource-files.md) for registered ty
 ## Low-level primitive integration
 
 Structural child order changes now notify the active renderer to republish registered source draw-index overrides below this parent, before ordinary child-order notifications. Source Node order and existing event/capture/owner behavior remain authoritative. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
+
+
+Externally associated physics bodies observe this node’s tree entry/exit while attached. Membership updates scene contact/overlap signals even while raw bodies remain in their space. Reverse observers are removed on detach/rebind and cleared at disposal; throwing handlers do not replay committed transitions. See [object associations](../components/physics-object-bindings.md).

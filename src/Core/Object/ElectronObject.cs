@@ -48,6 +48,19 @@ public abstract class ElectronObject : IDisposable
     private int _disposingThreadId;
     private int _canTranslateMessages = 1;
     private string _translationDomain = string.Empty;
+    private WeakReference<ElectronObject>? _identityReference;
+
+    internal ObjectIdentity BorrowIdentity()
+    {
+        ThrowIfDisposed();
+        var reference = Volatile.Read(ref _identityReference);
+        if (reference is null)
+        {
+            reference = new(this);
+            reference = Interlocked.CompareExchange(ref _identityReference, reference, null) ?? reference;
+        }
+        return new(InstanceID, reference);
+    }
 
     /// <summary>Gets this object's process-local instance identifier.</summary>
     /// <value>A nonzero identifier that is never changed or reused during the current process.</value>

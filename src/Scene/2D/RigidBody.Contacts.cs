@@ -10,8 +10,6 @@ public partial class RigidBody
             (body, value) => body.MaxContactsReported = value, _ => 0, stored: true)
     ];
 
-    private HashSet<PhysicsBody> _contacts = new(ReferenceEqualityComparer.Instance);
-    private HashSet<PhysicsBody> _nextContacts = new(ReferenceEqualityComparer.Instance);
     private readonly PhysicsShapePairTracker _shapePairs = new();
     private readonly List<PhysicsShapePairChange> _pairChanges = [];
     private bool _contactMonitor;
@@ -35,7 +33,7 @@ public partial class RigidBody
             if (!value && _dispatchingContact)
                 throw new InvalidOperationException("Disable contact monitoring after the contact callback returns.");
             _contactMonitor = value;
-            if (!value) { _contacts.Clear(); _nextContacts.Clear(); _shapePairs.Clear(); }
+            if (!value) { _shapePairs.Clear(); }
         }
     }
 
@@ -50,7 +48,6 @@ public partial class RigidBody
         {
             EnsureMutable();
             if ((uint)value > PhysicsBodyRuntime.MaxContactLimit) throw new ArgumentOutOfRangeException(nameof(value));
-            _contacts.EnsureCapacity(value); _nextContacts.EnsureCapacity(value);
             _shapePairs.Prepare(value);
             _pairChanges.EnsureCapacity(checked(value * 4));
             PhysicsServer.Service.BodyRuntime(PhysicsRID).View?.PrepareContacts(value);
@@ -94,11 +91,7 @@ public partial class RigidBody
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        if (!_contactMonitor || _contacts.Count == 0) return [];
-        var result = new Entity[_contacts.Count];
-        var index = 0;
-        foreach (var body in _contacts) result[index++] = body;
-        return result;
+        return _contactMonitor ? _shapePairs.Objects<Entity>(false) : [];
     }
 
     internal bool TakeSleepChange()
@@ -110,19 +103,14 @@ public partial class RigidBody
 
     internal void CollectContacts(PhysicsDirectBodyState state)
     {
-        _nextContacts.Clear(); _shapePairs.Begin();
+        _shapePairs.Begin();
         state.BeginContactSnapshot();
         if (HasBackend) state.CaptureContacts();
         if (_contactMonitor)
             foreach (ref readonly var contact in state.CapturedContacts)
-                if (contact.SceneCollider is PhysicsBody other && !ReferenceEquals(other, this))
-                {
-                    _nextContacts.Add(other);
-                    _shapePairs.Observe(new(contact.Collider, other, false, contact.ColliderShape, contact.LocalShape));
-                }
+                _shapePairs.Observe(new(contact.Collider, contact.Identity, false, contact.ColliderShape, contact.LocalShape));
 
         _pairChanges.Clear(); _shapePairs.Commit(_pairChanges);
-        (_contacts, _nextContacts) = (_nextContacts, _contacts);
         _contactCount = state.CapturedContacts.Length;
     }
 
@@ -133,20 +121,26 @@ public partial class RigidBody
         _pairChanges.Clear();
     }
 
-    internal void ForgetContact(PhysicsBody other, List<PhysicsSpace.ContactEvent> events)
+    internal void ForgetContact(RID other, List<PhysicsSpace.ContactEvent> events)
     {
-        _nextContacts.Remove(other); _contacts.Remove(other);
-        _pairChanges.Clear(); _shapePairs.Forget(other.PhysicsRID, _pairChanges);
+        _pairChanges.Clear(); _shapePairs.Forget(other, _pairChanges);
         if (_contactMonitor) foreach (var change in _pairChanges) events.Add(new(this, change));
         _pairChanges.Clear();
     }
 
     internal bool ContainsContact(PhysicsShapePairChange change) => change.ObjectEvent
-        ? change.Pair.Other is PhysicsBody body && _contacts.Contains(body) : _shapePairs.Contains(change.Pair);
+        ? _shapePairs.ContainsObject(change.Node, false) : _shapePairs.Contains(change.Pair);
 
+    internal void ObjectTreeChanged(Node node, bool entering, List<PhysicsSpace.ContactEvent> events)
+    {
+        if (!_contactMonitor) return;
+        _pairChanges.Clear(); _shapePairs.ObjectTreeChanged(node, entering, _pairChanges);
+        foreach (var change in _pairChanges) events.Add(new(this, change));
+        _pairChanges.Clear();
+    }
     internal void ClearContactState()
     {
-        _contacts.Clear(); _nextContacts.Clear(); _shapePairs.Clear(); _pairChanges.Clear();
+        _shapePairs.Clear(); _pairChanges.Clear();
         _contactCount = 0; _sleepChangePending = false;
     }
 
@@ -163,7 +157,7 @@ public partial class RigidBody
         _dispatchingContact = true;
         try
         {
-            if (change.Pair.Other is not PhysicsBody other) return;
+            if (!change.Pair.InTree || change.Node is not { } other) return;
             if (change.ObjectEvent) { if (change.Entered) BodyEntered?.Invoke(other); else BodyExited?.Invoke(other); }
             else if (change.Entered) BodyShapeEntered?.Invoke(change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
             else BodyShapeExited?.Invoke(change.Pair.RID, other, change.Pair.OtherShape, change.Pair.LocalShape);
