@@ -18,6 +18,7 @@ internal static partial class WaterPlaygroundTests
     }
     private static void CheckToys(RenderingDevice device, bool gpu)
     {
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_WATER_TOY_CASE") is null or "toggle") CheckToyToggles(device, gpu);
         if (Environment.GetEnvironmentVariable("ELECTRON2D_WATER_TOY_CASE") is null or "buoyancy")
             using (var water = new WaterSimulation(16384) { FaucetFlow = 0 })
             {
@@ -134,6 +135,29 @@ internal static partial class WaterPlaygroundTests
                 Console.WriteLine($"cargo {gpu}: mean unloaded={before:F1} loaded={after:F1} draft change={after - before:F1}");
                 Check(after > before + 2.5, "Two balanced dry cargo blocks increase the mean boat draft through rigid contacts.");
             }
+    }
+    private static void CheckToyToggles(RenderingDevice device, bool gpu)
+    {
+        using var water = new WaterSimulation(256) { FaucetFlow = 0 };
+        water.SeedPoolForTest(); water.SetUseGPU(gpu, device);
+        (WaterToy Kind, int Slot)[] toys = [(WaterToy.Bucket, WaterSimulation.BucketSlot), (WaterToy.Wheel, WaterSimulation.WheelSlot),
+            (WaterToy.Gate, WaterSimulation.GateSlot), (WaterToy.Ball, WaterSimulation.BallSlot),
+            (WaterToy.Wood, WaterSimulation.CargoStart), (WaterToy.Steel, WaterSimulation.CargoStart)];
+        foreach (var (kind, slot) in toys)
+            for (var cycle = 0; cycle < 2; cycle++)
+            {
+                Check(water.AddToy(kind), "A removed toy can be created again."); Steps(water, 1);
+                water.BeginDrag(water.ActorPose(slot).Origin);
+                Check(water.Dragged == water.ActorBody(slot), "The removal check starts with a held toy.");
+                water.RemoveToy(kind);
+                Check(water.KindCount(kind) == 0 && !water.Dragged.IsValid(), "Removing a toy releases its body and mouse grab.");
+                if (kind == WaterToy.Wheel) Check(!water.ActorExists(WaterSimulation.PlatformSlot) && water.WheelTurns == 0, "Removing the wheel also removes and resets its lift.");
+                Steps(water, 1);
+            }
+        water.AddToy(WaterToy.Wood); water.AddToy(WaterToy.Wood); water.AddToy(WaterToy.Steel);
+        water.RemoveToy(WaterToy.Wood); water.RemoveToy(WaterToy.Wood);
+        Check(water.KindCount(WaterToy.Wood) == 0 && water.KindCount(WaterToy.Steel) == 1 && water.AddToy(WaterToy.Wood), "Cargo removal affects only its kind and releases reusable slots.");
+        Console.WriteLine($"toy toggles {gpu}: removal, held-body release, recreation and wheel/lift cleanup passed");
     }
     private static void Put(WaterSimulation water, int slot, Vector2 point)
     { PhysicsServer.BodySetTransform(water.ActorBody(slot), new Transform(0, point)); PhysicsServer.BodySetLinearVelocity(water.ActorBody(slot), Vector2.Zero); }

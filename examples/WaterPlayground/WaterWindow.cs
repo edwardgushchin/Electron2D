@@ -107,7 +107,7 @@ internal sealed partial class WaterWindow : Window
     internal void Reset()
     {
         var gpu = Simulation.UseGPU; Simulation.Dispose(); Simulation = new(); if (gpu) Simulation.SetUseGPU(true, _device);
-        Paused = false; _held = false; _movingFaucet = false; foreach (var button in _tools) button.Disabled = false; UpdateValves(); FitWorld();
+        Paused = false; _held = false; _movingFaucet = false; foreach (var button in _tools) button.SetPressedNoSignal(false); UpdateValves(); FitWorld();
     }
     protected override void OnPhysicsProcess(double delta)
     {
@@ -116,7 +116,6 @@ internal sealed partial class WaterWindow : Window
     }
     protected override void OnProcess(double delta)
     {
-        UpdateToolCapacity();
         if (Stopwatch.GetElapsedTime(_lastHUD).TotalSeconds >= .25) { _lastHUD = Stopwatch.GetTimestamp(); if (InterfaceVisible) _hud.QueueRedraw(); }
     }
     protected override void OnInput(InputEvent input)

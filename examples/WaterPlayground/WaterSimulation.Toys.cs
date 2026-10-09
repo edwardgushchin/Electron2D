@@ -85,6 +85,27 @@ internal sealed partial class WaterSimulation
         _actors[slot] = body;
         return true;
     }
+    /// <summary>Removes toys of this kind, including the wheel's lift and any held grab.</summary>
+    /// <param name="kind">The optional toy kind to remove.</param>
+    internal void RemoveToy(WaterToy kind)
+    {
+        if (kind is not (WaterToy.Bucket or WaterToy.Wheel or WaterToy.Gate or WaterToy.Ball or WaterToy.Wood or WaterToy.Steel)) return;
+        if (kind == WaterToy.Wheel)
+        {
+            foreach (var joint in _joints) PhysicsServer.FreeRID(joint);
+            _joints.Clear(); RemoveActor(PlatformSlot);
+            _wheelAngle = _lastWheelRotation = 0;
+        }
+        if (kind == WaterToy.Gate) { _gateEntering = false; _gateVelocity = Vector2.Zero; }
+        for (var slot = BucketSlot; slot < BodyCount; slot++)
+            if (_kinds[slot] == kind) RemoveActor(slot);
+    }
+    private void RemoveActor(int slot)
+    {
+        var body = _actors[slot]; if (!body.IsValid()) return;
+        if (_dragged == body) EndDrag();
+        PhysicsServer.FreeRID(body); _bodies.Remove(body); _actors[slot] = default;
+    }
     private void AddPlatform(Vector2 position)
     {
         _kinds[PlatformSlot] = WaterToy.Platform;

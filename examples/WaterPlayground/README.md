@@ -8,7 +8,7 @@ dotnet run --project examples/WaterPlayground -c Release
 
 Drag toys to lift them, or stir the water. **H** hides or restores the whole interface; hidden buttons do not intercept the mouse. **Space** pauses, **R** refills, **F11** toggles borderless fullscreen. **CPU/GPU** buttons or **Tab** switch liquid computation without resetting it. `--cpu` starts with CPU fluid; `--compatibility` independently selects the compatibility renderer.
 
-The bottom toolbar adds a hollow bucket, a water wheel with a lift, a movable gate, wooden cargo, steel balls and a buoyant ball. **Q/E** or the mouse wheel tilts a held object; holding the wheel brakes it. Scoop and pour water, raise the gate to release a wave, or load the boat.
+The bottom toolbar toggles a hollow bucket, a water wheel with a lift, a movable gate, a wooden block, a steel ball and a buoyant ball. Press a toy button to create its object; press it again to remove it, including while paused. The wheel and lift disappear together. Reset clears all toy buttons. **Q/E** or the mouse wheel tilts a held object; holding the wheel brakes it. Scoop and pour water, raise the gate to release a wave, or load the boat.
 
 Drag the top handle to move the faucet. With no toy held, **Q/E** aims the jet and the mouse wheel adjusts flow. **F** cycles flow; **D** toggles the bottom drain. The reservoir is finite: after the initial pour, open the drain to recirculate water through the inlet.
 

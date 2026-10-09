@@ -22,13 +22,15 @@ A trial grid pressure/PIC-FLIP implementation passed a resting-pool check but fa
 
 ## Toys and interaction
 
-The initial stream fills the basin over eight simulation seconds; the duck enters at nine seconds and boat at eleven. The bottom toolbar adds:
+The initial stream fills the basin over eight simulation seconds; the duck enters at nine seconds and boat at eleven. The bottom toolbar uses independent on/off buttons for:
 
 - A hollow compound bucket, retaining and pouring actual particles through its open top.
 - A pinned eight-paddle wheel, with a spring winch coupling its angle to a groove-guided platform and returning reaction torque. Strong fluid/cargo loads can stall the lift.
 - A vertical kinematic gate, lowering gradually from above the pool and draggable upward to release a wave.
-- Up to eight cargo bodies: buoyant wood or sinking steel, including cargo resting on the boat.
+- A buoyant wooden block and sinking steel ball, including cargo resting on the boat.
 - A buoyant ball that can be submerged and released.
+
+Each pressed toy button creates one object; switching it off removes that kind, even while paused. Removing the wheel also frees both joints and its lift. Removal ends a grab on any deleted body, and subsequent activation creates a fresh mechanism with no retained winding or gate motion. Reset clears all toy toggles. The model retains eight cargo slots for programmatic use; removal releases every matching cargo body while preserving other kinds. Native checks cover switching all six buttons off/on while paused and resetting their states; CPU/GPU checks cover removal during a grab, repeated removal and recreation.
 
 A physical mouse spring lifts toys and compensates gravity; empty-water dragging stirs nearby particles. Holding the wheel brakes it. Q/E or mouse wheel input tilts a held object. Without a held object, Q/E aims the jet and the wheel changes flow. The top handle moves the faucet; F or the Flow button cycles its valve. D or Drain toggles the bottom outlet. Once the reserve is empty, opening the drain enables recirculation.
 

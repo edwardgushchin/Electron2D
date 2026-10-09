@@ -15,12 +15,15 @@ internal sealed partial class WaterWindow
         _drain = Tool("Drain closed"); _drain.Pressed += ToggleDrain;
         void Add(string label, WaterToy kind)
         {
-            var button = Tool(label);
-            button.Pressed += () =>
+            var button = Tool(label); button.ToggleMode = true;
+            button.Toggled += enabled =>
             {
-                if (!Simulation.AddToy(kind)) return;
+                if (enabled)
+                {
+                    if (!Simulation.AddToy(kind)) button.SetPressedNoSignal(Simulation.KindCount(kind) > 0);
+                }
+                else Simulation.RemoveToy(kind);
                 _drawing.QueueRedraw();
-                if (kind is WaterToy.Bucket or WaterToy.Wheel or WaterToy.Gate or WaterToy.Ball) button.Disabled = true;
             };
         }
         Button Tool(string label)
@@ -28,11 +31,6 @@ internal sealed partial class WaterWindow
             var button = ModeButton(label); button.ToggleMode = false; button.ButtonGroup = null;
             button.AddThemeFontSizeOverride("font_size", 13); _tools.Add(button); return button;
         }
-    }
-    private void UpdateToolCapacity()
-    {
-        var full = Simulation.KindCount(WaterToy.Wood) + Simulation.KindCount(WaterToy.Steel) >= 8;
-        _tools[3].Disabled = _tools[4].Disabled = full;
     }
     private void FitTools()
     {
