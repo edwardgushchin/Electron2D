@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 [Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public GPU binding now executes; complete family conformance remains open; built-in boundary and directed-ray response now execute.
 
@@ -372,3 +372,9 @@ material response, signed fields, persistent force/torque, omission and reattach
 [Discrete GPU restitution](../components/gpu-contact-solver.md#solve-and-history)
 preserves incoming impact speed before speculative braking; future and receding pairs
 remain free of premature rebound. Shared API and warm allocation checks cover this path.
+
+An internal [GPU replay checkpoint](../components/gpu-checkpoints.md) now retains
+resident body/force/contact/sleep/joint history without CPU state readback for an
+unchanged authored configuration. It verifies local rewind/replay only. CPU and
+public world snapshots, topology/lifecycle rewind, portable identity, network
+correction and predicted/confirmed event handling remain open.

@@ -131,7 +131,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 ContactPoints = (uint)ContactPointCount,
                 Correction = new(delta / (_contactTickDuration > 0 ? _contactTickDuration : delta), _jointTickBias, _contactSettings.RecycleRadius, _contactSettings.MaxSeparation),
                 Flags = externalForces ? 0u : 1u
-            }, iterations, previousTableCapacity != _solverHistoryTableCapacity, stepGravity, dampingDelta);
+            }, iterations, _checkpointRebuildHistory || previousTableCapacity != _solverHistoryTableCapacity, stepGravity, dampingDelta);
+            _checkpointRebuildHistory = false;
             _previousPointCount = ContactPointCount; _previousSolveDelta = delta; _hasPositionCorrections = true;
             _bodyVersion++;
         }

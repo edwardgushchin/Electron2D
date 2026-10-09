@@ -1,6 +1,6 @@
 # GPUPhysicsBodyStore
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 
@@ -282,3 +282,13 @@ no GPU readback. `ChangePublicationCount` counts successful nonempty-world chang
 publication operations for diagnostics, including publications with zero changed
 records. It changes no stream semantics or public API. The common world now
 [omits pre-step publication without a consumer](../components/physics-backends.md#conditional-body-publication).
+
+## Local replay checkpoint foundation
+
+`CreateCheckpoint()` returns a source-bound internal
+[Checkpoint](GPUPhysicsCheckpoint.md) retaining device-local motion, force, sleep,
+contact, one-way and joint history for the current authored configuration. Restore
+republishes bodies and invalidates derived query/debug caches. It is separate from
+observable `Snapshot`/`ReadChanges` data and is not a public, CPU or portable network
+checkpoint. [Scope, validation and measurements](../components/gpu-checkpoints.md)
+keep those remaining requirements explicit.

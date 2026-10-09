@@ -6,6 +6,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int _oneWayShapeCount, _oneWayHistoryCount;
     private RenderHandle? _oneWayHistoryGPU, _oneWayNextGPU, _oneWayHistoryTableGPU, _oneWayNextTableGPU, _oneWaySummary;
     private int _oneWayHistoryCapacity, _oneWayNextCapacity, _oneWayHistoryTableCapacity, _oneWayNextTableCapacity;
+    private int _oneWayReadCapacity;
+    private int OneWayHistoryTableSize => _oneWayReadCapacity != 0 ? _oneWayReadCapacity : _oneWayHistoryTableCapacity;
     internal int OneWayPairCount => _oneWayHistoryCount;
 
     internal OneWaySettings GetShapeOneWay(ShapeHandle shape) { Validate(shape); return _shapeSlots[shape.Index].OneWay; }
@@ -34,7 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         (_oneWayHistoryCapacity, _oneWayNextCapacity) = (_oneWayNextCapacity, _oneWayHistoryCapacity);
         (_oneWayHistoryTableGPU, _oneWayNextTableGPU) = (_oneWayNextTableGPU, _oneWayHistoryTableGPU);
         (_oneWayHistoryTableCapacity, _oneWayNextTableCapacity) = (_oneWayNextTableCapacity, _oneWayHistoryTableCapacity);
-        _oneWayHistoryCount = count;
+        _oneWayHistoryCount = count; _oneWayReadCapacity = 0;
     }
     private void DisposeOneWay()
     {

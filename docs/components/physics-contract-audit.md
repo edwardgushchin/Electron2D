@@ -1,6 +1,6 @@
 # Physics contract and backend audit
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 [Changed body publication](gpu-body-publication.md) now supplies compact device-compared
 state to the shared GPU world, with generation/removal semantics and measured
@@ -171,9 +171,12 @@ a headless CPU server correcting a GPU client. Existing [scene multiplayer](scen
 sequence, authority/schema checks and typed property groups. Its publication loop
 uses monotonic time and applies decoded properties; those mechanisms do not provide
 fixed physics ticks, an authoritative physics restore point or input replay.
-Current GPU snapshot counters concern internal upload mirrors, not portable game
-snapshots. No current public physics capture/restore/reconciliation family was
-found in this audit.
+Changed-body publications are observable latest state, not replay history. An
+internal [GPU checkpoint](gpu-checkpoints.md) now restores device-local motion,
+forces, contacts, sleep and joint history within a fixed authored configuration.
+CPU checkpoints, public scene/server capture/apply, portable state, lifecycle
+rewind and network reconciliation remain absent; this foundation closes none of
+the complete integration rows below.
 
 | Required integration | Existing prerequisite | Open acceptance |
 | --- | --- | --- |

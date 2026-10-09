@@ -90,7 +90,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Bodies = (uint)_highWater,
                 Corrections = _hasPositionCorrections ? 1u : 0u,
                 HistoryCount = (uint)_oneWayHistoryCount,
-                HistoryCapacity = (uint)_oneWayHistoryTableCapacity,
+                HistoryCapacity = (uint)OneWayHistoryTableSize,
                 EpisodeMargin = _contactMargin,
                 Tolerances = new(CCDTolerance, 0.5f, 0.00001f, delta)
             };

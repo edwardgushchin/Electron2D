@@ -106,7 +106,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 Bodies = (uint)_highWater,
                 Tolerances = new(margin, 0.5f, 0.00001f, _contactSensorMargin),
                 HistoryCount = (uint)_oneWayHistoryCount,
-                HistoryCapacity = (uint)_oneWayHistoryTableCapacity,
+                HistoryCapacity = (uint)OneWayHistoryTableSize,
                 NextCapacity = (uint)_oneWayNextCapacity,
                 NextTableCapacity = (uint)_oneWayNextTableCapacity
             };
