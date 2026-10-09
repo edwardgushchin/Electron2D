@@ -8,6 +8,7 @@ Last updated: 2026-10-09
 [geometry](../../src/Servers/Physics/GPUPhysicsBodyStore.Shapes.cs),
 [world queries](../../src/Servers/Physics/GPUPhysicsBodyStore.Queries.cs),
 [shape queries](../../src/Servers/Physics/GPUPhysicsBodyStore.ShapeQueries.cs),
+[body-motion queries](../../src/Servers/Physics/GPUPhysicsBodyStore.MotionQueries.cs),
 [mass](../../src/Servers/Physics/GPUPhysicsBodyStore.Mass.cs),
 [Area fields](../../src/Servers/Physics/GPUPhysicsBodyStore.Fields.cs),
 [kinematic targets](../../src/Servers/Physics/GPUPhysicsBodyStore.Kinematic.cs),
@@ -40,6 +41,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | Operation | Contract |
 | --- | --- |
 | `RetainQueryGeometry`, `QueryGeometry.Dispose` | Borrow a shared resource for standalone query use without a collider or body; edits remain live and owner/disposal/store identity validate before submission. |
+| `TestMotion` | Batched supplied-pose recovery and first impact over attached shapes, reciprocal masks, explicit collider/object and pair exclusions, one-way/ray rules, unchanged live poses and typed travel/contact results. See [motion queries](../components/gpu-resident-motion-queries.md). |
 | `QueryShapes` | Batched intersections, surface contact pairs, deepest rest contacts with point velocity and new-motion brackets. Explicit masks/exclusions/body/sensor selection, logical caps and unchanged caller tails; see [shape query semantics and limits](../components/gpu-resident-shape-queries.md). |
 | `Query`, `SetQueryIdentity` | Batched resident ray/point queries with authored logical identities, layer/body/sensor/canvas filters, exclusion spans and stable capped results. Flushes edits without simulation, retains device geometry and leaves unused caller tails unchanged. See [queries](../components/gpu-resident-queries.md). |
 | `QuerySubmissionCount`, `QuerySpatialSubmissionCount` | Search submissions and separate query-only tree preparation; neither enumerates simulation pairs. |

@@ -2,12 +2,14 @@
 
 Last updated: 2026-10-09
 
+[Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion/CharacterBody binding remains open.
+
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public
 GPU-world selection/binding remains open; declaration coverage is unchanged.
 
-[Resident shape queries](../components/gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding and body-motion recovery remain open.
+[Resident shape queries](../components/gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU query/world binding remains open.
 
 [Resident ray and point queries](../components/gpu-resident-queries.md) now search current device geometry with stable logical result caps, masks, exclusions and authored canvas filtering. Query-only tree preparation skips simulation pair generation; the public world/query adapter remains open.
 

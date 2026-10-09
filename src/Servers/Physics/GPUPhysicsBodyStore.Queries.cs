@@ -24,7 +24,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         internal readonly Vector2 Normal => new(PointNormal.Z, PointNormal.W);
     }
     [StructLayout(LayoutKind.Sequential)]
-    private struct QueryMapping { internal ulong Collider; internal uint LogicalShape, Generation; internal ulong Canvas; internal ulong Padding; }
+    private struct QueryMapping { internal ulong Collider; internal uint LogicalShape, Generation; internal ulong Canvas; internal ulong ObjectIdentity; }
     [StructLayout(LayoutKind.Sequential)]
     private struct QueryInput
     {
@@ -45,15 +45,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal long QuerySpatialSubmissionCount { get; private set; }
     internal long QuerySubmissionCount { get; private set; }
 
-    /// <summary>Assigns a logical ordering/exclusion key and canvas to a physical shape. A public-world adapter supplies its collider RID and logical slot.</summary>
-    internal void SetQueryIdentity(ShapeHandle shape, ulong collider, int logicalShape, ulong canvas = 0)
+    /// <summary>Assigns a logical ordering/exclusion key, canvas and optional object identity to a physical shape. A public-world adapter supplies its collider RID and logical slot.</summary>
+    internal void SetQueryIdentity(ShapeHandle shape, ulong collider, int logicalShape, ulong canvas = 0, ulong objectID = 0)
     {
         Validate(shape);
         if (collider == 0 || logicalShape < 0) throw new ArgumentOutOfRangeException(nameof(collider));
         EnsureQueryMappings();
         ref var value = ref _queryMappings[shape.Index];
-        if (value.Collider == collider && value.LogicalShape == logicalShape && value.Canvas == canvas) return;
-        value.Collider = collider; value.LogicalShape = (uint)logicalShape; value.Canvas = canvas; _queryMappingDirty = true;
+        if (value.Collider == collider && value.LogicalShape == logicalShape && value.Canvas == canvas && value.ObjectIdentity == objectID) return;
+        value.Collider = collider; value.LogicalShape = (uint)logicalShape; value.Canvas = canvas; value.ObjectIdentity = objectID; _queryMappingDirty = true;
     }
     private void ResetQueryIdentity(int index)
     {
@@ -200,5 +200,5 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private void UploadQuery(nint copy, RenderHandle target, int offset, int bytes) => SDL.UploadToGPUBuffer(copy,
         new() { TransferBuffer = _queryUpload!.DangerousGetHandle(), Offset = (uint)offset }, new() { Buffer = target.DangerousGetHandle(), Size = (uint)bytes }, false);
     private void DisposeQueries()
-    { _shapeQueryPipeline?.Dispose(); _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose(); }
+    { _motionQueryPipeline?.Dispose(); _shapeQueryPipeline?.Dispose(); _queryPipeline?.Dispose(); _queryMappingGPU?.Dispose(); _queryInputGPU?.Dispose(); _queryExcludedGPU?.Dispose(); _queryOutputGPU?.Dispose(); _queryCountsGPU?.Dispose(); _queryStatus?.Dispose(); _queryUpload?.Dispose(); _queryDownload?.Dispose(); }
 }

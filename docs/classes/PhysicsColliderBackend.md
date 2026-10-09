@@ -85,3 +85,13 @@ Existing force/field/view/surface/contact warmup assertions retain zero owner-th
 managed allocations. No new throughput, native-allocation or cross-platform claim
 is inferred from the refactor. Source inspection verifies that PhysicsBodyRuntime
 partials and the callback-state partial contain no concrete vendor types or calls.
+
+
+## Complete convex motion geometry
+
+Body-motion recovery, initial penetration and impact geometry use a complete convex
+contour when a shape exceeds the backend piece limit. Directed queries reject ray
+origins inside the complete contour or its swept region before selecting pieces.
+The fixture tag borrows the contour weakly; shared resource collision scratch stays
+allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
+both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).

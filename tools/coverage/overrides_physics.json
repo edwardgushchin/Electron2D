@@ -2196,7 +2196,7 @@
         "class:CharacterBody2D"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Internal GPU batch motion is verified separately; public GPU binding remains open."
     },
     {
       "godot": [
@@ -2204,7 +2204,7 @@
         "CharacterBody2D::method:move_and_slide()"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Internal GPU batch motion is verified separately; public GPU binding remains open."
     },
     {
       "godot": [
@@ -2298,14 +2298,14 @@
         "class:PhysicsTestMotionParameters2D"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Internal GPU batch motion is verified separately; public GPU binding remains open."
     },
     {
       "godot": [
         "PhysicsTestMotionParameters2D::property:collide_separation_ray"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Internal GPU batch motion is verified separately; public GPU binding remains open."
     },
     {
       "godot": [
@@ -2890,14 +2890,14 @@
         "PhysicsBody2D::method:test_move(Transform2D:,Vector2:,KinematicCollision2D:,float:,bool:)"
       ],
       "state": "Implemented",
-      "reason": "Scene body movement and test-only probes execute with safe-margin recovery, earliest body contact, one-way surfaces and typed KinematicCollision snapshots (ADR 0063, PhysicsMotionTests)."
+      "reason": "Scene body movement and test-only probes execute with safe-margin full-contour recovery, earliest body contact, one-way surfaces and typed KinematicCollision snapshots (ADR 0063, PhysicsMotionTests). Internal GPU supplied-pose motion executes separately; public GPU binding remains open."
     },
     {
       "godot": [
         "PhysicsServer2D::method:body_test_motion(RID:,PhysicsTestMotionParameters2D:,PhysicsTestMotionResult2D:)"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results (ADRs 0063, 0067, 0068; CharacterBodyTests, SeparationRayShapeTests)."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Internal GPU batch motion is verified separately; public GPU binding remains open."
     },
     {
       "godot": [

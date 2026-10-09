@@ -75,3 +75,13 @@ in bulk. Queries and further simulation remain rejected. See the
 ## Joint correction default
 
 ConstraintDefaultBias captures ProjectSettings.Physics2DDefaultConstraintBias with active feature overrides at construction (default 0.2). SetConstraintDefaultBias validates a finite [0,1] value under the normal owner/phase/error guard, then updates attached zero-bias joints and wakes their connected bodies. Explicit nonzero joint bias is preserved. The typed PhysicsServer accessors project this value. It governs joint recovery, not the separately pending contact-bias setting.
+
+
+## Complete convex motion geometry
+
+Body-motion recovery, initial penetration and impact geometry use a complete convex
+contour when a shape exceeds the backend piece limit. Directed queries reject ray
+origins inside the complete contour or its swept region before selecting pieces.
+The fixture tag borrows the contour weakly; shared resource collision scratch stays
+allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
+both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).

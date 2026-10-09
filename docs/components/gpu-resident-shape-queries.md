@@ -8,7 +8,7 @@ GPUPhysicsBodyStore.QueryShapes executes logical shape intersections, contact pa
 deepest rest information and translational motion brackets on resident geometry.
 It creates no CPU solver world or temporary simulation body. This remains an
 internal adapter prerequisite: public PhysicsDirectSpaceState and ShapeCast still
-use CPU. Public backend selection, body-motion recovery/CharacterBody binding,
+use CPU. Public backend selection, body-motion/CharacterBody binding,
 callback/event projection, missing shape families and networking remain open.
 
 RetainQueryGeometry borrows an authored Shape in a disposable QueryGeometry lease.
@@ -24,7 +24,9 @@ results and exclusions. Physical slots/generations remain internal attachments,
 not network identities. Pending world poses and geometry are prepared without a
 simulation advance. The same tree preparation/cache, failure state and batch
 submission path serve ray/point and shape queries. Byte capacities allow their
-48/80-byte inputs and 64/80-byte outputs to alternate safely.
+48/80-byte inputs and 64/80/128-byte outputs to alternate safely.
+[Body-motion queries](gpu-resident-motion-queries.md) now reuse this driver and the
+shared directed-contact include for supplied-pose recovery and sweeps.
 
 ## Geometry and public-query semantics
 

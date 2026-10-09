@@ -10,6 +10,7 @@ internal static class PhysicsMotionTests
         VerifyMarginPacking();
         VerifyShapeOwnerIndices();
         VerifyTangentialSlopeContact();
+        VerifyCompoundRecovery();
         Console.WriteLine("Physics body motion sweep and typed server/scene result checks passed.");
     }
 
@@ -240,6 +241,46 @@ internal static class PhysicsMotionTests
         Check(hit is not null && hit.GetNormal().X < -0.1f &&
               hit.GetNormal().Y < -0.9f && hit.GetTravel().X < 5,
             "A body touching an ascending segment reports an inward tangential sweep instead of tunneling through it.");
+    }
+
+    private static void VerifyCompoundRecovery()
+    {
+        var points = new Vector2[12]; for (var i = 0; i < points.Length; i++) points[i] = new Vector2(20, 0).Rotated(-i * Mathf.Tau / points.Length);
+        using var polygon = new ConvexPolygonShape { Points = points }; using var floorShape = new RectangleShape { Size = new(200, 20) };
+        using var circle = new CircleShape { Radius = 5 };
+        var space = PhysicsServer.SpaceCreate(); var mover = PhysicsServer.BodyCreate(); var obstacle = PhysicsServer.BodyCreate();
+        using var query = new PhysicsTestMotionParameters { From = new(0, new(0, 95)), Motion = new(0, 120), RecoveryAsCollision = true };
+        using var result = new PhysicsTestMotionResult();
+        try
+        {
+            PhysicsServer.BodySetMode(mover, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(mover, polygon.GetRID()); PhysicsServer.BodySetSpace(mover, space);
+            PhysicsServer.BodySetMode(obstacle, PhysicsServer.BodyMode.Static); PhysicsServer.BodyAddShape(obstacle, floorShape.GetRID()); PhysicsServer.BodySetTransform(obstacle, new(0, new(0, 100))); PhysicsServer.BodySetSpace(obstacle, space);
+            Check(PhysicsServer.BodyTestMotion(mover, query, result) && result.GetTravel().Y < -18 && result.GetCollisionNormal().Y < -.9f,
+                "A whole convex contour recovers outward instead of oscillating between its internal pieces.");
+            for (var i = 0; i < 64; i++) PhysicsServer.BodyTestMotion(mover, query, result);
+            var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) PhysicsServer.BodyTestMotion(mover, query, result);
+            Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Warmed full-contour recovery reuses collision scratch.");
+            PhysicsServer.BodySetShape(mover, 0, circle.GetRID()); PhysicsServer.BodySetShape(obstacle, 0, polygon.GetRID()); PhysicsServer.BodySetTransform(obstacle, Transform.Identity);
+            query.From = new(0, new(0, -5)); query.Motion = Vector2.Zero;
+            Check(PhysicsServer.BodyTestMotion(mover, query, result) && result.GetTravel().Length() > 10 && result.GetCollisionNormal().Y < -.7f,
+                "A compound target also uses its outer contour for recovery.");
+            using var ray = new SeparationRayShape { Length = 70, SlideOnSlope = true };
+            query.From = new(0, new(8, -3)); query.CollideSeparationRay = true;
+            foreach (var reverse in new[] { false, true })
+            {
+                PhysicsServer.BodySetShape(mover, 0, (reverse ? (Shape)polygon : ray).GetRID());
+                PhysicsServer.BodySetShape(obstacle, 0, (reverse ? (Shape)ray : polygon).GetRID());
+                foreach (var motion in new[] { Vector2.Zero, new Vector2(0, 5) })
+                {
+                    query.Motion = motion;
+                    var collided = PhysicsServer.BodyTestMotion(mover, query, result);
+                    Check(!collided && result.GetTravel().DistanceTo(motion) < .00001f,
+                        $"A ray origin inside a compound query or target rejects every internal seam, including the swept region: reverse={reverse}, motion={motion}, hit={collided}, travel={result.GetTravel()}.");
+                }
+            }
+
+        }
+        finally { PhysicsServer.FreeRID(mover); PhysicsServer.FreeRID(obstacle); PhysicsServer.FreeRID(space); }
     }
 
     private static void Check(bool condition, string message)

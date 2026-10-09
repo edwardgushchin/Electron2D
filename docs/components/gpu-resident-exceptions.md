@@ -12,6 +12,9 @@ Public PhysicsServer worlds still use CPU. Mapping their RID lists, detached or
 stale targets, body motion queries and event publication to this independent store
 remains part of the unfinished public-world adapter. Public declarations and
 their coverage states are unchanged by this internal implementation.
+[Resident body-motion queries](gpu-resident-motion-queries.md) now upload only the
+queried body's incident explicit exceptions and apply them in both directions,
+independently of joint contact vetoes.
 
 `SetCollisionException(owner, target, enabled)` validates both live generation-
 qualified handles before mutation. Each directed entry is independent; either

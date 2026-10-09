@@ -79,6 +79,48 @@ internal static class PhysicsShapeCollision
         return hit;
     }
 
+    /// <summary>Resolves one complete convex motion contact, using native primitive profiles and optional unpartitioned contours.</summary>
+    internal static B2Manifold FullMotionContact(in B2ShapeProxy first, ReadOnlySpan<Vector2> fullFirst, Transform poseFirst,
+        in B2ShapeProxy second, ReadOnlySpan<Vector2> fullSecond, Transform poseSecond)
+    {
+        var buffers = s_buffers ??= new();
+        var a = SceneProxy(first); var b = SceneProxy(second);
+        var hullA = BuildHull(a, fullFirst, fullFirst.IsEmpty ? Transform.Identity : poseFirst, Vector2.Zero, buffers, ref buffers.FirstHull);
+        var hullB = BuildHull(b, fullSecond, fullSecond.IsEmpty ? Transform.Identity : poseSecond, Vector2.Zero, buffers, ref buffers.SecondHull);
+        if (!Intersect(hullA, a.radius, hullB, b.radius, out var normal, out var depth)) return default;
+        Span<Vector2> supportA = stackalloc Vector2[2]; Span<Vector2> supportB = stackalloc Vector2[2];
+        var countA = Support(hullA, a.radius, -normal, supportA); var countB = Support(hullB, b.radius, normal, supportB);
+        var point = supportB[0];
+        if (countB == 2)
+        {
+            var toward = countA == 1 ? supportA[0] : (supportA[0] + supportA[1]) * .5f;
+            var edge = supportB[1] - point; var fraction = Math.Clamp(Dot(toward - point, edge) / Dot(edge, edge), 0, 1);
+            point = Lerp(point, supportB[1], fraction);
+        }
+        var midpoint = point - normal * (float)(depth * .5);
+        if (!midpoint.IsFinite() || !float.IsFinite((float)depth)) throw new ArgumentOutOfRangeException(nameof(first), "Motion contact exceeds the finite range.");
+        var result = new B2Manifold { normal = new(-normal.X, -normal.Y), pointCount = 1 };
+        result.points[0].point = PhysicsShapeBackend.ToBackend(midpoint);
+        result.points[0].separation = -(float)depth * PhysicsSpace.MetersPerUnit;
+        return result;
+    }
+
+    /// <summary>Tests ray-origin containment in a complete convex query region before inspecting its backend pieces.</summary>
+    internal static bool FullMotionRegionContains(ReadOnlySpan<Vector2> points, Transform pose, Vector2 motion, float radius, B2Vec2 point)
+    {
+        var buffers = s_buffers ??= new();
+        var hull = BuildHull(default, points, pose, motion, buffers, ref buffers.FirstHull);
+        Span<Vector2> origin = stackalloc Vector2[1] { new(point.X * PhysicsSpace.UnitsPerMeter, point.Y * PhysicsSpace.UnitsPerMeter) };
+        return Intersect(hull, radius * PhysicsSpace.UnitsPerMeter, origin, 0, out _, out _);
+    }
+
+    private static B2ShapeProxy SceneProxy(in B2ShapeProxy source)
+    {
+        var result = source; result.radius *= PhysicsSpace.UnitsPerMeter;
+        for (var i = 0; i < result.count; i++) result.points[i] *= PhysicsSpace.UnitsPerMeter;
+        return result;
+    }
+
     private static void Validate(Transform pose, Vector2 motion)
     {
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))

@@ -30,8 +30,9 @@ remove the solid episode. Policy edits wake the owner through the existing shape
 edit path; the device sleep graph handles prior neighbours.
 
 Recovery margin has the same role as on CPU: it does not select a rigid-contact
-side. GPU body-motion/recovery queries and the public scene/server world adapter
-remain unfinished. This internal stage adds no public declarations or coverage
+side. [GPU body-motion/recovery queries](gpu-resident-motion-queries.md) now apply
+the margin and permitted direction independently; the public scene/server world
+adapter remains unfinished. This internal stage adds no public declarations or coverage
 state upgrades, and does not establish a selectable complete GPU backend.
 
 ## Device pipeline and continuous collision

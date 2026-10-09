@@ -1,6 +1,6 @@
 # PhysicsTestMotionParameters
 
-Last updated: 2026-10-05
+Last updated: 2026-10-09
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
@@ -43,3 +43,13 @@ bool blocked = PhysicsServer.BodyTestMotion(bodyRID, parameters);
 ## Verification
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks defaults, invalid rollback, copied exclusions, server and scene bodies, recovery, one-way margins and no-hit reset. See [ADR 0063](../decisions/physics.md#adr-0063).
+
+
+## Complete convex motion geometry
+
+Body-motion recovery, initial penetration and impact geometry use a complete convex
+contour when a shape exceeds the backend piece limit. Directed queries reject ray
+origins inside the complete contour or its swept region before selecting pieces.
+The fixture tag borrows the contour weakly; shared resource collision scratch stays
+allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
+both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).

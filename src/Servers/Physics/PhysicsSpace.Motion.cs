@@ -81,12 +81,11 @@ internal sealed partial class PhysicsSpace
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                     B2Manifold manifold;
                     if (ray is not null || candidate.Tag.SeparationRay is not null)
-                        manifold = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
-                            otherTransform, candidate.Tag.SeparationRay, default, queryMargin);
+                        manifold = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, queryMargin);
                     else
                     {
-                        if (!PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
-                        manifold = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
+                        if (ownTag.Compound is null && candidate.Tag.Compound is null && !PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
+                        manifold = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
                     }
                     if (manifold.pointCount == 0) continue;
                     for (var index = 0; index < manifold.pointCount; index++)
@@ -130,11 +129,9 @@ internal sealed partial class PhysicsSpace
                     if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
                     if (ray is not null || candidate.Tag.SeparationRay is not null)
                     {
-                        var full = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
-                            otherTransform, candidate.Tag.SeparationRay, requested * safe, 0);
+                        var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, requested * safe, 0);
                         if (full.pointCount == 0) continue;
-                        var initial = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
-                            otherTransform, candidate.Tag.SeparationRay, default, 0);
+                        var initial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, 0);
                         if (initial.pointCount != 0 && -initial.points[0].separation <= 0.1f * B2_LINEAR_SLOP &&
                             b2Dot(requested, -initial.normal) >= -1e-6f) continue;
                         var lowRay = 0f;
@@ -143,8 +140,7 @@ internal sealed partial class PhysicsSpace
                             for (var step = 0; step < 8; step++)
                             {
                                 var middle = (lowRay + highRay) * 0.5f;
-                                var partial = PhysicsSeparationRay.PairContact(query, ray?.SlideOnSlope, other,
-                                    otherTransform, candidate.Tag.SeparationRay, requested * middle, 0);
+                                var partial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, requested * middle, 0);
                                 if (partial.pointCount != 0) highRay = middle;
                                 else lowRay = middle;
                             }
@@ -152,8 +148,7 @@ internal sealed partial class PhysicsSpace
                         var rayImpact = query;
                         for (var pointIndex = 0; pointIndex < rayImpact.count; pointIndex++)
                             rayImpact.points[pointIndex] += requested * highRay;
-                        var rayContact = PhysicsSeparationRay.PairContact(rayImpact, ray?.SlideOnSlope, other,
-                            otherTransform, candidate.Tag.SeparationRay, default, queryMargin);
+                        var rayContact = MotionRayContact(rayImpact, ownTag, fromTransform, recovery + requested * highRay, other, candidate.Tag, otherTransform, default, queryMargin);
                         if (rayContact.pointCount == 0) rayContact = full;
                         var point = rayContact.points[0];
                         var normal = -rayContact.normal;
@@ -168,7 +163,7 @@ internal sealed partial class PhysicsSpace
                     }
                     if (PhysicsDirectSpaceState.Overlaps(query, other, otherTransform))
                     {
-                        var stuck = PhysicsDirectSpaceState.GetManifold(query, other, otherTransform);
+                        var stuck = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
                         var depth = stuck.pointCount == 0 ? 0 : -stuck.points[0].separation;
                         var normal = -stuck.normal;
                         if (stuck.pointCount != 0 &&
@@ -199,7 +194,8 @@ internal sealed partial class PhysicsSpace
                     unsafeFraction = high;
                     var impact = WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform,
                         recovery + requested * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(requested)));
-                    var manifold = PhysicsDirectSpaceState.GetManifold(impact, other, otherTransform);
+                    var manifold = MotionManifold(impact, ownTag, fromTransform,
+                        recovery + requested * MathF.Min(1f, high + 2f * B2_LINEAR_SLOP / b2Length(requested)), other, candidate.Tag, otherTransform);
                     if (manifold.pointCount != 0)
                     {
                         var point = manifold.points[0];
@@ -230,6 +226,32 @@ internal sealed partial class PhysicsSpace
             new(contact.Normal.X, contact.Normal.Y), contact.Depth * UnitsPerMeter,
             ToScene(velocity), travel, remainder, safe, unsafeFraction, true);
     }
+
+    private static B2Manifold MotionRayContact(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,
+        in B2ShapeProxy other, PhysicsFixtureTag target, B2Transform otherPose, B2Vec2 motion, float margin)
+    {
+        if (own.SeparationRay is not null && target.Compound is { } targetContour &&
+            PhysicsShapeCollision.FullMotionRegionContains(targetContour.Points, ScenePose(otherPose, default) * targetContour.LocalPose,
+                Vector2.Zero, other.radius, query.points[0])) return default;
+        if (target.SeparationRay is { } ray && own.Compound is { } ownContour &&
+            PhysicsShapeCollision.FullMotionRegionContains(ownContour.Points, ScenePose(from, recovery) * ownContour.LocalPose,
+                ToScene(motion), query.radius, b2TransformPoint(otherPose, ray.From))) return default;
+        return PhysicsSeparationRay.PairContact(query, own.SeparationRay?.SlideOnSlope, other, otherPose, target.SeparationRay, motion, margin);
+    }
+
+    private static B2Manifold MotionManifold(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,
+        in B2ShapeProxy other, PhysicsFixtureTag target, B2Transform otherPose)
+    {
+        if (own.Compound is null && target.Compound is null) return PhysicsDirectSpaceState.GetManifold(query, other, otherPose);
+        // ponytail: reuse full-contour SAT scratch; cache transformed hulls if compound CPU queries dominate measured cost.
+        var firstPose = ScenePose(from, recovery) * (own.Compound?.LocalPose ?? Transform.Identity);
+        var secondPose = ScenePose(otherPose, default) * (target.Compound?.LocalPose ?? Transform.Identity);
+        ReadOnlySpan<Vector2> first = own.Compound is { } a ? a.Points : [];
+        ReadOnlySpan<Vector2> second = target.Compound is { } b ? b.Points : [];
+        return PhysicsShapeCollision.FullMotionContact(query, first, firstPose, WorldProxy(other, otherPose, default), second, secondPose);
+    }
+    private static Transform ScenePose(B2Transform pose, B2Vec2 offset) =>
+        new(new Vector2(pose.q.c, pose.q.s), new Vector2(-pose.q.s, pose.q.c), ToScene(pose.p + offset));
 
     private void AddMotionCandidates(IReadOnlyList<B2ShapeId> shapes, RID ownerRID,
         IReadOnlyList<B2ShapeId> ownShapes, RID[] excludedBodies, ulong[] excludedObjects)
