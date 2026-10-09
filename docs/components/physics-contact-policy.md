@@ -227,3 +227,89 @@ The CPU collider and full GPU regression suites passed; focused suites were repe
 after tightening rejection of squared backend-distance underflow. Native allocation,
 other platforms/devices, rendered FPS, large-world throughput, public GPU binding
 and network acceptance remain outside this contact-history slice.
+
+## Collision priority
+
+CollisionObject.CollisionPriority and PhysicsServer.BodyGet/SetCollisionPriority
+retain one finite positive obstacle weight, default one. Scene/server access shares
+that value even while detached, with owner-thread/step guards once attached. The
+inherited descriptor participates in PackedScene. Area retains the property but
+remains nonblocking. Priority edits do not rebuild fixtures, wake bodies or change
+rigid mass/material/impulse response. They affect BodyTestMotion penetration recovery
+and therefore PhysicsBody and CharacterBody movement through that shared path.
+
+Each of four recovery attempts keeps up to 32 deepest accepted contact planes.
+Sequential correction uses 40% of depth beyond 5% of the query margin, weighted by
+obstacle priority normalized to mean one. A total below 0.00001 uses the raw weights,
+retaining the near-zero policy. The moved body's own priority does not enter this
+calculation. One-way direction/margin, disabled shapes, reciprocal masks, exceptions,
+caller exclusions and logical contact identities retain their existing rules.
+Candidate/tie order is an internal detail; public results preserve the observed
+collision and motion contract rather than identical CPU/GPU point lists.
+
+CPU recovery uses 512 bytes of stack scratch. Partitioned convex shapes contribute
+the full contour once. Their motion manifold now clips an incident edge against
+the selected reference face and retains up to two genuine boundary points; reducing
+a face to one deepest point lost part of its weighted recovery. Single-point and
+rounded-feature contacts keep the existing fallback. Directed rays choose one outer
+entry across a convex contour's cached partitions; internal pieces do not gain
+additional recovery weight. No physical body is moved by
+a test-only query; normal scene movement applies the returned travel.
+
+GPU recovery reserves 512 bytes per request in the device-only tail of the existing
+output buffer; the 128-byte public result prefix is the only payload read back.
+Each pair emits at most two points before recovery stores them, avoiding repeated
+scratch scans inside the shared geometry callbacks. Surface.W stores
+the authored weight in the existing 96-byte body record. Sparse edits use the
+existing 176-byte command and a distinct mask bit. Surface/role edits preserve the
+weight. A batch containing only priority edits leaves spatial versions, contact
+history and sleep unchanged, so subsequent queries reuse the spatial tree.
+There is no body/contact state readback beyond the existing requested query result.
+
+The GPU normalizes weights through significands and exponent differences: direct
+division by float.MaxValue can flush its reciprocal to zero on this Vulkan device.
+The first candidate consequently returned a roughly 2.83e38-unit displacement in
+the maximum-weight test; that candidate was rejected. Explicit non-unrolled loops
+bound the recovery shader's repeated scratch scans. Measurements below distinguish
+cold setup from warmed execution; this slice does not establish full GPU-world
+selection, large simulation speedup, native allocations, window FPS or networking.
+
+PhysicsCollisionPriorityTests checks an analytic circle penetrating two orthogonal
+planes, priority ratios and common scaling, maximum finite weights, the near-zero
+normalization threshold and subnormal values. The normal case allows 0.002 scene
+units (0.02% of the circle diameter); tiny motion allows 0.0000001 units. Swapping
+9:1 priorities must change the dominant recovery direction by more than one unit.
+Forty-one contacts exercise the 32-plane cap, retaining the deeper perpendicular
+plane. Scene tests cover test-only and applied movement, CharacterBody, nonblocking
+Area, PackedScene, live scene/server projection, lifecycle/phase/thread rejection
+and unchanged sleep/RID/fixtures. GPU tests additionally verify device sleep and
+priority across role/surface edits, stale handles and spatial-tree reuse.
+
+Linux/.NET 10 Release, Vulkan/NVIDIA GeForce RTX 3090 Ti, three bodies, one full
+supplied-pose recovery query and one changed obstacle weight per sample:
+
+| Path | Warmup / samples | p50 / p95 / p99, ms | All-thread managed bytes over samples |
+| --- | --- | --- | --- |
+| Public CPU, dummy video | 128 / 128 | 0.0019 / 0.0019 / 0.0020 | 0 |
+| Independent resident GPU | 128 / 128 | 0.1587 / 0.3727 / 0.6072 | 0 |
+
+Resident traffic is 280 B uploaded and 148 B read back per edited query, including
+status, sparse authoring, the query and its single result; mean included wait is
+0.1514 ms. Logs: `/tmp/e2d-priority-verified-cpu.log`, `/tmp/e2d-priority-verified-gpu.log`.
+The full CPU collider and GPU suites passed, including both renderer lifetimes.
+The GPU suite's unchanged 65,536-obstacle/256-query workload measured
+1.2059/1.5792/2.1434 ms, with 22,536/33,800 B upload/readback per batch and zero
+owner/all-thread managed allocation. This larger measurement covers queries, not
+full simulation or window FPS; evidence is `/tmp/e2d-priority-final-gpu-suite.log`.
+
+Cold pipeline preparation is a separate unresolved backend cost. The diagnostic
+`ELECTRON2D_TEST_PHYSICS_PIPELINE=/absolute/file.spv` loads the offline program through
+the normal GPUPhysicsDevice/ShaderCompiler path and releases the pipeline. Fresh
+processes with `__GL_SHADER_DISK_CACHE=0` measured 134,340.63 ms for the motion shader
+from parent c9193423 and 136,650.00 ms for this shader; device startup was
+730.28/670.08 ms separately. Both sources used the repository's Vulkan 1.0 compiler
+recipe. Logs: `/tmp/e2d-priority-pipeline-baseline.log` and
+`/tmp/e2d-priority-pipeline-current.log`. This is one comparison on the stated
+machine, not a cross-device guarantee. The long preparation already existed before
+priority support; moving scratch storage and extracting per-pair collection did
+not resolve it. It must be addressed before full independent-GPU readiness.

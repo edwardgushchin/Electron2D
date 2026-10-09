@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-09-30
+Last updated: 2026-10-09
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -22,13 +22,14 @@ Direct [CollisionPolygon](CollisionPolygon.md) children contribute owned solid o
 | `public CollisionDisableMode DisableMode { get; set; }` | Policy for inherited disabled processing; default Remove. |
 | `public uint CollisionLayer { get; set; }` | Category bits; default 1. |
 | `public uint CollisionMask { get; set; }` | Accepted category bits; default 1. |
+| `public float CollisionPriority { get; set; }` | Relative motion-recovery weight; finite positive, default 1. |
 | `public RID GetRID()` | Stable server identity from construction to disposal. |
 | `public bool GetCollisionLayerValue(int layerNumber)` | Tests one-based layer 1–32. |
 | `public void SetCollisionLayerValue(int layerNumber, bool value)` | Changes one layer bit. |
 | `public bool GetCollisionMaskValue(int layerNumber)` | Tests one-based mask bit 1–32. |
 | `public void SetCollisionMaskValue(int layerNumber, bool value)` | Changes one mask bit. |
 | `protected override void OnNotification(int what)` | Applies effective disabled/enabled physics participation after base notification handling. |
-| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits and disable policy to inherited Entity descriptors. |
+| `protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()` | Adds stored filter bits, recovery priority and disable policy to inherited Entity descriptors. |
 
 ## Member descriptions
 
@@ -154,3 +155,19 @@ Owner IDs and slot indices are distinct. Missing owner IDs, negative/absent loca
 [PhysicsServer indexed methods](PhysicsServer.md#shape-slots) address these same global slots under [ADR 0088](../decisions/physics-shape-slots.md#adr-0088). A raw pose, disabled flag or one-way policy changes only its selected slot; stored owner fields and child properties remain. A corresponding group/child edit restores that policy for the whole group. Raw shape replacement updates the resource returned by ShapeOwnerGetShape without changing child Shape properties. Raw addition creates a transient null-owner group. Removal/clear keep current owner identities, adjust group-local lists and renumber global slots; clear leaves children configured, and a later child resource edit can repopulate its group.
 
 A server-backed geometry returned by ShapeOwnerGetShape is borrowed from its server RID. Separate disposal rejects. ShapeSetData replaces the RID's copy and retires a held old geometry view; FreeRID removes users and retires its current view. ShapeGetData supplies an independent long-lived copy. [PhysicsServerShapeSlotTests](../../tests/Electron2D.Tests/PhysicsServerShapeSlotTests.cs) verifies these interactions, actual native geometry and one-way response, mass poses, owner/phase/lifetime rejection and warmed allocation.
+
+## Collision priority
+
+<a id="collisionpriority"></a>
+`public float CollisionPriority { get; set; }` controls how strongly another body's
+penetration recovery favors separation from this collider. Default one; accepts
+finite strictly positive weights, including very small values. Invalid values throw
+ArgumentOutOfRangeException before changing state. Attached access enforces owner
+thread and physics-step boundaries; disposed access throws ObjectDisposedException.
+
+The retained value survives detach, role changes and PackedScene storage. Scene and
+PhysicsServer body accessors share one value. Area retains the inherited property
+but remains a sensor and never obstructs body motion. Priority changes preserve
+RID, fixtures, sleep and rigid contact impulses; recovered motion can change a
+later sweep's result. For example, `wall.CollisionPriority = 8f;` favors recovery
+out of that wall relative to ordinary obstacles. See [recovery policy](../components/physics-contact-policy.md#collision-priority).

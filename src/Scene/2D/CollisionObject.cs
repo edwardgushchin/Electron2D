@@ -2,13 +2,14 @@ using Box2D.NET;
 
 namespace Electron2D;
 
-/// <summary>A spatial scene object that owns collision filtering for physics shapes.</summary>
+/// <summary>A spatial scene object that owns collision filtering and motion-recovery priority for physics shapes.</summary>
 public abstract partial class CollisionObject : Entity
 {
     private static readonly PropertyDescriptor[] CollisionProperties =
     [
         new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionLayer), node => node.CollisionLayer, (node, value) => node.CollisionLayer = value, _ => 1u, stored: true),
         new PropertyDescriptor<CollisionObject, uint>(nameof(CollisionMask), node => node.CollisionMask, (node, value) => node.CollisionMask = value, _ => 1u, stored: true),
+        new PropertyDescriptor<CollisionObject, float>(nameof(CollisionPriority), node => node.CollisionPriority, (node, value) => node.CollisionPriority = value, _ => 1f, stored: true),
         new PropertyDescriptor<CollisionObject, CollisionDisableMode>(nameof(DisableMode), node => node.DisableMode, (node, value) => node.DisableMode = value, _ => CollisionDisableMode.Remove, stored: true)
     ];
 
@@ -29,6 +30,19 @@ public abstract partial class CollisionObject : Entity
     }
 
     internal PhysicsColliderBackend Backend { get; }
+
+    /// <summary>Gets or sets this collider's relative weight when another body recovers from penetration.</summary>
+    /// <value>A finite positive weight, one by default.</value>
+    /// <remarks>A higher weight favors recovery out of this body. It does not alter rigid contact impulses.
+    /// Area retains this property but does not obstruct body motion. Edits preserve sleep and fixture identity.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or not positive.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owner-thread or physics-step boundary.</exception>
+    /// <exception cref="ObjectDisposedException">The object is disposed.</exception>
+    public float CollisionPriority
+    {
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); Backend.Space?.EnsureQueryAccess(); return Backend.CollisionPriority; }
+        set { EnsureMutable(); Backend.SetCollisionPriority(value); }
+    }
 
     /// <summary>Gets the stable server identity of this collision object.</summary>
     /// <returns>A nonempty RID unchanged by fixture rebuilds or scene attachment.</returns>

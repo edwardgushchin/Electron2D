@@ -717,3 +717,18 @@ acquire hysteresis. Reused impulses cannot be duplicated across fresh points.
 See [contact persistence](../components/physics-contact-policy.md#contact-history-limits)
 for backend storage, tests and limits. All nine space-parameter capabilities now
 have concrete typed operations; this does not complete the rest of PhysicsServer.
+
+## Body collision priority
+
+| Signature | Contract |
+| --- | --- |
+| `public static float BodyGetCollisionPriority(RID body)` | Read the retained relative recovery weight, default one. |
+| `public static void BodySetCollisionPriority(RID body, float priority)` | Write a finite positive weight without rebuilding fixtures or waking bodies. |
+
+Both operations accept live scene or server bodies, including detached bodies.
+An Area/wrong/freed RID throws ArgumentException. Invalid priority throws
+ArgumentOutOfRangeException before mutation; attached owner/step violations throw
+InvalidOperationException. Scene properties and server operations project the same
+value. Priority weights obstacle contacts during BodyTestMotion recovery and the
+shared PhysicsBody/CharacterBody movement paths. It does not change rigid solver
+mass, impulses or direct-space ray/shape query filtering. See [policy and verification](../components/physics-contact-policy.md#collision-priority).

@@ -155,3 +155,12 @@ radius. Policy changes wake dynamics without replacing body/view identity; scene
 sleep transitions remain once-only. See [World sleep policy](physics-sleep.md).
 
 Rotation lock now masks CPU solver inverse inertia at mass updates and lock changes, with authored inertia restored on unlock. Normal/angular virtual surfaces contribute displacement to contact separation so relaxation preserves transferred physical momentum. [Contact correction](physics-contact-policy.md) covers the shared policy and regression checks.
+
+## Collision priority in motion recovery
+
+[CollisionObject.CollisionPriority](../classes/CollisionObject.md#collisionpriority)
+and PhysicsServer body getter/setter now share one retained positive weight.
+BodyTestMotion, PhysicsBody moves and CharacterBody recovery favor higher-priority
+obstacles, while Area remains nonblocking. The CPU and independent GPU query paths
+retain 32 deepest contact planes and apply weighted recovery with bounded scratch.
+Live edits preserve identity, sleep and rigid impulses. See [policy](physics-contact-policy.md#collision-priority).

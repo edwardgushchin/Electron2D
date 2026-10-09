@@ -44,7 +44,8 @@ void main()
         // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
         if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || ((mask & 8u) != 0u && b.velocity != c.body.velocity) || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
-        if ((mask & 65536u) != 0u) b.surface=c.body.surface;
+        if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
+        if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
         if ((mask & 262144u) != 0u) b.flags.z&=~6144u;
         if ((mask & 131072u) != 0u) {targets[index]=c.target;b.flags.z|=2048u;}
         if ((mask & 8192u) != 0u)
@@ -69,7 +70,7 @@ void main()
             if ((b.flags.z & 4u) == 0u) b.velocity.z += c.impulse.z;
         }
         if ((b.flags.z & 4u) != 0u) b.velocity.z = 0;
-        if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(b.velocity+b.surface)) { fail(2u); return; }
+        if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(vec4(b.velocity.xyz+b.surface.xyz,b.surface.w))) { fail(2u); return; }
         bodies[index] = b; transientForces[index]=pending;
     }
     else if (control.x == 1u || control.x == 3u || control.x == 4u)
@@ -129,7 +130,7 @@ void main()
             if(pending.w!=0)pending=vec4(0);
             if(b.flags.y==1u&&(b.flags.z&4096u)!=0u){b.pose=targets[i];b.flags.z&=~6144u;}
         }
-        if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(b.velocity+b.surface)) { fail(2u); return; }
+        if (!finite4(b.pose) || !finite4(b.velocity) || !finite4(vec4(b.velocity.xyz+b.surface.xyz,b.surface.w))) { fail(2u); return; }
         bodies[i] = b; transientForces[i]=pending;
     }
     else

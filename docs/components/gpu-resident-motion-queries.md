@@ -15,8 +15,11 @@ backend selection, event projection and networking remain open.
 
 ## Behavior
 
-Four deepest-contact recovery passes apply 40% of penetration after a 5%-of-margin
-allowance. Ordinary shapes expand by the query margin; directed rays extend along
+Four recovery passes retain up to 32 deepest accepted contact planes. Sequential
+projection applies 40% of excess penetration weighted by obstacle CollisionPriority,
+normalized to mean one except for near-zero total priority. The allowance is 5% of
+the motion margin. [Collision priority](physics-contact-policy.md#collision-priority)
+describes metadata, numerical limits and verification. Ordinary shapes expand by the query margin; directed rays extend along
 their positive axis. A zero margin retains the existing 0.0001-scene-unit minimum.
 A recovered pose then tests the requested translation. Residual penetration above
 0.05 scene units or inward motion stops at fraction zero. Ordinary conservative
@@ -75,7 +78,8 @@ travel. These are scoped convergence tolerances, not bitwise parity promises.
 
 Each request uploads 80 bytes plus 8-byte shape/exception tokens and supplied
 exclusion keys. One result reserves 128 bytes plus a 4-byte count; the batch has an
-8-byte status exchange. Inputs, outputs, scratch and transfers retain warmed
+8-byte status exchange. Recovery reserves another 512 bytes per query in the GPU
+output buffer; this tail is never uploaded or read back. Inputs, outputs, scratch and transfers retain warmed
 capacity. The shared driver safely alternates ray, shape and body-motion strides;
 query-only tree preparation skips simulation pair enumeration. Changed world
 geometry/poses require tree work; unchanged worlds reuse it.

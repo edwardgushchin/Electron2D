@@ -324,7 +324,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 131, "Partial": 12, "Unimplemented": 14, "Blocked": 4, "Excluded": 54}
+                "Implemented": 133, "Partial": 12, "Unimplemented": 12, "Blocked": 4, "Excluded": 54}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -375,6 +375,10 @@ def main():
     disable_rows = [row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
                     if row.startswith("| [`") and ("DisableMode" in row or "disable_mode" in row)]
     assert len(disable_rows) == 5 and all(" | Implemented | " in row for row in disable_rows)
+    assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
+                                        if row.startswith("| [`property float collision_priority"))
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_get_collision_priority", "body_set_collision_priority"))
     freeze_rows = [row for row in pages[CLASS_PAGES / "RigidBody2D.md"].splitlines()
                    if row.startswith("| [`") and ("FreezeMode" in row or "freeze_mode" in row)]
     assert len(freeze_rows) == 4 and all(" | Implemented | " in row for row in freeze_rows)

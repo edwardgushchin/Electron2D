@@ -19,3 +19,8 @@ results are converted only at this internal boundary.
 ShapeCollisionTests covers resource semantics; PhysicsMotionTests covers whole
 contour recovery/containment and warmed allocation. GPUPhysicsMotionQueryTests
 compares body motion with resident kernels. See [verification limits](../components/gpu-resident-motion-queries.md).
+
+FullMotionContact now clips the incident edge against a selected full-contour face
+and emits up to two actual boundary points, deepest first. This preserves face
+contributions in weighted body-motion recovery while keeping single-point fallback,
+caller-owned results and reused hull buffers. See [collision priority](../components/physics-contact-policy.md#collision-priority).

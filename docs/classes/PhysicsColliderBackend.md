@@ -102,3 +102,8 @@ World angular threshold and quiet duration are shared by existing/new attachment
 checks settings, body-size independence and scene/server behavior.
 
 Contact-policy preparation compares Shape.SolverPolicyEpoch separately from geometry. Weak fixture sources refresh per-shape bias without shape IDs, mass or history changes; changed policy wakes the body and touching neighbours. Body, Area and server-collider preparation share this path.
+
+CollisionPriority retains the shared scene/server recovery weight (default one)
+across Attach/Detach and role edits. SetCollisionPriority validates finite positive
+input and the current world's owner/step boundary. No fixture rebuild, body wake
+or vendor state edit is required; motion candidates capture the current value.

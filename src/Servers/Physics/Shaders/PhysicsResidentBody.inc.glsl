@@ -1,5 +1,6 @@
 struct ResidentBody { vec4 pose; vec4 velocity; vec4 force; vec4 properties; vec4 surface; uvec4 flags; };
 // The spare velocity lane retains the automatic-sleep clock; flags.z carries lock/sleep policy.
+// Surface xyz is virtual velocity; its w lane retains the authored motion-recovery priority.
 void bodyForces(inout ResidentBody b,float dt,vec4 fields,float dampingDelta,vec3 transientForce)
 {
     if((b.flags.z&1024u)!=0u)return;

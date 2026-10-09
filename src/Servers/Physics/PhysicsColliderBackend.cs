@@ -15,6 +15,16 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal B2BodyId BodyID { get; private set; }
     internal long AttachmentVersion { get; private set; }
     internal IReadOnlyList<B2ShapeId> Shapes => _shapes;
+    internal float CollisionPriority { get; private set; } = 1;
+
+    internal static void ValidateCollisionPriority(float value)
+    {
+        if (!float.IsFinite(value) || value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
+    }
+    internal void SetCollisionPriority(float value)
+    {
+        Space?.EnsureQueryAccess(); ValidateCollisionPriority(value); CollisionPriority = value;
+    }
 
     internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
     {

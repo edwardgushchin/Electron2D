@@ -128,6 +128,13 @@ internal static class PhysicsShapeCollision
         if (!Intersect(hullA, a.radius, hullB, b.radius, out var normal, out var depth)) return default;
         Span<Vector2> supportA = stackalloc Vector2[2]; Span<Vector2> supportB = stackalloc Vector2[2];
         var countA = Support(hullA, a.radius, -normal, supportA); var countB = Support(hullB, b.radius, normal, supportB);
+        if (countA == 2 || countB == 2)
+        {
+            var referenceB = countB == 2;
+            var face = MotionFaceContacts(referenceB ? supportB : supportA, referenceB ? hullA : hullB,
+                referenceB ? a.radius : b.radius, referenceB ? normal : -normal, normal);
+            if (face.pointCount > 0) return face;
+        }
         var point = supportB[0];
         if (countB == 2)
         {
@@ -140,6 +147,45 @@ internal static class PhysicsShapeCollision
         var result = new B2Manifold { normal = new(-normal.X, -normal.Y), pointCount = 1 };
         result.points[0].point = PhysicsShapeBackend.ToBackend(midpoint);
         result.points[0].separation = -(float)depth * PhysicsSpace.MetersPerUnit;
+        return result;
+    }
+
+    private static B2Manifold MotionFaceContacts(ReadOnlySpan<Vector2> reference, ReadOnlySpan<Vector2> incident,
+        float incidentRadius, Vector2 referenceNormal, Vector2 away)
+    {
+        if (incident.Length < 2) return default;
+        var selected = 0; var minimum = double.PositiveInfinity;
+        for (var i = 0; i < incident.Length; i++)
+        {
+            var edge = incident[(i + 1) % incident.Length] - incident[i];
+            var length = Math.Sqrt(Dot(edge, edge)); if (length == 0) continue;
+            var alignment = (referenceNormal.X * (double)edge.Y - referenceNormal.Y * (double)edge.X) / length;
+            if (alignment < minimum) { minimum = alignment; selected = i; }
+        }
+        var p = incident[selected]; var q = incident[(selected + 1) % incident.Length];
+        var tangent = reference[1] - reference[0]; var squared = Dot(tangent, tangent);
+        var from = Dot(p - reference[0], tangent) / squared; var to = Dot(q - reference[0], tangent) / squared;
+        if (Math.Max(from, to) < 0 || Math.Min(from, to) > 1) return default;
+        var low = 0d; var high = 1d;
+        if (from != to)
+        {
+            var first = -from / (to - from); var second = (1 - from) / (to - from);
+            low = Math.Max(0, Math.Min(first, second)); high = Math.Min(1, Math.Max(first, second));
+        }
+        var result = new B2Manifold { normal = new(-away.X, -away.Y) };
+        for (var i = 0; i < (low == high ? 1 : 2); i++)
+        {
+            var point = Lerp(p, q, i == 0 ? low : high);
+            var projected = point + referenceNormal * (float)Dot(reference[0] - point, referenceNormal);
+            point -= referenceNormal * incidentRadius;
+            var depth = Dot(projected - point, referenceNormal); if (depth < 0) continue;
+            var midpoint = (point + projected) * .5f;
+            if (!midpoint.IsFinite() || !float.IsFinite((float)depth)) throw new ArgumentOutOfRangeException(nameof(incident), "Motion contact exceeds the finite range.");
+            ref var contact = ref result.points[result.pointCount++];
+            contact.point = PhysicsShapeBackend.ToBackend(midpoint); contact.separation = -(float)depth * PhysicsSpace.MetersPerUnit;
+        }
+        if (result.pointCount == 2 && result.points[1].separation < result.points[0].separation)
+            (result.points[0], result.points[1]) = (result.points[1], result.points[0]);
         return result;
     }
 

@@ -121,3 +121,9 @@ rebuilding fixtures. The CPU updater stores true body-local boundary anchors,
 validates their current normal/tangential separation and performs one-use geometric
 impulse matching after preferring stable features. Fresh geometry and event identities
 remain independent of the history limits.
+
+Body-motion candidates capture each obstacle's CollisionPriority. Recovery keeps
+up to 32 deepest accepted contact planes and applies normalized weighted projection
+over four attempts; compound convex fixtures contribute their full contour once.
+The fixed stack buffer avoids managed allocation. [Collision priority](../components/physics-contact-policy.md#collision-priority)
+retains one-way/exclusion rules, query identity and motion/reporting semantics.

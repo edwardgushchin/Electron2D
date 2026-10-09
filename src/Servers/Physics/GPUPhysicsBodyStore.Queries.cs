@@ -119,7 +119,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         var capacity = Capacity(count); Array.Resize(ref _queryLimits, capacity); Array.Resize(ref _queryInputs, capacity);
     }
     private void ExecuteQueries<TInput, THit>(ReadOnlySpan<TInput> queries, ReadOnlySpan<ulong> exclusions, Span<int> counts, Span<THit> hits,
-        int total, ref RenderHandle? pipeline, string shader, bool centers = false) where TInput : unmanaged where THit : unmanaged
+        int total, ref RenderHandle? pipeline, string shader, bool centers = false, int scratchBytesPerQuery = 0) where TInput : unmanaged where THit : unmanaged
     {
         PrepareQuerySpatial();
         if (ShapeCount == 0 || total == 0) { counts[..queries.Length].Clear(); return; }
@@ -131,7 +131,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _queryMappingGPU, ref _queryMappingCapacity, _shapeHighWater, sizeof(QueryMapping), true);
         Grow(ref _queryInputGPU, ref _queryInputCapacity, inputBytes, 1, false);
         Grow(ref _queryExcludedGPU, ref _queryExcludedCapacity, Math.Max(1, exclusions.Length), 8, false);
-        Grow(ref _queryOutputGPU, ref _queryOutputCapacity, outputBytes, 1, false);
+        Grow(ref _queryOutputGPU, ref _queryOutputCapacity, checked(outputBytes + queries.Length * scratchBytesPerQuery), 1, false);
         Grow(ref _queryCountsGPU, ref _queryCountCapacity, queries.Length, 4, false);
         _queryStatus ??= Buffer(8);
         GrowTransfer(ref _queryUpload, ref _queryUploadCapacity, checked(8 + mappingBytes + inputBytes + excludedBytes), SDL.GPUTransferBufferUsage.Upload);

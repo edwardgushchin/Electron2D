@@ -6,7 +6,7 @@ Last updated: 2026-10-09
 ## ADR 0098: World contact solver settings and shape correction
 
 - Status: Accepted
-- Scope: Shape custom solver bias, contact correction and world solver iteration policy
+- Scope: Shape custom solver bias, contact correction, collision recovery priority and world solver policy
 - Depends on: [0054](physics.md#adr-0054), [0063](physics.md#adr-0063), [0069](physics.md#adr-0069), [0087](physics-joints.md#adr-0087), [0089](physics-activity.md#adr-0089)
 
 ### Decision
@@ -67,11 +67,27 @@ Last updated: 2026-10-09
   bias and slack. Independent GPU contacts consume resident per-shape policy and world
   settings; no host pose mirror or CPU contact calculation is introduced. Public
   independent-GPU world binding remains an open requirement.
+- Expose CollisionObject.CollisionPriority and PhysicsServer.BodyGet/SetCollisionPriority,
+  default one, finite and strictly positive. Scene and server APIs share the retained
+  authored value, including detached bodies. Area stores its inherited property but
+  never blocks body motion. Reject invalid values before mutation; attached access
+  follows owner-thread/solver-phase rules. Changes preserve sleep, geometry and RID.
+- Apply obstacle priority during BodyTestMotion recovery, including PhysicsBody and
+  CharacterBody callers. It does not change rigid contact mass or impulses; the
+  recovered pose still determines subsequent sweep results. Follow the pinned [recovery weighting](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_space_2d.cpp#L697):
+  retain up to 32 deepest accepted points, normalize priorities to mean one (except
+  near-zero total weights), and sequentially project the correction against those
+  planes over four recovery attempts. Retain one-way, exclusion and shape policies.
+  Internal candidate order and tied points are not cross-backend identity promises.
+- GPU recovery runs entirely on device with fixed per-query scratch. Store priority
+  in the existing spare body surface lane, submit sparse metadata edits and preserve
+  it across role/velocity changes. Query-only priority edits do not invalidate the
+  spatial tree, contact history or physical sleep state. Normalize finite weights
+  without overflowing their sum, including the maximum finite float.
 
 ### Remaining work and verification
 
-Collision priority,
-renderer debug drawing, backend extensions and public GPU binding remain separate
+Renderer debug drawing, backend extensions and public GPU binding remain separate
 open capabilities. Acceptance requires executable correction, lifecycle, copy/storage,
 material/impulse and warmed allocation checks on CPU and independent GPU, including
 legacy stage preservation; documentation records actual measurements after those checks.

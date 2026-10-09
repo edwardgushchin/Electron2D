@@ -19,7 +19,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [CapsuleShape2D](classes/CapsuleShape2D.md) | [Shape2D](classes/Shape2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [CharacterBody2D](classes/CharacterBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 41 | 0 | 0 | 0 | 0 |
 | [CircleShape2D](classes/CircleShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
-| [CollisionObject2D](classes/CollisionObject2D.md) | [Node2D](classes/Node2D.md) | 33 | 1 | 11 | 1 | 0 |
+| [CollisionObject2D](classes/CollisionObject2D.md) | [Node2D](classes/Node2D.md) | 34 | 1 | 11 | 0 | 0 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
 | [CollisionShape2D](classes/CollisionShape2D.md) | [Node2D](classes/Node2D.md) | 5 | 1 | 1 | 0 | 0 |
 | [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
@@ -37,7 +37,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 5 | 1 | 1 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
-| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 131 | 12 | 4 | 14 | 54 |
+| [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 133 | 12 | 4 | 12 | 54 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 0 | 141 | 0 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 0 | 0 | 3 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 550 | 53 | 220 | 15 | 54 |
+| **Total** | | 553 | 53 | 220 | 12 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -76,7 +76,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`CollisionObject2D::method:_mouse_exit()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
 | [`CollisionObject2D::method:_mouse_shape_enter(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
 | [`CollisionObject2D::method:_mouse_shape_exit(int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
-| [`CollisionObject2D::property:collision_priority`](classes/CollisionObject2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete CollisionObject2D API slice. |
 | [`CollisionObject2D::property:input_pickable`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
 | [`CollisionObject2D::signal:input_event(Node:,InputEvent:,int:)`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
 | [`CollisionObject2D::signal:mouse_entered()`](classes/CollisionObject2D.md) | Blocked | Trigger: viewport physics picking, pointer routing and shape-index event delivery. |
@@ -177,10 +176,8 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2D::method:body_get_canvas_instance_id(RID:)`](classes/PhysicsServer2D.md) | Blocked | Trigger: first missing operation-specific retained-canvas, texture or shader integration in the existing 2D renderer (ADR 0028). |
 | [`PhysicsServer2D::method:body_get_collision_layer(RID:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:body_get_collision_mask(RID:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::method:body_get_collision_priority(RID:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:body_get_continuous_collision_detection_mode(RID:)`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::method:body_get_object_instance_id(RID:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
-| [`PhysicsServer2D::method:body_set_collision_priority(RID:,float:)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |
 | [`PhysicsServer2D::method:body_set_continuous_collision_detection_mode(RID:,int:PhysicsServer2D.CCDMode)`](classes/PhysicsServer2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
 | [`PhysicsServer2D::method:free_rid(RID:)`](classes/PhysicsServer2D.md) | Partial | Scene-owned identities and explicit spaces/bodies/Areas/shapes/joints have tested lifetime (PhysicsQueryTests, PhysicsServerJointTests). WorldBoundary creation/data/free/lifetime now execute (WorldBoundaryTests); backend extension resources still require verification (ADRs 0054 and 0063). |
 | [`PhysicsServer2D::method:get_process_info(int:PhysicsServer2D.ProcessInfo)`](classes/PhysicsServer2D.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2D API slice. |

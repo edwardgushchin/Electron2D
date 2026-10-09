@@ -110791,6 +110791,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetCollisionPriority",
+    "signature": "public static System.Single BodyGetCollisionPriority(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyGetConstantForce(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -111457,6 +111476,30 @@
       {
         "name": "mask",
         "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.BodySetCollisionPriority(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodySetCollisionPriority",
+    "signature": "public static System.Void BodySetCollisionPriority(Electron2D.RID body, System.Single priority)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "priority",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -169562,6 +169605,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CollisionObject.CollisionPriority()",
+    "kind": "property",
+    "declaringType": "Electron2D.CollisionObject",
+    "name": "CollisionPriority",
+    "signature": "public System.Single CollisionPriority { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
     "value": null
   },
   {

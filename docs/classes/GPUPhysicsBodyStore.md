@@ -47,6 +47,7 @@ and network replay remain open. See [resident contact response](../components/gp
 | `QuerySubmissionCount`, `QuerySpatialSubmissionCount` | Search submissions and separate query-only tree preparation; neither enumerates simulation pairs. |
 | `Add(BodyDefinition)` | Validate finite authored values, allocate a generation-qualified slot and queue its initial device record. |
 | `Remove(BodyHandle)` | Invalidate identity and remove all attached shapes, joints and live exception edges immediately; queue device removal. Reuse gets a fresh generation. |
+| `SetCollisionPriority`, `GetCollisionPriority` | Retain finite positive recovery weight in the spare surface lane; sparse edits preserve sleep/history and query spatial residency. |
 | `SetMode`, `GetMode` | Change/read the authored solver role without replacing handles or attachments. Nondynamic transitions clear motion, RigidLinear clears angular motion, and dynamic restoration retains configured mass/forces/CCD. |
 | `SetIntegrationPolicy`, `GetIntegrationPolicy` | Change/read scalar gravity, authored signed damping and its Combine/Replace modes, dynamic rotation lock and default-force omission. Coalesced edits preserve call order; see [resident body parameters](../components/gpu-resident-parameters.md). |
 | `SetPose`, `SetVelocity`, `SetConstantForce`, `ApplyImpulse` | Coalesce edits per slot while preserving setter/impulse order. Velocity assignment supersedes earlier queued impulses; later impulses accumulate. |
@@ -223,3 +224,10 @@ consumer. Matching/claims stay on GPU; no history readback or CPU pose mirror is
 introduced. The existing 80-byte solver uniform carries both new distances in its
 last two spare components. [Contact history limits](../components/physics-contact-policy.md#contact-history-limits)
 documents storage and verification.
+
+CollisionPriority metadata occupies Surface.W without changing the 96-byte body
+or 176-byte command layout. A separate command bit changes only that lane; role and
+surface-velocity edits preserve it. Priority-only batches do not advance spatial
+version, wake bodies or retire solver history. Motion recovery keeps at most 32
+weighted planes in a 512-byte/request device-only output-buffer tail and normalizes large weights without a
+subnormal reciprocal. This adds no CPU physical-state mirror or contact readback.

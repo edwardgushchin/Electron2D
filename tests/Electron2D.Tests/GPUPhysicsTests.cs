@@ -56,6 +56,7 @@ internal static partial class GPUPhysicsTests
         PhysicsContactPolicyTests.RunResident();
         PhysicsSolverIterationTests.RunResident();
         PhysicsContactPersistenceTests.RunResident();
+        PhysicsCollisionPriorityTests.Run(true);
         GPUPhysicsCCDStoreTests.Run();
         GPUPhysicsSpatialTests.Run();
         GPUPhysicsContactStoreTests.Run();

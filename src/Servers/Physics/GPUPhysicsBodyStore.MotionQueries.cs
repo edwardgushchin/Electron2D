@@ -91,7 +91,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             input.ExceptionsCount = (uint)at - input.ExceptionsStart; _motionQueryInputs[i] = input; _queryLimits[i] = 1;
         }
         ExecuteQueries<MotionQueryInput, MotionQueryResult>(_motionQueryInputs.AsSpan(0, queries.Length), _motionPayload.AsSpan(0, at), _motionQueryCounts, results, queries.Length,
-            ref _motionQueryPipeline, "PhysicsResidentMotionQueries.comp.spv", centers: true);
+            ref _motionQueryPipeline, "PhysicsResidentMotionQueries.comp.spv", centers: true, scratchBytesPerQuery: 32 * 16);
         for (var i = 0; i < queries.Length; i++)
             if (_motionQueryCounts[i] == 0) results[i] = new() { TravelRemainder = new(queries[i].Motion.X, queries[i].Motion.Y, 0, 0), Fractions = new(1, 1, 0, 0) };
     }

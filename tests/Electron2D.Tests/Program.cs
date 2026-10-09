@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PIPELINE") is { } pipelinePath) { PhysicsCollisionPriorityTests.MeasurePipeline(pipelinePath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLISION_PRIORITY") == "1") { PhysicsCollisionPriorityTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLISION_PRIORITY_GPU") == "1") { PhysicsCollisionPriorityTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_HISTORY_GPU") == "1") { PhysicsContactPersistenceTests.RunResident(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_HISTORY") == "1") { PhysicsContactPersistenceTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SOLVER_ITERATIONS_GPU") == "1") { PhysicsSolverIterationTests.RunResident(); return; }
@@ -48,7 +51,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLIDER_BACKEND") == "1
     PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run();
     PhysicsBodyStateTests.Run(); PhysicsServerForceTests.Run(); PhysicsServerStateTests.Run(); PhysicsBodyParameterTests.Run();
     PhysicsSurfaceVelocityTests.Run(); PhysicsContactImpulseTests.Run();
-    PhysicsServerJointTests.Run(); PhysicsJointPolicyTests.Run(); PhysicsSleepPolicyTests.Run(); PhysicsContactPolicyTests.Run(); PhysicsSolverIterationTests.Run(); PhysicsContactPersistenceTests.Run(); WorldTests.Run();
+    PhysicsServerJointTests.Run(); PhysicsJointPolicyTests.Run(); PhysicsSleepPolicyTests.Run(); PhysicsContactPolicyTests.Run(); PhysicsSolverIterationTests.Run(); PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run(); WorldTests.Run();
     AnimatableBodyTests.Run(); CharacterBodyTests.Run(); RigidFreezeModeTests.Run(); PhysicalBoneTests.Run();
     Console.WriteLine("Shared collider backend passed: bodies/areas, geometry, materials, mass, views, joints, worlds, motion modes and physical bones.");
     return;
@@ -654,7 +657,7 @@ PhysicsActivityTests.Run();
 PhysicsSleepPolicyTests.Run();
 PhysicsContactPolicyTests.Run();
 PhysicsSolverIterationTests.Run();
-PhysicsContactPersistenceTests.Run();
+PhysicsContactPersistenceTests.Run(); PhysicsCollisionPriorityTests.Run();
 CapsuleShapeTests.Run();
 SegmentShapeTests.Run();
 SeparationRayShapeTests.Run();

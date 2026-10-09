@@ -16,7 +16,8 @@ layout(std430,set=0,binding=4) readonly buffer Nodes { Node nodes[]; };
 layout(std430,set=0,binding=5) readonly buffer Mappings { Mapping mappings[]; };
 layout(std430,set=0,binding=6) readonly buffer Inputs { Query queries[]; };
 layout(std430,set=0,binding=7) readonly buffer Payload { uvec2 payload[]; };
-layout(std430,set=1,binding=0) buffer Results { Result results[]; };
+// Requested result records occupy the prefix; recovery planes use the device-only tail.
+layout(std430,set=1,binding=0) buffer Results { vec4 outputData[]; };
 layout(std430,set=1,binding=1) buffer Counts { uint counts[]; };
 layout(std430,set=1,binding=2) buffer Status { uvec2 status; };
 layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
@@ -31,12 +32,33 @@ void fail(){failQuery(1u);}
 #include "PhysicsResidentCollision.inc.glsl"
 #include "PhysicsQueryDistance.inc.glsl"
 struct Contact { vec2 point; vec2 normal; float depth; bool valid; };
-Contact pairContact;
+Contact pairContact,pairSecond;
+uint recoveryCount=0u;
+uint scratchStart;
+bool oneWayContact(Contact c);
+void retainRecovery(Contact c)
+{
+    if(c.depth<=0||!oneWayContact(c))return;
+    vec4 plane=vec4(c.normal,c.depth,bodyB.surface.w);
+    if(recoveryCount<32u){outputData[scratchStart+recoveryCount++]=plane;return;}
+    uint shallowest=0u;
+    [[dont_unroll]] for(uint j=1u;j<32u;j++)if(outputData[scratchStart+j].z<outputData[scratchStart+shallowest].z)shallowest=j;
+    if(c.depth>outputData[scratchStart+shallowest].z)outputData[scratchStart+shallowest]=plane;
+}
+float relativePriority(float value,float maximum)
+{
+    // Divide normalized significands so a reciprocal of a huge weight cannot flush to zero.
+    uint a=floatBitsToUint(value),b=floatBitsToUint(maximum),ea=a>>23,eb=b>>23;
+    float ma=float((a&0x7fffffu)|(ea==0u?0u:0x800000u)),mb=float((b&0x7fffffu)|(eb==0u?0u:0x800000u));
+    return (ma/mb)*exp2(float(int(max(ea,1u))-int(max(eb,1u))));
+}
 void emitPoint(vec2 a,vec2 b,vec2 normal,uvec4 features)
 {
     float depth=-dot2(b-a,normal);if(depth<-contactLimit-tolerances.z)return;
     if(!finite2(a)||!finite2(b)||!finite2(normal)||!finite2(vec2(depth))){fail();return;}
-    if(!pairContact.valid||depth>pairContact.depth)pairContact=Contact(b,-normal,depth,true);
+    Contact c=Contact(b,-normal,depth,true);
+    if(!pairContact.valid||depth>pairContact.depth){pairSecond=pairContact;pairContact=c;}
+    else if(!pairSecond.valid||depth>pairSecond.depth)pairSecond=c;
 }
 #include "PhysicsResidentManifold.inc.glsl"
 #include "PhysicsDirectedQuery.inc.glsl"
@@ -50,7 +72,7 @@ Result recoveryResult,motionResult;
 bool recovered=false,blocked=false;
 Contact evaluate(Hull a,Hull b,Geometry ga,Geometry gb,vec2 extension,float margin,bool requireOverlap)
 {
-    pairContact=Contact(vec2(0),vec2(0),0,false);contactLimit=2;
+    pairContact=Contact(vec2(0),vec2(0),0,false);pairSecond=pairContact;contactLimit=2;
     if(a.boundary||b.boundary)
     {
         if(a.boundary&&b.boundary)return pairContact;
@@ -152,7 +174,8 @@ vec4 queryBounds(Shape shape,Geometry g,bool recovering)
 }
 void scan(bool recovering)
 {
-    float bestDepth=0;vec2 bestNormal=vec2(0);Result best;
+    recoveryCount=0u;
+    float bestDepth=0;Result best;
     for(uint own=0u;own<q.body.w;own++)
     {
         uvec2 token=payload[q.body.z+own];indexA=token.x;if(indexA>=shapeCount){fail();return;}
@@ -184,8 +207,10 @@ void scan(bool recovering)
                             {
                                 if(ga.data.z!=6u)a.radius+=q.motionMargin.z;
                                 Contact contact=evaluate(a,b,ga,gb,vec2(0),q.motionMargin.z,true);
+                                if(contact.valid)retainRecovery(contact);
+                                if(pairSecond.valid)retainRecovery(pairSecond);
                                 if(contact.valid&&contact.depth>bestDepth&&oneWayContact(contact))
-                                {bestDepth=contact.depth;bestNormal=contact.normal;best=snapshot(contact);}
+                                {bestDepth=contact.depth;best=snapshot(contact);}
                             }
                             else movingPair(a,b,ga,gb);
                         }
@@ -198,12 +223,25 @@ void scan(bool recovering)
     if(recovering&&bestDepth>0)
     {
         recovered=true;recoveryResult=best;
-        recovery+=bestNormal*max(0,bestDepth-q.motionMargin.z*0.05)*0.4;
+        float maximum=0,scaledTotal=0;
+        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)maximum=max(maximum,outputData[scratchStart+j].w);
+        if(maximum==0)return;
+        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)scaledTotal+=relativePriority(outputData[scratchStart+j].w,maximum);
+        bool tiny=maximum<0.00001/scaledTotal;
+        vec2 correction=vec2(0);
+        [[dont_unroll]] for(uint j=0u;j<recoveryCount;j++)
+        {
+            vec4 plane=outputData[scratchStart+j];float depth=plane.z-dot2(plane.xy,correction)-q.motionMargin.z*0.05;
+            float weight=tiny?plane.w:relativePriority(plane.w,maximum)*(float(recoveryCount)/scaledTotal);
+            if(depth>0.00001)correction+=plane.xy*(depth*0.4*weight);
+        }
+        recovery+=correction;
     }
 }
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=queryCount)return;counts[i]=1u;q=queries[i];
+    scratchStart=queryCount*8u+i*32u;
     if(q.body.x>=bodyCount){fail();return;}bodyA=bodies[q.body.x];
     if(bodyA.flags.x!=q.body.y||bodyA.flags.w==0u){fail();return;}
     bodyA.pose=q.pose;
@@ -217,5 +255,9 @@ void main()
     result.travelRemainder=vec4(recovery+safe*q.motionMargin.xy,(1-safe)*q.motionMargin.xy);
     result.fractions=vec4(safe,unsafeFraction,recovery);
     if(!finiteField(result.travelRemainder)||!finiteField(result.pointNormal)||!finiteField(result.velocityDepth)||!finiteField(result.fractions)){fail();return;}
-    results[i]=result;
+    uint at=i*8u;
+    outputData[at]=uintBitsToFloat(result.identity);outputData[at+1u]=uintBitsToFloat(result.shapes);
+    outputData[at+2u]=uintBitsToFloat(result.owner);outputData[at+3u]=uintBitsToFloat(result.objectID);
+    outputData[at+4u]=result.pointNormal;outputData[at+5u]=result.velocityDepth;
+    outputData[at+6u]=result.travelRemainder;outputData[at+7u]=result.fractions;
 }

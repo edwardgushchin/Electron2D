@@ -303,3 +303,9 @@ complete the typed space-parameter family: recycle radius and maximum separation
 control local-anchor impulse reuse on CPU and independent GPU, while fresh geometry,
 queries and event identities remain unchanged. Public GPU world binding and the
 remaining physics/server/networking capabilities are still open.
+
+[Collision priority](../components/physics-contact-policy.md#collision-priority)
+now weights penetration recovery through scene/server body operations and independent
+resident GPU motion queries. Storage, owner/step validation and live edits preserve
+collider identity and physical sleep/impulses. Public independent-GPU world binding
+and the other audited requirements remain open.

@@ -121,6 +121,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount++;
         if (slot.Mode == PhysicsServer.BodyMode.Kinematic) _kinematicBodyCount++;
         slot.Surface = slot.Mode < PhysicsServer.BodyMode.Rigid ? new(definition.Velocity.X, definition.Velocity.Y, definition.AngularVelocity, 0) : default;
+        slot.Surface.W = 1;
         slot.MassProfile = new(definition.Mass, definition.Inertia, definition.CenterOfMass);
         slot.MassProperties = new(definition.Mass, definition.Inertia, definition.CenterOfMass ?? Vector2.Zero);
         ref var command = ref Edit(index);
@@ -179,6 +180,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         var value = new Float4(linear.X, linear.Y, angular, 0);
         if (_slots[body.Index].Mode < PhysicsServer.BodyMode.Rigid)
         {
+            value.W = _slots[body.Index].Surface.W;
             _slots[body.Index].Surface = value; command.Body.Surface = value; command.Mask |= SurfaceEdit;
             command.Body.Velocity = default;
         }
@@ -386,7 +388,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
                 fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + 8, destination, outputBytes, outputBytes);
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
-            if (delta > 0 || _pendingCount > 0) _bodyVersion++;
+            var spatialEdit = delta > 0;
+            for (var i = 0; i < _pendingCount && !spatialEdit; i++) spatialEdit = (_pending[i].Mask & ~CollisionPriorityEdit) != 0;
+            if (spatialEdit) _bodyVersion++;
             for (var i = 0; i < _pendingCount; i++) _slots[_pending[i].Index].Command = -1;
             Array.Clear(_pending, 0, _pendingCount); _pendingCount = 0;
             _failed = false;

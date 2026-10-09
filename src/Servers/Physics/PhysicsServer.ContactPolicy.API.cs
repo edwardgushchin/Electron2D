@@ -2,6 +2,22 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    /// <summary>Gets a scene or server body's relative penetration-recovery priority.</summary>
+    /// <param name="body">A live body RID, including a detached body.</param>
+    /// <returns>The finite positive weight, initially one.</returns>
+    /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates owner-thread or solver-phase rules.</exception>
+    public static float BodyGetCollisionPriority(RID body) => Service.BodyGetCollisionPriorityCore(body);
+
+    /// <summary>Sets how strongly body-motion recovery favors separation from this body.</summary>
+    /// <param name="body">A live body RID, including a detached body.</param>
+    /// <param name="priority">A finite positive relative weight.</param>
+    /// <remarks>Applies to penetration recovery in BodyTestMotion and scene movement. It does not change
+    /// rigid contact impulses, sleep or fixture identity. Scene-owned bodies expose the same value.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The weight is nonfinite or not positive.</exception>
+    /// <exception cref="InvalidOperationException">Attached access violates owner-thread or solver-phase rules.</exception>
+    public static void BodySetCollisionPriority(RID body, float priority) => Service.BodySetCollisionPriorityCore(body, priority);
     /// <summary>Gets the world's body-local radius for reusing cached contact impulses.</summary>
     /// <param name="space">A live scene-owned or server-created space RID.</param>
     /// <returns>The configured nonnegative scene-unit distance.</returns>

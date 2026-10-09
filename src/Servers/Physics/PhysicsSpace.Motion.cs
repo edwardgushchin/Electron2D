@@ -38,7 +38,7 @@ internal sealed partial class PhysicsSpace
     }
 
     private readonly List<MotionCandidate> _motionCandidates = [];
-    private readonly record struct MotionCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag);
+    private readonly record struct MotionCandidate(B2ShapeId ShapeID, PhysicsFixtureTag Tag, float Priority);
 
     internal MotionResultData TestBodyMotion(RID ownerRID, IReadOnlyList<B2ShapeId> ownShapes,
         Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
@@ -48,10 +48,10 @@ internal sealed partial class PhysicsSpace
         _motionCandidates.Clear();
         foreach (var other in _bodies)
             if (other.GetRID() != ownerRID)
-                AddMotionCandidates(other.BackendShapes, ownerRID, ownShapes, excludedBodies, excludedObjects);
+                AddMotionCandidates(other.BackendShapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
         foreach (var other in _serverColliders)
             if (!other.IsArea && other.RID != ownerRID)
-                AddMotionCandidates(other.BackendShapes, ownerRID, ownShapes, excludedBodies, excludedObjects);
+                AddMotionCandidates(other.BackendShapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
 
         var requested = PhysicsShapeBackend.ToBackend(motion);
         var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), b2MakeRot(from.Rotation));
@@ -60,23 +60,25 @@ internal sealed partial class PhysicsSpace
         var hasRecoveryHit = false;
         var world = b2GetWorldFromId(_worldID);
         var queryMargin = MathF.Max(margin * MetersPerUnit, 0.0001f * MetersPerUnit);
+        Span<System.Numerics.Vector4> recoveryPlanes = stackalloc System.Numerics.Vector4[32];
 
         for (var attempt = 0; attempt < 4; attempt++)
         {
             var bestDepth = 0f;
-            var bestNormal = new B2Vec2(0, 0);
             var bestContact = default(MotionContact);
+            var planeCount = 0;
             for (var ownIndex = 0; ownIndex < ownShapes.Count; ownIndex++)
             {
                 var ownID = ownShapes[ownIndex];
                 var ownTag = b2Shape_GetUserData(ownID).GetRef<PhysicsFixtureTag>();
-                if (ownTag is null) continue;
+                if (ownTag is null || ownTag.Compound is not null && ownTag.CompoundPiece != 0) continue;
                 var ray = ownTag.SeparationRay;
                 var query = ray is { } data ? PhysicsSeparationRay.WorldProxy(data, fromTransform, recovery) :
                     WorldProxy(b2MakeShapeDistanceProxy(b2GetShape(world, ownID)), fromTransform, recovery);
                 if (ray is null) query.radius += queryMargin;
                 foreach (var candidate in _motionCandidates)
                 {
+                    if (candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
                     var other = b2MakeShapeDistanceProxy(b2GetShape(world, candidate.ShapeID));
                     var otherTransform = b2Body_GetTransform(b2Shape_GetBody(candidate.ShapeID));
                     B2Manifold manifold;
@@ -93,9 +95,10 @@ internal sealed partial class PhysicsSpace
                         var point = manifold.points[index];
                         var depth = -point.separation;
                         var normal = -manifold.normal;
-                        if (depth <= bestDepth || !AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
+                        if (depth <= 0 || !AcceptOneWay(candidate, normal, depth, queryMargin)) continue;
+                        RetainRecoveryPlane(recoveryPlanes, ref planeCount, new(normal.X, normal.Y, depth, candidate.Priority));
+                        if (depth <= bestDepth) continue;
                         bestDepth = depth;
-                        bestNormal = normal;
                         var colliderPoint = point.point + manifold.normal * (point.separation * 0.5f);
                         bestContact = new(candidate, ownTag.ShapeIndex, colliderPoint, normal, depth);
                     }
@@ -104,7 +107,18 @@ internal sealed partial class PhysicsSpace
             if (bestDepth <= 0) break;
             recoveryHit = bestContact;
             hasRecoveryHit = true;
-            recovery += bestNormal * MathF.Max(0, bestDepth - queryMargin * 0.05f) * 0.4f;
+            double totalPriority = 0;
+            for (var i = 0; i < planeCount; i++) totalPriority += recoveryPlanes[i].W;
+            var normalization = totalPriority < 0.00001f ? 1 : planeCount / totalPriority;
+            var correction = new B2Vec2(0, 0);
+            for (var i = 0; i < planeCount; i++)
+            {
+                var plane = recoveryPlanes[i]; var normal = new B2Vec2(plane.X, plane.Y);
+                var depth = plane.Z - b2Dot(normal, correction) - queryMargin * 0.05f;
+                if (depth > 0.00001f * MetersPerUnit) correction += normal * (depth * 0.4f * (float)(plane.W * normalization));
+            }
+            if (correction.X == 0 && correction.Y == 0) break;
+            recovery += correction;
         }
 
         var safe = 1f;
@@ -129,6 +143,8 @@ internal sealed partial class PhysicsSpace
                     if (!AcceptOneWayMotion(candidate, requested, otherTransform)) continue;
                     if (ray is not null || candidate.Tag.SeparationRay is not null)
                     {
+                        if (ownTag.Compound is not null && ownTag.CompoundPiece != 0 ||
+                            candidate.Tag.Compound is not null && candidate.Tag.CompoundPiece != 0) continue;
                         var full = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, requested * safe, 0);
                         if (full.pointCount == 0) continue;
                         var initial = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, 0);
@@ -236,6 +252,24 @@ internal sealed partial class PhysicsSpace
         if (target.SeparationRay is { } ray && own.Compound is { } ownContour &&
             PhysicsShapeCollision.FullMotionRegionContains(ownContour.Points, ScenePose(from, recovery) * ownContour.LocalPose,
                 ToScene(motion), query.radius, b2TransformPoint(otherPose, ray.From))) return default;
+        var compound = own.SeparationRay is not null ? target.Compound : target.SeparationRay is not null ? own.Compound : null;
+        if (compound is not null)
+        {
+            if (!compound.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(ConvexPolygonShape));
+            var pose = (own.SeparationRay is not null ? ScenePose(otherPose, default) : ScenePose(from, recovery)) * compound.LocalPose;
+            var transform = new B2Transform(PhysicsShapeBackend.ToBackend(pose.Origin), new B2Rot(pose.X.X, pose.X.Y));
+            var hulls = PhysicsShapeBackend.GetHulls(source, compound.Points); var best = default(B2Manifold);
+            // A partitioned contour contributes its outermost directed entry once, not one recovery plane per internal piece.
+            foreach (var hull in hulls)
+            {
+                var piece = new B2ShapeProxy { points = hull.points, count = hull.count, radius = own.SeparationRay is null ? query.radius : other.radius };
+                var candidate = own.SeparationRay is not null
+                    ? PhysicsSeparationRay.PairContact(query, own.SeparationRay.Value.SlideOnSlope, piece, transform, null, motion, margin)
+                    : PhysicsSeparationRay.PairContact(WorldProxy(piece, transform, default), null, other, otherPose, target.SeparationRay, motion, margin);
+                if (candidate.pointCount > 0 && (best.pointCount == 0 || candidate.points[0].separation < best.points[0].separation)) best = candidate;
+            }
+            return best;
+        }
         return PhysicsSeparationRay.PairContact(query, own.SeparationRay?.SlideOnSlope, other, otherPose, target.SeparationRay, motion, margin);
     }
 
@@ -253,7 +287,15 @@ internal sealed partial class PhysicsSpace
     private static Transform ScenePose(B2Transform pose, B2Vec2 offset) =>
         new(new Vector2(pose.q.c, pose.q.s), new Vector2(-pose.q.s, pose.q.c), ToScene(pose.p + offset));
 
-    private void AddMotionCandidates(IReadOnlyList<B2ShapeId> shapes, RID ownerRID,
+    private static void RetainRecoveryPlane(Span<System.Numerics.Vector4> planes, ref int count, System.Numerics.Vector4 plane)
+    {
+        if (count < planes.Length) { planes[count++] = plane; return; }
+        var shallowest = 0;
+        for (var i = 1; i < count; i++) if (planes[i].Z < planes[shallowest].Z) shallowest = i;
+        if (plane.Z > planes[shallowest].Z) planes[shallowest] = plane;
+    }
+
+    private void AddMotionCandidates(IReadOnlyList<B2ShapeId> shapes, float priority, RID ownerRID,
         IReadOnlyList<B2ShapeId> ownShapes, RID[] excludedBodies, ulong[] excludedObjects)
     {
         for (var shapeIndex = 0; shapeIndex < shapes.Count; shapeIndex++)
@@ -274,7 +316,7 @@ internal sealed partial class PhysicsSpace
                 if ((ownFilter.maskBits & filter.categoryBits) != 0 &&
                     (filter.maskBits & ownFilter.categoryBits) != 0) { eligible = true; break; }
             }
-            if (eligible) _motionCandidates.Add(new(shape, tag));
+            if (eligible) _motionCandidates.Add(new(shape, tag, priority));
         }
     }
 

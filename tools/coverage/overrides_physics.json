@@ -1234,6 +1234,21 @@
       "godot": "ProjectSettings::property:physics/2d/solver/contact_max_separation",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxSeparation()",
       "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "CollisionObject2D::property:collision_priority",
+      "electron2d": "property:Electron2D.CollisionObject.CollisionPriority()",
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_collision_priority(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetCollisionPriority(Electron2D.RID,System.Single)",
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
     }
   ],
   "extras": [
@@ -3681,6 +3696,15 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0098: numeric selector is represented by typed SpaceGetContactMaxSeparation/SpaceSetContactMaxSeparation; geometric history behavior executes."
+    },
+    {
+      "godot": [
+        "CollisionObject2D::property:collision_priority",
+        "PhysicsServer2D::method:body_get_collision_priority(RID:)",
+        "PhysicsServer2D::method:body_set_collision_priority(RID:,float:)"
+      ],
+      "state": "Implemented",
+      "reason": "Finite positive retained collision priority executes through scene/server access and weighted body-motion recovery; independent GPU matching uses resident metadata and bounded device scratch. Lifecycle, packing, numerical and allocation checks: PhysicsCollisionPriorityTests, ADR 0098. Public independent-GPU world binding remains open."
     }
   ]
 }
