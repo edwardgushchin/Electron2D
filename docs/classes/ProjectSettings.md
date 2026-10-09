@@ -1414,3 +1414,14 @@ explicitly authored. The supplied root object's explicit value takes precedence.
 Already active roots and ordinary child viewports are unaffected by later project
 edits. Each registry registers the definition with ordinary typed metadata and
 persistence. See [Physics picking](../components/physics-picking.md).
+
+## Physics diagnostic keys
+
+| Key | Typed member | Default and consumer |
+| --- | --- | --- |
+| `debug/shapes/collision/shape_color` | `ProjectSetting<Color> DebugCollisionShapeColor` | Finite `(0, .6, .7, .42)`, sampled by new CollisionShape nodes and SceneTree instances with feature overrides. |
+| `debug/shapes/collision/draw_2d_outlines` | `ProjectSetting<bool> DebugCollisionDrawOutlines` | `true`; filled Shape drawing adds opaque one-pixel outlines. Applies on next recording, requiring redraw for existing commands. |
+
+Both keys use the existing typed persistence/override registry and are not basic
+settings. [Physics diagnostics](../components/physics-debug.md) documents their
+consumers and native verification. Contact color/limit settings remain unimplemented.

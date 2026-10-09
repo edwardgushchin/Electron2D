@@ -45,6 +45,7 @@ The snippet assumes `root` is a Node, the two named bodies are or will be its ch
 | `public float MaxForce { get; set; }` | `float.MaxValue` | Shared linear and separate pure-angular force/impulse budget. |
 | `public bool DisableCollision { get; set; }` | `true` | Suppress mutual body contacts while joined. |
 | `public RID GetRID()` | — | Stable scene-owned identity until disposal; FreeRID rejects it. |
+| `protected override void OnNotification(int what)` | — | Record local anchor/guide diagnostics before user draw callbacks. |
 | `protected override void ValidateDisposal()` | — | Check scene/dependent world ownership before beginning disposal. |
 | `public override string[] GetConfigurationWarnings()` | — | Return current missing/invalid endpoint warnings. |
 | `protected override void OnEnterTree()` / `OnReady()` / `OnExitTree()` | — | Register, configure and release the scene constraint. |
@@ -96,3 +97,12 @@ owner/stepping guards but skips individual raw graph destruction and partial-mot
 capture. Managed bindings/views are released; the failed space reclaims raw storage
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
+
+### `OnNotification(int what)` and diagnostic geometry
+
+NotificationDraw records a pin cross or the groove/spring anchor extent when
+SceneTree.DebugCollisionsHint is enabled. Groove also shows InitialOffset; geometry
+edits invalidate recording. Markers follow local transforms and ordinary visibility,
+clipping and modulation. They describe authored local anchors, not solved impulses.
+The [shared diagnostic component](../components/physics-debug.md) verifies ordering,
+zero warmed allocation and real pixels for CPU/GPU physics and both renderers.

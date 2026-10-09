@@ -10,6 +10,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     private static readonly PropertyDescriptor[] ShapeProperties =
     [
         new PropertyDescriptor<CollisionShape, Shape?>(nameof(Shape), node => node.Shape, (node, value) => node.Shape = value, _ => null, stored: true),
+        new PropertyDescriptor<CollisionShape, Color>(nameof(DebugColor), node => node.DebugColor, (node, value) => node.DebugColor = value, _ => ProjectSettings.GetWithOverride(ProjectSettings.DebugCollisionShapeColor), stored: true),
         new PropertyDescriptor<CollisionShape, bool>(nameof(Disabled), node => node.Disabled, (node, value) => node.Disabled = value, _ => false, stored: true),
         new PropertyDescriptor<CollisionShape, bool>(nameof(OneWayCollision), node => node.OneWayCollision, (node, value) => node.OneWayCollision = value, _ => false, stored: true),
         new PropertyDescriptor<CollisionShape, float>(nameof(OneWayCollisionMargin), node => node.OneWayCollisionMargin,
@@ -18,7 +19,11 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             (node, value) => node.OneWayCollisionDirection = value, _ => Vector2.Down, stored: true)
     ];
 
+    private Color _debugColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugCollisionShapeColor);
+    private ulong _debugGeometryRevision;
+    private bool _debugGeometryDisposed;
     private Shape? _shape;
+
     private Shape[] _ownerShapes = [];
     private CollisionObject? _owner;
     private bool _disabled;
@@ -48,12 +53,25 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
             if (ReferenceEquals(value, _shape)) return;
             DetachShapeEvents(_shape);
-            _shape = value;
+            _shape = value; InvalidateCanvas();
             _ownerShapes = value is null ? [] : [value];
             AttachShapeEvents(value);
             _owner?.ReplaceChildShapes(this);
             UpdateConfigurationWarnings();
         }
+    }
+
+    /// <summary>Gets or sets the local geometry color used when scene collision diagnostics are enabled.</summary>
+    /// <value>The project collision shape color sampled at construction; stored in packed scenes.</value>
+    /// <remarks>Disabled geometry uses gray with half the configured alpha. Resource edits and color changes
+    /// invalidate retained drawing without changing collision participation. The shape resource remains borrowed.</remarks>
+    /// <exception cref="ArgumentException">A channel is nonfinite.</exception>
+    /// <exception cref="ObjectDisposedException">This node is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off the scene owner thread.</exception>
+    public Color DebugColor
+    {
+        get { ThrowIfDisposed(); return _debugColor; }
+        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentException("Debug color must be finite.", nameof(value)); if (_debugColor == value) return; _debugColor = value; InvalidateCanvas(); }
     }
 
     /// <summary>Gets or sets whether this node contributes collision geometry.</summary>
@@ -65,7 +83,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
         {
             EnsureMutable();
             if (_disabled == value) return;
-            _disabled = value;
+            _disabled = value; InvalidateCanvas();
             _owner?.ChildDisabledChanged(this);
         }
     }
@@ -77,7 +95,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     public bool OneWayCollision
     {
         get { ThrowIfDisposed(); return _oneWayCollision; }
-        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
+        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; InvalidateCanvas(); _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
     }
 
     /// <summary>Gets or sets the maximum accepted one-way recovery depth in scene units.</summary>
@@ -107,7 +125,7 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
             EnsureMutable();
             var direction = NormalizeOneWayDirection(value);
             if (_oneWayCollisionDirection == direction) return;
-            _oneWayCollisionDirection = direction;
+            _oneWayCollisionDirection = direction; InvalidateCanvas();
             _owner?.ChildDirectionChanged(this);
         }
     }
@@ -136,6 +154,11 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
+        if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this) && _shape is { IsDisposed: false })
+        {
+            _shape.DrawToCanvas(this, _disabled ? PhysicsDebugDrawing.Disabled(_debugColor, true) : _debugColor);
+            if (_oneWayCollision) PhysicsDebugDrawing.OneWay(this, _oneWayCollisionDirection, _disabled ? _debugColor.Inverted().Darkened(.25f) : _debugColor.Inverted(), 2);
+        }
         if (what == NotificationParented && Parent is CollisionObject owner)
         {
             _owner = owner; owner.AttachShape(this);
@@ -180,8 +203,16 @@ public sealed class CollisionShape : Entity, ICollisionGeometry
     }
 
 
+    internal void RefreshDebugGeometry()
+    {
+        var revision = _shape?.GeometryRevision ?? 0; var disposed = _shape?.IsDisposed == true;
+        if (_debugGeometryRevision == revision && _debugGeometryDisposed == disposed) return;
+        _debugGeometryRevision = revision; _debugGeometryDisposed = disposed; InvalidateCanvas();
+    }
+
     private void OnShapeDisposed(ElectronObject _)
     {
+        InvalidateCanvas();
         _owner?.MarkShapesDirty();
     }
 

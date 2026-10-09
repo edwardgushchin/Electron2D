@@ -35,6 +35,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Networking | [networking.md](networking.md) | 0094 |
 | Input | [input.md](input.md) | 0038 |
 | Display | [display.md](display.md) | 0040, 0041, 0042, 0043, 0044 |
+| Physics canvas diagnostics | [physics-debug.md](physics-debug.md) | 0100 |
 | Physics pointer delivery | [physics-picking.md](physics-picking.md) | 0099 |
 
 These documents contain current decisions, not an append-only history. Revise an active ADR in place, remove obsolete records, keep the anchors of retained ADRs stable, and update this table. Add a new record only for a distinct decision; split a document by cohesive subdomain before it exceeds 500 lines. See [ADR 0030](product.md#adr-0030).

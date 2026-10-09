@@ -65,7 +65,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
             if (_buildMode == value) return;
             var generated = BuildShapes(_polygon, value);
             ReplaceShapes(generated);
-            _buildMode = value;
+            _buildMode = value; InvalidateCanvas();
             UpdateConfigurationWarnings();
         }
     }
@@ -87,7 +87,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
             ValidatePolygon(copy);
             var generated = BuildShapes(copy, _buildMode);
             ReplaceShapes(generated);
-            _polygon = copy;
+            _polygon = copy; InvalidateCanvas();
             UpdateConfigurationWarnings();
         }
     }
@@ -105,7 +105,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     public bool OneWayCollision
     {
         get { ThrowIfDisposed(); return _oneWayCollision; }
-        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
+        set { EnsureMutable(); if (_oneWayCollision == value) return; _oneWayCollision = value; InvalidateCanvas(); _owner?.ChildOneWayChanged(this); UpdateConfigurationWarnings(); }
     }
 
     /// <summary>Gets or sets the maximum accepted one-way recovery depth in scene units.</summary>
@@ -135,7 +135,7 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
             EnsureMutable();
             var direction = CollisionShape.NormalizeOneWayDirection(value);
             if (_oneWayCollisionDirection == direction) return;
-            _oneWayCollisionDirection = direction;
+            _oneWayCollisionDirection = direction; InvalidateCanvas();
             _owner?.ChildDirectionChanged(this);
         }
     }
@@ -168,6 +168,12 @@ public sealed class CollisionPolygon : Entity, ICollisionGeometry
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
+        if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this))
+        {
+            var color = Tree!.DebugCollisionsColor;
+            if (_polygon.Length > 2) { DrawPolyline(_polygon, color); DrawLine(_polygon[^1], _polygon[0], color); }
+            if (_oneWayCollision) PhysicsDebugDrawing.OneWay(this, _oneWayCollisionDirection, new(color.R, color.G, color.B, 1), 3);
+        }
         if (what == NotificationParented && Parent is CollisionObject owner)
         {
             _owner = owner; owner.AttachShape(this);

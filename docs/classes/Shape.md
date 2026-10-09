@@ -1,16 +1,16 @@
 # Shape
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
-**Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md)
+**Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
-- **Source:** [Shape.cs](../../src/Scene/Resources/Shape.cs), [Shape.Collision.cs](../../src/Scene/Resources/Shape.Collision.cs)
+- **Source:** [Shape.cs](../../src/Scene/Resources/Shape.cs), [Shape.Collision.cs](../../src/Scene/Resources/Shape.Collision.cs), [Shape.Drawing.cs](../../src/Scene/Resources/Shape.Drawing.cs)
 - **Declaration:** `public abstract class Shape : Resource`
 - **Component:** [Collision shapes](../components/physics-shapes.md)
 
 ## Description
 
-The reusable 2D collision-geometry role. The caller owns a Shape resource; a [CollisionShape](CollisionShape.md) borrows it for a direct physics-body or [Area](Area.md) parent. [PhysicsShapeQueryParameters](PhysicsShapeQueryParameters.md) can also borrow it for direct shape queries, lazily registering a physics RID that remains stable through edits and is released on disposal. `Changed` invalidates the parent's and borrowed server fixtures before their next fixed step or direct query. Geometry revisions also let attached owners detect an edit when an earlier user `Changed` subscriber throws. Resource duplication of concrete shapes owns independent geometry state. The current profile supports circle, capsule, segment, separation ray, convex polygon, concave segment collection and rectangle geometry; standalone collision and contact queries execute for these families. Canvas drawing and custom solver bias retain their separate [coverage prerequisites](../coverage/classes/Shape2D.md).
+The reusable 2D collision-geometry role. The caller owns a Shape resource; a [CollisionShape](CollisionShape.md) borrows it for a direct physics-body or [Area](Area.md) parent. [PhysicsShapeQueryParameters](PhysicsShapeQueryParameters.md) can also borrow it for direct shape queries, lazily registering a physics RID that remains stable through edits and is released on disposal. `Changed` invalidates the parent's and borrowed server fixtures before their next fixed step or direct query. Geometry revisions also let attached owners detect an edit when an earlier user `Changed` subscriber throws. Resource duplication of concrete shapes owns independent geometry state. The current profile supports circle, capsule, segment, separation ray, convex polygon, concave segment collection and rectangle geometry; standalone collision and contact queries execute for these families. Canvas drawing and custom solver bias execute through the [diagnostic](../components/physics-debug.md) and [contact policy](../components/physics-contact-policy.md) components.
 
 ## Example
 
@@ -21,7 +21,7 @@ Standalone collisions consume the same source geometry without copying contours.
 GPUPhysicsBodyStore borrows that view for persistent device geometry and broad-phase
 bounds/pairs/contacts; revisions and disposal invalidate its shared geometry records.
 This extraction preserves the public resource contract and does not add a second
-implemented backend or custom-shape registration.
+custom-shape registration. The public world adapter independently selects CPU or GPU.
 
 This complete resource-only snippet requires no SceneTree, body or space:
 
@@ -38,6 +38,7 @@ Vector2[] pairs = circle.CollideAndGetContacts(Transform.Identity, box, boxPose)
 | Member | Contract |
 | --- | --- |
 | `protected Shape()` | Base construction through a concrete derived shape. |
+| `public void Draw(RID canvasItem, Color color)` | Append current local geometry to a live rendering canvas item. |
 | `public abstract Rect2 GetRect()` | Returns the local bounding rectangle in scene units. |
 | `public bool Collide(Transform localTransform, Shape withShape, Transform shapeTransform)` | Tests two posed resources. |
 | `public Vector2[] CollideAndGetContacts(Transform localTransform, Shape withShape, Transform shapeTransform)` | Up to sixteen caller/other boundary pairs. |
@@ -45,6 +46,20 @@ Vector2[] pairs = circle.CollideAndGetContacts(Transform.Identity, box, boxPose)
 | `public Vector2[] CollideWithMotionAndGetContacts(Transform localTransform, Vector2 localMotion, Shape withShape, Transform shapeTransform, Vector2 shapeMotion)` | Boundary pairs of independently swept regions. |
 
 ## Method description
+
+<a id="draw"></a>
+### `Draw(RID canvasItem, Color color)`
+
+Requires a live renderer and its owner thread. The canvas RID can be borrowed from
+a scene CanvasItem or owned by RenderingServer. Wrong-kind/stale RIDs, foreign
+session owners, disposed resources and nonfinite colors reject. Commands copy current
+local geometry and use ordinary canvas transforms, modulation and clipping. They
+persist until clearing/redrawing; resource edits do not change copied commands.
+Filled shapes respect ProjectSettings.DebugCollisionDrawOutlines when recorded.
+Segments stay lines, rays have arrowheads and boundaries use finite normalized-plane
+markers. No physics world/query/readback is created. The [component](../components/physics-debug.md)
+shows callback use, geometry details and executed CPU/GPU/native checks.
+
 
 <a id="getrect"></a>
 ### `GetRect()`

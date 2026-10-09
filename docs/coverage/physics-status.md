@@ -21,12 +21,12 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [CircleShape2D](classes/CircleShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
 | [CollisionObject2D](classes/CollisionObject2D.md) | [Node2D](classes/Node2D.md) | 45 | 1 | 0 | 0 | 0 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
-| [CollisionShape2D](classes/CollisionShape2D.md) | [Node2D](classes/Node2D.md) | 5 | 1 | 1 | 0 | 0 |
+| [CollisionShape2D](classes/CollisionShape2D.md) | [Node2D](classes/Node2D.md) | 7 | 0 | 0 | 0 | 0 |
 | [ConcavePolygonShape2D](classes/ConcavePolygonShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
 | [ConvexPolygonShape2D](classes/ConvexPolygonShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | [Joint2D](classes/Joint2D.md) | 4 | 1 | 0 | 0 | 0 |
-| [GrooveJoint2D](classes/GrooveJoint2D.md) | [Joint2D](classes/Joint2D.md) | 2 | 1 | 0 | 0 | 0 |
-| [Joint2D](classes/Joint2D.md) | [Node2D](classes/Node2D.md) | 5 | 1 | 0 | 0 | 0 |
+| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | [Joint2D](classes/Joint2D.md) | 5 | 0 | 0 | 0 | 0 |
+| [GrooveJoint2D](classes/GrooveJoint2D.md) | [Joint2D](classes/Joint2D.md) | 3 | 0 | 0 | 0 | 0 |
+| [Joint2D](classes/Joint2D.md) | [Node2D](classes/Node2D.md) | 6 | 0 | 0 | 0 | 0 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | [RefCounted](classes/RefCounted.md) | 11 | 3 | 0 | 0 | 0 |
 | [PhysicalBone2D](classes/PhysicalBone2D.md) | [RigidBody2D](classes/RigidBody2D.md) | 8 | 0 | 0 | 0 | 0 |
 | [PhysicsBody2D](classes/PhysicsBody2D.md) | [CollisionObject2D](classes/CollisionObject2D.md) | 7 | 1 | 0 | 0 | 0 |
@@ -43,20 +43,20 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
 | [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | [RefCounted](classes/RefCounted.md) | 8 | 0 | 0 | 0 | 0 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | [RefCounted](classes/RefCounted.md) | 12 | 2 | 0 | 0 | 0 |
-| [PinJoint2D](classes/PinJoint2D.md) | [Joint2D](classes/Joint2D.md) | 6 | 1 | 0 | 0 | 0 |
+| [PinJoint2D](classes/PinJoint2D.md) | [Joint2D](classes/Joint2D.md) | 7 | 0 | 0 | 0 | 0 |
 | [RayCast2D](classes/RayCast2D.md) | [Node2D](classes/Node2D.md) | 20 | 2 | 0 | 0 | 0 |
 | [RectangleShape2D](classes/RectangleShape2D.md) | [Shape2D](classes/Shape2D.md) | 2 | 0 | 0 | 0 | 0 |
 | [RigidBody2D](classes/RigidBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 44 | 11 | 0 | 0 | 0 |
 | [SegmentShape2D](classes/SegmentShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
 | [SeparationRayShape2D](classes/SeparationRayShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| [Shape2D](classes/Shape2D.md) | [Resource](classes/Resource.md) | 6 | 1 | 1 | 0 | 0 |
+| [Shape2D](classes/Shape2D.md) | [Resource](classes/Resource.md) | 8 | 0 | 0 | 0 | 0 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | [Node2D](classes/Node2D.md) | 26 | 2 | 0 | 0 | 0 |
 | [SkeletonModification2DJiggle](classes/SkeletonModification2DJiggle.md) | [SkeletonModification2D](classes/SkeletonModification2D.md) | 29 | 0 | 0 | 0 | 0 |
 | [SkeletonModification2DPhysicalBones](classes/SkeletonModification2DPhysicalBones.md) | [SkeletonModification2D](classes/SkeletonModification2D.md) | 7 | 0 | 0 | 0 | 0 |
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 580 | 52 | 203 | 3 | 54 |
+| **Total** | | 588 | 46 | 201 | 3 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -71,11 +71,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)`](classes/Area2D.md) | Partial | Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests). |
 | [`Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)`](classes/Area2D.md) | Partial | Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests). |
 | [`class:CollisionObject2D`](classes/CollisionObject2D.md) | Partial | Scene/server ownership, filtering, shape owners, disable modes and pointer delivery execute. Pointer delivery is verified on public CPU/GPU worlds (ADR 0099); the complete existing shape-owner/disable suite still needs public cross-backend conformance. Inherited API gaps remain recorded on their declaring families. |
-| [`class:CollisionShape2D`](classes/CollisionShape2D.md) | Partial | Body geometry, one-way contact side and margin-based motion recovery execute; physics debug color still requires renderer canvas integration. |
-| [`CollisionShape2D::property:debug_color`](classes/CollisionShape2D.md) | Blocked | Trigger: 2D physics debug drawing through the retained canvas renderer. |
-| [`class:DampedSpringJoint2D`](classes/DampedSpringJoint2D.md) | Partial | Anchor Hooke force and axial drag, general force cap and shared scene/server lifetime execute under ADRs 0086/0087. Springs have no positional recovery rows. Physics debug drawing remains missing. |
-| [`class:GrooveJoint2D`](classes/GrooveJoint2D.md) | Partial | Finite guide, free rotation and shared bias/vector correction/force caps execute under ADRs 0085/0087; physics debug drawing remains missing. |
-| [`class:Joint2D`](classes/Joint2D.md) | Partial | Scene/server joint identity, anchors, limits/motor and complete bias/softness/force/correction policies execute under ADR 0087; physics debug drawing still needs the scene debug-canvas flag/pass. |
 | [`class:KinematicCollision2D`](classes/KinematicCollision2D.md) | Partial | Typed travel, remainder, contact and scene shape owners execute; virtual tile collision-object and shape owners await typed tile-body integration (ADR 0063). |
 | [`KinematicCollision2D::method:get_collider()`](classes/KinematicCollision2D.md) | Partial | Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063). |
 | [`KinematicCollision2D::method:get_collider_shape()`](classes/KinematicCollision2D.md) | Partial | Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063). |
@@ -302,8 +297,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2DManager::method:set_default_server(String:,int:)`](classes/PhysicsServer2DManager.md) | Blocked | Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). |
 | [`class:PhysicsTestMotionResult2D`](classes/PhysicsTestMotionResult2D.md) | Partial | Typed motion result fields execute; collider object projection remains Partial for virtual tile collision bodies (ADR 0063). |
 | [`PhysicsTestMotionResult2D::method:get_collider()`](classes/PhysicsTestMotionResult2D.md) | Partial | Scene bodies resolve and server-only bodies return null; virtual tile collision bodies require typed tile-owner integration (ADR 0063). |
-| [`class:PinJoint2D`](classes/PinJoint2D.md) | Partial | Scene/server joint identity, anchors, limits/motor and complete bias/softness/force/correction policies execute under ADR 0087; physics debug drawing still needs the scene debug-canvas flag/pass. |
-| [`class:RayCast2D`](classes/RayCast2D.md) | Partial | Direct scene ray snapshots and own query options execute; retained physics-debug gizmo drawing and virtual tile collision-object results remain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063). |
+| [`class:RayCast2D`](classes/RayCast2D.md) | Partial | Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100). |
 | [`RayCast2D::method:get_collider()`](classes/RayCast2D.md) | Partial | Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063). |
 | [`class:RigidBody2D`](classes/RigidBody2D.md) | Partial | Scene-body geometry, fixed-step gravity, impulses, masks and lifetime execute through shared PhysicsColliderBackend ownership also used by Area and server colliders. Initial configuration, scene motion roles and live pose/velocity/sleep operations use engine values; the adapter owns vendor conversion. Resolved scene/server fields share PhysicsBodyRuntime. Body/shape/owner/disable/freeze/character/physical-bone tests and solved-pose notification writes verify these paths; independent GPU ownership and remaining own members stay open (ADR 0054). |
 | [`RigidBody2D::enum:CCDMode`](classes/RigidBody2D.md) | Partial | Shared CCDMode and scene/server settings execute on CPU with solved-motion trajectory checks, impact continuations, force/motor budgets and frame impulse publication (ADR 0054, PhysicsCCDTests). Independent resident GPU CCD uses the same enum. Remaining: public independent-GPU world binding; analytic world-boundary response and rotating-plane CCD now execute (WorldBoundaryTests). |
@@ -316,9 +310,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`RigidBody2D::signal:body_exited(Node:)`](classes/RigidBody2D.md) | Partial | Current scene-body snapshots and deduplicated transitions use the same deepest retained points as direct state. Tile-map virtual collision bodies remain to be integrated. |
 | [`RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)`](classes/RigidBody2D.md) | Partial | Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload requires the existing tile-body integration trigger (ADR 0058, ShapePairEventTests). |
 | [`RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)`](classes/RigidBody2D.md) | Partial | Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload requires the existing tile-body integration trigger (ADR 0058, ShapePairEventTests). |
-| [`class:Shape2D`](classes/Shape2D.md) | Partial | Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; internal GPU contact response and warm history execute; complete public GPU-world ownership/integration remain open. CustomSolverBias now executes under ADR 0098 with shared world policy and storage. Draw still requires renderer RID drawing (ADRs 0063, 0069; ShapeCollisionTests, PhysicsContactPolicyTests). |
-| [`Shape2D::method:draw(RID:,Color:)`](classes/Shape2D.md) | Blocked | Trigger: draw borrowed Shape geometry through existing canvas RIDs with shared physics debug rendering; World.Canvas already exists (ADRs 0028, 0054 and 0063). |
-| [`class:ShapeCast2D`](classes/ShapeCast2D.md) | Partial | Cached scene shape sweeps and typed contacts execute; physics-debug gizmo drawing and virtual tile collision-owner results retain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063). |
+| [`class:ShapeCast2D`](classes/ShapeCast2D.md) | Partial | Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100). |
 | [`ShapeCast2D::method:get_collider(int:)`](classes/ShapeCast2D.md) | Partial | Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063). |
 
 ## Shared inherited declarations
@@ -604,13 +596,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 15 | 3 | 6 | 0 | 0 |
-| [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 1 | 1 | 0 | 1 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 17 | 3 | 4 | 0 | 0 |
+| [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 2 | 1 | 0 | 0 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 0 | 1 | 0 | 0 |
-| **Total** | | 22 | 12 | 43 | 1 | 0 |
+| **Total** | | 25 | 12 | 41 | 0 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -625,15 +617,12 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Engine::property:time_scale`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests. Other monitor producers and custom-monitor registration/lifecycle remain absent; only the three functioning physics selectors are exposed. |
 | [`ProjectSettings::property:debug/shapes/collision/contact_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
-| [`ProjectSettings::property:debug/shapes/collision/draw_2d_outlines`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:debug/shapes/collision/max_contacts_displayed`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
-| [`ProjectSettings::property:debug/shapes/collision/shape_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/common/max_physics_steps_per_frame`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_ticks_per_second`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
-| [`SceneTree::property:debug_collisions_hint`](classes/SceneTree.md) | Unimplemented | Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint/DampedSpringJoint gizmos on both current renderers (ADRs 0085 and 0086); no runtime drawing owner exists yet. |
 | [`SceneTree::signal:physics_frame()`](classes/SceneTree.md) | Partial | Typed frame-start event; exact signal ordering requires audit under ADR 0002. |
 | [`TileData::method:add_collision_polygon(int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`TileData::method:get_collision_polygon_one_way_margin(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |

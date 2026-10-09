@@ -118,3 +118,8 @@ epoch, retaining geometry/fixture IDs, mass and contact history. Concrete copy h
 publish geometry revisions; convex in-place copies refresh the compiled hull through
 the Points setter. All eight shapes round-trip through the built-in resource file
 registry. See [contact correction](physics-contact-policy.md).
+
+[Shape.Draw and scene diagnostics](physics-debug.md) now record built-in geometry
+through the existing retained canvas with finite color, project outlines, typed RIDs
+and ownership/error checks. CPU/GPU physics do not need device state readback for this
+drawing. CollisionShape stores DebugColor and refreshes on geometry revisions/disposal.

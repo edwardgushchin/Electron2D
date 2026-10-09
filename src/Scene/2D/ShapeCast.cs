@@ -33,7 +33,10 @@ public sealed class ShapeCast : Entity
     private readonly List<PhysicsRestInfo> _staging = [];
     private RID[] _exceptionSnapshot = [];
     private RID[] _excludeScratch = [];
+    private ulong _debugGeometryRevision;
+    private bool _debugGeometryDisposed;
     private Shape? _shape;
+
     private Vector2 _targetPosition = new(0, 50);
     private float _margin;
     private int _maxResults = 32;
@@ -61,7 +64,7 @@ public sealed class ShapeCast : Entity
             if (ReferenceEquals(_shape, value)) return;
             if (value is null) _query.ShapeRID = default;
             else _query.Shape = value;
-            _shape = value;
+            _shape = value; InvalidateCanvas();
         }
     }
 
@@ -71,7 +74,7 @@ public sealed class ShapeCast : Entity
     public Vector2 TargetPosition
     {
         get { ThrowIfDisposed(); return _targetPosition; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; }
+        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
     }
 
     /// <summary>Gets or sets the nonnegative query margin in scene units.</summary>
@@ -112,7 +115,7 @@ public sealed class ShapeCast : Entity
         set
         {
             EnsureMutable();
-            _enabled = value;
+            _enabled = value; InvalidateCanvas();
             if (IsInsideTree) SetInternalProcessing(false, value);
             if (!value) _collided = false;
         }
@@ -329,6 +332,7 @@ public sealed class ShapeCast : Entity
         }
         _results.Clear();
         _results.AddRange(_staging);
+        if (_collided != (_results.Count != 0) && PhysicsDebugDrawing.Enabled(this)) InvalidateCanvas();
         _collided = _results.Count != 0;
         _safeFraction = safe;
         _unsafeFraction = unsafeFraction;
@@ -371,6 +375,7 @@ public sealed class ShapeCast : Entity
     {
         if (what == NotificationInternalPhysicsProcess && _enabled) ForceShapecastUpdate();
         base.OnNotification(what);
+        if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this)) DrawDebugCast();
     }
 
     /// <inheritdoc />
@@ -378,6 +383,32 @@ public sealed class ShapeCast : Entity
     {
         try { base.Dispose(disposing); }
         finally { if (disposing) _query.Dispose(); }
+    }
+
+    internal void RefreshDebugGeometry()
+    {
+        var revision = _shape?.GeometryRevision ?? 0; var disposed = _shape?.IsDisposed == true;
+        if (_debugGeometryRevision == revision && _debugGeometryDisposed == disposed) return;
+        _debugGeometryRevision = revision; _debugGeometryDisposed = disposed; InvalidateCanvas();
+    }
+
+    private void DrawDebugCast()
+    {
+        if (_shape is not { IsDisposed: false }) return;
+        var color = _collided ? new Color(1, .01f, 0) : Tree!.DebugCollisionsColor;
+        if (!_enabled) color = PhysicsDebugDrawing.Disabled(color);
+        var size = _shape.GetRect().Size;
+        var extent = Math.Sqrt((double)size.X * size.X + (double)size.Y * size.Y);
+        var length = Math.Sqrt((double)_targetPosition.X * _targetPosition.X + (double)_targetPosition.Y * _targetPosition.Y);
+        var steps = Math.Max(2, extent == 0 ? 2 : Math.Floor(length / extent * 4));
+        if (steps >= 1_048_576) throw new InvalidOperationException("Shape-cast diagnostics exceed the 1,048,576 sample budget.");
+        for (var i = 0; i <= (int)steps; i++)
+        {
+            DrawSetTransform(_targetPosition * (float)(i / steps));
+            _shape.DrawToCanvas(this, color);
+        }
+        DrawSetTransform(Vector2.Zero);
+        PhysicsDebugDrawing.Arrow(this, _targetPosition, color);
     }
 
     private void PrepareExclusions()

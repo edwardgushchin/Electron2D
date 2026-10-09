@@ -1,6 +1,6 @@
 # ShapeCast
 
-Last updated: 2026-10-05
+Last updated: 2026-10-09
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -68,9 +68,11 @@ if (cast.IsColliding()) Console.WriteLine(cast.GetCollisionNormal(0));
 
 ## Verification and limits
 
-[ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) checks defaults, invalid writes, PackedScene, first-frame and automatic samples, pause, fixture failure/recovery, multiple colliders and caps, parent/RID exceptions, Area/body/layer filters, zero motion, rotation, server-only RID lifetime, disabled force updates, owner-thread errors and 64 warmed active frames with zero managed allocation on Linux/.NET 8. Physics debug-gizmo drawing and virtual tile collision-object projections remain [coverage gaps](../coverage/classes/ShapeCast2D.md). Native allocator, other platforms and owner visual acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[ShapeCastTests](../../tests/Electron2D.Tests/ShapeCastTests.cs) checks defaults, invalid writes, PackedScene, first-frame and automatic samples, pause, fixture failure/recovery, multiple colliders and caps, parent/RID exceptions, Area/body/layer filters, zero motion, rotation, server-only RID lifetime, disabled force updates, owner-thread errors and 64 warmed active frames with zero managed allocation on Linux/.NET 8. Cached-state diagnostic drawing now executes. Virtual tile collision-object projections remain [coverage gaps](../coverage/classes/ShapeCast2D.md). Native allocator, other platforms and owner visual acceptance remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 
 Assigned object identity is sampled with each query result, including raw server objects.
 Rebinding does not retarget earlier results; disposal/collection makes object resolution null
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
+
+[Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.

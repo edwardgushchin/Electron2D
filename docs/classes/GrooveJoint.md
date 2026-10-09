@@ -1,6 +1,6 @@
 # GrooveJoint
 
-Last updated: 2026-09-30
+Last updated: 2026-10-09
 
 **Inherits:** [Joint](Joint.md), Entity, CanvasItem, Node, ElectronObject
 
@@ -53,6 +53,8 @@ At connection, the joint samples body B's local anchor from this node's transfor
 
 Both properties and the inherited paths/collision policy persist through PackedScene. A later body entry, path edit or name change can connect an unresolved guide. Body departure destroys the constraint before the body backend handle. Configuration warnings come from Joint. Active mutation and reads use the SceneTree owner thread; a solver-step mutation rejects.
 
-[GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) verifies finite endpoints, free rotation, rotated/reversed/zero-length guides, live geometry, outside offsets, packing, body reentry, numeric/thread failure recovery and 64 warmed active solver frames with zero managed allocation on Linux/.NET 10. The wheel solver's allocation fix is tracked in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). Native allocation, other platforms and owner visual acceptance remain unverified. The class's debug drawing awaits a physics debug-canvas flag and draw pass; see [coverage](../coverage/classes/GrooveJoint2D.md) and [ADR 0085](../decisions/physics-joints.md#adr-0085).
+[GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) verifies finite endpoints, free rotation, rotated/reversed/zero-length guides, live geometry, outside offsets, packing, body reentry, numeric/thread failure recovery and 64 warmed active solver frames with zero managed allocation on Linux/.NET 10. The wheel solver's allocation fix is tracked in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). Native allocation, other platforms and owner visual acceptance remain unverified. The class draws its authored guide and offset under SceneTree.DebugCollisionsHint; see [coverage](../coverage/classes/GrooveJoint2D.md) and [ADR 0085](../decisions/physics-joints.md#adr-0085).
 
 The inherited stable RID and shared server settings are described by [Joint.GetRID](Joint.md) and [PhysicsServer joint methods](PhysicsServer.md#joints), under [ADR 0087](../decisions/physics-joints.md#adr-0087).
+
+[Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.

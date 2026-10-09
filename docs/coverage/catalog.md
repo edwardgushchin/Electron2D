@@ -178,7 +178,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CollisionObject3D](classes/CollisionObject3D.md) | Node3D | Excluded | 36 |
 | [CollisionPolygon2D](classes/CollisionPolygon2D.md) | Node2D | Implemented | 9 |
 | [CollisionPolygon3D](classes/CollisionPolygon3D.md) | Node3D | Excluded | 6 |
-| [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Partial | 6 |
+| [CollisionShape2D](classes/CollisionShape2D.md) | Node2D | Implemented | 6 |
 | [CollisionShape3D](classes/CollisionShape3D.md) | Node3D | Excluded | 6 |
 | [Color](classes/Color.md) | — | Implemented | 206 |
 | [ColorPalette](classes/ColorPalette.md) | Resource | Implemented | 1 |
@@ -217,7 +217,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CylinderShape3D](classes/CylinderShape3D.md) | Shape3D | Excluded | 2 |
 | [DPITexture](classes/DPITexture.md) | Texture2D | Blocked | 11 |
 | [DTLSServer](classes/DTLSServer.md) | RefCounted | Implemented | 2 |
-| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Partial | 4 |
+| [DampedSpringJoint2D](classes/DampedSpringJoint2D.md) | Joint2D | Implemented | 4 |
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |
 | [Dictionary](classes/Dictionary.md) | — | Excluded | 40 |
 | [DirAccess](classes/DirAccess.md) | RefCounted | Partial | 40 |
@@ -357,7 +357,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [GridContainer](classes/GridContainer.md) | Container | Implemented | 3 |
 | [GridMap](classes/GridMap.md) | Node3D | Excluded | 50 |
 | [GridMapEditorPlugin](classes/GridMapEditorPlugin.md) | EditorPlugin | Excluded | 8 |
-| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Partial | 2 |
+| [GrooveJoint2D](classes/GrooveJoint2D.md) | Joint2D | Implemented | 2 |
 | [HBoxContainer](classes/HBoxContainer.md) | BoxContainer | Implemented | 0 |
 | [HFlowContainer](classes/HFlowContainer.md) | FlowContainer | Implemented | 0 |
 | [HMACContext](classes/HMACContext.md) | RefCounted | Implemented | 3 |
@@ -413,7 +413,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [JavaObject](classes/JavaObject.md) | RefCounted | Blocked | 2 |
 | [JavaScriptBridge](classes/JavaScriptBridge.md) | Object | Blocked | 11 |
 | [JavaScriptObject](classes/JavaScriptObject.md) | RefCounted | Blocked | 0 |
-| [Joint2D](classes/Joint2D.md) | Node2D | Partial | 5 |
+| [Joint2D](classes/Joint2D.md) | Node2D | Implemented | 5 |
 | [Joint3D](classes/Joint3D.md) | Node3D | Excluded | 5 |
 | [JointLimitation3D](classes/JointLimitation3D.md) | Resource | Excluded | 0 |
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
@@ -636,7 +636,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Partial | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
-| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Partial | 6 |
+| [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Implemented | 6 |
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |
 | [PlaceholderCubemap](classes/PlaceholderCubemap.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |
@@ -770,7 +770,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ShaderInclude](classes/ShaderInclude.md) | Resource | Blocked | 1 |
 | [ShaderIncludeDB](classes/ShaderIncludeDB.md) | Object | Blocked | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
-| [Shape2D](classes/Shape2D.md) | Resource | Partial | 7 |
+| [Shape2D](classes/Shape2D.md) | Resource | Implemented | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
 | [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Partial | 27 |
 | [ShapeCast3D](classes/ShapeCast3D.md) | Node3D | Excluded | 29 |

@@ -1,6 +1,6 @@
 # DampedSpringJoint
 
-Last updated: 2026-09-30
+Last updated: 2026-10-09
 
 **Inherits:** [Joint](Joint.md), Entity, CanvasItem, Node, ElectronObject
 
@@ -66,6 +66,8 @@ The axial damping coefficient, rather than a dimensionless frequency-normalized 
 
 The inherited [Joint](Joint.md) paths, collision policy, warnings and scene lifetime apply. Properties are stored by PackedScene. Attached reads and writes require the scene owner thread; writes during the solver step reject. Invalid scaled/skewed or unrepresentable anchor geometry preserves the prior native connection. Near-coincident anchors below the backend normalization epsilon have no force direction. Frozen/static endpoints remain immovable; a relaxed sleeping dynamic endpoint stays asleep, while a nonzero spring impulse wakes it. CustomIntegrator omits automatic body forces but preserves this external joint response.
 
-[DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) checks analytic force/mass and exponential drag, off-center torque, pair momentum and equilibrium, stretching beyond Length, rotated/reversed/coincident geometry, live changes, sleep/freeze/custom integration, collision filtering, packing, lifecycle, thread/numeric rollback, multiple-spring preflight and kinematic interval duration. Sixty-four warmed active frames allocate zero managed bytes on Linux/.NET 10. Native allocation, broad-scene performance/stability, other platforms and owner visual acceptance remain unverified. Inherited joint bias and physics debug drawing retain exact [coverage gaps](../coverage/classes/DampedSpringJoint2D.md) under [ADR 0086](../decisions/physics-joints.md#adr-0086).
+[DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) checks analytic force/mass and exponential drag, off-center torque, pair momentum and equilibrium, stretching beyond Length, rotated/reversed/coincident geometry, live changes, sleep/freeze/custom integration, collision filtering, packing, lifecycle, thread/numeric rollback, multiple-spring preflight and kinematic interval duration. Sixty-four warmed active frames allocate zero managed bytes on Linux/.NET 10. Native allocation, broad-scene performance/stability, other platforms and owner visual acceptance remain unverified. Inherited joint bias and authored anchor diagnostics now execute; other declarations retain their exact [coverage gaps](../coverage/classes/DampedSpringJoint2D.md) under [ADR 0086](../decisions/physics-joints.md#adr-0086).
 
 The inherited stable RID and shared server settings are described by [Joint.GetRID](Joint.md) and [PhysicsServer joint methods](PhysicsServer.md#joints), under [ADR 0087](../decisions/physics-joints.md#adr-0087).
+
+[Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.

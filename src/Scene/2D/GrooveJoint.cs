@@ -32,7 +32,7 @@ public sealed class GrooveJoint : Joint
             EnsureJointChange();
             ValidateExtent(value, nameof(value));
             if (_length == value) return;
-            _length = value;
+            _length = value; InvalidateCanvas();
             Runtime.SetGrooveLength(value);
             if (!Runtime.HasBackend || HasServerOverride) MarkJointDirty();
         }

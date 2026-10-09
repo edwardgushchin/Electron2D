@@ -86,6 +86,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(AnisotropicFilteringLevel, isBasic: false);
         RegisterInternal(DefaultClearColor, isBasic: true);
         RegisterInternal(DebugPathsColor, isBasic: false);
+        RegisterInternal(DebugCollisionShapeColor, isBasic: false);
+        RegisterInternal(DebugCollisionDrawOutlines, isBasic: false);
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
@@ -1180,6 +1182,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, AnisotropicFilteringLevel) ||
         ReferenceEquals(setting, DefaultClearColor) ||
         ReferenceEquals(setting, DebugPathsColor) ||
+        ReferenceEquals(setting, DebugCollisionShapeColor) ||
+        ReferenceEquals(setting, DebugCollisionDrawOutlines) ||
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||

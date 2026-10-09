@@ -1,6 +1,6 @@
 # CollisionShape
 
-Last updated: 2026-09-26
+Last updated: 2026-10-09
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -29,6 +29,7 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | --- | --- |
 | `public CollisionShape()` | Detached node with null shape and enabled collision slot. |
 | `public Shape? Shape { get; set; }` | Borrowed geometry, null by default. |
+| `public Color DebugColor { get; set; }` | Retained diagnostic color, initialized from the project shape color. |
 | `public bool Disabled { get; set; }` | Excludes all its fixtures when true; false by default. |
 | `public bool OneWayCollision { get; set; }` | Accepts body contact only from the side opposite the local direction; false by default. |
 | `public float OneWayCollisionMargin { get; set; }` | Maximum accepted recovery depth for one-way body motion; one scene unit by default. |
@@ -40,6 +41,18 @@ body.AddChild(new CollisionShape { Shape = geometry });
 | `protected override void Dispose(bool disposing)` | Disconnects borrowed resource events and removes the slot. |
 
 ## Property descriptions
+
+<a id="debugcolor"></a>
+### `DebugColor`
+
+Stored finite Color, initially sampled from ProjectSettings.DebugCollisionShapeColor
+at construction, with feature overrides. SceneTree.DebugCollisionsHint enables local
+shape drawing through the existing canvas. Disabled shapes use gray with half alpha;
+one-way shapes include a direction arrow. Setting the color invalidates drawing and
+preserves physical geometry/participation. Nonfinite channels reject with
+ArgumentException; attached mutation requires the owner thread. PackedScene preserves
+an explicit color, including transparent colors.
+
 
 <a id="shape"></a>
 ### `Shape`
@@ -68,7 +81,7 @@ The default one scene unit bounds how deeply an initially overlapping body may r
 
 ## Lifecycle, errors and limits
 
-The child registers during tree entry and unregisters before its exit finishes; scene disposal disconnects resource listeners. A disposed borrowed Shape becomes ineligible at the next step. A scale or skew change on an active shape fails before replacing the parent's existing fixtures; correction permits a later step. Owner-thread scene mutation follows Node and Entity. Debug color still needs renderer integration and remains on [CollisionShape2D coverage](../coverage/classes/CollisionShape2D.md).
+The child registers during tree entry and unregisters before its exit finishes; scene disposal disconnects resource listeners. A disposed borrowed Shape becomes ineligible at the next step. A scale or skew change on an active shape fails before replacing the parent's existing fixtures; correction permits a later step. Owner-thread scene mutation follows Node and Entity. Borrowed geometry revision/disposal checks refresh retained debug drawings even when a Changed subscriber throws. [Physics canvas diagnostics](../components/physics-debug.md) records CPU/GPU and native checks.
 
 [PhysicsBodyTests](../../tests/Electron2D.Tests/PhysicsBodyTests.cs) checks parent/shape diagnostics, live shape edits, disablement, PackedScene restoration and borrowed lifetime. [OneWayCollisionTests](../../tests/Electron2D.Tests/OneWayCollisionTests.cs) checks both contact sides, direction and rotation, live changes, packing, area sensing and warmed allocation. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks one-way motion approaches, margin depth and invalid rollback. Other shape-family tests cover their borrowed fixtures. [ADR 0065](../decisions/physics.md#adr-0065) records the one-way body-contact decision.
 

@@ -22,6 +22,7 @@ public sealed partial class SceneTree : MainLoop
         new PropertyDescriptor<SceneTree, Node>(nameof(Root), tree => tree.Root),
         new PropertyDescriptor<SceneTree, Node?>(nameof(CurrentScene), tree => tree.CurrentScene, (tree, value) => tree.CurrentScene = value, _ => null),
         new PropertyDescriptor<SceneTree, Node?>(nameof(EditedSceneRoot), tree => tree.EditedSceneRoot, (tree, value) => tree.EditedSceneRoot = value, _ => null),
+        new PropertyDescriptor<SceneTree, bool>(nameof(DebugCollisionsHint), tree => tree.DebugCollisionsHint, (tree, value) => tree.DebugCollisionsHint = value, _ => false),
         new PropertyDescriptor<SceneTree, bool>(nameof(DebugPathsHint), tree => tree.DebugPathsHint, (tree, value) => tree.DebugPathsHint = value, _ => false),
         new PropertyDescriptor<SceneTree, bool>(nameof(MultiplayerPoll), tree => tree.MultiplayerPoll, (tree, value) => tree.MultiplayerPoll = value, _ => true),
         new PropertyDescriptor<SceneTree, bool>(nameof(AutoAcceptQuit), tree => tree.AutoAcceptQuit, (tree, value) => tree.AutoAcceptQuit = value, _ => true),

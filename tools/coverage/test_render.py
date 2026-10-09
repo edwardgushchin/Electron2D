@@ -245,7 +245,7 @@ def main():
     assert len(shape_rows) == 8
     assert {state: sum(f" | {state} | " in row for row in shape_rows)
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
-                "Implemented": 6, "Partial": 1, "Blocked": 1, "Unimplemented": 0}
+                "Implemented": 8, "Partial": 0, "Blocked": 0, "Unimplemented": 0}
     separation_rows = [row for row in pages[CLASS_PAGES / "SeparationRayShape2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(separation_rows) == 3
@@ -400,6 +400,10 @@ def main():
     assert all(" | Implemented | " in row for row in shape_node_rows
                if "one_way_collision" in row and "margin" not in row)
     assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
+    assert all(" | Implemented | " in row for row in shape_node_rows)
+    assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "SceneTree.md"].splitlines() if "property bool debug_collisions_hint" in row)
+    for setting in ("shape_color", "draw_2d_outlines"):
+        assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines() if f"debug/shapes/collision/{setting}" in row)
     picking_rows = pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
     for name in ("_input_event", "_mouse_enter", "_mouse_exit", "_mouse_shape_enter", "_mouse_shape_exit"):
         assert " | Implemented | " in next(row for row in picking_rows if f"method {name}(" in row)
@@ -445,11 +449,11 @@ def main():
     assert " | Excluded | " in next(row for row in server_joint_rows if row.startswith("| [`enum_value PIN_JOINT_SOFTNESS"))
     assert " | Implemented | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))
     groove_rows = pages[CLASS_PAGES / "GrooveJoint2D.md"].splitlines()
-    assert " | Partial | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))
+    assert " | Implemented | " in next(row for row in groove_rows if row.startswith("| [`class GrooveJoint2D"))
     assert all(" | Implemented | " in next(row for row in groove_rows if row.startswith(f"| [`property float {name}"))
                for name in ("initial_offset", "length"))
     spring_rows = pages[CLASS_PAGES / "DampedSpringJoint2D.md"].splitlines()
-    assert " | Partial | " in next(row for row in spring_rows if row.startswith("| [`class DampedSpringJoint2D"))
+    assert " | Implemented | " in next(row for row in spring_rows if row.startswith("| [`class DampedSpringJoint2D"))
     assert all(" | Implemented | " in next(row for row in spring_rows if row.startswith(f"| [`property float {name}"))
                for name in ("damping", "length", "rest_length", "stiffness"))
     area_rows = [row for row in pages[CLASS_PAGES / "Area2D.md"].splitlines()
@@ -511,7 +515,7 @@ def main():
                          ("CollisionObject2D", "CollisionObject"), ("PhysicsBody2D", "PhysicsBody"),
                          ("StaticBody2D", "StaticBody"), ("RigidBody2D", "RigidBody")):
         assert f"../../classes/{target}.md" in class_rows[name]
-        assert (" | Implemented | " if name in {"CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
+        assert (" | Implemented | " if name in {"Shape2D", "CollisionShape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "RectangleShape2D", "StaticBody2D", "SeparationRayShape2D"} else " | Partial | ") in class_rows[name]
     for name, count in (("UPNP", 45), ("UPNPDevice", 22)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
         assert len(rows) == count and all(" | Implemented | " in row for row in rows), name

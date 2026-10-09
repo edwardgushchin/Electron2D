@@ -1,6 +1,6 @@
 # CollisionPolygon
 
-Last updated: 2026-09-26
+Last updated: 2026-10-09
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -79,3 +79,5 @@ The node creates its group under a direct CollisionObject parent at parenting, s
 [CollisionPolygonTests](../../tests/Electron2D.Tests/CollisionPolygonTests.cs) checks defaults, copies, malformed contour, errors, solid concavity, hollow edges, direct mixed owners, one-way traversal, live rebuild after callback failure, PackedScene and 64 warmed contact frames without managed allocation on Linux/.NET 8. [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) verifies its one-way margin in recovery. Native allocator counts, other platforms and owner visual acceptance remain unverified. See [ADR 0066](../decisions/physics.md#adr-0066).
 
 The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now supplies logical shape slots for both child and manual groups. Query/contact indices identify global slots, while ShapeFindOwner returns the distinct group ID; removal shifts later indices. Motion owner accessors resolve weak configured objects as well as child nodes. See [ADR 0071](../decisions/physics.md#adr-0071).
+
+[Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.

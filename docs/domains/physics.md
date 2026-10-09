@@ -342,3 +342,8 @@ Viewport through actual CPU/GPU point queries, with shape-index input, object/sh
 hover, stored eligibility, canvas transforms, handled-state routing and cleanup.
 It has common and native-window checks. Broader GPU conformance, debug/tile/backend
 extensions, networking and whole-application performance requirements stay open.
+
+[Physics canvas diagnostics](../components/physics-debug.md) now connect Shape.Draw,
+CollisionShape.DebugColor and SceneTree.DebugCollisionsHint to retained shape/cast/joint
+geometry on both renderers and explicit CPU/GPU worlds (ADR 0100). Contact-point
+publication/debug limits, tile owners, extensions and networking remain open.

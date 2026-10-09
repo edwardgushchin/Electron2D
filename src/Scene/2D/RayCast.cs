@@ -48,7 +48,7 @@ public sealed class RayCast : Entity
     public Vector2 TargetPosition
     {
         get { ThrowIfDisposed(); return _targetPosition; }
-        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; }
+        set { EnsureMutable(); if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value)); _targetPosition = value; InvalidateCanvas(); }
     }
 
     /// <summary>Gets or sets the 32-bit collision layers accepted by this ray.</summary>
@@ -67,7 +67,7 @@ public sealed class RayCast : Entity
         set
         {
             EnsureMutable();
-            _enabled = value;
+            _enabled = value; InvalidateCanvas();
             if (IsInsideTree) SetInternalProcessing(false, value);
             if (!value) _collided = false;
         }
@@ -216,6 +216,7 @@ public sealed class RayCast : Entity
         var world = GetWorld() ?? throw new InvalidOperationException("A raycast requires an attached scene world.");
         var transform = GetGlobalTransform();
         var target = _targetPosition == Vector2.Zero ? new Vector2(0, 0.01f) : _targetPosition;
+        var previouslyCollided = _collided;
         var result = world.DirectSpaceState.IntersectRay(transform.Origin, transform * target,
             _collisionMask, _excludeSnapshot, _collideWithAreas, _collideWithBodies, _hitFromInside);
         if (result is { } hit)
@@ -232,6 +233,7 @@ public sealed class RayCast : Entity
             _colliderRID = default; _colliderIdentity = default;
             _colliderShape = 0;
         }
+        if (previouslyCollided != _collided && PhysicsDebugDrawing.Enabled(this)) InvalidateCanvas();
     }
 
     /// <inheritdoc />
@@ -266,6 +268,11 @@ public sealed class RayCast : Entity
     {
         if (what == NotificationInternalPhysicsProcess && _enabled) ForceRaycastUpdate();
         base.OnNotification(what);
+        if (what == NotificationDraw && PhysicsDebugDrawing.Enabled(this))
+        {
+            var color = _collided ? new Color(1, .01f, 0) : Tree!.DebugCollisionsColor;
+            PhysicsDebugDrawing.Arrow(this, _targetPosition, _enabled ? color : PhysicsDebugDrawing.Disabled(color));
+        }
     }
 
     private void RefreshExclusions() => _excludeSnapshot = _exceptions.ToArray();

@@ -182,6 +182,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PARALLEL") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PERFORMANCE") == "1") { PhysicsPipelinePerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERING_DEVICE") == "1") { RenderingDeviceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_SCENES") == "1") { PhysicsGPUSpaceTests.RunMotionScenes(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_DEBUG") == "1") { PhysicsDebugTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_DEBUG_NATIVE") == "1") { PhysicsDebugNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PICKING_NATIVE") == "1") { PhysicsPickingNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PICKING") == "1") { PhysicsPickingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_STATISTICS") == "1") { PhysicsStatisticsTests.Run(); return; }
@@ -675,6 +677,7 @@ WorldBoundaryTests.Run();
 ShapeCollisionTests.Run();
 OneWayCollisionTests.Run();
 CollisionPolygonTests.Run();
+PhysicsDebugTests.Run(false);
 PhysicsQueryTests.Run();
 PhysicsCanvasTests.Run();
 PhysicsObjectBindingTests.Run();

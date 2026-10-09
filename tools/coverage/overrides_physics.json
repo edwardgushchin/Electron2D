@@ -1434,6 +1434,31 @@
       "godot": "ProjectSettings::property:physics/common/enable_object_picking",
       "electron2d": "property:Electron2D.ProjectSettings.PhysicsObjectPicking()",
       "reason": "Typed root-picking default sampled with feature overrides during SceneTree activation. The supplied root's explicit authored choice wins under ADR 0099."
+    },
+    {
+      "godot": "Shape2D::method:draw(RID:,Color:)",
+      "electron2d": "method:Electron2D.Shape.Draw(Electron2D.RID,Electron2D.Color)",
+      "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
+    },
+    {
+      "godot": "CollisionShape2D::property:debug_color",
+      "electron2d": "property:Electron2D.CollisionShape.DebugColor()",
+      "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
+    },
+    {
+      "godot": "SceneTree::property:debug_collisions_hint",
+      "electron2d": "property:Electron2D.SceneTree.DebugCollisionsHint()",
+      "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/collision/shape_color",
+      "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionShapeColor()",
+      "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/collision/draw_2d_outlines",
+      "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionDrawOutlines()",
+      "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
     }
   ],
   "extras": [
@@ -2418,6 +2443,11 @@
       "electron2d": "method:Electron2D.Performance.ValidateDisposal()",
       "reason": "ADR 0095: retained Engine service rejects consumer disposal before identity or object lifetime changes.",
       "adr": "ADR 0095"
+    },
+    {
+      "electron2d": "method:Electron2D.Joint.OnNotification(System.Int32)",
+      "reason": "Overrides the inherited node notification to record authored pin/groove/spring geometry before user drawing through the existing canvas. No new callback capability.",
+      "adr": "ADRs 0004/0028/0100"
     }
   ],
   "statusGroups": [
@@ -2425,15 +2455,15 @@
       "godot": [
         "SceneTree::property:debug_collisions_hint"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: a typed SceneTree debug-collision flag and retained canvas overlay pass shared by body shapes and PinJoint/GrooveJoint/DampedSpringJoint gizmos on both current renderers (ADRs 0085 and 0086); no runtime drawing owner exists yet."
+      "state": "Implemented",
+      "reason": "Retained shape/cast/joint diagnostics, stored finite per-node color and typed project policy execute through scene/owned canvas RIDs on CPU/GPU worlds and both renderers; lifetime, mutation, error and warm allocation checks in PhysicsDebugTests/PhysicsDebugNativeTests (ADR 0100)."
     },
     {
       "godot": [
         "class:DampedSpringJoint2D"
       ],
-      "state": "Partial",
-      "reason": "Anchor Hooke force and axial drag, general force cap and shared scene/server lifetime execute under ADRs 0086/0087. Springs have no positional recovery rows. Physics debug drawing remains missing."
+      "state": "Implemented",
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
     },
     {
       "godot": [
@@ -2449,8 +2479,8 @@
       "godot": [
         "class:GrooveJoint2D"
       ],
-      "state": "Partial",
-      "reason": "Finite guide, free rotation and shared bias/vector correction/force caps execute under ADRs 0085/0087; physics debug drawing remains missing."
+      "state": "Implemented",
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
     },
     {
       "godot": [
@@ -2465,8 +2495,8 @@
         "class:Joint2D",
         "class:PinJoint2D"
       ],
-      "state": "Partial",
-      "reason": "Scene/server joint identity, anchors, limits/motor and complete bias/softness/force/correction policies execute under ADR 0087; physics debug drawing still needs the scene debug-canvas flag/pass."
+      "state": "Implemented",
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
     },
     {
       "godot": [
@@ -2811,7 +2841,7 @@
         "class:ShapeCast2D"
       ],
       "state": "Partial",
-      "reason": "Cached scene shape sweeps and typed contacts execute; physics-debug gizmo drawing and virtual tile collision-owner results retain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
+      "reason": "Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100)."
     },
     {
       "godot": [
@@ -2857,7 +2887,7 @@
         "class:RayCast2D"
       ],
       "state": "Partial",
-      "reason": "Direct scene ray snapshots and own query options execute; retained physics-debug gizmo drawing and virtual tile collision-object results remain separate renderer/tile integration triggers (ADRs 0008, 0028 and 0063)."
+      "reason": "Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100)."
     },
     {
       "godot": [
@@ -3160,8 +3190,8 @@
       "godot": [
         "class:Shape2D"
       ],
-      "state": "Partial",
-      "reason": "Resource bounds and all four standalone collision/contact methods execute for current geometry families through borrowed scene-unit PhysicsShapeGeometry. CPU fixture/query/mass compilation resides in PhysicsShapeBackend. GPUPhysicsBodyStore retains shared geometry and GPU-derived bounds/pairs/contact points; internal GPU contact response and warm history execute; complete public GPU-world ownership/integration remain open. CustomSolverBias now executes under ADR 0098 with shared world policy and storage. Draw still requires renderer RID drawing (ADRs 0063, 0069; ShapeCollisionTests, PhysicsContactPolicyTests)."
+      "state": "Implemented",
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
     },
     {
       "godot": [
@@ -3212,8 +3242,8 @@
       "godot": [
         "class:CollisionShape2D"
       ],
-      "state": "Partial",
-      "reason": "Body geometry, one-way contact side and margin-based motion recovery execute; physics debug color still requires renderer canvas integration."
+      "state": "Implemented",
+      "reason": "Existing geometry/query or scene/server joint policies retain their shared CPU/GPU implementation. The remaining authored shape/joint drawing and stored debug-color behavior now execute through the retained canvas under ADR 0100. Contact-point debug publication, tile owners and backend extensions remain separate families."
     },
     {
       "godot": [
@@ -3283,8 +3313,8 @@
       "godot": [
         "Shape2D::method:draw(RID:,Color:)"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: draw borrowed Shape geometry through existing canvas RIDs with shared physics debug rendering; World.Canvas already exists (ADRs 0028, 0054 and 0063)."
+      "state": "Implemented",
+      "reason": "Retained shape/cast/joint diagnostics, stored finite per-node color and typed project policy execute through scene/owned canvas RIDs on CPU/GPU worlds and both renderers; lifetime, mutation, error and warm allocation checks in PhysicsDebugTests/PhysicsDebugNativeTests (ADR 0100)."
     },
     {
       "godot": [
@@ -3297,8 +3327,8 @@
       "godot": [
         "CollisionShape2D::property:debug_color"
       ],
-      "state": "Blocked",
-      "reason": "Trigger: 2D physics debug drawing through the retained canvas renderer."
+      "state": "Implemented",
+      "reason": "Retained shape/cast/joint diagnostics, stored finite per-node color and typed project policy execute through scene/owned canvas RIDs on CPU/GPU worlds and both renderers; lifetime, mutation, error and warm allocation checks in PhysicsDebugTests/PhysicsDebugNativeTests (ADR 0100)."
     },
     {
       "godot": [
@@ -4152,6 +4182,14 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0099 and PhysicsPickingTests verify the true project default, false/true root activation sampling, unchanged existing/child viewports and explicit authored precedence. Ordinary typed registry metadata/feature override machinery supplies the setting."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:debug/shapes/collision/shape_color",
+        "ProjectSettings::property:debug/shapes/collision/draw_2d_outlines"
+      ],
+      "state": "Implemented",
+      "reason": "Typed validated project settings drive construction defaults and next-recording outline policy. CPU/GPU and native render checks exercise consumers (ADR 0100)."
     }
   ]
 }

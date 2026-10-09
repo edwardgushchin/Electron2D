@@ -282,6 +282,7 @@ public abstract partial class CanvasItem
     {
         EnsureMutable();
         if (_drawing) throw new InvalidOperationException("Canvas recording cannot be re-entered.");
+        PhysicsDebugDrawing.Refresh(this);
         if (Interlocked.Exchange(ref _redrawPending, 0) == 0) return;
         if (ServerState is { Commands: { } painter } state) { painter.Dispose(); state.Commands = null; }
         _canvasCommands?.Clear();
