@@ -3,7 +3,7 @@
 #include "PhysicsBody.inc.glsl"
 layout(local_size_x = 64) in;
 #include "PhysicsContact.inc.glsl"
-struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; vec4 surfaceA; vec4 surfaceB; };
+struct ContactInput { vec4 ids; vec4 mass; vec4 material; vec4 warm; vec4 source; vec4 offset; vec4 surfaceA; vec4 surfaceB; vec4 history1; vec4 history2; };
 struct Manifold { vec4 normal; vec4 anchor1; vec4 point1; vec4 anchor2; vec4 point2; };
 struct Joint {
     vec4 ids; vec4 mass; vec4 frameA; vec4 frameB; vec4 geometry;
@@ -74,6 +74,7 @@ void prepareContact(uint index)
     vec4 a1 = first ? m.anchor1 : m.anchor2, b1 = first ? m.point1 : m.point2;
     vec4 a2 = second ? m.anchor1 : m.anchor2, b2 = second ? m.point1 : m.point2;
     Contact c;
+    c.history1=packet.history1;c.history2=packet.history2;
     c.surfaceA = vec4(packet.surfaceA.xyz, 0); c.surfaceB = vec4(packet.surfaceB.xyz, 0);
     c.ids = packet.ids; c.mass = packet.mass; c.normal = vec4(m.normal.xy, packet.material.xy);
     c.rolling = vec4(packet.material.z, 0, packet.source.y, packet.material.w); c.soft = vec4(0);

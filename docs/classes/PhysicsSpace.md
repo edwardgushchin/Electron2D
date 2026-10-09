@@ -114,3 +114,10 @@ feeds both scalar overflow and colored SIMD contacts/joints. SetSolverIterations
 validates before changing native policy and shares WakeDynamicBodies with contact
 settings. The internal raw backend default remains one for isolated diagnostics;
 Electron2D world creation explicitly applies its captured setting (default sixteen).
+
+ContactSettings also retains sampled contact recycle radius and maximum separation.
+Publication converts scene distances to native units and wakes dynamics without
+rebuilding fixtures. The CPU updater stores true body-local boundary anchors,
+validates their current normal/tangential separation and performs one-use geometric
+impulse matching after preferring stable features. Fresh geometry and event identities
+remain independent of the history limits.

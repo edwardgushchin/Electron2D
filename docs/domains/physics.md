@@ -297,3 +297,9 @@ now control contact and joint convergence through typed project/world operations
 CPU and the independent GPU store. Default sixteen, live wake semantics, shared
 numerical/temporal checks and bounded CPU stage storage replace the fixed one-pass
 CPU policy. Public independent-GPU binding remains open.
+
+[Contact history limits](../components/physics-contact-policy.md#contact-history-limits)
+complete the typed space-parameter family: recycle radius and maximum separation
+control local-anchor impulse reuse on CPU and independent GPU, while fresh geometry,
+queries and event identities remain unchanged. Public GPU world binding and the
+remaining physics/server/networking capabilities are still open.

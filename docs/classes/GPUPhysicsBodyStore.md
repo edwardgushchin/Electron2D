@@ -214,3 +214,12 @@ argument is absent; an explicit diagnostic argument affects only that call.
 Changed world counts use ordered dynamic wake commands, preserving a later explicit
 sleep edit. Equal/invalid writes do not invalidate history or wake bodies. Counts
 flow unchanged into CCD continuations; force/time budgets remain separate.
+
+Resident contact history now uses 96-byte records, including true local boundary
+anchors. Hashing groups a shape/piece pair; feature identity is preferred, with a
+nearby-anchor fallback bounded by world recycle radius and maximum separation.
+A claim word in existing geometry metadata gives each old impulse at most one new
+consumer. Matching/claims stay on GPU; no history readback or CPU pose mirror is
+introduced. The existing 80-byte solver uniform carries both new distances in its
+last two spare components. [Contact history limits](../components/physics-contact-policy.md#contact-history-limits)
+documents storage and verification.

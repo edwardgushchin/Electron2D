@@ -26,6 +26,7 @@ internal static partial class GPUPhysicsTests
         PhysicsSleepPolicyTests.Run(true);
         PhysicsContactPolicyTests.Run(true);
         PhysicsSolverIterationTests.Run(true);
+        PhysicsContactPersistenceTests.Run(true);
         PhysicsCCDTests.Run(true);
         SeparationRayDynamicsTests.Run(true);
         WorldBoundaryTests.Run(true);
@@ -54,6 +55,7 @@ internal static partial class GPUPhysicsTests
         PhysicsSleepPolicyTests.RunResident();
         PhysicsContactPolicyTests.RunResident();
         PhysicsSolverIterationTests.RunResident();
+        PhysicsContactPersistenceTests.RunResident();
         GPUPhysicsCCDStoreTests.Run();
         GPUPhysicsSpatialTests.Run();
         GPUPhysicsContactStoreTests.Run();

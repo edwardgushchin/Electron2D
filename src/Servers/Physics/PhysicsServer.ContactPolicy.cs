@@ -2,6 +2,22 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    internal float SpaceGetContactRecycleRadiusCore(RID space)
+    {
+        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.RecycleRadius;
+    }
+    internal void SpaceSetContactRecycleRadiusCore(RID space, float value)
+    {
+        ThrowIfDisposed(); var world = GetSceneSpace(space); world.SetContactSettings(world.ContactSettings with { RecycleRadius = value });
+    }
+    internal float SpaceGetContactMaxSeparationCore(RID space)
+    {
+        ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.ContactSettings.MaxSeparation;
+    }
+    internal void SpaceSetContactMaxSeparationCore(RID space, float value)
+    {
+        ThrowIfDisposed(); var world = GetSceneSpace(space); world.SetContactSettings(world.ContactSettings with { MaxSeparation = value });
+    }
     internal int SpaceGetSolverIterationsCore(RID space)
     {
         ThrowIfDisposed(); var world = GetSceneSpace(space); world.EnsureQueryAccess(); return world.SolverIterations;

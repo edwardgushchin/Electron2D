@@ -1178,12 +1178,12 @@
     {
       "godot": "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
-      "reason": "Typed concrete world operations cover joint bias, sleep and contact correction under ADRs 0087, 0089 and 0098. The dispatcher remains Partial for remaining selectors; public independent-GPU binding remains open."
+      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; public independent-GPU binding remains open."
     },
     {
       "godot": "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetConstraintDefaultBias(Electron2D.RID,System.Single)",
-      "reason": "Typed concrete world operations cover joint bias, sleep and contact correction under ADRs 0087, 0089 and 0098. The dispatcher remains Partial for remaining selectors; public independent-GPU binding remains open."
+      "reason": "All nine numeric selector capabilities map to concrete typed world operations under ADRs 0087, 0089 and 0098. Geometric history, correction, sleep and iteration behavior execute; public independent-GPU binding remains open."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/default_constraint_bias",
@@ -1224,6 +1224,16 @@
       "godot": "ProjectSettings::property:physics/2d/solver/solver_iterations",
       "electron2d": "property:Electron2D.ProjectSettings.Physics2DSolverIterations()",
       "reason": "Positive typed project/world iteration policy executes for CPU contact/joint biased and relaxation sweeps and independent GPU physical/position sweeps; shared convergence, momentum, time, lifecycle and allocation checks run in PhysicsSolverIterationTests (ADR 0098). Public independent-GPU binding remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/contact_recycle_radius",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactRecycleRadius()",
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": "ProjectSettings::property:physics/2d/solver/contact_max_separation",
+      "electron2d": "property:Electron2D.ProjectSettings.Physics2DContactMaxSeparation()",
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
     }
   ],
   "extras": [
@@ -2107,6 +2117,26 @@
     {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetSolverIterations(Electron2D.RID,System.Int32)",
       "reason": "Concrete typed integer branch of the space-parameter dispatcher; owner/phase guards, world capture and convergence behavior execute.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactRecycleRadius(Electron2D.RID)",
+      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactRecycleRadius(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxSeparation(Electron2D.RID)",
+      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
+      "adr": "ADRs 0004, 0098"
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactMaxSeparation(Electron2D.RID,System.Single)",
+      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
       "adr": "ADRs 0004, 0098"
     }
   ],
@@ -3509,8 +3539,8 @@
         "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
-      "state": "Partial",
-      "reason": "Typed constraint bias, sleep thresholds/duration contact bias/allowed penetration and solver iterations execute with owner/phase guards, invalid rollback and wake semantics (ADRs 0087/0089/0098). Contact recycling/max separation remain open; public independent-GPU binding remains open."
+      "state": "Implemented",
+      "reason": "All nine parameter capabilities execute through concrete typed getters/setters: contact recycling, maximum separation/penetration, contact/constraint bias, sleep thresholds/duration and solver iterations. CPU and independent GPU policies have shared behavior, lifetime and allocation tests (ADRs 0087/0089/0098). Public independent-GPU binding remains open."
     },
     {
       "godot": [
@@ -3623,6 +3653,34 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0098: numeric selector represented by typed positive integer SpaceGetSolverIterations/SpaceSetSolverIterations; actual contact and joint iteration behavior executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/contact_recycle_radius"
+      ],
+      "state": "Implemented",
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_RECYCLE_RADIUS"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0098: numeric selector is represented by typed SpaceGetContactRecycleRadius/SpaceSetContactRecycleRadius; geometric history behavior executes."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:physics/2d/solver/contact_max_separation"
+      ],
+      "state": "Implemented",
+      "reason": "Typed project/world geometric history limits execute on CPU and independent GPU: strict body-local anchor proximity, normal/tangential separation validation, stable-feature/nearby fallback and one-use impulses, with physical response, lifetime and zero warmed allocation checks (ADR 0098, PhysicsContactPersistenceTests). Public independent-GPU world binding remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::enum_value:SpaceParameter.SPACE_PARAM_CONTACT_MAX_SEPARATION"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0098: numeric selector is represented by typed SpaceGetContactMaxSeparation/SpaceSetContactMaxSeparation; geometric history behavior executes."
     }
   ]
 }

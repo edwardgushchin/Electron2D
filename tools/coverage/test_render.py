@@ -43,7 +43,7 @@ def check_physics_report(pages):
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
     assert "RigidBody2D::property:continuous_cd" in expected
-    assert "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)" in expected
+    assert "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)" not in expected
     assert "StaticBody2D::property:constant_angular_velocity" not in expected
 
 
@@ -318,13 +318,13 @@ def main():
     assert len(boundary_rows) == 3 and all(" | Implemented | " in row for row in boundary_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("world_boundary_shape_create", "shape_get_type"))
-    for setting in ("sleep_threshold_linear", "sleep_threshold_angular", "time_before_sleep", "solver/default_contact_bias", "solver/contact_max_allowed_penetration", "solver/solver_iterations"):
+    for setting in ("sleep_threshold_linear", "sleep_threshold_angular", "time_before_sleep", "solver/default_contact_bias", "solver/contact_max_allowed_penetration", "solver/solver_iterations", "solver/contact_recycle_radius", "solver/contact_max_separation"):
         assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines()
                                             if row.startswith("| [`property") and f"physics/2d/{setting}" in row)
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 129, "Partial": 14, "Unimplemented": 16, "Blocked": 4, "Excluded": 52}
+                "Implemented": 131, "Partial": 12, "Unimplemented": 14, "Blocked": 4, "Excluded": 54}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("area_set_monitor_callback", "area_set_area_monitor_callback", "area_get_collision_layer", "area_get_collision_mask", "area_get_transform"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
@@ -418,7 +418,7 @@ def main():
                         ("pin_joint_get_flag", "Implemented"), ("pin_joint_set_flag", "Implemented"),
                         ("damped_spring_joint_get_param", "Implemented"), ("damped_spring_joint_set_param", "Implemented"),
                         ("joint_get_param", "Implemented"), ("joint_set_param", "Implemented"),
-                        ("space_get_param", "Partial"), ("space_set_param", "Partial")):
+                        ("space_get_param", "Implemented"), ("space_set_param", "Implemented")):
         assert f" | {state} | " in next(row for row in server_joint_rows if row.startswith(f"| [`method {name}("))
     assert " | Excluded | " in next(row for row in server_joint_rows if row.startswith("| [`enum_value PIN_JOINT_SOFTNESS"))
     assert " | Implemented | " in next(row for row in pin_rows if row.startswith("| [`property float softness"))

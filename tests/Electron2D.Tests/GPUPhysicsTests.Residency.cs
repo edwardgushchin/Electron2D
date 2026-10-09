@@ -67,13 +67,13 @@ internal static partial class GPUPhysicsTests
         CheckTransfer(gpu, 67, 0);
         warmed.generatedManifoldOwner = gpu; warmed.Reset();
         if (warmed.generatedManifoldOwner is not null) throw new Exception("Step reset retained an obsolete manifold source.");
-        Console.WriteLine("Resident manifolds passed: CPU solve parity, graph/feature reordering, explicit overrides and stale geometry, 128 B/contact upload and zero warmed managed bytes.");
+        Console.WriteLine("Resident manifolds passed: CPU solve parity, graph/feature reordering, explicit overrides and stale geometry, 160 B/contact upload and zero warmed managed bytes.");
     }
 
     private static void CheckTransfer(GPUPhysicsWorld gpu, int resident, int uploaded)
     {
         if (gpu.ResidentContactCount != resident || gpu.UploadedManifoldCount != uploaded ||
-            gpu.ContactUploadBytes != 128L * (resident + uploaded) + 80L * uploaded)
+            gpu.ContactUploadBytes != 160L * (resident + uploaded) + 80L * uploaded)
             throw new InvalidOperationException($"Contact transfer differs: {gpu.ResidentContactCount}/{resident} resident, {gpu.UploadedManifoldCount}/{uploaded} uploaded, {gpu.ContactUploadBytes} bytes.");
     }
 

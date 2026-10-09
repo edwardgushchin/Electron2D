@@ -1386,3 +1386,20 @@ positive integers and supports feature overrides. New CPU and independent GPU wo
 capture it; existing worlds retain their count until their typed world setter is
 called. The count controls contact/joint sweeps, not time substeps. See
 [PhysicsServer](PhysicsServer.md#solver-iteration-count) for semantics and errors.
+
+## Contact history defaults
+
+<a id="physics2dcontactrecycleradius"></a>
+`public static ProjectSetting<float> Physics2DContactRecycleRadius { get; }` defines
+`physics/2d/solver/contact_recycle_radius`, default one scene unit.
+
+<a id="physics2dcontactmaxseparation"></a>
+`public static ProjectSetting<float> Physics2DContactMaxSeparation { get; }` defines
+`physics/2d/solver/contact_max_separation`, default 1.5 scene units.
+
+Both registered built-ins support feature overrides and are sampled by new CPU and
+independent GPU worlds. Existing worlds retain their values until changed through
+[PhysicsServer](PhysicsServer.md#contact-history-limits). Values must be finite and
+nonnegative with representable squared distances; positive backend squares cannot
+underflow to zero. Zero radius disables history reuse; zero maximum separation
+retains only cached contacts without positive normal gap or tangential drift.

@@ -21,6 +21,7 @@ internal sealed partial class PhysicsSpace
     {
         EnsureQueryAccess(); settings.Validate(); if (ContactSettings == settings) return;
         ContactSettings = settings; var world = b2GetWorldFromId(_worldID);
+        world.contactRecycleRadius = settings.RecycleRadius * MetersPerUnit; world.contactMaxSeparation = settings.MaxSeparation * MetersPerUnit;
         world.contactBias = settings.Bias; world.contactAllowedPenetration = settings.AllowedPenetration * MetersPerUnit;
         WakeDynamicBodies();
     }

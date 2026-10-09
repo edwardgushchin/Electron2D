@@ -691,3 +691,29 @@ resets quiet timers; equal writes preserve them. These operations use the same
 RID, owner-thread and solver-phase guards as world contact settings, including
 inactive spaces and scene-owned RIDs. Source: [ContactPolicy.API](../../src/Servers/Physics/PhysicsServer.ContactPolicy.API.cs).
 See [solver settings](../components/physics-contact-policy.md#solver-iterations).
+
+## Contact history limits
+
+| Signature | Contract |
+| --- | --- |
+| `public static float SpaceGetContactRecycleRadius(RID space)` | Current local-anchor reuse radius, initially one scene unit. |
+| `public static void SpaceSetContactRecycleRadius(RID space, float value)` | Sets the strict distance bound on both cached body-local boundary anchors. |
+| `public static float SpaceGetContactMaxSeparation(RID space)` | Current normal/tangential history-validation distance, initially 1.5 scene units. |
+| `public static void SpaceSetContactMaxSeparation(RID space, float value)` | Discards history beyond either separation bound. |
+
+New worlds capture typed project values with feature overrides. Values are finite
+nonnegative scene distances, with representable squares in both backend and scene
+units; positive squared backend values cannot underflow to zero. Invalid values throw
+ArgumentOutOfRangeException before mutation. Live RID, owner-thread and solver-phase
+validation follow the other world settings above. Changed values wake dynamics and
+reset quiet timers; equal writes preserve sleep and an explicit later sleep wins.
+
+Both local boundary anchors must move strictly less than the recycle radius; zero
+radius disables reuse. Old anchors transformed into current world poses must remain
+within the normal separation and tangential drift bounds (equality is accepted).
+Zero separation allows stable penetrating contacts without drift. Fresh contact
+geometry is always recomputed; query margins and body/shape enter/exit events do not
+acquire hysteresis. Reused impulses cannot be duplicated across fresh points.
+See [contact persistence](../components/physics-contact-policy.md#contact-history-limits)
+for backend storage, tests and limits. All nine space-parameter capabilities now
+have concrete typed operations; this does not complete the rest of PhysicsServer.

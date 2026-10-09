@@ -5,6 +5,7 @@
 #extension GL_GOOGLE_include_directive : require
 #include "PhysicsContact.inc.glsl"
 #include "PhysicsMaterial.inc.glsl"
+#include "PhysicsContactPersistence.inc.glsl"
 #include "PhysicsContactSlot.inc.glsl"
 layout(local_size_x = 64) in;
 struct Geometry { int typeFlags; float radius; int count; int id; vec4 vertices[8]; vec4 material; };
@@ -19,7 +20,7 @@ layout(std430, set = 0, binding = 0) readonly buffer Solved { Contact solved[]; 
 layout(std430, set = 0, binding = 1) readonly buffer UploadedHistory { ContactHistory uploadedHistory[]; };
 layout(std430, set = 0, binding = 2) readonly buffer GeometryUpdates { Geometry geometryUpdates[]; };
 layout(std430, set = 0, binding = 3) readonly buffer ContactSlots { ContactSlot contactSlots[]; };
-layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; };
+layout(std140, set = 2, binding = 0) uniform Settings { uvec4 settings; vec4 persistence; };
 const float epsilon = 1.1920928955078125e-7;
 const float speculative = 0.02;
 const float slop = 0.005;
@@ -194,26 +195,26 @@ void main()
     }
     Pair pair=pairs[index]; Result r=Result(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     if ((pair.ids.z & 0x40000000) != 0)
-    { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); materials[index]=vec4(0); return; }
+    { results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0)); materials[index]=vec4(0); return; }
     bool complete = (settings.z & 1u) != 0;
     uint previous = uint(pair.ids.z) >> 1;
     if ((uint(pair.ids.z) & 1u) == 0)
     {
         if (complete) { r.normal.w = float(((previous | 2u) & ~1u) << 2); materials[index] = vec4(0); }
-        results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0)); return;
+        results[index]=r; matched[index]=ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0)); return;
     }
     ivec2 shapeIDs = pair.ids.xy;
     if ((settings.z & 128u) != 0)
     {
         if (pair.ids.x < 0 || uint(pair.ids.x) >= settings.w)
         {
-            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0)); materials[index] = vec4(0); return;
+            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0)); materials[index] = vec4(0); return;
         }
         ContactSlot slot = contactSlots[pair.ids.x];
         shapeIDs = slot.shapeBody.xy;
         if (slot.state.x != uint(pair.ids.y) || any(lessThan(shapeIDs,ivec2(0))) || any(greaterThanEqual(shapeIDs,ivec2(shapes.length()))))
         {
-            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0)); materials[index] = vec4(0); return;
+            r.normal.z = -1; results[index] = r; matched[index] = ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0)); materials[index] = vec4(0); return;
         }
     }
     Geometry a=shapes[shapeIDs.x],b=shapes[shapeIDs.y]; int ta=a.typeFlags&255,tb=b.typeFlags&255;
@@ -253,28 +254,41 @@ void main()
             if(i==0) { r.anchor1=ap; r.point1=bp; } else { r.anchor2=ap; r.point2=bp; }
         }
     }
-    ContactHistory old = ContactHistory(vec4(0),vec4(0));
+    ContactHistory old = ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     int source = int(pair.ids.w);
     if (source >= 0)
     {
         Contact c = solved[source];
-        old = ContactHistory(vec4(c.impulses1.xy,c.impulses2.xy),vec4(c.impulses1.w,c.impulses2.w,c.ids.z,c.rolling.z));
+        old = ContactHistory(vec4(c.impulses1.xy,c.impulses2.xy),vec4(c.impulses1.w,c.impulses2.w,c.ids.z,c.rolling.z),c.history1,c.history2,vec4(c.normal.xy,0,0));
     }
     else if (source < -1) old = uploadedHistory[-source-2];
-    ContactHistory warm = ContactHistory(vec4(0),vec4(0));
+    ContactHistory warm = ContactHistory(vec4(0),vec4(0),vec4(0),vec4(0),vec4(0));
     if (m.count > 0) warm.features = vec4(float(m.ids[0]),float(m.ids[1]),m.count,old.features.w);
+    warm.normal=vec4(r.normal.xy,0,0);uint used=0u;
     for (int i=0;i<m.count;i++)
     {
+        vec4 ap=i==0?r.anchor1:r.anchor2,bp=i==0?r.point1:r.point2;
+        vec2 halfSeparation=0.5*ap.z*r.normal.xy;
+        vec4 current=vec4(historyRotate(vec2(pair.poseA.z,-pair.poseA.w),ap.xy-halfSeparation),
+            historyRotate(vec2(pair.poseB.z,-pair.poseB.w),bp.xy+halfSeparation));
+        if(i==0)warm.anchors1=current;else warm.anchors2=current;
+        int best=-1;float distance=uintBitsToFloat(0x7f800000u);bool sameFeature=false;
         for (int j=0;j<int(old.features.z);j++)
         {
-            if (float(m.ids[i]) != old.features[j]) continue;
-            vec2 impulse = j==0 ? old.impulses.xy : old.impulses.zw;
-            if (i==0) warm.impulses.xy=impulse; else warm.impulses.zw=impulse;
-            if (j==0) old.impulses.xy=vec2(0); else old.impulses.zw=vec2(0);
-            r.normal.w += float(1<<i);
-            break;
+            bool feature=float(m.ids[i])==old.features[j];
+            if(persistence.x<0){if(feature){best=j;break;}continue;}
+            if((used&(1u<<j))!=0u||dot(old.normal.xy,r.normal.xy)<0.99)continue;
+            float candidate=contactHistoryDistance(j==0?old.anchors1:old.anchors2,current,old.normal.xy,pair.poseA,pair.poseB,persistence.xy);
+            if(!isinf(candidate)&&(best<0||(feature&&!sameFeature)||(feature==sameFeature&&candidate<distance)))
+            {best=j;distance=candidate;sameFeature=feature;}
         }
+        if(best<0)continue;
+        vec2 impulse=best==0?old.impulses.xy:old.impulses.zw;
+        if(i==0)warm.impulses.xy=impulse;else warm.impulses.zw=impulse;
+        if(best==0)old.impulses.xy=vec2(0);else old.impulses.zw=vec2(0);
+        used|=1u<<best;r.normal.w+=float(1<<i);
     }
+    if(persistence.x>=0&&used==0u)warm.features.w=0;
     if (complete)
     {
         uint flagsA = uint(a.typeFlags) >> 8, flagsB = uint(b.typeFlags) >> 8;

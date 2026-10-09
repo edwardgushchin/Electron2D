@@ -280,8 +280,8 @@ publication on the owner. The step-scoped completion marker skips the CPU collis
 authoring constraint coloring, authoring island mutation and event publication still use the managed path. Feature-ID matching and reuse of normal/tangent/rolling impulses now
 execute in the collision shader. It reads the previous completed GPU solver
 buffer directly when that contact's source is current; cold or older sources
-upload a compact 32-byte history record. Empty histories need no upload.
-The matched 32-byte result remains on GPU for preparation and is also read back
+upload an 80-byte history record including both local boundary-anchor pairs and the prior normal. Empty histories need no upload.
+The matched 80-byte result remains on GPU for preparation and is also read back
 for the existing managed contact snapshot. Integrated GPU contacts already have
 mass-relative anchors; the pure numeric entry retains raw anchors for CPU update
 comparisons. Owner-side pre-solve veto does not repeat feature matching. A veto
@@ -294,8 +294,8 @@ World identity and the latest submission prevent using an overwritten solver buf
 the owner/step marker prevents cross-world or old-step reuse. Feature IDs resolve
 point reordering or pruning directly on GPU. Center-of-mass offsets are captured
 at the collision pose; complete GPU updates pass zero offsets to preparation
-because the collision kernel already applied them. The solver uploads a 128-byte input (body indices/masses,
-materials, retained impulses, source, offsets and surface velocities) instead of retransmitting the
+because the collision kernel already applied them. The solver uploads a 160-byte input (body indices/masses,
+materials, retained impulses, source, offsets, surface velocities and local history anchors) instead of retransmitting the
 working contact geometry. Missing provenance or an explicit internal geometry replacement uses a separate
 80-byte override; this includes sleeping contacts awakened after collision
 collection. Reset, another collision batch and consumption invalidate reuse.
@@ -329,7 +329,7 @@ authoring merges remain CPU work. `SplitIslandCount`, `SplitComponentCount` and
 The internal `PhysicsSpace.EnableGPUSolver` development entry submits all four
 substeps as one GPU command buffer. Body/contact/joint state remains resident
 between stages and is published once after its fence. Packed records are 80,
-208 and 192 bytes; solver uniforms occupy 80 bytes, including elapsed virtual-surface time. GPU/transfer buffers retain
+240 and 224 bytes; solver uniforms occupy 80 bytes, including elapsed virtual-surface time. GPU/transfer buffers retain
 capacity. Colored groups execute in parallel without shared dynamic-body writes;
 overflow preserves serial joint/contact order. The earlier
 `EnableGPUIntegration` entry remains a numeric development check.
@@ -384,7 +384,7 @@ solving at 3, 63, 64, 65, 66, 67 and 1,027 contacts. They exercise nonzero mass
 centers, graph copies, feature reordering/pruning, explicit overrides and older batches,
 pre-solve veto, overwritten/empty/consumed batches and step reset. Eight warmed
 collision/update/solve cycles allocate zero all-thread managed bytes on the
-checked Linux/Vulkan path. Transfer counters assert exactly 128 bytes per
+checked Linux/Vulkan path. Transfer counters assert exactly 160 bytes per
 resident contact plus 80 bytes per geometry override.
 History checks compare GPU feature matching with the actual CPU contact updater
 across all nine pair families, including reordered, unmatched and duplicate old
@@ -447,7 +447,7 @@ with zero owner/all-thread managed bytes. It reused 4,883,353 history records
 without any history upload; empty new histories required no input record.
 There were 4,969,124 solver contacts. The state hash and awake-body progression
 matched the preceding profile exactly. Collision/solver phases averaged
-100.69/53.16 ms. The 32-byte matched-history readback still serves the managed
+100.69/53.16 ms. At that historical revision the 32-byte matched-history readback served the managed
 contact mirror; this stage does not demonstrate an application speedup.
 Artifact: `bin/physics-sandbox/profile-Release-gpu-warm-matching.json`.
 The real native window run (32 warmup/64 measured frames, 65,537 bodies)
@@ -465,8 +465,8 @@ force setup, island sleep/set transfer and CCD/shape finalization, complete quer
 and startup fallback, native end-to-end scene checks and performance profiling.
 
 Constant linear/angular surface velocity is shared with the CPU constraint path.
-Its endpoint data adds 32 bytes to contact inputs/working records (128/208 bytes
-now); it affects normal/friction/rolling/restitution response without pose motion.
+Its endpoint data adds 32 bytes to contact inputs/working records (160/240 bytes
+with the later geometric-history extension); it affects normal/friction/rolling/restitution response without pose motion.
 PhysicsSurfaceVelocityTests exercises surface response, queries, wakeup, character
 carry and kinematic additivity on CPU/GPU. The standalone multi-world test first
 stalled during SDL/GTK video reinitialization on this Wayland host; its harness now
@@ -482,7 +482,7 @@ managed bytes; GPU completeness and foreign-device/native allocation remain open
 
 Normal and signed tangent impulses now cover all solver substeps, including warm
 starting. The two reserved endpoint-vector w components hold tangent totals without
-changing 128-byte input or 208-byte working layouts; resident history feature IDs
+growing the then 128-byte input or 208-byte working layouts; the later geometric-history extension changes them to 160/240 bytes; resident history feature IDs
 are unchanged. Publication tags the native solve epoch. The shared reporting path
 aggregates multiple kinematic intervals, retains short-lived contacts and selects
 deepest capped contacts before callbacks. PhysicsContactImpulseTests verifies CPU/GPU momentum, paired signs,
@@ -1347,3 +1347,14 @@ transform phase. Native allocation accounting, sustained all-awake/native-window
 FPS, foreign devices and full GPU-world completion remain separate requirements.
 
 The stage solver now transfers 224-byte joint packets carrying [bias, softness and force/correction caps](physics-joint-policies.md). Common public assertions exercise those policies on CPU and this stage host; historical timings above retain their original packet sizes.
+
+## Geometric contact history
+
+[World contact history limits](physics-contact-policy.md#contact-history-limits)
+now validate body-local boundary anchors before reusing cached impulses. Both
+legacy GPU collision and independent resident solving execute matching on device.
+The legacy host adds explicit local anchors to its existing mirrored contact data;
+its collision uniform is 32 bytes, uploaded/matched histories 80 bytes, solver inputs
+160 bytes and working contacts 240 bytes. Historical timings above keep the layouts
+of their recorded revisions. Independent GPU history records are 96 bytes and
+remain entirely resident; solver uniform size remains 80 bytes.

@@ -47,6 +47,22 @@ Last updated: 2026-10-09
   16-bit phase protocol, retaining failure cancellation and work stealing. This is an
   internal scheduler change, not a public threading guarantee. Large iteration counts
   intentionally cost more work; device submission failures retain fail-closed behavior.
+- Expose SpaceGet/SetContactRecycleRadius and SpaceGet/SetContactMaxSeparation,
+  captured from typed project defaults 1 and 1.5 scene units. Accept finite
+  nonnegative distances whose square and backend conversion are representable.
+  These govern cached contact reuse, not fresh narrow-phase/query margins or
+  object-event separation hysteresis. Recompute current geometry each interval.
+- Follow the pinned [contact cache validation and recycling](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_body_pair_2d.cpp#L46):
+  both body-local boundary anchors must move strictly less than the recycle radius;
+  discard prior history when current normal separation or tangential drift exceeds
+  maximum separation. Zero radius disables reuse. Shape/body identity, geometry,
+  participation and compatible normal checks remain required. Prefer stable features,
+  then nearby local anchors; consume each old impulse at most once. Fresh geometry
+  replaces cached geometry, so stale anchors cannot keep a separated pair colliding.
+- Keep boundary anchors with each cached manifold/impulse, including compounds,
+  directed rays and boundaries. GPU matching and ownership claims stay on device.
+  Policy changes wake dynamics without replacing shape/contact identities; later
+  explicit sleep retains priority. Document retained storage and transfer changes.
 - CPU scalar/SIMD and legacy GPU-stage constraint preparation consume the same mixed
   bias and slack. Independent GPU contacts consume resident per-shape policy and world
   settings; no host pose mirror or CPU contact calculation is introduced. Public
@@ -54,7 +70,7 @@ Last updated: 2026-10-09
 
 ### Remaining work and verification
 
-Contact recycling/max-separation, collision priority,
+Collision priority,
 renderer debug drawing, backend extensions and public GPU binding remain separate
 open capabilities. Acceptance requires executable correction, lifecycle, copy/storage,
 material/impulse and warmed allocation checks on CPU and independent GPU, including

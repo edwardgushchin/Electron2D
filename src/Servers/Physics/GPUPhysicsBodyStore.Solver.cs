@@ -115,7 +115,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Grow(ref _constraintImpulsesGPU, ref _constraintImpulseCapacity, Math.Max(1, constraintCount), 32, false);
             Grow(ref _positionCorrectionsGPU, ref _positionCorrectionCapacity, _highWater, 16, false);
             Grow(ref _contactHeadsGPU, ref _contactHeadCapacity, _highWater, 8, false);
-            Grow(ref _solverHistoryGPU, ref _solverHistoryCapacity, Math.Max(1, Math.Max(ContactPointCount, _previousPointCount)), 80, true);
+            Grow(ref _solverHistoryGPU, ref _solverHistoryCapacity, Math.Max(1, Math.Max(ContactPointCount, _previousPointCount)), 96, true);
             var previousTableCapacity = _solverHistoryTableCapacity;
             Grow(ref _solverHistoryTableGPU, ref _solverHistoryTableCapacity, checked(2 * Math.Max(1, Math.Max(ContactPointCount, _previousPointCount))), 4, false);
             PrepareContactReports();
@@ -129,7 +129,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 HistoryCapacity = (uint)_solverHistoryTableCapacity,
                 PreviousPoints = (uint)_previousPointCount,
                 ContactPoints = (uint)ContactPointCount,
-                Correction = new(delta / (_contactTickDuration > 0 ? _contactTickDuration : delta), _jointTickBias, 0, 0),
+                Correction = new(delta / (_contactTickDuration > 0 ? _contactTickDuration : delta), _jointTickBias, _contactSettings.RecycleRadius, _contactSettings.MaxSeparation),
                 Flags = externalForces ? 0u : 1u
             }, iterations, previousTableCapacity != _solverHistoryTableCapacity, stepGravity, dampingDelta);
             _previousPointCount = ContactPointCount; _previousSolveDelta = delta; _hasPositionCorrections = true;

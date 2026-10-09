@@ -73,6 +73,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(Physics2DContactMaxAllowedPenetration, isBasic: false);
         RegisterInternal(Physics2DDefaultConstraintBias, isBasic: false);
         RegisterInternal(Physics2DSolverIterations, isBasic: false);
+        RegisterInternal(Physics2DContactRecycleRadius, isBasic: false);
+        RegisterInternal(Physics2DContactMaxSeparation, isBasic: false);
         RegisterInternal(MaxPhysicsStepsPerFrame, isBasic: false);
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
@@ -1164,6 +1166,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, Physics2DContactMaxAllowedPenetration) ||
         ReferenceEquals(setting, Physics2DDefaultConstraintBias) ||
         ReferenceEquals(setting, Physics2DSolverIterations) ||
+        ReferenceEquals(setting, Physics2DContactRecycleRadius) ||
+        ReferenceEquals(setting, Physics2DContactMaxSeparation) ||
         ReferenceEquals(setting, MaxPhysicsStepsPerFrame) ||
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||

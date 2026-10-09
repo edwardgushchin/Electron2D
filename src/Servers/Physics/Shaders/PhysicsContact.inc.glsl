@@ -4,6 +4,7 @@ struct Contact {
     vec4 anchors2; vec4 params2; vec4 impulses2;
     // xyz: endpoint velocity; w: total tangent impulse for point 1 / point 2.
     vec4 surfaceA; vec4 surfaceB;
+    vec4 history1; vec4 history2;
 };
 // Feature IDs, point count and rolling impulse accompany two normal/tangent pairs.
-struct ContactHistory { vec4 impulses; vec4 features; };
+struct ContactHistory { vec4 impulses; vec4 features; vec4 anchors1; vec4 anchors2; vec4 normal; };

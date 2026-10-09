@@ -16,7 +16,7 @@ The developing GPU-world host currently executes velocity and delta-pose
 integration, GPU hierarchy construction/refit/traversal/built-in filters, contact identity allocation/initialization and adjacency construction/disjoint-contact removal, contact-driven island merging/unlinking and disconnected-island splitting, circle/capsule/segment/polygon manifolds, contacts and revolute/wheel constraints. It retains the rendering device when available or creates a
 windowless SDL compute device, with its own video-subsystem reference. Packed
 80-byte body records and 32-byte integration/80-byte solver uniforms have matching compute layouts.
-Contact/joint working records occupy 208/192 bytes. Contact uploads use 128-byte
+Contact/joint working records occupy 240/224 bytes. Contact uploads use 160-byte
 inputs and optional 80-byte geometry overrides. GPU/transfer buffers grow together
 before use and retain their capacity.
 
@@ -106,10 +106,10 @@ slots. Disposal detaches only its own observer. `ResidentGeometryCount`,
 `UploadedGeometryCount` and `GeometryUploadBytes` describe the latest batch;
 `GeometryCacheResetCount` is cumulative. Current pair transforms and fat-proxy
 overlap are still packed on CPU before generating all points in one submission. Its packed shape/pair/result records occupy 160/64/80
-bytes, plus a 32-byte history result. Shape records include surface material and
+bytes, plus an 80-byte history result. Shape records include surface material and
 hit-event inputs; the pair carries center-of-mass offsets. Integer identity headers avoid float ID conversion. Simulations carry their generation through graph copies to avoid a separate native-contact lookup during packing. Integrated pairs address resident contact slots by ID/generation, with stale generations rejected before geometry reads; isolated numeric probes retain direct shape-ID input. Feature matching and normal/tangent/rolling
 warm-start reuse execute on GPU. Current contacts read the retained previous
-solver buffer; cold/stale contacts upload 32-byte histories. Empty histories
+solver buffer; cold/stale contacts upload 80-byte histories. Empty histories
 need no upload. The pure `GenerateManifolds` entry retains raw shape-relative
 anchors for numeric checks and the CPU-update control.
 
@@ -333,7 +333,7 @@ warm start, solving and restitution add those velocities without changing the
 integrated body state. Surface conformance includes static endpoints in colored
 and serial overflow constraints.
 
-Working contact records remain 208 bytes. Endpoint-vector xyz still stores virtual
+Working contact records now occupy 240 bytes, including two body-local boundary-anchor pairs. Endpoint-vector xyz still stores virtual
 linear/angular velocity; their two reserved w components now accumulate signed
 tangential impulse for points one and two. Feature IDs remain in Impulses1/2.W for
 resident history matching. Publication includes the tangent totals and native solve
@@ -358,3 +358,11 @@ The legacy solver repeats complete contact/joint biased and relaxation sweeps us
 the CPU world's configured positive solverIterations. Preparation, velocity/position
 integration and restitution retain their original cadence. This path still uses
 CPU world ownership; the independent store has its own iteration loop.
+
+The legacy collision uniform is now 32 bytes and carries world recycle/separation
+limits. Uploaded/matched history records are 80 bytes; each completed solver contact
+retains its two local boundary-anchor pairs for the next GPU collision batch.
+Contact inputs are 160 bytes and working contacts 240 bytes. Raw diagnostic worlds
+retain feature-only matching through a negative private sentinel; public worlds
+always apply the typed geometric policy. Both modes preserve existing managed
+publication and failure boundaries.

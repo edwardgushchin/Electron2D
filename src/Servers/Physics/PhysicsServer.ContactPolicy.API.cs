@@ -2,6 +2,40 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    /// <summary>Gets the world's body-local radius for reusing cached contact impulses.</summary>
+    /// <param name="space">A live scene-owned or server-created space RID.</param>
+    /// <returns>The configured nonnegative scene-unit distance.</returns>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static float SpaceGetContactRecycleRadius(RID space) => Service.SpaceGetContactRecycleRadiusCore(space);
+
+    /// <summary>Sets the world's body-local radius for reusing cached contact impulses.</summary>
+    /// <param name="space">A live scene-owned or server-created space RID.</param>
+    /// <param name="value">A finite nonnegative distance with representable squared value and backend conversion.</param>
+    /// <remarks>Fresh collision geometry is still computed every interval. This setting controls history reuse,
+    /// not query margins or collision-event hysteresis. Changed values wake dynamics; equal writes preserve sleep.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or outside its representable range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static void SpaceSetContactRecycleRadius(RID space, float value) => Service.SpaceSetContactRecycleRadiusCore(space, value);
+
+    /// <summary>Gets the world's maximum normal separation or tangential drift of cached contacts.</summary>
+    /// <param name="space">A live scene-owned or server-created space RID.</param>
+    /// <returns>The configured nonnegative scene-unit distance.</returns>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static float SpaceGetContactMaxSeparation(RID space) => Service.SpaceGetContactMaxSeparationCore(space);
+
+    /// <summary>Sets the world's maximum normal separation or tangential drift of cached contacts.</summary>
+    /// <param name="space">A live scene-owned or server-created space RID.</param>
+    /// <param name="value">A finite nonnegative distance with representable squared value and backend conversion.</param>
+    /// <remarks>Fresh collision geometry is still computed every interval. This setting controls history reuse,
+    /// not query margins or collision-event hysteresis. Changed values wake dynamics; equal writes preserve sleep.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or outside its representable range.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    public static void SpaceSetContactMaxSeparation(RID space, float value) => Service.SpaceSetContactMaxSeparationCore(space, value);
+
     /// <summary>Gets the number of contact and joint solver sweeps per simulation substep.</summary>
     /// <param name="space">A live scene-owned or server-created physics space.</param>
     /// <returns>A positive count sampled from project settings when the space was created, initially sixteen.</returns>

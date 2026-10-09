@@ -11,12 +11,12 @@ internal sealed unsafe partial class GPUPhysicsWorld
     private struct Contact
     {
         internal Float4 IDs, Mass, Normal, Rolling, Soft;
-        internal Float4 Anchors1, Params1, Impulses1, Anchors2, Params2, Impulses2, SurfaceA, SurfaceB;
+        internal Float4 Anchors1, Params1, Impulses1, Anchors2, Params2, Impulses2, SurfaceA, SurfaceB, History1, History2;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct ContactInput
     {
-        internal Float4 IDs, Mass, Material, Warm, Source, Offset, SurfaceA, SurfaceB;
+        internal Float4 IDs, Mass, Material, Warm, Source, Offset, SurfaceA, SurfaceB, History1, History2;
     }
     [StructLayout(LayoutKind.Sequential)]
     private struct Joint
@@ -213,6 +213,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     IDs = new(c.bodySimIndexA, c.bodySimIndexB, m.pointCount, color == B2Constants.B2_GRAPH_COLOR_COUNT - 1 ? 1 : 0),
                     Mass = new(c.invMassA, c.invMassB, c.invIA, c.invIB),
                     Material = new(c.friction, c.tangentSpeed, c.rollingResistance, c.restitution),
+                    History1 = new(p1.localAnchorA.X, p1.localAnchorA.Y, p1.localAnchorB.X, p1.localAnchorB.Y),
+                    History2 = new(p2.localAnchorA.X, p2.localAnchorA.Y, p2.localAnchorB.X, p2.localAnchorB.Y),
                     Warm = source >= 0 ? default : new(p1.normalImpulse, p1.tangentImpulse, p2.normalImpulse, p2.tangentImpulse),
                     Source = new(source, m.rollingImpulse, p1.id, p2.id),
                     SurfaceA = new(c.surfaceLinearA.X, c.surfaceLinearA.Y, c.surfaceAngularA, c.solverBias >= 0 ? B2ContactSolvers.ContactCorrection(context, c.solverBias).biasRate : -1),

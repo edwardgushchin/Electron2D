@@ -4,6 +4,37 @@ using static Box2D.NET.B2MathFunction;
 
 internal static partial class GPUPhysicsTests
 {
+    internal static void RunContactRecycling()
+    {
+        B2Contacts.b2InitializeContactRegisters();
+        using var gpu = new GPUPhysicsWorld(); var c = ResidentContext(1); GenerateAndUpdate(gpu, c);
+        var index = 0; while (index < c.contacts.Count && c.contacts[index].manifold.pointCount != 2) index++;
+        if (index == c.contacts.Count) throw new Exception("Recycling fixture requires two fresh contacts.");
+        var contact = c.contacts[index]; var source = contact.manifold;
+        var old = source; old.pointCount = 1; old.points[0].id = ushort.MaxValue;
+        old.points[0].normalImpulse = 7; old.points[0].tangentImpulse = 2;
+        old.points[0].localAnchorA = .5f * (source.points[0].localAnchorA + source.points[1].localAnchorA);
+        old.points[0].localAnchorB = .5f * (source.points[0].localAnchorB + source.points[1].localAnchorB);
+        var a = c.world.shapes.data[contact.shapeIdA]; var b = c.world.shapes.data[contact.shapeIdB];
+        var sa = B2Bodies.b2GetBodySim(c.world, c.world.bodies.data[a.bodyId]); var sb = B2Bodies.b2GetBodySim(c.world, c.world.bodies.data[b.bodyId]);
+        foreach (var variant in new[] { 0, 1, 2 })
+        {
+            var cached = old;
+            if (variant == 2) cached.points[0].localAnchorB += b2InvRotateVector(sb.transform.q, 100 * old.normal);
+            c.world.contactRecycleRadius = variant == 1 ? 0 : 1000; c.world.contactMaxSeparation = 10;
+            contact.manifold = cached; contact.generatedManifoldVersion = 0;
+            var oracle = new B2ContactSim { manifold = cached };
+            B2Contacts.b2UpdateContact(c.world, oracle, a, sa.transform, b2RotateVector(sa.transform.q, sa.localCenter),
+                b, sb.transform, b2RotateVector(sb.transform.q, sb.localCenter));
+            gpu.GenerateManifolds(c, c.contacts.Count); var result = c.generatedManifolds[index]; CompareWarmStart(oracle.manifold, result);
+            var reused = 0; var impulse = 0f;
+            for (var i = 0; i < result.pointCount; i++) { if (result.points[i].persisted) reused++; impulse += result.points[i].normalImpulse; }
+            if (reused != (variant == 0 ? 1 : 0) || MathF.Abs(impulse - (variant == 0 ? 7 : 0)) > .0001f)
+                throw new Exception($"Geometric history fallback/one-use/separation failed: variant={variant}, reused={reused}, impulse={impulse}.");
+        }
+        Console.WriteLine("CPU/GPU stage recycling: changed-feature fallback, one-use impulses, zero radius and stale separation passed.");
+    }
+
     private static void VerifyWarmHistory(GPUPhysicsWorld gpu)
     {
         var c = ResidentContext(65);
@@ -64,7 +95,7 @@ internal static partial class GPUPhysicsTests
 
     private static void CheckHistory(GPUPhysicsWorld gpu, int resident, int uploaded)
     {
-        if (gpu.ResidentHistoryCount != resident || gpu.UploadedHistoryCount != uploaded || gpu.HistoryUploadBytes != 32L * uploaded)
+        if (gpu.ResidentHistoryCount != resident || gpu.UploadedHistoryCount != uploaded || gpu.HistoryUploadBytes != 80L * uploaded)
             throw new Exception($"GPU history differs: resident {gpu.ResidentHistoryCount}/{resident}, uploaded {gpu.UploadedHistoryCount}/{uploaded}, {gpu.HistoryUploadBytes} bytes.");
     }
 

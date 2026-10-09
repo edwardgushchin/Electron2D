@@ -19,9 +19,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
     [StructLayout(LayoutKind.Sequential)]
     private struct ManifoldResult { internal Float4 Normal, Anchor1, Point1, Anchor2, Point2; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct ContactHistory { internal Float4 Impulses, Features; }
+    private struct ContactHistory { internal Float4 Impulses, Features, Anchors1, Anchors2, Normal; }
     [StructLayout(LayoutKind.Sequential)]
-    private struct CollisionStep { internal uint Count, Operation, Options, ContactLimit; }
+    private struct CollisionStep { internal uint Count, Operation, Options, ContactLimit; internal Float4 Persistence; }
 
     private readonly Storage<Geometry> _geometryStorage, _geometryUpdateStorage;
     private readonly Action<int> _geometryChanged;
@@ -118,7 +118,10 @@ internal sealed unsafe partial class GPUPhysicsWorld
                     _historyStorage.Data[UploadedHistoryCount] = new()
                     {
                         Impulses = new(old.points[0].normalImpulse, old.points[0].tangentImpulse, old.points[1].normalImpulse, old.points[1].tangentImpulse),
-                        Features = new(old.points[0].id, old.points[1].id, old.pointCount, old.rollingImpulse)
+                        Features = new(old.points[0].id, old.points[1].id, old.pointCount, old.rollingImpulse),
+                        Anchors1 = new(old.points[0].localAnchorA.X, old.points[0].localAnchorA.Y, old.points[0].localAnchorB.X, old.points[0].localAnchorB.Y),
+                        Anchors2 = new(old.points[1].localAnchorA.X, old.points[1].localAnchorA.Y, old.points[1].localAnchorB.X, old.points[1].localAnchorB.Y),
+                        Normal = new(old.normal.X, old.normal.Y, 0, 0)
                     };
                     pair.History = -UploadedHistoryCount++ - 2;
                 }
@@ -135,6 +138,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
                 ((options & 1) != 0 && !Finite(_contactMaterialStorage.Data[i])) ||
                 _matchedStorage.Data[i].Features.Z != result.Normal.Z || !Finite(result.Normal) ||
                 !Finite(_matchedStorage.Data[i].Impulses) || !Finite(_matchedStorage.Data[i].Features) ||
+                !Finite(_matchedStorage.Data[i].Anchors1) || !Finite(_matchedStorage.Data[i].Anchors2) || !Finite(_matchedStorage.Data[i].Normal) ||
                 !Finite(result.Anchor1) || !Finite(result.Point1) || !Finite(result.Anchor2) || !Finite(result.Point2))
                 throw new InvalidOperationException("GPU collision returned an invalid manifold.");
         }
@@ -147,6 +151,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
             if (manifold.pointCount > 1) manifold.points[1] = UnpackPoint(result.Anchor2, result.Point2);
             for (var point = 0; point < manifold.pointCount; point++)
             {
+                var local = point == 0 ? warm.Anchors1 : warm.Anchors2;
+                manifold.points[point].localAnchorA = new(local.X, local.Y); manifold.points[point].localAnchorB = new(local.Z, local.W);
                 manifold.points[point].normalImpulse = point == 0 ? warm.Impulses.X : warm.Impulses.Z;
                 manifold.points[point].tangentImpulse = point == 0 ? warm.Impulses.Y : warm.Impulses.W;
                 manifold.points[point].persisted = ((int)result.Normal.W & (1 << point)) != 0;
@@ -252,8 +258,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
             SDL.EndGPUCopyPass(copy);
             if ((options & 128) != 0) UpdateContactPool(command);
             var contactLimit = (options & 128) != 0 ? (uint)world.contactIdPool.nextIndex : 0;
-            if (UploadedGeometryCount != 0) CollisionPass(command, UploadedGeometryCount, 1, options, contactLimit);
-            CollisionPass(command, pairCount, 0, options, contactLimit);
+            if (UploadedGeometryCount != 0) CollisionPass(command, UploadedGeometryCount, 1, options, contactLimit, world);
+            CollisionPass(command, pairCount, 0, options, contactLimit, world);
             RecordContactRemovals(command, world, pairCount);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw Failure("begin the manifold readback");
@@ -288,7 +294,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         }
     }
 
-    private void CollisionPass(nint command, int count, uint operation, uint options, uint contactLimit)
+    private void CollisionPass(nint command, int count, uint operation, uint options, uint contactLimit, B2World world)
     {
         Span<SDL.GPUStorageBufferReadWriteBinding> bindings = stackalloc SDL.GPUStorageBufferReadWriteBinding[5];
         bindings[0] = new() { Buffer = _geometryStorage.Handle }; bindings[1] = new() { Buffer = _pairStorage.Handle };
@@ -299,7 +305,7 @@ internal sealed unsafe partial class GPUPhysicsWorld
         SDL.BindGPUComputePipeline(compute, _collide.DangerousGetHandle());
         var inputs = stackalloc nint[4] { _contactStorage.Handle, _historyStorage.Handle, _geometryUpdateStorage.Handle, _contactSlotStorage.Handle };
         SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 4);
-        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options, ContactLimit = contactLimit };
+        var uniform = new CollisionStep { Count = (uint)count, Operation = operation, Options = options, ContactLimit = contactLimit, Persistence = new(world.contactRecycleRadius, world.contactMaxSeparation, 0, 0) };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&uniform), (uint)sizeof(CollisionStep));
         SDL.DispatchGPUCompute(compute, checked((uint)(count + 63) / 64), 1, 1);
         SDL.EndGPUComputePass(compute);

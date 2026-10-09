@@ -566,6 +566,21 @@ namespace Box2D.NET
             else if (manifold.points[1].separation > 1.5f * B2_LINEAR_SLOP) manifold.pointCount = 1;
         }
 
+        internal static float ContactHistoryDistance(float radius, float maximumSeparation,
+            in B2ManifoldPoint old, in B2ManifoldPoint current, B2Vec2 oldNormal,
+            in B2Transform transformA, in B2Transform transformB)
+        {
+            float a = b2LengthSquared(current.localAnchorA - old.localAnchorA);
+            float b = b2LengthSquared(current.localAnchorB - old.localAnchorB);
+            float radiusSquared = radius * radius;
+            if (a >= radiusSquared || b >= radiusSquared) return float.PositiveInfinity;
+            var axis = transformB.p - transformA.p + b2RotateVector(transformB.q, old.localAnchorB) - b2RotateVector(transformA.q, old.localAnchorA);
+            float separation = b2Dot(axis, oldNormal);
+            var tangent = axis - separation * oldNormal;
+            if (separation > maximumSeparation || b2LengthSquared(tangent) > maximumSeparation * maximumSeparation) return float.PositiveInfinity;
+            return MathF.Max(a, b);
+        }
+
         internal static bool b2UpdateContact(B2World world, B2ContactSim contactSim, B2Shape shapeA, in B2Transform transformA, B2Vec2 centerOffsetA,
             B2Shape shapeB, in B2Transform transformB, B2Vec2 centerOffsetB, B2Manifold[] generatedManifolds = null, int generatedIndex = 0)
         {
@@ -631,10 +646,14 @@ namespace Box2D.NET
 
             // Match old contact ids to new contact ids and copy the
             // stored impulses to warm start the solver.
-            int unmatchedCount = 0;
+            int unmatchedCount = 0, consumedHistory = 0;
             for (int i = 0; i < pointCount; ++i)
             {
                 ref B2ManifoldPoint mp2 = ref contactSim.manifold.points[i];
+
+                var halfSeparation = 0.5f * mp2.separation * contactSim.manifold.normal;
+                mp2.localAnchorA = b2InvRotateVector(transformA.q, mp2.anchorA - halfSeparation);
+                mp2.localAnchorB = b2InvRotateVector(transformB.q, mp2.anchorB + halfSeparation);
 
                 // shift anchors to be center of mass relative
                 mp2.anchorA = b2Sub(mp2.anchorA, centerOffsetA);
@@ -652,26 +671,33 @@ namespace Box2D.NET
 
                 ushort id2 = mp2.id;
 
+                int matched = -1; float bestDistance = float.PositiveInfinity; bool sameFeature = false;
                 for (int j = 0; j < oldManifold.pointCount; ++j)
                 {
                     ref B2ManifoldPoint mp1 = ref oldManifold.points[j];
-
-                    if (mp1.id == id2)
+                    if (world.contactRecycleRadius < 0)
                     {
-                        mp2.normalImpulse = mp1.normalImpulse;
-                        mp2.tangentImpulse = mp1.tangentImpulse;
-                        mp2.persisted = true;
-
-                        // clear old impulse
-                        mp1.normalImpulse = 0.0f;
-                        mp1.tangentImpulse = 0.0f;
-                        break;
+                        if (mp1.id == id2) { matched = j; break; }
+                        continue;
                     }
+                    if ((consumedHistory & (1 << j)) != 0 || b2Dot(oldManifold.normal, contactSim.manifold.normal) < 0.99f) continue;
+                    float distance = ContactHistoryDistance(world.contactRecycleRadius, world.contactMaxSeparation, mp1, mp2, oldManifold.normal, transformA, transformB);
+                    bool feature = mp1.id == id2;
+                    if (float.IsFinite(distance) && (matched < 0 || feature && !sameFeature || feature == sameFeature && distance < bestDistance))
+                    { matched = j; bestDistance = distance; sameFeature = feature; }
+                }
+                if (matched >= 0)
+                {
+                    ref var previous = ref oldManifold.points[matched];
+                    mp2.normalImpulse = previous.normalImpulse; mp2.tangentImpulse = previous.tangentImpulse; mp2.persisted = true;
+                    consumedHistory |= 1 << matched;
+                    previous.normalImpulse = previous.tangentImpulse = 0;
                 }
 
                 unmatchedCount += mp2.persisted ? 0 : 1;
             }
 
+            if (generatedManifolds == null && world.contactRecycleRadius >= 0 && consumedHistory == 0) contactSim.manifold.rollingImpulse = 0;
             B2_UNUSED(unmatchedCount);
 
 #if FALSE

@@ -225,6 +225,16 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<float> Physics2DContactMaxAllowedPenetration { get; } =
         new("physics/2d/solver/contact_max_allowed_penetration", .3f, PhysicsContactSettings.ValidPenetration);
 
+    /// <summary>Defines the body-local distance within which a cached contact may reuse its impulse history.</summary>
+    /// <value>physics/2d/solver/contact_recycle_radius; defaults to one scene unit. Zero disables reuse. New worlds capture feature overrides.</value>
+    public static ProjectSetting<float> Physics2DContactRecycleRadius { get; } =
+        new("physics/2d/solver/contact_recycle_radius", 1f, PhysicsContactSettings.ValidPersistenceDistance);
+
+    /// <summary>Defines the maximum normal separation or tangential drift of a cached contact.</summary>
+    /// <value>physics/2d/solver/contact_max_separation; defaults to 1.5 scene units. New worlds capture feature overrides.</value>
+    public static ProjectSetting<float> Physics2DContactMaxSeparation { get; } =
+        new("physics/2d/solver/contact_max_separation", 1.5f, PhysicsContactSettings.ValidPersistenceDistance);
+
     /// <summary>Defines the number of contact and joint solver sweeps per simulation substep.</summary>
     /// <value>physics/2d/solver/solver_iterations; defaults to sixteen and accepts positive integers. Each new world captures feature overrides.</value>
     public static ProjectSetting<int> Physics2DSolverIterations { get; } =

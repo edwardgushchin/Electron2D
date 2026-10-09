@@ -139,6 +139,7 @@ namespace Box2D.NET
         public float contactDampingRatio;
         internal float sleepAngularThreshold, timeToSleep;
         internal int solverIterations = 1;
+        internal float contactRecycleRadius = -1, contactMaxSeparation;
         internal float contactBias = -1, contactAllowedPenetration, contactBiasDuration;
 
         public b2FrictionCallback frictionCallback;
@@ -268,7 +269,7 @@ namespace Box2D.NET
             maxLinearSpeed = 0.0f;
             contactSpeed = 0.0f;
             sleepAngularThreshold = timeToSleep = 0;
-            solverIterations = 1; contactBias = -1; contactAllowedPenetration = contactBiasDuration = 0;
+            solverIterations = 1; contactRecycleRadius = -1; contactMaxSeparation = 0; contactBias = -1; contactAllowedPenetration = contactBiasDuration = 0;
             contactHertz = 0.0f;
             contactDampingRatio = 0.0f;
 

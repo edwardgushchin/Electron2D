@@ -5,8 +5,9 @@
 #include "PhysicsResidentContact.inc.glsl"
 #include "PhysicsMaterial.inc.glsl"
 #include "PhysicsPairHash.inc.glsl"
+#include "PhysicsContactPersistence.inc.glsl"
 layout(local_size_x=64) in;
-struct History { uvec4 pair; uvec4 features; uvec4 epochs; uvec4 geometry; vec4 impulse; };
+struct History { uvec4 pair; uvec4 features; uvec4 epochs; uvec4 geometry; vec4 impulse; vec4 anchors; };
 #include "PhysicsResidentConstraint.inc.glsl"
 layout(std430,set=0,binding=0) readonly buffer Points { ContactPoint points[]; };
 layout(std430,set=0,binding=1) readonly buffer Shapes { Shape shapes[]; };
@@ -26,7 +27,7 @@ void fail(){atomicOr(status.x,1u);}
 uint flags(vec2 material) {return (material.x<0?1u:0u)|(material.y<0?2u:0u);}
 uint historyHash(ContactPoint p)
 {
-    return pairHash(p.pair.xy)^pairHash(p.pair.zw)^pairHash(p.features.xy)^pairHash(p.features.zw);
+    return pairHash(p.pair.xy)^pairHash(p.pair.zw)^pairHash(p.features.zw);
 }
 uvec4 epochs(Shape a,Shape b)
 {
@@ -38,23 +39,37 @@ uvec4 geometryEpochs(Shape a,Shape b)
 }
 vec2 previousImpulse(ContactPoint p,Shape a,Shape b,float friction)
 {
-    if(history.y==0u)return vec2(0);
-    uint at=historyHash(p)&(history.x-1u);
-    for(uint probe=0u;probe<history.x;probe++)
+    if(history.y==0u||correctionPolicy.z==0)return vec2(0);
+    // Each failed claim consumes one candidate. History is immutable except for its claim word.
+    for(uint attempt=0u;attempt<history.y;attempt++)
     {
-        uint slot=table[at];if(slot==none)return vec2(0);
-        if(slot>=history.y){fail();return vec2(0);}
-        History old=records[slot];
-        if(old.pair==p.pair&&old.features==p.features)
+        uint at=historyHash(p)&(history.x-1u),best=none;
+        float distance=uintBitsToFloat(0x7f800000u);bool sameFeature=false,ended=false;
+        for(uint probe=0u;probe<history.x;probe++)
         {
-            if(old.epochs!=epochs(a,b)||old.geometry!=geometryEpochs(a,b)||dot2(old.impulse.zw,p.normal.xy)<0.99)return vec2(0);
-            vec2 impulse=policy.z*old.impulse.xy;
-            impulse.y=clamp(impulse.y,-friction*impulse.x,friction*impulse.x);
-            atomicAdd(status.y,1u);return impulse;
+            uint slot=table[at];if(slot==none){ended=true;break;}
+            if(slot>=history.y){fail();return vec2(0);}
+            History old=records[slot];
+            if(old.pair==p.pair&&old.features.zw==p.features.zw&&old.epochs==epochs(a,b)&&
+                old.geometry.xy==geometryEpochs(a,b).xy&&dot2(old.impulse.zw,p.normal.xy)>=0.99&&
+                atomicAdd(records[slot].geometry.z,0u)==0u)
+            {
+                float candidate=contactHistoryDistance(old.anchors,p.anchors,old.impulse.zw,
+                    bodies[a.owner.x].pose,bodies[b.owner.x].pose,correctionPolicy.zw);
+                bool feature=old.features.xy==p.features.xy;
+                if(!isinf(candidate)&&(best==none||(feature&&!sameFeature)||(feature==sameFeature&&candidate<distance)))
+                {best=slot;distance=candidate;sameFeature=feature;}
+            }
+            at=(at+1u)&(history.x-1u);
         }
-        at=(at+1u)&(history.x-1u);
+        if(!ended){fail();return vec2(0);}
+        if(best==none)return vec2(0);
+        if(atomicCompSwap(records[best].geometry.z,0u,1u)!=0u)continue;
+        vec2 impulse=policy.z*records[best].impulse.xy;
+        impulse.y=clamp(impulse.y,-friction*impulse.x,friction*impulse.x);
+        atomicAdd(status.y,1u);return impulse;
     }
-    fail();return vec2(0);
+    return vec2(0);
 }
 void main()
 {
@@ -64,6 +79,7 @@ void main()
     if(control.x==6u)
     {
         History h=records[i];if(h.pair.x==none)return;
+        records[i].geometry.z=0u;
         ContactPoint p=ContactPoint(h.pair,h.features,vec4(0),vec4(0));uint at=historyHash(p)&(history.x-1u);
         for(uint probe=0u;probe<history.x;probe++)
         {
@@ -75,11 +91,11 @@ void main()
     if(control.x==4u)
     {
         Constraint c=constraints[i];ContactPoint p=points[i];
-        History h=History(uvec4(none),uvec4(0),uvec4(0),uvec4(0),vec4(0));
+        History h=History(uvec4(none),uvec4(0),uvec4(0),uvec4(0),vec4(0),vec4(0));
         if(c.bodies.x!=none&&impulses[i].physical.x>0)
         {
             Shape a=shapes[p.pair.x],b=shapes[p.pair.y];
-            h=History(p.pair,p.features,epochs(a,b),geometryEpochs(a,b),vec4(impulses[i].physical.xy,p.normal.xy));
+            h=History(p.pair,p.features,epochs(a,b),geometryEpochs(a,b),vec4(impulses[i].physical.xy,p.normal.xy),p.anchors);
         }
         records[i]=h;return;
     }

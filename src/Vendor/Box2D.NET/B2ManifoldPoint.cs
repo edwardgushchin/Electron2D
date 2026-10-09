@@ -33,6 +33,9 @@ namespace Box2D.NET
         /// The separation of the contact point, negative if penetrating
         public float separation;
 
+        // Boundary anchors in body-local coordinates for geometric impulse recycling.
+        internal B2Vec2 localAnchorA, localAnchorB;
+
         /// The impulse along the manifold normal vector.
         public float normalImpulse;
 

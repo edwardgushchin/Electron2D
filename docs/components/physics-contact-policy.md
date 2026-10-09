@@ -1,4 +1,4 @@
-# World and shape contact correction
+# World and shape contact policy
 
 Last updated: 2026-10-09
 
@@ -161,3 +161,69 @@ do not promise equal numerical work or GPU acceleration. Logs:
 checks passed; focused checks were repeated after the empty-iteration optimization. Native allocation,
 other devices/platforms, real-window FPS, public GPU selection and network acceptance
 remain unverified by this iteration-setting slice.
+
+## Contact history limits
+
+SpaceGet/SetContactRecycleRadius and SpaceGet/SetContactMaxSeparation complete the
+nine typed world-parameter capabilities. New worlds capture project defaults of
+1 and 1.5 scene units respectively. Both accept finite nonnegative distances whose
+scene-unit square is finite; a positive distance must also retain a nonzero squared
+backend distance. Invalid writes preserve the policy. Changed writes wake dynamics,
+equal writes preserve sleep, and a later explicit sleep takes priority.
+
+These settings bound reuse of cached normal/tangent impulses. Current collision
+geometry is recomputed each interval, independent of the history limits. Both
+body-local boundary anchors must move strictly less than the recycle radius.
+Reprojecting the old anchors at current poses must leave normal separation and
+tangential drift no greater than maximum separation. Zero radius disables reuse;
+zero maximum separation still permits a stable penetrating contact. Neither value
+enlarges query margins or delays collision-exit events.
+
+CPU and GPU prefer a surviving feature, then the closest eligible old anchor pair.
+Body/shape generations, geometry and participation guards remain; old/new normals
+must have dot product at least 0.99. Each cached impulse can serve only one new point.
+Resident GPU matching uses the pair/piece hash and an atomic claim word, retrying
+when another point claims its candidate. Claims and history stay on device; this
+introduces no CPU pose mirror, history computation or history readback.
+
+CPU manifold points now retain two local boundary anchors (16 additional bytes per
+point). Resident history records grow from 80 to 96 bytes; the existing 80-byte
+solver uniform has room for both limits. The older CPU-host/GPU-stage path already
+mirrors contact state: its uploaded/matched histories grow from 32 to 80 bytes,
+solver inputs from 128 to 160, working contacts from 208 to 240 and collision
+uniforms from 16 to 32. Those costs belong to that diagnostic path; they do not
+introduce a host contact mirror in the independent backend.
+
+PhysicsContactPersistenceTests checks all seven finite/directed body geometries
+and an infinite boundary on CPU, stage GPU and independent GPU. A sliding body
+retains contact support and its 400 u/s tangent speed as history is enabled,
+disabled and rejected separately by radius or separation. Its reported per-frame
+impulse remains (0, -9.8) kg*u/s within 0.03, balancing gravity over the 0.01-second
+tick. A CPU/stage two-point fixture replaces feature IDs and verifies nearby-anchor
+fallback without duplicating its one old impulse. A tilted resident box exercises
+three competing-point intervals; reusable impulse count bounds the number of
+warm-started points. Settings capture, invalid/thread/phase access, scene events,
+sleep ordering and exact scalar boundary cases also execute.
+
+The warmed allocation probe alternates radius 10/0 before each full tick of one
+sliding body, with four substeps and sixteen sweeps. It measures 128 ticks after
+256 warmup ticks without pose/report readback inside the measured loop. Measurements
+and remaining acceptance limits are recorded below; this tiny case measures dispatch
+overhead and does not establish GPU speedup at large body counts.
+
+Linux/.NET 10 Release, Vulkan/NVIDIA GeForce RTX 3090 Ti:
+
+| Path | p50 / p95 / p99, ms per edited tick | All-thread managed bytes / 128 ticks |
+| --- | --- | --- |
+| Public CPU, dummy video | 0.0172 / 0.0174 / 0.0195 | 0 |
+| CPU host/GPU stages | 0.9778 / 1.5713 / 1.6707 | 0 |
+| Independent resident GPU | 2.4119 / 3.6464 / 4.3695 | 0 |
+
+Resident per-tick mean traffic is 374 B uploaded, 200 B of status read back and
+17,299 B of uniforms; included waits average 1.4165 ms. The small workload remains
+slower on GPU. Logs: `/tmp/e2d-history-final-cpu.log`,
+`/tmp/e2d-history-final-stages.log`, `/tmp/e2d-history-final-resident.log`.
+The CPU collider and full GPU regression suites passed; focused suites were repeated
+after tightening rejection of squared backend-distance underflow. Native allocation,
+other platforms/devices, rendered FPS, large-world throughput, public GPU binding
+and network acceptance remain outside this contact-history slice.

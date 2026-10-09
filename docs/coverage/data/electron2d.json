@@ -113168,6 +113168,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetContactMaxSeparation(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetContactMaxSeparation",
+    "signature": "public static System.Single SpaceGetContactMaxSeparation(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceGetContactRecycleRadius(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceGetContactRecycleRadius",
+    "signature": "public static System.Single SpaceGetContactRecycleRadius(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceGetDirectState(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -113374,6 +113412,54 @@
     "declaringType": "Electron2D.PhysicsServer",
     "name": "SpaceSetContactMaxAllowedPenetration",
     "signature": "public static System.Void SpaceSetContactMaxAllowedPenetration(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetContactMaxSeparation(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetContactMaxSeparation",
+    "signature": "public static System.Void SpaceSetContactMaxSeparation(Electron2D.RID space, System.Single value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServer.SpaceSetContactRecycleRadius(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceSetContactRecycleRadius",
+    "signature": "public static System.Void SpaceSetContactRecycleRadius(Electron2D.RID space, System.Single value)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -183329,6 +183415,32 @@
     "declaringType": "Electron2D.ProjectSettings",
     "name": "Physics2DContactMaxAllowedPenetration",
     "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DContactMaxAllowedPenetration { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DContactMaxSeparation()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DContactMaxSeparation",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DContactMaxSeparation { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.Physics2DContactRecycleRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "Physics2DContactRecycleRadius",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E Physics2DContactRecycleRadius { get;  }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,

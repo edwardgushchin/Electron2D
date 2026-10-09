@@ -113,6 +113,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var world = b2GetWorldFromId(_worldID);
         world.sleepAngularThreshold = SleepSettings.AngularThreshold; world.timeToSleep = SleepSettings.TimeToSleep;
         world.solverIterations = SolverIterations;
+        world.contactRecycleRadius = ContactSettings.RecycleRadius * MetersPerUnit; world.contactMaxSeparation = ContactSettings.MaxSeparation * MetersPerUnit;
         world.contactBias = ContactSettings.Bias; world.contactAllowedPenetration = ContactSettings.AllowedPenetration * MetersPerUnit;
         _tasks.Bind(world);
         world.workerCount = 1;
