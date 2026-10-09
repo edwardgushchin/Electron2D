@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -135,3 +135,10 @@ reads regain compatibility without adding a second state copy. RotationLocked re
 validated authored resident role/policy metadata, avoiding a pose readback during
 ordinary preparation. [Publication tests](../components/physics-backends.md#conditional-body-publication)
 cover intermediate reads restored to the prior final pose.
+
+GPU parameter preparation validates and resolves the runtime's owner once, then
+uses that same scene role for omission and persistent force/torque values. For
+non-rigid owners, rotation locking reads the current attachment directly. Existing
+GPU handle/access validation and per-step authored parameter sampling remain;
+this removes repeated owner resolution without a new cache or changed public API.
+See [parameter preparation measurements](../components/physics-backends.md#parameter-owner-resolution).

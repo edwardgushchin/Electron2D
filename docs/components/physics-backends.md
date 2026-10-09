@@ -1,6 +1,6 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Public selection
 
@@ -429,3 +429,50 @@ for a small world, not 60 Hz at 65,536 bodies; all-thread/native window allocati
 and a before/after rendered-speed claim are outside this check. Log:
 `/tmp/e2d-parameters-native.log`; captures:
 `/tmp/e2d-parameters-window-{CPU,GPU}.png`.
+
+## Parameter owner resolution
+
+`PrepareGPUParameters` reuses its already validated scene owner for omission and
+persistent force/torque, and the current adapter for a non-rigid rotation lock.
+It continues sampling authored parameters every step and retains GPU handle/access
+checks, live edits and callback ordering. It adds no state cache or transfer change.
+The source change is confined to this attached-only preparation path; detached
+accessors and public validation keep their existing behavior.
+
+Comparison uses `4c570ee6` and the two-line owner-reuse change, with both versions
+forcibly rebuilt (`--no-incremental`). Consumer IL confirms the original owner
+accessors versus direct reads after the initial owner resolution. The reverse
+baseline run loads the saved forced-build baseline DLL with the same test harness.
+No source timestamp restoration is used as a substitute for recompilation.
+
+The 65,536-body fixture retains 32,768 independent colliding pairs, 64 warmup and
+64 samples, no dynamic sleep, four substeps and sixteen iterations. Every dynamic
+pose and linear velocity is reset each tick; whole time includes those public
+edits and the complete physical step. Runs execute baseline/changed/changed/baseline.
+
+| Run | Parameters/motion/joints mean ms | Whole GPU p50 / p95 / p99 ms | Whole CPU p50 / p95 / p99 ms |
+| --- | ---: | --- | --- |
+| Baseline first | 6.0157 | 38.5033 / 41.9345 / 60.0424 | 67.3968 / 70.8164 / 72.5025 |
+| Changed first | 5.3763 | 35.7464 / 39.4099 / 40.7475 | 67.2458 / 71.8978 / 86.1696 |
+| Changed repeat | 5.4309 | 34.6665 / 38.5808 / 39.8158 | 65.9394 / 68.7447 / 70.8995 |
+| Baseline repeat | 6.2465 | 34.9506 / 42.3843 / 44.8025 | 71.1860 / 96.0241 / 187.1669 |
+
+The preparation phase consistently decreases by about 0.6–0.9 ms in these runs.
+Whole-time ranges overlap; the reverse baseline is faster than the first changed
+run, and CPU tails also vary. This is evidence of reduced local preparation work,
+not a stable whole-frame speedup or a new rendered-FPS claim.
+All eight warm CPU/GPU intervals allocate zero owner/all-thread managed bytes.
+Each GPU tick still uploads/downloads 5,767,344/192 bytes, makes 23 submissions and
+one body publication; mean waits range 7.8772–9.6748 ms. Logs:
+`/tmp/e2d-owner-{baseline,after,after-repeat,baseline-repeat}.log`.
+
+The existing explicit CPU/GPU parameter, publication and public-world suites pass,
+including live constant forces/torques, omission, locks, reentry, contact caps,
+callbacks, failed-world teardown and CPU/no-device startup fallback in a separate
+process. The public 4,096-active-circle-plus-floor scenario also reports zero
+owner/all-thread managed bytes (GPU whole-step p50/p95/p99
+4.5140/5.4787/6.0849 ms). Logs `/tmp/e2d-owner-parameters.log`,
+`/tmp/e2d-owner-publication.log` and `/tmp/e2d-owner-space.log` retain those checks.
+The prior real-window results remain separate: native allocations, new window
+measurements, network restore/replay and general conformance are not established
+by this optimization.

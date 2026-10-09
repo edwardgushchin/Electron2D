@@ -83,11 +83,11 @@ internal sealed partial class PhysicsColliderBackend
         var rigid = runtime.Owners.Scene as RigidBody;
         var policy = new GPUPhysicsBodyStore.IntegrationPolicy(rigid?.GravityScale ?? runtime.BodyGravityScale,
             rigid?.LinearDamp ?? runtime.BodyLinearDamp, rigid?.AngularDamp ?? runtime.BodyAngularDamp,
-            rigid is null ? runtime.RotationLocked : !rigid.Freeze && rigid.LockRotation, runtime.Omitted,
+            rigid is null ? RotationLocked : !rigid.Freeze && rigid.LockRotation, rigid?.CustomIntegrator ?? runtime.OmitForces,
             rigid?.LinearDampMode ?? runtime.BodyLinearDampMode, rigid?.AngularDampMode ?? runtime.BodyAngularDampMode);
         if (GPU!.GetIntegrationPolicy(GPUHandle) != policy) { GPU.SetIntegrationPolicy(GPUHandle, policy); Space!.InvalidateGPUStates(); }
         GPU.SetCCDMode(GPUHandle, runtime.ContinuousMode);
-        SetGPUConstants(runtime.GetConstantForce(), runtime.GetConstantTorque());
+        SetGPUConstants(rigid?.ConstantForce ?? runtime.ConstantForce, rigid?.ConstantTorque ?? runtime.ConstantTorque);
     }
     internal void PublishGPUFields(PhysicsBodyRuntime runtime)
     {
