@@ -1069,3 +1069,13 @@ Generic parameter operations require `T : unmanaged` and the reflected element c
 ## Local compute device creation
 
 `public static RenderingDevice CreateLocalRenderingDevice()` creates a caller-owned [local compute device](RenderingDevice.md) without requiring an active canvas renderer. It establishes native compute capability and owner-thread lifetime, and propagates initialization errors. The caller disposes the device and its RID graph. This factory does not change the active renderer or select a physics backend. See [local compute](../components/local-compute.md) for buffers, shaders, lists and verification.
+
+## Physics contact canvas
+
+The internal contact-canvas table owns one canvas-item RID and recorded revision per
+live physics WorldRuntime. Before frame capture it records that world's latest
+bounded point sample on its default canvas. Shared-world viewports render the same
+item through their own canvas transforms; they do not create duplicate markers.
+Empty samples clear old commands. Toggle-off, world detach and renderer shutdown
+release ownership. Ordinary canvas storage handles warmed rerecording without new
+managed allocations. See [physics diagnostics](../components/physics-debug.md).

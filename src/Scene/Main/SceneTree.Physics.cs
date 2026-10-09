@@ -65,13 +65,13 @@ public sealed partial class SceneTree
             }
             catch (Exception e) { CollectException(ref errors, e); }
         }
-        var count = _physicsWorlds.Count; for (var i = 0; i < count; i++) if (_physicsWorlds[i].ExistingSpace is { } space) try { space.Step(delta); } catch (Exception e) { CollectException(ref errors, e); }
+        var count = _physicsWorlds.Count; for (var i = 0; i < count; i++) if (_physicsWorlds[i].ExistingSpace is { } space) try { space.SetDebugContacts(_debugCollisionsHint ? DebugContactLimit : 0); space.Step(delta); } catch (Exception e) { CollectException(ref errors, e); }
     }
     private void ReleasePhysicsWorlds(ref List<Exception>? errors)
     {
         try { _physicsWorld?.Dispose(); } catch (Exception e) { CollectException(ref errors, e); }
         _physicsWorld = null;
-        foreach (var runtime in _physicsWorlds) try { runtime.Detach(this); } catch (Exception e) { CollectException(ref errors, e); }
+        foreach (var runtime in _physicsWorlds) try { try { runtime.ExistingSpace?.SetDebugContacts(0); } finally { runtime.Detach(this); } } catch (Exception e) { CollectException(ref errors, e); }
         _physicsWorlds.Clear(); _worldRebindPending.Clear(); _defaultWorldRuntime = null;
     }
 }

@@ -183355,6 +183355,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.DebugCollisionContactColor()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugCollisionContactColor",
+    "signature": "public static Electron2D.ProjectSetting\u003CElectron2D.Color\u003E DebugCollisionContactColor { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CElectron2D.Color\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.DebugCollisionDrawOutlines()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -183365,6 +183378,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.DebugCollisionMaxContacts()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "DebugCollisionMaxContacts",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E DebugCollisionMaxContacts { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

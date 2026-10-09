@@ -88,6 +88,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(DebugPathsColor, isBasic: false);
         RegisterInternal(DebugCollisionShapeColor, isBasic: false);
         RegisterInternal(DebugCollisionDrawOutlines, isBasic: false);
+        RegisterInternal(DebugCollisionContactColor, isBasic: false);
+        RegisterInternal(DebugCollisionMaxContacts, isBasic: false);
         RegisterInternal(LocaleTest, isBasic: false);
         RegisterInternal(LocaleFallback, isBasic: false);
         RegisterInternal(RootNodeAutoTranslate, isBasic: false);
@@ -1184,6 +1186,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, DebugPathsColor) ||
         ReferenceEquals(setting, DebugCollisionShapeColor) ||
         ReferenceEquals(setting, DebugCollisionDrawOutlines) ||
+        ReferenceEquals(setting, DebugCollisionContactColor) ||
+        ReferenceEquals(setting, DebugCollisionMaxContacts) ||
         ReferenceEquals(setting, LocaleTest) ||
         ReferenceEquals(setting, LocaleFallback) ||
         ReferenceEquals(setting, RootNodeAutoTranslate) ||

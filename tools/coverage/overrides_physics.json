@@ -1459,6 +1459,16 @@
       "godot": "ProjectSettings::property:debug/shapes/collision/draw_2d_outlines",
       "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionDrawOutlines()",
       "reason": "Typed retained canvas diagnostics under ADR 0100; project keys preserve their resource and scene roles."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/collision/contact_color",
+      "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionContactColor()",
+      "reason": "Typed bounded contact diagnostics sampled at tree construction, with shared CPU/GPU and native canvas consumers under ADR 0100."
+    },
+    {
+      "godot": "ProjectSettings::property:debug/shapes/collision/max_contacts_displayed",
+      "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionMaxContacts()",
+      "reason": "Typed bounded contact diagnostics sampled at tree construction, with shared CPU/GPU and native canvas consumers under ADR 0100."
     }
   ],
   "extras": [
@@ -2456,7 +2466,7 @@
         "SceneTree::property:debug_collisions_hint"
       ],
       "state": "Implemented",
-      "reason": "Retained shape/cast/joint diagnostics, stored finite per-node color and typed project policy execute through scene/owned canvas RIDs on CPU/GPU worlds and both renderers; lifetime, mutation, error and warm allocation checks in PhysicsDebugTests/PhysicsDebugNativeTests (ADR 0100)."
+      "reason": "Retained shape/cast/joint drawing and bounded contact snapshots execute on CPU/GPU worlds and both renderers; toggle, lifecycle, shared-world routing and warm allocation checks (ADR 0100, PhysicsDebugTests and PhysicsContactDebugTests plus native suites)."
     },
     {
       "godot": [
@@ -4190,6 +4200,20 @@
       ],
       "state": "Implemented",
       "reason": "Typed validated project settings drive construction defaults and next-recording outline policy. CPU/GPU and native render checks exercise consumers (ADR 0100)."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:debug/shapes/collision/contact_color"
+      ],
+      "state": "Implemented",
+      "reason": "PhysicsContactDebugTests and native tests verify finite color/nonnegative point limits, sampled defaults, bounded CPU/GPU capture, shared-world canvas ownership, failure cleanup and zero warm managed allocation (ADR 0100)."
+    },
+    {
+      "godot": [
+        "ProjectSettings::property:debug/shapes/collision/max_contacts_displayed"
+      ],
+      "state": "Implemented",
+      "reason": "PhysicsContactDebugTests and native tests verify finite color/nonnegative point limits, sampled defaults, bounded CPU/GPU capture, shared-world canvas ownership, failure cleanup and zero warm managed allocation (ADR 0100)."
     }
   ]
 }

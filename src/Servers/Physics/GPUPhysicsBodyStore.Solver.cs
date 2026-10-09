@@ -187,6 +187,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             SolverPass(ref command, settings, 5, _solverHistoryTableCapacity);
             SolverPass(ref command, settings, 6, ContactPointCount);
             RecordContactReports(command);
+            RecordDebugContacts(command);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin solver result");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });

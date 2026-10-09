@@ -242,3 +242,19 @@ Shared-world adapters can set an explicit stable Area traversal rank, separate
 actual solver velocity from virtual surface velocity, update default joint bias,
 and publish external wake propagation without advancing time. These internal
 operations preserve existing direct-store defaults.
+
+## Bounded contact diagnostics
+
+[GPUPhysicsBodyStore.DebugContacts.cs](../../src/Servers/Physics/GPUPhysicsBodyStore.DebugContacts.cs)
+prepares a point buffer, 8-byte status and retained transfer storage only on demand.
+The solver records a clear and compaction pass before advancing poses. The shader
+validates shape/body generations and finite world positions, and omits sensors,
+nonpenetrating and sleeping pairs. The last solver batch replaces earlier samples.
+
+ReadDebugContacts copies status plus a previous-count-sized prefix, then the exact
+remaining tail when the result grows. All bytes, submissions and waits contribute
+to the ordinary counters. A failed result leaves the store failed; disabling remains
+permitted for cleanup without authorizing subsequent reads or steps. Zero limit
+skips diagnostic compute and readback. Capacity is retained until disposal. The
+[component report](../components/physics-debug.md#contact-point-snapshots) distinguishes
+these explicit diagnostic transfers from ordinary simulation and body publication.

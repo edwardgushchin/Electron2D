@@ -84,7 +84,77 @@ Use a source-native Release test build:
   resource edits, thread/RID errors, redraw allocation and teardown on all four
   physics/renderer combinations. PNGs are saved to `/tmp/e2d-physics-debug-*.png`.
 
-Contact-point/Space debug APIs, contact limits/color, tile collision-owner diagnostics,
-backend extension drawing and the rest of the full physics/network objective remain
-open. Other platforms, native allocation and owner visual acceptance are not implied
-by these Linux tests.
+Tile collision-owner diagnostics, backend extension drawing and the rest of the
+full physics/network objective remain open. Other platforms, native allocation and
+owner visual acceptance are not implied by these Linux tests.
+
+## Contact-point snapshots
+
+The same tree flag requests bounded contacts from each scene-bound space. Project
+`DebugCollisionContactColor` (finite `(1,.2,.1,.8)`) and `DebugCollisionMaxContacts`
+(nonnegative `10000`) are sampled with feature overrides at tree construction.
+Zero maximum disables contact capture independently of shape drawing. Capacity is
+prepared on enable and retained until world disposal; an impossible size fails
+preparation without enabling the tree or leaving world requests active. Disable
+immediately clears samples and stops diagnostic GPU work.
+A caller-owned World retained after tree teardown loses the diagnostic request.
+
+Each penetrating manifold point contributes up to two world-space boundary points,
+sampled before that batch advances poses. Sensors, speculative nonpenetrating
+contacts and sleeping pairs are omitted. The latest solver batch replaces earlier
+CCD/substep batches; this is neither transient event history nor a whole-tick union.
+Order and capped subset are not stable backend identities. `MaxContactsReported`
+and gameplay reporting remain unchanged. A zero-time or inactive step retains the
+last sample; an empty positive active step clears it. Owner, failure and lifecycle
+guards cover reads and edits; a failed world permits disable/disposal only.
+
+CPU reads retained manifold midpoints/separations. GPU records two compute passes
+(clear/compact) inside the existing solver command, validates resident identities,
+and copies only an 8-byte summary and bounded `Vector2` results. It first reads a
+prefix sized by the previous count (at least two), then an exact missing tail when
+the result grows. Disabling removes both compute and copies. No full body/contact
+mirror or CPU collision pass is added. The internal space span is consumed by one
+renderer-owned retained canvas item per world, drawn once through each viewport.
+Markers are filled 5-by-5 scene-unit rectangles at point minus `(2,2)`. They inherit
+the default world canvas and viewport transform; they are not fixed screen pixels.
+
+The pinned `space_set_debug_contacts`, `space_get_contacts` and
+`space_get_contact_count` hooks are internal server operations and extension virtuals,
+not public scripted PhysicsServer methods. The concrete consumer is implemented;
+the full extension family stays blocked until registration and virtual dispatch work.
+
+`ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG=1` checks actual surface samples (.02 scene-unit
+geometry tolerance), odd/zero/invalid limits, sampled settings, zero time, sleep/wake,
+filters/sensors, body removal, owner guards, failed-world cleanup and warm allocation
+on explicit CPU/GPU. `ELECTRON2D_CONTACT_DEBUG_CPU_ONLY=1` also verifies no renderer or
+display was initialized and runs with missing GPU/display drivers.
+`ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG_NATIVE=1` checks rendered contact pixels,
+shared-world deduplication, separate viewport transforms, toggle/removal and resource
+release on all four physics/renderer combinations. Pixel tolerance is .05 red/.04
+other channels for render-target rounding. Captures: `/tmp/e2d-contact-debug-*.png`.
+
+Measured on Linux x64 with 256 independent static/dynamic circle pairs (512 bodies),
+96 warmup iterations and 64 samples, resetting every dynamic pose/velocity and then
+stepping 1/60 s. CPU/GPU use the same fixture and public operations on the same source
+candidate. Contact cap is 128 when enabled. Timings include the reset; no rendering.
+
+| Backend / contacts | Whole path p50 / p95 / p99 ms | Reset / step p50 ms | GPU upload / readback B per iteration | GPU wait ms per iteration |
+| --- | --- | --- | --- | --- |
+| CPU off | .3676 / .4636 / .4719 | .0712 / .2964 | 0 / 0 | 0 |
+| CPU on | .3742 / .4130 / .5306 | .0695 / .3042 | 0 / 0 | 0 |
+| GPU off | 59.0417 / 65.2467 / 66.8194 | 54.9242 / 3.4243 | 98496 / 63696 | 36.4441 |
+| GPU on | 56.7722 / 66.0741 / 88.4714 | 52.7402 / 3.6387 | 98496 / 64728 | 36.4958 |
+
+All four intervals allocated **0 owner-thread / 0 process-wide managed bytes**.
+Enabled contacts add 1032 readback bytes for the 128 selected points plus summary,
+without a CPU upload. Native checks separately measured **0 owner-thread bytes**
+in 64 warmed render frames. First preparation/growth, capture encoding and
+native/driver allocations are excluded. These tiny-window checks establish pixels,
+not representative FPS; timing noise prevents an on/off speedup claim.
+
+The complete GPU path loses badly on this reset-heavy workload: 768 command
+submissions per reset, before stepping. Current pose/velocity setters invalidate
+GPU snapshots; preserving the other velocity component triggers synchronous
+single-body reads. Phase timing and submission counts expose this existing adapter
+bottleneck. Fixing batched/partial authored edits and measuring representative
+massive scenes remain required; contact diagnostics do not establish GPU advantage.

@@ -462,6 +462,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         EnsureQueryAccess();
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot step recursively.");
+        ResetDebugContacts();
         if (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)
         {
             PhysicsServer.Service.PublishStatistics(this, default);
@@ -489,7 +490,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             world.contactBiasDuration = (float)delta;
             StepKinematicPaths(delta, hasKinematicBodies);
             RecordStepPhase(3, ref profileMark);
-            solverAdvanced = true;
+            solverAdvanced = true; CaptureDebugContacts();
             foreach (var collider in _serverColliders) collider.CompleteMotion();
             foreach (var body in _bodies)
             {
@@ -549,6 +550,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
+        _debugContacts = []; _debugContactLimit = _debugContactCount = 0;
         _tasks?.Dispose();
         if (_continuousTree is not null) Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(_continuousTree);
         _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear(); _continuousBoundaries.Clear();

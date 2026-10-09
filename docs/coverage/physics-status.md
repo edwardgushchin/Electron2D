@@ -596,13 +596,13 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
 | [Engine](classes/Engine.md) | [Object](classes/Object.md) | 0 | 7 | 0 | 0 | 0 |
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
-| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 17 | 3 | 4 | 0 | 0 |
+| [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 19 | 3 | 2 | 0 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 2 | 1 | 0 | 0 | 0 |
 | [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
 | [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
 | [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 0 | 1 | 0 | 0 |
-| **Total** | | 25 | 12 | 41 | 0 | 0 |
+| **Total** | | 27 | 12 | 39 | 0 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -616,8 +616,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Engine::property:physics_ticks_per_second`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Engine::property:time_scale`](classes/Engine.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Performance::method:get_monitor(int:Performance.Monitor)`](classes/Performance.md) | Partial | ADR 0089: completed-step active bodies, filtered collision candidates and active constraint islands execute on CPU and independent GPU; shared-world aggregation, pause, sleep, sensors, failures, cross-thread reads and zero warmed managed allocation are verified by PhysicsStatisticsTests. Other monitor producers and custom-monitor registration/lifecycle remain absent; only the three functioning physics selectors are exposed. |
-| [`ProjectSettings::property:debug/shapes/collision/contact_color`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
-| [`ProjectSettings::property:debug/shapes/collision/max_contacts_displayed`](classes/ProjectSettings.md) | Blocked | Trigger: first host diagnostics and typed debug-settings slice (ADRs 0015 and 0016). |
 | [`ProjectSettings::property:physics/2d/physics_engine`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/2d/run_on_separate_thread`](classes/ProjectSettings.md) | Blocked | Trigger: first Box2D.NET 2D physics and typed physics-settings slice (ADR 0012). |
 | [`ProjectSettings::property:physics/common/max_physics_steps_per_frame`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |

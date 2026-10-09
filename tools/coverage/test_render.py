@@ -402,7 +402,7 @@ def main():
     assert " | Implemented | " in next(row for row in shape_node_rows if "one_way_collision_margin" in row)
     assert all(" | Implemented | " in row for row in shape_node_rows)
     assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "SceneTree.md"].splitlines() if "property bool debug_collisions_hint" in row)
-    for setting in ("shape_color", "draw_2d_outlines"):
+    for setting in ("shape_color", "draw_2d_outlines", "contact_color", "max_contacts_displayed"):
         assert " | Implemented | " in next(row for row in pages[CLASS_PAGES / "ProjectSettings.md"].splitlines() if f"debug/shapes/collision/{setting}" in row)
     picking_rows = pages[CLASS_PAGES / "CollisionObject2D.md"].splitlines()
     for name in ("_input_event", "_mouse_enter", "_mouse_exit", "_mouse_shape_enter", "_mouse_shape_exit"):

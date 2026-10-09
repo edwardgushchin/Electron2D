@@ -982,7 +982,11 @@ False initially. Owner-thread changes invalidate attached CollisionShape,
 CollisionPolygon, RayCast, ShapeCast and Joint nodes, including hidden ones. Their
 next recording follows ordinary visibility/clipping/transform/modulation rules and
 works in all build configurations. Shape color is per-node; the tree samples the
-project default for casts/polygons at construction. A closed/disposed tree rejects
-access. No physics query, renderer startup or application UI is created by this flag.
-Contact-point/Space debug APIs remain separate. See [ADR 0100](../decisions/physics-debug.md#adr-0100)
+project default for casts/polygons and contact color/limit at construction. Existing
+worlds prepare contact capacity on enable; later spaces adopt it before stepping.
+Positive active steps publish bounded penetrating boundary samples. Zero contact
+limit leaves shape diagnostics enabled. Disabling or detaching clears contacts and
+stops diagnostic GPU work; it remains available after a failed step for cleanup.
+A closed/disposed tree or off-owner call rejects access. No renderer startup or
+application UI is created. GPU contact capture adds selected-point readback. See [ADR 0100](../decisions/physics-debug.md#adr-0100)
 for live-toggle behavior and [diagnostics](../components/physics-debug.md) for use and tests.

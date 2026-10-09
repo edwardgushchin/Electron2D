@@ -144,3 +144,15 @@ query/report work and publishes after completed body capture. Empty active posit
 steps clear the sample. The PhysicsServer registry gate protects publication and
 aggregation. Local activation uses a volatile flag so diagnostics can read it
 without entering a foreign owner's solver. See [Physics statistics](../components/physics-statistics.md).
+
+## Contact diagnostic snapshots
+
+The [diagnostic partial](../../src/Servers/Physics/PhysicsSpace.DebugContacts.cs)
+retains the configured limit, point buffer/count and monotonically changing revision.
+Internal owner-thread `SetDebugContacts` prepares storage, while `DebugContacts`
+borrows the current span. Positive active steps clear the previous sample, then
+publish penetrating surface samples from the latest manifold batch. CPU uses its
+retained pre-solve midpoint/separation; GPU supplies a bounded compact result.
+Disabled/sleeping/sensor pairs do not become markers. Reading a failed world still
+rejects, while disabling is permitted for release. These internal operations do not
+expand the public PhysicsServer API. See [diagnostics](../components/physics-debug.md).

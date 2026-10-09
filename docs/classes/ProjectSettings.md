@@ -1422,6 +1422,11 @@ persistence. See [Physics picking](../components/physics-picking.md).
 | `debug/shapes/collision/shape_color` | `ProjectSetting<Color> DebugCollisionShapeColor` | Finite `(0, .6, .7, .42)`, sampled by new CollisionShape nodes and SceneTree instances with feature overrides. |
 | `debug/shapes/collision/draw_2d_outlines` | `ProjectSetting<bool> DebugCollisionDrawOutlines` | `true`; filled Shape drawing adds opaque one-pixel outlines. Applies on next recording, requiring redraw for existing commands. |
 
-Both keys use the existing typed persistence/override registry and are not basic
+| `debug/shapes/collision/contact_color` | `ProjectSetting<Color> DebugCollisionContactColor` | Finite `(1, .2, .1, .8)`, sampled by each new SceneTree with feature overrides. |
+| `debug/shapes/collision/max_contacts_displayed` | `ProjectSetting<int> DebugCollisionMaxContacts` | Nonnegative, default `10000`; sampled by each new tree. Counts boundary-point markers per space, with zero disabling capture. |
+
+All four keys use the existing typed persistence/override registry and are not basic
 settings. [Physics diagnostics](../components/physics-debug.md) documents their
-consumers and native verification. Contact color/limit settings remain unimplemented.
+consumers and native verification. Each penetrating manifold contributes up to two
+points. Storage is prepared when diagnostics are enabled; addressability or memory
+limits reject preparation. Editing these two settings does not alter existing trees.

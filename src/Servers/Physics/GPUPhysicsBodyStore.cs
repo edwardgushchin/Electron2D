@@ -279,11 +279,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             throw new ArgumentException("The GPU body handle is stale or foreign.", nameof(body));
     }
 
-    private void EnsureAccess()
+    private void EnsureAccess(bool allowFailed = false)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        if (_failed) throw new InvalidOperationException("The GPU body store failed and must be disposed.");
+        if (_failed && !allowFailed) throw new InvalidOperationException("The GPU body store failed and must be disposed.");
     }
 
     private RenderHandle Buffer(uint size) => new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
@@ -455,6 +455,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
     {
         if (_disposed) return;
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
-        _disposed = true; DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeDebugContacts(); DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }
