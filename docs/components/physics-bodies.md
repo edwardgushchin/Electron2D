@@ -1,6 +1,11 @@
 # Scene physics bodies component
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
+
+Body runtime mass/forces and direct views now use engine-valued attachment operations.
+Concrete solver state and contact traversal belong to PhysicsColliderBackend;
+queued callbacks and views validate a per-collider attachment version. Public
+GPU-world selection/binding remains open; declaration coverage is unchanged.
 
 ## Physical skeletal integration
 

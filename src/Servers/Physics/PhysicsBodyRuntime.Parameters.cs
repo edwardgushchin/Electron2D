@@ -1,5 +1,3 @@
-using static Box2D.NET.B2Bodies;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsBodyRuntime
@@ -24,7 +22,7 @@ internal sealed partial class PhysicsBodyRuntime
         if (owners.Scene is { } scene) scene.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
     }
 
-    internal void ApplyResolvedFields(Box2D.NET.B2BodyId id, Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
+    internal void ApplyResolvedFields(Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
     {
         var rigid = Owners.Scene as RigidBody;
         var gravityScale = rigid?.GravityScale ?? BodyGravityScale;
@@ -42,22 +40,7 @@ internal sealed partial class PhysicsBodyRuntime
             !float.IsFinite(resolvedAngular) || !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
             throw new InvalidOperationException("The resolved body field exceeds the finite simulation range.");
         var changed = FieldsInitialized && (Gravity != scaledGravity || LinearDamp != resolvedLinear || AngularDamp != resolvedAngular);
-        var active = b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody && !Omitted && (changed || b2Body_IsAwake(id));
-        var linear = default(Box2D.NET.B2Vec2); var angular = 0f; var force = default(Box2D.NET.B2Vec2);
-        if (active)
-        {
-            linear = b2Body_GetLinearVelocity(id) * linearFactor;
-            angular = b2Body_GetAngularVelocity(id) * angularFactor;
-            if (acceleration != Vector2.Zero) force = PhysicsShapeBackend.ToBackend(acceleration) * b2Body_GetMass(id);
-            if (!float.IsFinite(linear.X) || !float.IsFinite(linear.Y) || !float.IsFinite(angular) ||
-                !float.IsFinite(force.X) || !float.IsFinite(force.Y))
-                throw new InvalidOperationException("The resolved body field would produce nonfinite motion.");
-        }
+        Backend.ApplyFieldMotion(changed, Omitted, linearFactor, angularFactor, acceleration);
         Gravity = scaledGravity; LinearDamp = resolvedLinear; AngularDamp = resolvedAngular; FieldsInitialized = true;
-        if (changed && b2Body_GetType(id) == Box2D.NET.B2BodyType.b2_dynamicBody) b2Body_SetAwake(id, true);
-        if (!active) return;
-        if (linearFactor != 1) b2Body_SetLinearVelocity(id, linear);
-        if (angularFactor != 1) b2Body_SetAngularVelocity(id, angular);
-        if (force.X != 0 || force.Y != 0) b2Body_ApplyForceToCenter(id, force, false);
     }
 }

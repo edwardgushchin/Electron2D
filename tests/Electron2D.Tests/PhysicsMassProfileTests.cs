@@ -53,7 +53,7 @@ internal static class PhysicsMassProfileTests
         void Clean(RID rid)
         {
             var state = PhysicsServer.BodyGetDirectState(rid)!;
-            var id = PhysicsServer.Service.BodyRuntime(rid).BodyID;
+            var id = PhysicsServer.Service.BodyRuntime(rid).Backend.BodyID;
             var world = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(id));
             Check((Box2D.NET.B2Bodies.b2GetBodyFullId(world, id).flags & (uint)Box2D.NET.B2BodyFlags.b2_dirtyMass) == 0,
                 "Applying a validated scene/server mass profile completes deferred fixture mass before the solver.");
@@ -96,7 +96,7 @@ internal static class PhysicsMassProfileTests
         Check(Near(state.AngularVelocity, 0), "Impulse at the rotated custom center has no angular moment.");
         body.Inertia = 200; body.Mass = 3;
         Check(body.Inertia == 200 && Near(1 / state.InverseInertia, 200), "Explicit inertia is independent of mass scaling.");
-        Check(PhysicsBodyRuntime.Simulation(body.BackendID).maxExtent > 0.2f,
+        Check(PhysicsColliderBackend.Simulation(body.BackendID).maxExtent > 0.2f,
             "Custom center changes recompute solver extents around the selected mass center.");
         body.CenterOfMassMode = RigidCenterOfMassMode.Auto;
         Check(body.CenterOfMass == Vector2.Zero && state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && Near(1 / state.InverseInertia, 200),

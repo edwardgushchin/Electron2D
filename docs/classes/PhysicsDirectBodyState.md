@@ -1,6 +1,6 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -12,7 +12,7 @@ Last updated: 2026-10-08
 
 An owner-thread view of one backend attachment of a scene or server body. Obtain it from PhysicsServer.BodyGetDirectState or the post-solver RigidBody integration hook. It has no public constructor and owns no body or space. The server caches one view per attachment. Access rejects native stepping, wrong threads, disposal, detachment, body release and a replaced attachment; reattachment never revives an old view. Consumer disposal allows a fresh cached view to be created, but disposal during a borrowed callback rejects.
 
-Acquiring a view synchronizes its requested body's pending pose/geometry without scanning other bodies. Direct-space queries synchronize their world independently. Scene runtime ownership retains the existing weak registration and never extends a body's lifetime. Server runtimes retain their registered collider owner and mark it released when its RID is freed, avoiding registry lookups on each live field read while retaining release and attachment guards. Frequently polled pose, velocity and sleep getters retain their backend body/world references and validate that same attachment before reading its current solver slot.
+Acquiring a view synchronizes its requested body's pending pose/geometry without scanning other bodies. Direct-space queries synchronize their world independently. Scene runtime ownership retains the existing weak registration and never extends a body's lifetime. Server runtimes retain their registered collider owner and mark it released when its RID is freed, avoiding registry lookups on each live field read while retaining release and attachment guards. Frequently polled getters retain a validated attachment adapter; its backend body/world references remain private. The common view validates the adapter version before reading current solver state.
 
 Fields read the live native body. A zero-contact view does not itself require a per-step contact snapshot; reducing the contact cap to zero clears the prior snapshot on the next solved step. Contact methods read an immutable value snapshot from the last solved step, capped by MaxContactsReported independently of object ContactMonitor. The word local identifies this body; contact positions, normals and velocities use global coordinates. Collision layer/mask changes and direct-space queries may rebuild fixtures without invalidating those stored contact values.
 
@@ -85,9 +85,10 @@ class ControlledBody : RigidBody
 | `protected override Void ValidateDisposal()` | Guarded live operation or retained contact lookup. |
 
 The public view contains no vendor body/world IDs or fixture tags. `PhysicsBodyRuntime`
-owns backend state access, unit conversion and contact traversal. The view retains
+validates the view/space/attachment version; `PhysicsColliderBackend` owns concrete
+backend state access, unit conversion and contact traversal. The view retains
 engine contact values and a weak collider owner, with lifetime checked against the
-runtime's current view and space. Detach invalidates old readers/writers even after
+runtime's current view, space and attachment version. Detach invalidates old readers/writers even after
 the same RID rejoins the same space; disposing a view permits a fresh view without
 changing the attached body. Existing native storage remains behind that adapter;
 this extraction does not supply an independent GPU world.

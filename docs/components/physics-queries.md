@@ -1,6 +1,6 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-08
+Last updated: 2026-10-09
 
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
@@ -11,11 +11,12 @@ Process-wide service operations and events use static access to retained objects
 
 [`PhysicsTestMotionParameters`](../classes/PhysicsTestMotionParameters.md) and [`PhysicsTestMotionResult`](../classes/PhysicsTestMotionResult.md) form the typed server body-motion query. The scene [PhysicsBody](../classes/PhysicsBody.md) exposes the same sweep through `TestMove` and `MoveAndCollide`, returning [KinematicCollision](../classes/KinematicCollision.md).
 
-`PhysicsDirectBodyState` now delegates backend state access and contact traversal
-to `PhysicsBodyRuntime.View.cs`. It holds engine contact values and weak owners,
-not backend IDs or fixture records. Runtime view identity invalidates stale views
-across detachment, reattachment and caller disposal. The adapter still uses the
-current Box2D world; independent GPU ownership remains open.
+`PhysicsDirectBodyState` and PhysicsBodyRuntime now use a versioned attachment
+adapter for live state, mass/force application and contact projection. Common code
+holds engine-valued mass profiles and contact values, with weak scene ownership;
+concrete world/body references and fixture traversal belong to PhysicsColliderBackend.
+The same adapter version qualifies queued callbacks across same-world reentry.
+The adapter still uses the current Box2D world; independent GPU binding remains open.
 
 ## Runtime flow
 

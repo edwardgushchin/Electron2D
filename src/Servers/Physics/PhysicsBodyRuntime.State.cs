@@ -1,6 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsBodyRuntime
@@ -21,7 +18,7 @@ internal sealed partial class PhysicsBodyRuntime
         var owner = Owners;
         if (owner.Scene is { } scene) { scene.GlobalTransform = transform; scene.PrepareBackend(); }
         else owner.Server!.SetTransform(transform);
-        if (Space is not null && b2Body_GetType(BodyID) == B2BodyType.b2_staticBody) b2Body_WakeTouching(BodyID);
+        if (Space is not null && Backend.HasMotionMode(PhysicsServer.BodyMode.Static)) Backend.WakeTouching();
         Wake();
     }
 
@@ -32,15 +29,15 @@ internal sealed partial class PhysicsBodyRuntime
         if (owner.Scene is RigidBody rigid) rigid.LinearVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
         {
-            if (Space is not null) b2Body_SetLinearVelocity(BodyID, default);
+            if (Space is not null) Backend.SetLinearVelocity(default);
             surface.ConstantLinearVelocity = velocity;
         }
         else if (owner.Scene is not null)
         {
             if (Space is not null)
             {
-                b2Body_SetLinearVelocity(BodyID, default);
-                SetSurfaceVelocity(BodyID, velocity, _surfaceAngular);
+                Backend.SetLinearVelocity(default);
+                Backend.SetSurfaceVelocity(velocity, _surfaceAngular);
             }
             _surfaceLinear = velocity;
         }
@@ -55,15 +52,15 @@ internal sealed partial class PhysicsBodyRuntime
         if (owner.Scene is RigidBody rigid) rigid.AngularVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
         {
-            if (Space is not null) b2Body_SetAngularVelocity(BodyID, 0);
+            if (Space is not null) Backend.SetAngularVelocity(0);
             surface.ConstantAngularVelocity = velocity;
         }
         else if (owner.Scene is not null)
         {
             if (Space is not null)
             {
-                b2Body_SetAngularVelocity(BodyID, 0);
-                SetSurfaceVelocity(BodyID, _surfaceLinear, velocity);
+                Backend.SetAngularVelocity(0);
+                Backend.SetSurfaceVelocity(_surfaceLinear, velocity);
             }
             _surfaceAngular = velocity;
         }
@@ -87,7 +84,7 @@ internal sealed partial class PhysicsBodyRuntime
 
     internal bool GetSleeping()
     {
-        if (Space is not null) return !b2Body_IsAwake(BodyID);
+        if (Space is not null) return !Backend.IsAwake;
         var owner = Owners;
         return owner.Scene is RigidBody rigid ? rigid.Sleeping : owner.Server?.GetSleeping() ?? owner.Scene is StaticBody and not AnimatableBody;
     }
@@ -109,7 +106,7 @@ internal sealed partial class PhysicsBodyRuntime
         else if (owner.Server is { } server) server.SetCanSleep(canSleep);
         else
         {
-            if (Space is not null) b2Body_EnableSleep(BodyID, canSleep);
+            if (Space is not null) Backend.SetCanSleep(canSleep);
             _canSleep = canSleep;
         }
     }
@@ -117,7 +114,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal void RestoreSceneState()
     {
         if (Owners.Scene is RigidBody) return;
-        b2Body_EnableSleep(BodyID, _canSleep);
-        if (Owners.Scene is not StaticBody) SetSurfaceVelocity(BodyID, _surfaceLinear, _surfaceAngular);
+        Backend.SetCanSleep(_canSleep);
+        if (Owners.Scene is not StaticBody) Backend.SetSurfaceVelocity(_surfaceLinear, _surfaceAngular);
     }
 }

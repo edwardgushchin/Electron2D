@@ -12,6 +12,7 @@ internal static class PhysicsBodyStateTests
         VerifyServerContactLimit();
         VerifyServerCallbacksAndLifetime();
         VerifyReattachmentViews();
+        VerifyReattachmentDuringDispatch();
         VerifyServerFieldsAndForces();
         VerifyCallbackFailureAndMutations();
         VerifyWarmAllocation();
@@ -298,6 +299,36 @@ internal static class PhysicsBodyStateTests
             Reject<ObjectDisposedException>(() => sceneView.SetConstantForce(Vector2.One));
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
+    }
+
+    private static void VerifyReattachmentDuringDispatch()
+    {
+        using var root = new Node();
+        var first = new ProbeBody { Name = "First", GravityScale = 0, CanSleep = false };
+        var later = new ProbeBody { Name = "Later", GravityScale = 0, CanSleep = false };
+        root.AddChild(first); root.AddChild(later); using var tree = new SceneTree(root);
+        var raw = PhysicsServer.BodyCreate(); var rawCalls = 0;
+        try
+        {
+            var space = first.GetWorld()!.Space;
+            PhysicsServer.BodySetCanSleep(raw, false); PhysicsServer.BodySetSpace(raw, space);
+            PhysicsServer.BodySetStateSyncCallback(raw, _ => rawCalls++);
+            var oldScene = PhysicsServer.BodyGetDirectState(later.GetRID())!; var oldServer = PhysicsServer.BodyGetDirectState(raw)!;
+            first.Update = _ =>
+            {
+                root.RemoveChild(later); root.AddChild(later);
+                PhysicsServer.BodySetSpace(raw, default); PhysicsServer.BodySetSpace(raw, space);
+                first.Update = null;
+            };
+            tree.PhysicsFrame(1d / 60);
+            Check(later.Calls == 0 && rawCalls == 0, "Reattachment in the same world cannot consume a queued callback from the previous attachment.");
+            Reject<ObjectDisposedException>(() => _ = oldScene.Transform); Reject<ObjectDisposedException>(() => _ = oldServer.Transform);
+            tree.PhysicsFrame(1d / 60);
+            Check(later.Calls == 1 && rawCalls == 1, "Replacement scene/server attachments participate on the following frame.");
+            Check(!ReferenceEquals(oldScene, PhysicsServer.BodyGetDirectState(later.GetRID())) &&
+                !ReferenceEquals(oldServer, PhysicsServer.BodyGetDirectState(raw)), "Replacement attachments receive fresh views.");
+        }
+        finally { PhysicsServer.FreeRID(raw); }
     }
 
     private static void VerifyCallbackFailureAndMutations()

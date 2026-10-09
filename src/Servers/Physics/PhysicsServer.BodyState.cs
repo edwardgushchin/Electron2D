@@ -37,7 +37,7 @@ public sealed partial class PhysicsServer
         space.EnsureQueryAccess();
         var owner = runtime.Owners;
         if (owner.Scene is { } scene) scene.PrepareBackend(); else owner.Server!.PrepareBackend();
-        return runtime.GetView(space, runtime.BodyID);
+        return runtime.GetView(space);
     }
 
     internal void BodySetForceIntegrationCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)

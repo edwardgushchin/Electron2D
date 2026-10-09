@@ -186,7 +186,7 @@ internal static class PhysicsContactImpulseTests
             }
             tree.PhysicsFrame(1d / 60);
             var world = B2Worlds.b2GetWorldFromId(floors[0].Space!.WorldID);
-            var native = B2Bodies.b2GetBodyFullId(world, PhysicsServer.Service.BodyRuntime(id).BodyID);
+            var native = B2Bodies.b2GetBodyFullId(world, PhysicsServer.Service.BodyRuntime(id).Backend.BodyID);
             float[] depths = [1, 5, 3, 4, 5, 5]; var colliders = new RID[6]; var count = 0;
             // Feed known depths through actual fixture identities to isolate the bounded selector from solver separation.
             for (var key = native.headContactKey; key != -1;)

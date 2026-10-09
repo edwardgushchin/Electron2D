@@ -1,8 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Worlds;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<CollisionObject>? sceneOwner, PhysicsServerCollider? serverOwner)
@@ -11,8 +6,8 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal float Mass = 1;
     internal float Inertia;
     internal Vector2? CustomCenter;
-    internal readonly List<B2ShapeProxy> MassProxies = [];
-    internal B2MassData MassData = new(1, default, 0);
+    private PhysicsMass.Geometry? _massGeometry;
+    internal PhysicsMass.Properties MassProperties = new(1, 0, default);
     internal Vector2 ConstantForce;
     internal float ConstantTorque;
     internal bool OmitForces;
@@ -39,7 +34,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         }
     }
     internal PhysicsSpace? Space { get { var owner = Owners; return owner.Scene?.Space ?? owner.Server?.Space; } }
-    internal B2BodyId BodyID { get { var owner = Owners; return owner.Scene?.BackendID ?? owner.Server!.BackendID; } }
+    internal PhysicsColliderBackend Backend { get { var owner = Owners; return owner.Scene?.Backend ?? owner.Server!.Backend; } }
     internal bool Omitted { get => Owners.Scene is RigidBody rigid ? rigid.CustomIntegrator : OmitForces; }
     internal int ContactLimit => Owners.Scene is RigidBody rigid ? rigid.MaxContactsReported : MaxContacts;
 
@@ -51,7 +46,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         var mass = owners.Scene is RigidBody rigid ? rigid.Mass : Mass;
         var inertia = owners.Scene is RigidBody rigidInertia ? rigidInertia.Inertia : Inertia;
         var center = owners.Scene is RigidBody rigidCenter ? rigidCenter.CustomMassCenter : CustomCenter;
-        MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center, MassProxies);
+        SetAttachedMassProfile(mass, inertia, center);
     }
 
     internal void SetMassProfile(float mass, float inertia, Vector2? center)
@@ -68,37 +63,32 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         if (Space is not null)
         {
             if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
-            MassData = PhysicsMass.Apply(BodyID, owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes, mass, inertia, center, MassProxies);
+            SetAttachedMassProfile(mass, inertia, center);
         }
         Mass = mass; Inertia = inertia; CustomCenter = center;
     }
 
-    internal void ApplyBeforeStep(B2BodyId id, PhysicsBody? scene)
+    internal void SetAttachedMassProfile(float mass, float inertia, Vector2? center) =>
+        MassProperties = Backend.ApplyMassProfile(mass, inertia, center);
+
+    internal void ApplyBeforeStep(PhysicsBody? scene)
     {
-        var type = b2Body_GetType(id);
-        ActiveBeforeStep = type != B2BodyType.b2_staticBody && b2Body_IsAwake(id);
-        if (type == B2BodyType.b2_staticBody || type == B2BodyType.b2_dynamicBody && !ActiveBeforeStep) return;
+        var backend = Backend;
+        ActiveBeforeStep = !backend.HasMotionMode(PhysicsServer.BodyMode.Static) && backend.IsAwake;
+        if (backend.HasMotionMode(PhysicsServer.BodyMode.Static) || backend.IsDynamic && !ActiveBeforeStep) return;
         var rigid = scene as RigidBody;
         if (rigid?.CustomIntegrator ?? OmitForces)
         {
-            b2Body_SetGravityScale(id, 0);
-            var sim = Simulation(id);
-            sim.force = default; sim.torque = 0;
+            backend.SetGravityScale(0); backend.ClearTransientForces();
             PendingForce = default; PendingTorque = 0;
             return;
         }
-        if (PendingForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, PhysicsShapeBackend.ToBackend(PendingForce), false);
-        if (PendingTorque != 0 && !RotationLocked) b2Body_ApplyTorque(id, PendingTorque * PhysicsMass.InertiaScale, false);
+        if (PendingForce != Vector2.Zero) backend.ApplyCentralForce(PendingForce, false);
+        if (PendingTorque != 0 && !RotationLocked) backend.ApplyTorque(PendingTorque, false);
         PendingForce = default; PendingTorque = 0;
         if (rigid is not null) { rigid.ApplyConstantForces(); return; }
-        b2Body_SetGravityScale(id, BodyGravityScale);
-        if (ConstantForce != Vector2.Zero) b2Body_ApplyForceToCenter(id, PhysicsShapeBackend.ToBackend(ConstantForce), false);
-        if (ConstantTorque != 0) b2Body_ApplyTorque(id, ConstantTorque * 0.0001f, false);
-    }
-
-    internal static B2BodySim Simulation(B2BodyId id)
-    {
-        var world = b2GetWorldFromId(b2Body_GetWorld(id));
-        return b2GetBodySim(world, b2GetBodyFullId(world, id));
+        backend.SetGravityScale(BodyGravityScale);
+        if (ConstantForce != Vector2.Zero) backend.ApplyCentralForce(ConstantForce, false);
+        if (ConstantTorque != 0) backend.ApplyTorque(ConstantTorque, false);
     }
 }

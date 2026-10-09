@@ -70,8 +70,7 @@ public partial class RigidBody
         if (HasBackend)
         {
             PrepareBackend();
-            PhysicsServer.Service.BodyRuntime(PhysicsRID).MassData =
-                PhysicsMass.Apply(BackendID, BackendShapes, mass, inertia, mode == RigidCenterOfMassMode.Custom ? center : null, PhysicsServer.Service.BodyRuntime(PhysicsRID).MassProxies);
+            Runtime.SetAttachedMassProfile(mass, inertia, mode == RigidCenterOfMassMode.Custom ? center : null);
         }
         var modeChanged = _centerOfMassMode != mode;
         _mass = mass; _inertia = inertia; _centerOfMassMode = mode; _centerOfMass = center;
@@ -81,7 +80,6 @@ public partial class RigidBody
     private void ApplyMass(float mass)
     {
         if (!HasBackend) return;
-        PhysicsServer.Service.BodyRuntime(PhysicsRID).MassData =
-            PhysicsMass.Apply(BackendID, BackendShapes, mass, _inertia, CustomMassCenter, PhysicsServer.Service.BodyRuntime(PhysicsRID).MassProxies);
+        Runtime.SetAttachedMassProfile(mass, _inertia, CustomMassCenter);
     }
 }

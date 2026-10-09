@@ -64,7 +64,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
                 _backend.SetLinearVelocity(_linearVelocity);
             RebuildShapes();
             if (!IsArea && _mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
-                PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _linearVelocity, _angularVelocity);
+                _backend.SetSurfaceVelocity(_linearVelocity, _angularVelocity);
             if (_sleeping) _backend.SetAwake(false);
         }
         catch { DetachBackend(); throw; }
@@ -217,10 +217,10 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
         return new(pose.Rotation, Vector2.One, 0, pose.Position);
     }
 
-    internal void AppendMassGeometry(List<B2ShapeProxy> proxies)
+    internal void AppendMassGeometry(PhysicsMass.Geometry geometry)
     {
         foreach (var slot in _slots)
-            if (!slot.Disabled) PhysicsMass.AppendGeometry(slot.Shape.Geometry, slot.LocalTransform, proxies);
+            if (!slot.Disabled) geometry.Append(slot.Shape.Geometry, slot.LocalTransform, false);
     }
 
     internal Vector2 GetLinearVelocity() => Space is null || _mode == PhysicsServer.BodyMode.Static ? _linearVelocity :
@@ -234,7 +234,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             {
                 _backend.SetAngularVelocity(0);
-                PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _linearVelocity, velocity);
+                _backend.SetSurfaceVelocity(_linearVelocity, velocity);
             }
             else _backend.SetAngularVelocity(velocity);
         }
@@ -249,7 +249,7 @@ internal sealed class PhysicsServerCollider(RID rid, bool isArea)
             if (_mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
             {
                 _backend.SetLinearVelocity(default);
-                PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, velocity, _angularVelocity);
+                _backend.SetSurfaceVelocity(velocity, _angularVelocity);
             }
             else _backend.SetLinearVelocity(velocity);
         }

@@ -19,10 +19,10 @@ internal sealed partial class PhysicsSpace
         var minimumExtent = B2_HUGE;
         foreach (var body in _bodies)
             if (body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
-                minimumExtent = MathF.Min(minimumExtent, PhysicsBodyRuntime.Simulation(body.BackendID).minExtent);
+                minimumExtent = MathF.Min(minimumExtent, PhysicsColliderBackend.Simulation(body.BackendID).minExtent);
         foreach (var body in _serverColliders)
             if (!body.IsArea && body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
-                minimumExtent = MathF.Min(minimumExtent, PhysicsBodyRuntime.Simulation(body.BackendID).minExtent);
+                minimumExtent = MathF.Min(minimumExtent, PhysicsColliderBackend.Simulation(body.BackendID).minExtent);
         if (minimumExtent == B2_HUGE) { StepBackend((float)delta); return; }
         var travel = 0d;
         foreach (var body in _bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
@@ -45,7 +45,7 @@ internal sealed partial class PhysicsSpace
             if (step != 0)
                 foreach (var body in _kinematicStepForces)
                 {
-                    var sim = PhysicsBodyRuntime.Simulation(body.ID);
+                    var sim = PhysicsColliderBackend.Simulation(body.ID);
                     sim.force = body.Force; sim.torque = body.Torque;
                 }
             StepBackend(subDelta);
@@ -81,7 +81,7 @@ internal sealed partial class PhysicsSpace
             var linear = b2Body_GetLinearVelocity(id);
             velocity = (linear.X, linear.Y, b2Body_GetAngularVelocity(id));
         }
-        var body = PhysicsBodyRuntime.Simulation(id);
+        var body = PhysicsColliderBackend.Simulation(id);
         velocity.X += (double)body.invMass * impulse.X;
         velocity.Y += (double)body.invMass * impulse.Y;
         var moment = ((double)point.X - body.center.X) * impulse.Y - ((double)point.Y - body.center.Y) * impulse.X;
@@ -94,7 +94,7 @@ internal sealed partial class PhysicsSpace
     private static void MeasureTravel(B2BodyId id, int shapeCount, double delta, ref float minimumExtent, ref double travel)
     {
         if (shapeCount == 0 || b2Body_GetType(id) != B2BodyType.b2_kinematicBody) return;
-        var sim = PhysicsBodyRuntime.Simulation(id);
+        var sim = PhysicsColliderBackend.Simulation(id);
         minimumExtent = MathF.Min(minimumExtent, sim.minExtent);
         var world = b2GetWorld(id.world0);
         var state = b2GetBodyState(world, b2GetBodyFullId(world, id));
@@ -106,7 +106,7 @@ internal sealed partial class PhysicsSpace
     private void Capture(B2BodyId id)
     {
         if (b2Body_GetType(id) != B2BodyType.b2_dynamicBody) return;
-        var sim = PhysicsBodyRuntime.Simulation(id);
+        var sim = PhysicsColliderBackend.Simulation(id);
         _kinematicStepForces.Add(new(id, sim.force, sim.torque));
     }
 }

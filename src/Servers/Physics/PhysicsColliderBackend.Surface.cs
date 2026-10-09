@@ -4,10 +4,11 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsBodyRuntime
+internal sealed partial class PhysicsColliderBackend
 {
-    internal static void SetSurfaceVelocity(B2BodyId id, Vector2 linear, float angular)
+    internal void SetSurfaceVelocity(Vector2 linear, float angular)
     {
+        var id = BodyID;
         var world = b2GetWorld(id.world0);
         if (world.locked) throw new InvalidOperationException("Surface velocity cannot change inside the solver.");
         var body = b2GetBodyFullId(world, id);

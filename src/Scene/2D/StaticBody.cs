@@ -31,7 +31,7 @@ public class StaticBody : PhysicsBody
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
             if (_constantLinearVelocity == value) return;
-            if (HasBackend) PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, value, _constantAngularVelocity);
+            if (HasBackend) Backend.SetSurfaceVelocity(value, _constantAngularVelocity);
             _constantLinearVelocity = value;
         }
     }
@@ -51,7 +51,7 @@ public class StaticBody : PhysicsBody
             EnsureMutable();
             if (!float.IsFinite(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_constantAngularVelocity == value) return;
-            if (HasBackend) PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _constantLinearVelocity, value);
+            if (HasBackend) Backend.SetSurfaceVelocity(_constantLinearVelocity, value);
             _constantAngularVelocity = value;
         }
     }
@@ -59,11 +59,11 @@ public class StaticBody : PhysicsBody
     internal override void OnShapesRebuilt()
     {
         base.OnShapesRebuilt();
-        PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _constantLinearVelocity, _constantAngularVelocity);
+        Backend.SetSurfaceVelocity(_constantLinearVelocity, _constantAngularVelocity);
     }
 
     internal override void OnBodyTypeChanged() =>
-        PhysicsBodyRuntime.SetSurfaceVelocity(BackendID, _constantLinearVelocity, _constantAngularVelocity);
+        Backend.SetSurfaceVelocity(_constantLinearVelocity, _constantAngularVelocity);
 
     /// <summary>Creates a detached static body with no collision shapes.</summary>
     public StaticBody() { }

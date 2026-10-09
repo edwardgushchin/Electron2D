@@ -13,11 +13,13 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
 
     internal PhysicsSpace? Space { get; private set; }
     internal B2BodyId BodyID { get; private set; }
+    internal long AttachmentVersion { get; private set; }
     internal IReadOnlyList<B2ShapeId> Shapes => _shapes;
 
     internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
     {
         if (Space is not null) throw new InvalidOperationException("A collider already belongs to a physics world.");
+        var version = checked(AttachmentVersion + 1);
         var definition = b2DefaultBodyDef();
         definition.type = BodyType(configuration.Mode);
         definition.position = PhysicsShapeBackend.ToBackend(position);
@@ -32,7 +34,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         _world = B2Worlds.b2GetWorldFromId(space.WorldID);
         _body = b2GetBodyFullId(_world, BodyID);
         _savedPose = b2GetBodyTransformQuick(_world, _body);
-        Space = space;
+        Space = space; AttachmentVersion = version;
     }
 
     // Motion-role matching intentionally ignores rotation locks; callers retain

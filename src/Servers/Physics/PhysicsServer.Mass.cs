@@ -39,7 +39,7 @@ public sealed partial class PhysicsServer
     {
         var runtime = ParameterRuntime(body);
         var value = ConfiguredInertia(runtime);
-        return value > 0 ? value : runtime.MassData.rotationalInertia / PhysicsMass.InertiaScale;
+        return value > 0 ? value : runtime.MassProperties.Inertia;
     }
 
     internal void BodySetCenterOfMassCore(RID body, Vector2 center)
@@ -51,8 +51,7 @@ public sealed partial class PhysicsServer
     internal Vector2 BodyGetCenterOfMassCore(RID body)
     {
         var runtime = ParameterRuntime(body);
-        return ConfiguredCenter(runtime) ?? new Vector2(runtime.MassData.center.X * PhysicsSpace.UnitsPerMeter,
-            runtime.MassData.center.Y * PhysicsSpace.UnitsPerMeter);
+        return ConfiguredCenter(runtime) ?? runtime.MassProperties.Center;
     }
 
     internal void BodyResetMassPropertiesCore(RID body)

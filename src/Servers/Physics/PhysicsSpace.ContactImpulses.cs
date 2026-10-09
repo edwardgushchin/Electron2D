@@ -11,6 +11,34 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
+    private BodyMotion[] _bodyMotions = [];
+    private readonly record struct BodyMotion(B2Vec2 Center, B2Vec2 Velocity, float Angular, bool Active);
+
+    private void CaptureBodyMotions()
+    {
+        Array.Clear(_bodyMotions);
+        var world = b2GetWorldFromId(_worldID);
+        var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
+        for (var i = 0; i < awake.bodySims.count; i++)
+        {
+            var sim = awake.bodySims.data[i];
+            var state = awake.bodyStates.data[i];
+            _bodyMotions[sim.bodyId] = new(sim.center, b2Add(state.linearVelocity, sim.surfaceLinearVelocity), state.angularVelocity + sim.surfaceAngularVelocity, true);
+        }
+        var stationary = world.solverSets.data[(int)B2SolverSetType.b2_staticSet];
+        for (var i = 0; i < stationary.bodySims.count; i++)
+        {
+            var sim = stationary.bodySims.data[i];
+            _bodyMotions[sim.bodyId] = new(sim.center, sim.surfaceLinearVelocity, sim.surfaceAngularVelocity, true);
+        }
+    }
+
+    internal B2Vec2 SolvedPointVelocity(B2BodyId id, B2Vec2 point)
+    {
+        ref readonly var motion = ref _bodyMotions[id.index1 - 1];
+        return motion.Active ? b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center))) : default;
+    }
+
     private bool _aggregateContactImpulses;
     private readonly Dictionary<(int A, int B, ushort Feature), int> _frameContactIndices = [];
     private readonly List<FrameContact> _frameContacts = [];
@@ -52,7 +80,7 @@ internal sealed partial class PhysicsSpace
         foreach (var body in _contactBodies)
             if (body.MaxContactsReported > 0) Capture(body.BackendID);
         foreach (var body in _callbackBodies)
-            if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) Capture(body.ID);
+            if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) Capture(body.Backend.BodyID);
 
         void Capture(B2BodyId id)
         {
@@ -111,7 +139,7 @@ internal sealed partial class PhysicsSpace
         }
     }
 
-    internal bool CaptureFrameContacts(PhysicsBodyRuntime runtime, PhysicsDirectBodyState state, B2BodyId id, int limit)
+    internal bool CaptureFrameContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState state, B2BodyId id, int limit)
     {
         if (!_aggregateContactImpulses) return false;
         var world = b2GetWorldFromId(_worldID);
@@ -123,7 +151,7 @@ internal sealed partial class PhysicsSpace
             var own = world.shapes.data[first ? contact.ShapeA : contact.ShapeB].userData.GetRef<PhysicsFixtureTag>();
             var other = world.shapes.data[first ? contact.ShapeB : contact.ShapeA].userData.GetRef<PhysicsFixtureTag>();
             if (own is null || other is null) continue;
-            runtime.CaptureViewContact(state, contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
+            backend.CaptureViewContact(state, contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
                 b2MakeBodyId(world, first ? contact.BodyB : contact.BodyA), first, own, other, limit);
         }
         return true;

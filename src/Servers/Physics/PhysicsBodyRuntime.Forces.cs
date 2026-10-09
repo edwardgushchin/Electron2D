@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsBodyRuntime
@@ -13,14 +9,14 @@ internal sealed partial class PhysicsBodyRuntime
     {
         get
         {
-            if (Space is not null) return b2Body_GetType(BodyID) == B2BodyType.b2_dynamicBody;
+            if (Space is not null) return Backend.IsDynamic;
             var owners = Owners;
             return owners.Scene?.RequestedBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ||
                 owners.Server?.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         }
     }
 
-    internal bool RotationLocked => Space is not null ? b2Body_GetMotionLocks(BodyID).angularZ :
+    internal bool RotationLocked => Space is not null ? Backend.RotationLocked :
         Owners.Scene is RigidBody rigid ? rigid.LockRotation : Owners.Server?.Mode == PhysicsServer.BodyMode.RigidLinear;
 
     internal void PrepareForceAccess(bool prepareGeometry)
@@ -35,30 +31,31 @@ internal sealed partial class PhysicsBodyRuntime
             if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
             return;
         }
-        MassProxies.Clear();
+        var geometry = _massGeometry ??= new();
+        geometry.Clear();
         if (owners.Scene is { } body)
         {
             PhysicsServerCollider.ValidateTransform(body.GlobalTransform);
             for (var index = 0; index < body.ShapeSlots.Count; index++)
             {
                 var slot = body.ShapeSlots[index];
-                if (slot.Active) PhysicsMass.AppendGeometry(slot.Shape, slot.Transform, MassProxies);
+                if (slot.Active) geometry.Append(slot.Shape, slot.Transform, false);
             }
         }
-        else owners.Server!.AppendMassGeometry(MassProxies);
+        else owners.Server!.AppendMassGeometry(geometry);
         var mass = owners.Scene is RigidBody massBody ? massBody.Mass : Mass;
         var inertia = owners.Scene is RigidBody inertiaBody ? inertiaBody.Inertia : Inertia;
         var center = owners.Scene is RigidBody centerBody ? centerBody.CustomMassCenter : CustomCenter;
-        MassData = PhysicsMass.Calculate(MassProxies, mass, inertia, center);
+        MassProperties = geometry.Calculate(mass, inertia, center);
     }
 
     internal Vector2 CenterOffset
     {
         get
         {
-            var center = new Vector2(MassData.center.X * PhysicsSpace.UnitsPerMeter, MassData.center.Y * PhysicsSpace.UnitsPerMeter);
+            var center = MassProperties.Center;
             var owners = Owners;
-            var rotation = Space is not null ? b2Rot_GetAngle(b2Body_GetRotation(BodyID)) :
+            var rotation = Space is not null ? Backend.GetPose().Rotation :
                 owners.Scene?.GlobalRotation ?? owners.Server!.GetTransform().Rotation;
             return center.Rotated(rotation);
         }
@@ -66,38 +63,24 @@ internal sealed partial class PhysicsBodyRuntime
 
     internal Vector2 GetLinearVelocity()
     {
-        if (Space is not null)
-        {
-            var value = b2Body_GetLinearVelocity(BodyID);
-            return new(value.X * PhysicsSpace.UnitsPerMeter, value.Y * PhysicsSpace.UnitsPerMeter);
-        }
+        if (Space is not null) return Backend.LinearVelocity;
         var owners = Owners;
         return owners.Scene switch { RigidBody rigid => rigid.LinearVelocity, StaticBody surface => surface.ConstantLinearVelocity, not null => _surfaceLinear, _ => owners.Server!.GetLinearVelocity() };
     }
 
-    internal float GetAngularVelocity() => Space is not null ? b2Body_GetAngularVelocity(BodyID) :
+    internal float GetAngularVelocity() => Space is not null ? Backend.AngularVelocity :
         Owners.Scene switch { RigidBody rigid => rigid.AngularVelocity, StaticBody surface => surface.ConstantAngularVelocity, not null => _surfaceAngular, _ => Owners.Server!.GetAngularVelocity() };
 
     internal void ApplyImpulse(Vector2 impulse, float moment)
     {
-        var inverseMass = Dynamic ? 1 / MassData.mass : 0;
-        var inverseInertia = Dynamic && !RotationLocked && MassData.rotationalInertia > 0 ?
-            PhysicsMass.InertiaScale / MassData.rotationalInertia : 0;
+        var inverseMass = Dynamic ? 1 / MassProperties.Mass : 0;
+        var inverseInertia = Dynamic && !RotationLocked && MassProperties.Inertia > 0 ?
+            1 / MassProperties.Inertia : 0;
         var velocity = GetLinearVelocity() + impulse * inverseMass;
         var angular = GetAngularVelocity() + moment * inverseInertia;
         Finite(velocity); Finite(angular);
         if (!Dynamic) return;
-        if (Space is not null)
-        {
-            var id = BodyID;
-            var nativeImpulse = PhysicsShapeBackend.ToBackend(impulse);
-            var sim = Simulation(id);
-            var nativeVelocity = b2Body_GetLinearVelocity(id) + nativeImpulse * sim.invMass;
-            Finite(new Vector2(nativeVelocity.X * PhysicsSpace.UnitsPerMeter, nativeVelocity.Y * PhysicsSpace.UnitsPerMeter));
-            if (!RotationLocked) Finite(b2Body_GetAngularVelocity(id) + moment * PhysicsMass.InertiaScale * sim.invInertia);
-            b2Body_ApplyLinearImpulseToCenter(id, nativeImpulse, true);
-            if (!RotationLocked) b2Body_ApplyAngularImpulse(id, moment * PhysicsMass.InertiaScale, true);
-        }
+        if (Space is not null) Backend.ApplyImpulse(impulse, moment);
         else
         {
             var owners = Owners;
@@ -119,7 +102,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal void Wake()
     {
         if (!Dynamic) return;
-        if (Space is not null) b2Body_SetAwake(BodyID, true);
+        if (Space is not null) Backend.SetAwake(true);
         else SetSleeping(false);
     }
 

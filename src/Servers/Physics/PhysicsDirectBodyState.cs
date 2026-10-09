@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>A live owner-thread view of one attached physics body and its last solved contacts.</summary>
 /// <remarks>The server creates and caches this view. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
-/// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the runtime;
+/// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;
 /// this view retains only its attachment identity and public contact values. Contact positions, normals and velocities
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
 /// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain

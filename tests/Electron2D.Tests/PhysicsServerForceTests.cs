@@ -108,11 +108,11 @@ internal static class PhysicsServerForceTests
                 var root = new Node(); var body = NewBody(2); var owner = body.CreateShapeOwner(null); body.ShapeOwnerAddShape(owner, shape);
                 body.ShapeOwnerSetTransform(owner, new(0.3f, Vector2.One, 0, new(5, 9))); root.AddChild(body);
                 var server = PhysicsServer.Service; PhysicsServer.BodyApplyCentralImpulse(body.GetRID(), new(2, 0));
-                var detached = server.BodyRuntime(body.GetRID()).MassData;
+                var detached = server.BodyRuntime(body.GetRID()).MassProperties;
                 using var tree = new SceneTree(root);
-                var attached = server.BodyRuntime(body.GetRID()).MassData;
-                Check(Near(detached.center.X, attached.center.X) && Near(detached.center.Y, attached.center.Y) &&
-                    Near(detached.rotationalInertia, attached.rotationalInertia), "Detached resource proxies match native fixture mass for " + shape.GetType().Name);
+                var attached = server.BodyRuntime(body.GetRID()).MassProperties;
+                Check(Near(detached.Center.X, attached.Center.X) && Near(detached.Center.Y, attached.Center.Y) &&
+                    Near(detached.Inertia, attached.Inertia), "Detached resource proxies match native fixture mass for " + shape.GetType().Name);
             }
         }
         finally { foreach (var shape in shapes) shape.Dispose(); }

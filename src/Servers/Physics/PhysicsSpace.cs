@@ -497,7 +497,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         var space = (PhysicsSpace)context;
         for (var i = start; i < end; i++)
             if (space._bodies[i] is RigidBody { NeedsContactSnapshot: true } rigid)
-                rigid.CollectContacts(rigid.Runtime.GetView(space, rigid.BackendID));
+                rigid.CollectContacts(rigid.Runtime.GetView(space));
     }
 
     public void Dispose()
