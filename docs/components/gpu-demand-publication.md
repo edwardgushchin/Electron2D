@@ -1,6 +1,13 @@
 # GPU publication for current consumers
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
+
+[The 2026-10-11 paired trial](physics-current-performance.md) verifies complete
+headless and real-window paths on one main revision with freshly built assemblies.
+It records source and
+assembly digests, full latency distributions, phase means, transfers/waits,
+allocation and physical gates. Measurements later in this page are the historical
+2026-10-10 trials and retain their small-world GPU disadvantage.
 
 ## Scope and runtime flow
 

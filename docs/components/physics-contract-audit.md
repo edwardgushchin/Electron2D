@@ -1,6 +1,12 @@
 # Physics contract and backend audit
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
+
+[Same-revision dense performance](physics-current-performance.md) now records
+CPU/GPU full-step and real-window advantage at 65,536 awake bodies, with matching
+source/assembly digests, zero warmed managed allocation and passing physical
+gates. This closes no declaration gap: registered implementations/custom algorithms,
+native/foreign acceptance and sustained 60 Hz remain open.
 
 [Public joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly

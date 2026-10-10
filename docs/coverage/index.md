@@ -1,6 +1,12 @@
 # API coverage register
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
+
+[Same-revision dense physics measurements](../components/physics-current-performance.md)
+verify full CPU/GPU paths and actual window frames at 65,536 awake bodies, with
+zero warmed managed allocation and physical gates. GPU advantage is specific to
+that workload/host; no declaration state changes. Registered backend/custom
+algorithm coverage and native/foreign acceptance remain open.
 
 [Background navigation iterations](../components/navigation-maps.md#background-iterations) now compute independently selected region geometry and map topology on workers while preserving committed queries. Four formerly Blocked controls are Implemented; explicit host Synchronize retains deterministic publication. Controlled queued workers, stale-input/failure/lifetime checks and actual GPU/compatibility route pixels verify the exercised profile.
 

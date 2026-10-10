@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 [Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
@@ -441,8 +441,12 @@ The diagnostic separated path measures the same kernels and workload.
 [Resident contact colors](../components/gpu-contact-colors.md) improve dense-pile
 convergence through a device schedule and compact color ranges. Public CPU/GPU
 headless and native-window workloads now measure penetration and energy alongside
-full-step latency, allocations and actual frame/tick rates. The corrected massive
-world performance target remains open.
+full-step latency, allocations and actual frame/tick rates.
+[The same-revision 65,536-body trial](../components/physics-current-performance.md)
+confirms complete GPU step and actual window FPS advantages with zero warmed
+managed allocation and passing physical gates. Sustained 60 Hz at that population,
+native allocation, other devices/platforms and complete backend extensions remain
+open; this circle workload does not establish whole-engine performance acceptance.
 
 The same colored solver now uses packed contact ranges and compact shared body
 velocities for contact/joint iteration, then restores owning records before reports,

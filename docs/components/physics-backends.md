@@ -1,6 +1,15 @@
 # Physics backend selection and shared worlds
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
+
+[Same-revision mass measurements](physics-current-performance.md) record complete
+CPU/GPU headless steps and real-window frames at 65,536 awake bodies on
+`7bff847e`. GPU step p50 is 38.7552/48.9548 ms headless/window versus CPU
+276.6446/263.8018 ms; actual window FPS is 15.6201 versus 3.4699. All warmed
+physics/frame samples allocate zero managed bytes. This workload passes physical
+gates and confirms a host-specific advantage; 60 Hz, native/foreign acceptance
+and complete registered extensions remain open. Earlier measurements below retain
+their own source/workload scope.
 
 ## Public selection
 
