@@ -34,6 +34,8 @@ GPU-world selection/binding now executes through the shared adapter.
 
 [Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes; full conformance remains open.
 
+Public [query/motion result construction](../components/physics-queries.md) now validates RID/shape/lifetime and samples object associations without accepting forged object IDs. CPU/GPU checks execute from a separate consumer with zero warmed construction allocation. Full registered backend and direct-state extensions remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
 ## Square atlas tile integration
 
 [Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).

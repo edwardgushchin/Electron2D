@@ -6,6 +6,26 @@ namespace Electron2D;
 /// <summary>A typed result for the nearest ray hit in a two-dimensional physics space.</summary>
 public readonly struct PhysicsRayResult
 {
+    /// <summary>Captures a ray result using a live collider's current object association.</summary>
+    /// <param name="collider">A live scene or server body or Area RID.</param>
+    /// <param name="shapeIndex">The collider's logical shape-owner index.</param>
+    /// <param name="position">The global hit position in scene units.</param>
+    /// <param name="normal">A finite global normal, or zero for an inside hit.</param>
+    /// <remarks>This constructor does not perform a query. The values are supplied by a query implementation.
+    /// Collider access follows its owner-thread, solver and failed-world guards. The sampled identity survives later rebind or disposal.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live collider.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The shape index or a supplied vector is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the collider's owner-thread, solver or failed-world guard.</exception>
+    /// <exception cref="ObjectDisposedException">The collider's shape or the physics service has been disposed.</exception>
+    public PhysicsRayResult(RID collider, int shapeIndex, Vector2 position, Vector2 normal)
+    {
+        if (!position.IsFinite()) throw new ArgumentOutOfRangeException(nameof(position));
+        if (!normal.IsFinite()) throw new ArgumentOutOfRangeException(nameof(normal));
+        var captured = PhysicsServer.Service.CaptureResultCollider(collider, shapeIndex);
+        ColliderRID = collider; Collider = captured.Scene; Identity = captured.Identity;
+        ShapeIndex = shapeIndex; Position = position; Normal = normal;
+    }
+
     internal PhysicsRayResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex, Vector2 position, Vector2 normal)
     {
         ColliderRID = rid;
@@ -43,6 +63,21 @@ public readonly struct PhysicsRayResult
 /// <summary>A typed collider and shape-owner result for a point query.</summary>
 public readonly struct PhysicsPointResult
 {
+    /// <summary>Captures a point-query result using a live collider's current object association.</summary>
+    /// <param name="collider">A live scene or server body or Area RID.</param>
+    /// <param name="shapeIndex">The collider's logical shape-owner index.</param>
+    /// <remarks>This constructor does not perform a query. Collider access follows its owner-thread,
+    /// solver and failed-world guards. The sampled identity survives later rebind or disposal.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live collider.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The logical shape index is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the collider's owner-thread, solver or failed-world guard.</exception>
+    /// <exception cref="ObjectDisposedException">The collider's shape or the physics service has been disposed.</exception>
+    public PhysicsPointResult(RID collider, int shapeIndex)
+    {
+        var captured = PhysicsServer.Service.CaptureResultCollider(collider, shapeIndex);
+        ColliderRID = collider; Collider = captured.Scene; Identity = captured.Identity; ShapeIndex = shapeIndex;
+    }
+
     internal PhysicsPointResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex)
     {
         ColliderRID = rid;

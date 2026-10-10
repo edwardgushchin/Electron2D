@@ -16133,6 +16133,30 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PhysicsPointResult..ctor(Electron2D.RID,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsPointResult",
+    "name": ".ctor",
+    "signature": "public PhysicsPointResult(Electron2D.RID collider, System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.PhysicsRayQueryParameters..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.PhysicsRayQueryParameters",
@@ -16146,6 +16170,79 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.PhysicsRayResult..ctor(Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsRayResult",
+    "name": ".ctor",
+    "signature": "public PhysicsRayResult(Electron2D.RID collider, System.Int32 shapeIndex, Electron2D.Vector2 position, Electron2D.Vector2 normal)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsRestInfo..ctor(Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsRestInfo",
+    "name": ".ctor",
+    "signature": "public PhysicsRestInfo(Electron2D.RID collider, System.Int32 shapeIndex, Electron2D.Vector2 point, Electron2D.Vector2 normal, Electron2D.Vector2 linearVelocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "linearVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.PhysicsShapeQueryParameters..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.PhysicsShapeQueryParameters",
@@ -16155,6 +16252,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsShapeResult..ctor(Electron2D.RID,System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsShapeResult",
+    "name": ".ctor",
+    "signature": "public PhysicsShapeResult(Electron2D.RID collider, System.Int32 shapeIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "shapeIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -115054,6 +115175,99 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult.SetCollision(Electron2D.RID,System.Int32,Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2,System.Single,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
+    "name": "SetCollision",
+    "signature": "public System.Void SetCollision(Electron2D.RID body, System.Int32 localShape, Electron2D.RID collider, System.Int32 colliderShape, Electron2D.Vector2 point, Electron2D.Vector2 normal, System.Single depth, Electron2D.Vector2 colliderVelocity, Electron2D.Vector2 travel, Electron2D.Vector2 remainder, System.Single safeFraction, System.Single unsafeFraction)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "localShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "colliderShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "point",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "depth",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "colliderVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "travel",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "remainder",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "safeFraction",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "unsafeFraction",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsTestMotionResult.SetMotion(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsTestMotionResult",
+    "name": "SetMotion",
+    "signature": "public System.Void SetMotion(Electron2D.Vector2 travel)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "travel",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

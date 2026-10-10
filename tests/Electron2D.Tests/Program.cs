@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESULT_CONSTRUCTION") is { } resultBackend) { PhysicsResultConstructionTests.Run(resultBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPORT_ONLY") is { } reportOnlyBackend) { PhysicsReportOnlyTests.Run(reportOnlyBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTERS") == "1") { PhysicsFilterTests.Run(); PhysicsFilterTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILES_NATIVE") == "1") { TileMapLayerTests.RunNative(); return; }
@@ -738,6 +739,7 @@ PhysicsContactDebugTests.Run(false);
 PhysicsVelocityEditTests.Run(false);
 PhysicsGPUPublicationTests.Run(false);
 PhysicsHostPreparationTests.Run(false);
+PhysicsResultConstructionTests.Run(PhysicsServer.Backend.CPU);
 PhysicsQueryTests.Run();
 PhysicsCanvasTests.Run();
 PhysicsObjectBindingTests.Run();

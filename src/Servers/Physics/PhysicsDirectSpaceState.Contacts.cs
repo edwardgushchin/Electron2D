@@ -11,6 +11,28 @@ namespace Electron2D;
 /// <summary>A typed closest contact for a shape at rest in a physics space.</summary>
 public readonly struct PhysicsRestInfo
 {
+    /// <summary>Captures a rest result using a live collider's current object association.</summary>
+    /// <param name="collider">A live scene or server body or Area RID.</param>
+    /// <param name="shapeIndex">The collider's logical shape-owner index.</param>
+    /// <param name="point">The global contact point in scene units.</param>
+    /// <param name="normal">The finite global contact normal.</param>
+    /// <param name="linearVelocity">Collider velocity at the contact point in scene units per second.</param>
+    /// <remarks>This constructor does not perform a query. Collider access follows its owner-thread,
+    /// solver and failed-world guards. The sampled identity survives later rebind or disposal.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live collider.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The shape index or a supplied vector is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the collider's owner-thread, solver or failed-world guard.</exception>
+    /// <exception cref="ObjectDisposedException">The collider's shape or the physics service has been disposed.</exception>
+    public PhysicsRestInfo(RID collider, int shapeIndex, Vector2 point, Vector2 normal, Vector2 linearVelocity)
+    {
+        if (!point.IsFinite()) throw new ArgumentOutOfRangeException(nameof(point));
+        if (!normal.IsFinite()) throw new ArgumentOutOfRangeException(nameof(normal));
+        if (!linearVelocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(linearVelocity));
+        var captured = PhysicsServer.Service.CaptureResultCollider(collider, shapeIndex);
+        ColliderRID = collider; Collider = captured.Scene; Identity = captured.Identity;
+        ShapeIndex = shapeIndex; Point = point; Normal = normal; LinearVelocity = linearVelocity;
+    }
+
     internal PhysicsRestInfo(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex, Vector2 point,
         Vector2 normal, Vector2 linearVelocity)
     {

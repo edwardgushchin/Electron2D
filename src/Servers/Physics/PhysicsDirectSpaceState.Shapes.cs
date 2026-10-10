@@ -11,6 +11,21 @@ namespace Electron2D;
 /// <summary>A typed collider result from a direct shape-overlap query.</summary>
 public readonly struct PhysicsShapeResult
 {
+    /// <summary>Captures a shape-query result using a live collider's current object association.</summary>
+    /// <param name="collider">A live scene or server body or Area RID.</param>
+    /// <param name="shapeIndex">The collider's logical shape-owner index.</param>
+    /// <remarks>This constructor does not perform a query. Collider access follows its owner-thread,
+    /// solver and failed-world guards. The sampled identity survives later rebind or disposal.</remarks>
+    /// <exception cref="ArgumentException">The RID does not identify a live collider.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The logical shape index is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the collider's owner-thread, solver or failed-world guard.</exception>
+    /// <exception cref="ObjectDisposedException">The collider's shape or the physics service has been disposed.</exception>
+    public PhysicsShapeResult(RID collider, int shapeIndex)
+    {
+        var captured = PhysicsServer.Service.CaptureResultCollider(collider, shapeIndex);
+        ColliderRID = collider; Collider = captured.Scene; Identity = captured.Identity; ShapeIndex = shapeIndex;
+    }
+
     internal PhysicsShapeResult(RID rid, CollisionObject? collider, ObjectIdentity identity, int shapeIndex)
     {
         ColliderRID = rid;

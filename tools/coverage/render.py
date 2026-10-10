@@ -355,7 +355,7 @@ def reason_for_type(item, lookup):
         ({"PhysicsDirectBodyState2D", "PhysicsDirectBodyState2DExtension"},
          "complete typed body-state extension hooks and context construction preserving live attachment, owner/callback lifetime, contact identity and inherited operations (ADRs 0054 and 0103); current direct-body state is sealed and its constructor is internal"),
         ({"PhysicsDirectSpaceState2DExtension"},
-         "complete typed direct-space extension dispatch, scoped exclusion helpers and usable typed result construction with shared identity/lifetime semantics (ADRs 0054 and 0103); current direct-space state is sealed and query result constructors are internal"),
+         "complete typed direct-space extension dispatch, scoped exclusion helpers and usable typed result construction with shared identity/lifetime semantics (ADRs 0054 and 0103); validated query/motion result construction now executes from a separate CPU/GPU public consumer, but current direct-space state remains sealed and extension dispatch/exclusion hooks are absent"),
         ({"PhysicsDirectSpaceState2D", "PhysicsPointQueryParameters2D", "PhysicsRayQueryParameters2D", "PhysicsShapeQueryParameters2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "KinematicCollision2D"},
          "typed direct-space sweep/ray/point query and result lifecycle over the PhysicsServer space"),
         ({"RayCast2D", "ShapeCast2D"},

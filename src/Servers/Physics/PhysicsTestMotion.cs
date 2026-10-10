@@ -101,10 +101,65 @@ public sealed class PhysicsTestMotionResult : ElectronObject
 {
     private MotionResultData _data;
 
-    /// <summary>Creates an empty writable-by-the-server result.</summary>
+    /// <summary>Creates an empty result writable by a motion-query implementation.</summary>
     public PhysicsTestMotionResult() { }
 
     internal void Set(in MotionResultData data) { ThrowIfDisposed(); _data = data; }
+
+    /// <summary>Replaces this result with an unobstructed completed motion.</summary>
+    /// <param name="travel">The completed global displacement, including any recovery, in scene units.</param>
+    /// <remarks>Clears prior collision identity and geometry, sets the remainder to zero and both fractions to one.
+    /// This method does not execute a motion test and reuses the result's existing storage.</remarks>
+    /// <exception cref="ArgumentOutOfRangeException">Travel is not finite.</exception>
+    /// <exception cref="ObjectDisposedException">The result has been disposed.</exception>
+    public void SetMotion(Vector2 travel)
+    {
+        ThrowIfDisposed();
+        if (!travel.IsFinite()) throw new ArgumentOutOfRangeException(nameof(travel));
+        _data = new(default, default, 0, 0, 0, default, default, 0, default, travel, default, 1, 1, false);
+    }
+
+    /// <summary>Replaces this result with validated geometry and identity supplied by a motion-query implementation.</summary>
+    /// <param name="body">The live moving body's RID.</param>
+    /// <param name="localShape">The moving body's logical shape index.</param>
+    /// <param name="collider">The live body collider's RID in the same space.</param>
+    /// <param name="colliderShape">The collider's logical shape index.</param>
+    /// <param name="point">The global collision point in scene units.</param>
+    /// <param name="normal">The finite global separation normal.</param>
+    /// <param name="depth">Nonnegative penetration depth in scene units.</param>
+    /// <param name="colliderVelocity">Global collider point velocity in scene units per second.</param>
+    /// <param name="travel">Completed global displacement including recovery, in scene units.</param>
+    /// <param name="remainder">Remaining requested displacement in scene units.</param>
+    /// <param name="safeFraction">A safe motion fraction from zero through one.</param>
+    /// <param name="unsafeFraction">An unsafe fraction from safeFraction through one.</param>
+    /// <remarks>This method does not execute a motion test. Both bodies follow their owner-thread,
+    /// solver and failed-world guards. Identity is sampled once from the collider's current association;
+    /// later rebind/disposal does not retarget this result. Validation precedes replacement and warmed calls allocate no managed storage.</remarks>
+    /// <exception cref="ArgumentException">An RID is not a live body, or the moving body is its own collider.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">A shape index, vector, depth or fraction is invalid.</exception>
+    /// <exception cref="InvalidOperationException">Bodies do not share a live space, or access violates its guard.</exception>
+    /// <exception cref="ObjectDisposedException">The result or a selected shape has been disposed.</exception>
+    public void SetCollision(RID body, int localShape, RID collider, int colliderShape, Vector2 point,
+        Vector2 normal, float depth, Vector2 colliderVelocity, Vector2 travel, Vector2 remainder,
+        float safeFraction, float unsafeFraction)
+    {
+        ThrowIfDisposed();
+        if (!point.IsFinite()) throw new ArgumentOutOfRangeException(nameof(point));
+        if (!normal.IsFinite()) throw new ArgumentOutOfRangeException(nameof(normal));
+        if (!colliderVelocity.IsFinite()) throw new ArgumentOutOfRangeException(nameof(colliderVelocity));
+        if (!travel.IsFinite()) throw new ArgumentOutOfRangeException(nameof(travel));
+        if (!remainder.IsFinite()) throw new ArgumentOutOfRangeException(nameof(remainder));
+        if (!float.IsFinite(depth) || depth < 0) throw new ArgumentOutOfRangeException(nameof(depth));
+        if (!float.IsFinite(safeFraction) || safeFraction < 0 || safeFraction > 1) throw new ArgumentOutOfRangeException(nameof(safeFraction));
+        if (!float.IsFinite(unsafeFraction) || unsafeFraction < safeFraction || unsafeFraction > 1) throw new ArgumentOutOfRangeException(nameof(unsafeFraction));
+        if (body == collider) throw new ArgumentException("A moving body cannot be its own motion collider.", nameof(collider));
+        var local = PhysicsServer.Service.CaptureResultCollider(body, localShape, bodyOnly: true);
+        var remote = PhysicsServer.Service.CaptureResultCollider(collider, colliderShape, bodyOnly: true);
+        if (local.Space is null || !ReferenceEquals(local.Space, remote.Space))
+            throw new InvalidOperationException("Motion result bodies must share a live physics space.");
+        _data = new(body, collider, remote.Identity.ID, localShape, colliderShape, point, normal, depth,
+            colliderVelocity, travel, remainder, safeFraction, unsafeFraction, true, remote.Identity);
+    }
 
     /// <summary>Returns the live object association captured by the motion test.</summary>
     /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
