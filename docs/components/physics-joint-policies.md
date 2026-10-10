@@ -39,7 +39,7 @@ linear-force factor 0.01.
 ## CPU execution
 
 PhysicsJointRuntime retains the common authored values. PhysicsJointBackend
-converts units and attaches them to the live joint simulation record. A changed
+dispatches to CPUPhysicsJointImplementation, which converts units and attaches them to the live joint simulation record. A changed
 profile wakes bodies, reacquires the simulation record after a possible solver-set
 transfer, and clears old warm impulses without resampling anchors. The native
 record's clear/copy paths include all policy fields, preserving sleep/wake and

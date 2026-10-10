@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        JointAttachment(backend);
         ColliderAttachment(backend);
         QueryOwnership(backend);
         CallbackBorrow(backend);
@@ -59,10 +60,64 @@ internal static class PhysicsBackendOwnershipTests
         }
         finally { PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second); }
         Reject<ObjectDisposedException>(implementation.EnsureAccess);
-        if (backend == PhysicsServer.Backend.CPU) Check(!b2World_IsValid(cpuID), "CPU solver world released by its implementation");
+        if (backend == PhysicsServer.Backend.CPU)
+        {
+            Check(!b2World_IsValid(cpuID), "CPU solver world released by its implementation");
+            Reject<ObjectDisposedException>(() => ((CPUPhysicsWorldBackend)implementation).GetJointWorldBody());
+        }
         else Reject<ObjectDisposedException>(() => gpuStore!.Read([], []));
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
+    }
+    private static void JointAttachment(PhysicsServer.Backend backend)
+    {
+        var firstSpace = PhysicsServer.SpaceCreate(backend); var secondSpace = PhysicsServer.SpaceCreate();
+        var first = PhysicsServer.BodyCreate(); var second = PhysicsServer.BodyCreate(); var joint = PhysicsServer.JointCreate();
+        try
+        {
+            PhysicsServer.BodySetGravityScale(first, 0); PhysicsServer.BodySetGravityScale(second, 0);
+            PhysicsServer.BodySetTransform(first, new(.3f, new(10, 20))); PhysicsServer.BodySetTransform(second, new(-.2f, new(40, 30)));
+            PhysicsServer.BodySetSpace(first, firstSpace); PhysicsServer.BodySetSpace(second, firstSpace);
+            var a = PhysicsServer.Service.BodyRuntime(first).Backend; var b = PhysicsServer.Service.BodyRuntime(second).Backend;
+            var failed = new PhysicsJointBackend();
+            Reject<Exception>(() => failed.Attach(PhysicsServer.Service.GetSceneSpace(firstSpace), a, b, new(default)));
+            Check(!failed.IsAttached && failed.Implementation is null && PhysicsServer.BodyGetSpace(first) == firstSpace,
+                "Unsupported internal role retires the failed joint attachment without releasing endpoints");
+            var source = PhysicsServer.Service.GetSceneSpace(firstSpace);
+            foreach (var role in new[] { PhysicsServer.JointType.Pin, PhysicsServer.JointType.Groove, PhysicsServer.JointType.DampedSpring })
+            {
+                if (role == PhysicsServer.JointType.Pin) PhysicsServer.JointMakePin(joint, new(25, 25), first, second);
+                else if (role == PhysicsServer.JointType.Groove) PhysicsServer.JointMakeGroove(joint, new(10, 20), new(40, 30), new(25, 25), first, second);
+                else PhysicsServer.JointMakeDampedSpring(joint, new(10, 20), new(40, 30), first, second);
+                var runtime = source.SnapshotJoints.Single(value => value.RID == joint);
+                var frameA = runtime.FrameA; var frameB = runtime.FrameB;
+                var previous = runtime.Backend.Implementation!;
+                PhysicsServer.JointSetBias(joint, .25f); PhysicsServer.JointSetMaxForce(joint, 10); PhysicsServer.JointSetMaxBias(joint, 50);
+                PhysicsServer.BodySetSpace(first, secondSpace);
+                Check(!runtime.HasBackend && !previous.IsAttached && runtime.Backend.Implementation is null,
+                    "A suspended connection retires its selected constraint before endpoint world transfer");
+                PhysicsServer.BodySetSpace(second, secondSpace);
+                Check(runtime.HasBackend && !ReferenceEquals(previous, runtime.Backend.Implementation) && runtime.FrameA == frameA && runtime.FrameB == frameB &&
+                    PhysicsServer.JointGetType(joint) == role && PhysicsServer.JointGetBias(joint) == .25f && PhysicsServer.JointIsDisabledCollisionsBetweenBodies(joint),
+                    "Reconnection uses a fresh selected implementation and preserves RID, local bases and authored policy exactly");
+                PhysicsServer.BodySetSpace(first, firstSpace); PhysicsServer.BodySetSpace(second, firstSpace);
+                Check(runtime.HasBackend && runtime.FrameA == frameA && runtime.FrameB == frameB, "Reverse transfer preserves sampled local frames");
+                PhysicsServer.JointClear(joint);
+                Check(!runtime.HasBackend && runtime.Backend.Implementation is null && PhysicsServer.JointGetType(joint) == PhysicsServer.JointType.Empty,
+                    "Clearing a role retains the public RID and retires concrete constraint storage");
+            }
+            PhysicsServer.JointMakePin(joint, new(10, 20), first);
+            var worldPin = source.SnapshotJoints.Single(value => value.RID == joint);
+            Check(worldPin.HasBackend, "A single-body pin uses the selected world-anchor policy");
+            if (backend == PhysicsServer.Backend.CPU)
+            {
+                var owner = (CPUPhysicsWorldBackend)source.BackendImplementation;
+                Check(owner.GetJointWorldBody().Equals(owner.GetJointWorldBody()), "The CPU world owns and reuses its one shape-free anchor");
+            }
+            else Reject<InvalidOperationException>(() => _ = source.WorldID);
+            Console.WriteLine($"{backend}: all three joint roles, creation failure, cross-world suspension/reconnect, exact frames/policy and world-anchor ownership passed.");
+        }
+        finally { PhysicsServer.FreeRID(joint); PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second); PhysicsServer.FreeRID(firstSpace); PhysicsServer.FreeRID(secondSpace); }
     }
     private static void ColliderAttachment(PhysicsServer.Backend backend)
     {

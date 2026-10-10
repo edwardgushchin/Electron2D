@@ -74,6 +74,13 @@ internal sealed partial class GPUPhysicsColliderImplementation
         }
         var pose = GetPose(); return new(pose.Rotation, Vector2.One, 0, pose.Position);
     }
+    internal override Transform SampleJointLocalFrame(Vector2 point, float angle)
+    {
+        var current = GetTransform();
+        var pointLocal = current.AffineInverse() * point;
+        PhysicsJointRuntime.ValidateExtent(pointLocal.Length());
+        return new Transform(angle - current.Rotation, Vector2.One, 0, pointLocal);
+    }
     internal override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion()
     {
         ref readonly var snapshot = ref GPUState;

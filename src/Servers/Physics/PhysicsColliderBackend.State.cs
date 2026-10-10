@@ -4,6 +4,7 @@ internal sealed partial class PhysicsColliderBackend
 {
     internal (Vector2 Position, float Rotation) GetPose() => Attached.GetPose();
     internal Transform GetTransform() => Attached.GetTransform();
+    internal Transform SampleJointLocalFrame(Vector2 point, float angle) => Attached.SampleJointLocalFrame(point, angle);
     internal (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion() => Attached.GetSolverMotion();
     internal Vector2 LinearVelocity => Attached.LinearVelocity;
     internal float AngularVelocity => Attached.AngularVelocity;

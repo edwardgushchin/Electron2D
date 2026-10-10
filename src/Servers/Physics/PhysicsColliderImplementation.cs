@@ -17,6 +17,7 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     internal abstract (Vector2 Position, float Rotation) GetPose();
     internal abstract Transform GetTransform();
+    internal abstract Transform SampleJointLocalFrame(Vector2 point, float angle);
     internal abstract (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion();
     internal abstract Vector2 LinearVelocity { get; }
     internal abstract float AngularVelocity { get; }

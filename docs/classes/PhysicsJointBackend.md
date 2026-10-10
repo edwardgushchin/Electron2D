@@ -14,10 +14,9 @@ motion filtering, extreme finite spring caps and begun-GPU-failure lifetime.
 
 ## Ownership and operations
 
-One retained adapter belongs to each PhysicsJointRuntime. It owns the current
-CPU joint/body handles or a resident GPU joint handle, private compiled local
-frames, attached space reference and CPU transient spring impulses. It borrows both endpoint bodies; an empty second
-endpoint uses the existing space-owned static world anchor. Public identity and
+The selected PhysicsWorldBackend now creates a fresh PhysicsJointImplementation for each constraint attachment. PhysicsJointBackend retains only that current implementation; RID, authored values, local frames, membership and pair-exception accounting stay in PhysicsJointRuntime. CPUPhysicsJointImplementation owns native endpoint/joint IDs, exact compiled local frames and transient spring evaluation. GPUPhysicsJointImplementation owns its resident handle and retained definition, using the device solver for spring/constraint execution. Generic live setters, solver policy, portable frames and release all dispatch through the selected attachment. Current-body local-frame sampling also dispatches through the selected collider implementation; detached sampling preserves the existing CPU numeric convention. CPUPhysicsWorldBackend owns its lazy shape-free world anchor; GPU pins retain their virtual world endpoint with no CPU body.
+
+One retained adapter belongs to each PhysicsJointRuntime. It delegates borrowed endpoint and concrete handle ownership to the selected attachment. Public identity and
 settings remain with the runtime, independently of attachment generations.
 
 | Operation | Contract |
@@ -25,7 +24,7 @@ settings remain with the runtime, independently of attachment generations.
 | `SampleLocalFrame` | Use the attached solver pose or detached typed pose, reject unrepresentable local anchors, return a scene-unit Transform with the sampled basis. |
 | `Attach` | Compile engine frames/settings into revolute, wheel or filter definitions and acquire one active joint handle. |
 | `IsAttached` | Report whether the current constraint exists without exposing its vendor identity to scene classes. |
-| `Detach` | Destroy the joint with endpoint wakeup, or skip backend destruction after world failure; clear all handles, frame/impulse state and the space reference. |
+| `Detach` | Attempt selected constraint retirement with endpoint wakeup, or skip native calls after world failure; clear handles/frame/impulse state in finally and remove the retained attachment. |
 | `ApplySolverPolicy` | Resolve inherited bias, convert linear/angular limits to backend units, wake and reacquire transferred records, update policy and clear old impulses. |
 | Pin/collision/groove setters | Update live solver settings without resampling the stored anchors; groove distances convert from scene units here. |
 | `PrepareSolverStep`, `ValidateSolverStep`, `ApplySolverStep` | Evaluate the existing Hooke/axial-drag impulse, preflight cumulative world motion, then apply equal opposite anchor impulses. |

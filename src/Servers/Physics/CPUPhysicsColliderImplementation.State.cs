@@ -25,6 +25,9 @@ internal sealed partial class CPUPhysicsColliderImplementation
         var pose = GetPose(); return new(pose.Rotation, Vector2.One, 0, pose.Position);
     }
 
+    internal override Transform SampleJointLocalFrame(Vector2 point, float angle) =>
+        CPUPhysicsJointImplementation.SampleLocalFrame(Owner, default, point, angle);
+
     internal override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion()
     {
         var state = b2GetBodyState(_world!, _body!);

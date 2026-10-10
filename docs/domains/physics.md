@@ -77,7 +77,7 @@ existing public contract while isolating vendor-dependent operations. Built-in
 shape resources now expose borrowed scene-unit geometry internally; CPU fixture,
 query and mass compilation is isolated in PhysicsShapeBackend. Independent GPU
 ownership and public backend selection remain open. Joint identity, sampled frames
-and settings now also sit outside vendor storage; PhysicsJointBackend owns current
+and settings now also sit outside vendor storage; the selected PhysicsJointImplementation owns current
 constraint handles and CPU spring evaluation. A separate GPUPhysicsBodyStore now
 retains and integrates device body state, shared shape geometry, transformed bounds,
 complete broad-phase pairs and narrow-phase contact points without a CPU world or

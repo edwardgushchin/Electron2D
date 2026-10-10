@@ -27,6 +27,7 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
         if (GPUStore.HasFailed) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.");
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new GPUPhysicsColliderImplementation(collider, Space); }
+    internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new GPUPhysicsJointImplementation(Space); }
     internal override void Step(double delta) => Space.StepGPU(delta);
     public override void Dispose()
     {

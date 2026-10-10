@@ -21,7 +21,6 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<RigidBody> _contactBodies = [];
     private readonly List<Joint> _joints = [];
     private readonly List<PhysicsJointRuntime> _jointRuntimes = [];
-    private B2BodyId _jointWorldBody;
     internal float ConstraintDefaultBias { get; private set; }
     internal void SetConstraintDefaultBias(float value)
     {
@@ -325,16 +324,6 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void AddJointRuntime(PhysicsJointRuntime runtime) => _jointRuntimes.Add(runtime);
     internal void RemoveJointRuntime(PhysicsJointRuntime runtime) => _jointRuntimes.Remove(runtime);
 
-    internal B2BodyId GetJointWorldBody()
-    {
-        if (_jointWorldBody.index1 == 0)
-        {
-            var definition = b2DefaultBodyDef();
-            definition.type = B2BodyType.b2_staticBody;
-            _jointWorldBody = b2CreateBody(WorldID, definition);
-        }
-        return _jointWorldBody;
-    }
 
     internal void Remove(Joint joint)
     {

@@ -7,6 +7,7 @@ namespace Electron2D;
 internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
+    private B2BodyId _jointWorldBody;
     private readonly PhysicsTaskScheduler _tasks;
     private GPUPhysicsWorld? _stageGPU;
     private bool _disposed;
@@ -47,6 +48,18 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space); }
+    internal B2BodyId GetJointWorldBody()
+    {
+        EnsureAccess();
+        if (_jointWorldBody.index1 == 0)
+        {
+            var definition = B2Types.b2DefaultBodyDef();
+            definition.type = B2BodyType.b2_staticBody;
+            _jointWorldBody = B2Bodies.b2CreateBody(WorldID, definition);
+        }
+        return _jointWorldBody;
+    }
+    internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new CPUPhysicsJointImplementation(Space, this); }
     internal override void Step(double delta) => Space.StepCPU(delta);
     internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); b2World_Step(_worldID, delta, substeps); }
 

@@ -12,10 +12,11 @@ PhysicalBone borrows its first authored direct Joint child and optionally config
 
 ## Runtime flow and invariants
 
+The selected PhysicsWorldBackend now creates a fresh PhysicsJointImplementation for each constraint attachment. PhysicsJointBackend retains only that current implementation; RID, authored values, local frames, membership and pair-exception accounting stay in PhysicsJointRuntime. CPUPhysicsJointImplementation owns native endpoint/joint IDs, exact compiled local frames and transient spring evaluation. GPUPhysicsJointImplementation owns its resident handle and retained definition, using the device solver for spring/constraint execution. Generic live setters, solver policy, portable frames and release all dispatch through the selected attachment. Current-body local-frame sampling also dispatches through the selected collider implementation; detached sampling preserves the existing CPU numeric convention. CPUPhysicsWorldBackend owns its lazy shape-free world anchor; GPU pins retain their virtual world endpoint with no CPU body.
+
 PhysicsJointRuntime retains shared RID identity, scene-unit local frames and guide
 bounds, scalar settings, world membership and pair-exception accounting.
-[PhysicsJointBackend](../classes/PhysicsJointBackend.md) owns current solver handles,
-creation, live updates, release and spring evaluation. Scene joint classes and the
+[PhysicsJointBackend](../classes/PhysicsJointBackend.md) routes creation, live updates, release and spring evaluation to the selected concrete attachment. Scene joint classes and the
 runtime no longer depend on vendor types. Stored frame bases preserve the sampled
 rotation through detach/reentry; a membership change does not resample anchors.
 
@@ -44,12 +45,13 @@ of invalid replacement. Each world runs 120 steps at 1/120 s; one scene unit of
 anchor error and 0.05 rad beyond the configured angle limit allow the existing
 solver tolerances. Independent GPU joint ownership, spring evaluation, public-world integration and portable replay now execute; full physics/network acceptance remains open.
 
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) now exercises all three roles, failed internal creation followed by retirement, body transfer that suspends/reconnects constraints, exact stored frame/policy metadata, clear/reuse and CPU/GPU world-anchor ownership. The selected implementation never retargets another world. Public registration and extension construction remain open under ADR 0103.
+
 ## Independent GPU foundation
 
 [GPUPhysicsBodyStore](gpu-resident-joints.md) now retains device joint configuration
 and warm history, solves pins/grooves together with contacts and applies Hooke/axial
-spring impulses on GPU. Joint collision vetoes are device-resident. This internal
-path does not yet replace the scene/server CPU attachment. Public CPU bias/compliance/caps and the stage GPU equivalents now execute; independent public sleep/CCD/event integration and network replay remain open.
+spring impulses on GPU. Joint collision vetoes are device-resident. Public scene/server GPU worlds now create the resident attachment through the selected owner. Public bias/compliance/caps, sleep/wake, motion vetoes, failure release and portable/network replay execute through both selected built-ins; complete platform and performance acceptance remain open.
 
 The [shared public CPU/GPU family run](physics-joint-policies.md#public-cpu-gpu-conformance)
 now covers all five joint suites, including motion vetoes from multiple joints,
