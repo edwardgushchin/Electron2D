@@ -1,10 +1,16 @@
 # CPUPhysicsColliderImplementation
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class CPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [CPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/CPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
 ## Responsibility and flow
+
+The CPU creator retains this concrete attachment in its private collider table.
+Native body/shape IDs are absent from common scene/server identities. Selected
+wrappers can delegate operations while the creator resolves native storage for
+queries, fields, CCD, contacts and joints. Matching detach retires the table entry;
+late detach of a previous attachment preserves its replacement.
 
 Owns one native body/world reference, logical fixture pieces, exact saved transform, reusable mass geometry and shape policy epoch. Implements CPU shape validation/creation, filters/materials/tags, state/force/mass/surface operations and current/frame contact projection in scene units. Native simulation access, field application, sleep timers and checkpoint piece lookup stay internal. Detach retires cached handles even when native destruction fails; final failed-world cleanup belongs to the selected world.
 

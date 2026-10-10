@@ -36,10 +36,10 @@ internal static class PhysicsObjectBindingTests
             Check(PhysicsServer.BodyTestMotion(mover, parameters, result) && result.GetColliderID() == first.InstanceID && result.GetCollider() == first, "Motion snapshot captures bound object.");
             parameters.ExcludeObjects = [first.InstanceID]; Check(!PhysicsServer.BodyTestMotion(mover, parameters, result), "Object exclusions use assigned identity."); parameters.ExcludeObjects = [];
             Check(PhysicsServer.BodyTestMotion(mover, parameters, result), "Removing exclusion restores motion hit.");
-            var backend = PhysicsServer.Service.BodyRuntime(body).Backend; var native = backend.BodyID; var fixture = backend.Shapes[0];
+            var backend = PhysicsServer.Service.BodyRuntime(body).Backend; var native = ((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID; var fixture = ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0];
             PhysicsServer.BodyAttachObject(body, second);
             Check(pointHit.ColliderObject == first && rayHit.ColliderObject == first && shapeHit.ColliderObject == first && restHit.ColliderObject == first && result.GetCollider() == first, "Rebinding cannot rewrite old query/motion snapshots.");
-            Check(direct.IntersectPoint(point)[0].ColliderObject == second && native.Equals(backend.BodyID) && fixture.Equals(backend.Shapes[0]), "New association is immediate and preserves solver identity.");
+            Check(direct.IntersectPoint(point)[0].ColliderObject == second && native.Equals(((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID) && fixture.Equals(((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0]), "New association is immediate and preserves solver identity.");
             point.CollideWithBodies = false; point.CollideWithAreas = true;
             Check(direct.IntersectPoint(point).Single().ColliderObject == second && PhysicsServer.AreaGetObjectInstanceID(area) == second.InstanceID, "Area association uses the same path.");
             PhysicsServer.BodySetSpace(body, default); PhysicsServer.BodySetSpace(body, space);

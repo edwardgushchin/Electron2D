@@ -1,18 +1,13 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
-/// <summary>Retains shared scene/server identity and delegates the current attachment to its selected solver owner.</summary>
+/// <summary>Retains shared scene/server identity and delegates attachment operations without exposing native CPU handles.</summary>
 internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwner = null)
 {
     private PhysicsColliderImplementation? _implementation;
     internal PhysicsColliderImplementation? Implementation => _implementation;
     private PhysicsColliderImplementation Attached => _implementation ?? throw new InvalidOperationException("The collider has no solver attachment.");
-    private CPUPhysicsColliderImplementation CPU => _implementation as CPUPhysicsColliderImplementation ?? throw new InvalidOperationException("The collider has no CPU solver attachment.");
     private GPUPhysicsColliderImplementation GPUAttachment => _implementation as GPUPhysicsColliderImplementation ?? throw new InvalidOperationException("The collider has no resident GPU attachment.");
     internal RID RID => rid;
-    internal B2BodyId BodyID => (_implementation as CPUPhysicsColliderImplementation)?.BodyID ?? default;
-    internal IReadOnlyList<B2ShapeId> Shapes => (_implementation as CPUPhysicsColliderImplementation)?.Shapes ?? [];
     internal int ShapeCount => _implementation?.ShapeCount ?? 0;
     internal WeakReference<CollisionObject>? SceneOwnerReference => _sceneOwner;
     internal CollisionObject? SceneOwner => _sceneOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;

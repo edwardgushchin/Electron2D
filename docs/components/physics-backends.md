@@ -11,6 +11,30 @@ gates and confirms a host-specific advantage; 60 Hz, native/foreign acceptance
 and complete registered extensions remain open. Earlier measurements below retain
 their own source/workload scope.
 
+## CPU collider ownership
+
+CPUPhysicsWorldBackend now retains its concrete collider attachments by the shared
+collider identity. Body/shape handles stay in that owner and the concrete CPU
+attachment; CollisionObject, PhysicsBody, raw server colliders and the common
+collider facade expose no CPU body/shape IDs or default-empty native aliases.
+CPU fields, queries, Area monitoring, CCD, kinematic intervals, contacts, joints
+and portable one-way mapping resolve native data through their actual owner.
+Retirement removes only the matching attachment, so a delayed old detach cannot
+remove a newer entry. World disposal clears retained attachment references.
+
+Contact-policy preparation dispatches through the selected collider implementation.
+Portable sleep capture/finalization dispatches through the world owner; CPU restores
+native sleep after shared authoring, while GPU retains its existing resident motion
+write that already commits sleep time/flags. No extra GPU transfer or CPU mirror
+is introduced by that finalization route.
+
+[Wrapped-collider checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.WrappedCollider.cs)
+use a non-CPU implementation type delegating actual CPU state. The selected-view
+fixture exercises real impulse/policy hooks, scene/raw contacts, Area monitoring,
+ray/shape CCD, queries, retirement/reentry and portable capture/apply. Shared
+physics APIs and warm allocation guards are retained. Public registration and the
+complete external server operation bridge remain open under ADR 0103.
+
 ## Selected direct-state construction
 
 The retained world owner now creates both cached direct-space and direct-body

@@ -2,6 +2,10 @@ namespace Electron2D;
 
 internal sealed partial class GPUPhysicsWorldBackend
 {
+    internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) =>
+        ((GPUPhysicsColliderImplementation)collider.Implementation!).PortableSleepTime;
+    // Resident motion restoration already commits sleep time and flags in its device write.
+    internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) { }
     private GPUPhysicsBodyStore.PortableOneWay[] _portableGPUOneWays = [];
     internal override void BeginPortableRestore() => GPUStore.BeginPortableRestore();
     internal override void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick)

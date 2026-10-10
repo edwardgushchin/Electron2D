@@ -1,6 +1,6 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class PhysicsServerCollider` · **Inherits:** System.Object
 
@@ -22,6 +22,10 @@ the public CPU/GPU live-edit checks are described in
 [host preparation](../components/gpu-host-preparation.md).
 
 ## Description and runtime flow
+
+The shared collider carries authored identity, slots and selected operations;
+CPU body/shape handles belong exclusively to the actual CPU owner/attachment.
+Native probes stay in the owning implementation and tests.
 
 Caller-owned body/Area configuration with indexed shape entry, local pose, disabled and body one-way fields. Getter/replacement/clear operate on logical slots; native tags retain logical indices across compound fixtures. Same-value writes are inert, real edits rebuild the one native world body and mass profile. Typed scene slots use their existing CollisionObject owner store instead of this class.
 

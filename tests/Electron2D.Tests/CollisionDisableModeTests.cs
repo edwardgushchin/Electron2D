@@ -30,7 +30,7 @@ internal static class CollisionDisableModeTests
         Check(body.DisableMode == CollisionDisableMode.Remove && (int)CollisionDisableMode.MakeStatic == 1 &&
             (int)CollisionDisableMode.KeepActive == 2, "Stored defaults and enum values.");
         using var tree = new SceneTree(root);
-        Check(!body.HasBackend && removedArea.BackendShapes.Count == 0 && independent.HasBackend,
+        Check(!body.HasBackend && removedArea.Backend.ShapeCount == 0 && independent.HasBackend,
             "Disabled inherited entry omits bodies/areas; an explicit process mode breaks inheritance.");
         branch.ProcessMode = ProcessMode.Pausable;
         using var point = new PhysicsPointQueryParameters { Position = Vector2.Zero };
@@ -93,14 +93,14 @@ internal static class CollisionDisableModeTests
             "A disabled static rigid body retains real solver contact response.");
         support.LinearVelocity = new(30, 0); support.AngularVelocity = 2;
         support.Freeze = true; support.Freeze = false;
-        Check(b2Body_GetType(support.BackendID) == B2BodyType.b2_staticBody && support.LinearVelocity == new Vector2(30, 0),
+        Check(b2Body_GetType(((CPUPhysicsColliderImplementation)support.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody && support.LinearVelocity == new Vector2(30, 0),
             "Freeze changes cannot override temporary static participation; newly assigned velocity is retained.");
         support.DisableMode = CollisionDisableMode.KeepActive;
         Check(MathF.Abs(view.InverseMass - 1f / 7) < 0.001f && view.InverseInertia == 0 && view.LinearVelocity.IsEqualApprox(new(30, 0)),
             "Restoring dynamics reapplies explicit mass, rotation lock and latest stored velocity.");
         support.Freeze = true; support.DisableMode = CollisionDisableMode.MakeStatic;
         support.ProcessMode = ProcessMode.Always;
-        Check(support.Freeze && b2Body_GetType(support.BackendID) == B2BodyType.b2_staticBody,
+        Check(support.Freeze && b2Body_GetType(((CPUPhysicsColliderImplementation)support.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody,
             "Enabling never unfreezes a user-frozen body.");
         support.Freeze = false;
         support.ProcessMode = ProcessMode.Disabled; support.DisableMode = CollisionDisableMode.Remove;
@@ -111,7 +111,7 @@ internal static class CollisionDisableModeTests
         Check(support.Position.X > 0.3f, "Removal from temporary static mode cannot turn retained dynamic sleep into static inactivity.");
         support.DisableMode = CollisionDisableMode.MakeStatic;
         Check(view != PhysicsServer.BodyGetDirectState(support.GetRID()) &&
-            b2Body_GetType(support.BackendID) == B2BodyType.b2_staticBody, "Disabled reattachment creates a static native body.");
+            b2Body_GetType(((CPUPhysicsColliderImplementation)support.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody, "Disabled reattachment creates a static native body.");
     }
 
     private static void VerifyKinematicAndSensors()
@@ -132,8 +132,8 @@ internal static class CollisionDisableModeTests
         root.AddChild(platform); root.AddChild(character); root.AddChild(area);
         using var tree = new SceneTree(root);
         tree.PhysicsFrame(1d / 60);
-        Check(area.GetOverlappingBodies().Contains(platform) && b2Body_GetType(platform.BackendID) == B2BodyType.b2_staticBody &&
-            b2Body_GetType(character.BackendID) == B2BodyType.b2_staticBody, "MakeStatic keeps Area sensing and converts both kinematic siblings.");
+        Check(area.GetOverlappingBodies().Contains(platform) && b2Body_GetType(((CPUPhysicsColliderImplementation)platform.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody &&
+            b2Body_GetType(((CPUPhysicsColliderImplementation)character.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody, "MakeStatic keeps Area sensing and converts both kinematic siblings.");
         Check(character.GetGravity().IsEqualApprox(new(0, -100)), "MakeStatic Area fields continue resolving for attached bodies.");
         area.DisableMode = CollisionDisableMode.Remove; tree.PhysicsFrame(1d / 60);
         Check(character.GetGravity().IsEqualApprox(new(0, 980)), "Remove omits a disabled Area from field resolution.");
@@ -142,12 +142,12 @@ internal static class CollisionDisableModeTests
         platform.Position = new(20, 0); character.Position = new(120, 0);
         tree.PhysicsFrame(1d / 60);
         Check(platform.Position.IsEqualApprox(new(20, 0)) && character.Position.IsEqualApprox(new(120, 0)) &&
-            b2Body_GetLinearVelocity(platform.BackendID).X == 0 && b2Body_GetLinearVelocity(platform.BackendID).Y == 0, "Static manual movement teleports without kinematic contact velocity.");
+            b2Body_GetLinearVelocity(((CPUPhysicsColliderImplementation)platform.Backend.Implementation!).BodyID).X == 0 && b2Body_GetLinearVelocity(((CPUPhysicsColliderImplementation)platform.Backend.Implementation!).BodyID).Y == 0, "Static manual movement teleports without kinematic contact velocity.");
         root.ProcessMode = ProcessMode.Pausable;
-        Check(b2Body_GetType(platform.BackendID) == B2BodyType.b2_kinematicBody &&
-            b2Body_GetType(character.BackendID) == B2BodyType.b2_kinematicBody, "Enable restores both configured kinematic types.");
+        Check(b2Body_GetType(((CPUPhysicsColliderImplementation)platform.Backend.Implementation!).BodyID) == B2BodyType.b2_kinematicBody &&
+            b2Body_GetType(((CPUPhysicsColliderImplementation)character.Backend.Implementation!).BodyID) == B2BodyType.b2_kinematicBody, "Enable restores both configured kinematic types.");
         root.RemoveChild(platform); root.ProcessMode = ProcessMode.Disabled; root.AddChild(platform);
-        Check(b2Body_GetType(platform.BackendID) == B2BodyType.b2_staticBody, "Exit/reentry reapplies the disabled policy.");
+        Check(b2Body_GetType(((CPUPhysicsColliderImplementation)platform.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody, "Exit/reentry reapplies the disabled policy.");
     }
 
     private static void VerifyFailuresAndPacking()
@@ -188,7 +188,7 @@ internal static class CollisionDisableModeTests
         using var copy = scene.Instantiate(); using var copyTree = new SceneTree(copy);
         var stored = (RigidBody)copy.GetChild(0);
         Check(stored.DisableMode == CollisionDisableMode.MakeStatic && stored.ProcessMode == ProcessMode.Disabled &&
-            b2Body_GetType(stored.BackendID) == B2BodyType.b2_staticBody, "PackedScene restores policy and effective disabled entry.");
+            b2Body_GetType(((CPUPhysicsColliderImplementation)stored.Backend.Implementation!).BodyID) == B2BodyType.b2_staticBody, "PackedScene restores policy and effective disabled entry.");
         using var disposed = new StaticBody(); disposed.Dispose();
         Reject<ObjectDisposedException>(() => _ = disposed.DisableMode);
         Reject<ObjectDisposedException>(() => disposed.DisableMode = CollisionDisableMode.KeepActive);

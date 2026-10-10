@@ -13,6 +13,7 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract bool HasMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetContactReporting(bool enabled);
+    internal abstract void PrepareContactPolicy();
     internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
     internal abstract void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     internal abstract void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);

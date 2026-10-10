@@ -6,6 +6,7 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class ViewBackend : PhysicsWorldBackend
     {
         private readonly PhysicsWorldBackend _inner;
+        internal CPUPhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider) => ((CPUPhysicsWorldBackend)_inner).NativeCollider(collider);
         internal Func<PhysicsDirectSpaceState>? SpaceFactory;
         internal Func<PhysicsBodyRuntime, PhysicsDirectBodyState>? BodyFactory;
         internal int SpaceCreations, BodyCreations;
@@ -26,6 +27,8 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override bool ResultsReady => _inner.ResultsReady;
         internal override PhysicsBackendCheckpoint CreateCheckpoint() => _inner.CreateCheckpoint();
         internal override void BeginPortableRestore() => _inner.BeginPortableRestore();
+        internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) => _inner.ReadPortableSleepTime(collider);
+        internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) => _inner.ApplyPortableSleep(collider, time, canSleep, sleeping);
         internal override void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick) => _inner.CompletePortableRestore(map, pairs, tick);
         internal override void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination) => _inner.CapturePortableOneWays(map, destination);
         internal override int ReadDebugContacts(Span<Vector2> output) => _inner.ReadDebugContacts(output);
@@ -37,7 +40,11 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void PrepareSolverCapacity() => _inner.PrepareSolverCapacity();
         internal override void PrepareMonitoringCapacity() => _inner.PrepareMonitoringCapacity();
         internal override PhysicsSpace.Statistics ReadStatistics() => _inner.ReadStatistics();
-        internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) => _inner.CreateCollider(collider);
+        internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
+        {
+            var created = _inner.CreateCollider(collider);
+            return Kind == PhysicsServer.Backend.CPU ? new WrappedCollider(collider, Space, created) : created;
+        }
         internal override PhysicsJointImplementation CreateJoint() => _inner.CreateJoint();
         internal override void BeginStep(double delta) => _inner.BeginStep(delta);
         internal override void PrepareWorld(double delta) => _inner.PrepareWorld(delta);

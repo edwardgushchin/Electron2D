@@ -16,15 +16,18 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
     internal B2JointId ID { get; private set; }
     internal override bool IsAttached => ID.index1 != 0;
 
-    internal static Transform SampleLocalFrame(PhysicsColliderBackend? body, Transform pose, Vector2 point, float angle)
+    internal static Transform SampleLocalFrame(B2BodyId body, Vector2 point, float angle)
     {
-        var attached = body?.Space is not null;
-        var local = attached ? b2Body_GetLocalPoint(body!.BodyID, PhysicsShapeBackend.ToBackend(point)) :
-            PhysicsShapeBackend.ToBackend(pose.AffineInverse() * point);
+        var local = b2Body_GetLocalPoint(body, PhysicsShapeBackend.ToBackend(point));
+        return LocalFrame(local, b2Body_GetRotation(body), angle);
+    }
+    internal static Transform SampleDetachedLocalFrame(Transform pose, Vector2 point, float angle) =>
+        LocalFrame(PhysicsShapeBackend.ToBackend(pose.AffineInverse() * point), b2MakeRot(pose.Rotation), angle);
+    private static Transform LocalFrame(B2Vec2 local, B2Rot rotation, float angle)
+    {
         if (!float.IsFinite(local.X) || !float.IsFinite(local.Y) ||
             Math.Sqrt((double)local.X * local.X + (double)local.Y * local.Y) > B2_HUGE)
-            throw new ArgumentOutOfRangeException(nameof(point), "The local joint anchor exceeds the backend extent.");
-        var rotation = attached ? b2Body_GetRotation(body!.BodyID) : b2MakeRot(pose.Rotation);
+            throw new ArgumentOutOfRangeException("point", "The local joint anchor exceeds the backend extent.");
         var relative = b2InvMulRot(rotation, b2MakeRot(angle));
         // Keep the sampled basis instead of decoding and rebuilding its angle on reattachment.
         return new(new(relative.c, relative.s), new(-relative.s, relative.c),
@@ -37,7 +40,7 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         var space = Space;
         var definition = b2DefaultJointDef();
         _localFrameA = ToBackend(settings.FrameA); _localFrameB = ToBackend(settings.FrameB);
-        BodyAID = first.BodyID; BodyBID = second?.BodyID ?? worldOwner.GetJointWorldBody();
+        BodyAID = worldOwner.NativeCollider(first).BodyID; BodyBID = second is null ? worldOwner.GetJointWorldBody() : worldOwner.NativeCollider(second).BodyID;
         definition.localFrameA = _localFrameA; definition.localFrameB = _localFrameB;
         definition.bodyIdA = BodyAID; definition.bodyIdB = BodyBID;
         definition.collideConnected = !settings.DisableCollision;

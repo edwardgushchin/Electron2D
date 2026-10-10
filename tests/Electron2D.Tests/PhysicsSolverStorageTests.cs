@@ -53,7 +53,7 @@ internal static class PhysicsSolverStorageTests
         root.AddChild(body);
         using var tree = new SceneTree(root);
         for (var i = 0; i < 8; i++) { body.Sleeping = true; PhysicsTick(tree); body.Sleeping = false; PhysicsTick(tree); }
-        var world = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(body.BackendID));
+        var world = Box2D.NET.B2Worlds.b2GetWorldFromId(Box2D.NET.B2Bodies.b2Body_GetWorld(((CPUPhysicsColliderImplementation)body.Backend.Implementation!).BodyID));
         var before = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 64; i++) { body.Sleeping = true; PhysicsTick(tree); body.Sleeping = false; PhysicsTick(tree); }
         Check(GC.GetAllocatedBytesForCurrentThread() == before, "Warmed sleep/wake fixed steps reuse sleeping-island buffers.");

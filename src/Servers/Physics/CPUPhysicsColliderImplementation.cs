@@ -54,7 +54,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
     internal override void Detach()
     {
         try { if (B2Worlds.b2Body_IsValid(BodyID) && !Space.HasBackendFailure) b2DestroyBody(BodyID); }
-        finally { _shapes.Clear(); _world = null; _body = null; _savedPose = default; BodyID = default; _contactReporting = false; }
+        finally { _shapes.Clear(); _world = null; _body = null; _savedPose = default; BodyID = default; _contactReporting = false; WorldOwner.RetireCollider(Owner, this); }
     }
 
     private bool _contactReporting;

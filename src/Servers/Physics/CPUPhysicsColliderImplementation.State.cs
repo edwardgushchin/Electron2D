@@ -26,7 +26,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
     }
 
     internal override Transform SampleJointLocalFrame(Vector2 point, float angle) =>
-        CPUPhysicsJointImplementation.SampleLocalFrame(Owner, default, point, angle);
+        CPUPhysicsJointImplementation.SampleLocalFrame(BodyID, point, angle);
 
     internal override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion()
     {

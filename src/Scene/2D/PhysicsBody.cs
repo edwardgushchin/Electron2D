@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 /// <summary>A spatial collision object that participates in a scene tree's physics world.</summary>
@@ -21,7 +19,6 @@ public abstract partial class PhysicsBody : CollisionObject
 
     private PhysicsBodyRuntime? _runtime;
     internal PhysicsBodyRuntime Runtime => _runtime ??= PhysicsServer.Service.BodyRuntime(PhysicsRID);
-    internal B2BodyId BackendID => Backend.BodyID;
     internal PhysicsSpace? Space => Backend.Space;
     internal bool HasBackend => Space is not null;
     internal virtual bool CollisionResponseEnabled => true;

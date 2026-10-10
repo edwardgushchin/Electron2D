@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 internal sealed class PhysicsServerShape(RID rid, Shape geometry, bool ownsGeometry = true)
@@ -32,13 +30,11 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 
     internal RID RID { get; } = rid;
     internal PhysicsColliderBackend Backend => _backend;
-    internal B2BodyId BackendID => _backend.BodyID;
     internal bool IsArea { get; } = isArea;
     internal PhysicsAreaFields? AreaFields { get; } = isArea ? new(9.80665f, new(0, -1)) : null;
     internal bool Monitorable { get; set; }
     internal RID SpaceRID { get; private set; }
     internal PhysicsSpace? Space => _backend.Space;
-    internal IReadOnlyList<B2ShapeId> BackendShapes => _backend.Shapes;
     internal PhysicsServer.BodyMode Mode => _mode;
     internal int ShapeCount => _slots.Count;
     private volatile bool _shapesDirty;

@@ -22,14 +22,14 @@ internal sealed partial class CPUPhysicsWorldBackend
         void Capture(PhysicsColliderBackend backend, int limit)
         {
             if (limit == 0 || backend.IsDynamic) return;
-            if (backend.HasMotionMode(PhysicsServer.BodyMode.Kinematic) && !b2Body_IsAwake(backend.BodyID)) _reportOnlyActive++;
+            if (backend.HasMotionMode(PhysicsServer.BodyMode.Kinematic) && !b2Body_IsAwake(NativeCollider(backend).BodyID)) _reportOnlyActive++;
             if (!_aggregateContactImpulses) { BeginFrameContacts(); CaptureIntervalImpulses(); }
             var world = b2GetWorldFromId(WorldID);
-            var shapes = backend.Shapes;
+            var shapes = NativeCollider(backend).Shapes;
             for (var i = 0; i < shapes.Count; i++)
             {
                 var id = shapes[i];
-                var shape = b2GetShape(world, id); var context = new ReportOnlyQuery { Space = this, Receiver = backend.BodyID, Shape = shape };
+                var shape = b2GetShape(world, id); var context = new ReportOnlyQuery { Space = this, Receiver = NativeCollider(backend).BodyID, Shape = shape };
                 for (var type = 0; type < 2; type++)
                 {
                     var tree = world.broadPhase.trees[type];

@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 /// <summary>A spatial scene object that owns collision filtering and motion-recovery priority for physics shapes.</summary>
@@ -144,7 +142,6 @@ public abstract partial class CollisionObject : Entity
 
     internal virtual void OnCollisionFilterChanged() { }
 
-    internal IReadOnlyList<B2ShapeId> BackendShapes => Backend.Shapes;
     internal abstract void MarkShapesDirty();
 
     /// <inheritdoc />

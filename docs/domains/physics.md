@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-11
 
+[CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)
+now confines native body/shape IDs to the CPU owner and its attachments. Common
+scene/server/facade types have no CPU aliases; fields, queries, Areas, CCD, contacts,
+joints and portable state resolve actual owned data. Wrapped selected collider
+operations execute through the same identity/lifetime path; complete public
+registration and external operation families remain open.
+
 [Selected direct-state construction](../components/physics-backends.md#selected-direct-state-construction)
 now routes cached World/body views and real scene/raw callbacks through the chosen
 internal owner. Factories run before solver/worker borrowing, validate immutable

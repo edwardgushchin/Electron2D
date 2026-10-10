@@ -6,6 +6,10 @@ Last updated: 2026-10-11
 
 ## Description and internal flow
 
+ReadPortableSleepTime and ApplyPortableSleep dispatch native/resident sleep handling
+through the selected owner. CPU resolves its private collider table; GPU keeps its
+existing motion-restore sleep write. Common collider metadata retains no CPU handles.
+
 Owns selection metadata and full interval dispatch for one internal implementation. Space RID registration and sampled-setting validation precede selected creation/initialization. Create makes a fresh CPUPhysicsWorldBackend or GPUPhysicsWorldBackend; optional startup fallback constructs an actual CPU implementation and retains the GPU request and failure message. It never changes a running implementation.
 
 CreateDirectSpaceState and CreateDirectBodyState supply the actual cached views to common World/server queries and scene/raw callbacks. Creation executes outside solver/worker borrowing and the service registry lock; library context/generation validation precedes cache publication. Built-in owners return ordinary views. The internal selected-owner fixture returns real executing extensions. Public registered factories and complete server operation dispatch remain open; see [the ownership route](../components/physics-backends.md#selected-direct-state-construction).

@@ -3,7 +3,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-/// <summary>Owns the CPU world, policies, field/Area geometry, capacity, statistics, workers and optional diagnostic GPU stages.</summary>
+/// <summary>Owns the CPU world, retained native collider attachments, policies, field/Area geometry, capacity, statistics, workers and optional diagnostic GPU stages.</summary>
 internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
@@ -53,7 +53,23 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
-    internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space, this); }
+    private readonly Dictionary<PhysicsColliderBackend, CPUPhysicsColliderImplementation> _colliders = [];
+    internal CPUPhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider) =>
+        _colliders.TryGetValue(collider, out var value) ? value : throw new InvalidOperationException("The collider has no attachment owned by this CPU world.");
+    internal void RetireCollider(PhysicsColliderBackend collider, CPUPhysicsColliderImplementation implementation)
+    {
+        if (_colliders.TryGetValue(collider, out var current) && ReferenceEquals(current, implementation)) _colliders.Remove(collider);
+    }
+    internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
+    {
+        EnsureAccess();
+        var implementation = new CPUPhysicsColliderImplementation(collider, Space, this);
+        _colliders.Add(collider, implementation);
+        return implementation;
+    }
+    internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) => NativeCollider(collider).PortableSleepTime;
+    internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) =>
+        NativeCollider(collider).ApplyPortableSleep(time, canSleep, sleeping);
     internal B2BodyId GetJointWorldBody()
     {
         EnsureAccess();

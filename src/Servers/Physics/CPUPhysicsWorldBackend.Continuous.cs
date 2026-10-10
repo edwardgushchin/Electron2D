@@ -38,8 +38,8 @@ internal sealed partial class CPUPhysicsWorldBackend
 
     private void AddContinuousBody(PhysicsColliderBackend backend, CCDMode mode, B2StepContext context)
     {
-        var world = context.world; var sim = CPUPhysicsColliderImplementation.Simulation(backend.BodyID);
-        var body = b2GetBodyFullId(world, backend.BodyID);
+        var world = context.world; var sim = CPUPhysicsColliderImplementation.Simulation(NativeCollider(backend).BodyID);
+        var body = b2GetBodyFullId(world, NativeCollider(backend).BodyID);
         var state = body.setIndex == (int)B2SolverSetType.b2_awakeSet ? context.states[body.localIndex] : null;
         // Restitution runs after position integration. A separating correction cannot
         // consume the entire interval while the new bounce velocity waits for the next one.
@@ -86,7 +86,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);
         for (var index = 0; index < bodies.Length; index++)
         {
-            ref var body = ref bodies[index]; var shapes = body.Backend.Shapes;
+            ref var body = ref bodies[index]; var shapes = NativeCollider(body.Backend).Shapes;
             for (var shapeIndex = 0; shapeIndex < shapes.Count; shapeIndex++)
             {
                 var id = shapes[shapeIndex]; var shape = b2GetShape(world, id); if (shape.sensorIndex != B2Constants.B2_NULL_INDEX) continue;
@@ -209,8 +209,8 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (input.proxyA.isBoundary || input.proxyB.isBoundary) rate = MathF.Max(rate, B2Boundaries.SweepRate(input) / _continuousDuration);
             if (rate > 0)
             {
-                var extent = MathF.Min(CPUPhysicsColliderImplementation.Simulation(bodies[a.Body].Backend.BodyID).minExtent,
-                    CPUPhysicsColliderImplementation.Simulation(bodies[b.Body].Backend.BodyID).minExtent);
+                var extent = MathF.Min(CPUPhysicsColliderImplementation.Simulation(NativeCollider(bodies[a.Body].Backend).BodyID).minExtent,
+                    CPUPhysicsColliderImplementation.Simulation(NativeCollider(bodies[b.Body].Backend).BodyID).minExtent);
                 _continuousNearStep = MathF.Min(_continuousNearStep, .25f * MathF.Max(extent, B2Constants.B2_LINEAR_SLOP) / rate);
             }
             return;

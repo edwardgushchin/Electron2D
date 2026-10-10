@@ -110,8 +110,8 @@ internal sealed partial class CPUPhysicsWorldBackend
     private void SaveContinuousForce(PhysicsColliderBackend backend)
     {
         if (!backend.IsDynamic) return;
-        var sim = CPUPhysicsColliderImplementation.Simulation(backend.BodyID);
-        _continuousForces.Add(new() { ID = backend.BodyID, Force = sim.force, Torque = sim.torque, Gravity = sim.gravityScale });
+        var sim = CPUPhysicsColliderImplementation.Simulation(NativeCollider(backend).BodyID);
+        _continuousForces.Add(new() { ID = NativeCollider(backend).BodyID, Force = sim.force, Torque = sim.torque, Gravity = sim.gravityScale });
     }
 
     private void CaptureContinuousJointBudgets(B2World world, float nominal)

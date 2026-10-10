@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)
+now separates native handles from common scene/server identities and supports
+real wrapped collider dispatch. Native retirement, query/contact/Area/CCD and
+portable checks retain their scope. No public declaration or registration status
+is added by this internal change.
+
 [Selected direct-state construction](../components/physics-backends.md#selected-direct-state-construction)
 now supplies validated internal owner views to World/server queries and actual
 scene/raw callbacks, with CPU/GPU/no-device lifecycle/failure/contact/allocation

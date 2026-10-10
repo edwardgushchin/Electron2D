@@ -14,7 +14,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     internal override bool AreaContainsPoint(Area area, Vector2 position, uint mask)
     {
         var point = PhysicsShapeBackend.ToBackend(position);
-        var shapes = area.BackendShapes;
+        var shapes = NativeCollider(area.Backend).Shapes;
         for (var index = 0; index < shapes.Count; index++)
             if (b2Shape_TestPoint(shapes[index], point)) return true;
         return false;
@@ -32,14 +32,14 @@ internal sealed partial class CPUPhysicsWorldBackend
             {
                 foreach (var body in Space.Bodies)
                     if ((area.CollisionMask & body.CollisionLayer) != 0)
-                        ScanOverlapPairs(area, body.GetRID(), body, false, body.BackendShapes);
+                        ScanOverlapPairs(area, body.GetRID(), body, false, NativeCollider(body.Backend).Shapes);
                 foreach (var other in Space.Areas)
                     if (!ReferenceEquals(area, other) && other.Monitorable &&
                         (area.CollisionMask & other.CollisionLayer) != 0)
-                        ScanOverlapPairs(area, other.GetRID(), other, true, other.BackendShapes);
+                        ScanOverlapPairs(area, other.GetRID(), other, true, NativeCollider(other.Backend).Shapes);
                 foreach (var other in Space.ServerColliders)
                     if ((!other.IsArea || other.Monitorable) && (area.CollisionMask & other.CollisionLayer) != 0)
-                        ScanOverlapPairs(area, other.RID, null, other.IsArea, other.BackendShapes);
+                        ScanOverlapPairs(area, other.RID, null, other.IsArea, NativeCollider(other.Backend).Shapes);
             }
             Space.CommitAreaScan(area);
         }
@@ -47,9 +47,9 @@ internal sealed partial class CPUPhysicsWorldBackend
 
     private void ScanOverlapPairs(Area area, RID rid, CollisionObject? other, bool isArea, IReadOnlyList<B2ShapeId> otherShapes)
     {
-        for (var localIndex = 0; localIndex < area.BackendShapes.Count; localIndex++)
+        for (var localIndex = 0; localIndex < NativeCollider(area.Backend).Shapes.Count; localIndex++)
         {
-            var local = area.BackendShapes[localIndex];
+            var local = NativeCollider(area.Backend).Shapes[localIndex];
             var localTag = b2Shape_GetUserData(local).GetRef<PhysicsFixtureTag>();
             if (localTag is null) continue;
             for (var remoteIndex = 0; remoteIndex < otherShapes.Count; remoteIndex++)
@@ -74,10 +74,10 @@ internal sealed partial class CPUPhysicsWorldBackend
         // ponytail: Stable insertion order is quadratic in field areas; use indexed sorting if large-world profiling needs it.
         _fieldAreas.Clear();
         foreach (var area in Space.Areas)
-            AddFieldArea(area.Fields, area.CollisionMask, area.BackendShapes, area.GlobalTransform);
+            AddFieldArea(area.Fields, area.CollisionMask, NativeCollider(area.Backend).Shapes, area.GlobalTransform);
         foreach (var collider in Space.ServerColliders)
             if (collider.AreaFields is { } fields)
-                AddFieldArea(fields, collider.CollisionMask, collider.BackendShapes, collider.GetTransform());
+                AddFieldArea(fields, collider.CollisionMask, NativeCollider(collider.Backend).Shapes, collider.GetTransform());
 
     }
 
@@ -196,13 +196,13 @@ internal sealed partial class CPUPhysicsWorldBackend
         foreach (var area in Space.Areas)
         {
             var runtime = PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID);
-            if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, area.BackendShapes);
+            if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, NativeCollider(area.Backend).Shapes);
         }
         foreach (var area in Space.ServerColliders)
         {
             if (!area.IsArea) continue;
             var runtime = PhysicsServer.Service.FindAreaRuntime(area.RID);
-            if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, area.BackendShapes);
+            if (runtime is { Monitoring: true }) ScanAreaMonitor(runtime, NativeCollider(area.Backend).Shapes);
         }
     }
 
@@ -212,16 +212,16 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (receiver.BodyCallback is not null)
             foreach (var body in Space.Bodies)
                 if ((receiver.Mask & body.CollisionLayer) != 0)
-                    ScanMonitorPairs(receiver, localShapes, body.PhysicsRID, body, false, body.BackendShapes);
+                    ScanMonitorPairs(receiver, localShapes, body.PhysicsRID, body, false, NativeCollider(body.Backend).Shapes);
         if (receiver.AreaCallback is not null)
             foreach (var area in Space.Areas)
                 if (area.PhysicsRID != receiver.RID && area.Monitorable && (receiver.Mask & area.CollisionLayer) != 0)
-                    ScanMonitorPairs(receiver, localShapes, area.PhysicsRID, area, true, area.BackendShapes);
+                    ScanMonitorPairs(receiver, localShapes, area.PhysicsRID, area, true, NativeCollider(area.Backend).Shapes);
         foreach (var collider in Space.ServerColliders)
         {
             if (collider.RID == receiver.RID || (receiver.Mask & collider.CollisionLayer) == 0) continue;
             if (collider.IsArea ? receiver.AreaCallback is null || !collider.Monitorable : receiver.BodyCallback is null) continue;
-            ScanMonitorPairs(receiver, localShapes, collider.RID, null, collider.IsArea, collider.BackendShapes);
+            ScanMonitorPairs(receiver, localShapes, collider.RID, null, collider.IsArea, NativeCollider(collider.Backend).Shapes);
         }
         receiver.Changes.Clear(); receiver.Pairs.Commit(receiver.Changes); Space.QueueMonitorChanges(receiver);
     }

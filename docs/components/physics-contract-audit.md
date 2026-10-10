@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[CPU collider ownership](physics-backends.md#cpu-collider-ownership) removes native
+body/shape aliases and CPU implementation casts from shared scene/server/collider
+types. Actual native storage belongs to the CPU world; wrapped collider operations
+retain real contacts, Area/CCD/query behavior, retirement and portable state. This
+closes an internal ownership bypass, not the public registered operation family.
+
 [Selected direct-state construction](physics-backends.md#selected-direct-state-construction)
 now executes internal owner-created query/state extensions through World/server
 access and real scene/raw callbacks. Binding, cache identity, contact snapshots,
