@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>Owns planar navigation maps, region/link/agent identities and committed authored-polygon pathfinding.</summary>
 /// <remarks>Static operations use one retained service. Geometry/configuration edits stage under a service gate;
-/// Synchronize and the physics lane publish immutable iterations before MapChanged. Returned paths and RID arrays are copied.</remarks>
+/// Synchronize and the physics lane publish immutable raster topology, region versions, margin pathways and counters
+/// before MapChanged. Surface sampling reuses committed geometry; returned paths and RID arrays are copied.</remarks>
 public sealed partial class NavigationServer : ElectronObject
 {
     private static readonly NavigationServer Shared = new();
@@ -63,13 +64,16 @@ public sealed partial class NavigationServer : ElectronObject
                 var dirty = false;
                 foreach (var region in _regions.Values) if (region.Dirty) { dirty = true; break; }
                 if (!dirty) foreach (var map in _maps.Values) if (map.Dirty) { dirty = true; break; }
-                if (!dirty) { _synchronizing = false; return; }
+                if (!dirty) { Span<int> counts = stackalloc int[10]; ReadProcessInfo(counts, null); counts.CopyTo(_processInfo); _synchronizing = false; return; }
                 var regionIterations = new Dictionary<RID, NavigationMapIteration>();
                 foreach (var region in _regions.Values) if (region.Dirty) regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region));
                 List<(NavigationMapState Map, NavigationMapIteration Iteration)>? pending = null;
                 foreach (var map in _maps.Values)
                     if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations, _links.Values)));
-                foreach (var (rid, iteration) in regionIterations) { var region = _regions[rid]; region.Iteration = iteration; region.Dirty = false; }
+                Span<int> counters = stackalloc int[10]; ReadProcessInfo(counters, pending);
+                foreach (var (rid, iteration) in regionIterations) { var region = _regions[rid]; region.Iteration = iteration; region.IterationID = region.IterationID == uint.MaxValue ? 1 : region.IterationID + 1; region.Dirty = false; }
+                foreach (var region in _regions.Values) region.PublishedMap = region.Map;
+                counters.CopyTo(_processInfo);
                 // Build every dirty map before publishing any: failed geometry leaves the previous iterations intact.
                 if (pending is not null) foreach (var (map, snapshot) in pending)
                     {
@@ -99,7 +103,7 @@ internal sealed class NavigationMapState(RID rid, WorldRuntime? owner)
     internal readonly RID RID = rid;
     internal readonly WorldRuntime? Owner = owner;
     internal bool Active, UseEdgeConnections = true, Dirty = true;
-    internal float EdgeMargin = 1, LinkRadius = 4;
+    internal float EdgeMargin = 1, LinkRadius = 4, CellSize = 1, RasterScale = .1f;
     internal ulong IterationID;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
 }
@@ -107,7 +111,8 @@ internal sealed class NavigationRegionState(RID rid, NavigationRegion? scene)
 {
     internal readonly RID RID = rid;
     internal readonly WeakReference<NavigationRegion>? Scene = scene is null ? null : new(scene);
-    internal RID Map;
+    internal RID Map, PublishedMap;
+    internal uint IterationID;
     internal bool Enabled = true, UseEdgeConnections = true, Dirty = true;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
     internal uint Layers = 1;

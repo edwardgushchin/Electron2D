@@ -6355,6 +6355,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NavigationServer.ProcessInfo",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "ProcessInfo",
+    "signature": "public enum Electron2D.NavigationServer.ProcessInfo",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NavigationWaypoint",
     "kind": "type",
     "declaringType": "Electron2D.NavigationWaypoint",
@@ -32289,6 +32307,136 @@
     "parameters": [],
     "returnType": "Electron2D.NavigationPathQueryResult.PathSegmentType",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.ActiveMaps()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "ActiveMaps",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo ActiveMaps = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.AgentCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "AgentCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo AgentCount = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.EdgeConnectionCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "EdgeConnectionCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo EdgeConnectionCount = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.EdgeCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "EdgeCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo EdgeCount = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.EdgeFreeCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "EdgeFreeCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo EdgeFreeCount = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.EdgeMergeCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "EdgeMergeCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo EdgeMergeCount = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.LinkCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "LinkCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo LinkCount = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.ObstacleCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "ObstacleCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo ObstacleCount = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.PolygonCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "PolygonCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo PolygonCount = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.RegionCount()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationServer.ProcessInfo",
+    "name": "RegionCount",
+    "signature": "public const Electron2D.NavigationServer.ProcessInfo RegionCount = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationServer.ProcessInfo",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.Node.InternalMode.Back()",
@@ -103575,6 +103723,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.GetProcessInfo(Electron2D.NavigationServer.ProcessInfo)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "GetProcessInfo",
+    "signature": "public static System.Int32 GetProcessInfo(Electron2D.NavigationServer.ProcessInfo processInfo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "processInfo",
+        "type": "Electron2D.NavigationServer.ProcessInfo",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.LinkCreate()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104026,6 +104193,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.MapGetCellSize(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetCellSize",
+    "signature": "public static System.Single MapGetCellSize(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.MapGetClosestPoint(Electron2D.RID,Electron2D.Vector2)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104150,6 +104336,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.MapGetMergeRasterizerCellScale(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetMergeRasterizerCellScale",
+    "signature": "public static System.Single MapGetMergeRasterizerCellScale(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.MapGetPath(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2,System.Boolean,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104186,6 +104391,35 @@
       }
     ],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapGetRandomPoint(Electron2D.RID,System.UInt32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetRandomPoint",
+    "signature": "public static Electron2D.Vector2 MapGetRandomPoint(Electron2D.RID map, System.UInt32 navigationLayers, System.Boolean uniformly)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "navigationLayers",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "uniformly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {
@@ -104270,6 +104504,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.MapSetCellSize(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapSetCellSize",
+    "signature": "public static System.Void MapSetCellSize(Electron2D.RID map, System.Single cellSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "cellSize",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.MapSetEdgeConnectionMargin(Electron2D.RID,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104310,6 +104568,30 @@
       },
       {
         "name": "radius",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapSetMergeRasterizerCellScale(Electron2D.RID,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapSetMergeRasterizerCellScale",
+    "signature": "public static System.Void MapSetMergeRasterizerCellScale(Electron2D.RID map, System.Single scale)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "scale",
         "type": "System.Single",
         "default": null
       }
@@ -104784,6 +105066,73 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.RegionGetConnectionPathwayEnd(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetConnectionPathwayEnd",
+    "signature": "public static Electron2D.Vector2 RegionGetConnectionPathwayEnd(Electron2D.RID region, System.Int32 connection)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "connection",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.RegionGetConnectionPathwayStart(Electron2D.RID,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetConnectionPathwayStart",
+    "signature": "public static Electron2D.Vector2 RegionGetConnectionPathwayStart(Electron2D.RID region, System.Int32 connection)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "connection",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.RegionGetConnectionsCount(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetConnectionsCount",
+    "signature": "public static System.Int32 RegionGetConnectionsCount(Electron2D.RID region)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.RegionGetEnabled(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104819,6 +105168,25 @@
       }
     ],
     "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.RegionGetIterationID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetIterationID",
+    "signature": "public static System.UInt64 RegionGetIterationID(Electron2D.RID region)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -104876,6 +105244,35 @@
       }
     ],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.RegionGetRandomPoint(Electron2D.RID,System.UInt32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetRandomPoint",
+    "signature": "public static Electron2D.Vector2 RegionGetRandomPoint(Electron2D.RID region, System.UInt32 navigationLayers, System.Boolean uniformly)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "navigationLayers",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "uniformly",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

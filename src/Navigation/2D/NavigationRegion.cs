@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>Places authored navigation polygons in the same map used by its selected scene World.</summary>
 /// <remarks>Scene properties stage server edits; synchronization publishes query topology. Geometry is borrowed.
-/// Source parsing/baking, clearance and avoidance have separate prerequisites.</remarks>
+/// Source parsing/baking and clearance retain separate prerequisites.</remarks>
 public sealed class NavigationRegion : Entity
 {
     private readonly RID _rid;
@@ -47,8 +47,15 @@ public sealed class NavigationRegion : Entity
         set { EnsureMutable(); NavigationServer.RegionSetNavigationPolygon(_rid, value); _polygon = value; NavigationPolygonChanged?.Invoke(); }
     }
     /// <summary>Occurs after polygon replacement or an authored resource edit stages server geometry.</summary>
+    /// <remarks>Attached resource edits from another thread deliver this signal through the scene owner queue.</remarks>
     public event Action? NavigationPolygonChanged;
-    internal void NotifyPolygonChanged() => NavigationPolygonChanged?.Invoke();
+    internal void NotifyPolygonChanged()
+    {
+        if (IsDisposed) return;
+        if (Tree is { } tree && !tree.IsOwnerThread)
+        { if (!tree.IsClosing) tree.Defer(() => { if (!IsDisposed && Tree == tree) NavigationPolygonChanged?.Invoke(); }); }
+        else NavigationPolygonChanged?.Invoke();
+    }
     /// <summary>Returns the explicit map override or the selected World's map while attached.</summary>
     /// <returns>Returns the explicit map override or the selected World's map while attached.</returns>
     /// <exception cref="ObjectDisposedException">This instance is disposed.</exception>

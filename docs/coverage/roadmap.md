@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1410 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1404 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 1354 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -46,7 +46,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [CanvasItem](classes/CanvasItem.md) | 0 | 26 |
 | [ItemList](classes/ItemList.md) | 0 | 19 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
-| [NavigationServer2D](classes/NavigationServer2D.md) | 0 | 12 |
 | [NoiseTexture2D](classes/NoiseTexture2D.md) | 0 | 12 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
 | [Translation](classes/Translation.md) | 0 | 9 |
@@ -56,6 +55,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
+| [NavigationServer2D](classes/NavigationServer2D.md) | 0 | 6 |
 | [RegExMatch](classes/RegExMatch.md) | 0 | 6 |
 | [Shader](classes/Shader.md) | 0 | 6 |
 | [ImageTexture](classes/ImageTexture.md) | 0 | 5 |

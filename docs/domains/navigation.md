@@ -1,6 +1,6 @@
 # Navigation domain
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 ## Responsibility
 
@@ -54,3 +54,5 @@ NavigationLink and owned server links now provide directed/bidirectional off-sur
 [NavigationAgent](../classes/NavigationAgent.md) now supplies getter-driven Entity-parent movement targets, typed waypoint/link events, target completion, real server agent map membership and fresh-process source settings. [Its contract](../components/navigation-maps.md#agent-path-following) separates managed checks and actual GPU/compatibility rendered consumers from pending debug prerequisites.
 
 [Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Bake exclusion/carving and complete profiling/debug producers retain operation-specific dependencies.
+
+Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback, baking, async and debug/global activation remain separate obligations.

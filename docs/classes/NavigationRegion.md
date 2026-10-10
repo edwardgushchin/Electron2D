@@ -1,6 +1,6 @@
 # NavigationRegion
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Source: [NavigationRegion.cs](../../src/Navigation/2D/NavigationRegion.cs)
 - Inherits: [Entity](Entity.md)
@@ -218,4 +218,6 @@ The node caches source properties; direct server edits do not mutate those prope
 
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster, baking, async, link, query and avoidance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining baking/source parsing, async, debug/global activation and comprehensive weighted query acceptance prerequisites.
+
+Worker edits of the borrowed polygon stage server geometry immediately, while NavigationPolygonChanged delivery for an attached node returns to the scene owner queue. Queued delivery skips disposed or reparented-to-another-tree nodes.

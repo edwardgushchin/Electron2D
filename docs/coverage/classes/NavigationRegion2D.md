@@ -1,6 +1,6 @@
 # NavigationRegion2D API coverage
 
-Last updated: 2026-09-23
+Last updated: 2026-10-10
 
 Godot source: [doc/classes/NavigationRegion2D.xml](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) at `4.7.2-stable` (`ed1daf0bf001b61586d9930840f2f1394092c079`).
 
@@ -10,7 +10,7 @@ Inherited declarations are recorded on their declaring base-class pages; the bas
 
 | Godot API | Electron2D API | State | Reason / implementation trigger |
 | --- | --- | --- | --- |
-| [`class NavigationRegion2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) | [`public sealed class Electron2D.NavigationRegion`](../../classes/NavigationRegion.md) | Partial | ADR 0097 authored regions/maps/links, typed query controls, direct-parent agents and shared managed ORCA agent/obstacle avoidance execute. Remaining raster/nonmanifold/search equivalence, source parsing/baking, async work, random-area sampling and full committed profiling retain exact operation-specific producer dependencies. |
+| [`class NavigationRegion2D`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) | [`public sealed class Electron2D.NavigationRegion`](../../classes/NavigationRegion.md) | Partial | ADR 0097 authored regions/maps/links, typed query controls, direct-parent agents and shared managed ORCA agent/obstacle avoidance execute. Remaining exact weighted search/tie/fallback equivalence, source parsing/baking, async work, debug drawing and global activation retain exact operation-specific producer dependencies. |
 | [`method bake_navigation_polygon(bool on_thread = true) -> void`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) | — | Blocked | ADR 0097 trigger: scene source-geometry collection and real navigation polygon baking, lifecycle and completion notification. Authored map/region storage is already executable; compilation alone does not satisfy this operation. |
 | [`method get_bounds() -> Rect2`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) | [`public Electron2D.Rect2 GetBounds()`](../../classes/NavigationRegion.md) | Implemented | Authored polygon/resource versions, staged map/region settings and copied identities execute through one retained kernel; NavigationTests verifies defaults, invalid/stale/borrowed RID guards, deferred publication, failed-build rollback, resource edits, World replacement and fresh PackedScene loading (ADRs 0052/0095/0097). |
 | [`method get_navigation_layer_value(int layer_number) -> bool`](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/NavigationRegion2D.xml) | [`public System.Boolean GetNavigationLayerValue(System.Int32 layerNumber)`](../../classes/NavigationRegion.md) | Implemented | Authored polygon/resource versions, staged map/region settings and copied identities execute through one retained kernel; NavigationTests verifies defaults, invalid/stale/borrowed RID guards, deferred publication, failed-build rollback, resource edits, World replacement and fresh PackedScene loading (ADRs 0052/0095/0097). |

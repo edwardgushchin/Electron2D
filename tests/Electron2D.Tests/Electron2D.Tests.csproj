@@ -35,6 +35,7 @@
     <EmbeddedResource Include="Fixtures/Audio/Compressor/reference.json" LogicalName="TestAudio.CompressorReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/PitchShift/reference.json" LogicalName="TestAudio.PitchShiftReference.json" />
     <EmbeddedResource Include="Fixtures/Audio/Phaser/reference.json" LogicalName="TestAudio.PhaserReference.json" />
+    <EmbeddedResource Include="Fixtures/Navigation/*.json" LogicalName="TestNavigation.%(Filename)%(Extension)" />
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf;Fixtures/Fonts/*.ttc" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />

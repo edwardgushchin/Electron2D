@@ -6,7 +6,7 @@ internal sealed partial class NavigationMapIteration
     internal NavigationPathQueryData Query(NavigationPathQuerySettings settings)
     {
         var usable = new bool[Cells.Length];
-        for (var i = 0; i < Cells.Length; i++) { var cell = Cells[i]; usable[i] = (cell.Layers & settings.NavigationLayers) != 0 && (cell.IsLink ? Allowed(cell.LinkStartRegion) && Allowed(cell.LinkEndRegion) : Allowed(cell.Region)); }
+        for (var i = 0; i < Cells.Length; i++) { var cell = Cells[i]; usable[i] = cell.Enabled && (cell.Layers & settings.NavigationLayers) != 0 && (cell.IsLink ? Allowed(cell.LinkStartRegion) && Allowed(cell.LinkEndRegion) : Allowed(cell.Region)); }
         var start = Project(settings.StartPosition, out var from); var finish = Project(settings.TargetPosition, out var to);
         if (start < 0 || finish < 0) return NavigationPathQueryData.Empty;
         var points = new List<(Vector2 Point, int Cell)>();
@@ -41,7 +41,7 @@ internal sealed partial class NavigationMapIteration
         }
         corridor.Reverse();
         if (settings.PostProcessing == NavigationPathQueryParameters.PathPostProcessing.CorridorFunnel) points = FunnelWithProvenance(from, to, start, best, corridor);
-        else { Add(points, from, start); foreach (var portal in corridor) Add(points, settings.PostProcessing == NavigationPathQueryParameters.PathPostProcessing.EdgeCentered ? portal.Left * .5f + portal.Right * .5f : entry[portal.Cell], portal.Cell); Add(points, to, best); }
+        else { Add(points, from, start); foreach (var portal in corridor) Add(points, settings.PostProcessing == NavigationPathQueryParameters.PathPostProcessing.EdgeCentered ? previous[portal.Cell].Centered ?? portal.Left * .5f + portal.Right * .5f : entry[portal.Cell], portal.Cell); Add(points, to, best); }
         return Complete(points);
         bool Allowed(RID region) => !settings.ExcludedRegions.AsSpan().Contains(region) && (settings.IncludedRegions.Length == 0 || settings.IncludedRegions.AsSpan().Contains(region));
         int Project(Vector2 point, out Vector2 projected)

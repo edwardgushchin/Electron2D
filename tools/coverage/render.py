@@ -677,6 +677,8 @@ def render():
             updated = "2026-10-08"
         if name in {"PhysicsDirectSpaceState2D", "PhysicsBody2D", "PhysicsServer2D", "CharacterBody2D", "PhysicsTestMotionParameters2D", "RigidBody2D"}:
             updated = "2026-10-09"
+        if name in {"NavigationServer2D", "NavigationRegion2D"}:
+            updated = "2026-10-10"
         if name == "MenuBar":
             updated = "2026-10-10"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]

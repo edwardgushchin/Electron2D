@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+[Quantized navigation topology](../components/navigation-maps.md#geometry-and-routes) now executes cell/raster controls, two-owner grouping, directed margin pathways, per-region versions, all process counters and filtered area/nonuniform sampling. Twenty-two formerly Blocked rows and six topology-control Partial rows are Implemented. Twelve independent pinned-runtime fixtures and actual GPU/compatibility route-driven pixels verify the slice; comprehensive weighted search/tie/budget/fallback and baking/async/debug/global activation remain precise dependencies.
+
 [MenuBar](../classes/MenuBar.md) now executes a complete embedded menu strip with direct popup identity, shaped themed RTL headers, keyboard/pointer/hover switching, shortcut gates and child-bound fresh scene/file storage. Its 38 own/inherited-default/theme rows are Implemented; system-global-menu preference/insertion remain precisely Blocked under ADR 0041 and class correspondence retains inherited semantic/editor/native-window services. Linux Wayland GPU and compatibility pass native SDL/pixel checks and 64 warmed title/focus/render frames with zero managed allocation.
 
 [Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs

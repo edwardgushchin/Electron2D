@@ -1,6 +1,6 @@
 # NavigationServer
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs), [NavigationServer.API.cs](../../src/Servers/Navigation/NavigationServer.API.cs), [NavigationServer.Links.cs](../../src/Servers/Navigation/NavigationServer.Links.cs), [NavigationServer.Query.cs](../../src/Servers/Navigation/NavigationServer.Query.cs), [NavigationServer.Agents.cs](../../src/Servers/Navigation/NavigationServer.Agents.cs)
 - Inherits: [ElectronObject](ElectronObject.md)
@@ -1362,3 +1362,284 @@ Synchronizes topology and advances avoidance on caller maps unbound to a SceneTr
 `InvalidOperationException`: Stepping or synchronization is reentered.
 
 `AggregateException`: Observers fail after completed publication.
+
+## Raster topology, profiling and surface sampling
+
+The [committed topology contract](../components/navigation-maps.md#geometry-and-routes) owns these operations and [ProcessInfo](NavigationServer.ProcessInfo.md). Raster getters report staged settings; counters/pathways/region versions/samples read complete published snapshots.
+
+| Complete declaration | Contract |
+| --- | --- |
+| `public static System.Int32 GetProcessInfo(Electron2D.NavigationServer.ProcessInfo processInfo)` | Returns a counter from the last complete synchronization; staged changes do not affect this snapshot. |
+| `public static System.Single MapGetCellSize(Electron2D.RID map)` | Returns the staged raster cell size. |
+| `public static System.Single MapGetMergeRasterizerCellScale(Electron2D.RID map)` | Returns the staged raster scale. |
+| `public static Electron2D.Vector2 MapGetRandomPoint(Electron2D.RID map, System.UInt32 navigationLayers, System.Boolean uniformly)` | Samples an enabled nonempty committed map surface matching the supplied navigation layers. |
+| `public static System.Void MapSetCellSize(Electron2D.RID map, System.Single cellSize)` | Stages the raster cell size, clamping finite values to at least 0.0001 world units. |
+| `public static System.Void MapSetMergeRasterizerCellScale(Electron2D.RID map, System.Single scale)` | Stages the raster scale, clamping finite values to 0.0001 through 0.1. |
+| `public static Electron2D.Vector2 RegionGetConnectionPathwayEnd(Electron2D.RID region, System.Int32 connection)` | Returns the second endpoint of one published margin pathway. |
+| `public static Electron2D.Vector2 RegionGetConnectionPathwayStart(Electron2D.RID region, System.Int32 connection)` | Returns the first endpoint of one published margin pathway. |
+| `public static System.Int32 RegionGetConnectionsCount(Electron2D.RID region)` | Returns the region's committed directed free-edge margin pathway count. |
+| `public static System.UInt64 RegionGetIterationID(Electron2D.RID region)` | Returns the region's last published nonzero iteration identity, or zero before its first publication. |
+| `public static Electron2D.Vector2 RegionGetRandomPoint(Electron2D.RID region, System.UInt32 navigationLayers, System.Boolean uniformly)` | Samples an enabled committed region surface matching the supplied navigation layers. |
+
+<a id="member-37e2932cdebf"></a>
+### `GetProcessInfo(Electron2D.NavigationServer.ProcessInfo)`
+
+Kind: `method`
+
+```csharp
+public static System.Int32 GetProcessInfo(Electron2D.NavigationServer.ProcessInfo processInfo)
+```
+
+#### Summary
+
+Returns a counter from the last complete synchronization; staged changes do not affect this snapshot.
+
+#### Returns
+
+The committed count, initially zero.
+
+#### Parameters
+
+- `processInfo`: A defined counter identity.
+
+#### Exceptions
+
+- `T:System.ArgumentOutOfRangeException`: The counter identity is unknown.
+
+<a id="member-d0306740ffd2"></a>
+### `MapGetCellSize(Electron2D.RID)`
+
+Kind: `method`
+
+```csharp
+public static System.Single MapGetCellSize(Electron2D.RID map)
+```
+
+#### Summary
+
+Returns the staged raster cell size.
+
+#### Returns
+
+One initially.
+
+#### Parameters
+
+- `map`: A live map RID.
+
+<a id="member-3dbdf32e95a7"></a>
+### `MapGetMergeRasterizerCellScale(Electron2D.RID)`
+
+Kind: `method`
+
+```csharp
+public static System.Single MapGetMergeRasterizerCellScale(Electron2D.RID map)
+```
+
+#### Summary
+
+Returns the staged raster scale.
+
+#### Returns
+
+0.1 initially.
+
+#### Parameters
+
+- `map`: A live map RID.
+
+<a id="member-f13614a2ec03"></a>
+### `MapGetRandomPoint(Electron2D.RID, System.UInt32, System.Boolean)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.Vector2 MapGetRandomPoint(Electron2D.RID map, System.UInt32 navigationLayers, System.Boolean uniformly)
+```
+
+#### Summary
+
+Samples an enabled nonempty committed map surface matching the supplied navigation layers.
+
+#### Remarks
+
+Prepared surface groups are reused. Random sequences are not guaranteed across runtime versions.
+
+#### Returns
+
+A world point inside a surface, or zero when no eligible surface exists.
+
+#### Parameters
+
+- `map`: A live map RID.
+- `navigationLayers`: Eligible layer mask.
+- `uniformly`: True weights every surface level by area; false chooses regions, polygons and triangles uniformly.
+
+<a id="member-597b3e23eca7"></a>
+### `MapSetCellSize(Electron2D.RID, System.Single)`
+
+Kind: `method`
+
+```csharp
+public static System.Void MapSetCellSize(Electron2D.RID map, System.Single cellSize)
+```
+
+#### Summary
+
+Stages the raster cell size, clamping finite values to at least 0.0001 world units.
+
+#### Parameters
+
+- `map`: A live map RID.
+- `cellSize`: Finite cell size; one initially.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The RID is invalid or the value is nonfinite.
+
+<a id="member-8c3d8413f862"></a>
+### `MapSetMergeRasterizerCellScale(Electron2D.RID, System.Single)`
+
+Kind: `method`
+
+```csharp
+public static System.Void MapSetMergeRasterizerCellScale(Electron2D.RID map, System.Single scale)
+```
+
+#### Summary
+
+Stages the raster scale, clamping finite values to 0.0001 through 0.1.
+
+#### Remarks
+
+The effective square cell dimension is CellSize multiplied by this scale.
+
+#### Parameters
+
+- `map`: A live map RID.
+- `scale`: Finite raster scale; 0.1 initially.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The RID is invalid or the value is nonfinite.
+
+<a id="member-10bf2b2a706a"></a>
+### `RegionGetConnectionPathwayEnd(Electron2D.RID, System.Int32)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.Vector2 RegionGetConnectionPathwayEnd(Electron2D.RID region, System.Int32 connection)
+```
+
+#### Summary
+
+Returns the second endpoint of one published margin pathway.
+
+#### Returns
+
+A world-space endpoint.
+
+#### Parameters
+
+- `region`: A live region RID.
+- `connection`: A valid zero-based pathway index.
+
+#### Exceptions
+
+- `T:System.ArgumentOutOfRangeException`: The index does not identify a published pathway.
+
+<a id="member-d910c8246e55"></a>
+### `RegionGetConnectionPathwayStart(Electron2D.RID, System.Int32)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.Vector2 RegionGetConnectionPathwayStart(Electron2D.RID region, System.Int32 connection)
+```
+
+#### Summary
+
+Returns the first endpoint of one published margin pathway.
+
+#### Returns
+
+A world-space endpoint.
+
+#### Parameters
+
+- `region`: A live region RID.
+- `connection`: A valid zero-based pathway index.
+
+#### Exceptions
+
+- `T:System.ArgumentOutOfRangeException`: The index does not identify a published pathway.
+
+<a id="member-b8a5e0281bde"></a>
+### `RegionGetConnectionsCount(Electron2D.RID)`
+
+Kind: `method`
+
+```csharp
+public static System.Int32 RegionGetConnectionsCount(Electron2D.RID region)
+```
+
+#### Summary
+
+Returns the region's committed directed free-edge margin pathway count.
+
+#### Returns
+
+Zero for detached regions or absent pathways; raster pairs and links are excluded.
+
+#### Parameters
+
+- `region`: A live region RID.
+
+<a id="member-19d1ad262fa0"></a>
+### `RegionGetIterationID(Electron2D.RID)`
+
+Kind: `method`
+
+```csharp
+public static System.UInt64 RegionGetIterationID(Electron2D.RID region)
+```
+
+#### Summary
+
+Returns the region's last published nonzero iteration identity, or zero before its first publication.
+
+#### Returns
+
+A 32-bit wrapping identity projected to ulong.
+
+#### Parameters
+
+- `region`: A live region RID.
+
+<a id="member-af260024b43b"></a>
+### `RegionGetRandomPoint(Electron2D.RID, System.UInt32, System.Boolean)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.Vector2 RegionGetRandomPoint(Electron2D.RID region, System.UInt32 navigationLayers, System.Boolean uniformly)
+```
+
+#### Summary
+
+Samples an enabled committed region surface matching the supplied navigation layers.
+
+#### Remarks
+
+Detached regions retain geometry for this query. Prepared surface groups are reused.
+
+#### Returns
+
+A world point inside the region, or zero when no eligible surface exists.
+
+#### Parameters
+
+- `region`: A live region RID.
+- `navigationLayers`: Eligible layer mask.
+- `uniformly`: True weights polygons and triangles by area; false chooses both uniformly.

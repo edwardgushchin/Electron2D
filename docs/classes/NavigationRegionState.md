@@ -1,6 +1,6 @@
 # NavigationRegionState
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Visibility: internal
 - Source: [NavigationServer.cs](../../src/Servers/Navigation/NavigationServer.cs)
@@ -15,3 +15,5 @@ A dirty authored geometry/configuration version builds an independent committed 
 ## Verification
 
 [NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) exercises the concrete geometry/query/lifetime consumers. The [Authored navigation maps](../components/navigation-maps.md) contract records limits.
+
+PublishedMap preserves pathway membership until synchronization. IterationID records a nonzero wrapping uint identity, returned through the static ulong query; geometry/configuration publication remains transactional.
