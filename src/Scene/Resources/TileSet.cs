@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Defines square tile dimensions, atlas sources and shared physics and navigation layer policies.</summary>
+/// <summary>Defines tile grid geometry and dimensions, atlas sources and shared physics and navigation layer policies.</summary>
 /// <remarks>Sources are transferred between sets, while materials are borrowed. Copies duplicate sources
 /// even in shallow mode so copying cannot remove sources from the original set.</remarks>
 public sealed partial class TileSet : Resource
@@ -17,7 +17,7 @@ public sealed partial class TileSet : Resource
 
     /// <summary>Creates an empty square tile set with 16 by 16 scene-unit cells.</summary>
     public TileSet() { }
-    /// <summary>Gets or sets the positive square-grid cell dimensions in scene units.</summary>
+    /// <summary>Gets or sets the positive cell bounding dimensions in scene units.</summary>
     public Vector2i TileSize { get { ThrowIfDisposed(); return _tileSize; } set { ThrowIfDisposed(); Positive(value); if (_tileSize == value) return; _tileSize = value; EmitChanged(); } }
     /// <summary>Returns the number of physics layers.</summary>
     /// <returns>Returns the number of physics layers.</returns>
@@ -175,7 +175,7 @@ public sealed partial class TileSet : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSet)target; copy.ClearContents(); copy._tileSize = _tileSize; copy.NavigationLayers.AddRange(NavigationLayers);
+        var copy = (TileSet)target; copy.ClearContents(); copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
         foreach (var layer in PhysicsLayers)
         {
             copy.PhysicsLayers.Add(new() { Layer = layer.Layer, Mask = layer.Mask, Priority = layer.Priority });
@@ -207,6 +207,7 @@ public sealed partial class TileSet : Resource
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        foreach (var property in GeometryProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, Vector2i>(nameof(TileSize), n => n.TileSize, (n, v) => n.TileSize = v, _ => new(16, 16), stored: true);
         yield return new PropertyDescriptor<TileSet, int>("PhysicsLayerCount", n => n.GetPhysicsLayersCount(), (n, v) => n.RestoreLayerCount(v), _ => 0, stored: true);
         for (var i = 0; i < PhysicsLayers.Count; i++)

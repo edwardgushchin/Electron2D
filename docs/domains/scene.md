@@ -4,7 +4,7 @@ Last updated: 2026-10-10
 
 ## Square atlas tile integration
 
-[Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).
+[Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain/pattern/proxy painting and occlusion retain explicit prerequisites under [ADR 0101](../decisions/tiles.md#adr-0101).
 
 ## Executable low-level primitive producers
 

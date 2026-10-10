@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-11
 
+[Tile grid geometry](../components/tiles.md#grid-placement-and-neighbors) now supports all four shapes, six coordinate layouts, two offset axes and named neighbors. Thirty-seven formerly Blocked and two Partial rows are Implemented. The same kernel places retained drawing, CPU/GPU collisions, navigation regions and baked contours; all 48 configurations match pinned executable geometry. Fresh scene files, actual GPU/compatibility pixels and zero-allocation scalar/native owner checks verify the exercised Linux profile. Terrain/pattern/proxy/occlusion retain their own prerequisites.
+
 [Selected direct-state construction](../components/physics-backends.md#selected-direct-state-construction)
 now supplies validated internal owner views to World/server queries and actual
 scene/raw callbacks, with CPU/GPU/no-device lifecycle/failure/contact/allocation

@@ -10,8 +10,12 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
-| [Scene](domains/scene.md) | [Tiles](components/tiles.md) | [TileMapLayer](classes/TileMapLayer.md) | [TileMapLayer.cs](../src/Scene/2D/TileMapLayer.cs) | Current | Scene layer, body-RID lookup and runtime updates. |
-| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileSet](classes/TileSet.md) | [TileSet.cs](../src/Scene/Resources/TileSet.cs) | Current | Square-grid dimensions, sources and physics/navigation policies. |
+| [Scene](domains/scene.md) | [Tiles](components/tiles.md) | [TileMapLayer](classes/TileMapLayer.md) | [TileMapLayer.cs](../src/Scene/2D/TileMapLayer.cs) | Current | Scene layer, grid/neighbor queries, body-RID lookup and runtime updates. |
+| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileSet](classes/TileSet.md) | [TileSet.cs](../src/Scene/Resources/TileSet.cs) | Current | All grid shapes/layouts/axes, sources and physics/navigation policies. |
+| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileShape](classes/TileShape.md) | [TileShape.cs](../src/Scene/Resources/TileShape.cs) | Current | Four cell outlines. |
+| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileLayout](classes/TileLayout.md) | [TileLayout.cs](../src/Scene/Resources/TileLayout.cs) | Current | Six offset coordinate systems. |
+| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileOffsetAxis](classes/TileOffsetAxis.md) | [TileOffsetAxis.cs](../src/Scene/Resources/TileOffsetAxis.cs) | Current | Horizontal row or vertical column offset. |
+| [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [CellNeighbor](classes/CellNeighbor.md) | [CellNeighbor.cs](../src/Scene/Resources/CellNeighbor.cs) | Current | Sixteen named edge/corner directions, validated for the active shape. |
 | [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileSetSource](classes/TileSetSource.md) | [TileSetSource.cs](../src/Scene/Resources/TileSetSource.cs) | Current | Abstract identity queries shared by tile sources. |
 | [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | [TileSetAtlasSource.cs](../src/Scene/Resources/TileSetAtlasSource.cs) | Current | Animated frame reservations, source-owned alternatives and transient padded texture. |
 | [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileData](classes/TileData.md) | [TileData.cs](../src/Scene/Resources/TileData.cs) | Current | Borrowed tile image settings, physical contours and navigation polygons. |

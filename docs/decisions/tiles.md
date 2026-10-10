@@ -3,7 +3,7 @@
 <a id="adr-0101"></a>
 ## ADR 0101: Tile layers own generated physics bodies
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ### Status
 
@@ -21,7 +21,9 @@ A layer batches authored cell/resource changes. `UpdateInternals` explicitly pub
 
 `GetCoordsForBodyRID` returns quadrant coordinates; a quadrant size of one makes these cell coordinates. Owner projections preserve the layer and the individual body RID through queries, motion results, direct-state contacts and overlap events. Hiding drawing does not disable collision. Disabling the layer or collision removes generated bodies. Exit, disposal and world replacement release or move their server resources, including canvas association.
 
-The first executable implementation targets square cells, atlas tiles and physical layers/polygons, including one-way margins and constant surface velocities. Other layouts, terrain painting and occlusion remain explicit coverage gaps. They are not represented by inert public switches. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
+The executable implementation supports square, isometric, half-offset square and hexagonal cells, all six coordinate layouts and both offset axes. `TileShape`, `TileLayout`, `TileOffsetAxis` and `CellNeighbor` are namespace enums under ADR 0051; the first three are stored TileSet properties. Square cells ignore layout and offset axis. Map/local conversion and named neighbors share one geometry kernel used by drawing, generated physics and navigation, including source parsing. Cell images and authored polygons keep their own geometry; grid shape changes placement, not the contents of a tile. Terrain painting, patterns and occlusion remain explicit coverage gaps. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
+
+Named neighbors depend on cell shape and offset axis; requesting an undefined enum or a direction absent from that shape throws `ArgumentOutOfRangeException`. Surrounding cells return the four or six edge-sharing cells in clockwise order. Negative rows/columns use positive parity. Neighbor calculations widen intermediate coordinates and throw `OverflowException` when the final coordinate cannot fit Vector2i. LocalToMap rejects nonfinite inputs and out-of-range results, preserves the square grid's normalized 0.00005 boundary bias and the asymmetric sloping-edge ties of the pinned geometry. MapToLocal returns float scene positions, with their ordinary loss of adjacent-cell precision at very large coordinates. Missing TileSet continues to throw `InvalidOperationException` for geometry queries. Geometry setters validate before changing state, publish Changed only on a real edit, and rebuild consuming layers through the existing batch mechanism.
 
 ### Navigation layers
 

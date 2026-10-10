@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Draws a square atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.</summary>
+/// <summary>Draws an atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.</summary>
 /// <remarks>Cell and resource edits are batched until the tree flushes deferred work or UpdateInternals is called.
 /// Generated bodies and navigation regions do not appear as child nodes. Queries and contacts report this layer as their collider object.</remarks>
 public partial class TileMapLayer : Entity
@@ -124,19 +124,33 @@ public partial class TileMapLayer : Entity
         foreach (var c in _cells.Keys) { min = min.Min(c); max = max.Max(c); }
         return new(min, new(checked(max.X - min.X + 1), checked(max.Y - min.Y + 1)));
     }
-    /// <summary>Returns the center of a square cell in layer-local scene units.</summary>
-    /// <param name="mapPosition">Square-grid cell coordinates.</param>
-    /// <returns>Returns the center of a square cell in layer-local scene units.</returns>
-    public Vector2 MapToLocal(Vector2i mapPosition)
-    { ThrowIfDisposed(); var size = RequireSet().TileSize; return new((mapPosition.X + .5f) * size.X, (mapPosition.Y + .5f) * size.Y); }
-    /// <summary>Returns the square cell containing a finite layer-local position, using floor for negative coordinates.</summary>
+    /// <summary>Returns the cell center in layer-local scene units using the set's grid geometry.</summary>
+    /// <param name="mapPosition">Cell coordinates in the selected layout.</param>
+    /// <returns>The cell center, independent of tile texture origins.</returns>
+    /// <exception cref="InvalidOperationException">No tile set is assigned.</exception>
+    public Vector2 MapToLocal(Vector2i mapPosition) { ThrowIfDisposed(); return RequireSet().MapToLocal(mapPosition); }
+    /// <summary>Returns the cell containing a finite layer-local position.</summary>
+    /// <remarks>Square boundaries use a normalized 0.00005 bias; sloping boundaries follow the grid's directional tie rule.</remarks>
     /// <param name="localPosition">Finite layer-local position in scene units.</param>
-    /// <returns>Returns the square cell containing a finite layer-local position, using floor for negative coordinates.</returns>
-    public Vector2i LocalToMap(Vector2 localPosition)
-    {
-        ThrowIfDisposed(); if (!localPosition.IsFinite()) throw new ArgumentOutOfRangeException(nameof(localPosition)); var size = RequireSet().TileSize;
-        return new(checked((int)Math.Floor((double)localPosition.X / size.X)), checked((int)Math.Floor((double)localPosition.Y / size.Y)));
-    }
+    /// <returns>Cell coordinates in the selected layout.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The position is not finite.</exception>
+    /// <exception cref="OverflowException">The resulting coordinate cannot fit Vector2i.</exception>
+    /// <exception cref="InvalidOperationException">No tile set is assigned.</exception>
+    public Vector2i LocalToMap(Vector2 localPosition) { ThrowIfDisposed(); return RequireSet().LocalToMap(localPosition); }
+    /// <summary>Returns the neighboring cell in a named direction supported by the grid shape.</summary>
+    /// <param name="coords">Cell coordinates in the selected layout.</param>
+    /// <param name="neighbor">An edge or corner direction supported by this shape and offset axis.</param>
+    /// <returns>The neighboring cell coordinate.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">The direction is undefined or absent from the shape.</exception>
+    /// <exception cref="OverflowException">The resulting coordinate cannot fit Vector2i.</exception>
+    /// <exception cref="InvalidOperationException">No tile set is assigned.</exception>
+    public Vector2i GetNeighborCell(Vector2i coords, CellNeighbor neighbor) { ThrowIfDisposed(); return RequireSet().GetNeighborCell(coords, neighbor); }
+    /// <summary>Returns the four or six edge-sharing neighbors in clockwise order.</summary>
+    /// <param name="coords">Cell coordinates in the selected layout.</param>
+    /// <returns>An owned array of neighboring coordinates; corners are omitted.</returns>
+    /// <exception cref="OverflowException">A neighboring coordinate cannot fit Vector2i.</exception>
+    /// <exception cref="InvalidOperationException">No tile set is assigned.</exception>
+    public Vector2i[] GetSurroundingCells(Vector2i coords) { ThrowIfDisposed(); return RequireSet().GetSurroundingCells(coords); }
     /// <summary>Tests whether a body RID currently belongs to this layer.</summary>
     /// <param name="body">Borrowed generated body identity; do not release it separately.</param>
     /// <returns>Tests whether a body RID currently belongs to this layer.</returns>

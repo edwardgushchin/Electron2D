@@ -1,12 +1,12 @@
 # TileMapLayer
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Source:** [TileMapLayer.cs](../../src/Scene/2D/TileMapLayer.cs).
 
 ## Overview
 
-Draws a square atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.
+Draws an atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.
 
 ## Syntax
 
@@ -39,6 +39,8 @@ layer.UpdateInternals();
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`Vector2i GetNeighborCell(Vector2i coords, CellNeighbor neighbor)`](#grid-getneighborcell) | method | Returns a named edge/corner neighbor for the active shape and axis. Undefined or unavailable directions throw ArgumentOutOfRangeException. Widened integer intermediates avoid wraparound; final results outside Vector2i throw OverflowException. |
+| [`Vector2i[] GetSurroundingCells(Vector2i coords)`](#grid-getsurroundingcells) | method | Returns an owned array of four (square/isometric) or six (half-offset/hexagonal) edge-sharing neighbors in clockwise order, omitting corners. Overflow rejects the query. |
 | [`public TileMapLayer()`](#member-535034972235) | constructor | Creates an empty enabled tile layer. |
 | [`public event System.Action Changed`](#member-0b71f16522de) | event | Occurs after cell, resource or layer settings change; multiple changes may precede one rebuild. |
 | [`public System.Void Clear()`](#member-52d2606bd80b) | method | Erases every authored cell. |
@@ -59,8 +61,8 @@ layer.UpdateInternals();
 | [`public System.Boolean IsCellFlippedH(Electron2D.Vector2i coords)`](#member-603870067167) | method | Returns whether the cell's transform flag reflects its horizontal axis. |
 | [`public System.Boolean IsCellFlippedV(Electron2D.Vector2i coords)`](#member-5865fab12059) | method | Returns whether the cell's transform flag reflects its vertical axis. |
 | [`public System.Boolean IsCellTransposed(Electron2D.Vector2i coords)`](#member-0efa037fc9e8) | method | Returns whether the cell's transform flag exchanges its axes. |
-| [`public Electron2D.Vector2i LocalToMap(Electron2D.Vector2 localPosition)`](#member-841d32433cfc) | method | Returns the square cell containing a finite layer-local position, using floor for negative coordinates. |
-| [`public Electron2D.Vector2 MapToLocal(Electron2D.Vector2i mapPosition)`](#member-babe4678b07c) | method | Returns the center of a square cell in layer-local scene units. |
+| [`public Electron2D.Vector2i LocalToMap(Electron2D.Vector2 localPosition)`](#member-841d32433cfc) | method | Returns the cell containing a finite layer-local position. |
+| [`public Electron2D.Vector2 MapToLocal(Electron2D.Vector2i mapPosition)`](#member-babe4678b07c) | method | Returns the cell center in layer-local scene units using the set’s grid geometry. |
 | [`public System.Void NotifyRuntimeTileDataUpdate()`](#member-e57b359252fa) | method | Schedules recreation of per-cell runtime tile data. |
 | [`protected override System.Void OnDraw()`](#member-ffcf0b3e7b7e) | method |  |
 | [`protected override System.Void OnEnterTree()`](#member-bf3b8554eb12) | method |  |
@@ -439,15 +441,20 @@ public Electron2D.Vector2i LocalToMap(Electron2D.Vector2 localPosition)
 
 #### Summary
 
-Returns the square cell containing a finite layer-local position, using floor for negative coordinates.
+Returns the cell containing a finite layer-local position.
 
 #### Returns
 
-Returns the square cell containing a finite layer-local position, using floor for negative coordinates.
+Returns the cell containing a finite layer-local position.
 
 #### Parameters
 
 - `localPosition`: Finite layer-local position in scene units.
+
+
+#### Boundary behavior
+
+Square boundaries have a normalized positive 0.00005 bias. Sloping boundaries follow the active grid’s directional tie rule. Nonfinite positions throw ArgumentOutOfRangeException; results outside Vector2i throw OverflowException. A missing live TileSet throws InvalidOperationException.
 
 <a id="member-babe4678b07c"></a>
 ### `MapToLocal(Electron2D.Vector2i)`
@@ -460,15 +467,15 @@ public Electron2D.Vector2 MapToLocal(Electron2D.Vector2i mapPosition)
 
 #### Summary
 
-Returns the center of a square cell in layer-local scene units.
+Returns the cell center in layer-local scene units using the set’s grid geometry.
 
 #### Returns
 
-Returns the center of a square cell in layer-local scene units.
+Returns the cell center in layer-local scene units using the set’s grid geometry.
 
 #### Parameters
 
-- `mapPosition`: Square-grid cell coordinates.
+- `mapPosition`: Cell coordinates in the selected layout.
 
 <a id="member-e57b359252fa"></a>
 ### `NotifyRuntimeTileDataUpdate()`
@@ -764,3 +771,25 @@ Validates and assigns a borrowed map; empty restores World selection. The caller
 ## Retained animated tiles
 
 Tile drawing uses the selected runtime atlas and all frame intervals. Default is synchronized; stable random phases use layer/cell identity. Frame time updates reuse recorded commands without rebuilding authored physics/navigation. See [atlas animation](../components/tiles.md#atlas-frame-animation-and-padding).
+
+## Grid geometry
+
+See [grid placement and neighbors](../components/tiles.md#grid-placement-and-neighbors) for exact boundary and missing-set behavior.
+
+<a id="grid-getneighborcell"></a>
+### GetNeighborCell
+
+```csharp
+Vector2i GetNeighborCell(Vector2i coords, CellNeighbor neighbor)
+```
+
+Returns a named edge/corner neighbor for the active shape and axis. Undefined or unavailable directions throw ArgumentOutOfRangeException. Widened integer intermediates avoid wraparound; final results outside Vector2i throw OverflowException.
+
+<a id="grid-getsurroundingcells"></a>
+### GetSurroundingCells
+
+```csharp
+Vector2i[] GetSurroundingCells(Vector2i coords)
+```
+
+Returns an owned array of four (square/isometric) or six (half-offset/hexagonal) edge-sharing neighbors in clockwise order, omitting corners. Overflow rejects the query.

@@ -1,10 +1,10 @@
-# Square atlas tiles and physical layers
+# Tile grids, animated atlases and physical layers
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Scope and ownership
 
-[ADR 0101](../decisions/tiles.md#adr-0101) connects `TileSet`, `TileSetSource`, `TileSetAtlasSource`, source-owned `TileData` and scene `TileMapLayer`. The current slice supplies square cells, static atlas regions/alternatives and all tile physics-layer policies. It uses the world's selected CPU or independent GPU implementation; renderer choice is independent.
+[ADR 0101](../decisions/tiles.md#adr-0101) connects `TileSet`, `TileSetSource`, `TileSetAtlasSource`, source-owned `TileData` and scene `TileMapLayer`. The implementation supplies square, isometric, half-offset square and hexagonal cells, all coordinate layouts, animated atlas regions/alternatives and all tile physics-layer policies. It uses the world's selected CPU or independent GPU implementation; renderer choice is independent.
 
 A source belongs to one set. Transfer removes it from the former set before publishing notifications. Texture/material resources are borrowed. Shallow TileSet duplication still duplicates each source and its owned data, retaining texture/material references; deep resource duplication follows the ordinary resource graph policy. CopyFromResource also preserves the original source owner. Removing/disposal of an alternative invalidates borrowed TileData. Callers cannot dispose borrowed data separately. Source disposal removes it from its set; set/texture/material disposal updates consumers without taking ownership of those borrowed resources.
 
@@ -39,6 +39,25 @@ Hidden layers retain authored collision. Runtime tile-data copies are prepared o
 
 Queries use the existing typed owner split: Collider is the CollisionObject convenience view and is null for a generated tile body; ColliderObject identifies the TileMapLayer. Motion/cast results, typed direct contacts and Area/RigidBody object and shape events retain the same layer identity. Object events deduplicate multiple tile bodies; per-shape events preserve each body RID. Excluding the layer's instance ID excludes all its generated bodies.
 
+## Grid placement and neighbors
+
+TileSet stores TileShape (Square, Isometric, HalfOffsetSquare, Hexagon), TileLayout (Stacked, StackedOffset, StairsRight, StairsDown, DiamondRight, DiamondDown), TileOffsetAxis (Horizontal, Vertical) and positive TileSize. Their defaults preserve the square 16×16 grid. Square cells ignore layout and axis; the other shapes use alternating offsets and overlap ratios of one, one-half or three-quarters. Negative rows/columns use positive parity. All six coordinate systems preserve their authored coordinates through cell storage, quadrant identity, duplication and resource/scene files.
+
+MapToLocal returns the cell center in local scene units, independently of TextureOrigin. LocalToMap selects the containing cell. Square boundaries use a normalized 0.00005 positive bias; sloping edges retain directional ties, including strict versus inclusive corner tests. Nonfinite inputs throw ArgumentOutOfRangeException and integer results outside Vector2i throw OverflowException. Floating scene coordinates lose adjacent-cell precision at extreme magnitudes; integer neighbor queries retain their precision with widened intermediates. Every geometry query requires a live TileSet.
+
+GetNeighborCell validates the named CellNeighbor against the current shape and axis. Square cells have side and diagonal-corner directions. Isometric cells have diagonal sides and cardinal corners. HalfOffsetSquare and Hexagon have six sides selected by the offset axis. Invalid/absent directions throw ArgumentOutOfRangeException, and final integer overflow throws. GetSurroundingCells returns an owned array of four or six edge-sharing cells, clockwise and without corners.
+
+Drawing, collision generation, navigation regions and root-local source parsing use this same center transform. The tile image and authored collision/navigation polygons keep their own shape and dimensions. Changing grid settings schedules existing consumers to rebuild through the normal batch; it does not warp a tile texture or manufacture a polygon.
+
+```csharp
+set.TileShape = TileShape.Hexagon;
+set.TileLayout = TileLayout.Stacked;
+set.TileOffsetAxis = TileOffsetAxis.Horizontal;
+Vector2 center = layer.MapToLocal(new(-2, 3));
+Vector2i next = layer.GetNeighborCell(new(-2, 3), CellNeighbor.BottomRightSide);
+Vector2i[] edges = layer.GetSurroundingCells(new(-2, 3));
+```
+
 ## Storage and failure behavior
 
 Built-in compiled factories reconstruct TileSet, TileSetAtlasSource and TileMapLayer. Resource descriptors store ordered source identities, layer policies/material references, atlas regions/alternatives and owned tile-data fields; Vector2i arrays have a built-in portable codec. TileMapData is a copied version-zero little-endian array with 12-byte records and the documented signed-16-bit coordinate wrapping. Malformed array input fails before changing cells. Generated bodies and runtime copies are transient.
@@ -46,6 +65,10 @@ Built-in compiled factories reconstruct TileSet, TileSetAtlasSource and TileMapL
 Attached node mutation requires the scene owner thread. Authored edits may queue work; publishing physics changes is prohibited while a solver/overlap callback holds the world. Runtime callback reentry is rejected. A failing runtime-data callback releases its new copy, leaves committed physical bodies intact and keeps a full retry pending. Resource/file operations and geometry changes allocate; unchanged physics frames and warmed redraw reuse existing storage.
 
 ## Verification
+
+`TileLayoutTests` compares 48 pinned executable configurations: 3,888 centers and surrounding arrays, 27,216 named neighbors and 32,352 inverse/boundary results. It also checks reciprocal/invalid directions, quiet validated setters, finite/integer limits and widened large integer intermediates. All 48 geometry configurations are duplicated, packed, saved and reconstructed in a fresh process. Explicit CPU/GPU world fixtures check transformed collision/owner lookup, navigation regions, geometry edits, root-local traversable baking and cleanup. Root/global inverse roundtrips allow 0.0001 scene units of float error; grid integer/center oracle comparisons are exact. Warmed scalar geometry queries allocate zero owner-thread managed bytes. [Fixture provenance and reproduction](../../tools/tiles/REFERENCE.md).
+
+`TileLayoutTests.Native` renders 48 configurations and independently checks 96 cell centers against collision owners on all four renderer/physics combinations. Each real 768×384 window measures 24 warmed full owner frames with forced redraw, all at zero managed bytes, then verifies redraw after shape edits. GPU and compatibility readback images agree. Captures live under ignored `bin/tile-layout-validation/`. All-thread/native allocator totals, foreign targets, dense-map throughput and human visual acceptance remain unverified for this slice.
 
 `TileMapLayerTests` runs against explicit CPU and GPU worlds. It covers source transfer and copy ownership, borrowed lifetime, typed resource and PackedScene storage, fresh-process reconstruction, negative quadrants, dirty identity replacement, merged neighboring tiles, holes, surface velocity and material policy, one-way motion, foreign-thread rejection, owner projection through queries/casts/motion/contacts/monitoring, world/transform/enable/exit/reentry/disposal and runtime callback isolation/recovery. Unchanged layers measured 0 owner-thread bytes over 120 warmed physics frames on each backend.
 
@@ -62,7 +85,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Non-square layouts, terrain/pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Terrain/pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 

@@ -1,12 +1,12 @@
 # TileSet
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Source:** [TileSet.cs](../../src/Scene/Resources/TileSet.cs).
 
 ## Overview
 
-Defines square tile dimensions, atlas sources and shared physics and navigation layer policies.
+Defines tile grid geometry and dimensions, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -39,6 +39,9 @@ set.SetPhysicsLayerPhysicsMaterial(0, material);
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`TileShape TileShape { get; set; }`](#grid-tileshape) | property | The cell outline, default Square. Undefined values throw before state changes; a real edit changes placement in all consuming layers. |
+| [`TileLayout TileLayout { get; set; }`](#grid-tilelayout) | property | The coordinate layout, default Stacked. All six layouts are stored; square cells ignore this setting. |
+| [`TileOffsetAxis TileOffsetAxis { get; set; }`](#grid-tileoffsetaxis) | property | The offset direction, default Horizontal. Non-square cells offset rows horizontally or columns vertically; square cells ignore this setting. |
 | [`public TileSet()`](#member-8dfd74136481) | constructor | Creates an empty square tile set with 16 by 16 scene-unit cells. |
 | [`public System.Void AddPhysicsLayer(System.Int32 toPosition = -1)`](#member-1017cbed061e) | method | Inserts an empty physics layer; a negative position appends. |
 | [`public System.Int32 AddSource(Electron2D.TileSetSource source, System.Int32 atlasSourceIDOverride = -1)`](#member-e7dacd2144b0) | method | Adds a source under an explicit or automatically selected nonnegative identity. |
@@ -64,7 +67,7 @@ set.SetPhysicsLayerPhysicsMaterial(0, material);
 | [`public System.Void SetPhysicsLayerCollisionPriority(System.Int32 layerIndex, System.Single priority)`](#member-8b9a169c3587) | method | Sets a finite positive collision recovery priority. |
 | [`public System.Void SetPhysicsLayerPhysicsMaterial(System.Int32 layerIndex, Electron2D.PhysicsMaterial physicsMaterial)`](#member-ea39bcb6c236) | method | Assigns a borrowed material and observes its changes and disposal. |
 | [`public System.Void SetSourceID(System.Int32 sourceID, System.Int32 newSourceID)`](#member-47730f062bb3) | method | Renames a source identity to an unoccupied nonnegative value. |
-| [`public Electron2D.Vector2i TileSize { get; set; }`](#member-ac39ee317d80) | property | Gets or sets the positive square-grid cell dimensions in scene units. |
+| [`public Electron2D.Vector2i TileSize { get; set; }`](#member-ac39ee317d80) | property | Gets or sets the positive cell bounding dimensions in scene units. |
 
 ## Member Details
 
@@ -507,7 +510,7 @@ public Electron2D.Vector2i TileSize { get; set; }
 
 #### Summary
 
-Gets or sets the positive square-grid cell dimensions in scene units.
+Gets or sets the positive cell bounding dimensions in scene units.
 
 ## Verification
 
@@ -580,3 +583,34 @@ void SetNavigationLayerLayerValue(int layerIndex, int layerNumber, bool value)
 ```
 
 Changes one membership bit while preserving the rest.
+
+## Grid geometry
+
+See [grid placement and neighbors](../components/tiles.md#grid-placement-and-neighbors) for exact boundary and missing-set behavior.
+
+<a id="grid-tileshape"></a>
+### TileShape
+
+```csharp
+TileShape TileShape { get; set; }
+```
+
+The cell outline, default Square. Undefined values throw before state changes; a real edit changes placement in all consuming layers.
+
+<a id="grid-tilelayout"></a>
+### TileLayout
+
+```csharp
+TileLayout TileLayout { get; set; }
+```
+
+The coordinate layout, default Stacked. All six layouts are stored; square cells ignore this setting.
+
+<a id="grid-tileoffsetaxis"></a>
+### TileOffsetAxis
+
+```csharp
+TileOffsetAxis TileOffsetAxis { get; set; }
+```
+
+The offset direction, default Horizontal. Non-square cells offset rows horizontally or columns vertically; square cells ignore this setting.

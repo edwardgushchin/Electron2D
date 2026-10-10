@@ -2647,6 +2647,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CellNeighbor",
+    "kind": "type",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "CellNeighbor",
+    "signature": "public enum Electron2D.CellNeighbor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.CellularDistanceFunction",
     "kind": "type",
     "declaringType": "Electron2D.CellularDistanceFunction",
@@ -10080,6 +10098,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TileLayout",
+    "kind": "type",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "TileLayout",
+    "signature": "public enum Electron2D.TileLayout",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TileMapLayer",
     "kind": "type",
     "declaringType": "Electron2D.TileMapLayer",
@@ -10100,6 +10136,24 @@
     "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
     "name": "DebugVisibilityMode",
     "signature": "public enum Electron2D.TileMapLayer.DebugVisibilityMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileOffsetAxis",
+    "kind": "type",
+    "declaringType": "Electron2D.TileOffsetAxis",
+    "name": "TileOffsetAxis",
+    "signature": "public enum Electron2D.TileOffsetAxis",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -10170,6 +10224,24 @@
     "baseType": "Electron2D.Resource",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileShape",
+    "kind": "type",
+    "declaringType": "Electron2D.TileShape",
+    "name": "TileShape",
+    "signature": "public enum Electron2D.TileShape",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
     ],
     "parameters": null,
     "returnType": null,
@@ -22081,6 +22153,214 @@
     "parameters": [],
     "returnType": "Electron2D.CPUParticles.ParticleFlags",
     "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomCorner",
+    "signature": "public const Electron2D.CellNeighbor BottomCorner = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomLeftCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomLeftCorner",
+    "signature": "public const Electron2D.CellNeighbor BottomLeftCorner = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomLeftSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomLeftSide",
+    "signature": "public const Electron2D.CellNeighbor BottomLeftSide = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomRightCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomRightCorner",
+    "signature": "public const Electron2D.CellNeighbor BottomRightCorner = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomRightSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomRightSide",
+    "signature": "public const Electron2D.CellNeighbor BottomRightSide = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.BottomSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "BottomSide",
+    "signature": "public const Electron2D.CellNeighbor BottomSide = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.LeftCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "LeftCorner",
+    "signature": "public const Electron2D.CellNeighbor LeftCorner = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.LeftSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "LeftSide",
+    "signature": "public const Electron2D.CellNeighbor LeftSide = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.RightCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "RightCorner",
+    "signature": "public const Electron2D.CellNeighbor RightCorner = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.RightSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "RightSide",
+    "signature": "public const Electron2D.CellNeighbor RightSide = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopCorner",
+    "signature": "public const Electron2D.CellNeighbor TopCorner = 13",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "13"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopLeftCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopLeftCorner",
+    "signature": "public const Electron2D.CellNeighbor TopLeftCorner = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopLeftSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopLeftSide",
+    "signature": "public const Electron2D.CellNeighbor TopLeftSide = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopRightCorner()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopRightCorner",
+    "signature": "public const Electron2D.CellNeighbor TopRightCorner = 15",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "15"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopRightSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopRightSide",
+    "signature": "public const Electron2D.CellNeighbor TopRightSide = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.CellNeighbor.TopSide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.CellNeighbor",
+    "name": "TopSide",
+    "signature": "public const Electron2D.CellNeighbor TopSide = 12",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.CellNeighbor",
+    "value": "12"
   },
   {
     "id": "enumValue:Electron2D.CellularDistanceFunction.Euclidean()",
@@ -37384,6 +37664,84 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.TileLayout.DiamondDown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "DiamondDown",
+    "signature": "public const Electron2D.TileLayout DiamondDown = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.TileLayout.DiamondRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "DiamondRight",
+    "signature": "public const Electron2D.TileLayout DiamondRight = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.TileLayout.Stacked()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "Stacked",
+    "signature": "public const Electron2D.TileLayout Stacked = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TileLayout.StackedOffset()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "StackedOffset",
+    "signature": "public const Electron2D.TileLayout StackedOffset = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TileLayout.StairsDown()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "StairsDown",
+    "signature": "public const Electron2D.TileLayout StairsDown = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TileLayout.StairsRight()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileLayout",
+    "name": "StairsRight",
+    "signature": "public const Electron2D.TileLayout StairsRight = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.Default()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
@@ -37420,6 +37778,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TileOffsetAxis.Horizontal()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileOffsetAxis",
+    "name": "Horizontal",
+    "signature": "public const Electron2D.TileOffsetAxis Horizontal = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileOffsetAxis",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TileOffsetAxis.Vertical()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileOffsetAxis",
+    "name": "Vertical",
+    "signature": "public const Electron2D.TileOffsetAxis Vertical = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileOffsetAxis",
     "value": "1"
   },
   {
@@ -37460,6 +37844,58 @@
     "parameters": [],
     "returnType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TileShape.HalfOffsetSquare()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileShape",
+    "name": "HalfOffsetSquare",
+    "signature": "public const Electron2D.TileShape HalfOffsetSquare = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileShape",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TileShape.Hexagon()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileShape",
+    "name": "Hexagon",
+    "signature": "public const Electron2D.TileShape Hexagon = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileShape",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.TileShape.Isometric()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileShape",
+    "name": "Isometric",
+    "signature": "public const Electron2D.TileShape Isometric = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileShape",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TileShape.Square()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileShape",
+    "name": "Square",
+    "signature": "public const Electron2D.TileShape Square = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileShape",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.TransferMode.Reliable()",
@@ -151803,6 +152239,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapLayer.GetNeighborCell(Electron2D.Vector2i,Electron2D.CellNeighbor)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetNeighborCell",
+    "signature": "public Electron2D.Vector2i GetNeighborCell(Electron2D.Vector2i coords, Electron2D.CellNeighbor neighbor)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "neighbor",
+        "type": "Electron2D.CellNeighbor",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileMapLayer.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.TileMapLayer",
@@ -151813,6 +152273,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetSurroundingCells(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetSurroundingCells",
+    "signature": "public Electron2D.Vector2i[] GetSurroundingCells(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
     "value": null
   },
   {
@@ -199528,6 +200007,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSet.TileLayout()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSet",
+    "name": "TileLayout",
+    "signature": "public Electron2D.TileLayout TileLayout { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileLayout",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSet.TileOffsetAxis()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSet",
+    "name": "TileOffsetAxis",
+    "signature": "public Electron2D.TileOffsetAxis TileOffsetAxis { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileOffsetAxis",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSet.TileShape()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSet",
+    "name": "TileShape",
+    "signature": "public Electron2D.TileShape TileShape { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileShape",
     "value": null
   },
   {
