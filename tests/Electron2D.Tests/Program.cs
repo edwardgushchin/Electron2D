@@ -80,6 +80,20 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_JOINT_CONTRACT") == 
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_POLICIES") == "1") { PhysicsJointPolicyTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run(); PhysicsServerJointTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CCD_CONTRACT") == "1")
+{
+    using var device = new GPUPhysicsBodyStore(); var errors = new List<Exception>();
+    (string Name, Action<PhysicsServer.Backend> Run)[] suites =
+        [("CCD", PhysicsCCDTests.Run), ("boundary", WorldBoundaryTests.Run), ("directed ray", SeparationRayDynamicsTests.Run)];
+    foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+        foreach (var suite in suites)
+        {
+            Console.WriteLine($"Continuous contract: {backend}/{suite.Name}");
+            try { suite.Run(backend); } catch (Exception error) { Console.WriteLine(error); errors.Add(error); }
+        }
+    if (errors.Count != 0) throw new AggregateException("Public continuous contract failed.", errors);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CCD") == "1") { PhysicsCCDTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") == "1") { GPUPhysicsMotionQueryTests.Run(); PhysicsMotionTests.Run(); SeparationRayShapeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") == "1") { GPUPhysicsShapeQueryTests.Run(); GPUPhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(); ShapeCastTests.Run(); return; }

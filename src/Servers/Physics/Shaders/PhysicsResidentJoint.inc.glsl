@@ -8,4 +8,4 @@ struct ResidentJoint
     vec4 policy; // Axial damping; remaining fields reserved.
     vec4 solverPolicy; // Bias (zero inherits), correction speed cap, force cap, pin anchor softness.
 };
-struct JointState { uvec4 epochs; vec4 first; vec4 last; vec4 budget; }; // Five row impulses, previous dt; substep cap and spent linear/angular impulse.
+struct JointState { uvec4 epochs; vec4 first; vec4 last; vec4 budget; }; // Five row impulses, previous dt; substep cap, spent linear/angular impulse, active solve marker.

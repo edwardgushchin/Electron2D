@@ -1,6 +1,6 @@
 # Per-body continuous collision
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Public contract
 
@@ -71,8 +71,8 @@ Ray mode is deliberately approximate. SeparationRayDynamicsTests now verifies
 directed dynamic response and axial ray/full-shape CCD. WorldBoundaryTests additionally verifies analytic infinite planes with ray/full-shape
 translation and rotating-plane CCD; conservative angular bounds use finite-body
 distance from the plane owner rather than a nonexistent finite plane radius. The independent resident GPU store now uses the same
-public enum and retains its own device CCD implementation, but public independent
-world selection/binding is still open.
+public enum and retains its own device CCD implementation. Explicit public CPU/GPU
+worlds now run the common CCD, boundary and directed-ray suites described below.
 
 CPU TOI uses the backend's existing 0.5-scene-unit linear slop and speculative
 contact profile. CPU restitution is resolved in the ordinary constraint solver;
@@ -99,23 +99,90 @@ Adding `ELECTRON2D_SANDBOX_GPU_SOLVER=1` exercises the CPU host with experimenta
 GPU stages. `SDL_VIDEODRIVER=dummy` exercises the CPU runner without video output.
 The warmed microbenchmark measures 128 reset/active public steps after 64 warmup
 steps, with one projectile and one wall; it includes authored reset calls and
-checks all-thread managed allocation. A late-woken motor regression records first
-contact time and verifies its remaining-duration angular impulse; stale sleeping
-history previously reduced -0.276667 rad/s to -0.2 rad/s. It is not a mass-world, native-allocation,
-window-FPS or standalone CPU/GPU throughput comparison. Those acceptance gates,
-foreign platforms and authoritative multiplayer remain open.
+checks all-thread managed allocation. The late-woken motor regression derives first
+touch time from authored geometry and verifies remaining-duration angular impulse,
+without reading backend contact callbacks. It is not a mass-world, native-allocation
+or window-FPS comparison. Foreign platforms and full physics acceptance remain open;
+authoritative multiplayer is verified separately by the PhysicsNetwork workflow.
 
-The final Linux/.NET 10 dummy-video run measured **p50/p95/p99
+The earlier Linux/.NET 10 dummy-video run measured **p50/p95/p99
 0.0220/0.0222/0.0256 ms** per reset/active step and **0 all-thread managed bytes**
 (`/tmp/electron2d-cpu-ccd-headless-final3.log`). The CPU host with experimental
 GPU stages measured **1.3750/1.9555/2.9777 ms** on Vulkan/RTX 3090 Ti with the same
 small workload and zero managed bytes. This stage overhead is not the independent
 resident GPU backend's performance.
 
-The complete 38-group CPU collider runner and full GPU suite pass on this source
+The earlier complete 38-group CPU collider runner and full GPU suite passed
 (`/tmp/electron2d-cpu-ccd-collider-final3.log`,
 `/tmp/electron2d-cpu-ccd-gpu-final3.log`). The GPU suite includes the public CCD
 checks through its experimental host and the separate independent resident CCD
 suite; no public independent-GPU or multiplayer acceptance is implied.
 
 Restitution contact points with incoming closing speed also bound the initial impact interval, even when positional correction is already separating. This lets outgoing velocity consume the remainder. PhysicsCCDTests checks ray/full-shape bounce at bias 0, 0.8 and 1 with full impulse accounting.
+
+
+## Public CPU/GPU conformance, 2026-10-10
+
+`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1` runs PhysicsCCDTests, WorldBoundaryTests and
+SeparationRayDynamicsTests against explicit `PhysicsServer.Backend.CPU` and `GPU`
+spaces and scene Worlds. The older CPU-hosted GPU stage switch remains a separate
+control. Shared tests now include configuration/packing/lifetime, all built-in
+geometry, relative and rotational sweeps, filtering, frame impulses, infinite
+boundaries, directed-ray materials/mass/sleep and scene callbacks.
+
+Three regressions were reproduced before their resident shader fixes:
+
+- An unchanged motor woke an explicitly sleeping body on later substeps. Driving
+  wake now requires an already awake dynamic endpoint; edits and impacts still wake
+  the component normally.
+- After preserving sleep, an impact-awakened motor missed the remainder of its
+  impact interval. A device marker in the existing 64-byte joint state now starts
+  the first active solve with the remaining-time motor/general-force allowance.
+  It does not repeat torque for joints that already solved in that substep.
+- Directed ray contacts used the speculative search extension as physical length.
+  The manifold now retains the authored tip and signed separation. A stationary
+  ray with a 0.5-unit gap must remain unchanged for both slope policies; CCD at
+  6000 u/s stops at Y=19.897 on GPU and Y=19.900 on CPU, within the stated one-unit
+  contact-slop tolerance. The scene resting-height check is now bounded on both sides.
+
+The motor oracle uses four first-touch times across a 0.02-s tick, immediate impact
+or two idle ticks after explicit sleep, and unlimited or finite general force:
+16 cases per backend. With inertia 1 and torque 0.002 N·m, expected angular velocity
+is `-min(20, MaxForce) * remainingSeconds`. The 0.005-rad/s tolerance covers the CPU's
+0.5-unit contact slop at 3000 u/s (0.00334 rad/s) plus floating-point error. Its
+sleep/identity assertions remain exact. The separate linear-force budget fixture
+sets MaxBias=0 so positional correction cannot consume the allowance being measured.
+
+Linux/.NET 10, Vulkan/RTX 3090 Ti; one active body and an obstacle, complete public
+steps. CCD includes authored pose/velocity resets, 64 warmup and 128 samples;
+boundary/ray use 128 warmup and 128 samples. CCD uses 0.02 s; the others use 1/60 s.
+All measured loops report zero all-thread managed bytes:
+
+| Probe | CPU p50 / p95 / p99, ms | GPU p50 / p95 / p99, ms |
+| --- | --- | --- |
+| CCD reset + step | 0.0276 / 0.0278 / 0.0306 | 3.2160 / 4.1311 / 4.7219 |
+| Infinite boundary | 0.0169 / 0.0171 / 0.0197 | 2.5933 / 3.3602 / 4.0999 |
+| Directed ray | 0.0179 / 0.0227 / 0.0268 | 2.6544 / 3.3505 / 4.1564 |
+
+These probes measure small-world overhead and contract behavior. They do not prove
+large-world speedup, 60 FPS, native allocator behavior or foreign-platform support.
+The public test log is retained in the ignored local evidence directory
+`bin/physics-ccd-validation/2026-10-10/public-ccd.log`.
+
+
+Regression networking is a separate gate: one separate-process check observed
+856 managed bytes during warmed replay on the late CPU client, while GPU prediction/
+replay and the CPU authority remained at zero. The next run and a rebuilt baseline
+`84b9c443` run passed with zero. The intermittent allocation's source is unresolved;
+these results do not establish unconditional zero-allocation network replay.
+Both failing and passing process reports are retained with the local evidence.
+
+
+The final native-window regression used 4,096 awake circles, four substeps,
+16 iterations, fixed 60-Hz physics, 240 warmup and 240 sampled ticks, GPU canvas
+rendering and enabled VSync. CPU/GPU physics p50 was 12.1028 / 10.3091 ms; observed
+window rates were 124.8 / 144.0 FPS, with physics remaining 60.0 ticks/s. Both
+physics and whole rendered-frame loops reported zero managed bytes on owner/all
+threads. Neither world lost a body; both captures were saved under
+`bin/physics-ccd-validation/2026-10-10/native-window/`. This is a 4,096-body
+regression result, not the 65,536-fragment target or a before/after speedup claim.

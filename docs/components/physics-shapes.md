@@ -86,7 +86,8 @@ tree traversal, free-side pruning, contacts, queries and CCD. No CPU pose/geomet
 mirror is used for resident simulation. The old CPU-hosted GPU-stage experiment
 continues to publish custom boundary/ray manifolds on the host; that path is separate.
 
-WorldBoundaryTests checks scene/server and independent store response at X=1,000,000,
+WorldBoundaryTests checks explicitly selected public CPU/GPU scene/server worlds
+and independent store response at X=1,000,000,
 queries up to X=4,000,000, contacts against all seven other built-in families,
 nonunit equations, resource motion precedence, shape/type
 lifetime, sensors, sleep/edit/removal, and both CCD modes including a rotating plane.
@@ -108,8 +109,9 @@ readback; included device waits average 1.1224 ms. No pose readback occurs in th
 measured loop. Logs: `/tmp/electron2d-boundary-cpu.log`,
 `/tmp/electron2d-boundary-stages.log`, `/tmp/electron2d-boundary-resident.log`.
 These are tiny-world overhead/allocation probes, not large-world speedup or 60 FPS
-acceptance. Native allocation, window rendering, network behavior, other platforms
-and public independent-GPU binding remain unverified or unimplemented as applicable.
+acceptance. Native allocation, window rendering, network behavior and other platforms
+remain separate acceptance gates. Public CPU/GPU binding and the common boundary
+suite now execute; see the [current record](cpu-continuous-collision.md#public-cpugpu-conformance-2026-10-10).
 
 ## Solver policy and storage
 

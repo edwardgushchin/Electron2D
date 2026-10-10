@@ -1,14 +1,16 @@
 using System.Diagnostics;
 using Electron2D;
 
-internal static class WorldBoundaryTests
+internal sealed class WorldBoundaryTests(bool gpu, PhysicsServer.Backend backend)
 {
-    internal static void Run(bool gpu = false)
+    internal static void Run(bool gpu = false) => new WorldBoundaryTests(gpu, PhysicsServer.Backend.CPU).RunCore();
+    internal static void Run(PhysicsServer.Backend backend) => new WorldBoundaryTests(false, backend).RunCore();
+    private void RunCore()
     {
         VerifyAPI();
         using var plane = new WorldBoundaryShape { Normal = new(0, -2), Distance = 10 };
         using var ball = new CircleShape { Radius = 2 };
-        var space = PhysicsServer.SpaceCreate(); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
         try
         {
             PhysicsServer.SpaceSetActive(space, true);
@@ -34,7 +36,7 @@ internal static class WorldBoundaryTests
             using var parameters = new PhysicsTestMotionParameters { From = new(0, new(3_000_000, 0)), Motion = new(0, 60) };
             using var motion = new PhysicsTestMotionResult();
             Check(PhysicsServer.BodyTestMotion(body, parameters, motion) && motion.GetTravel().Y is > 32 and < 34, "Plane body motion.");
-            PhysicsServer.Service.GetSceneSpace(space).DefaultAreaFields.Gravity = 0;
+            PhysicsServer.AreaSetGravity(space, 0);
             foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
             {
                 PhysicsServer.BodySetTransform(body, new(0, new(1_000_000, 0))); PhysicsServer.BodySetLinearVelocity(body, new(0, 6000));
@@ -44,15 +46,15 @@ internal static class WorldBoundaryTests
             Check(plane.Collide(new(0, new(0, 40)), ball, new(0, new(4_000_000, 34))), "Standalone infinite collision.");
             Check(!plane.CollideWithMotion(new(0, new(0, 40)), new(0, -100), ball, new(0, new(4_000_000, 34)), new(0, -10)), "Boundary resource tests the other endpoint.");
             PhysicsServer.BodySetContinuousCollisionDetectionMode(body, CCDMode.Disabled); PhysicsServer.BodySetCanSleep(body, false);
-            PhysicsServer.Service.GetSceneSpace(space).DefaultAreaFields.Gravity = 980;
+            PhysicsServer.AreaSetGravity(space, 980);
             for (var i = 0; i < 128; i++) PhysicsServer.SpaceStep(space, 1d / 60);
             var samples = new long[128]; var allocated = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); PhysicsServer.SpaceStep(space, 1d / 60); samples[i] = Stopwatch.GetTimestamp() - start; }
-            allocated = GC.GetTotalAllocatedBytes(true) - allocated; Report(gpu ? "CPU host/GPU stages" : "CPU", samples, allocated);
+            allocated = GC.GetTotalAllocatedBytes(true) - allocated; Report(gpu ? "CPU host/GPU stages" : backend.ToString(), samples, allocated);
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
-        VerifyRotation(gpu); VerifyScene(gpu); VerifyDiscreteRotation(gpu); VerifyFamilies(false, gpu);
-        Console.WriteLine($"World boundary response and direct queries passed ({(gpu ? "CPU host/GPU stages" : "CPU")}).");
+        VerifyRotation(gpu); VerifyScene(gpu); VerifyDiscreteRotation(gpu); VerifyFamilies(false, gpu, backend);
+        Console.WriteLine($"World boundary response and direct queries passed ({(gpu ? "CPU host/GPU stages" : backend.ToString())}).");
     }
     internal static void RunResident()
     {
@@ -119,13 +121,13 @@ internal static class WorldBoundaryTests
         Check(plane.Normal == new Vector2(0, -2) && plane.Distance == 20, "Invalid boundary edits are atomic.");
         Reject<ArgumentException>(() => PhysicsServer.ShapeGetType(rid));
     }
-    private static void VerifyRotation(bool gpu)
+    private void VerifyRotation(bool gpu)
     {
         using var plane = new WorldBoundaryShape(); using var ray = new SeparationRayShape();
-        var space = PhysicsServer.SpaceCreate(); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
         try
         {
-            PhysicsServer.SpaceSetActive(space, true); var world = PhysicsServer.Service.GetSceneSpace(space); world.DefaultAreaFields.Gravity = 0;
+            PhysicsServer.SpaceSetActive(space, true); var world = PhysicsServer.Service.GetSceneSpace(space); PhysicsServer.AreaSetGravity(space, 0);
             if (gpu) world.EnableGPUSolver();
             PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Rigid); PhysicsServer.BodySetMass(floor, 1e9f); PhysicsServer.BodySetInertia(floor, 1e9f);
             PhysicsServer.BodyAddShape(floor, plane.GetRID()); PhysicsServer.BodySetAngularVelocity(floor, -20); PhysicsServer.BodySetSpace(floor, space);
@@ -138,11 +140,11 @@ internal static class WorldBoundaryTests
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(space); }
     }
-    private static void VerifyScene(bool gpu)
+    private void VerifyScene(bool gpu)
     {
         using var plane = new WorldBoundaryShape(); using var areaPlane = new WorldBoundaryShape();
         using var ball = new CircleShape { Radius = 2 }; using var zero = new SeparationRayShape { Length = 0 };
-        var root = new Node(); var floor = new StaticBody { Name = "Floor", Position = new(0, 40) };
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var floor = new StaticBody { Name = "Floor", Position = new(0, 40) };
         floor.AddChild(new CollisionShape { Shape = plane });
         var body = new RigidBody { Name = "Ball", Position = new(10000, 0), ContactMonitor = true, MaxContactsReported = 4 };
         body.AddChild(new CollisionShape { Shape = ball });
@@ -174,7 +176,7 @@ internal static class WorldBoundaryTests
         var gap = Vector2.Up.Rotated(state[0].Rotation).Dot(tip - state[0].Position);
         Check(gap > -.75f, $"Resident rotating infinite boundary CCD: gap={gap} u.");
     }
-    private static void VerifyFamilies(bool resident, bool stages = false)
+    private static void VerifyFamilies(bool resident, bool stages = false, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU)
     {
         Shape[] shapes = [new CircleShape { Radius = 3 }, new RectangleShape { Size = new(8, 6) }, new CapsuleShape { Radius = 2, Height = 8 },
             new SegmentShape { A = new(-4, 0), B = new(4, 0) }, new ConvexPolygonShape { Points = [new(-4, -3), new(4, -3), new(4, 3), new(-4, 3)] },
@@ -197,7 +199,7 @@ internal static class WorldBoundaryTests
                 }
                 else
                 {
-                    var space = PhysicsServer.SpaceCreate(); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+                    var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
                     try
                     {
                         PhysicsServer.SpaceSetActive(space, true); if (stages) PhysicsServer.Service.GetSceneSpace(space).EnableGPUSolver();
@@ -215,12 +217,12 @@ internal static class WorldBoundaryTests
         }
         finally { foreach (var shape in shapes) shape.Dispose(); }
     }
-    private static void VerifyDiscreteRotation(bool gpu)
+    private void VerifyDiscreteRotation(bool gpu)
     {
         using var plane = new WorldBoundaryShape(); using var circle = new CircleShape { Radius = 2 };
         foreach (var dynamicPlane in new[] { false, true })
         {
-            var space = PhysicsServer.SpaceCreate(); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
+            var space = PhysicsServer.SpaceCreate(backend); var floor = PhysicsServer.BodyCreate(); var body = PhysicsServer.BodyCreate();
             try
             {
                 PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 0);

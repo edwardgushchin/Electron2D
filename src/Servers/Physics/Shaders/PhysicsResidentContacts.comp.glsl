@@ -61,7 +61,7 @@ void rayContact(Shape ra,Geometry rg,ResidentBody rb,Shape other,Geometry og,Res
 {
     Hull ray=hull(ra,rg,rb,0u);vec2 from=vertex(ray,0u),d=vertex(ray,1u)-from;
     if(d==vec2(0))return;
-    vec2 axis=normalized(d);d+=axis*contactLimit;
+    vec2 tip=from+d,axis=normalized(d);d+=axis*contactLimit;
     float nearest=2;vec2 hitNormal=vec2(0);uint hitFeature=0u,hitPiece=0u;
     uint pieceCount=og.data.z==5u?og.data.y/2u:1u;
     for(uint i=0u;i<pieceCount;i++)
@@ -70,7 +70,8 @@ void rayContact(Shape ra,Geometry rg,ResidentBody rb,Shape other,Geometry og,Res
         if(rayHit(hull(other,og,ob,i),from,d,t,n,f)&&t<nearest){nearest=t;hitNormal=n;hitFeature=f;hitPiece=i;}
     }
     if(nearest>1)return;
-    vec2 a=from+d;float depth=(1-nearest)*length(d);
+    // The search margin admits separated pairs; physical anchors retain the authored ray tip.
+    vec2 a=tip;float depth=(1-nearest)*length(d)-contactLimit;
     vec2 n=rg.parameters.y!=0?-hitNormal:axis,b=a-depth*n;
     if(flip)emitPoint(b,a,-n,uvec4(hitFeature,2u,hitPiece,0u));
     else emitPoint(a,b,n,uvec4(2u,hitFeature,0u,hitPiece));

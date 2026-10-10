@@ -211,7 +211,12 @@ not established by this Linux compute run.
 
 Resident joints now participate in [GPU sleep components](gpu-resident-sleep.md). The measurements above predate sleep; current regression populations explicitly set CanSleep=false, preserving the all-awake workload.
 
-CCD impact intervals reuse pin/groove/contact solving but do not reapply the scheduled spring impulse or motor torque budget. Unrelated spring and motor analytic checks cover that cadence in GPUPhysicsCCDStoreTests.
+CCD impact intervals reuse pin/groove/contact solving without repeating an already
+applied spring or motor contribution. A newly awakened joint receives the remaining
+interval's general force and motor allowance once; the active-solve marker shares
+the existing 64-byte warm state and checkpoint payload. An unchanged motor preserves
+explicit sleep. GPUPhysicsCCDStoreTests and the common public PhysicsCCDTests check
+both ordinary cadence and impacts that awaken sleeping motors.
 
 
 ## Policy verification, 2026-10-09

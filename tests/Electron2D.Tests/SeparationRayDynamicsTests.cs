@@ -8,7 +8,7 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
     internal static void Run(PhysicsServer.Backend backend) => new SeparationRayDynamicsTests(false, backend).RunCore();
     private void RunCore()
     {
-        VerifyFamilies(gpu); VerifySlope(gpu); VerifyMaterials(gpu); VerifySleepAndAllocation(gpu); VerifyFilters(gpu); VerifyCoupled(gpu); VerifyCCD(gpu); VerifyScene(gpu);
+        VerifyFamilies(gpu); VerifySlope(gpu); VerifyMaterials(gpu); VerifySleepAndAllocation(gpu); VerifySearchMargin(gpu); VerifyFilters(gpu); VerifyCoupled(gpu); VerifyCCD(gpu); VerifyScene(gpu);
         Console.WriteLine($"Directed ray dynamics passed ({(gpu ? "CPU host/GPU stages" : backend.ToString())}): solver, materials, mass, reports, sleep and allocation.");
     }
     private sealed class World : IDisposable
@@ -109,6 +109,19 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
         if (store is not null) Console.WriteLine($"Resident whole-step traffic: upload/readback/uniforms {(store.UploadBytes - upload) / 128}/{(store.ReadbackBytes - readback) / 128}/{(store.UniformBytes - uniforms) / 128} B; mean wait {(store.WaitMS - wait) / 128:F4} ms.");
         Check(allocated == 0, "Warmed active directed solver steps allocate zero managed bytes.");
     }
+    private void VerifySearchMargin(bool gpu)
+    {
+        using var floor = new RectangleShape { Size = new(200, 10) };
+        foreach (var slide in new[] { false, true })
+        {
+            using var ray = new SeparationRayShape { SlideOnSlope = slide }; using var world = new World(gpu, backend);
+            var body = world.Add(ray, new(0, 14.5f), true); world.Add(floor, new(0, 40));
+            world.Step(4);
+            Check(PhysicsServer.BodyGetTransform(body).Origin.DistanceTo(new(0, 14.5f)) < .0001f &&
+                PhysicsServer.BodyGetLinearVelocity(body) == Vector2.Zero,
+                "A separated stationary ray is not pushed away by the speculative contact search margin");
+        }
+    }
     private void VerifyFilters(bool gpu)
     {
         using var ray = new SeparationRayShape(); using var floor = new RectangleShape { Size = new(200, 10) };
@@ -152,7 +165,7 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
             using var world = new World(gpu, backend); var body = world.Add(ray, default, true); world.Add(floor, new(0, 40));
             PhysicsServer.BodySetLinearVelocity(body, new(0, 6000)); PhysicsServer.BodySetContinuousCollisionDetectionMode(body, mode);
             world.Step();
-            Check(PhysicsServer.BodyGetTransform(body).Origin.Y < 21 && MathF.Abs(PhysicsServer.BodyGetLinearVelocity(body).Y) < 1, $"Continuous directed contact stops at its tip ({mode}): {PhysicsServer.BodyGetTransform(body).Origin}, {PhysicsServer.BodyGetLinearVelocity(body)}.");
+            Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - 19.9f) < 1 && MathF.Abs(PhysicsServer.BodyGetLinearVelocity(body).Y) < 1, $"Continuous directed contact stops at its tip ({mode}): {PhysicsServer.BodyGetTransform(body).Origin}, {PhysicsServer.BodyGetLinearVelocity(body)}.");
             Console.WriteLine($"Ray CCD {mode}: {PhysicsServer.BodyGetTransform(body).Origin}, {PhysicsServer.BodyGetLinearVelocity(body)}");
         }
         for (var reverse = 0; reverse < 2; reverse++)
@@ -171,7 +184,7 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
         body.AddChild(new CollisionShape { Shape = ray }); target.AddChild(new CollisionShape { Shape = floor }); root.AddChild(body); root.AddChild(target);
         using var tree = new SceneTree(root); if (gpu) body.Space!.EnableGPUSolver(); var entered = 0; body.BodyEntered += _ => entered++;
         for (var i = 0; i < 60; i++) tree.PhysicsFrame(1d / 60);
-        Check(entered == 1 && body.GetContactCount() > 0 && body.Position.Y < 16, "Scene directed body publishes one entry and ordinary contact snapshots.");
+        Check(entered == 1 && body.GetContactCount() > 0 && body.Position.Y is > 14 and < 16, $"Scene directed body publishes one entry at its authored tip: y={body.Position.Y}.");
     }
     private static void Check(bool value, string message) { if (!value) throw new InvalidOperationException(message); }
 }

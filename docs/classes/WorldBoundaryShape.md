@@ -1,6 +1,6 @@
 # WorldBoundaryShape
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -14,8 +14,8 @@ An infinite solid half-plane `Normal.Dot(localPoint) <= Distance`. The normal po
 into free space. This is analytic geometry, with no finite width or wall thickness.
 A CollisionShape offsets and rotates the plane for a body or Area. The borrowed
 resource contributes no geometric mass or inertia; explicit body parameters remain
-effective. Two boundaries do not collide. CPU scene/server use is implemented;
-independent GPU geometry executes internally, while public GPU binding remains open.
+effective. Two boundaries do not collide. Public CPU and independent GPU worlds
+share scene/server response, sensing, queries and CCD checks.
 
 ## Example
 
@@ -66,7 +66,8 @@ swept-query and initial-overlap rules. See [Shape](Shape.md) and [ADR 0069](../d
 [WorldBoundaryTests](../../tests/Electron2D.Tests/WorldBoundaryTests.cs) checks
 nonunit/default/copied geometry, invalid edits, all logical shape identities,
 far-away infinite response and queries, Area membership, contact events, sleep,
-live edits, removal and translating/rotating CCD. Shared GPU shape/motion matrices
+live edits, removal and translating/rotating CCD through explicitly selected CPU
+and GPU worlds (`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1`). Shared GPU shape/motion matrices
 exercise both argument positions. The [component report](../components/physics-shapes.md#infinite-world-boundaries)
 records measured allocation, traffic and remaining acceptance limits.
 

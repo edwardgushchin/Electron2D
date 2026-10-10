@@ -146,7 +146,9 @@ void main()
         if(i>=control.w)
         {
             ResidentJoint j=joints[i-control.w];bool driving=false;
-            if(j.ids.y==0u)driving=(j.identity.z&2u)!=0u&&j.motorSpring.y>0&&j.motorSpring.x!=0;
+            // An unchanged motor keeps an active component awake but must respect explicit sleep.
+            if(j.ids.y==0u)driving=(j.identity.z&2u)!=0u&&j.motorSpring.y>0&&j.motorSpring.x!=0&&
+                ((a&&(bodies[e.x].flags.z&16u)==0u)||(b&&(bodies[e.y].flags.z&16u)==0u));
             if(j.ids.y==2u)
             {
                 ResidentBody ba=bodies[e.x],bb=e.y==none?worldBody():bodies[e.y];

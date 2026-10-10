@@ -42,7 +42,7 @@ def check_physics_report(pages):
     assert dict(actual) == expected, "Physics ledger must retain every open row from the class classifier"
     assert "Joint2D::property:bias" not in expected
     assert "PinJoint2D::property:softness" not in expected
-    assert "RigidBody2D::property:continuous_cd" in expected
+    assert "RigidBody2D::property:continuous_cd" not in expected
     assert "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)" not in expected
     assert "StaticBody2D::property:constant_angular_velocity" not in expected
 
@@ -329,7 +329,7 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 146, "Partial": 12, "Unimplemented": 3, "Blocked": 0, "Excluded": 54}
+                "Implemented": 152, "Partial": 6, "Unimplemented": 3, "Blocked": 0, "Excluded": 54}
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_attach_canvas_instance_id", "body_get_canvas_instance_id",
                             "area_attach_canvas_instance_id", "area_get_canvas_instance_id"))
@@ -346,12 +346,13 @@ def main():
     assert " | Implemented | " in next(row for row in resource_rows if row.startswith("| [`method _get_rid("))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("set_active", "space_set_active", "space_is_active"))
-    assert all(" | Partial | " in next(row for row in server_rows if f"method {name}(" in row)
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_get_continuous_collision_detection_mode", "body_set_continuous_collision_detection_mode"))
     for owner in ("RigidBody2D", "PhysicsServer2D"):
         rows = pages[CLASS_PAGES / f"{owner}.md"].splitlines()
         ccd = next(row for row in rows if row.startswith("| [`enum CCDMode"))
-        assert "public enum Electron2D.CCDMode" in ccd and "public independent-GPU" in ccd
+        assert "public enum Electron2D.CCDMode" in ccd and " | Implemented | " in ccd
+        assert "ELECTRON2D_TEST_GPU_CCD_CONTRACT" in ccd and "public CPU and independent GPU worlds" in ccd
     area_parameter_rows = [row for row in server_rows if "AreaParameter" in row.split(" | ")[0] and "method" not in row.split(" | ")[0]]
     assert len(area_parameter_rows) == 11 and all(" | Excluded | " in row for row in area_parameter_rows)
     assert all(" | Implemented | " in next(row for row in server_rows if f"method area_{action}_param(" in row)

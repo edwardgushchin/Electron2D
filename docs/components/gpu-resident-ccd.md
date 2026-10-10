@@ -1,6 +1,6 @@
 # Resident GPU continuous collision
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Executing boundary
 
@@ -15,7 +15,7 @@ definition. Step and SolveConstraints remain their existing partial-stage contro
 
 This is an internal independent GPU implementation under
 [ADR 0054](../decisions/physics.md#adr-0054). [Public CPU CCD modes](cpu-continuous-collision.md) now execute through scene/server
-settings, and this store reuses the shared public CCDMode enum. [Independent GPU world selection](physics-backends.md) and public contact/event projection now execute. Full CCD-family conformance and networking remain open.
+settings, and this store reuses the shared public CCDMode enum. [Independent GPU world selection](physics-backends.md) and public contact/event projection now execute. The common public CCD, world-boundary and directed-ray suites now run on explicit CPU/GPU worlds; see the [current conformance record](cpu-continuous-collision.md#public-cpugpu-conformance-2026-10-10). Full physics, performance and platform acceptance remain separate.
 
 The pinned [reference API](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RigidBody2D.xml)
 defines disabled, ray and shape prediction. Its
@@ -88,9 +88,13 @@ impulse solvers resolve the impact, and the remaining duration is swept again.
 Thus restitution, friction, angular response, static surface motion, joint
 constraints and waking use existing shared device operations.
 
-Intermediate impact solves skip a second spring/motor contribution. A sleeper
-newly activated by an impact receives the remaining interval's force integration
-once. All poses consume the same elapsed interval; CCD-disabled peers retain their
+Intermediate impact solves skip an already-applied spring/motor contribution. A
+sleeper newly activated by an impact receives the remaining interval's force
+integration and motor allowance once. JointState.budget.w records whether a joint
+has solved with an active dynamic endpoint in this scheduled substep; a newly
+awakened joint initializes its general force budget from the remaining duration.
+An unchanged motor respects explicit sleep until an edit or external interaction
+wakes its component. All poses consume the same elapsed interval; CCD-disabled peers retain their
 mode, though global impact boundaries can add ordinary constraint evaluations.
 Automatic sleep ages once for the full scheduled substep, not once per CCD query.
 Zero delta does not consume motion. With no enabled dynamic bodies, no continuous
@@ -99,9 +103,9 @@ pipeline is created or dispatched.
 Internal CCDQueryCount counts actual TOI dispatches, CCDIntervalCount counts split
 intervals (including near-contact rotational refinement), and CCDWaitMS counts
 those TOI summary waits. These are not public impact events or contact counts.
-Transient contact publication across those intervals must be connected in the
-future public-world adapter; a last internal manifold is not a complete frame
-contact/event snapshot.
+The public-world adapter publishes accumulated frame records across those intervals;
+the common CCD suite verifies the full restitution impulse. A last internal
+manifold alone is not a complete frame contact/event snapshot.
 
 ## Storage, transfer and native limits
 

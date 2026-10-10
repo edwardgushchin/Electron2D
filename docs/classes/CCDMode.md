@@ -1,6 +1,6 @@
 # CCDMode
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `public enum CCDMode`
 **Source:** [CCDMode.cs](../../src/Servers/Physics/CCDMode.cs)
@@ -9,7 +9,7 @@ Last updated: 2026-10-09
 ## Description
 
 One shared mode contract for RigidBody.ContinuousCD, PhysicsServer body accessors
-and the internal resident GPU store. The mode is stored while detached or not
+on explicitly selected CPU and GPU worlds. The mode is stored while detached or not
 dynamic. A changed mode wakes an attached dynamic body. It does not change a
 neighbour's configured policy. Detection and ordinary impulse response remain
 separate phases of the same physics step; numerical paths differ between backends.
@@ -30,4 +30,5 @@ PhysicsServer.BodySetContinuousCollisionDetectionMode(projectile.GetRID(), CCDMo
 Undefined values reject before mutation. Configuration, packing, scene/server
 projection, geometry, force budgets and warmed allocation are covered by
 PhysicsCCDTests. See the component page for supported geometry and verification
-limits. The independent GPU world is not yet publicly selectable.
+limits. The common CCD, boundary and directed-ray group runs with
+`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1`; the older stage-hosted diagnostic is separate.

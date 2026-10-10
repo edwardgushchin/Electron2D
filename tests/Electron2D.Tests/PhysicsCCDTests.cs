@@ -2,22 +2,26 @@ using System.Diagnostics;
 using Electron2D;
 using Mode = Electron2D.PhysicsServer.BodyMode;
 
-internal static class PhysicsCCDTests
+internal sealed class PhysicsCCDTests(bool gpu, PhysicsServer.Backend backend)
 {
-    internal static void Run(bool gpu = false)
+    internal static void Run(bool gpu = false) => new PhysicsCCDTests(gpu, PhysicsServer.Backend.CPU).RunCore();
+    internal static void Run(PhysicsServer.Backend backend) => new PhysicsCCDTests(false, backend).RunCore();
+    private void RunCore()
     {
-        VerifyAPI(); VerifyScene(gpu); VerifyWall(gpu); VerifyFamilies(gpu); VerifyModes(gpu); VerifyMoving(gpu); VerifyRotation(gpu); VerifyBounce(gpu); VerifyJointMotion(gpu); VerifyForces(gpu); VerifySleepingMotor(gpu); VerifyFilters(gpu); VerifyChain(gpu); VerifyAllocation(gpu);
-        Console.WriteLine($"Public per-body CCD passed on {(gpu ? "CPU host/GPU stages" : "CPU")}: modes, lifetime, geometry, relative motion and allocation.");
+        VerifyAPI(); VerifyScene(gpu); VerifyWall(gpu); VerifyFamilies(gpu); VerifyModes(gpu); VerifyMoving(gpu); VerifyRotation(gpu);
+        VerifyBounce(gpu); VerifyJointMotion(gpu); VerifyForces(gpu); VerifySleepingMotor(gpu); VerifyFilters(gpu); VerifyChain(gpu); VerifyAllocation(gpu);
+        Console.WriteLine($"Public per-body CCD passed on {(gpu ? "CPU host/GPU stages" : backend.ToString())}: modes, lifetime, geometry, relative motion and allocation.");
     }
     private sealed class Fixture : IDisposable
     {
-        internal readonly RID Space = PhysicsServer.SpaceCreate();
+        internal readonly RID Space;
         private readonly List<RID> _bodies = [];
-        internal Fixture(bool gpu = false)
+        internal Fixture(bool gpu, PhysicsServer.Backend backend)
         {
+            Space = PhysicsServer.SpaceCreate(backend);
+            Check(PhysicsServer.SpaceGetBackend(Space) == backend, "CCD uses the selected public backend");
             PhysicsServer.SpaceSetActive(Space, true);
-            var fields = PhysicsServer.Service.GetSceneSpace(Space).DefaultAreaFields;
-            fields.Gravity = 0; fields.LinearDamp = fields.AngularDamp = 0;
+            PhysicsServer.AreaSetGravity(Space, 0); PhysicsServer.AreaSetLinearDamp(Space, 0); PhysicsServer.AreaSetAngularDamp(Space, 0);
             if (gpu) PhysicsServer.Service.GetSceneSpace(Space).EnableGPUSolver();
         }
         internal RID Add(Shape shape, Vector2 position = default, Vector2 velocity = default, CCDMode ccd = CCDMode.Disabled, Mode mode = Mode.Rigid)
@@ -30,7 +34,7 @@ internal static class PhysicsCCDTests
         internal void Step() => PhysicsServer.SpaceStep(Space, .02);
         public void Dispose() { foreach (var body in _bodies) PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(Space); }
     }
-    private static void VerifyAPI()
+    private void VerifyAPI()
     {
         using var body = new RigidBody { Name = "Projectile" };
         Check(body.ContinuousCD == CCDMode.Disabled, "Scene default is discrete.");
@@ -40,7 +44,7 @@ internal static class PhysicsCCDTests
         Check(body.ContinuousCD == CCDMode.CastRay, "Invalid writes are atomic.");
         using var scene = new PackedScene(); scene.Pack(body); using var copy = (RigidBody)scene.Instantiate();
         Check(copy.ContinuousCD == CCDMode.CastRay, "CCD is stored in packed scenes.");
-        using var circle = new CircleShape { Radius = 1 }; using var f = new Fixture(); var server = f.Add(circle, ccd: CCDMode.CastShape);
+        using var circle = new CircleShape { Radius = 1 }; using var f = new Fixture(false, backend); var server = f.Add(circle, ccd: CCDMode.CastShape);
         PhysicsServer.BodySetSleeping(server, true); PhysicsServer.BodySetContinuousCollisionDetectionMode(server, CCDMode.CastRay);
         Check(!PhysicsServer.BodyGetSleeping(server), "A changed CCD policy wakes a body.");
         PhysicsServer.BodySetSpace(server, default); PhysicsServer.BodySetMode(server, Mode.Static); PhysicsServer.BodySetSpace(server, f.Space);
@@ -49,10 +53,10 @@ internal static class PhysicsCCDTests
         var area = PhysicsServer.AreaCreate(); try { Reject<ArgumentException>(() => PhysicsServer.BodySetContinuousCollisionDetectionMode(area, CCDMode.CastShape)); } finally { PhysicsServer.FreeRID(area); }
         body.Dispose(); Reject<ObjectDisposedException>(() => _ = body.ContinuousCD);
     }
-    private static void VerifyScene(bool gpu)
+    private void VerifyScene(bool gpu)
     {
         using var ball = new CircleShape { Radius = 1 }; using var wallShape = new RectangleShape { Size = new(.2f, 100) };
-        using var root = new Node(); var body = new RigidBody
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld }; var body = new RigidBody
         {
             Name = "Projectile",
             ContinuousCD = CCDMode.CastShape,
@@ -73,7 +77,7 @@ internal static class PhysicsCCDTests
         root.RemoveChild(body); root.AddChild(body);
         Check(body.ContinuousCD == CCDMode.CastRay, "Freeze and scene reentry retain configured CCD.");
     }
-    private static void VerifyFamilies(bool gpu)
+    private void VerifyFamilies(bool gpu)
     {
         var points = new Vector2[12]; for (var i = 0; i < points.Length; i++) points[i] = new Vector2(10, 0).Rotated(i * Mathf.Tau / points.Length);
         Shape[] shapes = [new CapsuleShape { Radius = 1, Height = 4 }, new RectangleShape { Size = new(2, 4) },
@@ -84,20 +88,20 @@ internal static class PhysicsCCDTests
         {
             foreach (var shape in shapes)
             {
-                using var f = new Fixture(gpu); var a = f.Add(shape, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
+                using var f = new Fixture(gpu, backend); var a = f.Add(shape, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
                 f.Step(); Check(PhysicsServer.BodyGetTransform(a).Origin.X < 20.1f, $"Complete CCD geometry for {shape.GetType().Name}");
             }
         }
         finally { foreach (var shape in shapes) shape.Dispose(); }
     }
-    private static void VerifyWall(bool gpu)
+    private void VerifyWall(bool gpu)
     {
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 100) };
         foreach (var mode in Enum.GetValues<CCDMode>())
         {
-            using var f = new Fixture(gpu); var a = f.Add(circle, velocity: new(3000, 0), ccd: mode); f.Add(wall, new(20, 0), mode: Mode.Static);
+            using var f = new Fixture(gpu, backend); var a = f.Add(circle, velocity: new(3000, 0), ccd: mode); f.Add(wall, new(20, 0), mode: Mode.Static);
             PhysicsServer.BodySetMaxContactsReported(a, 4); using var state = PhysicsServer.BodyGetDirectState(a)!;
-            f.Step(); Console.WriteLine($"CPU CCD {mode}: {state.Transform.Origin}, {state.LinearVelocity}");
+            f.Step(); Console.WriteLine($"{backend} CCD {mode}: {state.Transform.Origin}, {state.LinearVelocity}");
             if (mode == CCDMode.Disabled) Check(state.Transform.Origin.X > 50, "Disabled has no implicit global CCD.");
             else
             {
@@ -108,12 +112,12 @@ internal static class PhysicsCCDTests
             }
         }
     }
-    private static void VerifyModes(bool gpu)
+    private void VerifyModes(bool gpu)
     {
         using var box = new RectangleShape { Size = new(2, 8) }; using var corner = new RectangleShape { Size = new(.2f, .4f) };
         foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
         {
-            using var f = new Fixture(gpu); var a = f.Add(box, velocity: new(3000, 0), ccd: mode); var b = f.Add(corner, new(20, 3), mode: Mode.Static);
+            using var f = new Fixture(gpu, backend); var a = f.Add(box, velocity: new(3000, 0), ccd: mode); var b = f.Add(corner, new(20, 3), mode: Mode.Static);
             PhysicsServer.BodySetMaxContactsReported(a, 4); f.Step(); var x = PhysicsServer.BodyGetTransform(a).Origin.X;
             using var state = PhysicsServer.BodyGetDirectState(a)!;
             Check(mode == CCDMode.CastRay ? x > 50 && state.LinearVelocity.X == 3000 :
@@ -123,42 +127,42 @@ internal static class PhysicsCCDTests
             Check(PhysicsServer.BodyGetTransform(a).Origin.X > 50, "Either endpoint's explicit exception rejects CCD.");
         }
     }
-    private static void VerifyMoving(bool gpu)
+    private void VerifyMoving(bool gpu)
     {
         using var circle = new CircleShape { Radius = 1 };
         foreach (var peer in new[] { CCDMode.Disabled, CCDMode.CastRay, CCDMode.CastShape })
         {
-            using var f = new Fixture(gpu); var a = f.Add(circle, new(-20, 0), new(3000, 0), CCDMode.CastShape); var b = f.Add(circle, new(20, 0), new(-3000, 0), peer);
+            using var f = new Fixture(gpu, backend); var a = f.Add(circle, new(-20, 0), new(3000, 0), CCDMode.CastShape); var b = f.Add(circle, new(20, 0), new(-3000, 0), peer);
             f.Step(); Check(PhysicsServer.BodyGetTransform(a).Origin.X < PhysicsServer.BodyGetTransform(b).Origin.X, "Relative sweeps prevent exchanging sides.");
             for (var i = 0; i < 3; i++) f.Step();
             Check(PhysicsServer.BodyGetTransform(a).Origin.X < PhysicsServer.BodyGetTransform(b).Origin.X && PhysicsServer.BodyGetContinuousCollisionDetectionMode(b) == peer, "Moving peers keep their policy and react through contacts.");
         }
     }
-    private static void VerifyChain(bool gpu)
+    private void VerifyChain(bool gpu)
     {
         using var ball = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 100) };
-        using var f = new Fixture(gpu); var front = f.Add(ball, velocity: new(3000, 0), ccd: CCDMode.CastShape);
+        using var f = new Fixture(gpu, backend); var front = f.Add(ball, velocity: new(3000, 0), ccd: CCDMode.CastShape);
         var back = f.Add(ball, new(-20, 0), new(3000, 0)); f.Add(wall, new(20, 0), mode: Mode.Static);
         f.Step(); var a = PhysicsServer.BodyGetTransform(front).Origin; var b = PhysicsServer.BodyGetTransform(back).Origin;
         Check(b.X < a.X, $"A stopped CCD body must not be crossed by a following peer: front={a}, back={b}");
         for (var i = 0; i < 4; i++) { f.Step(); Check(PhysicsServer.BodyGetTransform(back).Origin.X < PhysicsServer.BodyGetTransform(front).Origin.X, "Chained impact remains ordered after subsequent solver steps."); }
     }
-    private static void VerifyRotation(bool gpu)
+    private void VerifyRotation(bool gpu)
     {
         using var rod = new RectangleShape { Size = new(40, 1) }; using var target = new CircleShape { Radius = .6f };
-        using var f = new Fixture(gpu); var a = f.Add(rod, ccd: CCDMode.CastShape); f.Add(target, new(14, 8), mode: Mode.Static);
+        using var f = new Fixture(gpu, backend); var a = f.Add(rod, ccd: CCDMode.CastShape); f.Add(target, new(14, 8), mode: Mode.Static);
         PhysicsServer.BodySetMaxContactsReported(a, 4); PhysicsServer.BodySetAngularVelocity(a, 60); f.Step();
         using var state = PhysicsServer.BodyGetDirectState(a)!;
         Check(state.GetContactCount() > 0 && MathF.Abs(state.AngularVelocity - 60) > 1,
             $"A rotating contour hits the intermediate arc and receives a constraint impulse: angle={state.Transform.Rotation}, omega={state.AngularVelocity}, contacts={state.GetContactCount()}");
     }
-    private static void VerifyBounce(bool gpu)
+    private void VerifyBounce(bool gpu)
     {
         using var ball = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 100) };
         foreach (var mode in new[] { CCDMode.CastRay, CCDMode.CastShape })
             foreach (var bias in new[] { 0f, .8f, 1f })
             {
-                using var f = new Fixture(gpu); PhysicsServer.SpaceSetContactDefaultBias(f.Space, bias); var a = f.Add(ball, velocity: new(3000, 0), ccd: mode); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
+                using var f = new Fixture(gpu, backend); PhysicsServer.SpaceSetContactDefaultBias(f.Space, bias); var a = f.Add(ball, velocity: new(3000, 0), ccd: mode); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
                 PhysicsServer.BodySetBounce(a, .5f); PhysicsServer.BodySetBounce(b, .5f); PhysicsServer.BodySetFriction(a, 0); PhysicsServer.BodySetFriction(b, 0);
                 PhysicsServer.BodySetMaxContactsReported(a, 8); f.Step(); using var state = PhysicsServer.BodyGetDirectState(a)!;
                 var impulse = Vector2.Zero; for (var i = 0; i < state.GetContactCount(); i++) impulse += state.GetContactImpulse(i);
@@ -168,10 +172,10 @@ internal static class PhysicsCCDTests
                 Check(impulse.DistanceTo(new(-6000, 0)) < 2, "The frame contact snapshot contains the complete physical impulse.");
             }
     }
-    private static void VerifyJointMotion(bool gpu)
+    private void VerifyJointMotion(bool gpu)
     {
         using var rod = new RectangleShape { Size = new(40, 1) }; using var target = new CircleShape { Radius = .6f };
-        using var f = new Fixture(gpu); var a = f.Add(rod, ccd: CCDMode.CastShape); f.Add(target, new(14, 8), mode: Mode.Static);
+        using var f = new Fixture(gpu, backend); var a = f.Add(rod, ccd: CCDMode.CastShape); f.Add(target, new(14, 8), mode: Mode.Static);
         PhysicsServer.BodySetInertia(a, 1); PhysicsServer.BodySetMaxContactsReported(a, 8);
         var pin = PhysicsServer.JointCreate();
         try
@@ -185,10 +189,10 @@ internal static class PhysicsCCDTests
         }
         finally { PhysicsServer.FreeRID(pin); }
     }
-    private static void VerifyForces(bool gpu)
+    private void VerifyForces(bool gpu)
     {
         using var ball = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 100) };
-        using var f = new Fixture(gpu); var a = f.Add(ball, velocity: new(3000, 0), ccd: CCDMode.CastShape); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
+        using var f = new Fixture(gpu, backend); var a = f.Add(ball, velocity: new(3000, 0), ccd: CCDMode.CastShape); var b = f.Add(wall, new(20, 0), mode: Mode.Static);
         PhysicsServer.BodySetBounce(a, .5f); PhysicsServer.BodySetBounce(b, .5f);
         var free = f.Add(ball, new(0, 1000)); PhysicsServer.BodySetConstantForce(free, new(100, 0));
         var motor = f.Add(ball, new(0, 2000)); PhysicsServer.BodySetInertia(motor, 1);
@@ -198,63 +202,67 @@ internal static class PhysicsCCDTests
         {
             PhysicsServer.JointMakePin(pin, new(0, 2000), motor); PhysicsServer.PinJointSetMotorTargetVelocity(pin, 1000);
             PhysicsServer.PinJointSetMotorMaxTorque(pin, .002f); PhysicsServer.PinJointSetMotorEnabled(pin, true);
-            PhysicsServer.JointMakePin(limitedPin, new(0, 3000), limited); PhysicsServer.JointSetMaxForce(limitedPin, 50);
+            PhysicsServer.JointMakePin(limitedPin, new(0, 3000), limited); PhysicsServer.JointSetMaxForce(limitedPin, 50); PhysicsServer.JointSetMaxBias(limitedPin, 0);
             f.Step(); var linear = PhysicsServer.BodyGetLinearVelocity(free).X; var angular = PhysicsServer.BodyGetAngularVelocity(motor);
             Check(MathF.Abs(linear - 2) < .0001f, $"Split impacts do not repeat or omit constant forces: {linear}");
-            Check(MathF.Abs(PhysicsServer.BodyGetLinearVelocity(limited).X - 999) < .002f, "The shared linear joint force budget is applied once over the complete tick.");
+            Check(MathF.Abs(PhysicsServer.BodyGetLinearVelocity(limited).X - 999) < .002f, $"The shared linear joint force budget is applied once over the complete tick: {PhysicsServer.BodyGetLinearVelocity(limited).X}.");
             Check(MathF.Abs(angular + .4f) < .001f, $"Motor impulse budget spans the whole nominal interval: {angular}");
         }
         finally { PhysicsServer.FreeRID(pin); PhysicsServer.FreeRID(limitedPin); }
     }
-    private static void VerifySleepingMotor(bool gpu)
+    private void VerifySleepingMotor(bool gpu)
     {
-        using var ball = new CircleShape { Radius = 1 }; using var f = new Fixture(gpu);
-        var a = f.Add(ball, new(-100, 0), ccd: CCDMode.CastShape); var motor = f.Add(ball, new(20, 0));
-        PhysicsServer.BodySetInertia(motor, 1); PhysicsServer.BodySetCanSleep(motor, true);
-        PhysicsServer.BodySetFriction(a, 0); PhysicsServer.BodySetFriction(motor, 0);
-        var pin = PhysicsServer.JointCreate(); var world = Box2D.NET.B2Worlds.b2GetWorldFromId(PhysicsServer.Service.GetSceneSpace(f.Space).WorldID);
-        var previous = world.preSolveFcn; var at = -1f;
-        try
-        {
-            PhysicsServer.JointMakePin(pin, new(20, 0), motor); PhysicsServer.PinJointSetMotorTargetVelocity(pin, 1000);
-            PhysicsServer.PinJointSetMotorMaxTorque(pin, .002f); PhysicsServer.PinJointSetMotorEnabled(pin, true);
-            f.Step(); // Retain a nonzero motor history, then sleep the whole joint.
-            PhysicsServer.BodySetSleeping(motor, true); Check(PhysicsServer.BodyGetSleeping(motor), "Motor fixture is asleep before the impact.");
-            PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0));
-            var backend = PhysicsServer.Service.BodyRuntime(a).Backend;
-            for (var i = 0; i < backend.Shapes.Count; i++) Box2D.NET.B2Shapes.b2Shape_EnablePreSolveEvents(backend.Shapes[i], true);
-            world.preSolveFcn = (first, second, point, normal, context) =>
-            {
-                // Observe actual first-contact time from constant pre-impact translation, without changing filtering.
-                if (at < 0) at = Box2D.NET.B2Bodies.b2Body_GetPosition(backend.BodyID).X * 100 / 3000;
-                return previous(first, second, point, normal, context);
-            };
-            f.Step(); var actual = PhysicsServer.BodyGetAngularVelocity(motor); var expected = -20 * (.02f - at);
-            Check(at > .005f && MathF.Abs(actual - expected) < .003f,
-                $"A newly woken motor receives only its remaining-time budget; sleeping history spends none: time={at}, angular={actual}, expected={expected}");
-        }
-        finally { world.preSolveFcn = previous; PhysicsServer.FreeRID(pin); }
+        using var ball = new CircleShape { Radius = 1 };
+        foreach (var position in new[] { 8f, 20f, 44f, 59f })
+            foreach (var idleTicks in new[] { 0, 2 })
+                foreach (var cap in new[] { float.MaxValue, 10f })
+                {
+                    using var f = new Fixture(gpu, backend);
+                    var a = f.Add(ball, new(-100, 0), ccd: CCDMode.CastShape); var motor = f.Add(ball, new(position, 0));
+                    PhysicsServer.BodySetInertia(motor, 1); PhysicsServer.BodySetCanSleep(motor, true);
+                    PhysicsServer.BodySetFriction(a, 0); PhysicsServer.BodySetFriction(motor, 0);
+                    var pin = PhysicsServer.JointCreate();
+                    try
+                    {
+                        PhysicsServer.JointMakePin(pin, new(position, 0), motor); PhysicsServer.JointSetMaxForce(pin, cap);
+                        PhysicsServer.PinJointSetMotorTargetVelocity(pin, 1000); PhysicsServer.PinJointSetMotorMaxTorque(pin, .002f);
+                        PhysicsServer.PinJointSetMotorEnabled(pin, true); f.Step();
+                        PhysicsServer.BodySetSleeping(motor, true);
+                        for (var i = 0; i < idleTicks; i++) f.Step();
+                        Check(PhysicsServer.BodyGetSleeping(motor) && PhysicsServer.BodyGetAngularVelocity(motor) == 0,
+                            "An unchanged motor respects explicit sleep over later substeps and ticks");
+                        PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0));
+                        PhysicsServer.BodySetMaxContactsReported(a, 4);
+                        var contactTime = (PhysicsServer.BodyGetTransform(motor).Origin.X - 2) / 3000;
+                        f.Step(); var actual = PhysicsServer.BodyGetAngularVelocity(motor); var expected = -MathF.Min(20, cap) * (.02f - contactTime);
+                        using var state = PhysicsServer.BodyGetDirectState(a)!;
+                        // The 0.5-unit contact slop at 3000 u/s permits 0.00334 rad/s of budget error, plus float error.
+                        Check(!PhysicsServer.BodyGetSleeping(motor) && state.GetContactCount() > 0 && MathF.Abs(actual - expected) < .005f,
+                            $"Impact motor budget at x={position}, idle={idleTicks}, cap={cap}: time={contactTime}, angular={actual}, expected={expected}");
+                    }
+                    finally { PhysicsServer.FreeRID(pin); }
+                }
     }
-    private static void VerifyFilters(bool gpu)
+    private void VerifyFilters(bool gpu)
     {
         using var ball = new CircleShape { Radius = 1 }; using var floor = new RectangleShape { Size = new(200, .2f) };
         foreach (var fromBelow in new[] { false, true })
         {
-            using var f = new Fixture(gpu); var a = f.Add(ball, new(0, fromBelow ? 40 : 0), new(0, fromBelow ? -3000 : 3000), CCDMode.CastShape);
+            using var f = new Fixture(gpu, backend); var a = f.Add(ball, new(0, fromBelow ? 40 : 0), new(0, fromBelow ? -3000 : 3000), CCDMode.CastShape);
             var b = f.Add(floor, new(0, 20), mode: Mode.Static); PhysicsServer.BodySetShapeAsOneWayCollision(b, 0, true, 1);
             f.Step(); var y = PhysicsServer.BodyGetTransform(a).Origin.Y;
             Check(fromBelow ? y < 0 : y < 20, $"One-way CCD side: below={fromBelow}, y={y}");
         }
-        using (var f = new Fixture(gpu))
+        using (var f = new Fixture(gpu, backend))
         {
             var a = f.Add(ball, velocity: new(0, 3000), ccd: CCDMode.CastShape); var b = f.Add(floor, new(0, 20), mode: Mode.Static);
             PhysicsServer.BodySetCollisionMask(b, 0); f.Step(); Check(PhysicsServer.BodyGetTransform(a).Origin.Y > 50, "CCD requires reciprocal masks.");
         }
     }
-    private static void VerifyAllocation(bool gpu)
+    private void VerifyAllocation(bool gpu)
     {
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(.2f, 200) };
-        using var f = new Fixture(gpu); var a = f.Add(circle, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
+        using var f = new Fixture(gpu, backend); var a = f.Add(circle, velocity: new(3000, 0), ccd: CCDMode.CastShape); f.Add(wall, new(20, 0), mode: Mode.Static);
         for (var i = 0; i < 64; i++) { PhysicsServer.BodySetTransform(a, Transform.Identity); PhysicsServer.BodySetLinearVelocity(a, new(3000, 0)); f.Step(); }
         var times = new double[128]; var bytes = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < times.Length; i++)

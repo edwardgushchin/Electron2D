@@ -120,7 +120,9 @@ void main()
     // Cached impulses seed iteration; do not amplify a short-interval impact into a large cancellation.
     float ratio=old.epochs==epochs&&old.last.y>0?min(1,time.x/old.last.y):0;
     states[i].epochs=epochs;
-    if(history.w==0u)states[i].budget=vec4(impulseCap(j),0,0,0);
+    // A joint first awakened at an impact starts with only that interval's remaining allowance.
+    bool firstSolve=(history.w&1u)==0u||old.budget.w==0;
+    if(firstSolve)states[i].budget=vec4(impulseCap(j),0,0,ma.x>0||mb.x>0?1:0);
     float bias=j.solverPolicy.x==0?correctionPolicy.y:j.solverPolicy.x;
     float maxBias=min(time.w,j.solverPolicy.y);
     if(j.ids.y==0u)
@@ -141,7 +143,7 @@ void main()
                 emitRow(base+2u+row,j,ma,mb,vec2(0),sign,sign,-max(gap,0)*time.y,min(maxBias,bias*max(-gap,0)*time.y),vec2(0,maximum),savedImpulse(old,2u+row,ratio),gap>0);
             }
         }
-        if((history.w&1u)==0u&&(j.identity.z&2u)!=0u&&j.motorSpring.y>0)
+        if(firstSolve&&(j.identity.z&2u)!=0u&&j.motorSpring.y>0)
         {
             float cap=min(maximum,j.motorSpring.y*(time.x*10000.0));
             emitRow(base+4u,j,ma,mb,vec2(0),1,1,j.motorSpring.x,0,vec2(-cap,cap),savedImpulse(old,4u,ratio),true);

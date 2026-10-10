@@ -13,7 +13,7 @@ policies before shared pre-step snapshots and reuses the current resident rotati
 basis for pose reads. Explicit public CPU/GPU tests cover authored edits, CCD,
 callbacks, replay and reentry; full contract/performance acceptance remains open.
 
-[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public GPU binding now executes; complete family conformance remains open; built-in boundary and directed-ray response now execute.
+[Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals. The common CCD, analytic boundary and directed-ray suites now execute on explicitly selected CPU/GPU worlds, including unchanged sleeping motors, remaining-time budgets and physical ray-tip contacts. Broader physics acceptance remains open.
 
 [Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. The public GPU motion adapter now executes; full CharacterBody conformance remains open.
 

@@ -83,3 +83,9 @@ The built-in resource file registry constructs this concrete shape on load.
 [Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
 now run SeparationRayShapeTests and SeparationRayDynamicsTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
+
+
+The common public CCD group (`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1`) also verifies
+stationary separated rays and bounded CCD/scene resting positions on both backends.
+The speculative search margin admits candidates without extending the authored ray
+length or adding penetration. See the [conformance record](../components/cpu-continuous-collision.md#public-cpugpu-conformance-2026-10-10).

@@ -1,6 +1,6 @@
 # Resident GPU sleep and wake
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Executing boundary
 
@@ -15,16 +15,17 @@ while asleep. Static and kinematic roles do not enter dynamic sleep.
 Simulate evaluates automatic sleep using shared PhysicsSleepSettings sampled from
 project defaults at creation, with independently configurable finite,
 nonnegative linear/angular thresholds and a quiet interval. Initial internal values
-are 2 scene units/s, 0.13962634 rad/s and 0.5 s. These are internal solver settings;
-they do not close the missing public SpaceParameter integration. Step remains the
-integration-only control and observes explicit sleep without evaluating automatic
+are 2 scene units/s, 0.13962634 rad/s and 0.5 s. The shared
+[public sleep policy](physics-sleep.md) supplies these settings through typed world
+accessors. Step remains the integration-only control and observes explicit sleep without evaluating automatic
 island sleep. SolveConstraints propagates wake without advancing poses or timers.
 
 This implements the resident stage required by [ADR 0054](../decisions/physics.md#adr-0054).
-Public backend selection, scene/server ownership/publication, sleep callbacks,
-complete queries/events and network checkpoints/replay remain open. The
-current public CPU world and its callback contract are unchanged. Internal selected
-snapshots are not event delivery or a portable replay format.
+[Public backend selection and ownership](physics-backends.md), scene/server
+publication and sleep callbacks now execute. Local checkpoints and portable
+network snapshots remain distinct consumers; internal selected snapshots are not
+event delivery or a portable replay format. Full physics and platform acceptance
+requires the complete shared public contract.
 
 ## Device graph and propagation
 
@@ -44,8 +45,12 @@ build. A removed, reused, teleported or edited endpoint wakes its former neighbo
 before the old edges are overwritten. This includes removal/filtering/disposal of a
 static support. Old component wake skips newly reused body generations. New contacts
 then propagate wake across the current component. A moving static/kinematic surface,
-active motor or stretched spring wakes its constrained dynamics. Springs retain the
-existing nonzero-force wake policy, including at an offset loaded equilibrium.
+motor on an already awake component or stretched spring wakes its constrained
+dynamics. An unchanged motor does not override explicit sleep. A motor edit or
+external impact still wakes the component through ordinary authoring/contact rules.
+Springs retain the existing nonzero-force wake policy, including at an offset loaded
+equilibrium. The common public CCD suite checks immediate impact and two idle ticks
+after explicit sleep, at four impact times and with finite/unlimited joint caps.
 
 Wake occurs before contact/joint effective masses are prepared. If a body wakes
 after that substep's initial force pass, the same device force function applies the
