@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        PhysicsAreaBackendTests.Run(backend);
         TickBoundary(backend);
         PreparationFailure(backend);
         WorldPolicy(backend);

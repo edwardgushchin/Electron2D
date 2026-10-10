@@ -458,3 +458,10 @@ CPU/GPU full intervals now share one step/lifetime/callback boundary and dispatc
 [Caller-created direct-space extensions](../components/physics-space-extensions.md) now execute all six typed query hooks through inherited public array/span/scalar operations. The library owns bound-space guards, nested exclusions, scratch lifetime and validated result publication. A separate public-only consumer computes real scene/raw/Area circle queries on CPU/GPU and checks lifecycle, failures and warmed allocation. Registered-backend factories, direct-body extensions and custom geometry remain open under ADR 0103.
 
 [Caller-created body-state extensions](../components/physics-body-extensions.md) now execute the complete typed state/force/space/contact family. Body context is qualified by current attachment generation; nested hooks borrow body/world lifetime and preserve ordinary live mutation. Contact projection uses immutable engine-validated PhysicsBodyContact values. Registered server factories and factory-returned scene/server callback integration remain open under ADR 0103.
+
+Scene/raw Area geometry, CPU priority/field/body preparation and selected audio
+containment now dispatch through the retained CPU/GPU implementation owners. Common
+space code keeps memberships, default profiles and generation-qualified observer
+publication. [Area ownership checks](../components/physics-backends.md#area-implementation-ownership)
+exercise real fields, notifications, masks, audio and lifetime on both implementations;
+public registration, custom geometry and the remaining implementation hooks stay open.

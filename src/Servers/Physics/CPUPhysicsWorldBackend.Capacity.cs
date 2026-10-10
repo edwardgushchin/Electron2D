@@ -16,6 +16,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         EnsureAccess();
         var world = b2GetWorldFromId(WorldID);
+        _fieldAreas.EnsureCapacity(Space.Areas.Count + Space.ServerColliders.Count);
         foreach (var sensor in world.sensors.data.AsSpan(0, world.sensors.count))
         {
             Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.hits, world.shapes.count);

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Owns the resident GPU store, world policy, capacity, statistics and interval dispatch.</summary>
+/// <summary>Owns the resident GPU store, world policy, Area queries, capacity, statistics and interval dispatch.</summary>
 internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private bool _disposed;
@@ -37,6 +37,7 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         if (_disposed) return;
         _disposed = true;
+        _gpuAreaHits = []; _areaPointHits = []; _gpuAreaQuery[0] = default;
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear();
         GPUStore.Dispose();
     }

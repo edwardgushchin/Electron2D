@@ -3,7 +3,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-/// <summary>Owns the CPU world, policies, solver capacity, statistics, workers and optional diagnostic GPU stages.</summary>
+/// <summary>Owns the CPU world, policies, field/Area geometry, capacity, statistics, workers and optional diagnostic GPU stages.</summary>
 internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
@@ -87,6 +87,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         if (_disposed) return;
         _disposed = true;
+        _fieldAreas.Clear();
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear(); _shapeCandidates.Clear(); _queryProxies.Clear(); _motionCandidates.Clear();
         List<Exception>? errors = null;
         try { _tasks.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }

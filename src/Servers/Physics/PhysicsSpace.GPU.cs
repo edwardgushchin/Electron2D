@@ -23,6 +23,8 @@ internal sealed partial class PhysicsSpace
     private readonly Dictionary<ulong, PhysicsColliderBackend> _gpuRIDColliders = [];
     private readonly Dictionary<uint, (PhysicsColliderBackend Owner, uint Generation, int Slot)> _gpuShapeOwners = [];
     private int _gpuSensorShapeCount;
+    internal int GPUSensorShapeCount => _gpuSensorShapeCount;
+    internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];
     private GPUPhysicsBodyStore.BodyHandle[] _gpuObservedBodies = [];
     private GPUPhysicsBodyStore.Snapshot[] _gpuObservedStates = [];
@@ -170,8 +172,8 @@ internal sealed partial class PhysicsSpace
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges.Clear();
         _gpuExceptions.Clear(); _gpuNextExceptions.Clear();
         _gpuChanges = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
-        _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = []; _gpuAreaHits = [];
-        _gpuShapeQuery[0] = default; _gpuAreaQuery[0] = default;
+        _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
+        _gpuShapeQuery[0] = default;
     }
     internal void CaptureGPUViewContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState view, int limit)
     {

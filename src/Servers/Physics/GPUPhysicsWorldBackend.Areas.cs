@@ -1,15 +1,30 @@
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class GPUPhysicsWorldBackend
 {
+    private GPUPhysicsBodyStore.QueryHit[] _areaPointHits = [];
+
+    internal override bool AreaContainsPoint(Area area, Vector2 point, uint mask)
+    {
+        var capacity = Space.GPUSensorShapeCount;
+        if (_areaPointHits.Length < capacity) Array.Resize(ref _areaPointHits, Math.Max(8, capacity * 2));
+        Span<GPUPhysicsBodyStore.WorldQuery> query = stackalloc GPUPhysicsBodyStore.WorldQuery[1];
+        query[0] = new(point, Mask: mask, Bodies: false, Areas: true, Limit: capacity, Canvas: area.Backend.CanvasInstanceID);
+        Span<int> count = stackalloc int[1];
+        GPUStore.Query(query, [], count, _areaPointHits);
+        foreach (ref readonly var hit in _areaPointHits.AsSpan(0, count[0]))
+            if (hit.Collider == (ulong)area.PhysicsRID.GetID()) return true;
+        return false;
+    }
+
     private readonly GPUPhysicsBodyStore.ShapeQuery[] _gpuAreaQuery = new GPUPhysicsBodyStore.ShapeQuery[1];
     private GPUPhysicsBodyStore.ShapeQueryHit[] _gpuAreaHits = [];
 
-    internal void ScanGPUAreas()
+    internal override void ScanAreas()
     {
-        foreach (var area in _areas)
+        foreach (var area in Space.Areas)
             ScanGPUArea(area.Backend, area, PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID));
-        foreach (var area in _serverColliders)
+        foreach (var area in Space.ServerColliders)
             if (area.IsArea) ScanGPUArea(area.Backend, null, PhysicsServer.Service.FindAreaRuntime(area.RID));
     }
     private void ScanGPUArea(PhysicsColliderBackend backend, Area? scene, PhysicsAreaRuntime? runtime)
@@ -30,7 +45,7 @@ internal sealed partial class PhysicsSpace
                 GPUStore.QueryShapes(_gpuAreaQuery, exclude, counts, _gpuAreaHits);
                 foreach (ref readonly var hit in _gpuAreaHits.AsSpan(0, counts[0]))
                 {
-                    if (!_gpuColliders.TryGetValue((int)hit.Body, out var other) || other.GPUHandle.Generation != hit.BodyGeneration) continue;
+                    if (!Space.TryGetGPUCollider((int)hit.Body, out var other) || other.GPUHandle.Generation != hit.BodyGeneration) continue;
                     if (other.GPUSensor)
                     {
                         var owners = PhysicsServer.Service.ResolveAreaOwners(other.RID);
@@ -42,7 +57,7 @@ internal sealed partial class PhysicsSpace
                 }
             }
         }
-        scene?.CommitOverlapScan(_overlapEvents);
-        if (runtime is not null) { runtime.Changes.Clear(); runtime.Pairs.Commit(runtime.Changes); QueueMonitorChanges(runtime); }
+        if (scene is not null) Space.CommitAreaScan(scene);
+        if (runtime is not null) { runtime.Changes.Clear(); runtime.Pairs.Commit(runtime.Changes); Space.QueueMonitorChanges(runtime); }
     }
 }

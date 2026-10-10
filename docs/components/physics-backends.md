@@ -624,3 +624,32 @@ native allocation and complete registered extensions remain open.
 [Caller-created direct-space extensions](../components/physics-space-extensions.md) now execute all six typed query hooks through inherited public array/span/scalar operations. The library owns bound-space guards, nested exclusions, scratch lifetime and validated result publication. A separate public-only consumer computes real scene/raw/Area circle queries on CPU/GPU and checks lifecycle, failures and warmed allocation. Registered-backend factories, direct-body extensions and custom geometry remain open under ADR 0103.
 
 [Caller-created body-state extensions](../components/physics-body-extensions.md) now execute the complete typed state/force/space/contact family. Body context is qualified by current attachment generation; nested hooks borrow body/world lifetime and preserve ordinary live mutation. Contact projection uses immutable engine-validated PhysicsBodyContact values. Registered server factories and factory-returned scene/server callback integration remain open under ADR 0103.
+
+## Area implementation ownership
+
+CPU/GPU owners now execute scene and raw Area geometry scans and audio point
+containment. CPU owns stable field-priority scratch, exact native overlaps
+(including world boundaries and directed separation rays), per-body gravity/damping
+resolution and pre-step body/motion preparation. GPU owns resident overlap queries
+and retained sensor/audio result buffers; the device field reducer remains unchanged.
+PhysicsSpace keeps memberships, authored defaults, generation-qualified monitor
+histories and ordered callback/event queues. Scanning commits observations through
+common helpers; it does not invoke user code while the solver phase is borrowed.
+
+The selected AreaContainsPoint operation serves spatial audio without a CPU/GPU
+branch in shared code. CPU scans native fixtures by index; GPU uses current resident
+sensor geometry, canvas/mask filtering and complete sensor capacity. Disabled slots,
+transfers, reentry and free are read from current attachments, independently of
+Monitoring/Monitorable for field and audio participation. Owner disposal releases
+field/query scratch references. This is an executed internal ownership boundary,
+not public registration or custom geometry.
+
+[PhysicsAreaBackendTests](../../tests/Electron2D.Tests/PhysicsAreaBackendTests.cs)
+uses the same CPU/GPU scene/raw fixture: mixed priority fields, independently
+resolved damping, duplicate logical sensor slots, scene and raw notifications,
+audio hit/miss masks, disabled slots and Area transfer/reentry/free. Numeric fields
+and velocity use .002 scene-unit tolerance for finite float integration; identities,
+counts, damping totals and allocation are exact. After 64 warm cycles, 64 full
+steps plus two audio queries and a field read allocate 0 owner/all-thread bytes.
+CPU also runs in the existing no-device ownership child. Native allocation,
+foreign execution and new full-step/FPS performance measurements remain unverified.

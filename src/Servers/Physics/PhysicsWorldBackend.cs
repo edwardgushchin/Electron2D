@@ -2,7 +2,7 @@ using Box2D.NET;
 
 namespace Electron2D;
 
-/// <summary>Owns selected solver policy, capacity, statistics, complete intervals and direct-space queries.</summary>
+/// <summary>Owns selected solver policy, Area observations, capacity, statistics, complete intervals and direct-space queries.</summary>
 internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Backend requested, string? fallbackReason = null) : IDisposable
 {
     protected PhysicsSpace Space { get; } = space;
@@ -36,6 +36,7 @@ internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Ba
     internal abstract void CompleteBody(PhysicsBody body);
     internal abstract void CollectContacts();
     internal abstract void ScanAreas();
+    internal abstract bool AreaContainsPoint(Area area, Vector2 point, uint mask);
     internal abstract void EndStep(Exception? failure);
     internal virtual void StepNative(float delta, int substeps) => throw new InvalidOperationException("This physics space has no CPU solver world.");
     internal virtual GPUPhysicsWorld EnableGPUIntegration() => throw new InvalidOperationException("GPU stage controls require a CPU-hosted world.");

@@ -9,19 +9,6 @@ internal sealed partial class PhysicsSpace
     private Shape? _gpuQueryShape;
     private GPUPhysicsBodyStore.QueryGeometry? _gpuQueryGeometry;
 
-    private bool GPUAreaContainsPoint(Area area, Vector2 point, uint mask)
-    {
-        var capacity = _gpuSensorShapeCount;
-        if (_gpuPointHits.Length < capacity) Array.Resize(ref _gpuPointHits, Math.Max(8, capacity * 2));
-        Span<GPUPhysicsBodyStore.WorldQuery> query = stackalloc GPUPhysicsBodyStore.WorldQuery[1];
-        query[0] = new(point, Mask: mask, Bodies: false, Areas: true, Limit: capacity, Canvas: area.Backend.CanvasInstanceID);
-        Span<int> count = stackalloc int[1];
-        GPUStore!.Query(query, [], count, _gpuPointHits);
-        foreach (ref readonly var hit in _gpuPointHits.AsSpan(0, count[0]))
-            if (hit.Collider == (ulong)area.PhysicsRID.GetID()) return true;
-        return false;
-    }
-
     private ReadOnlySpan<ulong> GPUExclusions(ReadOnlySpan<RID> source)
     {
         if (_gpuQueryExclusions.Length < source.Length) Array.Resize(ref _gpuQueryExclusions, Math.Max(8, source.Length * 2));

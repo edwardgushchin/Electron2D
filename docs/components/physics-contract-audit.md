@@ -321,3 +321,12 @@ object/static-service role boundary and requires complete typed dispatch and
 supporting construction/lifetime paths. Registration-only enum aliases and virtual
 signatures with no scene/query consumer are rejected. The four extension-family
 coverage pages remain Blocked until implementation and executable acceptance.
+
+Area implementation dispatch now moves CPU native overlap/priority reduction and
+pre-step body preparation out of the shared space. Scene/raw observer scans and
+audio containment reach the selected owner; GPU retains resident field reduction
+and owns sensor/audio scratch. [Shared Area checks](physics-backends.md#area-implementation-ownership)
+cover CPU/GPU fields, masks, logical notifications, audio and attachment lifetime
+at zero warmed managed allocation. This closes an internal registration prerequisite;
+the manager/server-extension census remains open until real registered implementations
+execute the complete contract.

@@ -39,3 +39,7 @@ The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnership
 ## Limits and decisions
 
 Native IDs and worker callbacks stay internal. Common body/shape/joint adapters still contain CPU/GPU branches; their complete extension boundary remains open. No new public backend capability is exported. Native allocator and foreign-platform execution remain separate gates; recorded workload-specific GPU/window measurements do not establish general superiority. See [ADR 0054](../decisions/physics-backends.md#adr-0054) and [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+## Area implementation ownership
+
+[The Area partial](../../src/Servers/Physics/CPUPhysicsWorldBackend.Areas.cs) owns retained stable priority scratch, exact native overlaps, scene/raw observer scans and indexed audio containment. [Body preparation](../../src/Servers/Physics/CPUPhysicsWorldBackend.BodyState.cs) resolves fields and damping before motion and solver integration. Native boundary/directed-ray overlap rules are preserved; Dispose clears field references. Shared event histories remain in PhysicsSpace. [Contract and checks](../components/physics-backends.md#area-implementation-ownership) cover both selected backends and no-device CPU.

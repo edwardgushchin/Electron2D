@@ -39,3 +39,7 @@ The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnership
 ## Limits and decisions
 
 Startup fallback is handled only by the internal creation factory. A started GPU interval never selects or executes a CPU replacement. Shared registrations, authored metadata, readback consumers and event delivery remain in PhysicsSpace; public registered extensions are still absent. Native allocator and foreign-platform execution remain separate gates; recorded workload-specific GPU/window measurements do not establish general superiority. See [ADR 0054](../decisions/physics-backends.md#adr-0054) and [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+## Area implementation ownership
+
+[The Area partial](../../src/Servers/Physics/GPUPhysicsWorldBackend.Areas.cs) owns resident scene/raw overlap scans and sensor/audio result scratch. AreaContainsPoint uses current sensor capacity, canvas/mask filtering and logical RID projection. Scans commit generation-qualified observations to shared PhysicsSpace; Dispose clears retained geometry/result buffers before store release. Device field reduction is unchanged. [Contract and checks](../components/physics-backends.md#area-implementation-ownership) cover both selected backends and warmed allocation.

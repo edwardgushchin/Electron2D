@@ -8,8 +8,8 @@ internal sealed partial class CPUPhysicsWorldBackend
     private bool _hasKinematicBodies, _resultsReady;
     internal override bool ResultsReady => _resultsReady;
     internal override void BeginStep(double delta) { _resultsReady = false; EnsureAccess(); }
-    internal override void PrepareWorld(double delta) => Space.PrepareAreaFields();
-    internal override void PrepareBodies(double delta) { _hasKinematicBodies = Space.PrepareBodyStates(delta); PrepareInterval(); }
+    internal override void PrepareWorld(double delta) => PrepareAreaFields();
+    internal override void PrepareBodies(double delta) { _hasKinematicBodies = PrepareBodyStates(delta); PrepareInterval(); }
     internal override void Solve(double delta)
     {
         var world = b2GetWorldFromId(WorldID); world.contactBiasDuration = (float)delta;
@@ -38,6 +38,5 @@ internal sealed partial class CPUPhysicsWorldBackend
             finally { if (task is not null) _tasks.Finish(task, Space); }
         }
     }
-    internal override void ScanAreas() { Space.ScanAreas(); Space.ScanAreaMonitors(); }
     internal override void EndStep(Exception? failure) => Space.PruneOneWayPairs();
 }
