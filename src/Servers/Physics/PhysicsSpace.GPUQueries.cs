@@ -72,7 +72,7 @@ internal sealed partial class PhysicsSpace
     }
     internal PhysicsColliderBackend GPUQueryOwner(ulong id) => _gpuRIDColliders[id];
 
-    private MotionResultData GPUTestMotion(RID owner, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
+    internal MotionResultData GPUTestMotion(RID owner, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
         RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay)
     {
         var body = _gpuRIDColliders[(ulong)owner.GetID()];

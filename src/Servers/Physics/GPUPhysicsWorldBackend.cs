@@ -28,6 +28,11 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new GPUPhysicsColliderImplementation(collider, Space); }
     internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new GPUPhysicsJointImplementation(Space); }
+    internal override MotionResultData TestBodyMotion(RID body, Transform from, Vector2 motion, float margin,
+        bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
+    {
+        EnsureAccess(); return Space.GPUTestMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
+    }
     public override void Dispose()
     {
         if (_disposed) return;

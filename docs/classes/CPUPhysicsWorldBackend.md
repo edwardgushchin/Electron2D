@@ -10,7 +10,7 @@ Owns one native CPU world, its retained PhysicsTaskScheduler and any diagnostic 
 
 WorldID exposes a borrowed internal native identity; Tasks and StageGPU expose owned internal helpers. EnsureAccess rejects disposed or solver-owned state. Step uses the common space boundary and CPU-owned phases; every CPU discrete and CCD interval reaches StepNative. EnableGPUIntegration and EnableGPUSolver retain the existing CPU-hosted diagnostic paths, which keep CPU identity. Dispose joins workers, removes native stage callbacks, releases diagnostic GPU resources and destroys the native world; cleanup errors are aggregated after attempting each owned resource. Repeated disposal is harmless.
 
-The query partials own native ray/point scans, standalone query proxies, candidate collection, intersection/sweep refinement, manifold contact pairs and deepest rest selection. Retained lists serve all array/span overloads without output allocation for span calls. Shared CPU body-motion code uses the moved Overlaps, Cast and GetManifold geometry helpers; Dispose clears retained query references.
+The query partials own native ray/point scans, standalone query proxies, candidate collection, intersection/sweep refinement, manifold contact pairs and deepest rest selection. Retained lists serve all array/span overloads without output allocation for span calls. The CPU motion partial owns body candidate collection, weighted recovery, directed-ray/one-way/full-contour geometry and sweep refinement using the same Overlaps, Cast and GetManifold helpers. Dispose clears retained direct-query and motion candidates. Source: [CPU body motion](../../src/Servers/Physics/CPUPhysicsWorldBackend.Motion.cs).
 
 CreateCollider constructs a fresh CPUPhysicsColliderImplementation for each body/Area attachment. The retained collider identity facade delegates all engine-unit body and shape operations to that concrete owner; reattachment never retargets its immutable world.
 
@@ -29,6 +29,8 @@ CPU capacity preparation keeps a conservative flag once any dynamic attachment c
 ## Selected step phases
 
 CPU step phases resolve world fields and body callbacks, select workers, execute native discrete/CCD/kinematic intervals, complete poses, collect contacts in joined ranges and scan Area observations. ResultsReady becomes true only after solve advances the tick. EndStep prunes one-way history on both success and failure. The [common phase/lifetime boundary](PhysicsWorldBackend.md#selected-step-phases) owns observer publication and ordered callbacks. Source: [CPU phases](../../src/Servers/Physics/CPUPhysicsWorldBackend.Step.cs).
+
+Body-motion tests now dispatch through this selected owner using engine-unit inputs and RID exclusions. The [common contract and verification](PhysicsWorldBackend.md#body-motion-and-platform-lookup) records geometry, identity, lookup and allocation boundaries.
 
 ## Ownership and verification
 

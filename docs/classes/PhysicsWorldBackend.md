@@ -52,6 +52,30 @@ release rejection, continued simulation after a user callback error, rejected
 geometry and scene recovery on both implementations. Common physics, GPU demand,
 checkpoint, portable and network checks retain their separate acceptance scope.
 
+
+## Body motion and platform lookup
+
+TestBodyMotion accepts engine-unit pose/motion, physical RID and typed exclusions,
+then dispatches to the selected world owner. Common server/space code no longer
+passes native fixture lists or selects a solver. CPU owns candidate collection,
+priority-weighted recovery, one-way/directed-ray/full-contour geometry and sweep
+refinement in [its motion partial](../../src/Servers/Physics/CPUPhysicsWorldBackend.Motion.cs).
+GPU dispatches the existing resident query pipeline with its retained geometry leases.
+Both preserve supplied-pose testing without moving the live body and retain logical
+shape/object identity and reusable hit/miss result semantics.
+
+Platform point velocity resolves the current scene/raw body through the shared RID
+registry and verifies its current attachment belongs to the queried world. There
+is no complete-body scan or newly created runtime view. The selected collider
+returns world-point surface/center motion; CPU keeps direct native world-point
+conversion to avoid a decoded-pose subtraction/addition round trip. Invalid,
+Area, foreign, detached and freed identities return empty velocity/layer values.
+
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs)
+checks selected hit/miss sweeps, filtering/exclusions, unchanged pose, scene/raw
+surface velocities within .002 scene units and native-converted miss travel within .0001 units, world transfer/stale identities,
+off-owner rejection and 64 warmed motion/lookup cycles at zero owner/all-thread managed bytes on both implementations, including a CPU child without a graphics device.
+
 ## Ownership and verification
 
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.

@@ -58,7 +58,7 @@ owns the native world, workers and optional diagnostic GPU stages;
 resident store. PhysicsSpace gates an interval and dispatches its complete CPU/GPU
 path through that selected object. CPU discrete and CCD native intervals also reach
 the CPU implementation. Common callbacks, event order, authoring and attachment
-identity remain in the space. All six direct-space query algorithms and prepared result scratch also dispatch through that owner; the public view retains validation and array/span projection. CPU body-motion geometry helpers now belong to the CPU implementation. The GPU implementation uses the existing resident query driver. World release attempts all participants before
+identity remain in the space. All six direct-space query algorithms and prepared result scratch also dispatch through that owner; the public view retains validation and array/span projection. Complete body-motion dispatch, candidate/recovery/sweep algorithms and native shape access now belong to the CPU implementation. Common motion inputs contain only engine values and RIDs; GPU uses resident motion queries. Platform velocity uses indexed current RID/attachment membership and selected world-point collider motion, preserving native CPU conversion and GPU center-aware surface behavior. The GPU implementation uses the existing resident query driver. World release attempts all participants before
 releasing the selected implementation and aggregating failures. Once release starts,
 FreeRID unregisters the space even when cleanup throws. During any live physics
 callback, release and recursive stepping reject without invalidating that context.

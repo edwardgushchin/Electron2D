@@ -163,3 +163,5 @@ Idle kinematic velocity clearing and unchanged targets do not generate a wake
 when real motion is already zero. Actual platform movement/stopping still wakes
 contacts, while explicit assignments retain their wake and ordering semantics.
 See [resident kinematics](../components/gpu-resident-kinematic.md#idle-platform-wake-policy).
+
+World-point platform velocity now dispatches through the current selected attachment. Common lookup uses the shared scene/raw RID registry and checks current world ownership, including transfer/detach/free. CPU keeps direct world-point native conversion; GPU keeps resident center-aware surface motion. See [motion ownership and checks](PhysicsWorldBackend.md#body-motion-and-platform-lookup).

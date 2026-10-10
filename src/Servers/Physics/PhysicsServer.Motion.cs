@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 public sealed partial class PhysicsServer
@@ -22,21 +20,10 @@ public sealed partial class PhysicsServer
         bool collideSeparationRay = false)
     {
         ThrowIfDisposed();
-        PhysicsSpace? space;
-        IReadOnlyList<B2ShapeId> shapes;
-        if (ResolveSceneObject(body) is PhysicsBody sceneBody)
-        {
-            space = sceneBody.Space;
-            shapes = sceneBody.BackendShapes;
-        }
-        else
-        {
-            var serverBody = GetCollider(body, isArea: false);
-            space = serverBody.Space;
-            shapes = serverBody.BackendShapes;
-        }
+        var owners = ResolveBodyOwners(body);
+        var space = owners.Scene?.Space ?? owners.Server?.Space;
         if (space is null) throw new InvalidOperationException("A body motion test requires a registered physics space.");
-        return space.TestBodyMotion(body, shapes, from, motion, margin, recoveryAsCollision,
+        return space.TestBodyMotion(body, from, motion, margin, recoveryAsCollision,
             excludedBodies, excludedObjects, collideSeparationRay);
     }
 }

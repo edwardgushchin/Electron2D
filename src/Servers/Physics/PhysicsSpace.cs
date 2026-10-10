@@ -594,7 +594,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (rayA is not null || rayB is not null)
         {
             var query = rayA is { } ray ? PhysicsSeparationRay.WorldProxy(ray, input.transformA, default) :
-                WorldProxy(input.proxyA, input.transformA, default);
+                CPUPhysicsWorldBackend.WorldProxy(input.proxyA, input.transformA, default);
             if (PhysicsSeparationRay.PairContact(query, rayA?.SlideOnSlope, input.proxyB,
                 input.transformB, rayB, default, 0).pointCount != 0) return true;
             return false;

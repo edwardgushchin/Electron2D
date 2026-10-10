@@ -30,6 +30,8 @@ CPU capacity preparation keeps a conservative flag once any dynamic attachment c
 
 GPU step phases prepare authored policies and the required pre-step activity snapshot, enqueue motion/Area/joint/filter/report work, solve resident fields and synchronize consumer state/reports. ResultsReady becomes true after required publication completes. EndStep retains the started-submission failure marker without CPU replay. The [common phase/lifetime boundary](PhysicsWorldBackend.md#selected-step-phases) owns observer publication and ordered callbacks. Source: [GPU phases](../../src/Servers/Physics/GPUPhysicsWorldBackend.Step.cs).
 
+Body-motion tests now dispatch through this selected owner using engine-unit inputs and RID exclusions. The [common contract and verification](PhysicsWorldBackend.md#body-motion-and-platform-lookup) records geometry, identity, lookup and allocation boundaries.
+
 ## Ownership and verification
 
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.

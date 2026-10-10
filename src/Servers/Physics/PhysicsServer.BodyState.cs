@@ -6,10 +6,15 @@ public sealed partial class PhysicsServer
 
     internal (PhysicsBody? Scene, PhysicsServerCollider? Server) ResolveBodyOwners(RID rid)
     {
-        if (ResolveSceneObject(rid) is PhysicsBody scene) return (scene, null);
-        lock (_registryGate)
-            if (_serverColliders.TryGetValue(rid, out var collider) && !collider.IsArea) return (null, collider);
+        if (TryResolveBodyOwners(rid, out var owners)) return owners;
         throw new ArgumentException("The RID does not identify a live physics body.", nameof(rid));
+    }
+    internal bool TryResolveBodyOwners(RID rid, out (PhysicsBody? Scene, PhysicsServerCollider? Server) owners)
+    {
+        if (ResolveSceneObject(rid) is PhysicsBody scene) { owners = (scene, null); return true; }
+        lock (_registryGate)
+            if (_serverColliders.TryGetValue(rid, out var collider) && !collider.IsArea) { owners = (null, collider); return true; }
+        owners = default; return false;
     }
 
     internal PhysicsBodyRuntime BodyRuntime(RID body)

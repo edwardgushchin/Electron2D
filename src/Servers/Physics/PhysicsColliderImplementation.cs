@@ -43,6 +43,7 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract PhysicsMass.Properties ApplyMassProfile(float mass, float inertia, Vector2? center);
     internal abstract void WakeTouching();
     internal abstract Vector2 GetPointVelocity(Vector2 offset);
+    internal abstract Vector2 GetWorldPointVelocity(Vector2 point);
     internal abstract void ApplyImpulse(Vector2 impulse, float moment);
     internal abstract void SetSurfaceVelocity(Vector2 linear, float angular);
     internal abstract void CaptureViewContacts(PhysicsDirectBodyState view, int limit);

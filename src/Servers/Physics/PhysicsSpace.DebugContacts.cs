@@ -46,7 +46,7 @@ internal sealed partial class PhysicsSpace
     private void AddDebugContact(B2Vec2 point)
     {
         if (_debugContactCount == _debugContactLimit) return;
-        var value = ToScene(point);
+        var value = new Vector2(point.X * UnitsPerMeter, point.Y * UnitsPerMeter);
         if (!value.IsFinite()) throw new InvalidOperationException("Physics contact diagnostics contain a nonfinite point.");
         _debugContacts[_debugContactCount++] = value;
     }

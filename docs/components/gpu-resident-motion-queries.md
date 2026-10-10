@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+The selected GPU world owner now receives engine-unit body motion and typed RID exclusions from common server/space code, then invokes this resident driver. CPU fixture lists no longer pass through that boundary. Platform point velocity resolves current body RID/world membership and uses the selected resident collider attachment. See [shared ownership checks](../classes/PhysicsWorldBackend.md#body-motion-and-platform-lookup).
+
 ## Boundary
 
 GPUPhysicsBodyStore.TestMotion tests a registered body's shapes at a supplied pose,

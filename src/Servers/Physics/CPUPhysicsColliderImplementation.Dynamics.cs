@@ -32,6 +32,11 @@ internal sealed partial class CPUPhysicsColliderImplementation
         var result = ToScene(b2Body_GetWorldPointVelocity(BodyID, point));
         PhysicsBodyRuntime.Finite(result); return result;
     }
+    internal override Vector2 GetWorldPointVelocity(Vector2 point)
+    {
+        var velocity = ToScene(b2Body_GetWorldPointVelocity(BodyID, PhysicsShapeBackend.ToBackend(point)));
+        PhysicsBodyRuntime.Finite(velocity); return velocity;
+    }
     internal override void ApplyImpulse(Vector2 impulse, float moment)
     {
         var nativeImpulse = PhysicsShapeBackend.ToBackend(impulse);

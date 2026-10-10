@@ -35,6 +35,8 @@ marks the space failed and rejects later stepping/queries rather than replaying
 a partially committed interval on CPU. Disposal remains available. The independent GPU store uses the same fail-closed policy. Public startup
 selection and fallback are described in [physics backends](../components/physics-backends.md).
 
+TestBodyMotion prepares authored topology and delegates engine-unit inputs to the selected world owner. TryGetBodyPointMotion resolves the current scene/raw body by RID, verifies world ownership and delegates world-point velocity to its selected attachment. Neither operation carries native shape lists through common code; platform lookup does not scan world bodies. See [motion ownership](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
+
 ## Invariants and verification
 
 [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) verifies fresh selected implementations, independent ticks, 512-body warmed full-step allocation, native destruction despite an injected worker-cleanup failure and no-device startup/fallback. Shared body/shape/joint/query paths and registration/extension work retain their own gates.

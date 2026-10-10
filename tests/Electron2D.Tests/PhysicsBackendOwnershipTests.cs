@@ -12,6 +12,7 @@ internal static class PhysicsBackendOwnershipTests
         JointAttachment(backend);
         ColliderAttachment(backend);
         QueryOwnership(backend);
+        MotionOwnership(backend);
         CallbackBorrow(backend);
         var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate(backend);
         var left = PhysicsServer.Service.GetSceneSpace(first); var right = PhysicsServer.Service.GetSceneSpace(second);
@@ -374,6 +375,74 @@ internal static class PhysicsBackendOwnershipTests
             if (first.IsValid()) PhysicsServer.FreeRID(first);
             PhysicsServer.FreeRID(second);
         }
+    }
+    private static void MotionOwnership(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var otherWorld = new World(backend);
+        using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = 5 }; using var rectangle = new RectangleShape { Size = new(200, 20) };
+        var surface = new StaticBody
+        {
+            Position = new(10000, -8000),
+            CollisionLayer = 8,
+            ConstantLinearVelocity = new(3, -4),
+            ConstantAngularVelocity = 2
+        };
+        surface.AddChild(new CollisionShape { Shape = circle }); root.AddChild(surface);
+        using var tree = new SceneTree(root);
+        var mover = PhysicsServer.BodyCreate(); var floor = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        using var hit = new PhysicsTestMotionParameters { Motion = new(0, 120) };
+        using var miss = new PhysicsTestMotionParameters { Motion = new(0, -120) };
+        using var result = new PhysicsTestMotionResult();
+        var space = PhysicsServer.Service.GetSceneSpace(world.Space); var other = PhysicsServer.Service.GetSceneSpace(otherWorld.Space);
+        try
+        {
+            PhysicsServer.BodySetMode(mover, PhysicsServer.BodyMode.Static); PhysicsServer.BodySetMode(floor, PhysicsServer.BodyMode.Static);
+            PhysicsServer.BodyAddShape(mover, circle.GetRID()); PhysicsServer.BodyAddShape(floor, rectangle.GetRID());
+            PhysicsServer.BodySetTransform(floor, new(0, new(0, 100))); PhysicsServer.BodySetCollisionLayer(floor, 4);
+            PhysicsServer.BodySetCollisionMask(mover, 4);
+            PhysicsServer.BodySetLinearVelocity(floor, new(3, -4)); PhysicsServer.BodySetAngularVelocity(floor, 2);
+            PhysicsServer.BodySetSpace(mover, world.Space); PhysicsServer.BodySetSpace(floor, world.Space);
+            PhysicsServer.AreaSetSpace(area, world.Space);
+            Evaluate();
+            Check(space.TryGetBodyPointMotion(surface.GetRID(), surface.Position + new Vector2(12, 7), out var velocity, out var layer) &&
+                velocity.DistanceTo(new(-11, 20)) < .002f && layer == 8,
+                "Scene surface world-point velocity preserves scene/metre rounding within .002 units at a distant authored pose");
+            CheckMiss(default); CheckMiss(area);
+            Task.Run(() => Reject<InvalidOperationException>(() => space.TryGetBodyPointMotion(floor, Vector2.Zero, out _, out _))).GetAwaiter().GetResult();
+            PhysicsServer.BodySetSpace(floor, otherWorld.Space); CheckMiss(floor);
+            Check(other.TryGetBodyPointMotion(floor, new(12, 107), out velocity, out layer) && velocity.DistanceTo(new(-11, 20)) < .002f && layer == 4,
+                "Indexed lookup follows the fresh selected attachment after world transfer");
+            PhysicsServer.BodySetSpace(floor, default); CheckMiss(floor);
+            PhysicsServer.BodySetSpace(floor, world.Space);
+            hit.ExcludeBodies = [floor];
+            Check(!PhysicsServer.BodyTestMotion(mover, hit, result) && result.GetColliderRID() == default, "Excluded owner clears the reusable result");
+            hit.ExcludeBodies = [];
+            Collect();
+            for (var i = 0; i < 64; i++) Evaluate();
+            var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) Evaluate();
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(owner == 0 && all == 0, $"Motion dispatch and indexed platform lookup allocated {owner}/{all} owner/all-thread bytes");
+            root.RemoveChild(surface); CheckMiss(surface.GetRID()); surface.Dispose();
+            var freed = floor; PhysicsServer.FreeRID(floor); floor = default; CheckMiss(freed);
+            Console.WriteLine($"{backend}: selected hit/miss motion, exact identity/filter/exclusion, distant scene/raw surface velocity, transfer/stale lookup and 64 warmed cycles: {owner}/{all} owner/all-thread B passed.");
+
+            void Evaluate()
+            {
+                Check(PhysicsServer.BodyTestMotion(mover, hit, result) && result.GetColliderRID() == floor &&
+                    result.GetColliderShape() == 0 && result.GetCollisionLocalShape() == 0 && result.GetCollisionNormal().Y < -.9f &&
+                    result.GetTravel().Y is > 80 and < 90 && PhysicsServer.BodyGetTransform(mover) == Transform.Identity,
+                    "Selected motion owner returns real sweep geometry and logical identities without moving the tested body");
+                Check(!PhysicsServer.BodyTestMotion(mover, miss, result) && result.GetTravel().DistanceTo(miss.Motion) < .0001f && result.GetColliderRID() == default,
+                    "Alternating hit/miss calls clear identity and preserve travel within .0001 scene units for native unit conversion");
+                Check(space.TryGetBodyPointMotion(floor, new(12, 107), out var value, out var mask) && value.DistanceTo(new(-11, 20)) < .002f && mask == 4,
+                    "Raw static world-point motion uses selected surface translation and rotation");
+            }
+            void CheckMiss(RID rid) => Check(!space.TryGetBodyPointMotion(rid, Vector2.Zero, out var value, out var mask) && value == Vector2.Zero && mask == 0,
+                "Invalid, Area, foreign, detached and freed identities yield empty platform motion");
+        }
+        finally { PhysicsServer.FreeRID(mover); if (floor.IsValid()) PhysicsServer.FreeRID(floor); PhysicsServer.FreeRID(area); }
     }
     private static void CallbackBorrow(PhysicsServer.Backend backend)
     {

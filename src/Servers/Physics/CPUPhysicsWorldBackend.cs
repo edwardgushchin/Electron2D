@@ -87,7 +87,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         if (_disposed) return;
         _disposed = true;
-        _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear(); _shapeCandidates.Clear(); _queryProxies.Clear();
+        _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear(); _shapeCandidates.Clear(); _queryProxies.Clear(); _motionCandidates.Clear();
         List<Exception>? errors = null;
         try { _tasks.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (b2World_IsValid(_worldID))

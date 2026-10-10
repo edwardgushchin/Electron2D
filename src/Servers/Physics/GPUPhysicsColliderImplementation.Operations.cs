@@ -131,6 +131,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
         GPU.SetMassProfile(GPUHandle, new(mass, inertia, center)); Space.InvalidateGPUStates(); return GPU.GetMassProperties(GPUHandle);
     }
     internal override void WakeTouching() { GPU.WakeConnected(GPUHandle); Space.InvalidateGPUStates(); }
+    internal override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - GetPose().Position);
     internal override Vector2 GetPointVelocity(Vector2 offset)
     {
         var arm = offset - CenterOfMass;
