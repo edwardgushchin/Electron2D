@@ -3132,7 +3132,7 @@
         "class:PhysicsDirectSpaceState2D"
       ],
       "state": "Partial",
-      "reason": "All six direct-space query methods and exact point canvas filtering execute for current geometry. Object association now executes through weak sampled identities; actual tile collision generation/lookup, public independent-GPU integration and extensions remain open (ADRs 0054/0063)."
+      "reason": "All six direct-space query methods, exact point canvas filtering and weak sampled object association execute for scene/raw CPU and independent GPU worlds, including generated tile owners. Queries now dispatch through retained per-world implementations with prepared scratch; public registered extension contexts and scoped exclusion hooks remain open (ADRs 0054/0063/0103)."
     },
     {
       "godot": [

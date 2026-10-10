@@ -1,6 +1,6 @@
 # PhysicsDirectSpaceState
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
@@ -8,7 +8,9 @@ Last updated: 2026-10-09
 
 Jiggle uses the existing internal scalar ray overload for a candidate dynamic point in the attached scene world, bodies-only with its 32-bit collision mask. Query preparation and owner/stepping guards are unchanged. Tests exercise real scene fixture hits before a physics step and warmed native render/query intervals; whole-bone collision is not supplied by this ray.
 
-A live view of one existing Box2D space, shared by [World](World.md) and [PhysicsServer.SpaceGetDirectState](PhysicsServer.md). It prepares pending scene fixture and transform edits before querying, including queries before the first physics frame. It does not advance simulation or own a second world. Attached queries require the space's owner thread and reject execution while its solver is stepping. A freed space makes a retained view unusable.
+A live view of one existing CPU or GPU space, shared by [World](World.md) and [PhysicsServer.SpaceGetDirectState](PhysicsServer.md). It prepares pending scene fixture and transform edits before querying, including queries before the first physics frame. It does not advance simulation or own a second world. Attached queries require the space's owner thread and reject execution while its solver is stepping. A freed space makes a retained view unusable.
+
+All six operations use the selected per-world implementation after shared access guards and authoring preparation. Array/span overloads preserve ordering, caps, identity and untouched storage tails. Disposing this view retires only the view; a replacement still queries the same world. See [query dispatch](../components/physics-queries.md#runtime-flow) for ownership and current extension limits.
 
 ## Example
 

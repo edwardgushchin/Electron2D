@@ -4,7 +4,7 @@ using static Box2D.NET.B2Worlds;
 namespace Electron2D;
 
 /// <summary>Owns the CPU world, retained worker scheduler and optional diagnostic GPU stages.</summary>
-internal sealed class CPUPhysicsWorldBackend : PhysicsWorldBackend
+internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
     private readonly PhysicsTaskScheduler _tasks;
@@ -70,6 +70,7 @@ internal sealed class CPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         if (_disposed) return;
         _disposed = true;
+        _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear(); _shapeCandidates.Clear(); _queryProxies.Clear();
         List<Exception>? errors = null;
         try { _tasks.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (b2World_IsValid(_worldID))

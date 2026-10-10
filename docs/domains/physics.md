@@ -349,6 +349,8 @@ CPU/GPU World and server-space creation, startup fallback diagnostics, independe
 resident body/shape/joint attachments and common query/event publication. Complete
 conformance, performance and networking acceptance remain open.
 
+All six [direct-space queries](../components/physics-queries.md#runtime-flow) now dispatch through the retained selected CPU/GPU implementation with prepared scratch. Shared public guards and array/span projection preserve identity, filtering and lifetime; public registration and extension contexts remain open under ADR 0103.
+
 ## Completed-step diagnostics
 
 [Physics statistics](../components/physics-statistics.md) publishes active body,

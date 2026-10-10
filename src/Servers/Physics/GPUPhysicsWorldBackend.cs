@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Owns the independent resident GPU store and its world-step dispatch.</summary>
-internal sealed class GPUPhysicsWorldBackend : PhysicsWorldBackend
+internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private bool _disposed;
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.GPU;
@@ -30,6 +30,8 @@ internal sealed class GPUPhysicsWorldBackend : PhysicsWorldBackend
     public override void Dispose()
     {
         if (_disposed) return;
-        _disposed = true; GPUStore.Dispose();
+        _disposed = true;
+        _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear();
+        GPUStore.Dispose();
     }
 }

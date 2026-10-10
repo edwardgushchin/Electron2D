@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        QueryOwnership(backend);
         CallbackBorrow(backend);
         var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate(backend);
         var left = PhysicsServer.Service.GetSceneSpace(first); var right = PhysicsServer.Service.GetSceneSpace(second);
@@ -61,6 +62,99 @@ internal static class PhysicsBackendOwnershipTests
         else Reject<ObjectDisposedException>(() => gpuStore!.Read([], []));
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
+    }
+    private static void QueryOwnership(PhysicsServer.Backend backend)
+    {
+        using var geometry = new CircleShape { Radius = 5 };
+        using var queryGeometry = new CircleShape { Radius = 2 };
+        using var ray = PhysicsRayQueryParameters.Create(new(-20, 0), new(20, 0));
+        using var point = new PhysicsPointQueryParameters();
+        using var shape = new PhysicsShapeQueryParameters { Shape = queryGeometry };
+        using var sweep = new PhysicsShapeQueryParameters { Shape = queryGeometry, Transform = new(0, new(-20, 0)), Motion = new(40, 0) };
+        var points = new PhysicsPointResult[2]; var shapes = new PhysicsShapeResult[2]; var contacts = new Vector2[5];
+        contacts[^1] = new(999, 999);
+        var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate(backend);
+        var body = PhysicsServer.BodyCreate(); var other = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodySetMode(other, PhysicsServer.BodyMode.Static);
+            PhysicsServer.BodyAddShape(body, geometry.GetRID()); PhysicsServer.BodyAddShape(other, geometry.GetRID());
+            PhysicsServer.BodySetTransform(other, new(0, new(100, 0)));
+            PhysicsServer.BodySetSpace(body, first); PhysicsServer.BodySetSpace(other, second);
+            var direct = PhysicsServer.SpaceGetDirectState(first); var separate = PhysicsServer.SpaceGetDirectState(second);
+            Check(direct.IntersectPoint(point).Length == 1 && direct.IntersectShape(shape).Length == 1 && direct.CollideShape(shape).Length > 0,
+                "Copied results execute the selected query family");
+            Evaluate(direct, true); Evaluate(separate, false);
+            Task.Run(() => GuardAll<InvalidOperationException>(direct)).GetAwaiter().GetResult();
+            if (backend == PhysicsServer.Backend.CPU)
+            {
+                var world = b2GetWorldFromId(PhysicsServer.Service.GetSceneSpace(first).WorldID);
+                world.locked = true;
+                try { GuardAll<InvalidOperationException>(direct); }
+                finally { world.locked = false; }
+            }
+            Collect();
+            for (var i = 0; i < 64; i++) { Evaluate(direct, true); Evaluate(separate, false); }
+            var all = GC.GetTotalAllocatedBytes(true); var owner = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) { Evaluate(direct, true); Evaluate(separate, false); }
+            owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(owner == 0 && all == 0, $"Complete query dispatch allocated {owner}/{all} owner/all-thread bytes");
+            ray.Exclude = [body]; point.Exclude = [body]; shape.Exclude = [body]; sweep.Exclude = [body];
+            Evaluate(direct, false);
+            ray.Exclude = []; point.Exclude = []; shape.Exclude = []; sweep.Exclude = [];
+            Evaluate(direct, true);
+            direct.Dispose(); GuardAll<ObjectDisposedException>(direct);
+            var reopened = PhysicsServer.SpaceGetDirectState(first);
+            Check(!ReferenceEquals(direct, reopened), "Disposed view reopens on the same selected world");
+            Evaluate(reopened, true);
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
+                PhysicsServer.SpaceSetActive(first, true);
+                Reject<AggregateException>(() => PhysicsServer.SpaceStep(first, float.MaxValue));
+                GuardAll<InvalidOperationException>(reopened);
+            }
+            PhysicsServer.FreeRID(first); first = default;
+            GuardAll<ArgumentException>(reopened);
+            Evaluate(separate, false);
+            Console.WriteLine($"{backend}: six query families, alternating hit/miss worlds, all overload guards and 64 warmed cycles: {owner}/{all} owner/all-thread B passed.");
+
+            void Evaluate(PhysicsDirectSpaceState view, bool hit)
+            {
+                var rayHit = view.IntersectRay(ray);
+                Check(hit ? rayHit is { ColliderRID: var rid } && rid == body && MathF.Abs(rayHit.Value.Position.X + 5) < .05f : rayHit is null,
+                    "Ray uses its own world and preserves scene-unit geometry within .05 units");
+                var pointCount = view.IntersectPoint(point, points); var shapeCount = view.IntersectShape(shape, shapes);
+                Check(pointCount == (hit ? 1 : 0) && shapeCount == pointCount && (!hit || points[0].ColliderRID == body && shapes[0].ColliderRID == body),
+                    "Point and shape dispatch preserve physical RID identity");
+                var pairCount = view.CollideShape(shape, contacts);
+                Check((pairCount > 0) == hit && contacts[^1] == new Vector2(999, 999), "Contact pairs preserve unused odd storage");
+                var rest = view.GetRestInfo(shape);
+                Check(hit ? rest is { ColliderRID: var restRID } && restRID == body && rest.Value.Point.IsFinite() : rest is null,
+                    "Rest information uses the selected geometry");
+                var fractions = view.CastMotion(sweep);
+                Check(hit ? fractions.SafeFraction is > .2f and < .5f && fractions.UnsafeFraction >= fractions.SafeFraction : fractions == (1f, 1f),
+                    "Motion fractions bracket the new collision or preserve the no-hit sentinel");
+            }
+            void GuardAll<T>(PhysicsDirectSpaceState view) where T : Exception
+            {
+                Reject<T>(() => view.IntersectRay(ray));
+                Reject<T>(() => view.IntersectPoint(point)); Reject<T>(() => view.IntersectPoint(point, points));
+                Reject<T>(() => view.IntersectPoint(point, Span<PhysicsPointResult>.Empty));
+                Reject<T>(() => view.IntersectShape(shape)); Reject<T>(() => view.IntersectShape(shape, shapes));
+                Reject<T>(() => view.IntersectShape(shape, Span<PhysicsShapeResult>.Empty));
+                Reject<T>(() => view.CastMotion(sweep));
+                Reject<T>(() => view.CollideShape(shape)); Reject<T>(() => view.CollideShape(shape, contacts));
+                Reject<T>(() => view.CollideShape(shape, Span<Vector2>.Empty));
+                Reject<T>(() => view.GetRestInfo(shape));
+            }
+        }
+        finally
+        {
+            PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(other);
+            if (first.IsValid()) PhysicsServer.FreeRID(first);
+            PhysicsServer.FreeRID(second);
+        }
     }
     private static void CallbackBorrow(PhysicsServer.Backend backend)
     {

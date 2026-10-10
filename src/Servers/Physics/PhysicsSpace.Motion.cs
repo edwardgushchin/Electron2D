@@ -97,7 +97,7 @@ internal sealed partial class PhysicsSpace
                         manifold = MotionRayContact(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform, default, queryMargin);
                     else
                     {
-                        if (ownTag.Compound is null && candidate.Tag.Compound is null && !PhysicsDirectSpaceState.Overlaps(query, other, otherTransform)) continue;
+                        if (ownTag.Compound is null && candidate.Tag.Compound is null && !CPUPhysicsWorldBackend.Overlaps(query, other, otherTransform)) continue;
                         manifold = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
                     }
                     if (manifold.pointCount == 0) continue;
@@ -188,7 +188,7 @@ internal sealed partial class PhysicsSpace
                         hasMotionHit = true;
                         continue;
                     }
-                    if (PhysicsDirectSpaceState.Overlaps(query, other, otherTransform))
+                    if (CPUPhysicsWorldBackend.Overlaps(query, other, otherTransform))
                     {
                         var stuck = MotionManifold(query, ownTag, fromTransform, recovery, other, candidate.Tag, otherTransform);
                         var depth = stuck.pointCount == 0 ? 0 : -stuck.points[0].separation;
@@ -205,14 +205,14 @@ internal sealed partial class PhysicsSpace
                         }
                         continue;
                     }
-                    var cast = PhysicsDirectSpaceState.Cast(query, other, otherTransform, requested, safe);
+                    var cast = CPUPhysicsWorldBackend.Cast(query, other, otherTransform, requested, safe);
                     if (!cast.hit) continue;
                     var low = 0f;
                     var high = safe;
                     for (var step = 0; step < 8; step++)
                     {
                         var middle = (low + high) * 0.5f;
-                        if (PhysicsDirectSpaceState.Cast(query, other, otherTransform, requested, middle).hit)
+                        if (CPUPhysicsWorldBackend.Cast(query, other, otherTransform, requested, middle).hit)
                             high = middle;
                         else low = middle;
                     }
@@ -287,7 +287,7 @@ internal sealed partial class PhysicsSpace
     private static B2Manifold MotionManifold(in B2ShapeProxy query, PhysicsFixtureTag own, B2Transform from, B2Vec2 recovery,
         in B2ShapeProxy other, PhysicsFixtureTag target, B2Transform otherPose)
     {
-        if (query.isBoundary || other.isBoundary || own.Compound is null && target.Compound is null) return PhysicsDirectSpaceState.GetManifold(query, other, otherPose);
+        if (query.isBoundary || other.isBoundary || own.Compound is null && target.Compound is null) return CPUPhysicsWorldBackend.GetManifold(query, other, otherPose);
         // ponytail: reuse full-contour SAT scratch; cache transformed hulls if compound CPU queries dominate measured cost.
         var firstPose = ScenePose(from, recovery) * (own.Compound?.LocalPose ?? Transform.Identity);
         var secondPose = ScenePose(otherPose, default) * (target.Compound?.LocalPose ?? Transform.Identity);
