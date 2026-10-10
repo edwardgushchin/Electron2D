@@ -103,7 +103,7 @@ public sealed partial class SceneTree
         if (point != null && input is InputEventMouseMotion && chosen is PopupMenu menu)
         {
             while (menu.Parent is PopupMenu parentMenu) menu = parentMenu;
-            if (menu.Parent is MenuButton { SwitchOnHover: true } owner && !menu.EmbeddedHitRect.HasPoint(point.Value)) RefreshMenuBarHover(owner, host, point.Value);
+            if (menu.Parent is Control owner && (owner is MenuButton { SwitchOnHover: true } || owner is MenuBar { SwitchOnHover: true }) && !menu.EmbeddedHitRect.HasPoint(point.Value)) RefreshMenuBarHover(owner, host, point.Value);
         }
         target = chosen;
         var localized = input.XformedBy(new Transform(0, -(Vector2)chosen.Position));
@@ -115,7 +115,7 @@ public sealed partial class SceneTree
         }
         catch { if (!ReferenceEquals(localized, input)) localized.Dispose(); throw; }
     }
-    private void RefreshMenuBarHover(MenuButton owner, Viewport host, Vector2 point)
+    private void RefreshMenuBarHover(Control owner, Viewport host, Vector2 point)
     {
         if (owner.GetViewport() is not { } viewport) return;
         if (viewport != host && viewport is Window window) point -= (Vector2)window.Position;
@@ -123,7 +123,7 @@ public sealed partial class SceneTree
         try
         {
             var target = FindMouseControl(viewport, point, ref errors);
-            if (target is MenuButton other && owner.CanSwitchTo(other)) UpdateGUIHover(viewport, point, ref errors);
+            if (owner is MenuButton button && target is MenuButton other && button.CanSwitchTo(other) || owner is MenuBar && target == owner) UpdateGUIHover(viewport, point, ref errors);
             else try { ClearGUIHover(); } catch (Exception e) { CollectException(ref errors, e); }
         }
         finally { _gui.InputTraversal.Clear(); }

@@ -42,3 +42,7 @@ PopupMenuTests verifies creation families, typed null metadata, strict/end-relat
 [TabContainer](tab-panels.md) now consumes the menu prerequisite through its header button. [OptionButton](dropdown-choices.md) now consumes menu items, selection, search and shortcuts. MenuButton and LineEdit context actions remain separate executable consumers.
 
 Submenu binding now exposes only the node-based family. Three deprecated string-path declarations are removed under the current ADR 0004; their reference rows remain Excluded with the exact replacement.
+
+[MenuBar](menu-strips.md) owns a strip over ordinary child menus. Top-level popup horizontal keyboard actions forward to that strip after existing submenu actions; the common embedding router updates strip hover while the popup owns pointer delivery.
+
+Four typed private `_menu_bar/*` scene fields travel with each popup and restore its optional MenuBar header title, tooltip, disabled and hidden settings before attachment. Packing an unowned sibling therefore cannot shift the remaining header configuration.

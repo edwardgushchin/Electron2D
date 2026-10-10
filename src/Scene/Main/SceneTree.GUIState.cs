@@ -94,6 +94,7 @@ public sealed partial class SceneTree
         _gui.GuiMouseCapture = null; _gui.GuiMouseCaptureMask = 0;
         ThrowCollected("Viewport input-disable callbacks failed.", errors);
     }
+    internal Vector2 GetGUIHoverPosition(Viewport viewport) { EnsureOwnerThread(); using var scope = SelectGUI(viewport); return _gui.GuiHoverPosition; }
     internal Control? GetGUIHoveredControl(Viewport viewport) { EnsureOwnerThread(); using var scope = SelectGUI(viewport); return _gui.GuiHoverTarget; }
     private void UpdateEmbeddedHover(SubViewportContainer container, Vector2 parentPoint, ref List<Exception>? errors)
     {

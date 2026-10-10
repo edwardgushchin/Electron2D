@@ -5,6 +5,10 @@ public partial class PopupMenu
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
+        yield return new PropertyDescriptor<PopupMenu, string?>("_menu_bar/title", m => m.MenuBarTitle, (m, v) => { m.EnsureMutable(); if (m.Parent is MenuBar owner) owner.ValidatePopupHeaderMutation(); m.MenuBarTitle = v; if (m.Parent is MenuBar bar) bar.PopupHeaderChanged(m); }, _ => null, stored: true);
+        yield return new PropertyDescriptor<PopupMenu, string>("_menu_bar/tooltip", m => m.MenuBarTooltip, (m, v) => { m.EnsureMutable(); ArgumentNullException.ThrowIfNull(v); if (m.Parent is MenuBar owner) owner.ValidatePopupHeaderMutation(); m.MenuBarTooltip = v; if (m.Parent is MenuBar bar) bar.PopupHeaderChanged(m); }, _ => "", stored: true);
+        yield return new PropertyDescriptor<PopupMenu, bool>("_menu_bar/disabled", m => m.MenuBarDisabled, (m, v) => { m.EnsureMutable(); if (m.Parent is MenuBar owner) owner.ValidatePopupHeaderMutation(); m.MenuBarDisabled = v; if (m.Parent is MenuBar bar) bar.PopupHeaderChanged(m); }, _ => false, stored: true);
+        yield return new PropertyDescriptor<PopupMenu, bool>("_menu_bar/hidden", m => m.MenuBarHidden, (m, v) => { m.EnsureMutable(); if (m.Parent is MenuBar owner) owner.ValidatePopupHeaderMutation(); m.MenuBarHidden = v; if (m.Parent is MenuBar bar) bar.PopupHeaderChanged(m); }, _ => false, stored: true);
         foreach (var property in base.GetPropertyDescriptors())
         {
             if (property.Name is nameof(Transparent) or nameof(TransparentBG)) yield return new PropertyDescriptor<PopupMenu, bool>(property.Name, m => property.Name == nameof(Transparent) ? m.Transparent : m.TransparentBG, (m, v) => { if (property.Name == nameof(Transparent)) m.Transparent = v; else m.TransparentBG = v; }, _ => true, stored: true);

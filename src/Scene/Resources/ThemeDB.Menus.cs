@@ -4,6 +4,18 @@ public sealed partial class ThemeDB
 {
     private void AddMenuDefaults()
     {
+        const string bar = "MenuBar";
+        foreach (var state in new[] { "normal", "disabled", "hover", "pressed", "hover_pressed" })
+        {
+            var color = state is "hover" or "hover_pressed" ? new Color(.25f, .25f, .25f) : state == "pressed" ? new Color(.15f, .15f, .15f) : new Color(.2f, .2f, .2f);
+            var style = CreateButtonStyle(color, 6, 4, 6, 4);
+            _defaultTheme.SetStyleBox(state, bar, style); _defaultTheme.SetStyleBox(state + "_mirrored", bar, style);
+        }
+        _defaultTheme.SetFont("font", bar, null); _defaultTheme.SetFontSize("font_size", bar, -1);
+        _defaultTheme.SetConstant("h_separation", bar, 4); _defaultTheme.SetConstant("outline_size", bar, 0);
+        _defaultTheme.SetColor("font_color", bar, new(.875f, .875f, .875f)); _defaultTheme.SetColor("font_disabled_color", bar, new(.875f, .875f, .875f, .5f));
+        _defaultTheme.SetColor("font_focus_color", bar, new(.95f, .95f, .95f)); _defaultTheme.SetColor("font_hover_color", bar, new(.95f, .95f, .95f));
+        _defaultTheme.SetColor("font_pressed_color", bar, Colors.White); _defaultTheme.SetColor("font_hover_pressed_color", bar, Colors.White); _defaultTheme.SetColor("font_outline_color", bar, Colors.Black);
         const string type = "PopupMenu";
         _defaultTheme.SetStyleBox("panel", type, CreateButtonStyle(new(.1f, .1f, .1f, .98f), 6, 6, 6, 6));
         _defaultTheme.SetStyleBox("hover", type, CreateButtonStyle(new(.3f, .3f, .3f, .8f), 0, 0, 0, 0));

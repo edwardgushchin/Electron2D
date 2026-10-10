@@ -5825,6 +5825,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.MenuBar",
+    "kind": "type",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "MenuBar",
+    "signature": "public class Electron2D.MenuBar",
+    "visibility": "public",
+    "baseType": "Electron2D.Control",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.MenuButton",
     "kind": "type",
     "declaringType": "Electron2D.MenuButton",
@@ -15530,6 +15545,19 @@
     "declaringType": "Electron2D.MarginContainer",
     "name": ".ctor",
     "signature": "public MarginContainer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.MenuBar..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.MenuBar",
+    "name": ".ctor",
+    "signature": "public MenuBar()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -98847,6 +98875,402 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.MenuBar.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.GetMenuCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "GetMenuCount",
+    "signature": "public System.Int32 GetMenuCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.GetMenuPopup(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "GetMenuPopup",
+    "signature": "public Electron2D.PopupMenu GetMenuPopup(System.Int32 menu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PopupMenu",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.GetMenuTitle(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "GetMenuTitle",
+    "signature": "public System.String GetMenuTitle(System.Int32 menu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.GetMenuTooltip(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "GetMenuTooltip",
+    "signature": "public System.String GetMenuTooltip(System.Int32 menu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.IsMenuDisabled(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "IsMenuDisabled",
+    "signature": "public System.Boolean IsMenuDisabled(System.Int32 menu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.IsMenuHidden(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "IsMenuHidden",
+    "signature": "public System.Boolean IsMenuHidden(System.Int32 menu)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.IsNativeMenu()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "IsNativeMenu",
+    "signature": "public System.Boolean IsNativeMenu()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.OnGUIInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "OnGUIInput",
+    "signature": "protected override System.Void OnGUIInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.OnGetMinimumSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "OnGetMinimumSize",
+    "signature": "protected override Electron2D.Vector2 OnGetMinimumSize()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.OnGetTooltip(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "OnGetTooltip",
+    "signature": "protected override System.String OnGetTooltip(Electron2D.Vector2 atPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.OnShortcutInput(Electron2D.InputEvent)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "OnShortcutInput",
+    "signature": "protected override System.Void OnShortcutInput(Electron2D.InputEvent input)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "input",
+        "type": "Electron2D.InputEvent",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.SetDisableShortcuts(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SetDisableShortcuts",
+    "signature": "public System.Void SetDisableShortcuts(System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.SetMenuDisabled(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SetMenuDisabled",
+    "signature": "public System.Void SetMenuDisabled(System.Int32 menu, System.Boolean disabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "disabled",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.SetMenuHidden(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SetMenuHidden",
+    "signature": "public System.Void SetMenuHidden(System.Int32 menu, System.Boolean hidden)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "hidden",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.SetMenuTitle(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SetMenuTitle",
+    "signature": "public System.Void SetMenuTitle(System.Int32 menu, System.String title)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "title",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.SetMenuTooltip(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SetMenuTooltip",
+    "signature": "public System.Void SetMenuTooltip(System.Int32 menu, System.String tooltip)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "menu",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tooltip",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.MenuBar.ValidateMutation()",
+    "kind": "method",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "ValidateMutation",
+    "signature": "protected override System.Void ValidateMutation()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.MenuButton.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.MenuButton",
@@ -182042,6 +182466,58 @@
     "id": "property:Electron2D.LineEdit.TextDirection()",
     "kind": "property",
     "declaringType": "Electron2D.LineEdit",
+    "name": "TextDirection",
+    "signature": "public Electron2D.TextDirection TextDirection { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TextDirection",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MenuBar.Flat()",
+    "kind": "property",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "Flat",
+    "signature": "public System.Boolean Flat { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MenuBar.Language()",
+    "kind": "property",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "Language",
+    "signature": "public System.String Language { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MenuBar.SwitchOnHover()",
+    "kind": "property",
+    "declaringType": "Electron2D.MenuBar",
+    "name": "SwitchOnHover",
+    "signature": "public System.Boolean SwitchOnHover { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MenuBar.TextDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.MenuBar",
     "name": "TextDirection",
     "signature": "public Electron2D.TextDirection TextDirection { get; set; }",
     "visibility": "public",

@@ -210,3 +210,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 ## Local application compute
 
 [Local compute](../components/local-compute.md) now supplies the applicable RenderingDevice buffer/compute-list API, independent of canvas selection. Runtime-owned native handles stay internal; consumers load compiled modules through RDShaderSPIRV and bind typed RDUniform descriptors. The water playground executes the same application liquid model on CPU or through this device API. Broader device graphics/texture APIs remain separate gaps.
+
+[Menu strips](../components/menu-strips.md) add shaped translated RTL headers, all ordinary/mirrored state styles and flat/focus text behavior to current embedded PopupMenu presentation and typed theme lookup.

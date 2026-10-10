@@ -73,11 +73,12 @@ public partial class PopupMenu
     /// <inheritdoc />
     protected override void OnInput(InputEvent inputEvent)
     {
-        base.OnInput(inputEvent); if (!Visible) return;
+        base.OnInput(inputEvent); if (!Visible) return; var inputTree = Tree;
         if (inputEvent.IsActionPressed("ui_down", true, true)) { NavigateEvent(inputEvent, 1); }
         else if (inputEvent.IsActionPressed("ui_up", true, true)) { NavigateEvent(inputEvent, -1); }
         else if (inputEvent.IsActionPressed("ui_left", true, true) && Parent is PopupMenu) { Hide(); SetInputAsHandled(); }
         else if (inputEvent.IsActionPressed("ui_right", true, true) && Eligible(_focused) && _items[_focused].Submenu is not null) { OpenSubmenu(_focused, true); SetInputAsHandled(); }
+        else if (Parent is MenuBar bar && bar.SwitchFromPopup(this, inputEvent)) { inputTree?.SetInputAsHandled(); }
         else if (inputEvent.IsActionPressed("ui_accept", true, true)) { ActivateFocused(); SetInputAsHandled(); }
         else if (!(_searchVisible && _search.HasFocus()) && ActivateItemByEvent(inputEvent)) { SetInputAsHandled(); }
         else if (_allowSearch && !_searchVisible && inputEvent is InputEventKey { Pressed: true, Unicode: > 0 } key)

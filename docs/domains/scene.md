@@ -254,3 +254,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 ## CPU particle integration
 
 [CPUParticles](../classes/CPUParticles.md) and [CPU particles](../components/cpu-particles.md) connect ordinary scene internal processing, scalar curves/gradients, borrowed textures/materials, typed file graphs and shared canvas output. Configured CPU simulation and sprite-sheet replay execute on current GPU/compatibility. World emission follows complete physics poses and uses a separate canvas basis for visible world quads. GPU compute/process materials, their conversion, foreign/native allocator and owner acceptance remain separate exact dependencies.
+
+[Menu strips](../components/menu-strips.md) now present direct PopupMenu children with identity-preserving headers, pointer/keyboard/hover switching, shortcut gates and child-bound fresh scene/file factories. System global menus retain the precise NativeMenu decision/backend dependency in ADR 0041.

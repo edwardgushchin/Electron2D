@@ -216,7 +216,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_CHILD") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_TRASH") is { } trashPath) { FileDialogTests.RunTrashChild(trashPath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_DIALOG") == "1") { FileDialogTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_CHILD") is { } menuBarPath) { MenuBarTests.RunChild(menuBarPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR") == "1") { MenuBarTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_CHILD") is { } menuButtonPath) { MenuButtonTests.RunChild(menuButtonPath); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BAR_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON_NATIVE") == "1") { RenderingRuntimeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MENU_BUTTON") == "1") { MenuButtonTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DIALOG_CHILD") is { } dialogPath) { DialogTests.RunChild(dialogPath); return; }
@@ -893,6 +896,7 @@ TabContainerTests.Run();
 ColorPickerTests.Run();
 SpinBoxTests.Run();
 FileDialogTests.Run();
+MenuBarTests.Run();
 MenuButtonTests.Run();
 DialogTests.Run();
 OptionButtonTests.Run();

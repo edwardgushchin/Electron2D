@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+[MenuBar](../classes/MenuBar.md) now executes a complete embedded menu strip with direct popup identity, shaped themed RTL headers, keyboard/pointer/hover switching, shortcut gates and child-bound fresh scene/file storage. Its 38 own/inherited-default/theme rows are Implemented; system-global-menu preference/insertion remain precisely Blocked under ADR 0041 and class correspondence retains inherited semantic/editor/native-window services. Linux Wayland GPU and compatibility pass native SDL/pixel checks and 64 warmed title/focus/render frames with zero managed allocation.
+
 [Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
 selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;

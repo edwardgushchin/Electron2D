@@ -1,12 +1,14 @@
 # PopupMenu
 
-Last updated: 2026-10-06
+Last updated: 2026-10-10
 
 **Namespace:** `Electron2D`. **Declaration:** `public partial class PopupMenu : Popup`. **Inherits:** [Popup](Popup.md). **Inherited By:** —. **Source:** [model](../../src/Scene/GUI/PopupMenu.cs), [layout](../../src/Scene/GUI/PopupMenu.Layout.cs), [input](../../src/Scene/GUI/PopupMenu.Input.cs), [search](../../src/Scene/GUI/PopupMenu.Search.cs), [storage](../../src/Scene/GUI/PopupMenu.Storage.cs). **Component:** [Popup menus](../components/popup-menus.md).
 
 A themed, scrollable embedded command menu with typed items, search and submenus.
 
 ## Description
+
+A [MenuBar](MenuBar.md) parent uses four typed private scene fields on each popup for its header title override, tooltip, disabled and hidden state. They follow child identity across scene pruning; top-level horizontal input forwards to the owning strip after submenu handling.
 
 PopupMenu presents themed text, borrowed icons/shortcuts, checkbox/radio decorations, explicit multistate values, titled separators and direct child submenus through the existing embedded Window host. Configure `GUIEmbedSubwindows=true` on the containing viewport before attaching menus. Each menu owns an internal Panel, ScrollContainer, LineEdit, item canvas and one-shot Timer; ordinary child enumeration and packing omit these implementation nodes. Showing requires an attached embedder. The [popup host](../components/popup-windows.md) defines viewport coordinates, modal routing, focus restoration, renderer target ownership and cancellation.
 

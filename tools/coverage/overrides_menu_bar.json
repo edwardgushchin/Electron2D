@@ -1,0 +1,306 @@
+{
+  "mappings": [
+    {
+      "godot": "class:MenuBar",
+      "electron2d": "T:Electron2D.MenuBar",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:get_menu_count()",
+      "electron2d": "method:Electron2D.MenuBar.GetMenuCount()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:get_menu_popup(int:)",
+      "electron2d": "method:Electron2D.MenuBar.GetMenuPopup(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:get_menu_title(int:)",
+      "electron2d": "method:Electron2D.MenuBar.GetMenuTitle(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:get_menu_tooltip(int:)",
+      "electron2d": "method:Electron2D.MenuBar.GetMenuTooltip(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:is_menu_disabled(int:)",
+      "electron2d": "method:Electron2D.MenuBar.IsMenuDisabled(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:is_menu_hidden(int:)",
+      "electron2d": "method:Electron2D.MenuBar.IsMenuHidden(System.Int32)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:is_native_menu()",
+      "electron2d": "method:Electron2D.MenuBar.IsNativeMenu()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:set_disable_shortcuts(bool:)",
+      "electron2d": "method:Electron2D.MenuBar.SetDisableShortcuts(System.Boolean)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:set_menu_disabled(int:,bool:)",
+      "electron2d": "method:Electron2D.MenuBar.SetMenuDisabled(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:set_menu_hidden(int:,bool:)",
+      "electron2d": "method:Electron2D.MenuBar.SetMenuHidden(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:set_menu_title(int:,String:)",
+      "electron2d": "method:Electron2D.MenuBar.SetMenuTitle(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::method:set_menu_tooltip(int:,String:)",
+      "electron2d": "method:Electron2D.MenuBar.SetMenuTooltip(System.Int32,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::property:flat",
+      "electron2d": "property:Electron2D.MenuBar.Flat()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::property:focus_mode",
+      "electron2d": "property:Electron2D.Control.FocusMode()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::property:language",
+      "electron2d": "property:Electron2D.MenuBar.Language()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::property:switch_on_hover",
+      "electron2d": "property:Electron2D.MenuBar.SwitchOnHover()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::property:text_direction",
+      "electron2d": "property:Electron2D.MenuBar.TextDirection()",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:disabled",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:disabled_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font",
+      "electron2d": "method:Electron2D.Control.GetThemeFont(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_disabled_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_focus_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_hover_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_hover_pressed_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_outline_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_pressed_color",
+      "electron2d": "method:Electron2D.Control.GetThemeColor(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:font_size",
+      "electron2d": "method:Electron2D.Control.GetThemeFontSize(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:h_separation",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:hover",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:hover_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:hover_pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:hover_pressed_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:normal",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:normal_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:outline_size",
+      "electron2d": "method:Electron2D.Control.GetThemeConstant(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:pressed",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    },
+    {
+      "godot": "MenuBar::theme_item:pressed_mirrored",
+      "electron2d": "method:Electron2D.Control.GetThemeStyleBox(System.String,System.String)",
+      "reason": "ADRs 0004/0008/0038/0040/0083: direct ordinary PopupMenu identity, automatic/overridden titles, themed shaped RTL headers, pointer/keyboard/hover switching, gated shortcuts, exception-safe lifecycle and exact child-bound scene/file factories execute on current embedded backends. System global menu insertion and inherited semantic/editor/native-window services retain precise owner prerequisites."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.MenuBar..ctor()",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.CreateSceneInstanceFactory()",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.Dispose(System.Boolean)",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.GetPropertyDescriptors()",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.OnGUIInput(Electron2D.InputEvent)",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.OnShortcutInput(Electron2D.InputEvent)",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.OnNotification(System.Int32)",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.OnGetMinimumSize()",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.OnGetTooltip(Electron2D.Vector2)",
+      "reason": "Concrete menu-strip construction and inherited input, layout, tooltip, notification, storage and lifecycle hooks under ADRs 0008/0023/0038/0083; no dynamic facade or additional game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.ValidateMutation()",
+      "reason": "Inherited node mutation/disposal hooks reject edits from translation/text preparation callbacks under ADRs 0008/0083."
+    },
+    {
+      "electron2d": "method:Electron2D.MenuBar.ValidateDisposal()",
+      "reason": "Inherited node mutation/disposal hooks reject edits from translation/text preparation callbacks under ADRs 0008/0083."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "MenuBar::method:get_menu_count()",
+        "MenuBar::method:get_menu_popup(int:)",
+        "MenuBar::method:get_menu_title(int:)",
+        "MenuBar::method:get_menu_tooltip(int:)",
+        "MenuBar::method:is_menu_disabled(int:)",
+        "MenuBar::method:is_menu_hidden(int:)",
+        "MenuBar::method:is_native_menu()",
+        "MenuBar::method:set_disable_shortcuts(bool:)",
+        "MenuBar::method:set_menu_disabled(int:,bool:)",
+        "MenuBar::method:set_menu_hidden(int:,bool:)",
+        "MenuBar::method:set_menu_title(int:,String:)",
+        "MenuBar::method:set_menu_tooltip(int:,String:)",
+        "MenuBar::property:flat",
+        "MenuBar::property:focus_mode",
+        "MenuBar::property:language",
+        "MenuBar::property:switch_on_hover",
+        "MenuBar::property:text_direction",
+        "MenuBar::theme_item:disabled",
+        "MenuBar::theme_item:disabled_mirrored",
+        "MenuBar::theme_item:font",
+        "MenuBar::theme_item:font_color",
+        "MenuBar::theme_item:font_disabled_color",
+        "MenuBar::theme_item:font_focus_color",
+        "MenuBar::theme_item:font_hover_color",
+        "MenuBar::theme_item:font_hover_pressed_color",
+        "MenuBar::theme_item:font_outline_color",
+        "MenuBar::theme_item:font_pressed_color",
+        "MenuBar::theme_item:font_size",
+        "MenuBar::theme_item:h_separation",
+        "MenuBar::theme_item:hover",
+        "MenuBar::theme_item:hover_mirrored",
+        "MenuBar::theme_item:hover_pressed",
+        "MenuBar::theme_item:hover_pressed_mirrored",
+        "MenuBar::theme_item:normal",
+        "MenuBar::theme_item:normal_mirrored",
+        "MenuBar::theme_item:outline_size",
+        "MenuBar::theme_item:pressed",
+        "MenuBar::theme_item:pressed_mirrored"
+      ],
+      "state": "Implemented",
+      "reason": "Executable embedded menu strip verified by managed, fresh-process and Linux Wayland GPU/compatibility SDL input/pixel checks. All ordinary/mirrored theme keys, title language/direction, identity, shortcut/lifecycle and child-bound storage consumers execute. Native system menu preference/insertion remain distinct blocked rows; inherited class gaps do not downgrade these completed own contracts."
+    },
+    {
+      "godot": [
+        "class:MenuBar"
+      ],
+      "state": "Partial",
+      "reason": "The complete embedded menu strip executes. Trigger for full class correspondence: accepted NativeMenu ownership/callback decision and system-global-menu backend (ADR 0041), inherited Control semantic accessibility/editor support and independent native child windows on their owners."
+    },
+    {
+      "godot": [
+        "MenuBar::property:prefer_global_menu",
+        "MenuBar::property:start_index"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0041: requires an accepted NativeMenu service decision plus a backend exposing the system main menu, contiguous insertion/reordering across bars, borrowed PopupMenu native bindings and lifetime/callback cleanup. Current SDL GPU/compatibility embedded menu hosts expose no system global menu. No inert preference or insertion-order property is shipped."
+    }
+  ]
+}

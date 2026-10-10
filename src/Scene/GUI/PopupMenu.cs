@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A themed, scrollable popup of text, icon, check, state and submenu items.</summary>
 /// <remarks>Items borrow icons and shortcuts. Check and state changes are explicit; activation only emits events.
-/// Metadata uses exact generic types and remains runtime-only. The embedded host owns presentation and input.</remarks>
+/// Metadata uses exact generic types and remains runtime-only. The embedded host owns presentation and input.
+/// A MenuBar parent uses this popup's child-bound scene fields for its header title, tooltip and eligibility.</remarks>
 public partial class PopupMenu : Popup
 {
     internal sealed class Item
@@ -23,6 +24,9 @@ public partial class PopupMenu : Popup
         internal Vector2 IconSize;
         internal string DisplayText = "", AcceleratorText = "";
     }
+    internal string? MenuBarTitle;
+    internal string MenuBarTooltip = "";
+    internal bool MenuBarDisabled, MenuBarHidden;
     private readonly List<Item> _items = [];
     private readonly Dictionary<Resource, int> _resources = [];
     private readonly MenuItems _view;

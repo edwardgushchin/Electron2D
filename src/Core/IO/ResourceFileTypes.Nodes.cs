@@ -6,6 +6,7 @@ public static partial class ResourceFileTypes
     private static ColorPickerButton CreateColorPickerButtonFileNode() => new();
     private static SpinBox CreateSpinBoxFileNode() => new();
     private static FileDialog CreateFileDialogFileNode() => new();
+    private static MenuBar CreateMenuBarFileNode() => new();
     private static MenuButton CreateMenuButtonFileNode() => new();
     private static AcceptDialog CreateAcceptDialogFileNode() => new();
     private static ConfirmationDialog CreateConfirmationDialogFileNode() => new();
@@ -28,6 +29,7 @@ public static partial class ResourceFileTypes
         RegisterNode("ColorPicker", CreateColorPickerFileNode);
         RegisterNode("ColorPickerButton", CreateColorPickerButtonFileNode);
         RegisterNode("FileDialog", CreateFileDialogFileNode);
+        RegisterNode("MenuBar", CreateMenuBarFileNode);
         RegisterNode("MenuButton", CreateMenuButtonFileNode);
         RegisterNode("AcceptDialog", CreateAcceptDialogFileNode);
         RegisterNode("ConfirmationDialog", CreateConfirmationDialogFileNode);
