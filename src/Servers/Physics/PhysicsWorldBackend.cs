@@ -2,7 +2,7 @@ using Box2D.NET;
 
 namespace Electron2D;
 
-/// <summary>Owns one selected solver implementation, complete world-step dispatch and direct-space queries.</summary>
+/// <summary>Owns selected solver policy, capacity, statistics, complete intervals and direct-space queries.</summary>
 internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Backend requested, string? fallbackReason = null) : IDisposable
 {
     protected PhysicsSpace Space { get; } = space;
@@ -14,6 +14,15 @@ internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Ba
     internal virtual PhysicsTaskScheduler Tasks => throw new InvalidOperationException("This physics space has no CPU worker scheduler.");
     internal virtual GPUPhysicsWorld? StageGPU => null;
     internal abstract void EnsureAccess();
+    internal abstract void SetSleepSettings(in PhysicsSleepSettings settings);
+    internal abstract void SetContactSettings(in PhysicsContactSettings settings);
+    internal abstract void SetSolverIterations(int value);
+    internal abstract void SetConstraintDefaultBias(float value);
+    internal abstract int PreparedBodyCapacity { get; }
+    internal abstract void PrepareSolverCapacity();
+    internal abstract void PrepareMonitoringCapacity();
+    internal abstract PhysicsSpace.Statistics ReadStatistics();
+    internal virtual void PrepareInterval() => throw new InvalidOperationException("This physics space has no CPU worker scheduler.");
     internal abstract PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider);
     internal abstract PhysicsJointImplementation CreateJoint();
     internal abstract void Step(double delta);

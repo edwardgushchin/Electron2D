@@ -26,8 +26,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         EnsureQueryAccess(); PhysicsJointRuntime.ValidateBias(value);
         if (ConstraintDefaultBias == value) return;
-        ConstraintDefaultBias = value; GPUStore?.SetConstraintDefaultBias(value);
-        foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
+        ConstraintDefaultBias = value; _backend.SetConstraintDefaultBias(value);
     }
     private readonly List<Area> _areas = [];
     private readonly List<PhysicsServerCollider> _serverColliders = [];
@@ -51,8 +50,6 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool _disposed;
     private long _contactStep;
     internal ulong Tick { get; private set; }
-    private int _preparedBodyCapacity;
-    private int _preparedSleepCapacity;
 
     internal readonly record struct OverlapEvent(Area Area, PhysicsShapePairChange Change);
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
@@ -82,17 +79,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _backend = PhysicsWorldBackend.Create(this, backend, allowCPUFallback);
     }
 
-    internal B2WorldDef CreateCPUDefinition()
-    {
-        var definition = b2DefaultWorldDef();
-        definition.gravity = PhysicsShapeBackend.ToBackend(_defaultGravity);
-        definition.restitutionThreshold = 0;
-        definition.enableContinuous = false; // Per-body modes use the shared scene/server trajectory pass.
-        definition.frictionCallback = CombineFriction;
-        definition.restitutionCallback = CombineBounce;
-        return definition;
-    }
-    internal void InstallCPUCallbacks(B2WorldId world) => b2World_SetPreSolveCallback(world, PreSolveContact, this);
+    internal Vector2 DefaultGravity => _defaultGravity;
 
     private bool _isActive;
     internal bool IsActive => Volatile.Read(ref _isActive);
@@ -191,91 +178,10 @@ internal sealed partial class PhysicsSpace : IDisposable
         _contactEvents.EnsureCapacity(contactEvents); _sleepEvents.EnsureCapacity(_bodies.Count);
         _overlapEvents.EnsureCapacity(overlapEvents); _serverAreaEvents.EnsureCapacity(serverEvents);
         _fieldAreas.EnsureCapacity(_areas.Count + _serverColliders.Count);
-        if (GPUStore is not null) return;
-        var world = b2GetWorldFromId(WorldID);
-        foreach (var sensor in world.sensors.data.AsSpan(0, world.sensors.count))
-        {
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.hits, world.shapes.count);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.overlaps1, world.shapes.count);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref sensor.overlaps2, world.shapes.count);
-        }
-
+        _backend.PrepareMonitoringCapacity();
     }
 
-    private void PrepareSolverCapacity()
-    {
-        if (GPUStore is not null) { PrepareGPUCapacity(); return; }
-        var world = b2GetWorldFromId(WorldID);
-        var count = world.bodyIdPool.nextIndex;
-        var capacity = (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)Math.Max(8, count));
-        if (capacity <= _preparedBodyCapacity && count <= _preparedSleepCapacity) return;
-        var sleeping = 0;
-        foreach (var body in world.bodies.data.AsSpan(0, world.bodies.count))
-            if (body.id >= 0 && body.type == B2BodyType.b2_dynamicBody && body.enableSleep) sleeping++;
-        var sleepCapacity = sleeping == 0 ? 0 : (int)System.Numerics.BitOperations.RoundUpToPowerOf2((uint)sleeping);
-        if (capacity <= _preparedBodyCapacity && sleepCapacity <= _preparedSleepCapacity) return;
-        _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
-        _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
-        capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity;
-        if (_bodyMotions.Length < capacity) Array.Resize(ref _bodyMotions, capacity);
-        // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSetIdPool.freeArray, sleepCapacity + 3);
-        while (world.solverSets.count < sleepCapacity + 3)
-        {
-            var index = world.solverSetIdPool.nextIndex++;
-            var set = new B2SolverSet { setIndex = B2_NULL_INDEX };
-            Box2D.NET.B2Arrays.b2Array_Push(ref world.solverSets, set);
-            Box2D.NET.B2IdPools.b2FreeId(world.solverSetIdPool, index);
-        }
-        var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref awake.bodyStates, capacity);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.bodyMoveEvents, capacity);
-        // ponytail: Four contacts per body is the prepared graph budget; larger topologies need explicit capacity preparation.
-        var contacts = checked(capacity * 4);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contacts, contacts);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.contactIdPool.freeArray, contacts);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islands, capacity);
-        Box2D.NET.B2Arrays.b2Array_Reserve(ref world.islandIdPool.freeArray, capacity);
-        for (var i = 0; i < world.solverSets.count; i++)
-        {
-            var set = world.solverSets.data[i];
-            // ponytail: Dormant budget is 16 bodies/32 contacts; larger island topologies need explicit preparation.
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.bodySims, i < 3 ? capacity : 16);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.contactSims, i < 3 ? contacts : 32);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.jointSims, 4);
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref set.islandSims, i < 3 ? capacity : 1);
-        }
-        foreach (var task in world.taskContexts.data.AsSpan(0, world.taskContexts.count))
-        {
-            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.contactStateBitSet, contacts);
-            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.enlargedSimBitSet, capacity);
-            Box2D.NET.B2BitSets.b2SetBitCountAndClear(ref task.awakeIslandBitSet, capacity);
-        }
-        for (var index = 0; index < world.constraintGraph.colors.Length; index++)
-        {
-            ref var color = ref world.constraintGraph.colors[index];
-            // A regular color contains at most one constraint per dynamic body; overflow has no such bound.
-            Box2D.NET.B2Arrays.b2Array_Reserve(ref color.contactSims,
-                index == Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX ? contacts : capacity);
-            if (index != Box2D.NET.B2ConstraintGraphs.B2_OVERFLOW_INDEX && color.bodySet.blockCount < (capacity + 63) / 64)
-                Box2D.NET.B2BitSets.b2GrowBitSet(ref color.bodySet, (capacity + 63) / 64);
-        }
-        if (capacity >= 256) PrepareArenaCapacity(world, capacity, contacts);
-    }
-
-    private static void PrepareArenaCapacity(B2World world, int bodies, int contacts)
-    {
-        var arena = world.arena;
-        arena.GetOrCreateFor<int>().Reserve(checked(bodies * 9 + 96));
-        arena.GetOrCreateFor<B2MoveResult>().Reserve(bodies + 32);
-        arena.GetOrCreateFor<B2MovePair>().Reserve(checked(bodies * 32));
-        arena.GetOrCreateFor<B2ContactSim>().Reserve(contacts + 128);
-        arena.GetOrCreateFor<B2ContactConstraintSIMD>().Reserve(contacts / B2Cores.B2_SIMD_WIDTH + 128);
-        arena.GetOrCreateFor<B2ContactConstraint>().Reserve(contacts);
-        arena.GetOrCreateFor<B2SolverBlock>().Reserve((bodies + contacts * 2) / 32 + 512);
-        arena.GetOrCreateFor<B2SolverStage>().Reserve(256);
-    }
+    private void PrepareSolverCapacity() => _backend.PrepareSolverCapacity();
 
     internal void Add(PhysicsBody body)
     {
@@ -437,8 +343,8 @@ internal sealed partial class PhysicsSpace : IDisposable
             PrepareAreaFields();
             RecordStepPhase(1, ref profileMark);
             var hasKinematicBodies = PrepareBodyStates(delta);
+            _backend.PrepareInterval();
             var world = b2GetWorldFromId(WorldID);
-            world.workerCount = (_backend.StageGPU is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _backend.Tasks.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
             world.contactBiasDuration = (float)delta;
             var warmStarting = world.enableWarmStarting;
@@ -546,7 +452,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
     }
 
-    private static bool PreSolveContact(B2ShapeId first, B2ShapeId second, B2Vec2 point,
+    internal static bool PreSolveContact(B2ShapeId first, B2ShapeId second, B2Vec2 point,
         B2Vec2 normal, object context) => ((PhysicsSpace)context).AllowBodyContact(first, second, normal);
 
     private bool AllowBodyContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)

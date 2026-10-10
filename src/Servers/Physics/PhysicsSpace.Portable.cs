@@ -62,7 +62,7 @@ internal sealed partial class PhysicsSpace
             }
             gpu.CompletePortableRestore(_portableGPUOneWays.AsSpan(0, pairs.Count)); _gpuWakePending = false;
             InvalidateGPUStates(wake: false); PublishGPU();
-            PhysicsServer.Service.PublishStatistics(this, new(gpu.PublishedActiveBodyCount, gpu.PairCount, gpu.PublishedIslandCount));
+            PhysicsServer.Service.PublishStatistics(this, _backend.ReadStatistics());
         }
         else
         {

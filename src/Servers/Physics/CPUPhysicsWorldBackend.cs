@@ -3,7 +3,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-/// <summary>Owns the CPU world, retained worker scheduler and optional diagnostic GPU stages.</summary>
+/// <summary>Owns the CPU world, policies, solver capacity, statistics, workers and optional diagnostic GPU stages.</summary>
 internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private readonly B2WorldId _worldID;
@@ -21,7 +21,11 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         _tasks = new(OperatingSystem.IsBrowser() ? 1 : Math.Min(4, Environment.ProcessorCount));
         try
         {
-            var definition = space.CreateCPUDefinition();
+            var definition = B2Types.b2DefaultWorldDef();
+            definition.gravity = PhysicsShapeBackend.ToBackend(space.DefaultGravity);
+            definition.restitutionThreshold = 0;
+            definition.enableContinuous = false;
+            definition.frictionCallback = PhysicsSpace.CombineFriction; definition.restitutionCallback = PhysicsSpace.CombineBounce;
             definition.workerCount = _tasks.WorkerCount;
             definition.enqueueTask = _tasks.Enqueue; definition.finishTask = _tasks.Finish;
             _worldID = b2CreateWorld(definition);
@@ -33,7 +37,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
             world.contactBias = space.ContactSettings.Bias;
             world.contactAllowedPenetration = space.ContactSettings.AllowedPenetration * PhysicsSpace.MetersPerUnit;
             _tasks.Bind(world); world.workerCount = 1;
-            space.InstallCPUCallbacks(_worldID);
+            b2World_SetPreSolveCallback(_worldID, PhysicsSpace.PreSolveContact, space);
         }
         catch (Exception error)
         {

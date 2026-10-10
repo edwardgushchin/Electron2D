@@ -25,7 +25,9 @@ internal static class PhysicsMassPerformance
         {
             foreach (var backend in selected)
             {
+                var setup = Stopwatch.GetTimestamp();
                 using var pile = new Pile(backend, count, warmup, samples);
+                pile.SetupMS = Stopwatch.GetElapsedTime(setup).TotalMilliseconds;
                 if (rendered) Render(pile); else { while (!pile.Complete) pile.Step(); pile.Validate(); }
                 pile.Report(rendered);
             }
@@ -41,6 +43,7 @@ internal static class PhysicsMassPerformance
     private sealed class Pile : IDisposable
     {
         internal readonly PhysicsServer.Backend Backend;
+        internal double SetupMS;
         internal readonly RID Space;
         internal readonly RID[] Bodies;
         internal readonly int Warmup, Samples;
@@ -165,6 +168,7 @@ internal static class PhysicsMassPerformance
             var report = new
             {
                 Schema = 1,
+                SetupMS,
                 Scene = "dense-circle-pile",
                 Backend = Backend.ToString(),
                 Rendered = rendered,

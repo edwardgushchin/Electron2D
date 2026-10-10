@@ -12,11 +12,11 @@ Last updated: 2026-10-10
 
 ## Description and internal flow
 
-One owner-thread world shared by scene bodies/Areas/joints and caller-owned colliders. It retains one selected [PhysicsWorldBackend](PhysicsWorldBackend.md), which owns the native CPU world/workers or the resident GPU store and full interval dispatch. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
+One owner-thread world shared by scene bodies/Areas/joints and caller-owned colliders. Authored sleep/contact/iteration/default-joint policy stays here; application, capacity preparation and completed statistics dispatch through the selected owner. It retains one selected [PhysicsWorldBackend](PhysicsWorldBackend.md), which owns the native CPU world/workers or the resident GPU store and full interval dispatch. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
 
 | State/operation | Contract |
 | --- | --- |
-| `PhysicsSpace(Backend backend = CPU, bool allowCPUFallback = false)` | Selected CPU world or resident GPU store with sampled defaults; initially inactive. CPU alone owns the retained task scheduler. |
+| `PhysicsSpace(Backend backend = CPU, bool allowCPUFallback = false)` | Selected CPU world or resident GPU store with sampled defaults; initially inactive. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
 | `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
@@ -140,7 +140,7 @@ exceptions. Its observable host caches and waits are documented in the backend c
 
 [PhysicsSpace.Statistics.cs](../../src/Servers/Physics/PhysicsSpace.Statistics.cs)
 retains an internal `Statistics(Active, Pairs, Islands)` value. The private
-`SensorStatisticsQuery` value carries native tree-query state without allocations.
+`CPUPhysicsWorldBackend.SensorStatisticsQuery` value carries native tree-query state without allocations.
 CPU publishes after body capture; GPU captures the final resident counters before
 query/report work and publishes after completed body capture. Empty active positive
 steps clear the sample. The PhysicsServer registry gate protects publication and

@@ -553,3 +553,20 @@ correction; warmed step/replay all-thread counters were zero in their measured
 intervals. This verifies those exercised scenarios on the current implementation,
 not every network, platform or numerical acceptance condition. Public registered
 backends, custom geometry and the complete extension dispatch families remain open.
+
+## Owned world operations
+
+World initialization, authored sleep/contact/iteration/default-joint application, native worker selection, solver/sensor scratch preparation and completed process statistics now execute through the selected implementation. Common PhysicsSpace retains validation, authored values and observer publication. CPU owns native world defaults, arena/dormant budgets and sensor-statistics traversal; GPU applies store policies, invalidates observation epochs and prepares resident-consumer scratch without CPU motion storage. Public registration and direct-state extensions remain open.
+
+The dormant-capacity fast path also removes repeated whole-population scans when
+no dynamic body has ever allowed sleeping. The existing public dense-pile fixture
+now reports setup separately. At 16384 CPU circles, creation was 1053.5285 ms
+before this fast path and 802.8116 ms after it; an isolated repeat measured
+822.4178 ms. All runs retain four substeps, 16 iterations, 32 warmup and 32 measured
+steps. Full-step p50/p95/p99 was 53.5809/56.8210/59.4889 ms before and
+51.8929/54.1560/54.2829 ms in the repeat, with 0/0 warmed managed bytes and identical
+.25791 maximum penetration. The first after-run overlapped formatting checks and
+is retained separately; these individual runs are evidence of setup cost and
+preserved behavior, not a broad throughput guarantee. Logs/reports are in
+`bin/physics-world-operations/2026-10-10/capacity-before/`, `capacity-after/` and
+`capacity-repeat/`. Sleeping worlds preserve their existing dormant budgets.

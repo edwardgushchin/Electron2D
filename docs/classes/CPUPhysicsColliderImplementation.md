@@ -19,3 +19,5 @@ A failed attachment attempts cleanup and leaves the common facade detached. Reti
 ## Limits and decisions
 
 Only internal CPU/GPU implementations are currently constructed. Public backend registration, server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103); this type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
+
+CPU dynamic attachment creation, sleep enabling and live mode changes now notify the owning CPU world before sleeping capacity can be needed. The conservative world flag persists across replay and retired attachments, avoiding repeated no-sleep population scans without reducing dormant capacity.

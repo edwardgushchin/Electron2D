@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        WorldPolicy(backend);
         JointAttachment(backend);
         ColliderAttachment(backend);
         QueryOwnership(backend);
@@ -68,6 +69,62 @@ internal static class PhysicsBackendOwnershipTests
         else Reject<ObjectDisposedException>(() => gpuStore!.Read([], []));
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
+    }
+    private static void WorldPolicy(PhysicsServer.Backend backend)
+    {
+        var first = PhysicsServer.SpaceCreate(backend); var other = PhysicsServer.SpaceCreate(backend);
+        var body = PhysicsServer.BodyCreate();
+        try
+        {
+            var space = PhysicsServer.Service.GetSceneSpace(first); var owner = space.BackendImplementation;
+            var untouched = PhysicsServer.SpaceGetSolverIterations(other);
+            PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(first, 3); PhysicsServer.SpaceSetBodyAngularVelocitySleepThreshold(first, .2f);
+            PhysicsServer.SpaceSetBodyTimeToSleep(first, .75f);
+            PhysicsServer.SpaceSetContactDefaultBias(first, .3f); PhysicsServer.SpaceSetContactMaxAllowedPenetration(first, .25f);
+            PhysicsServer.SpaceSetContactRecycleRadius(first, 2); PhysicsServer.SpaceSetContactMaxSeparation(first, 3);
+            PhysicsServer.SpaceSetSolverIterations(first, 7); PhysicsServer.SpaceSetConstraintDefaultBias(first, .4f);
+            Check(space.SleepSettings == new PhysicsSleepSettings(3, .2f, .75f) &&
+                space.ContactSettings == new PhysicsContactSettings(.3f, .25f, 2, 3) && space.SolverIterations == 7 &&
+                space.ConstraintDefaultBias == .4f && PhysicsServer.SpaceGetSolverIterations(other) == untouched,
+                "Typed world policy is retained by the selected world without changing another world");
+            if (backend == PhysicsServer.Backend.CPU)
+            {
+                var native = b2GetWorldFromId(space.WorldID);
+                Check(native.sleepAngularThreshold == .2f && native.timeToSleep == .75f && native.solverIterations == 7 &&
+                    native.contactBias == .3f && native.contactAllowedPenetration == .25f * PhysicsSpace.MetersPerUnit,
+                    "The CPU owner applies authored policy to its actual native solver");
+            }
+            else Reject<InvalidOperationException>(owner.PrepareInterval);
+            var before = space.ContactSettings;
+            Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceSetContactDefaultBias(first, float.NaN));
+            Reject<ArgumentOutOfRangeException>(() => PhysicsServer.SpaceSetSolverIterations(first, 0));
+            Check(space.ContactSettings == before && space.SolverIterations == 7, "Invalid policy leaves authored and solver settings unchanged");
+            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetCanSleep(body, false); PhysicsServer.BodySetSpace(body, first);
+            PhysicsServer.SpaceSetActive(first, true); PhysicsServer.SpaceStep(first, 1d / 60);
+            Check(owner.ReadStatistics() == space.PublishedStatistics && space.PublishedStatistics.Active == 1,
+                "The completed process snapshot comes from the selected solver");
+            if (owner is CPUPhysicsWorldBackend cpu)
+            {
+                Check(!cpu.MaySleep, "All no-sleep dynamic bodies skip dormant-body scanning");
+                PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static); PhysicsServer.BodySetCanSleep(body, true);
+                Check(!cpu.MaySleep, "Static sleep policy does not activate dormant simulation storage");
+                PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Rigid);
+                Check(cpu.MaySleep, "A live switch to a sleep-capable dynamic role prepares dormant capacity");
+                PhysicsServer.BodySetCanSleep(body, false); PhysicsServer.SpaceStep(first, 1d / 60);
+            }
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                var motions = (Array)typeof(PhysicsSpace).GetField("_bodyMotions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(space)!;
+                Check(motions.Length == 0, "GPU capacity preparation does not allocate a CPU motion mirror");
+            }
+            Console.WriteLine($"{backend}: world policy/validation, isolated settings, selected solver statistics and capacity ownership passed.");
+            PhysicsServer.FreeRID(body); body = default; PhysicsServer.FreeRID(first); first = default;
+            Reject<ObjectDisposedException>(owner.PrepareSolverCapacity);
+            Reject<ObjectDisposedException>(owner.PrepareMonitoringCapacity);
+            Reject<ObjectDisposedException>(() => owner.ReadStatistics());
+            Reject<ObjectDisposedException>(() => owner.SetSleepSettings(new(3, .2f, .75f)));
+        }
+        finally { if (body.IsValid()) PhysicsServer.FreeRID(body); if (first.IsValid()) PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(other); }
     }
     private static void JointAttachment(PhysicsServer.Backend backend)
     {

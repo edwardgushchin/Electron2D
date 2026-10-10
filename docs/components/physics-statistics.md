@@ -96,3 +96,5 @@ requests a snapshot. Native-dormant CPU kinematics with reporting enabled count
 as logically active without holding a dynamic sleep island awake. Two static
 bodies remain ineligible, and report-only pairs add no dynamic constraint island.
 See [contact reporting](physics-report-only.md).
+
+The selected PhysicsWorldBackend now supplies completed counts. CPUPhysicsWorldBackend owns native awake/contact/island and sensor-candidate traversal; the shared space contributes report-only observations. GPUPhysicsWorldBackend reads the completed resident counters. Shared publication timing, aggregate service values and portable restoration retain their previous contract.

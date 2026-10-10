@@ -313,7 +313,7 @@ the old one-way compatibility binding remains separately excluded. Current
 PhysicsServer is a sealed static facade, direct states are sealed and RID allocation
 is internal. Public typed query-result constructors now exist and preserve payload validation.
 Shape still has an internal abstract geometry member. Selected world/collider/joint
-ownership has been extracted, but registered third-party state/motion/query dispatch
+ownership, world policy/capacity and completed statistics have been extracted, but registered third-party state/motion/query dispatch
 is not implemented. These
 are concrete integration prerequisites, not a reason to exclude extension behavior.
 [ADR 0103](../decisions/physics-extensions.md#adr-0103) resolves the implementation

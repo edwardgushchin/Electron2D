@@ -12,6 +12,10 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     private BodyMotion[] _bodyMotions = [];
+    internal void ReserveBodyMotionCapacity(int capacity)
+    {
+        if (_bodyMotions.Length < capacity) Array.Resize(ref _bodyMotions, capacity);
+    }
     private readonly record struct BodyMotion(B2Vec2 Center, B2Vec2 Velocity, float Angular, bool Active);
 
     private void CaptureBodyMotions()
@@ -67,7 +71,7 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _callbackBodies)
                 if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) { _aggregateContactImpulses = true; break; }
         if (!_aggregateContactImpulses) return;
-        var count = Math.Max(_preparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
+        var count = Math.Max(_backend.PreparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
         if (_frameContactHeads.Length < count)
         {
             Array.Resize(ref _frameContactHeads, count); Array.Resize(ref _frameContactTails, count);

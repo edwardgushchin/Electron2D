@@ -448,3 +448,5 @@ history and integration. This adds device scratch and no host state mirror; comp
 full-step and native-window results in the contact-layout report.
 
 [Directional filters](../components/physics-filters.md) now expose body layer/mask getters and shared scene/server/tile setters, preserving all bits and existing geometry. One-sided response and CCD run on both public backends; queries update immediately and overlap/contact events publish on the next step. Kinematic/static and kinematic/kinematic report-only pairs now execute under the same reporting contract; static/static pairs remain ineligible.
+
+World sleep/contact/iteration/default-joint settings, implementation capacity preparation and completed statistics now dispatch through the selected world owner. Shared resource metadata and validation remain in PhysicsSpace; CPU-only arena, sensor and worker logic no longer implement those operations in the shared policy/statistics layer. Registered external implementations and remaining concrete CPU scene phases remain open under ADR 0103.

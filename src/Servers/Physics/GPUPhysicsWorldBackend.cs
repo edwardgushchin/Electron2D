@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Owns the independent resident GPU store and its world-step dispatch.</summary>
+/// <summary>Owns the resident GPU store, world policy, capacity, statistics and interval dispatch.</summary>
 internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private bool _disposed;

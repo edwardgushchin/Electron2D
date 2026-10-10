@@ -57,7 +57,7 @@ internal sealed partial class PhysicsSpace
         if (_gpuShapeOwners.Remove((uint)handle.Index, out var previous) && previous.Owner.GPUSensor) _gpuSensorShapeCount--;
     }
 
-    private void PrepareGPUCapacity()
+    internal void PrepareGPUCapacity()
     {
         var count = GPUStore!.BodySlotCount;
         if (_gpuChanges.Length < count)
@@ -252,7 +252,7 @@ internal sealed partial class PhysicsSpace
             Tick++;
             CaptureDebugContacts();
             RecordStepPhase(3, ref profileMark);
-            var statistics = new Statistics(GPUStore.PublishedActiveBodyCount, GPUStore.PairCount, GPUStore.PublishedIslandCount);
+            var statistics = _backend.ReadStatistics();
             InvalidateGPUStates(wake: false);
             PublishGPUCompletion(callbacks); ReadGPUReports(); advanced = true;
             RecordStepPhase(4, ref profileMark);

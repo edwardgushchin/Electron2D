@@ -1,7 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Worlds;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
@@ -13,9 +9,7 @@ internal sealed partial class PhysicsSpace
         if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
         if (SolverIterations == value) return;
         SolverIterations = value;
-        if (GPUStore is not null) { GPUStore.SetSolverIterations(value); InvalidateGPUStates(); return; }
-        b2GetWorldFromId(WorldID).solverIterations = value;
-        WakeDynamicBodies();
+        _backend.SetSolverIterations(value);
     }
 
     internal PhysicsContactSettings ContactSettings { get; private set; }
@@ -23,20 +17,6 @@ internal sealed partial class PhysicsSpace
     {
         EnsureQueryAccess(); settings.Validate(); if (ContactSettings == settings) return;
         ContactSettings = settings;
-        if (GPUStore is not null) { GPUStore.SetContactSettings(settings); InvalidateGPUStates(); return; }
-        var world = b2GetWorldFromId(WorldID);
-        world.contactRecycleRadius = settings.RecycleRadius * MetersPerUnit; world.contactMaxSeparation = settings.MaxSeparation * MetersPerUnit;
-        world.contactBias = settings.Bias; world.contactAllowedPenetration = settings.AllowedPenetration * MetersPerUnit;
-        WakeDynamicBodies();
-    }
-    private void WakeDynamicBodies()
-    {
-        var world = b2GetWorldFromId(WorldID);
-        for (var i = 0; i < world.bodies.count; i++)
-        {
-            var body = world.bodies.data[i];
-            if (body.id < 0 || body.type != B2BodyType.b2_dynamicBody) continue;
-            body.sleepTime = 0; b2WakeBody(world, body);
-        }
+        _backend.SetContactSettings(settings);
     }
 }

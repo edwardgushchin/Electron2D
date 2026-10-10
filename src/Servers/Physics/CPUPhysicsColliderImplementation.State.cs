@@ -67,6 +67,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
     internal override void SetCanSleep(bool canSleep)
     {
         b2Body_EnableSleep(BodyID, canSleep);
+        if (canSleep && _body!.type == B2BodyType.b2_dynamicBody) PrepareSleepCapacity();
     }
     internal override void SetRotationLocked(bool locked)
     {

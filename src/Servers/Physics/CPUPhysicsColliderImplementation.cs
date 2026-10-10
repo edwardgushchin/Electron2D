@@ -31,10 +31,16 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         _world = B2Worlds.b2GetWorldFromId(space.WorldID);
         _body = b2GetBodyFullId(_world, BodyID);
         _savedPose = b2GetBodyTransformQuick(_world, _body);
+        if (definition.type == B2BodyType.b2_dynamicBody && definition.enableSleep) PrepareSleepCapacity();
     }
 
     internal override bool HasMotionMode(PhysicsServer.BodyMode mode) => b2Body_GetType(BodyID) == BodyType(mode);
-    internal override void SetMotionMode(PhysicsServer.BodyMode mode) => b2Body_SetType(BodyID, BodyType(mode));
+    internal override void SetMotionMode(PhysicsServer.BodyMode mode)
+    {
+        b2Body_SetType(BodyID, BodyType(mode));
+        if (BodyType(mode) == B2BodyType.b2_dynamicBody && _body!.enableSleep) PrepareSleepCapacity();
+    }
+    private void PrepareSleepCapacity() => ((CPUPhysicsWorldBackend)Space.BackendImplementation).PrepareSleepCapacity();
     private static B2BodyType BodyType(PhysicsServer.BodyMode mode) => mode switch
     {
         PhysicsServer.BodyMode.Static => B2BodyType.b2_staticBody,
