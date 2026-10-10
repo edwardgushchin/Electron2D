@@ -330,6 +330,7 @@ internal abstract class StoredPropertyValue
     internal abstract bool TryGetValue<TValue>(out TValue value);
 
     internal abstract StoredPropertyValue TransformResources(Func<Resource, Resource> transform);
+    internal virtual bool HasResourceReferences => false;
 }
 
 internal sealed class StoredNodeReferenceValue(Type type, string? path) : StoredPropertyValue
@@ -346,6 +347,7 @@ internal sealed class StoredNodeReferenceValue(Type type, string? path) : Stored
 
 internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredPropertyValue
 {
+    internal override bool HasResourceReferences => Value is Resource or Resource?[];
     internal override Type ValueType => typeof(TValue);
 
     internal TValue Value { get; } = value;

@@ -1,6 +1,6 @@
 # Resource
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -65,7 +65,6 @@ resource.Changed += _ => Console.WriteLine("Changed");
 | [`public static string GenerateSceneUniqueID()`](#m-electron2d-resource-generatesceneuniqueid) | Generates a compact scene-relative resource identifier. |
 | [`public void ResetState()`](#m-electron2d-resource-resetstate) | Clears non-stored state through [`Resource.OnResetState`](Resource.md#m-electron2d-resource-onresetstate). |
 | [`public void SetPathCache(string path)`](#m-electron2d-resource-setpathcache-system-string) | Sets the path value without registering it in the process-wide resource cache. |
-| [`public void SetupLocalToScene()`](#m-electron2d-resource-setuplocaltoscene) | Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component. |
 | [`public void TakeOverPath(string path)`](#m-electron2d-resource-takeoverpath-system-string) | Transfers ownership of a process-wide resource path to this resource. |
 | [`protected virtual Resource CreateDuplicateInstance()`](#m-electron2d-resource-createduplicateinstance) | Creates a fresh default instance used as the target of duplication. |
 | [`protected virtual void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource, Resource> duplicateSubresource, Func<Resource, Resource> forceDuplicateSubresource)`](#m-electron2d-resource-copycustomstateto-electron2d-resource-system-boolean-electron2d-deepduplicatemode-system-func-electron2d-resource-electron2d-resource-system-func-electron2d-resource-electron2d-resource) | Copies derived stored state into a duplicate or copy target. |
@@ -82,7 +81,6 @@ resource.Changed += _ => Console.WriteLine("Changed");
 | Member | Description |
 | --- | --- |
 | [`public event Action<Resource> Changed`](#e-electron2d-resource-changed) | Occurs when this resource reports a meaningful content change. |
-| [`public event Action<Resource> SetupLocalToSceneRequested`](#e-electron2d-resource-setuplocaltoscenerequested) | Occurs immediately before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) is invoked. |
 
 ## Constructor Descriptions
 
@@ -295,19 +293,6 @@ Sets the path value without registering it in the process-wide resource cache.
 **Remarks:** This loader-oriented operation may produce the same visible path on multiple resources. It first removes this
 resource's previously registered path, then invokes [`Resource.OnPathCacheSet(String)`](Resource.md#m-electron2d-resource-onpathcacheset-system-string) after committing the value.
 
-<a id="m-electron2d-resource-setuplocaltoscene"></a>
-### `public void SetupLocalToScene()`
-
-Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component.
-
-**Exceptions**
-
-- `ObjectDisposedException`: The resource is disposing on another thread or has finished disposing.
-- `AggregateException`: Both the compatibility event and virtual callback fail.
-- `Exception`: The compatibility event or virtual callback fails.
-
-**Remarks:** Packed-scene instantiation invokes this automatically for each duplicated scene-local resource.
-
 <a id="m-electron2d-resource-takeoverpath-system-string"></a>
 ### `public void TakeOverPath(string path)`
 
@@ -435,13 +420,6 @@ Occurs when this resource reports a meaningful content change.
 **Remarks:** Delivery is synchronous on the calling thread. Custom resource setters should call [`Resource.EmitChanged`](Resource.md#m-electron2d-resource-emitchanged)
 after committing a meaningful change. A throwing handler stops later handlers and propagates to the caller.
 
-<a id="e-electron2d-resource-setuplocaltoscenerequested"></a>
-### `public event Action<Resource> SetupLocalToSceneRequested`
-
-Occurs immediately before [`Resource.OnSetupLocalToScene`](Resource.md#m-electron2d-resource-onsetuplocaltoscene) is invoked.
-
-**Remarks:** Packed-scene instantiation raises this after assigning the local scene; overrides are preferred.
-
 ## Inherited API
 
 Public and protected members inherited from [ElectronObject](ElectronObject.md). Their lifecycle and error contracts remain applicable unless this page states an override.
@@ -462,7 +440,7 @@ Public and protected members inherited from [ElectronObject](ElectronObject.md).
 
 [`PackedScene`](PackedScene.md) creates one graph-preserving duplication session per scene instance. A directly stored resource is duplicated when `ResourceLocalToScene` is true. Within a duplicated local graph, nested resources are duplicated when local-to-scene or built-in; external non-local resources remain shared. Repeated references and cycles resolve to the same duplicate.
 
-Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The obsolete compatibility event runs before `OnSetupLocalToScene()` and each local duplicate is set up once. After successful setup, the root adopts every resource created by the session, including non-local built-in duplicates reached inside the graph. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared source/external resources are never owned or disposed by the instance.
+Every local duplicate receives the new root through `GetLocalScene()` before setup begins. The current `OnSetupLocalToScene()` hook runs once for each local duplicate. After successful setup, the root adopts every resource created by the session, including non-local built-in duplicates reached inside the graph. `Node.ReplaceBy` transfers those created resources and local-scene associations to the replacement root. Root disposal disposes owned resources after child-node cleanup and clears each resource's local-scene reference through resource disposal. Failed instantiation disposes the partial duplicate graph instead. Shared source/external resources are never owned or disposed by the instance.
 
 ## Path lifecycle and invariants
 
@@ -482,9 +460,9 @@ The reference inheritance chain is `Resource -> RefCounted -> Object`. Electron2
 | --- | --- |
 | Four `resource_*` properties | Implemented as the four typed properties above |
 | `changed` | Implemented as `Changed` |
-| `setup_local_to_scene_requested` | Implemented as an obsolete typed compatibility event |
+| Deprecated setup method/event | Excluded under ADR 0004; automatic scene instancing invokes the current protected hook |
 | `_reset_state`, `_set_path_cache`, `_setup_local_to_scene` | Implemented as protected typed hooks |
-| `copy_from`, `duplicate`, `duplicate_deep`, `emit_changed`, `generate_scene_unique_id`, `is_built_in`, `reset_state`, `set_path_cache`, `setup_local_to_scene`, `take_over_path` | Implemented with the typed adaptations documented above; explicit hook delegates replace reflective always/never-duplicate property flags |
+| `copy_from`, `duplicate`, `duplicate_deep`, `emit_changed`, `generate_scene_unique_id`, `is_built_in`, `reset_state`, `set_path_cache`, `take_over_path` | Implemented with the typed adaptations documented above; explicit hook delegates replace reflective always/never-duplicate property flags |
 | `_get_rid`, `get_rid` | Typed virtual GetRID executes for base managed resources, physics Shape and rendering Texture; material/shader identities remain incomplete |
 | `get_local_scene` and automatic local-to-scene duplication/setup | Implemented for in-memory `PackedScene`; root association precedes setup and persists until resource disposal |
 | `get_id_for_path`, `set_id_for_path` | Deferred with editor/import serialization because their mapping is tooling-only |
@@ -521,3 +499,7 @@ Engine consumers can detect content changes through an internal monotonic revisi
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
 
 AudioBusLayout and AudioServer use the existing private file graph retention to preserve internally decoded effects after the root layout is disposed. External dependencies remain borrowed; retention never serializes native processing state.
+
+## Prepared reference publication
+
+The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook maps freshly prepared references to final cached/new identities before owner publication under ADR 0013. Resource defaults to stored resource descriptors; PackedScene includes its node model; Shader includes default texture bindings. Opaque application storage overrides this hook and calls base for descriptor state. Primitive descriptors are not rewritten by the default remapper. This is a typed graph-publication extension, not a dynamic property API.

@@ -1,0 +1,98 @@
+{
+  "mappings": [
+    {
+      "godot": "ResourceLoader::enum:ThreadLoadStatus",
+      "electron2d": "T:Electron2D.ResourceLoader.ThreadLoadStatus",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_FAILED",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.Failed()",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.InvalidResource()",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_IN_PROGRESS",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.InProgress()",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_LOADED",
+      "electron2d": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.Loaded()",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::method:load_threaded_get(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.LoadThreadedGet(System.String)",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::method:load_threaded_get(String:)",
+      "electron2d": "method:Electron2D.ResourceLoader.LoadThreadedGet`1(System.String)",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::method:load_threaded_get_status(String:,Array:)",
+      "electron2d": "method:Electron2D.ResourceLoader.LoadThreadedGetStatus(System.String)",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::method:load_threaded_get_status(String:,Array:)",
+      "electron2d": "method:Electron2D.ResourceLoader.LoadThreadedGetStatus(System.String,ref System.Single)",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": "ResourceLoader::method:load_threaded_request(String:,String:,bool:,int:ResourceLoader.CacheMode)",
+      "electron2d": "method:Electron2D.ResourceLoader.LoadThreadedRequest`1(System.String,System.Boolean,Electron2D.ResourceLoader.CacheMode,System.Threading.CancellationToken,Electron2D.SceneTree)",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "ResourceLoader::enum:ThreadLoadStatus",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_FAILED",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_IN_PROGRESS",
+        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_LOADED",
+        "ResourceLoader::method:load_threaded_get(String:)",
+        "ResourceLoader::method:load_threaded_get_status(String:,Array:)",
+        "ResourceLoader::method:load_threaded_request(String:,String:,bool:,int:ResourceLoader.CacheMode)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0001/0013/0014/0021/0095/0104: executable typed threaded loading stages isolated resource graphs, genuinely parallel external dependency hooks, monotonic progress, duplicate/concurrent consumers, cooperative cancellation, captured errors, compatible cache identities, deep modes, aliases/root cycles, shared-parent leases and exact ownership cleanup. Publication and replacement callbacks run on the scene owner via deferred completion/status/get; without a tree the consuming caller publishes. Get waits and retires one matching request. Tests exercise two blocked dependencies simultaneously, no partial cache, cancellation, external-cycle rollback, owner shutdown, older worker consumption and zero-byte warmed status polling. Separate-process authored PackedScene gallery renders 30 frames while image I/O is blocked, then instantiates on owner and verifies red/blue pixels on Linux Wayland GPU and compatibility. Native/foreign/AOT/Web bootstrap and human acceptance remain separate gates."
+    },
+    {
+      "godot": [
+        "Resource::method:setup_local_to_scene()"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004/0013: pinned ed1daf0bf001b61586d9930840f2f1394092c079 Resource.xml deprecated=\"This method should only be called internally.\". Remove public obsolete mirrors and consumers; scene instancing executes current OnSetupLocalToScene. No implementation trigger or alias."
+    },
+    {
+      "godot": [
+        "Resource::signal:setup_local_to_scene_requested()"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004/0013: pinned ed1daf0bf001b61586d9930840f2f1394092c079 Resource.xml deprecated=\"This signal is only emitted when the resource is created. Override [method _setup_local_to_scene] instead.\". Remove public obsolete mirrors and consumers; scene instancing executes current OnSetupLocalToScene. No implementation trigger or alias."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "method:Electron2D.PackedScene.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0013/0104: protected typed prepared-reference remapping supports final cache identities, opaque application references, PackedScene node resources and shader defaults without dynamic values or reflection."
+    },
+    {
+      "electron2d": "method:Electron2D.Resource.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0013/0104: protected typed prepared-reference remapping supports final cache identities, opaque application references, PackedScene node resources and shader defaults without dynamic values or reflection."
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0013/0104: protected typed prepared-reference remapping supports final cache identities, opaque application references, PackedScene node resources and shader defaults without dynamic values or reflection."
+    }
+  ]
+}

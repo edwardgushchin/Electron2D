@@ -64,6 +64,6 @@ X509Certificate and CryptoKey implement copied Resource state, change/failure be
 
 See [resource-file contracts](resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
 
-## Background loading prerequisite
+## Background loading
 
-[WorkerThreadPool](worker-pool.md) now executes typed jobs and indexed groups under ADR 0104. ResourceLoader remains synchronous: resource request ownership, progress/status, cooperative cancellation, graph/cache lifetime, owner callback delivery and parallel dependency loading across its load gate are the exact remaining threaded-loading dependencies. A worker wrapper around Load does not implement those missing contracts.
+[Threaded resource loading](threaded-resource-loading.md) executes typed requests on WorkerThreadPool under ADR 0013/0104. Isolated preparation does not mutate registered cache objects; owner publication preserves cache modes and shared graph leases. Protected remapping handles stored/PackedScene/shader references. AsyncGallery verifies separately authored scenes with real background dependencies and native rendered output. Further import/pack/editor/schema work retains its own coverage dependencies.

@@ -224,6 +224,13 @@ public sealed class PackedScene : Resource
         lock (_gate) if (_stateExported && !_state.IsDisposed) _state.UpdateFileLease(RetainFileResources());
     }
     internal PackedSceneData FileData { get { ThrowIfDisposed(); lock (_gate) return _data; } }
+    /// <summary>Remaps prepared references in the stored node model before owner publication.</summary>
+    /// <param name="remap">Maps each resource reference to its final cache identity.</param>
+    protected override void RemapResourceReferences(Func<Resource, Resource> remap)
+    {
+        base.RemapResourceReferences(remap);
+        LoadFileData(FileData.TransformResources(remap));
+    }
     internal void LoadFileData(PackedSceneData data) { ThrowIfDisposed(); lock (_gate) ReplaceDataUnderLock(data); }
 
     /// <inheritdoc />

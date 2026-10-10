@@ -406,21 +406,7 @@
         "ResourceLoader::method:get_recognized_extensions_for_type(String:)"
       ],
       "state": "Partial",
-      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: concrete archive schemas for audio/curves/materials/mesh/animation/Theme, worker job tokens, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities."
-    },
-    {
-      "godot": [
-        "ResourceLoader::enum:ThreadLoadStatus",
-        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_INVALID_RESOURCE",
-        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_IN_PROGRESS",
-        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_FAILED",
-        "ResourceLoader::enum_value:ThreadLoadStatus.THREAD_LOAD_LOADED",
-        "ResourceLoader::method:load_threaded_get(String:)",
-        "ResourceLoader::method:load_threaded_get_status(String:,Array:)",
-        "ResourceLoader::method:load_threaded_request(String:,String:,bool:,int:ResourceLoader.CacheMode)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: typed resource-load request ownership, status/progress and cooperative cancellation, cache/graph lifetime across completion, owner-thread callback delivery, and actual parallel dependency loading over WorkerThreadPool (ADR 0104). The portable job pool now executes; synchronous ResourceLoader still serializes format/cache decisions under its load gate (ADR 0013)."
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/editor/text-diff/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: further concrete archive schemas, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities. Typed threaded request/status/get and dependency staging/publication now execute under ADR 0013/0104 with separate-process authored/rendered scene checks; these are not remaining blockers."
     },
     {
       "godot": [

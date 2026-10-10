@@ -154,6 +154,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE_CHILD") is { }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE") == "1") { NavigationAvoidanceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_ARRAYS") == "1") { TextureArrayTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORKER_POOL") == "1") { WorkerThreadPoolTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_LOADING") == "1") { ThreadedResourceLoaderTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_LOADING_NATIVE") == "1") { ThreadedLoadingRenderingTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORKER_ROUTES_NATIVE") == "1") { WorkerRoutesRenderingTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_ARRAYS_NATIVE") == "1") { TextureArrayRenderingTests.RunHost(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NAVIGATION_AGENT_HOST") == "1") { NavigationAgentTests.RunHost(); return; }
@@ -838,6 +840,7 @@ RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
 WorkerThreadPoolTests.Run();
+ThreadedResourceLoaderTests.Run();
 NavigationTests.Run();
 NavigationLinkTests.Run();
 NavigationQueryTests.Run();
@@ -12564,21 +12567,19 @@ static void VerifyResources()
             throwingName.ResourceName == "committed",
         "A throwing change handler must propagate after the name is committed.");
 
-    using var setup = new SetupProbeResource();
-#pragma warning disable CS0618
-    setup.SetupLocalToSceneRequested += _ => setup.Order.Add("event");
-    setup.SetupLocalToScene();
-#pragma warning restore CS0618
-    Require(setup.Order.SequenceEqual(["event", "hook"]),
-        "Scene-local setup must publish its compatibility event before the virtual hook.");
+    using var setup = new PackedTestResource { ResourceLocalToScene = true };
+    var setupScope = Resource.CreateSceneDuplicationScope();
+    using var localSetup = (PackedTestResource)setupScope.Resolve(setup);
+    setupScope.SetupLocalResources();
+    Require(localSetup.SetupCount == 1 && setup.SetupCount == 0,
+        "Scene-local setup invokes the current hook on the duplicated resource.");
 
-    using var failingSetup = new SetupProbeResource { ThrowInHook = true };
-#pragma warning disable CS0618
-    failingSetup.SetupLocalToSceneRequested += _ => throw new ArgumentException("expected event failure");
-    var setupError = Capture(failingSetup.SetupLocalToScene);
-#pragma warning restore CS0618
-    Require(setupError is AggregateException { InnerExceptions.Count: 2 } && failingSetup.Order.SequenceEqual(["hook"]),
-        "Scene-local setup must attempt the hook and aggregate failures after a throwing event.");
+    using var failingSetup = new PackedTestResource { ResourceLocalToScene = true, ThrowOnSetup = true };
+    var failingScope = Resource.CreateSceneDuplicationScope();
+    using var localFailure = (PackedTestResource)failingScope.Resolve(failingSetup);
+    var setupError = Capture(failingScope.SetupLocalResources);
+    Require(setupError is AggregateException { InnerExceptions.Count: 1 } && localFailure.SetupCount == 1,
+        "Scene-local instancing attempts setup and reports its hook failure.");
 
     using var plainDuplicate = resource.Duplicate();
     Require(plainDuplicate.GetType() == typeof(Resource) && plainDuplicate.ResourceName == resource.ResourceName &&
@@ -13524,20 +13525,6 @@ sealed class TestResource : Resource
     }
 
     protected override void OnPathCacheSet(string path) => PathCacheSetCount++;
-}
-
-sealed class SetupProbeResource : Resource
-{
-    public List<string> Order { get; } = [];
-
-    public bool ThrowInHook { get; init; }
-
-    protected override void OnSetupLocalToScene()
-    {
-        Order.Add("hook");
-        if (ThrowInHook)
-            throw new InvalidOperationException("expected setup failure");
-    }
 }
 
 sealed class ResetFailureResource : Resource

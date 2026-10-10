@@ -128,3 +128,7 @@ concrete factories; PhysicsContactPolicyTests exercises all eight .e2dres round 
 ## Tile integration
 
 Built-in factories now register TileSet, TileSetAtlasSource and TileMapLayer, plus TileSetSource resource arrays, for typed tile graph and scene reconstruction. See [the tile component](../components/tiles.md) for behavior and verification.
+
+## Threaded preparation
+
+Threaded loading invokes compiled factories and codecs on workers, potentially concurrently for independent files. Registration remains allocating setup; factory/codec implementations must prepare independent thread-safe data and avoid owner-bound scene/native mutation.

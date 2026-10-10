@@ -68,6 +68,27 @@ public class Resource : ElectronObject
     internal virtual void OnFileOwnershipChanged() { }
     internal IDisposable? RetainFileResources() => _fileOwnership?.Retain();
     internal ResourceFileOwnership? RetainFileOwnership() => _fileOwnership?.RetainOwner();
+    internal void AppendFileOwnerships(ResourceFileOwnership[] owners)
+    {
+        if (owners.Length == 0) return;
+        var previous = _fileOwnership;
+        _fileOwnership = new ResourceFileOwnership([], previous is null ? owners : [previous, .. owners]);
+        OnFileOwnershipChanged();
+    }
+    internal void RemapPreparedReferences(Func<Resource, Resource> remap) => RemapResourceReferences(remap);
+    /// <summary>Remaps resource references in freshly prepared data before cache publication.</summary>
+    /// <param name="remap">Selects the final live identity for each borrowed or prepared resource reference.</param>
+    /// <remarks>The default follows stored property descriptors. Override for opaque reference storage, and call
+    /// the base implementation for descriptor-backed state. Publication invokes this hook on its owner thread.</remarks>
+    protected virtual void RemapResourceReferences(Func<Resource, Resource> remap)
+    {
+        ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(remap);
+        foreach (var descriptor in GetPropertyList()) if (descriptor.IsStored)
+            {
+                var stored = descriptor.CaptureStoredValue(this);
+                if (stored.HasResourceReferences) descriptor.RestoreStoredValue(this, stored.TransformResources(remap), static resource => resource);
+            }
+    }
 
     private readonly object _changeBatchGate = new();
     private readonly object _stateGate = new();
@@ -238,10 +259,6 @@ public class Resource : ElectronObject
     /// </remarks>
     public event Action<Resource>? Changed;
 
-    /// <summary>Occurs immediately before <see cref="OnSetupLocalToScene"/> is invoked.</summary>
-    /// <remarks>Packed-scene instantiation raises this after assigning the local scene; overrides are preferred.</remarks>
-    [Obsolete("Override OnSetupLocalToScene instead.")]
-    public event Action<Resource>? SetupLocalToSceneRequested;
 
     /// <summary>Copies stored data from another resource of the exact same runtime type while preserving this resource's path and scene ID.</summary>
     /// <param name="source">The live resource whose stored data is copied.</param>
@@ -420,46 +437,12 @@ public class Resource : ElectronObject
         ThrowCombined(cacheError, changedError);
     }
 
-    /// <summary>Invokes scene-local setup callbacks for a resource duplicated by a scene-instancing component.</summary>
-    /// <remarks>Packed-scene instantiation invokes this automatically for each duplicated scene-local resource.</remarks>
-    /// <exception cref="ObjectDisposedException">The resource is disposing on another thread or has finished disposing.</exception>
-    /// <exception cref="AggregateException">Both the compatibility event and virtual callback fail.</exception>
-    /// <exception cref="Exception">The compatibility event or virtual callback fails.</exception>
-    [Obsolete("This method is reserved for scene-instancing infrastructure. Override OnSetupLocalToScene instead.")]
-    public void SetupLocalToScene()
-    {
-        SetupLocalToSceneCore();
-    }
-
     internal static SceneDuplicationScope CreateSceneDuplicationScope() => new();
 
     private void SetupLocalToSceneCore()
     {
         ThrowIfDisposed();
-        Exception? eventError = null;
-        Exception? callbackError = null;
-
-        try
-        {
-#pragma warning disable CS0618
-            SetupLocalToSceneRequested?.Invoke(this);
-#pragma warning restore CS0618
-        }
-        catch (Exception error)
-        {
-            eventError = error;
-        }
-
-        try
-        {
-            OnSetupLocalToScene();
-        }
-        catch (Exception error)
-        {
-            callbackError = error;
-        }
-
-        ThrowCombined(eventError, callbackError);
+        OnSetupLocalToScene();
     }
 
     /// <summary>Transfers ownership of a process-wide resource path to this resource.</summary>
@@ -559,9 +542,6 @@ public class Resource : ElectronObject
                 {
                     _localScene = null;
                     Changed = null;
-#pragma warning disable CS0618
-                    SetupLocalToSceneRequested = null;
-#pragma warning restore CS0618
                     _changeBlockDepth = 0;
                     _changeBlockOwnerThreadId = 0;
                     _changePending = false;
@@ -625,6 +605,11 @@ public class Resource : ElectronObject
 
     private void SetPath(string path, bool takeOver)
     {
+        if (ResourceLoadGraph.Current is not null)
+        {
+            if (FilePathRegistered) throw new InvalidOperationException("A staged loader cannot publish registered resource state.");
+            SetPathCache(path); return;
+        }
         ThrowIfDisposed();
         ArgumentNullException.ThrowIfNull(path);
 

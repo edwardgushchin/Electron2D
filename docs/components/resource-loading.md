@@ -1,10 +1,10 @@
 # Resource loading component
 
-Last updated: 2026-10-05
+Last updated: 2026-10-10
 
 ## Scope and owned types
 
-[`ResourceLoader`](../classes/ResourceLoader.md) and its [`CacheMode`](../classes/ResourceLoader.CacheMode.md) enum provide the first synchronous resource-file path: six integrated image decoders produce an `ImageTexture` that the current Sprite and renderer can draw. This component uses the existing Resource weak path cache and the typed archive/format extension layer below. Threaded workers and general import remapping remain separate dependencies.
+[`ResourceLoader`](../classes/ResourceLoader.md) and its [`CacheMode`](../classes/ResourceLoader.CacheMode.md) enum provide the first synchronous resource-file path: six integrated image decoders produce an `ImageTexture` that the current Sprite and renderer can draw. This component uses the existing Resource weak path cache and the typed archive/format extension layer below. The threaded profile now runs isolated preparation and owner publication; general import remapping remains a separate dependency.
 
 ## Runtime flow and ownership
 
@@ -18,7 +18,7 @@ The GPU payload is managed by the existing texture renderer when the resource is
 - Cache modes have their pinned numeric identities. Deep modes equal ordinary modes for dependency-free image files.
 - Malformed input, unsupported types/extensions and invalid paths fail explicitly. Failed decoding preserves a cached texture and its pixels; callback failure can propagate after committed replacement.
 - `Exists` may return true for a cached resource after its source file is removed. Discovery returns caller-owned extension arrays.
-- Further concrete resource formats, threaded loading, tolerant missing-resource policy and resource-aware directory listing have separate coverage triggers. Generic load/exists/discovery remain Partial across the full applicable asset API.
+- Further concrete resource formats, tolerant missing-resource policy and resource-aware directory listing have separate coverage triggers. Generic load/exists/discovery remain Partial across the full applicable asset API.
 
 ## Verification
 
@@ -53,3 +53,5 @@ Ordered borrowed format extensions support front priority, deduplication, metada
 ## Compiled C# source assets
 
 Registered `.cs` sources load as Script resources through portable-PDB source/type and checksum validation. Reuse/Ignore/Replace retain ordinary weak-cache policy; malformed, changed or unknown compiled associations fail before compatible cache replacement. Source saving is atomic UTF-8 and does not reload CLR code. Host registration shares ResourceFileTypes exact factories and typed schemas with scene/resource reconstruction. See [Scripting](scripting.md) for the executable workflow, symbol prerequisites and live reload boundary.
+
+[Threaded resource loading](threaded-resource-loading.md) executes the WorkerThreadPool prerequisite under ADR 0013/0104. Preparation does not mutate registered cache objects; owner publication preserves cache modes and graph leases, and private remapping handles stored/PackedScene/shader references. AsyncGallery verifies separately authored scenes with real background dependencies and native rendered output.

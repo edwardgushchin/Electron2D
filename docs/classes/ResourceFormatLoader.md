@@ -187,3 +187,7 @@ Rewrites external dependency paths atomically.
 Permanent service objects cannot be disposed or unregistered; format extensions are caller-owned and borrowed only while registered. Factories must return fresh exact live identities; node factories are detached, without caller-owned tree membership. Unknown schemas, incompatible property/resource types, invalid flags/UIDs, missing files and corrupt payloads reject explicitly. Metadata, registration, snapshots, save/load and scene instantiation allocate outside the frame interval. File cache publication follows complete decoding; arbitrary custom copy or observer failure follows Resource commitment rules. Read the component for concrete bounds and remaining payload integrations.
 
 ResourceArchiveTests exercises registered public formats, graph/scene persistence, separate-process lifecycle, UID/dependency rewrite, cache replacement, font/theme/pixel/geometry consumers and rollback/lifetime edges on Linux x64. It does not establish editor, rendered archive scenes, foreign-host/AOT, all-resource payloads, unmeasured native allocations or human acceptance.
+
+## Threaded preparation
+
+Threaded requests may invoke borrowed format hooks concurrently. Retain each registered loader until its pending requests are collected, return independent owned payload and keep registered resources/scene/native state out of worker preparation. The hook receives the selected subthread/cache options; typed ResourceLoader dependency calls join the staged graph.

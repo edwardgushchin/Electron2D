@@ -198,6 +198,21 @@ public sealed partial class Shader : Resource
     }
 
     /// <inheritdoc />
+    protected override void RemapResourceReferences(Func<Resource, Resource> remap)
+    {
+        base.RemapResourceReferences(remap);
+        lock (_codeGate)
+        {
+            foreach (var name in _defaultTextures.Keys.ToArray())
+            {
+                var replacement = remap(_defaultTextures[name]);
+                if (replacement is not Texture && replacement is not TextureLayered) throw new InvalidDataException("A shader default requires a sampled texture resource.");
+                _defaultTextures[name] = replacement;
+            }
+        }
+    }
+
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing) lock (_codeGate) { ReleaseRenderingRID(); _program = ShaderProgram.Default; _defaultTextures.Clear(); }

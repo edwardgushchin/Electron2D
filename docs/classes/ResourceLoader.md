@@ -1,8 +1,8 @@
 # ResourceLoader
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
@@ -205,3 +205,35 @@ ResourceArchiveTests exercises registered public formats, graph/scene persistenc
 ## Bitmap/indexed font integration
 
 [Bitmap font authoring](../components/bitmap-fonts.md) connects FontFile indexed image/glyph/kerning/metric records and matching configured FontVariation resources to the existing HarfBuzz and common canvas/control path. Copied pixel UV regions preserve clipping and recorded image snapshots; authored publication retires native data after active readers finish. Text/binary v3 import, typed archive/fresh-process restoration and current Linux GPU/compatibility prepared output are exercised. Source policies and other platform/native-allocator gates remain explicit.
+
+## Threaded loading
+
+[Threaded resource loading](../components/threaded-resource-loading.md) implements typed requests, monotonic progress/status and blocking collection. `ResourceLoader.ThreadLoadStatus` keeps values InvalidResource=0, InProgress=1, Failed=2 and Loaded=3. Error results use typed exceptions.
+
+| Declaration | Behavior |
+| --- | --- |
+| `LoadThreadedRequest<TResource>(string path, bool useSubThreads = false, CacheMode cacheMode = CacheMode.Reuse, CancellationToken cancellationToken = default, SceneTree? publicationTree = null)` | Retains one matching request; identical duplicates share work and require matching gets. An explicit tree or the active engine scene owns publication. |
+| `LoadThreadedGetStatus(string path)` | Reports current request status; absent/consumed paths are InvalidResource. |
+| `LoadThreadedGetStatus(string path, out float progress)` | Reports monotonic zero-through-one progress. Owner polls may publish ready data without waiting on the cache gate. |
+| `LoadThreadedGet(string path)` | Waits and releases one matching request, returning the published Resource or rethrowing failure after cleanup. |
+| `LoadThreadedGet<TResource>(string path)` | Checks an assignable concrete type; an incompatible get does not consume the request. |
+
+Every accepted request requires get, including failure/cancellation. Conflicting duplicate options reject. There are at most 128 uncollected request paths. Preparation is allocating explicit work; at most 1024 file records and depth 64 are permitted. Independent external dependencies genuinely execute on workers with useSubThreads. Their temporary identities do not appear in the path cache.
+
+Cache modes preserve compatible identities, root cycles, aliases and ownership. Existing resources and Changed callbacks update on the publication owner. SceneTree.Defer and owner polls publish ready graphs; until then status is InProgress. Without a tree the consuming status/get caller publishes. An unpublished scene result cannot be consumed off owner, and a load callback cannot recursively consume another unpublished threaded request. A publication callback also rejects self-collection, preserving its matching consumers. Worker collection can help a specifically awaited older root task with active-stack checks.
+
+CancellationToken is cooperative between stages and before publication. Blocked hooks finish before cleanup; no forced thread abort is used. Caller formats/factories must be thread-safe, return independent owned state and support stored/opaque reference remapping. Root and new dependencies are retained until publication/rollback; borrowed existing cache resources remain borrowed.
+
+```csharp
+ResourceLoader.LoadThreadedRequest<PackedScene>(path, useSubThreads: true,
+    cancellationToken: cancellation.Token, publicationTree: tree);
+// Poll during normal frames; consume when Loaded or Failed.
+var status = ResourceLoader.LoadThreadedGetStatus(path, out float progress);
+if (status is ResourceLoader.ThreadLoadStatus.Loaded or ResourceLoader.ThreadLoadStatus.Failed)
+{
+    using var scene = ResourceLoader.LoadThreadedGet<PackedScene>(path);
+    root.AddChild(scene.Instantiate());
+}
+```
+
+A successful scene instance retains its decoded resource graph after template disposal. [AsyncGallery](../../examples/AsyncGallery/README.md) demonstrates fresh-process file authoring, two background image dependencies and actual owner-thread scene consumption. Foreign/AOT/Web bootstrap, native allocations and human acceptance remain separate gates.

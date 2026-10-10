@@ -510,7 +510,17 @@ def main():
     assert len(loader_rows) == 26
     assert {state: sum(f" | {state} | " in row for row in loader_rows)
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
-                "Implemented": 12, "Partial": 4, "Blocked": 9, "Unimplemented": 1}
+                "Implemented": 20, "Partial": 4, "Blocked": 1, "Unimplemented": 1}
+    for row in loader_rows:
+        if "load_threaded_" in row or "ThreadLoadStatus" in row:
+            assert " | Implemented | " in row, row
+    resource_rows = pages[CLASS_PAGES / "Resource.md"].splitlines()
+    for name in ("method setup_local_to_scene()", "signal setup_local_to_scene_requested()"):
+        row = next(row for row in resource_rows if row.startswith(f"| [`{name}"))
+        assert " | Excluded | " in row and "deprecated=" in row and "No implementation trigger" in row
+    for item in engine:
+        assert "Electron2D.Resource.SetupLocalToScene(" not in item["id"]
+        assert "Electron2D.Resource.SetupLocalToSceneRequested(" not in item["id"]
     for name, target in (("Shape2D", "Shape"), ("CircleShape2D", "CircleShape"),
                          ("CapsuleShape2D", "CapsuleShape"),
                          ("SegmentShape2D", "SegmentShape"),

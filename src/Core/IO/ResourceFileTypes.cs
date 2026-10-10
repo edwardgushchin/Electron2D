@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>Registers stable compiled factories and typed portable value codecs for resource/scene files.</summary>
 /// <remarks>Registration is allocating setup. IDs are ordinal and immutable; file data never loads assemblies,
 /// invokes reflected members or constructs arbitrary CLR types. Register the same schemas before saving and in
-/// every loading process. Factories are direct static delegates and must return fresh exact-type instances.</remarks>
+/// every loading process. Factories are direct static delegates and must return fresh exact-type instances.
+/// Threaded loading may invoke factories/codecs concurrently; their preparation must be thread-safe.</remarks>
 public static partial class ResourceFileTypes
 {
     private static object Gate => ResourceLoader.Runtime.FileTypes.Gate;

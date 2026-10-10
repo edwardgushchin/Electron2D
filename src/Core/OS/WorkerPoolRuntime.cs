@@ -12,13 +12,15 @@ internal sealed class WorkerPoolRuntime : IDisposable
         internal Action? Action;
         internal Action<int>? GroupAction;
         internal string Description = "";
-        internal bool Group, HighPriority, Completed;
+        internal bool Group, HighPriority, Completed, ReleaseRequested;
         internal int Elements, Processed, Runners, Waiters, FailureIndex;
         internal ExceptionDispatchInfo? Failure;
     }
     private sealed class Worker(WorkerPoolRuntime pool)
     {
         internal readonly WorkerPoolRuntime Pool = pool;
+        internal readonly Job?[] Active = new Job?[pool._capacity];
+        internal int Depth;
         internal System.Threading.Thread Thread = null!;
         internal Job? Current;
         internal long WaitFloor = -1;
@@ -54,6 +56,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
     private readonly Queue<Job> _high, _low;
     private readonly Worker[] _workers;
     private readonly int _maxLow;
+    private readonly int _capacity;
     private int _activeLow;
     private long _lastID;
     private bool _stopping;
@@ -64,6 +67,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
         ArgumentOutOfRangeException.ThrowIfLessThan(capacity, 1);
         if (!float.IsFinite(lowRatio) || lowRatio < 0 || lowRatio > 1) throw new ArgumentOutOfRangeException(nameof(lowRatio));
         var tickets = checked(workers * capacity);
+        _capacity = capacity;
         _jobs = new(capacity); _free = new(capacity); _high = new(tickets); _low = new(tickets);
         for (var i = 0; i < capacity; i++) _free.Push(new());
         _maxLow = Math.Clamp((int)(workers * lowRatio), 1, Math.Max(1, workers - 1)); _workers = new Worker[workers];
@@ -113,7 +117,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
             if (_free.Count == 0) throw new InvalidOperationException("Worker pool pending capacity is exhausted. Wait for accepted jobs before submitting more.");
             var id = checked(_lastID + 1);
             var job = _free.Pop(); job.ID = id; job.Action = action; job.GroupAction = groupAction; job.Group = groupAction is not null;
-            job.Description = description; job.HighPriority = high; job.Elements = elements; job.Runners = runners; job.Completed = runners == 0; job.FailureIndex = int.MaxValue;
+            job.Description = description; job.HighPriority = high; job.Elements = elements; job.Runners = runners; job.Completed = runners == 0; job.FailureIndex = int.MaxValue; job.ReleaseRequested = false;
             _jobs.Add(id, job); _lastID = id;
             var queue = high ? _high : _low;
             for (var i = 0; i < runners; i++) queue.Enqueue(job);
@@ -124,23 +128,23 @@ internal sealed class WorkerPoolRuntime : IDisposable
     private Job Find(long id, bool group) => _jobs.TryGetValue(id, out var job) && job.Group == group ? job : throw new ArgumentException("The ID does not identify a pending job of the requested kind.", nameof(id));
     internal bool IsCompleted(long id, bool group) { lock (_gate) return Find(id, group).Completed; }
     internal int Processed(long id) { lock (_gate) return Find(id, true).Processed; }
-    private Job? Take(Worker worker)
+    private Job? Take(Worker worker, long target = 0, bool allowOlder = false)
     {
-        var job = TakeEligible(_high, worker.WaitFloor);
+        var job = TakeEligible(_high, worker.WaitFloor, target, allowOlder);
         if (job is not null) return job;
         if (worker.LowDepth == 0 && _activeLow >= _maxLow) return null;
-        job = TakeEligible(_low, worker.WaitFloor);
+        job = TakeEligible(_low, worker.WaitFloor, target, allowOlder);
         if (job is not null && worker.LowDepth++ == 0) _activeLow++;
         return job;
     }
-    private static Job? TakeEligible(Queue<Job> queue, long floor)
+    private static Job? TakeEligible(Queue<Job> queue, long floor, long target, bool allowOlder)
     {
-        if (queue.TryPeek(out var head) && head.ID > floor) return queue.Dequeue();
+        if (queue.TryPeek(out var head) && (head.ID > floor || allowOlder) && (target == 0 || head.ID == target)) return queue.Dequeue();
         Job? selected = null;
         for (var count = queue.Count; count > 0; count--)
         {
             var job = queue.Dequeue();
-            if (selected is null && job.ID > floor) selected = job;
+            if (selected is null && (job.ID > floor || allowOlder) && (target == 0 || job.ID == target)) selected = job;
             else queue.Enqueue(job);
         }
         return selected;
@@ -148,6 +152,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
     private void Execute(Worker worker, Job job)
     {
         var previous = worker.Current; worker.Current = job;
+        worker.Active[worker.Depth++] = job;
         if (job.Group)
         {
             while (true)
@@ -160,6 +165,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
         }
         else Invoke(job, 0);
         worker.Current = previous;
+        worker.Active[--worker.Depth] = null;
         lock (_gate)
         {
             if (!job.HighPriority && --worker.LowDepth == 0) _activeLow--;
@@ -180,14 +186,22 @@ internal sealed class WorkerPoolRuntime : IDisposable
             lock (_gate) if (index <= job.FailureIndex) { job.FailureIndex = index; job.Failure = ExceptionDispatchInfo.Capture(error); }
         }
     }
-    internal void Wait(long id, bool group)
+    internal void Wait(long id, bool group, bool targetOnly = false, bool allowOlder = false, bool retire = true)
     {
         Job job; var worker = CurrentWorker is { } w && w.Pool == this ? w : null;
         var oldFloor = worker?.WaitFloor ?? -1;
         lock (_gate)
         {
             job = Find(id, group);
-            if (worker?.Current is { } current && !job.Completed && id <= Math.Max(current.ID, oldFloor)) throw new InvalidOperationException("A worker cannot wait for unfinished self or older work.");
+            if (worker?.Current is { } current && !job.Completed)
+            {
+                if (!allowOlder && id <= Math.Max(current.ID, oldFloor)) throw new InvalidOperationException("A worker cannot wait for unfinished self or older work.");
+                if (allowOlder)
+                {
+                    if (!targetOnly) throw new InvalidOperationException("An older wait must target one known job.");
+                    for (var i = 0; i < worker.Depth; i++) if (ReferenceEquals(worker.Active[i], job)) throw new InvalidOperationException("A worker cannot wait for its active load stack.");
+                }
+            }
             job.Waiters++;
             if (worker is not null) worker.WaitFloor = Math.Max(oldFloor, worker.Current!.ID);
         }
@@ -200,7 +214,7 @@ internal sealed class WorkerPoolRuntime : IDisposable
                 lock (_gate)
                 {
                     if (job.Completed) { failure = job.Failure; break; }
-                    if (worker is not null) help = Take(worker);
+                    if (worker is not null) help = Take(worker, targetOnly ? id : 0, allowOlder);
                     if (help is null) { System.Threading.Monitor.Wait(_gate); continue; }
                 }
                 Execute(worker!, help);
@@ -211,7 +225,8 @@ internal sealed class WorkerPoolRuntime : IDisposable
             if (worker is not null) worker.WaitFloor = oldFloor;
             lock (_gate)
             {
-                if (--job.Waiters == 0 && job.Completed)
+                if (retire && job.Completed) job.ReleaseRequested = true;
+                if (--job.Waiters == 0 && job.Completed && job.ReleaseRequested)
                 {
                     _jobs.Remove(id); job.Action = null; job.GroupAction = null; job.Description = ""; job.Failure = null;
                     job.NextIndex = 0; job.Processed = 0; _free.Push(job);

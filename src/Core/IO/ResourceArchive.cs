@@ -440,7 +440,7 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
         var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
         foreach (var definition in _definitions.Skip(1)) { if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0) throw new InvalidDataException("Invalid external resource metadata."); if (definition.Path.Length == 0 && definition.SceneID.Length != 0 && !sceneIDs.Add(definition.SceneID)) throw new InvalidDataException("Duplicate subresource scene ID."); }
         if (_definitions[0].Path.Length != 0) throw new InvalidDataException("Archive root cannot be an external reference.");
-        for (var i = 0; i < count; i++)
+        void LoadIdentity(int i)
         {
             var d = _definitions[i];
             if (d.Path.Length != 0)
@@ -448,18 +448,28 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
                 var target = d.UID >= 0 && ResourceUID.HasID(d.UID) ? ResourceUID.GetIDPath(d.UID) : d.Path;
                 if (!target.Contains("://", StringComparison.Ordinal) && !System.IO.Path.IsPathRooted(target)) target = System.IO.Path.Combine(System.IO.Path.GetDirectoryName(ResourceArchive.Absolute(path))!, target);
                 var dependencyMode = mode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep ? mode : ResourceLoader.CacheMode.Reuse;
-                var cachedDependency = Resource.GetRegisteredPath(target);
-                var resource = ResourceLoader.LoadFileResource(target, dependencyMode);
-                if (!ReferenceEquals(cachedDependency, resource)) Owned.Add(resource);
+                var stage = ResourceLoadGraph.Current;
+                var cachedDependency = stage is null ? Resource.GetRegisteredPath(target) : null;
+                var resource = ResourceLoader.LoadFileResource(target, dependencyMode, d.Type.Type);
+                if (stage is null && !ReferenceEquals(cachedDependency, resource)) Owned.Add(resource);
                 if (resource.GetType() != d.Type.Type) throw new InvalidDataException("External resource type does not match its schema.");
                 _resources[i] = resource;
-                continue;
             }
-            var created = d.Type.Factory() as Resource ?? throw new InvalidDataException("Resource factory returned a node.");
-            Owned.Add(created);
-            if (created.IsDisposed || created.GetType() != d.Type.Type) throw new InvalidDataException("Resource factory returned an invalid identity.");
-            _resources[i] = created;
+            else
+            {
+                var created = d.Type.Factory() as Resource ?? throw new InvalidDataException("Resource factory returned a node.");
+                Owned.Add(created);
+                if (created.IsDisposed || created.GetType() != d.Type.Type) throw new InvalidDataException("Resource factory returned an invalid identity.");
+                _resources[i] = created;
+            }
         }
+        if (ResourceLoadGraph.Current is { } loadGraph)
+        {
+            for (var i = 0; i < count; i++) if (_definitions[i].Path.Length == 0) LoadIdentity(i);
+            var dependencies = Enumerable.Range(0, count).Where(i => _definitions[i].Path.Length != 0).ToArray();
+            loadGraph.LoadDependencies(dependencies.Length, index => LoadIdentity(dependencies[index]));
+        }
+        else for (var i = 0; i < count; i++) LoadIdentity(i);
         for (var i = 0; i < count; i++)
         {
             var d = _definitions[i];
@@ -592,13 +602,9 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
     {
         var original = Root;
         Resource Redirect(Resource resource) => ReferenceEquals(resource, original) ? replacement : resource;
-        foreach (var resource in Owned) if (resource is PackedScene packed) packed.LoadFileData(packed.FileData.TransformResources(Redirect));
-            else if (resource is not Image && resource is not ImageTexture && resource is not TextureArray) foreach (var descriptor in resource.GetPropertyList().Where(p => p.IsStored))
-                {
-                    var stored = descriptor.CaptureStoredValue(resource);
-                    descriptor.RestoreStoredValue(resource, stored.TransformResources(Redirect), static r => r);
-                }
+        RedirectResources(Redirect);
     }
+    internal void RedirectResources(Func<Resource, Resource> redirect) { foreach (var resource in Owned) resource.RemapPreparedReferences(redirect); }
     internal Resource ReleaseRoot()
     {
         var root = Root;

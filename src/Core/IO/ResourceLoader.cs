@@ -4,8 +4,10 @@ namespace Electron2D;
 /// <remarks>Supported resources include registered typed archives/format extensions, image textures, dynamic fonts,
 /// WAV/MP3/Ogg audio, compiled C# source assets and certificate/private-key files. Static operations use a permanent retained service.
 /// The returned resource belongs to the caller and is cached weakly while it remains live. Synchronous load
-/// operations serialize cache decisions. File roots own newly decoded dependency graphs; the weak cache owns no resources.</remarks>
-public sealed class ResourceLoader : ElectronObject
+/// operations serialize cache decisions. Explicit threaded requests prepare independent graphs on workers and
+/// publish cache identities/callbacks on their scene owner or consuming standalone caller. File roots retain newly
+/// decoded dependency graph leases; the weak cache owns no resources.</remarks>
+public sealed partial class ResourceLoader : ElectronObject
 {
     /// <summary>Controls how a load uses or refreshes the path cache.</summary>
     /// <remarks>Deep modes equal their ordinary counterparts for dependency-free image and font files.</remarks>
@@ -40,7 +42,7 @@ public sealed class ResourceLoader : ElectronObject
     public static void AddResourceFormatLoader(ResourceFormatLoader formatLoader, bool atFront = false) { ArgumentNullException.ThrowIfNull(formatLoader); ObjectDisposedException.ThrowIf(formatLoader.IsDisposed, formatLoader); lock (LoadGate) { if (FileLoaders.Any(item => ReferenceEquals(item, formatLoader))) return; if (FileLoaders.Count >= 64) throw new InvalidOperationException("At most 64 format loaders can be registered."); if (atFront) FileLoaders.Insert(0, formatLoader); else FileLoaders.Add(formatLoader); } }
     /// <summary>Removes loader registration without disposing its object.</summary><param name="formatLoader">Extension identity.</param>
     public static void RemoveResourceFormatLoader(ResourceFormatLoader formatLoader) { ArgumentNullException.ThrowIfNull(formatLoader); lock (LoadGate) FileLoaders.RemoveAll(item => ReferenceEquals(item, formatLoader)); }
-    private static ResourceFormatLoader[] LoaderSnapshot() { lock (LoadGate) return FileLoaders.Where(l => !l.IsDisposed).ToArray(); }
+    private static ResourceFormatLoader[] LoaderSnapshot() { if (ResourceLoadGraph.Current is { } stage) return stage.Formats; lock (LoadGate) return FileLoaders.Where(l => !l.IsDisposed).ToArray(); }
     /// <summary>Returns external dependency tokens from a recognized format.</summary><param name="path">Source file.</param><param name="addTypes">Whether to append stable type IDs.</param><returns>Copied ordered dependencies.</returns>
     public static string[] GetDependencies(string path, bool addTypes = false) { path = ResourceUID.EnsurePath(path); foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path)) return loader.GetDependencies(path, addTypes); return IsBitmapFont(path) ? FontFile.BitmapDependencies(path, addTypes) : []; }
     /// <summary>Reports the UID stored by a recognized file format.</summary><param name="path">Source file.</param><returns>UID or InvalidID.</returns>
@@ -62,73 +64,81 @@ public sealed class ResourceLoader : ElectronObject
     /// <exception cref="FormatException">Encoded audio is malformed or outside its verified channel profile.</exception>
     /// <exception cref="InvalidDataException">The encoded resource is malformed or exceeds supported limits.</exception>
     /// <exception cref="System.Security.Cryptography.CryptographicException">Certificate/key input is malformed or does not match the requested key role.</exception>
-    public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse)
-        where TResource : Resource
+    public static TResource Load<TResource>(string path, CacheMode cacheMode = CacheMode.Reuse) where TResource : Resource => (TResource)LoadCore(path, cacheMode, typeof(TResource));
+
+    internal static Resource LoadCore(string path, CacheMode cacheMode, Type requestedType)
+    {
+        if (ResourceLoadGraph.Current is { } stage) return stage.Load(path, cacheMode, requestedType);
+        return LoadImmediate(path, cacheMode, requestedType);
+    }
+
+    internal static Resource LoadImmediate(string path, CacheMode cacheMode, Type requestedType, bool isolated = false, CacheMode? hookMode = null)
     {
         CheckFilePath(path);
         if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode));
         path = ResourceUID.EnsurePath(path);
-        foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, typeof(TResource)))
+        foreach (var loader in LoaderSnapshot()) if (loader.RecognizePath(path, requestedType))
             {
-                if (loader is ResourceArchiveLoader) return (TResource)LoadFileResource(path, cacheMode, typeof(TResource));
-                lock (LoadGate)
+                if (loader is ResourceArchiveLoader) return LoadFileResource(path, cacheMode, requestedType);
+                lock (isolated ? ResourceLoadGraph.Current!.EntryGate : LoadGate)
                 {
-                    var cached = Resource.GetRegisteredPath(path);
-                    if (cacheMode == CacheMode.Reuse && cached is not null) return cached is TResource reused ? reused : throw new InvalidOperationException("Cached resource does not match requested type.");
+                    var cached = isolated ? null : Resource.GetRegisteredPath(path);
+                    if (cacheMode == CacheMode.Reuse && cached is not null) return requestedType.IsInstanceOfType(cached) ? cached : throw new InvalidOperationException("Cached resource does not match requested type.");
                     _fileLoads ??= new(StringComparer.Ordinal);
                     var fileKey = ResourceArchive.Absolute(path);
                     if (_fileLoads.Count >= 64 || !_fileLoads.Add(fileKey)) throw new InvalidDataException("File format dependency cycle or depth budget exceeded.");
                     try
                     {
-                        var loaded = loader.Load(path, path, false, cacheMode) ?? throw new InvalidDataException("Format loader returned null.");
-                        if (ReferenceEquals(loaded, cached)) { if (loaded is TResource existing && !loaded.IsDisposed) return existing; throw new InvalidDataException("Format loader returned an invalid cached resource."); }
+                        var loaded = loader.Load(path, path, isolated && ResourceLoadGraph.Current!.UseSubThreads, hookMode ?? cacheMode) ?? throw new InvalidDataException("Format loader returned null.");
+                        if (isolated && loaded.FilePathRegistered) throw new InvalidDataException("A staged format hook must return independent resource state.");
+                        if (ReferenceEquals(loaded, cached)) { if (requestedType.IsInstanceOfType(loaded) && !loaded.IsDisposed) return loaded; throw new InvalidDataException("Format loader returned an invalid cached resource."); }
                         try
                         {
-                            if (loaded is not TResource result || loaded.IsDisposed) throw new InvalidDataException("Format loader returned an incompatible resource.");
-                            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFromResource(loaded); loaded.Dispose(); return (TResource)cached; }
-                            if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); return result;
+                            if (!requestedType.IsInstanceOfType(loaded) || loaded.IsDisposed) throw new InvalidDataException("Format loader returned an incompatible resource.");
+                            if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == loaded.GetType()) { cached.CopyFromResource(loaded); loaded.Dispose(); return cached; }
+                            if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else loaded.TakeOverPath(path); return loaded;
                         }
                         catch { loaded.Dispose(); throw; }
                     }
                     finally { _fileLoads.Remove(fileKey); }
                 }
             }
-        CheckType<TResource>();
+        CheckType(requestedType);
         CheckFilePath(path);
         if (cacheMode is < CacheMode.Ignore or > CacheMode.ReplaceDeep)
             throw new ArgumentOutOfRangeException(nameof(cacheMode));
 
-        lock (LoadGate)
+        lock (isolated ? ResourceLoadGraph.Current!.EntryGate : LoadGate)
         {
-            var cached = Resource.GetRegisteredPath(path);
-            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream or X509Certificate or CryptoKey && cached is TResource reused) return reused;
+            var cached = isolated ? null : Resource.GetRegisteredPath(path);
+            if (cacheMode == CacheMode.Reuse && cached is ImageTexture or FontFile or AudioStream or X509Certificate or CryptoKey && requestedType.IsInstanceOfType(cached)) return cached;
             if (cacheMode == CacheMode.Reuse && cached is not null)
                 throw new InvalidOperationException("The cached resource has a different type.");
 
-            var fontFile = typeof(TResource).IsAssignableFrom(typeof(FontFile)) &&
-                (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) || IsExtension(path, FontExtensions));
+            var fontFile = requestedType.IsAssignableFrom(typeof(FontFile)) &&
+                (!requestedType.IsAssignableFrom(typeof(ImageTexture)) || IsExtension(path, FontExtensions));
             Resource loaded;
-            var audioType = AudioType<TResource>(path);
-            var cryptoType = CryptoType<TResource>(path);
+            var audioType = AudioType(path, requestedType);
+            var cryptoType = CryptoType(path, requestedType);
             if (cryptoType is not null)
             {
                 Resource created = cryptoType == typeof(CryptoKey) ? new CryptoKey() : new X509Certificate();
                 try { if (created is CryptoKey key) key.Load(path); else ((X509Certificate)created).Load(path); } catch { created.Dispose(); throw; }
-                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == cryptoType) { using (created) { if (cached is CryptoKey key) key.ReloadFrom((CryptoKey)created); else ((X509Certificate)cached!).ReloadFrom((X509Certificate)created); } return (TResource)cached!; }
+                if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached?.GetType() == cryptoType) { using (created) { if (cached is CryptoKey key) key.ReloadFrom((CryptoKey)created); else ((X509Certificate)cached!).ReloadFrom((X509Certificate)created); } return cached!; }
                 loaded = created;
             }
             else if (audioType is not null)
             {
                 AudioStream audio = audioType == typeof(AudioStreamWAV) ? AudioStreamWAV.LoadFromFile(path) : audioType == typeof(AudioStreamMP3) ? AudioStreamMP3.LoadFromFile(path) : AudioStreamOggVorbis.LoadFromFile(path);
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is AudioStream existing && existing.GetType() == audioType)
-                { using (audio) existing.ReloadFrom(audio); return (TResource)(Resource)existing; }
+                { using (audio) existing.ReloadFrom(audio); return existing; }
                 loaded = audio;
             }
             else if (fontFile)
             {
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is FontFile font)
                 {
-                    if (IsBitmapFont(path)) font.LoadBitmapFont(path); else font.LoadDynamicFont(path); return (TResource)(Resource)font;
+                    if (IsBitmapFont(path)) font.LoadBitmapFont(path); else font.LoadDynamicFont(path); return font;
                 }
                 var createdFont = new FontFile();
                 try { if (IsBitmapFont(path)) createdFont.LoadBitmapFont(path); else createdFont.LoadDynamicFont(path); loaded = createdFont; }
@@ -136,12 +146,12 @@ public sealed class ResourceLoader : ElectronObject
             }
             else
             {
-                if (typeof(CryptoKey).IsAssignableFrom(typeof(TResource)) || typeof(X509Certificate).IsAssignableFrom(typeof(TResource))) throw new NotSupportedException("The file extension does not match the requested security resource type.");
-                if (typeof(AudioStream).IsAssignableFrom(typeof(TResource))) throw new NotSupportedException("The file extension does not match the requested audio resource type.");
+                if (typeof(CryptoKey).IsAssignableFrom(requestedType) || typeof(X509Certificate).IsAssignableFrom(requestedType)) throw new NotSupportedException("The file extension does not match the requested security resource type.");
+                if (typeof(AudioStream).IsAssignableFrom(requestedType)) throw new NotSupportedException("The file extension does not match the requested audio resource type.");
                 using var image = Image.LoadFromFile(path);
                 if (cacheMode is CacheMode.Replace or CacheMode.ReplaceDeep && cached is ImageTexture texture)
                 {
-                    texture.SetImage(image); return (TResource)(Resource)texture;
+                    texture.SetImage(image); return texture;
                 }
                 loaded = ImageTexture.CreateFromImage(image);
             }
@@ -153,7 +163,7 @@ public sealed class ResourceLoader : ElectronObject
                     loaded.TakeOverPath(path);
                 else
                     loaded.ResourcePath = path;
-                return (TResource)(Resource)loaded;
+                return loaded;
             }
             catch
             {
@@ -167,7 +177,8 @@ public sealed class ResourceLoader : ElectronObject
     internal static Resource LoadFileResource(string path, CacheMode cacheMode, Type? expectedType = null)
     {
         ArgumentException.ThrowIfNullOrEmpty(path); if ((uint)cacheMode > 4) throw new ArgumentOutOfRangeException(nameof(cacheMode)); path = ResourceUID.EnsurePath(path);
-        if (!ResourceArchive.IsPath(path)) return Load<Resource>(path, cacheMode);
+        if (ResourceLoadGraph.Current is { } stage) return stage.Load(path, cacheMode, expectedType ?? typeof(Resource));
+        if (!ResourceArchive.IsPath(path)) return LoadCore(path, cacheMode, expectedType ?? typeof(Resource));
         lock (LoadGate)
         {
             var cached = Resource.GetRegisteredPath(path); if (cacheMode == CacheMode.Reuse && cached is not null) { if (expectedType is not null && !expectedType.IsInstanceOfType(cached)) throw new InvalidOperationException("Cached resource does not match requested type."); return cached; }
@@ -211,7 +222,9 @@ public sealed class ResourceLoader : ElectronObject
     public static bool HasCached(string path)
     {
         CheckPath(path);
-        return Resource.GetRegisteredPath(ResourceUID.EnsurePath(path)) is not null;
+        path = ResourceUID.EnsurePath(path);
+        if (ResourceLoadGraph.Current?.IsCreatingPath(path) == true) return false;
+        return Resource.GetRegisteredPath(path) is not null;
     }
 
     /// <summary>Gets a live cached resource of the requested type, or null when absent.</summary>
@@ -223,7 +236,9 @@ public sealed class ResourceLoader : ElectronObject
     public static TResource? GetCachedRef<TResource>(string path) where TResource : Resource
     {
         CheckPath(path);
-        return Resource.GetRegisteredPath(ResourceUID.EnsurePath(path)) as TResource;
+        path = ResourceUID.EnsurePath(path);
+        if (ResourceLoadGraph.Current?.IsCreatingPath(path) == true) return null;
+        return Resource.GetRegisteredPath(path) as TResource;
     }
 
     /// <summary>Gets caller-owned lowercase filename extensions supported for a resource type.</summary>
@@ -246,22 +261,23 @@ public sealed class ResourceLoader : ElectronObject
 
     }
 
-    private static Type? CryptoType<TResource>(string path) where TResource : Resource
+    private static Type? CryptoType<TResource>(string path) where TResource : Resource => CryptoType(path, typeof(TResource));
+    private static Type? CryptoType(string path, Type requestedType)
     {
         var type = System.IO.Path.GetExtension(path).ToLowerInvariant() switch { ".key" => typeof(CryptoKey), ".crt" => typeof(X509Certificate), _ => null };
-        return type is not null && typeof(TResource).IsAssignableFrom(type) ? type : null;
+        return type is not null && requestedType.IsAssignableFrom(type) ? type : null;
     }
-    private static Type? AudioType<TResource>(string path) where TResource : Resource
+    private static Type? AudioType<TResource>(string path) where TResource : Resource => AudioType(path, typeof(TResource));
+    private static Type? AudioType(string path, Type requested)
     {
-        var requested = typeof(TResource);
         var extension = System.IO.Path.GetExtension(path);
         var type = extension.ToLowerInvariant() switch { ".wav" => typeof(AudioStreamWAV), ".mp3" => typeof(AudioStreamMP3), ".ogg" => typeof(AudioStreamOggVorbis), _ => null };
         return type is not null && requested.IsAssignableFrom(type) ? type : null;
     }
-    private static void CheckType<TResource>() where TResource : Resource
+    private static void CheckType(Type requestedType)
     {
-        if (!typeof(TResource).IsAssignableFrom(typeof(ImageTexture)) && !typeof(TResource).IsAssignableFrom(typeof(FontFile)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamWAV)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamMP3)) && !typeof(TResource).IsAssignableFrom(typeof(AudioStreamOggVorbis)) && !typeof(TResource).IsAssignableFrom(typeof(CryptoKey)) && !typeof(TResource).IsAssignableFrom(typeof(X509Certificate)))
-            throw new NotSupportedException($"Resource files for {typeof(TResource).Name} are not integrated.");
+        if (!requestedType.IsAssignableFrom(typeof(ImageTexture)) && !requestedType.IsAssignableFrom(typeof(FontFile)) && !requestedType.IsAssignableFrom(typeof(AudioStreamWAV)) && !requestedType.IsAssignableFrom(typeof(AudioStreamMP3)) && !requestedType.IsAssignableFrom(typeof(AudioStreamOggVorbis)) && !requestedType.IsAssignableFrom(typeof(CryptoKey)) && !requestedType.IsAssignableFrom(typeof(X509Certificate)))
+            throw new NotSupportedException($"Resource files for {requestedType.Name} are not integrated.");
     }
 
     private static void CheckPath(string path) => ArgumentException.ThrowIfNullOrEmpty(path);

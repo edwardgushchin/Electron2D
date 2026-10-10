@@ -1,7 +1,9 @@
 namespace Electron2D;
 /// <summary>Defines a caller-owned typed resource-file loading extension.</summary>
 /// <remarks>ResourceLoader borrows ordered registration. Hooks execute on the loading thread and return actual
-/// caller-owned resources; dependency and cache contracts remain explicit.</remarks>
+/// caller-owned resources; dependency and cache contracts remain explicit. Threaded requests may invoke hooks
+/// concurrently. Retain the borrowed loader until pending requests are collected, prepare independent payloads,
+/// and avoid mutating registered resources or scene/native state during preparation.</remarks>
 public abstract class ResourceFormatLoader : ElectronObject
 {
     /// <summary>Constructs a managed format extension.</summary>

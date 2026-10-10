@@ -8024,6 +8024,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ResourceLoader.ThreadLoadStatus",
+    "kind": "type",
+    "declaringType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "name": "ThreadLoadStatus",
+    "signature": "public enum Electron2D.ResourceLoader.ThreadLoadStatus",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.ResourceSaver",
     "kind": "type",
     "declaringType": "Electron2D.ResourceSaver",
@@ -33790,6 +33808,58 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.Failed()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "name": "Failed",
+    "signature": "public const Electron2D.ResourceLoader.ThreadLoadStatus Failed = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.InProgress()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "name": "InProgress",
+    "signature": "public const Electron2D.ResourceLoader.ThreadLoadStatus InProgress = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.InvalidResource()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "name": "InvalidResource",
+    "signature": "public const Electron2D.ResourceLoader.ThreadLoadStatus InvalidResource = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.ResourceLoader.ThreadLoadStatus.Loaded()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "name": "Loaded",
+    "signature": "public const Electron2D.ResourceLoader.ThreadLoadStatus Loaded = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": "3"
+  },
+  {
     "id": "enumValue:Electron2D.RichTextLabel.ImageUnit.EM()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RichTextLabel.ImageUnit",
@@ -41478,19 +41548,6 @@
     "declaringType": "Electron2D.Resource",
     "name": "Changed",
     "signature": "public event System.Action\u003CElectron2D.Resource\u003E Changed",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.Action\u003CElectron2D.Resource\u003E",
-    "value": null
-  },
-  {
-    "id": "event:Electron2D.Resource.SetupLocalToSceneRequested()",
-    "kind": "event",
-    "declaringType": "Electron2D.Resource",
-    "name": "SetupLocalToSceneRequested",
-    "signature": "public event System.Action\u003CElectron2D.Resource\u003E SetupLocalToSceneRequested",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -109279,6 +109336,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PackedScene.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PackedScene",
+    "name": "RemapResourceReferences",
+    "signature": "protected override System.Void RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E remap)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "remap",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PacketPeer.CheckPacketPeer()",
     "kind": "method",
     "declaringType": "Electron2D.PacketPeer",
@@ -127213,6 +127289,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Resource.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Resource",
+    "name": "RemapResourceReferences",
+    "signature": "protected virtual System.Void RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E remap)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "remap",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Resource.ResetState()",
     "kind": "method",
     "declaringType": "Electron2D.Resource",
@@ -127241,19 +127336,6 @@
         "default": null
       }
     ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.Resource.SetupLocalToScene()",
-    "kind": "method",
-    "declaringType": "Electron2D.Resource",
-    "name": "SetupLocalToScene",
-    "signature": "public System.Void SetupLocalToScene()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -127863,6 +127945,126 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.LoadThreadedGet(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "LoadThreadedGet",
+    "signature": "public static Electron2D.Resource LoadThreadedGet(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.LoadThreadedGetStatus(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "LoadThreadedGetStatus",
+    "signature": "public static Electron2D.ResourceLoader.ThreadLoadStatus LoadThreadedGetStatus(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.LoadThreadedGetStatus(System.String,ref System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "LoadThreadedGetStatus",
+    "signature": "public static Electron2D.ResourceLoader.ThreadLoadStatus LoadThreadedGetStatus(System.String path, out System.Single progress)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "progress",
+        "type": "ref System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ResourceLoader.ThreadLoadStatus",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.LoadThreadedGet\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "LoadThreadedGet",
+    "signature": "public static TResource LoadThreadedGet\u003CTResource\u003E(System.String path)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "TResource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceLoader.LoadThreadedRequest\u00601(System.String,System.Boolean,Electron2D.ResourceLoader.CacheMode,System.Threading.CancellationToken,Electron2D.SceneTree)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceLoader",
+    "name": "LoadThreadedRequest",
+    "signature": "public static System.Void LoadThreadedRequest\u003CTResource\u003E(System.String path, System.Boolean useSubThreads = false, Electron2D.ResourceLoader.CacheMode cacheMode = Reuse, System.Threading.CancellationToken cancellationToken = default, Electron2D.SceneTree publicationTree = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "useSubThreads",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "cacheMode",
+        "type": "Electron2D.ResourceLoader.CacheMode",
+        "default": "Reuse"
+      },
+      {
+        "name": "cancellationToken",
+        "type": "System.Threading.CancellationToken",
+        "default": "default"
+      },
+      {
+        "name": "publicationTree",
+        "type": "Electron2D.SceneTree",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -133420,6 +133622,25 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shader.RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "RemapResourceReferences",
+    "signature": "protected override System.Void RemapResourceReferences(System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E remap)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "remap",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 **Inherits:** [Resource](Resource.md)
 
@@ -283,3 +283,7 @@ Successful instances carry an internal reference to their source template, enabl
 ## Typed file integration
 
 See [resource-file contracts](../components/resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## Prepared reference publication
+
+The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook maps freshly prepared references to final cached/new identities before owner publication under ADR 0013. Resource defaults to stored resource descriptors; PackedScene includes its node model; Shader includes default texture bindings. Opaque application storage overrides this hook and calls base for descriptor state. Primitive descriptors are not rewritten by the default remapper. This is a typed graph-publication extension, not a dynamic property API.

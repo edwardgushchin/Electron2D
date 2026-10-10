@@ -303,9 +303,9 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
 | [Object](classes/Object.md) | — | 2 | 23 | 2 | 32 | 15 |
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
-| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 23 | 0 | 2 | 0 |
+| [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 213 | 144 | 22 | 92 | 20 |
+| **Total** | | 213 | 142 | 22 | 92 | 22 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -557,14 +557,12 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`Resource::method:reset_state()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:set_id_for_path(String:,String:)`](classes/Resource.md) | Unimplemented | No mapped C# declaration; trigger: next complete Resource API slice. |
 | [`Resource::method:set_path_cache(String:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Resource::method:setup_local_to_scene()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::method:take_over_path(String:)`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_local_to_scene`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_name`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_path`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::property:resource_scene_unique_id`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`Resource::signal:changed()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
-| [`Resource::signal:setup_local_to_scene_requested()`](classes/Resource.md) | Partial | Declaration mapping is structural; return/default/value and observable behavior require audit. |
 | [`class:SkeletonModification2D`](classes/SkeletonModification2D.md) | Partial | All runtime callbacks, setup/phase/configuration and angle constraints execute. Only editor gizmo callbacks/state require the first actual editor canvas-gizmo owner; no inert runtime switch. |
 | [`SkeletonModification2D::method:_draw_editor_gizmo()`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |
 | [`SkeletonModification2D::method:get_editor_draw_gizmo()`](classes/SkeletonModification2D.md) | Blocked | Requires the actual editor canvas-gizmo registration/drawing owner, refresh lifecycle and visible authoring host; trigger its first editor skeletal authoring integration under ADR 0090. Runtime skeletal execution is already implemented. |
