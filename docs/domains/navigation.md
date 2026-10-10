@@ -60,3 +60,5 @@ Committed [raster topology and surface sampling](../components/navigation-maps.m
 ## Source geometry producer
 
 [Navigation baking](../components/navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.
+
+[Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.

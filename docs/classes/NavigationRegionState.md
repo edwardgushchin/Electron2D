@@ -17,3 +17,5 @@ A dirty authored geometry/configuration version builds an independent committed 
 [NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) exercises the concrete geometry/query/lifetime consumers. The [Authored navigation maps](../components/navigation-maps.md) contract records limits.
 
 PublishedMap preserves pathway membership until synchronization. IterationID records a nonzero wrapping uint identity, returned through the static ulong query; geometry/configuration publication remains transactional.
+
+Region scene ownership uses a weak Node reference shared by NavigationRegion and tile-generated regions. Caller FreeRID rejects both node-owned cases; expired/disposed owners release their region entries. Waypoint owner resolution returns the corresponding scene node, including TileMapLayer.

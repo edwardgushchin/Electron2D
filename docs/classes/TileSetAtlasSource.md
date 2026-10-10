@@ -539,3 +539,7 @@ Gets or sets positive atlas cell dimensions in pixels.
 ## Verification
 
 TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed resources, fresh-process scenes and the real window workflow. [Recorded measurements and remaining gates](../components/tiles.md#verification) keep native, rendering, throughput and platform claims separate. Owning decision: [ADR 0101](../decisions/tiles.md#adr-0101).
+
+## Navigation polygon storage
+
+Navigation layer counts and original borrowed polygons are restored by typed descriptors. Layer policies remap all alternatives. Deep duplication preserves sharing while duplicating original navigation resources; runtime transformed cache resources remain transient. See [tile navigation](../components/tiles.md#navigation-layers).

@@ -51,6 +51,8 @@ public partial class TileMapLayer
         new PropertyDescriptor<TileMapLayer, bool>(nameof(UseKinematicBodies), n => n.UseKinematicBodies, (n,v) => n.UseKinematicBodies = v, _ => false, stored: true),
         new PropertyDescriptor<TileMapLayer, int>(nameof(PhysicsQuadrantSize), n => n.PhysicsQuadrantSize, (n,v) => n.PhysicsQuadrantSize = v, _ => 16, stored: true),
         new PropertyDescriptor<TileMapLayer, DebugVisibilityMode>(nameof(CollisionVisibilityMode), n => n.CollisionVisibilityMode, (n,v) => n.CollisionVisibilityMode = v, _ => DebugVisibilityMode.Default, stored: true),
+        new PropertyDescriptor<TileMapLayer, bool>(nameof(NavigationEnabled), n => n.NavigationEnabled, (n,v) => n.NavigationEnabled = v, _ => true, stored: true),
+        new PropertyDescriptor<TileMapLayer, DebugVisibilityMode>(nameof(NavigationVisibilityMode), n => n.NavigationVisibilityMode, (n,v) => n.NavigationVisibilityMode = v, _ => DebugVisibilityMode.Default, stored: true),
         new PropertyDescriptor<TileMapLayer, byte[]>(nameof(TileMapData), n => n.TileMapData, (n,v) => n.TileMapData = v, _ => [], stored: true)
     ];
 }

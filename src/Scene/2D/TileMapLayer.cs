@@ -1,18 +1,18 @@
 namespace Electron2D;
 
-/// <summary>Draws a square atlas tile layer and generates tile-owned collision bodies in its selected world.</summary>
+/// <summary>Draws a square atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.</summary>
 /// <remarks>Cell and resource edits are batched until the tree flushes deferred work or UpdateInternals is called.
-/// Generated bodies do not appear as child nodes. Queries and contacts report this layer as their collider object.</remarks>
+/// Generated bodies and navigation regions do not appear as child nodes. Queries and contacts report this layer as their collider object.</remarks>
 public partial class TileMapLayer : Entity
 {
-    /// <summary>Selects collision overlay visibility independently of ordinary tile drawing.</summary>
+    /// <summary>Selects diagnostic overlay visibility independently of ordinary tile drawing.</summary>
     public enum DebugVisibilityMode
     {
-        /// <summary>Follows the scene tree's collision hint.</summary>
+        /// <summary>Follows the scene tree's corresponding diagnostic hint.</summary>
         Default = 0,
-        /// <summary>Draws collision geometry whenever this layer is visible.</summary>
+        /// <summary>Draws the corresponding diagnostic geometry whenever this layer is visible.</summary>
         ForceShow = 1,
-        /// <summary>Hides collision geometry even when the scene hint is enabled.</summary>
+        /// <summary>Hides the corresponding diagnostic geometry even when the scene hint is enabled.</summary>
         ForceHide = 2
     }
     private readonly record struct Cell(int SourceID, Vector2i Atlas, int Alternative);
@@ -177,13 +177,13 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void OnEnterTree() { base.OnEnterTree(); MarkAll(); }
     /// <inheritdoc />
-    protected override void OnExitTree() { try { ReleasePhysics(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
+    protected override void OnExitTree() { try { ReleasePhysics(); ReleaseNavigation(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
-        if (what == NotificationWorldChanged && IsInsideTree) MoveWorld();
-        else if (what == NotificationTransformChanged && IsInsideTree) UpdateBodyTransforms();
+        if (what == NotificationWorldChanged && IsInsideTree) { MoveWorld(); MoveNavigationWorld(); }
+        else if (what == NotificationTransformChanged && IsInsideTree) { UpdateBodyTransforms(); UpdateNavigationTransforms(); }
         else if (what == NotificationVisibilityChanged) MarkAll();
         else if (what is NotificationEnterCanvas or NotificationExitCanvas) UpdateCanvas(what == NotificationExitCanvas ? 0 : GetCanvasLayerNode()?.InstanceID ?? 0);
     }
@@ -192,8 +192,8 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        try { base.Dispose(disposing); }
-        finally { if (disposing) { DetachSet(); ReleasePhysics(); ClearRuntimeData(); Changed = null; } }
+        try { if (disposing) DetachSet(); base.Dispose(disposing); }
+        finally { if (disposing) { ReleasePhysics(); ReleaseNavigation(); ClearRuntimeData(); Changed = null; } }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateTileLayer;

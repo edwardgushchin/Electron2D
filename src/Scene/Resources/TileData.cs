@@ -1,9 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Stores the visual transform and collision polygons of one atlas alternative.</summary>
+/// <summary>Stores the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.</summary>
 /// <remarks>Instances are owned by an atlas source. Polygon arrays are copied on reads and writes.
 /// Removing an alternative invalidates its borrowed data. Runtime update callbacks receive a separate owned copy.</remarks>
-public sealed class TileData : ElectronObject
+public sealed partial class TileData : ElectronObject
 {
     internal sealed class Polygon
     {
@@ -140,10 +140,12 @@ public sealed class TileData : ElectronObject
         if (count < Layers.Count) Layers.RemoveRange(count, Layers.Count - count);
         else { Layers.EnsureCapacity(count); while (Layers.Count < count) Layers.Add(new()); }
     }
-    internal TileData Copy()
+    internal TileData Copy(Func<Resource?, Resource?>? duplicate = null)
     {
         ThrowIfDisposed(); var copy = new TileData(_allowTransform) { _flipH = _flipH, _flipV = _flipV, _transpose = _transpose, _textureOrigin = _textureOrigin, _modulate = _modulate };
         foreach (var layer in Layers) copy.Layers.Add(layer.Copy());
+        copy.ResizeNavigationLayers(Navigation.Count);
+        for (var i = 0; i < Navigation.Count; i++) copy.SetNavigationPolygon(i, duplicate is null ? Navigation[i].Polygon : (NavigationPolygon?)duplicate(Navigation[i].Polygon));
         return copy;
     }
     internal void Release()
@@ -159,7 +161,7 @@ public sealed class TileData : ElectronObject
         base.ValidateDisposal();
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; Layers.Clear(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; Layers.Clear(); ResizeNavigationLayers(0); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(StoredProperties<TileData>("", static p => p));
 
@@ -171,6 +173,7 @@ public sealed class TileData : ElectronObject
         yield return new PropertyDescriptor<T, Vector2i>(prefix + nameof(TextureOrigin), n => data(n).TextureOrigin, (n, v) => data(n).TextureOrigin = v, _ => default, stored: true);
         yield return new PropertyDescriptor<T, Color>(prefix + nameof(Modulate), n => data(n).Modulate, (n, v) => data(n).Modulate = v, _ => Colors.White, stored: true);
         yield return new PropertyDescriptor<T, int>(prefix + "PhysicsLayerCount", n => data(n).Layers.Count, (n, v) => data(n).ResizeLayers(v), _ => 0, stored: true);
+        foreach (var property in NavigationProperties(prefix, data)) yield return property;
         for (var i = 0; i < Layers.Count; i++)
         {
             var layer = i; var key = prefix + $"Physics/{i}/";

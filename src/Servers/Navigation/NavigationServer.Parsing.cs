@@ -82,6 +82,8 @@ public sealed partial class NavigationServer
                 for (var i = 0; i < count; i++) AddMesh(data, multiMesh, root * many.GlobalTransform * multi.GetInstanceTransform2D(i));
             }
         }
+        if (node is TileMapLayer navigationTiles) foreach (var points in navigationTiles.CaptureNavigationTraversable())
+            { for (var i = 0; i < points.Length; i++) points[i] = root * navigationTiles.GlobalTransform * points[i]; data.AddTraversableOutline(points); }
         if (settings.ParsedGeometry == NavigationPolygon.ParsedGeometryType.MeshInstances) return;
         if (node is StaticBody body && (body.CollisionLayer & settings.ParsedCollisionMask) != 0)
         {

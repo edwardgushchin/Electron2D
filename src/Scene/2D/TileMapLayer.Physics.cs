@@ -52,6 +52,7 @@ public partial class TileMapLayer
                 foreach (var quadrant in dirtyQuadrants) RebuildQuadrant(quadrant);
                 _shapeBasis = ShapeBasis();
             }
+            UpdateNavigation(changed);
             QueueRedraw();
         }
         catch { _allDirty = true; throw; }

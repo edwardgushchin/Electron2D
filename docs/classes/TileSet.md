@@ -6,7 +6,7 @@ Last updated: 2026-10-10
 
 ## Overview
 
-Defines square tile dimensions, atlas sources and shared physics layer policies.
+Defines square tile dimensions, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -512,3 +512,71 @@ Gets or sets the positive square-grid cell dimensions in scene units.
 ## Verification
 
 TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed resources, fresh-process scenes and the real window workflow. [Recorded measurements and remaining gates](../components/tiles.md#verification) keep native, rendering, throughput and platform claims separate. Owning decision: [ADR 0101](../decisions/tiles.md#adr-0101).
+
+## Tile navigation
+
+See [tile navigation](../components/tiles.md#navigation-layers) for ownership, batching, file graphs and verification.
+
+### GetNavigationLayersCount
+
+```csharp
+int GetNavigationLayersCount()
+```
+
+Returns the shared navigation layer count.
+
+### AddNavigationLayer
+
+```csharp
+void AddNavigationLayer(int toPosition = -1)
+```
+
+Inserts a mask-one layer; negative positions append. Every source alternative is remapped.
+
+### MoveNavigationLayer
+
+```csharp
+void MoveNavigationLayer(int layerIndex, int toPosition)
+```
+
+Moves before an insertion position, preserving masks and each alternative polygon.
+
+### RemoveNavigationLayer
+
+```csharp
+void RemoveNavigationLayer(int layerIndex)
+```
+
+Removes the policy and its polygon references; borrowed polygons remain owned by their callers.
+
+### GetNavigationLayerLayers
+
+```csharp
+uint GetNavigationLayerLayers(int layerIndex)
+```
+
+Returns the complete unsigned membership mask.
+
+### SetNavigationLayerLayers
+
+```csharp
+void SetNavigationLayerLayers(int layerIndex, uint layers)
+```
+
+Sets the mask; zero excludes the regions from all queries.
+
+### GetNavigationLayerLayerValue
+
+```csharp
+bool GetNavigationLayerLayerValue(int layerIndex, int layerNumber)
+```
+
+Tests bit one through 32; other bit numbers throw.
+
+### SetNavigationLayerLayerValue
+
+```csharp
+void SetNavigationLayerLayerValue(int layerIndex, int layerNumber, bool value)
+```
+
+Changes one membership bit while preserving the rest.

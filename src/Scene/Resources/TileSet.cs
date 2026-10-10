@@ -1,9 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Defines square tile dimensions, atlas sources and shared physics layer policies.</summary>
+/// <summary>Defines square tile dimensions, atlas sources and shared physics and navigation layer policies.</summary>
 /// <remarks>Sources are transferred between sets, while materials are borrowed. Copies duplicate sources
 /// even in shallow mode so copying cannot remove sources from the original set.</remarks>
-public sealed class TileSet : Resource
+public sealed partial class TileSet : Resource
 {
     internal sealed class PhysicsLayer
     {
@@ -98,7 +98,7 @@ public sealed class TileSet : Resource
         if (ReferenceEquals(source.OwnerSet, this)) throw new ArgumentException("The source already belongs to this set.", nameof(source));
         var previous = source.OwnerSet;
         previous?.DetachSourceInstance(source);
-        source.ResizePhysicsLayers(PhysicsLayers.Count); source.OwnerSet = this;
+        source.ResizePhysicsLayers(PhysicsLayers.Count); source.ResizeNavigationLayers(NavigationLayers.Count); source.OwnerSet = this;
         _sources[id] = source; source.Changed += SourceChanged; source.Disposed += SourceDisposed;
         try { previous?.ChangedSchema(); } finally { ChangedSchema(); }
         return id;
@@ -164,7 +164,7 @@ public sealed class TileSet : Resource
     { foreach (var layer in PhysicsLayers) if (ReferenceEquals(layer.Material, material)) { UnobserveMaterial(layer.Material); layer.Material = null; } EmitChanged(); }
     private void ClearContents()
     {
-        foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear();
+        foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear(); NavigationLayers.Clear();
         foreach (var source in _sources.Values) if (source is not null) { source.Changed -= SourceChanged; source.Disposed -= SourceDisposed; source.OwnerSet = null; }
         _sources.Clear();
     }
@@ -175,7 +175,7 @@ public sealed class TileSet : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSet)target; copy.ClearContents(); copy._tileSize = _tileSize;
+        var copy = (TileSet)target; copy.ClearContents(); copy._tileSize = _tileSize; copy.NavigationLayers.AddRange(NavigationLayers);
         foreach (var layer in PhysicsLayers)
         {
             copy.PhysicsLayers.Add(new() { Layer = layer.Layer, Mask = layer.Mask, Priority = layer.Priority });
@@ -217,6 +217,7 @@ public sealed class TileSet : Resource
             yield return new PropertyDescriptor<TileSet, float>(prefix + "Priority", n => n.GetPhysicsLayerCollisionPriority(id), (n, v) => n.SetPhysicsLayerCollisionPriority(id, v), _ => 1, stored: true);
             yield return new PropertyDescriptor<TileSet, PhysicsMaterial?>(prefix + "Material", n => n.GetPhysicsLayerPhysicsMaterial(id), (n, v) => n.SetPhysicsLayerPhysicsMaterial(id, v), _ => null, stored: true);
         }
+        foreach (var property in NavigationProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, int[]>("SourceIDs", n => n._sources.Keys.ToArray(), (n, v) => n.RestoreSourceIDs(v), _ => [], stored: true);
         foreach (var sourceID in _sources.Keys)
         {

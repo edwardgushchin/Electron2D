@@ -25,15 +25,16 @@ public sealed partial class NavigationServer : ElectronObject
     private NavigationMapState Map(RID rid) => _maps.TryGetValue(rid, out var map) ? map : throw new ArgumentException("The RID does not identify a live navigation map.", nameof(rid));
     private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
     internal RID CreateMap(WorldRuntime? owner = null) { lock (_gate) { var rid = RID.Allocate(); _maps.Add(rid, new(rid, owner)); return rid; } }
-    internal RID CreateRegion(NavigationRegion? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
+    internal RID CreateRegion(Node? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
     internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.ContainsKey(rid)) return; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } foreach (var agent in _agents.Values) if (agent.Map == rid) agent.Map = default; foreach (var obstacle in _obstacles.Values) if (obstacle.Map == rid) obstacle.Map = default; _maps.Remove(rid); } }
     internal void ReleaseSceneRegion(RID rid) { lock (_gate) { if (_regions.Remove(rid, out var region)) { Dirty(region.Map); region.Unsubscribe(); } } }
     private void Dirty(RID rid) { if (_maps.TryGetValue(rid, out var map)) map.Dirty = true; }
+    internal void ValidateTileMap(RID map, SceneTree? tree) { lock (_gate) { Map(map); ValidateSceneMap(map, tree); } }
     private void SetRegionMap(RID region, RID map) { var value = Region(region); if (map.IsValid()) Map(map); Dirty(value.Map); value.Map = map; Dirty(map); value.Dirty = true; }
     private void SetPolygon(RID rid, NavigationPolygon? polygon)
     {
         var region = Region(rid); var data = polygon?.Snapshot() ?? new NavigationPolygonData([], []); region.Unsubscribe(); region.Polygon = polygon; region.Geometry = data;
-        if (polygon is not null) { region.Changed = _ => { lock (_gate) { if (!_regions.ContainsKey(rid)) return; region.Geometry = polygon.Snapshot(); region.Dirty = true; Dirty(region.Map); } if (region.Scene is not null && region.Scene.TryGetTarget(out var node) && !node.IsDisposed) node.NotifyPolygonChanged(); }; region.Disposed = _ => { lock (_gate) { region.Geometry = new([], []); region.Dirty = true; Dirty(region.Map); } }; polygon.Changed += region.Changed; polygon.Disposed += region.Disposed; }
+        if (polygon is not null) { region.Changed = _ => { lock (_gate) { if (!_regions.ContainsKey(rid)) return; region.Geometry = polygon.Snapshot(); region.Dirty = true; Dirty(region.Map); } if (region.Scene is not null && region.Scene.TryGetTarget(out var node) && node is NavigationRegion { IsDisposed: false } navigationRegion) navigationRegion.NotifyPolygonChanged(); }; region.Disposed = _ => { lock (_gate) { region.Geometry = new([], []); region.Dirty = true; Dirty(region.Map); } }; polygon.Changed += region.Changed; polygon.Disposed += region.Disposed; }
         region.Dirty = true; Dirty(region.Map);
     }
     internal void SynchronizeCore()
@@ -108,10 +109,10 @@ internal sealed class NavigationMapState(RID rid, WorldRuntime? owner)
     internal ulong IterationID;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
 }
-internal sealed class NavigationRegionState(RID rid, NavigationRegion? scene)
+internal sealed class NavigationRegionState(RID rid, Node? scene)
 {
     internal readonly RID RID = rid;
-    internal readonly WeakReference<NavigationRegion>? Scene = scene is null ? null : new(scene);
+    internal readonly WeakReference<Node>? Scene = scene is null ? null : new(scene);
     internal RID Map, PublishedMap;
     internal uint IterationID;
     internal bool Enabled = true, UseEdgeConnections = true, Dirty = true;

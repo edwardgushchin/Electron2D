@@ -6,7 +6,7 @@ Last updated: 2026-10-10
 
 ## Overview
 
-Stores the visual transform and collision polygons of one atlas alternative.
+Stores the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.
 
 ## Syntax
 
@@ -457,3 +457,23 @@ Gets or sets whether tile axes are exchanged before reflection.
 ## Verification
 
 TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed resources, fresh-process scenes and the real window workflow. [Recorded measurements and remaining gates](../components/tiles.md#verification) keep native, rendering, throughput and platform claims separate. Owning decision: [ADR 0101](../decisions/tiles.md#adr-0101).
+
+## Tile navigation
+
+See [tile navigation](../components/tiles.md#navigation-layers) for ownership, batching, file graphs and verification.
+
+### SetNavigationPolygon
+
+```csharp
+void SetNavigationPolygon(int layerID, NavigationPolygon? navigationPolygon)
+```
+
+Assigns a borrowed live polygon or null. Changes and disposal invalidate transformed cache resources and notify consuming layers.
+
+### GetNavigationPolygon
+
+```csharp
+NavigationPolygon? GetNavigationPolygon(int layerID, bool flipH = false, bool flipV = false, bool transpose = false)
+```
+
+Returns the borrowed original without transforms or a cached data-owned transformed resource. Transpose precedes reflections; polygon indices and outline winding are preserved. Copies are invalidated when the original changes or this data is removed.

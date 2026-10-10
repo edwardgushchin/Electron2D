@@ -21,7 +21,15 @@ A layer batches authored cell/resource changes. `UpdateInternals` explicitly pub
 
 `GetCoordsForBodyRID` returns quadrant coordinates; a quadrant size of one makes these cell coordinates. Owner projections preserve the layer and the individual body RID through queries, motion results, direct-state contacts and overlap events. Hiding drawing does not disable collision. Disabling the layer or collision removes generated bodies. Exit, disposal and world replacement release or move their server resources, including canvas association.
 
-The first executable implementation targets square cells, static atlas tiles and physical layers/polygons, including one-way margins and constant surface velocities. Other layouts, terrain painting, animated atlases, occlusion and tile navigation remain explicit coverage gaps. They are not represented by inert public switches. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
+The first executable implementation targets square cells, static atlas tiles and physical layers/polygons, including one-way margins and constant surface velocities. Other layouts, terrain painting, animated atlases and occlusion remain explicit coverage gaps. They are not represented by inert public switches. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
+
+### Navigation layers
+
+TileSet navigation layers own 32-bit membership masks; insertion, movement and removal remap every alternative's borrowed NavigationPolygon. TileData observes polygon changes/disposal. Transformed getters cache tile-data-owned polygon resources for the seven nonidentity flip/transpose combinations, preserve outline winding and polygon indices, and invalidate caches on source changes. Resource duplication and file graphs preserve sharing according to the selected duplicate mode; only original polygons are stored.
+
+TileMapLayer generates one node-owned server region per nonempty cell/navigation-layer pair, with its instance identity, cell transform and navigation mask. Regions use the selected World map or a borrowed explicit map and are batched through UpdateInternals. Disabling navigation, disabling the layer, erasing cells, removing source data and leaving the tree release regions; hiding ordinary drawing retains navigation. World replacement and transform changes rebind surviving regions. Generated RIDs cannot be freed by callers. Map publication follows [ADR 0097](navigation.md#adr-0097); invalid preparation retains the preceding cell regions. Navigation diagnostics consume actual polygons through NavigationVisibilityMode and SceneTree.DebugNavigationHint, with ordinary canvas routing/visibility.
+
+Source parsing consumes tile navigation outlines as traversable contours independently of collider parsing mode, with the same runtime tile data and cell transforms. It also consumes stored polygon faces when no outlines exist, making manually authored navigation usable for baking. Collision contours retain their existing obstruction/mask policy. Generated regions and transformed cache resources are transient.
 
 ### Consequences
 

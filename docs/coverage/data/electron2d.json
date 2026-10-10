@@ -150752,6 +150752,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileData.GetNavigationPolygon(System.Int32,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetNavigationPolygon",
+    "signature": "public Electron2D.NavigationPolygon GetNavigationPolygon(System.Int32 layerID, System.Boolean flipH = false, System.Boolean flipV = false, System.Boolean transpose = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "flipH",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "flipV",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "transpose",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.NavigationPolygon",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileData.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.TileData",
@@ -150972,6 +151006,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileData.SetNavigationPolygon(System.Int32,Electron2D.NavigationPolygon)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetNavigationPolygon",
+    "signature": "public System.Void SetNavigationPolygon(System.Int32 layerID, Electron2D.NavigationPolygon navigationPolygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "navigationPolygon",
+        "type": "Electron2D.NavigationPolygon",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileData.ValidateDisposal()",
     "kind": "method",
     "declaringType": "Electron2D.TileData",
@@ -151154,6 +151212,19 @@
       }
     ],
     "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetNavigationMap()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetNavigationMap",
+    "signature": "public Electron2D.RID GetNavigationMap()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -151444,6 +151515,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapLayer.SetNavigationMap(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "SetNavigationMap",
+    "signature": "public System.Void SetNavigationMap(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileMapLayer.TileDataRuntimeUpdate(Electron2D.Vector2i,Electron2D.TileData)",
     "kind": "method",
     "declaringType": "Electron2D.TileMapLayer",
@@ -151533,6 +151623,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddNavigationLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddNavigationLayer",
+    "signature": "public System.Void AddNavigationLayer(System.Int32 toPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -151648,6 +151757,62 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetNavigationLayerLayerValue(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetNavigationLayerLayerValue",
+    "signature": "public System.Boolean GetNavigationLayerLayerValue(System.Int32 layerIndex, System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetNavigationLayerLayers(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetNavigationLayerLayers",
+    "signature": "public System.UInt32 GetNavigationLayerLayers(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetNavigationLayersCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetNavigationLayersCount",
+    "signature": "public System.Int32 GetNavigationLayersCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -151836,6 +152001,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.MoveNavigationLayer(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MoveNavigationLayer",
+    "signature": "public System.Void MoveNavigationLayer(System.Int32 layerIndex, System.Int32 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.MovePhysicsLayer(System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -151852,6 +152041,25 @@
       },
       {
         "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveNavigationLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveNavigationLayer",
+    "signature": "public System.Void RemoveNavigationLayer(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
         "type": "System.Int32",
         "default": null
       }
@@ -151891,6 +152099,59 @@
       {
         "name": "sourceID",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetNavigationLayerLayerValue(System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetNavigationLayerLayerValue",
+    "signature": "public System.Void SetNavigationLayerLayerValue(System.Int32 layerIndex, System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetNavigationLayerLayers(System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetNavigationLayerLayers",
+    "signature": "public System.Void SetNavigationLayerLayers(System.Int32 layerIndex, System.UInt32 layers)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layers",
+        "type": "System.UInt32",
         "default": null
       }
     ],
@@ -194289,6 +194550,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.SceneTree.DebugNavigationHint()",
+    "kind": "property",
+    "declaringType": "Electron2D.SceneTree",
+    "name": "DebugNavigationHint",
+    "signature": "public System.Boolean DebugNavigationHint { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.SceneTree.DebugPathsHint()",
     "kind": "property",
     "declaringType": "Electron2D.SceneTree",
@@ -198160,6 +198434,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.NavigationEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "NavigationEnabled",
+    "signature": "public System.Boolean NavigationEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.NavigationVisibilityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "NavigationVisibilityMode",
+    "signature": "public Electron2D.TileMapLayer.DebugVisibilityMode NavigationVisibilityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
     "value": null
   },
   {

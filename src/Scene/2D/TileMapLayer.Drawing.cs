@@ -27,6 +27,7 @@ public partial class TileMapLayer
                     foreach (var shape in body.Shapes) shape.DrawToCanvas(this, color);
                 }
         }
+        DrawNavigation();
         DrawSetTransformMatrix(Transform.Identity);
     }
 }

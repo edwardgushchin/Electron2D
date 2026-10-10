@@ -6,7 +6,7 @@ Last updated: 2026-10-10
 
 ## Overview
 
-Draws a square atlas tile layer and generates tile-owned collision bodies in its selected world.
+Draws a square atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.
 
 ## Syntax
 
@@ -16,7 +16,7 @@ public class Electron2D.TileMapLayer
 
 ### Remarks
 
-Cell and resource edits are batched until the tree flushes deferred work or UpdateInternals is called. Generated bodies do not appear as child nodes. Queries and contacts report this layer as their collider object.
+Cell and resource edits are batched until the tree flushes deferred work or UpdateInternals is called. Generated bodies and navigation regions do not appear as child nodes. Queries and contacts report this layer as their collider object.
 
 **Inherits:** [Entity](Entity.md)
 
@@ -723,4 +723,40 @@ TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed res
 
 ## Navigation baking integration
 
-Navigation source parsing consumes effective/runtime collision polygons with the same cell transpose/reflection and map-local positions as physics. Missing tile navigation-layer producers retain their separate tile dependencies. See [navigation baking](../components/navigation-baking.md).
+Navigation source parsing consumes effective/runtime collision polygons with the same cell transpose/reflection and map-local positions as physics. Navigation layers now supply traversable outlines or stored convex faces with the same cell/runtime transforms. See [navigation baking](../components/navigation-baking.md).
+
+## Tile navigation
+
+See [tile navigation](../components/tiles.md#navigation-layers) for ownership, batching, file graphs and verification.
+
+### NavigationEnabled
+
+```csharp
+bool NavigationEnabled { get; set; }
+```
+
+True initially. Enabled cells generate navigation independently of drawing visibility. Disabling releases generated regions at the next batched update.
+
+### NavigationVisibilityMode
+
+```csharp
+DebugVisibilityMode NavigationVisibilityMode { get; set; }
+```
+
+Default follows SceneTree.DebugNavigationHint. ForceShow/ForceHide override the hint; ordinary canvas visibility and clipping apply.
+
+### GetNavigationMap
+
+```csharp
+RID GetNavigationMap()
+```
+
+Returns a borrowed explicit map, the selected World map inside the tree, or an empty RID while detached.
+
+### SetNavigationMap
+
+```csharp
+void SetNavigationMap(RID map)
+```
+
+Validates and assigns a borrowed map; empty restores World selection. The caller retains the explicit map lifetime. The override is transient and is not serialized.

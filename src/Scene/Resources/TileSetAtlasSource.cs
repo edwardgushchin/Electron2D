@@ -20,7 +20,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     private readonly Dictionary<Vector2i, Tile> _tiles = [];
     private Texture? _texture;
     private Vector2i _margins, _separation, _regionSize = new(16, 16);
-    private int _physicsLayers;
+    private int _physicsLayers, _navigationLayers;
 
     /// <summary>Creates an empty source with 16 by 16 pixel texture regions.</summary>
     public TileSetAtlasSource() { }
@@ -171,7 +171,7 @@ public sealed class TileSetAtlasSource : TileSetSource
             if (pair.Key != ignored && coords.X < (long)pair.Key.X + pair.Value.Size.X && pair.Key.X < (long)coords.X + size.X && coords.Y < (long)pair.Key.Y + pair.Value.Size.Y && pair.Key.Y < (long)coords.Y + size.Y) return false;
         return true;
     }
-    private TileData NewData(bool alternative) { var data = new TileData(alternative); data.ResizeLayers(_physicsLayers); data.Changed += Change; return data; }
+    private TileData NewData(bool alternative) { var data = new TileData(alternative); data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
     private void ReleaseData(TileData data) { data.Changed -= Change; data.Release(); }
     private void Change() { NotifyPropertyListChanged(); EmitChanged(); }
     private void TextureChanged(Resource _) => EmitChanged();
@@ -181,6 +181,10 @@ public sealed class TileSetAtlasSource : TileSetSource
     internal override void InsertPhysicsLayer(int index) { _physicsLayers++; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.Layers.Insert(index, new()); }
     internal override void RemovePhysicsLayer(int index) { _physicsLayers--; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.Layers.RemoveAt(index); }
     internal override void MovePhysicsLayer(int from, int to) { foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) TileSet.Move(data.Layers, from, to); }
+    internal override void ResizeNavigationLayers(int count) { _navigationLayers = count; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.ResizeNavigationLayers(count); }
+    internal override void InsertNavigationLayer(int index) { _navigationLayers++; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.InsertNavigationLayer(index); }
+    internal override void RemoveNavigationLayer(int index) { _navigationLayers--; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.RemoveNavigationLayer(index); }
+    internal override void MoveNavigationLayer(int from, int to) { foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) TileSet.Move(data.Navigation, from, to); }
     private void ClearTiles() { foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) ReleaseData(data); _tiles.Clear(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { DetachTexture(); ClearTiles(); } base.Dispose(disposing); }
@@ -189,12 +193,12 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSetAtlasSource)target; copy.ClearTiles(); copy._physicsLayers = _physicsLayers;
+        var copy = (TileSetAtlasSource)target; copy.ClearTiles(); copy._physicsLayers = _physicsLayers; copy._navigationLayers = _navigationLayers;
         copy._margins = _margins; copy._separation = _separation; copy._regionSize = _regionSize; copy.Texture = deep ? (Texture?)duplicate(_texture) : _texture;
         foreach (var pair in _tiles)
         {
             var tile = new Tile { Size = pair.Value.Size };
-            foreach (var alt in pair.Value.Alternatives) { var data = alt.Value.Copy(); data.Changed += copy.Change; tile.Alternatives.Add(alt.Key, data); }
+            foreach (var alt in pair.Value.Alternatives) { var data = alt.Value.Copy(deep ? duplicate : null); data.Changed += copy.Change; tile.Alternatives.Add(alt.Key, data); }
             copy._tiles.Add(pair.Key, tile);
         }
     }
@@ -222,6 +226,7 @@ public sealed class TileSetAtlasSource : TileSetSource
         yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i>(nameof(Separation), n => n.Separation, (n, v) => n.Separation = v, _ => default, stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i>(nameof(TextureRegionSize), n => n.TextureRegionSize, (n, v) => n.TextureRegionSize = v, _ => new(16, 16), stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, int>("PhysicsLayerCount", n => n._physicsLayers, (n, v) => { if (v < 0) throw new ArgumentOutOfRangeException(nameof(v)); n.ResizePhysicsLayers(v); }, _ => 0, stored: true);
+        yield return new PropertyDescriptor<TileSetAtlasSource, int>("NavigationLayerCount", n => n._navigationLayers, (n, v) => { if (v < 0) throw new ArgumentOutOfRangeException(nameof(v)); n.ResizeNavigationLayers(v); }, _ => 0, stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i[]>("TileCoordinates", n => n.SortedCoords(), (n, v) => n.RestoreCoords(v), _ => [], stored: true);
         foreach (var coord in SortedCoords())
         {
