@@ -32,6 +32,10 @@ message. It does not catch a started physics interval. Device failure invalidate
 the store; subsequent queries/steps reject while release remains available. No CPU
 replay or hidden backend change follows a failed GPU step.
 
+[Consumer-driven GPU publication](gpu-demand-publication.md) now avoids mandatory raw-body state downloads. Scene/view/contact/kinematic consumers and explicit getters retain current results; callbacks preserve shared ordered publication. The current 4096-body fixture downloads 752 bytes per step rather than a full moving-body stream, while GPU speed advantage remains open.
+
+The separate 65536-body independent-contact fixture now demonstrates full-step GPU p50 18.2922 ms versus CPU 55.1572 ms in an isolated repeat, with 0/0 warmed managed bytes and identical counts/substeps/iterations. [Complete measurements](gpu-demand-publication.md#massive-independent-contacts) include unfavorable smaller-world and tail results; this does not establish general performance or window FPS.
+
 ## Runtime flow and ownership
 
 The internal [PhysicsWorldBackend](../classes/PhysicsWorldBackend.md) factory now

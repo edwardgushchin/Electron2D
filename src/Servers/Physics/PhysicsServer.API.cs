@@ -256,7 +256,8 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>A cached view tied to this backend attachment; caller disposal invalidates only that view.</returns>
     /// <remarks>Synchronizes the requested body's pending pose and geometry. Whole-space queries synchronize
-    /// their world separately; acquiring body views does not scan other bodies.</remarks>
+    /// their world separately; acquiring body views does not scan other bodies. GPU views refresh the selected
+    /// body's resolved fields and participate in current completion while live; unobserved raw bodies remain resident.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the solver is stepping.</exception>
     public static PhysicsDirectBodyState? BodyGetDirectState(RID body) => Service.BodyGetDirectStateCore(body);

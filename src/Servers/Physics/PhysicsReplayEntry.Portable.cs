@@ -13,6 +13,7 @@ internal sealed partial class PhysicsReplayEntry
 
     internal void CapturePortable(float sleepTime)
     {
+        if (_runtime is not null && Backend.Space!.GPUStore is not null) Backend.PublishGPUFields(_runtime);
         Capture();
         if (Scene is null) _pose = Server!.GetTransform();
         _portableSolverPose = Backend.PortablePose;

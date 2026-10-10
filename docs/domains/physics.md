@@ -38,6 +38,8 @@ Public [query/motion result construction](../components/physics-queries.md) now 
 
 Each world now retains a distinct internal solver implementation owning either the CPU world/workers or the independent resident GPU store. Full interval dispatch and solver destruction use that object; [backend ownership checks](../components/physics-backends.md#runtime-flow-and-ownership) cover isolation, warmed allocation and no-device startup. The public registration and complete extension families remain open.
 
+[GPU publication](../components/gpu-demand-publication.md) now follows scene, view, contact and explicit snapshot/getter demand. Unobserved server bodies keep state on device; observed mixed-world bodies use a selected batch with no warmed managed allocation. Performance acceptance still requires a measured GPU advantage.
+
 ## Square atlas tile integration
 
 [Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).

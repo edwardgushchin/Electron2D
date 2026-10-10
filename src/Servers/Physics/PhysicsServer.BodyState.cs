@@ -37,6 +37,7 @@ public sealed partial class PhysicsServer
         space.EnsureQueryAccess();
         var owner = runtime.Owners;
         if (owner.Scene is { } scene) scene.PrepareBackend(); else owner.Server!.PrepareBackend();
+        if (space.GPUStore is not null) runtime.Backend.PublishGPUFields(runtime);
         return runtime.GetView(space);
     }
 

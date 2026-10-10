@@ -10,6 +10,8 @@ Last updated: 2026-10-10
 [direct-view adapter](../../src/Servers/Physics/PhysicsBodyRuntime.View.cs).
 **Component:** [Physics server and queries](../components/physics-queries.md).
 
+[GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
+
 ## Ownership and flow
 
 PhysicsServer keeps one runtime per body RID. A scene owner is weakly referenced;

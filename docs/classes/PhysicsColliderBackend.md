@@ -11,6 +11,8 @@ Last updated: 2026-10-10
 [contact projection](../../src/Servers/Physics/PhysicsColliderBackend.Contacts.cs)
 **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
+[GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
+
 ## Responsibility and ownership
 
 One retained component owns the current backend body, world attachment and shape

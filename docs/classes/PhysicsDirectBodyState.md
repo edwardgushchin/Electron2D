@@ -8,6 +8,8 @@ Last updated: 2026-10-10
 - **Declaration:** `public sealed class PhysicsDirectBodyState : ElectronObject`
 - **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
+[GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
+
 ## Description
 
 An owner-thread view of one backend attachment of a scene or server body. Obtain it from PhysicsServer.BodyGetDirectState or the post-solver RigidBody integration hook. It has no public constructor and owns no body or space. The server caches one view per attachment. Access rejects native stepping, wrong threads, disposal, detachment, body release and a replaced attachment; reattachment never revives an old view. Consumer disposal allows a fresh cached view to be created, but disposal during a borrowed callback rejects.

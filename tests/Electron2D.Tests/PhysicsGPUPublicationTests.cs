@@ -24,28 +24,28 @@ internal static class PhysicsGPUPublicationTests
         var store = PhysicsServer.Service.GetSceneSpace(space).GPUStore;
         try
         {
-            Step(1);
+            Step(0);
             var original = PhysicsServer.BodyGetTransform(a);
             PhysicsServer.BodySetTransform(a, new(0, new Vector2(500, 100)));
             Check(PhysicsServer.BodyGetTransform(a).Origin.X == 500, "Explicit getters observe an intermediate authored pose");
-            PhysicsServer.BodySetTransform(a, original); Step(1);
+            PhysicsServer.BodySetTransform(a, original); Step(0);
             Check(PhysicsServer.BodyGetTransform(a).Origin.DistanceTo(original.Origin) < .001f, "A step returning to the last published state must discard an intermediate getter cache");
             PhysicsServer.BodySetTransform(a, new(0, new Vector2(3, 7))); PhysicsServer.BodySetLinearVelocity(a, new(2, 0));
-            Step(1); Check(PhysicsServer.BodyGetTransform(a).Origin.X > 3, "Completion publishes solved pose after an authored edit");
+            Step(0); Check(PhysicsServer.BodyGetTransform(a).Origin.X > 3, "Completion publishes solved pose after an authored edit");
             var first = 0; var second = 0;
             PhysicsServer.BodySetForceIntegrationCallback(a, _ => { first++; PhysicsServer.BodySetStateSyncCallback(b, _ => second++); });
             Step(2); Check(first == 1 && second == 1, "An earlier callback can enable a later receiver in the same step");
-            PhysicsServer.BodySetForceIntegrationCallback(a, null); PhysicsServer.BodySetStateSyncCallback(b, null); Step(1);
+            PhysicsServer.BodySetForceIntegrationCallback(a, null); PhysicsServer.BodySetStateSyncCallback(b, null); Step(0);
             PhysicsServer.BodySetLinearVelocity(a, Vector2.Zero); PhysicsServer.BodyApplyCentralForce(a, new(60, 0)); PhysicsServer.BodySetSleeping(a, true);
-            Step(2); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 0);
-            PhysicsServer.BodySetSleeping(a, false); Step(2); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 1);
-            Step(1); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 1);
-            PhysicsServer.BodySetMode(b, PhysicsServer.BodyMode.Static); PhysicsServer.BodyApplyCentralForce(b, new(60, 0)); Step(2);
-            PhysicsServer.BodySetMode(b, PhysicsServer.BodyMode.Rigid); Step(2); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
-            PhysicsServer.BodySetOmitForceIntegration(b, true); PhysicsServer.BodyApplyCentralForce(b, new(60, 0)); Step(2); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
-            PhysicsServer.BodySetOmitForceIntegration(b, false); Step(1); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
-            PhysicsServer.BodySetLinearVelocity(a, Vector2.Zero); PhysicsServer.BodyApplyTorque(a, 60); Step(2); Near(PhysicsServer.BodyGetAngularVelocity(a), 1);
-            Step(1); Near(PhysicsServer.BodyGetAngularVelocity(a), 1);
+            Step(1); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 0);
+            PhysicsServer.BodySetSleeping(a, false); Step(1); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 1);
+            Step(0); Near(PhysicsServer.BodyGetLinearVelocity(a).X, 1);
+            PhysicsServer.BodySetMode(b, PhysicsServer.BodyMode.Static); PhysicsServer.BodyApplyCentralForce(b, new(60, 0)); Step(1);
+            PhysicsServer.BodySetMode(b, PhysicsServer.BodyMode.Rigid); Step(1); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
+            PhysicsServer.BodySetOmitForceIntegration(b, true); PhysicsServer.BodyApplyCentralForce(b, new(60, 0)); Step(1); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
+            PhysicsServer.BodySetOmitForceIntegration(b, false); Step(0); Near(PhysicsServer.BodyGetLinearVelocity(b).X, 1);
+            PhysicsServer.BodySetLinearVelocity(a, Vector2.Zero); PhysicsServer.BodyApplyTorque(a, 60); Step(1); Near(PhysicsServer.BodyGetAngularVelocity(a), 1);
+            Step(0); Near(PhysicsServer.BodyGetAngularVelocity(a), 1);
             Console.WriteLine($"Pre-step publication {backend}: no unused snapshot, fresh completion, later callback registration, sleeping/static retained force, omission and single-tick torque passed.");
         }
         finally { PhysicsServer.FreeRID(b); PhysicsServer.FreeRID(a); PhysicsServer.FreeRID(space); }

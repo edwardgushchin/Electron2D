@@ -67,6 +67,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     }
     /// <summary>Captures compatible local physical state and its tick into reusable portable storage.</summary>
     /// <param name="snapshot">Caller-owned destination storage.</param>
+    /// <remarks>GPU capture batches the complete bound object set explicitly; ordinary unobserved steps do not require that transfer.</remarks>
     /// <exception cref="ArgumentNullException">The destination is null.</exception>
     /// <exception cref="InvalidOperationException">The world/bindings are incomplete or busy, access is off-owner, or the budget is insufficient.</exception>
     /// <exception cref="ObjectDisposedException">The map/world is disposed.</exception>
@@ -126,19 +127,19 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     {
         space.PreparePortableCapture();
         PhysicsReplayCopy.Require(space.Bodies.Count + space.Areas.Count + space.ServerColliders.Count == _objects.Count && space.SnapshotJoints.Count == _joints.Count);
-        if (capture && space.GPUStore is not null && _gpuHandles.Length < _objects.Count) { Array.Resize(ref _gpuHandles, _objects.Count); Array.Resize(ref _gpuStates, _objects.Count); }
+        if (space.GPUStore is not null && _gpuHandles.Length < _objects.Count) { Array.Resize(ref _gpuHandles, _objects.Count); Array.Resize(ref _gpuStates, _objects.Count); }
         for (var i = 0; i < _objects.Count; i++)
         {
             var entry = _objects[i].Entry!;
             PhysicsReplayCopy.Require(entry.Backend.Space == space && entry.Backend.AttachmentVersion == _objects[i].Attachment);
-            if (capture && space.GPUStore is not null) _gpuHandles[i] = entry.Backend.GPUHandle;
+            if (space.GPUStore is not null) _gpuHandles[i] = entry.Backend.GPUHandle;
         }
-        if (capture && space.GPUStore is { } gpu)
+        if (space.GPUStore is { } gpu)
         {
-            gpu.Read(_gpuHandles.AsSpan(0, _objects.Count), _gpuStates);
+            if (_objects.Count == 0 && !capture) gpu.Step(0, default);
+            else gpu.Read(_gpuHandles.AsSpan(0, _objects.Count), _gpuStates);
             for (var i = 0; i < _objects.Count; i++) _objects[i].Entry!.Backend.AcceptGPUState(_gpuStates[i]);
         }
-        if (!capture) space.GPUStore?.Step(0, default);
         _poses.Clear(); _poses.EnsureCapacity(_objects.Count);
         for (var i = 0; i < _objects.Count; i++)
         {
