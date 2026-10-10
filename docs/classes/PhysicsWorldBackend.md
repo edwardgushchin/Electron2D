@@ -6,7 +6,9 @@ Last updated: 2026-10-11
 
 ## Description and internal flow
 
-Owns selection metadata and full interval dispatch for one internal implementation. PhysicsSpace constructs it after validating sampled world settings. Create makes a fresh CPUPhysicsWorldBackend or GPUPhysicsWorldBackend; optional startup fallback constructs an actual CPU implementation and retains the GPU request and failure message. It never changes a running implementation.
+Owns selection metadata and full interval dispatch for one internal implementation. Space RID registration and sampled-setting validation precede selected creation/initialization. Create makes a fresh CPUPhysicsWorldBackend or GPUPhysicsWorldBackend; optional startup fallback constructs an actual CPU implementation and retains the GPU request and failure message. It never changes a running implementation.
+
+CreateDirectSpaceState and CreateDirectBodyState supply the actual cached views to common World/server queries and scene/raw callbacks. Creation executes outside solver/worker borrowing and the service registry lock; library context/generation validation precedes cache publication. Built-in owners return ordinary views. The internal selected-owner fixture returns real executing extensions. Public registered factories and complete server operation dispatch remain open; see [the ownership route](../components/physics-backends.md#selected-direct-state-construction).
 
 Kind, Requested and FallbackReason describe immutable selection. EnsureAccess performs implementation-specific idle/failure/lifetime checks. Step dispatches the complete CPU/GPU interval; StepNative is the CPU discrete/CCD endpoint. WorldID, Tasks and diagnostic stage controls are internal CPU-only facets and reject for a resident GPU implementation. GPUStore is present only for the resident implementation. Dispose releases owned solver resources.
 

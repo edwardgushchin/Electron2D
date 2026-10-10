@@ -14,10 +14,13 @@ internal sealed class WorldRuntime
     internal bool Alive => Volatile.Read(ref _alive);
     internal PhysicsServer.Backend RequestedBackend { get; }
     private readonly bool _allowCPUFallback;
-    internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false)
+    private readonly Func<PhysicsSpace, PhysicsWorldBackend>? _backendFactory;
+    private bool _creatingSpace;
+    internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false,
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null)
     {
         if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
-        RequestedBackend = backend; _allowCPUFallback = allowCPUFallback;
+        RequestedBackend = backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory;
         SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this);
     }
     internal void Retain() { lock (_gate) { EnsureAlive(); _resources++; } }
@@ -37,17 +40,43 @@ internal sealed class WorldRuntime
             lock (_gate)
             {
                 EnsureAlive();
-                if (ExistingSpace is null)
+                if (ExistingSpace is not null)
                 {
-                    var space = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false);
-                    _spaceRID = space.RID; ExistingSpace = space;
+                    PhysicsServer.Service.GetSceneSpace(_spaceRID); return _spaceRID;
                 }
-                PhysicsServer.Service.GetSceneSpace(_spaceRID); return _spaceRID;
+                if (_creatingSpace) throw new InvalidOperationException("A world cannot recursively create its physics space.");
+                _creatingSpace = true;
             }
+            PhysicsSpace? created = null;
+            try
+            {
+                created = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false, factory: _backendFactory);
+                lock (_gate) { EnsureAlive(); _spaceRID = created.RID; ExistingSpace = created; }
+                return created.RID;
+            }
+            catch (Exception error)
+            {
+                if (created is not null)
+                {
+                    try { created.Dispose(); }
+                    catch (Exception cleanup) { throw new AggregateException("World physics publication and cleanup failed.", error, cleanup); }
+                    finally { PhysicsServer.Service.UnregisterSceneSpace(created.RID); }
+                }
+                throw;
+            }
+            finally { lock (_gate) _creatingSpace = false; }
         }
     }
     internal PhysicsSpace Space { get { _ = SpaceRID; return ExistingSpace!; } }
-    internal void ValidateRelease() { lock (_gate) { if (_alive && SceneOwner is null && _resources == 1) ExistingSpace?.EnsureWorldRelease(); } }
+    internal void ValidateRelease()
+    {
+        lock (_gate)
+            if (_alive && SceneOwner is null && _resources == 1)
+            {
+                if (_creatingSpace) throw new InvalidOperationException("A world cannot be released while its physics implementation is being created.");
+                ExistingSpace?.EnsureWorldRelease();
+            }
+    }
     internal void Release()
     {
         lock (_gate) { if (--_resources == 0 && SceneOwner is null) Destroy(); }

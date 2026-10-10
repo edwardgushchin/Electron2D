@@ -123,14 +123,15 @@ public sealed partial class PhysicsServer : ElectronObject
     internal PhysicsDirectSpaceState SpaceGetDirectStateCore(RID space)
     {
         ThrowIfDisposed();
+        var world = GetSceneSpace(space);
+        world.EnsureQueryAccess();
         lock (_registryGate)
         {
-            if (!_sceneSpaces.ContainsKey(space))
-                throw new ArgumentException("The RID does not identify a live physics space.", nameof(space));
-            if (!_directStates.TryGetValue(space, out var state) || state.IsDisposed)
-                _directStates[space] = state = new PhysicsDirectSpaceState(space);
-            return state;
+            if (_directStates.TryGetValue(space, out var current) && !current.IsDisposed) return current;
         }
+        var state = world.CreateDirectSpaceState();
+        lock (_registryGate) _directStates[space] = state;
+        return state;
     }
 
     /// <inheritdoc />

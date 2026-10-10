@@ -53,7 +53,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
-    internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space); }
+    internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space, this); }
     internal B2BodyId GetJointWorldBody()
     {
         EnsureAccess();

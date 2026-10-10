@@ -3190,7 +3190,7 @@
         "class:PhysicsDirectBodyState2D"
       ],
       "state": "Partial",
-      "reason": "Live owner-thread state, post-solver callbacks, forces, fields and complete normal/tangential frame impulses execute. Backend access/contact traversal belongs to PhysicsBodyRuntime; the public view retains engine values and rejects stale attachment identity, including same-space reattachment. Virtual tile collider identity remains a separate gap (ADR 0070, PhysicsBodyStateTests, PhysicsContactImpulseTests)."
+      "reason": "Live scene/server state, callbacks, fields, forces and complete step contact snapshots execute on CPU/GPU, including sampled tile-layer owners (TileMapLayerTests). Selected internal owner factories now supply validated cached views to scene/raw callbacks before solver/worker borrowing; real contacts, hook effects, failure/reentry and zero warmed allocation execute in CPU/GPU/no-device profiles. Public registered implementations and their complete operation bridge remain open under ADR 0103."
     },
     {
       "godot": [
@@ -3242,8 +3242,8 @@
       "godot": [
         "PhysicsDirectBodyState2D::method:get_contact_collider_object(int:)"
       ],
-      "state": "Partial",
-      "reason": "Physical scene-collider access and generic sampled object associations execute for scene/server bodies, including replacement, disposal and weak lifetime (PhysicsObjectBindingTests). Virtual tile collider identity still requires tile-body generation and lookup (ADRs 0063, 0070)."
+      "state": "Implemented",
+      "reason": "Sampled generic object associations execute for scene/server bodies and generated tile colliders. TileMapLayerTests verifies real solved contacts retain the layer object and generated body RID; PhysicsObjectBindingTests verifies replacement/disposal/weak lifetime on both selected implementations. ADRs 0063/0070."
     },
     {
       "godot": [
@@ -3607,7 +3607,7 @@
         "class:PhysicsDirectSpaceState2D"
       ],
       "state": "Partial",
-      "reason": "All six direct-space query methods, exact point canvas filtering and weak sampled object association execute for scene/raw CPU and independent GPU worlds, including generated tile owners. Queries now dispatch through retained per-world implementations with prepared scratch; public registered extension contexts and scoped exclusion hooks remain open (ADRs 0054/0063/0103)."
+      "reason": "All six query families, canvas filtering and weak scene/raw/tile identities execute on CPU/GPU. Selected internal owners now create validated cached views outside the registry lock for World/server/body-space consumers. Caller-created typed query/exclusion hooks execute; public registered implementations and their complete operation bridge remain open under ADR 0103."
     },
     {
       "godot": [
@@ -4846,7 +4846,7 @@
         "class:PhysicsDirectSpaceState2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: caller-created view implements complete guarded six-query/exclusion family and inherits all base array/span APIs. Registered backend factories do not yet supply this view to scene/server consumers; that integration remains open."
+      "reason": "ADR 0103: complete caller-created six-query/exclusion inheritance executes. The selected internal owner factory now supplies validated cached views to World/server/body-space consumers outside the registry lock, with real queries and lifecycle/failure guards. Public named registration and complete server operation dispatch remain open."
     },
     {
       "godot": [
@@ -4907,14 +4907,14 @@
         "class:PhysicsDirectBodyState2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: complete guarded caller-created body-state/force/contact family executes with exact base inheritance and generation-qualified context. Binding prepares selected geometry/state without acquiring or reopening the built-in view cache. Registered backend factories do not yet supply these views to scene/server callbacks; that integration remains open."
+      "reason": "ADR 0103: complete guarded caller-created state/force/contact inheritance and generation-qualified binding execute. The selected internal owner factory now supplies actual scene/raw callback views with solved contacts, validated cache identity, lifecycle/failure guards and zero warmed allocation. Public named registration and complete server operation dispatch remain open."
     },
     {
       "godot": [
         "class:PhysicsServer2DExtension"
       ],
       "state": "Blocked",
-      "reason": "ADR 0103 requires the complete executing typed implementation family and registered scene/server dispatch. Internal space RID registration now precedes selected-owner construction and guarded initialization with native/registry rollback; CPU/GPU/no-device queries and ownership checks execute. Public registered factories, qualified callback-view integration and the complete operation bridge remain open."
+      "reason": "ADR 0103 requires the complete executing typed implementation family and public registration. Internal space RID registration precedes owner initialization; selected factories now supply validated direct-state/query views to real scene/raw consumers and callbacks, preserving contact snapshots, failure/reentry guards and zero warmed allocation on CPU/GPU/no-device. Public named factories and the complete operation bridge remain open."
     }
   ]
 }

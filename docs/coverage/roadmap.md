@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1407 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1406 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 1352 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -85,7 +85,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [CanvasLayer](classes/CanvasLayer.md) | 0 | 1 |
 | [FileDialog](classes/FileDialog.md) | 0 | 1 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | 0 | 1 |
-| [PhysicsDirectBodyState2D](classes/PhysicsDirectBodyState2D.md) | 0 | 1 |
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | 0 | 1 |
 | [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | 0 | 1 |
 | [RayCast2D](classes/RayCast2D.md) | 0 | 1 |
@@ -126,7 +125,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
 | Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
-| ADR 0103 requires the complete executing typed implementation family and registered scene/server dispatch. Internal space RID registration now precedes selected-owner construction and guarded initialization with native/registry rollback; CPU/GPU/no-device queries and ownership checks execute. Public registered factories, qualified callback-view integration and the complete operation bridge remain open. | 1 |
+| ADR 0103 requires the complete executing typed implementation family and public registration. Internal space RID registration precedes owner initialization; selected factories now supply validated direct-state/query views to real scene/raw consumers and callbacks, preserving contact snapshots, failure/reentry guards and zero warmed allocation on CPU/GPU/no-device. Public named factories and the complete operation bridge remain open. | 1 |
 | Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |

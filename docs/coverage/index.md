@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-11
 
+[Selected direct-state construction](../components/physics-backends.md#selected-direct-state-construction)
+now supplies validated internal owner views to World/server queries and actual
+scene/raw callbacks, with CPU/GPU/no-device lifecycle/failure/contact/allocation
+checks. Registered public factories and the full server operation bridge remain
+open. The existing tile contact/object projection now replaces its stale Partial
+reason for GetContactColliderObject; no new public declaration is added.
+
 [Same-revision dense physics measurements](../components/physics-current-performance.md)
 verify full CPU/GPU paths and actual window frames at 65,536 awake bodies, with
 zero warmed managed allocation and physical gates. GPU advantage is specific to

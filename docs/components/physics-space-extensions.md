@@ -1,6 +1,6 @@
 # Caller-created space-query extensions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Responsibility and owned types
 
@@ -22,4 +22,6 @@ Unchanged warmed span/scalar calls reuse storage. A larger destination, deeper n
 
 CPU, GPU and a CPU process without display/GPU access are separate profiles. The warmed fixture repeats 64 complete six-query cycles and measures owner/all-thread managed bytes. Native allocation and foreign-platform execution are separate gates.
 
-This executes caller-created query extensions. Registered server factories do not yet return these views to scene/server consumers; registered body-state callback integration and custom Shape families remain open. The class coverage stays Partial for that integration. [ADR 0103](../decisions/physics-extensions.md#adr-0103) owns the complete boundary.
+The internal [selected-owner factory route](physics-backends.md#selected-direct-state-construction) now provides a cached extension to World, server acquisition and body-space consumers. Creation runs on the world owner outside the service registry lock; validation and recursive/lifetime guards precede cache publication. A disposed cache permits a new selected view; invalid foreign/null/disposed factory results leave it unchanged. CPU/GPU/no-device ownership fixtures execute actual queries through this route.
+
+Caller-created query extensions execute. Public named backend registration, its full server operation bridge, custom solver algorithms and platform/native acceptance remain open. Class coverage stays Partial. [ADR 0103](../decisions/physics-extensions.md#adr-0103) owns the complete boundary.

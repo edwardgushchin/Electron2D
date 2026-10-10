@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-11
 
+[Selected direct-state construction](physics-backends.md#selected-direct-state-construction)
+now executes internal owner-created query/state extensions through World/server
+access and real scene/raw callbacks. Binding, cache identity, contact snapshots,
+failed factory rollback, later callback delivery and zero warmed allocation execute
+on CPU/GPU/no-device. Public named registration and the full server-operation family
+remain open. The stale tile-collider-object reason was reconciled against the
+existing CPU/GPU TileMapLayer contact and object-association tests.
+
 [Same-revision dense performance](physics-current-performance.md) now records
 CPU/GPU full-step and real-window advantage at 65,536 awake bodies, with matching
 source/assembly digests, zero warmed managed allocation and passing physical

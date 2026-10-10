@@ -1240,6 +1240,7 @@ public sealed partial class PhysicsServer
     /// <param name="space">A live space RID.</param>
     /// <returns>The cached query view, or a fresh view if a caller disposed the previous one.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live physics space.</exception>
+    /// <exception cref="InvalidOperationException">The caller is off-owner, the solver is executing, or the space has failed.</exception>
     public static PhysicsDirectSpaceState SpaceGetDirectState(RID space) => Service.SpaceGetDirectStateCore(space);
 
 }

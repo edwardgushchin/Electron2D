@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>A live owner-thread view of one attached physics body and its last solved contacts.</summary>
-/// <remarks>The server creates and caches built-in views; consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
+/// <remarks>The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;
 /// this view retains only its attachment identity and public contact values. Contact positions, normals and velocities
@@ -13,8 +13,9 @@ public class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
     private readonly PhysicsSpace _space;
-    private readonly PhysicsColliderBackend? _extensionBackend;
-    private readonly long _extensionAttachment;
+    private readonly PhysicsColliderBackend _boundBackend;
+    private readonly long _boundAttachment;
+    private readonly bool _callerCreated;
     internal PhysicsBodyRuntime Runtime => _runtime;
     internal PhysicsSpace Space => _space;
     private Contact[] _contacts = [];
@@ -31,15 +32,25 @@ public class PhysicsDirectBodyState : ElectronObject
     internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space)
     {
         _runtime = runtime; _space = space;
+        _boundBackend = runtime.Backend; _boundAttachment = _boundBackend.AttachmentVersion;
         PrepareContacts(runtime.ContactLimit);
     }
     internal PhysicsDirectBodyState(RID body)
     {
         _runtime = PhysicsServer.Service.PrepareBodyStateAccess(body);
         _space = _runtime.Space ?? throw new InvalidOperationException("A body extension requires a current physics attachment.");
-        _extensionBackend = _runtime.Backend; _extensionAttachment = _extensionBackend.AttachmentVersion;
+        _boundBackend = _runtime.Backend; _boundAttachment = _boundBackend.AttachmentVersion; _callerCreated = true;
     }
     internal bool CallbackActive => _callbackDepth != 0;
+    internal void EnsureContext(PhysicsBodyRuntime runtime, PhysicsSpace space, PhysicsColliderBackend backend, long attachment)
+    {
+        ThrowIfDisposed(); space.EnsureQueryAccess();
+        if (!ReferenceEquals(_runtime, runtime) || !ReferenceEquals(_space, space))
+            throw new InvalidOperationException("The returned direct-body view belongs to another body or world.");
+        runtime.ValidateAttachment(space, backend, attachment);
+        if (!ReferenceEquals(_boundBackend, backend) || _boundAttachment != attachment)
+            throw new InvalidOperationException("The returned direct-body view belongs to an earlier attachment.");
+    }
     internal bool HasCapturedContacts => _contactCount != 0;
     internal void BeginCallback() => _callbackDepth++;
     internal void EndCallback() => _callbackDepth--;
@@ -54,8 +65,8 @@ public class PhysicsDirectBodyState : ElectronObject
     {
         ThrowIfDisposed();
         _space.EnsureQueryAccess();
-        if (_extensionBackend is null) _runtime.ValidateView(this, _space);
-        else _runtime.ValidateAttachment(_space, _extensionBackend, _extensionAttachment);
+        if (_callerCreated) _runtime.ValidateAttachment(_space, _boundBackend, _boundAttachment);
+        else _runtime.ValidateView(this, _space);
     }
     private static void ValidateTransform(Transform value)
     {
