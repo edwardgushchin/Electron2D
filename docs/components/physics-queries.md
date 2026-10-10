@@ -22,7 +22,7 @@ Process-wide service operations and events use static access to retained objects
 `PhysicsDirectBodyState` and PhysicsBodyRuntime now use a versioned attachment
 adapter for live state, mass/force application and contact projection. Common code
 holds engine-valued mass profiles and contact values, with weak scene ownership;
-concrete world/body references and fixture traversal belong to PhysicsColliderBackend.
+concrete world/body references and fixture traversal belong to its selected CPU/GPU collider implementation.
 The same adapter version qualifies queued callbacks across same-world reentry.
 CPU attachments use Box2D.NET and GPU attachments use the resident store;
 backend identity belongs to their selected World.

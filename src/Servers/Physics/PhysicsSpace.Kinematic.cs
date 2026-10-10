@@ -45,7 +45,7 @@ internal sealed partial class PhysicsSpace
             if (step != 0)
                 foreach (var body in _kinematicStepForces)
                 {
-                    var sim = PhysicsColliderBackend.Simulation(body.ID);
+                    var sim = CPUPhysicsColliderImplementation.Simulation(body.ID);
                     sim.force = body.Force; sim.torque = body.Torque;
                 }
             StepBackend(subDelta);
@@ -53,7 +53,7 @@ internal sealed partial class PhysicsSpace
         }
         void MeasureExtent(PhysicsColliderBackend backend, int limit)
         {
-            var type = b2Body_GetType(backend.BodyID); var extent = PhysicsColliderBackend.Simulation(backend.BodyID).minExtent;
+            var type = b2Body_GetType(backend.BodyID); var extent = CPUPhysicsColliderImplementation.Simulation(backend.BodyID).minExtent;
             if (type == B2BodyType.b2_dynamicBody) minimumExtent = MathF.Min(minimumExtent, extent);
             else
             {
@@ -102,7 +102,7 @@ internal sealed partial class PhysicsSpace
             var linear = b2Body_GetLinearVelocity(id);
             velocity = (linear.X, linear.Y, b2Body_GetAngularVelocity(id));
         }
-        var body = PhysicsColliderBackend.Simulation(id);
+        var body = CPUPhysicsColliderImplementation.Simulation(id);
         velocity.X += (double)body.invMass * impulse.X;
         velocity.Y += (double)body.invMass * impulse.Y;
         var moment = ((double)point.X - body.center.X) * impulse.Y - ((double)point.Y - body.center.Y) * impulse.X;
@@ -115,7 +115,7 @@ internal sealed partial class PhysicsSpace
     private static void MeasureTravel(B2BodyId id, int shapeCount, double delta, ref float minimumExtent, ref double travel)
     {
         if (shapeCount == 0 || b2Body_GetType(id) != B2BodyType.b2_kinematicBody) return;
-        var sim = PhysicsColliderBackend.Simulation(id);
+        var sim = CPUPhysicsColliderImplementation.Simulation(id);
         minimumExtent = MathF.Min(minimumExtent, sim.minExtent);
         var world = b2GetWorld(id.world0);
         var state = b2GetBodyState(world, b2GetBodyFullId(world, id));
@@ -127,7 +127,7 @@ internal sealed partial class PhysicsSpace
     private void Capture(B2BodyId id)
     {
         if (b2Body_GetType(id) != B2BodyType.b2_dynamicBody) return;
-        var sim = PhysicsColliderBackend.Simulation(id);
+        var sim = CPUPhysicsColliderImplementation.Simulation(id);
         _kinematicStepForces.Add(new(id, sim.force, sim.torque));
     }
 }

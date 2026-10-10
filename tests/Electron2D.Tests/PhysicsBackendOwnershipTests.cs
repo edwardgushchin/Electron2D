@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        ColliderAttachment(backend);
         QueryOwnership(backend);
         CallbackBorrow(backend);
         var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate(backend);
@@ -62,6 +63,53 @@ internal static class PhysicsBackendOwnershipTests
         else Reject<ObjectDisposedException>(() => gpuStore!.Read([], []));
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
+    }
+    private static void ColliderAttachment(PhysicsServer.Backend backend)
+    {
+        using var geometry = new CircleShape { Radius = 5 };
+        using var association = new Node();
+        using var point = new PhysicsPointQueryParameters { Position = new(10, 20), CollideWithAreas = true };
+        var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate();
+        var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        try
+        {
+            var retained = PhysicsServer.Service.BodyRuntime(body).Backend;
+            var initialVersion = retained.AttachmentVersion;
+            Reject<ArgumentOutOfRangeException>(() => retained.Attach(PhysicsServer.Service.GetSceneSpace(first), default, 0,
+                new((PhysicsServer.BodyMode)999)));
+            Check(retained.Space is null && retained.Implementation is null && retained.AttachmentVersion == initialVersion,
+                "Rejected native creation leaves the retained collider detached and reusable");
+            PhysicsServer.BodyAddShape(body, geometry.GetRID()); PhysicsServer.AreaAddShape(area, geometry.GetRID());
+            PhysicsServer.BodySetTransform(body, new(0, point.Position)); PhysicsServer.AreaSetTransform(area, new(0, point.Position));
+            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetMass(body, 2); PhysicsServer.BodySetInertia(body, 20);
+            PhysicsServer.BodySetLinearVelocity(body, new(3, 4)); PhysicsServer.BodySetAngularVelocity(body, .25f);
+            PhysicsServer.BodySetConstantForce(body, new(5, 6)); PhysicsServer.BodyAttachObject(body, association);
+            PhysicsColliderImplementation? previous = null;
+            PhysicsDirectBodyState? stale = null;
+            for (var i = 0; i < 4; i++)
+            {
+                var target = i % 2 == 0 ? first : second;
+                PhysicsServer.BodySetSpace(body, target); PhysicsServer.AreaSetSpace(area, target);
+                Check(retained.Implementation is not null && !ReferenceEquals(previous, retained.Implementation) && retained.AttachmentVersion == initialVersion + i + 1,
+                    "Every attachment comes from its selected world and advances the retained identity epoch");
+                if (previous is CPUPhysicsColliderImplementation cpu) Check(cpu.BodyID.index1 == 0, "Retired CPU attachment clears its borrowed native ID");
+                if (previous is GPUPhysicsColliderImplementation gpu) Check(gpu.GPUHandle.Generation == 0, "Retired GPU attachment clears its resident handle");
+                if (stale is not null) Reject<InvalidOperationException>(() => _ = stale.Transform);
+                var view = PhysicsServer.BodyGetDirectState(body)!;
+                Check(view.Transform.Origin.IsEqualApprox(point.Position) && view.LinearVelocity.IsEqualApprox(new(3, 4)) && MathF.Abs(view.AngularVelocity - .25f) < .0001f &&
+                    MathF.Abs(view.InverseMass - .5f) < .0001f && view.GetConstantForce() == new Vector2(5, 6),
+                    "Attachment transfer preserves scene-unit motion, mass and authored force within .0001 rounding tolerance");
+                var hits = PhysicsServer.SpaceGetDirectState(target).IntersectPoint(point);
+                Check(hits.Length == 2 && hits[0].ColliderRID == body && hits[0].ColliderObject == association && hits[1].ColliderRID == area,
+                    "Body/Area geometry and sampled object association use the selected attachment with stable public RIDs");
+                previous = retained.Implementation; stale = view;
+            }
+            PhysicsServer.BodySetSpace(body, default); PhysicsServer.AreaSetSpace(area, default);
+            Check(retained.Space is null && retained.Implementation is null && retained.ShapeCount == 0 && retained.RID == body,
+                "Detachment retires concrete storage while retaining common resource identity");
+            Console.WriteLine($"{backend}: body/Area attachment creation failure, four world transfers, public state/identity and native retirement passed.");
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second); }
     }
     private static void QueryOwnership(PhysicsServer.Backend backend)
     {

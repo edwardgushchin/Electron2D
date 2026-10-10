@@ -46,6 +46,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         ThrowIfDisposed();
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
+    internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space); }
     internal override void Step(double delta) => Space.StepCPU(delta);
     internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); b2World_Step(_worldID, delta, substeps); }
 

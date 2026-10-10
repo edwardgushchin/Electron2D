@@ -22,8 +22,8 @@ internal sealed partial class PhysicsJointBackend
         if (distance < FLT_EPSILON) return;
         var nx = dx / distance;
         var ny = dy / distance;
-        var first = PhysicsColliderBackend.Simulation(BodyAID);
-        var second = PhysicsColliderBackend.Simulation(BodyBID);
+        var first = CPUPhysicsColliderImplementation.Simulation(BodyAID);
+        var second = CPUPhysicsColliderImplementation.Simulation(BodyBID);
         var crossA = ((double)_pointA.X - first.center.X) * ny - ((double)_pointA.Y - first.center.Y) * nx;
         var crossB = ((double)_pointB.X - second.center.X) * ny - ((double)_pointB.Y - second.center.Y) * nx;
         var inverse = first.invMass + (double)second.invMass + first.invInertia * crossA * crossA + second.invInertia * crossB * crossB;

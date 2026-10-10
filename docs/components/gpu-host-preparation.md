@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+The retained facade forwards policy preparation and current-state reads to [GPUPhysicsColliderImplementation](../classes/GPUPhysicsColliderImplementation.md); resident handles and epoch-qualified caches live in that attachment. Reattachment creates fresh concrete storage and preserves common authoring identity.
+
 ## Authored integration changes
 
 The common GPU space previously rebuilt and compared every body's integration

@@ -18,7 +18,7 @@ callbacks, replay and reentry; full contract/performance acceptance remains open
 [Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with moving-mask/target-layer filtering, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. The public GPU motion adapter now executes; full CharacterBody conformance remains open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
-Concrete solver state and contact traversal belong to PhysicsColliderBackend;
+Concrete solver state and contact traversal belong to the selected collider implementation behind PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public
 GPU-world selection/binding now executes through the shared adapter.
 
@@ -129,9 +129,10 @@ The current geometry profile accepts translated/rotated bodies and areas with un
 
 Direct body views now keep backend-neutral contact values and current-attachment
 validation; backend reads, unit conversion and contact traversal reside in
-PhysicsColliderBackend. Both CPU and independent GPU worlds now use this attachment boundary.
+the selected collider implementation behind PhysicsColliderBackend. Both CPU and independent GPU worlds now use this attachment boundary.
 
-Scene bodies, Areas and raw server colliders now share PhysicsColliderBackend body/fixture ownership. It centralizes creation, filtering/material/tag setup, transform validation and failure-aware destruction; execution selects CPU fixtures or independent resident GPU handles. Full cross-family conformance remains open.
+The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain internal; public registration and complete extension contexts are still open under ADR 0103.
+
 
 Initial body configuration and scene motion roles now use engine values and
 PhysicsServer.BodyMode. The shared collider adapter owns vendor definition/unit

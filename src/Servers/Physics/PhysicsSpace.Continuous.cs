@@ -38,7 +38,7 @@ internal sealed partial class PhysicsSpace
 
     private void AddContinuousBody(PhysicsColliderBackend backend, CCDMode mode, B2StepContext context)
     {
-        var world = context.world; var sim = PhysicsColliderBackend.Simulation(backend.BodyID);
+        var world = context.world; var sim = CPUPhysicsColliderImplementation.Simulation(backend.BodyID);
         var body = b2GetBodyFullId(world, backend.BodyID);
         var state = body.setIndex == (int)B2SolverSetType.b2_awakeSet ? context.states[body.localIndex] : null;
         // Restitution runs after position integration. A separating correction cannot
@@ -209,8 +209,8 @@ internal sealed partial class PhysicsSpace
             if (input.proxyA.isBoundary || input.proxyB.isBoundary) rate = MathF.Max(rate, B2Boundaries.SweepRate(input) / _continuousDuration);
             if (rate > 0)
             {
-                var extent = MathF.Min(PhysicsColliderBackend.Simulation(bodies[a.Body].Backend.BodyID).minExtent,
-                    PhysicsColliderBackend.Simulation(bodies[b.Body].Backend.BodyID).minExtent);
+                var extent = MathF.Min(CPUPhysicsColliderImplementation.Simulation(bodies[a.Body].Backend.BodyID).minExtent,
+                    CPUPhysicsColliderImplementation.Simulation(bodies[b.Body].Backend.BodyID).minExtent);
                 _continuousNearStep = MathF.Min(_continuousNearStep, .25f * MathF.Max(extent, B2Constants.B2_LINEAR_SLOP) / rate);
             }
             return;

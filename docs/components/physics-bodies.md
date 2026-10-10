@@ -2,12 +2,12 @@
 
 Last updated: 2026-10-10
 
-[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public independent-GPU binding and missing shape-family response remain open.
+[Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the selected world also dispatches independent GPU CCD. Complete contract and platform acceptance remain open.
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
-Concrete solver state and contact traversal belong to PhysicsColliderBackend;
+Concrete solver state and contact traversal belong to its selected CPU/GPU collider implementation;
 queued callbacks and views validate a per-collider attachment version. Public
-GPU-world selection/binding remains open; declaration coverage is unchanged.
+GPU-world selection/binding executes through the common body adapter; public backend registration and extension contexts remain open.
 
 ## Physical skeletal integration
 

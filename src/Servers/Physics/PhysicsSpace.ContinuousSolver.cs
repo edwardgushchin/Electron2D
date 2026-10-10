@@ -43,7 +43,7 @@ internal sealed partial class PhysicsSpace
             {
                 foreach (ref var force in CollectionsMarshal.AsSpan(_continuousForces))
                 {
-                    var sim = PhysicsColliderBackend.Simulation(force.ID);
+                    var sim = CPUPhysicsColliderImplementation.Simulation(force.ID);
                     sim.force = force.Force; sim.torque = force.Torque; sim.gravityScale = force.Gravity; force.Applied = false;
                 }
                 CaptureContinuousJointBudgets(world, nominal);
@@ -54,7 +54,7 @@ internal sealed partial class PhysicsSpace
                     world.enableWarmStarting = interval == 0 && warm;
                     foreach (ref var force in CollectionsMarshal.AsSpan(_continuousForces))
                     {
-                        var sim = PhysicsColliderBackend.Simulation(force.ID);
+                        var sim = CPUPhysicsColliderImplementation.Simulation(force.ID);
                         sim.gravityScale = force.Applied ? 0 : force.Gravity;
                         if (force.Applied) { sim.force = default; sim.torque = 0; }
                     }
@@ -84,7 +84,7 @@ internal sealed partial class PhysicsSpace
             if (!HasBackendFailure)
             {
                 RestoreContinuousJointBudgets(world);
-                foreach (var force in _continuousForces) PhysicsColliderBackend.Simulation(force.ID).gravityScale = force.Gravity;
+                foreach (var force in _continuousForces) CPUPhysicsColliderImplementation.Simulation(force.ID).gravityScale = force.Gravity;
             }
         }
     }
@@ -110,7 +110,7 @@ internal sealed partial class PhysicsSpace
     private void SaveContinuousForce(PhysicsColliderBackend backend)
     {
         if (!backend.IsDynamic) return;
-        var sim = PhysicsColliderBackend.Simulation(backend.BodyID);
+        var sim = CPUPhysicsColliderImplementation.Simulation(backend.BodyID);
         _continuousForces.Add(new() { ID = backend.BodyID, Force = sim.force, Torque = sim.torque, Gravity = sim.gravityScale });
     }
 

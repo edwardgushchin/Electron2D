@@ -1,33 +1,6 @@
-using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Worlds;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsColliderBackend
 {
-    internal void SetSurfaceVelocity(Vector2 linear, float angular)
-    {
-        if (GPU is { } gpu)
-        {
-            if (_gpuSurfaceLinear == linear && _gpuSurfaceAngular == angular) return;
-            gpu.SetSurfaceVelocity(GPUHandle, linear, angular);
-            _gpuSurfaceLinear = linear; _gpuSurfaceAngular = angular; Space!.InvalidateGPUStates(); return;
-        }
-        var id = BodyID;
-        var world = b2GetWorld(id.world0);
-        if (world.locked) throw new InvalidOperationException("Surface velocity cannot change inside the solver.");
-        var body = b2GetBodyFullId(world, id);
-        var sim = b2GetBodySim(world, body);
-        var native = PhysicsShapeBackend.ToBackend(linear);
-        if (sim.surfaceLinearVelocity == native && sim.surfaceAngularVelocity == angular) return;
-        sim.surfaceLinearVelocity = native; sim.surfaceAngularVelocity = angular;
-        b2WakeBody(world, body);
-        for (var key = body.headContactKey; key != -1;)
-        {
-            var contact = world.contacts.data[key >> 1]; var edge = key & 1;
-            key = contact.edges[edge].nextKey;
-            b2WakeBody(world, world.bodies.data[contact.edges[1 - edge].bodyId]);
-        }
-    }
+    internal void SetSurfaceVelocity(Vector2 linear, float angular) => Attached.SetSurfaceVelocity(linear, angular);
 }

@@ -38,6 +38,8 @@ The separate 65536-body independent-contact fixture now demonstrates full-step G
 
 ## Runtime flow and ownership
 
+The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain internal; public registration and complete extension contexts are still open under ADR 0103.
+
 The internal [PhysicsWorldBackend](../classes/PhysicsWorldBackend.md) factory now
 creates a fresh retained implementation for each space. [CPUPhysicsWorldBackend](../classes/CPUPhysicsWorldBackend.md)
 owns the native world, workers and optional diagnostic GPU stages;

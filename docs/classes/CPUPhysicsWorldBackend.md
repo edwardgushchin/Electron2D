@@ -12,6 +12,8 @@ WorldID exposes a borrowed internal native identity; Tasks and StageGPU expose o
 
 The query partials own native ray/point scans, standalone query proxies, candidate collection, intersection/sweep refinement, manifold contact pairs and deepest rest selection. Retained lists serve all array/span overloads without output allocation for span calls. Shared CPU body-motion code uses the moved Overlaps, Cast and GetManifold geometry helpers; Dispose clears retained query references.
 
+CreateCollider constructs a fresh CPUPhysicsColliderImplementation for each body/Area attachment. The retained collider identity facade delegates all engine-unit body and shape operations to that concrete owner; reattachment never retargets its immutable world.
+
 ## Ownership and verification
 
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.

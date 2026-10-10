@@ -12,6 +12,8 @@ Kind, Requested and FallbackReason describe immutable selection. EnsureAccess pe
 
 IntersectRay, CollectPointHits, CollectShapeHits, CastMotion, CollectShapeContacts and GetRestInfo dispatch every direct-space query to the same selected owner. Public access guards and output projection stay in PhysicsDirectSpaceState; concrete implementations own retained query scratch. These internal operations do not yet expose the public extension context under ADR 0103.
 
+CreateCollider constructs a fresh selected CPU/GPU PhysicsColliderImplementation for each body/Area attachment. The retained collider identity facade delegates all engine-unit body and shape operations to that concrete owner; reattachment never retargets its immutable world.
+
 ## Ownership and verification
 
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.

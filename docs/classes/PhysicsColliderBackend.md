@@ -15,11 +15,11 @@ Last updated: 2026-10-10
 
 ## Responsibility and ownership
 
-One retained component owns the current backend body, world attachment and shape
-ID collection for a scene CollisionObject or a server-created collider. PhysicsBody,
-Area and PhysicsServerCollider share it. It owns either CPU storage or an independent
-resident GPU attachment according to the selected world; vendor handles remain
-internal to the adapter.
+The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain internal; public registration and complete extension contexts are still open under ADR 0103.
+
+PhysicsBody, Area and PhysicsServerCollider share the retained identity facade. The
+selected world constructs concrete attachment storage; the facade holds no CPU world/body
+cache or GPU snapshot cache. Backend handles remain internal borrowed facets.
 
 The component keeps the stable public collider RID and a weak scene owner. Raw
 server colliders have no scene owner. Logical shape indices come from the owning
@@ -48,12 +48,12 @@ transform reads reuse the qualified GPU basis while CPU keeps its angle conventi
 | `ApplyImpulse`, `ApplyFieldMotion`, `ClearTransientForces` | Preflight CPU numeric candidates, apply already-resolved body policy and preserve current force/omission/wake ordering. |
 | `SetSurfaceVelocity`, `WakeTouching`, `GetPointVelocity` | Keep virtual surface motion, support wakeup and center-aware point velocity behind the attachment boundary. |
 | `CaptureViewContacts`, `CaptureViewContact` | Project CPU solved/frame contacts or resident GPU reports into existing engine contact values; common runtime contains no fixture tags or backend contact records. |
-| `Detach` | Destroy the body and its fixtures, clear IDs and space, retain list capacity. If the world has failed, skip backend calls and leave final backend cleanup to world disposal. |
+| `Detach` | Attempt solver and binding cleanup, retire the concrete attachment and clear its handles and the common space. If the world has failed, skip backend calls and leave final backend cleanup to world disposal. |
 | `RebuildShapes` | Validate all active slot transforms before removing existing fixtures; preserve disabled/disposed-slot indexing and append the current active geometry. |
 | `UpdateFilter` | Update existing CPU/GPU fixture metadata, preserve geometry identity and wake body/contact neighbors when requested; query/failed-world guards precede mutation. |
 | `Shapes`, `BodyID`, `Space` | Internal borrowed backend state; shape IDs can change on rebuild, body IDs on reattachment. Public RID identity is independent. |
 
-Scene and server slot overloads use one shared shape-definition/append path. It
+Scene and server slot overloads use the selected implementation's shape-definition/append path. It
 installs category/mask bits, sensor/density policy, surface material, one-way
 metadata and exception pre-solve eligibility. Shape resources supply their existing
 borrowed scene-unit geometry through PhysicsShapeBackend. Definitions are temporary locals; the component does not retain
@@ -123,8 +123,8 @@ ObjectIdentity retains the authored weak instance association independently of t
 
 ## Independent GPU attachment
 
-The same adapter now owns either CPU fixtures or resident GPU body/shape handles,
-selected by its PhysicsSpace. GPU paths retain RID/object/canvas and logical shape
+The retained adapter now delegates CPU fixtures or resident GPU body/shape handles
+to the concrete attachment created by its selected PhysicsSpace implementation. GPU paths retain RID/object/canvas and logical shape
 identity, mass/policy/force state, sampled direct contacts and attachment versions.
 A 64-byte observable cache serves scene/server getters; shared epoch invalidation
 avoids a per-edit scan. Immediate wake publication uses the solved device graph.

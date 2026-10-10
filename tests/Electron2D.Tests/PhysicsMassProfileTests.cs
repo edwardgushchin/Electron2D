@@ -96,7 +96,7 @@ internal static class PhysicsMassProfileTests
         Check(Near(state.AngularVelocity, 0), "Impulse at the rotated custom center has no angular moment.");
         body.Inertia = 200; body.Mass = 3;
         Check(body.Inertia == 200 && Near(1 / state.InverseInertia, 200), "Explicit inertia is independent of mass scaling.");
-        Check(PhysicsColliderBackend.Simulation(body.BackendID).maxExtent > 0.2f,
+        Check(CPUPhysicsColliderImplementation.Simulation(body.BackendID).maxExtent > 0.2f,
             "Custom center changes recompute solver extents around the selected mass center.");
         body.CenterOfMassMode = RigidCenterOfMassMode.Auto;
         Check(body.CenterOfMass == Vector2.Zero && state.CenterOfMassLocal.IsEqualApprox(new(20, 0)) && Near(1 / state.InverseInertia, 200),

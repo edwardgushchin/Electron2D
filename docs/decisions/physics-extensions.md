@@ -30,7 +30,7 @@ helpers, not just body simulation.
 Current Electron2D has two built-in per-world implementations behind a static
 sealed PhysicsServer facade. PhysicsDirectBodyState and PhysicsDirectSpaceState
 are sealed; validated query-result construction and reusable motion-result filling now execute through a separate public consumer; RID allocation belongs to the engine.
-The internal factory now creates a retained implementation that owns each built-in solver and complete interval dispatch. All six direct-space operations now dispatch through that owner with implementation-owned result/CPU geometry scratch; public guards and array/span projection stay common. Scene attachment/state/motion/joints still branch directly between CPU and GPU, while resident queries retain the existing space driver and geometry leases. A registry returning enum aliases, an unused factory, or facade-only
+The internal factory now creates a retained implementation that owns each built-in solver and complete interval dispatch. All six direct-space operations now dispatch through that owner with implementation-owned result/CPU geometry scratch; public guards and array/span projection stay common. The selected owner now creates fresh concrete CPU/GPU collider attachments for scene/server bodies and Areas; state, forces, mass, shape/filter, surface, contact and portable operations dispatch through that attachment. Joint/other server operations and native-only world phases remain separate built-in paths, while resident queries retain the existing space driver and geometry leases. A registry returning enum aliases, an unused factory, or facade-only
 interception would leave scene behavior and direct queries outside the extension.
 
 ### Decision
