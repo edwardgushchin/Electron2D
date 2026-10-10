@@ -19,3 +19,5 @@ A dirty authored geometry/configuration version builds an independent committed 
 PublishedMap preserves pathway membership until synchronization. IterationID records a nonzero wrapping uint identity, returned through the static ulong query; geometry/configuration publication remains transactional.
 
 Region scene ownership uses a weak Node reference shared by NavigationRegion and tile-generated regions. Caller FreeRID rejects both node-owned cases; expired/disposed owners release their region entries. Waypoint owner resolution returns the corresponding scene node, including TileMapLayer.
+
+Owns the selected automatic worker policy and at most one captured IterationWork. Worker results publish only at owner synchronization after matching current staged state. Release and deterministic host synchronization retire pending jobs. See [background iterations](../components/navigation-maps.md#background-iterations).

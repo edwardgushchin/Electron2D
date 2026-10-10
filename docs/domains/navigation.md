@@ -27,7 +27,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and so
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; async map iterations and debug retain their own exact prerequisites.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; global debug retains its exact prerequisite.
 
 ## Verification and limits
 
@@ -62,3 +62,5 @@ Committed [raster topology and surface sampling](../components/navigation-maps.m
 [Navigation baking](../components/navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.
 
 [Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
+
+[Background iterations](../components/navigation-maps.md#background-iterations) now rebuild region geometry and map topology through independently selected workers while keeping prior query snapshots usable. Explicit host Synchronize remains deterministic.

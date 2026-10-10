@@ -106045,6 +106045,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.MapGetUseAsyncIterations(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapGetUseAsyncIterations",
+    "signature": "public static System.Boolean MapGetUseAsyncIterations(Electron2D.RID map)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.MapGetUseEdgeConnections(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -106196,6 +106215,30 @@
       {
         "name": "scale",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.MapSetUseAsyncIterations(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "MapSetUseAsyncIterations",
+    "signature": "public static System.Void MapSetUseAsyncIterations(Electron2D.RID map, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "map",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
         "default": null
       }
     ],
@@ -106951,6 +106994,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.RegionGetUseAsyncIterations(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionGetUseAsyncIterations",
+    "signature": "public static System.Boolean RegionGetUseAsyncIterations(Electron2D.RID region)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.RegionGetUseEdgeConnections(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -107179,6 +107241,30 @@
       {
         "name": "cost",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.RegionSetUseAsyncIterations(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "RegionSetUseAsyncIterations",
+    "signature": "public static System.Void RegionSetUseAsyncIterations(Electron2D.RID region, System.Boolean enabled)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "region",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "enabled",
+        "type": "System.Boolean",
         "default": null
       }
     ],

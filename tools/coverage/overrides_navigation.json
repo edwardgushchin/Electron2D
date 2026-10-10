@@ -1389,6 +1389,26 @@
       "godot": "NavigationServer2D::method:region_get_random_point(RID:,int:,bool:)",
       "electron2d": "method:Electron2D.NavigationServer.RegionGetRandomPoint(Electron2D.RID,System.UInt32,System.Boolean)",
       "reason": "ADR 0097: committed quantized two-owner region/map topology, directed margin pathways, per-region versions, complete profiling and filtered area/hierarchical sampling execute. Twelve official pinned-runtime scenarios verify counters/pathways/raw/funnel paths; typed rollback/lifetime/layer/numeric and zero warmed allocation checks accompany real GPU/compatibility scene consumers."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_get_use_async_iterations(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapGetUseAsyncIterations(Electron2D.RID)",
+      "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "godot": "NavigationServer2D::method:map_set_use_async_iterations(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.MapSetUseAsyncIterations(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "godot": "NavigationServer2D::method:region_get_use_async_iterations(RID:)",
+      "electron2d": "method:Electron2D.NavigationServer.RegionGetUseAsyncIterations(Electron2D.RID)",
+      "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
+    },
+    {
+      "godot": "NavigationServer2D::method:region_set_use_async_iterations(RID:,bool:)",
+      "electron2d": "method:Electron2D.NavigationServer.RegionSetUseAsyncIterations(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
     }
   ],
   "extras": [
@@ -1899,16 +1919,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::method:map_get_use_async_iterations(RID:)",
-        "NavigationServer2D::method:map_set_use_async_iterations(RID:,bool:)",
-        "NavigationServer2D::method:region_get_use_async_iterations(RID:)",
-        "NavigationServer2D::method:region_set_use_async_iterations(RID:,bool:)"
-      ],
-      "reason": "ADR 0097 trigger: worker-built immutable iterations with completion, cancellation and owner-thread publication. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "NavigationServer2D::method:get_debug_enabled()",
         "NavigationServer2D::method:set_debug_enabled(bool:)",
         "NavigationServer2D::signal:navigation_debug_changed()"
@@ -2247,6 +2257,16 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0097: committed quantized two-owner region/map topology, directed margin pathways, per-region versions, complete profiling and filtered area/hierarchical sampling execute. Twelve official pinned-runtime scenarios verify counters/pathways/raw/funnel paths; typed rollback/lifetime/layer/numeric and zero warmed allocation checks accompany real GPU/compatibility scene consumers."
+    },
+    {
+      "godot": [
+        "NavigationServer2D::method:map_get_use_async_iterations(RID:)",
+        "NavigationServer2D::method:map_set_use_async_iterations(RID:,bool:)",
+        "NavigationServer2D::method:region_get_use_async_iterations(RID:)",
+        "NavigationServer2D::method:region_set_use_async_iterations(RID:,bool:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0014/0097/0104: independent region/map WorkerThreadPool jobs over captured immutable inputs, nonblocking scene synchronization, committed-query retention, stale input coalescing, owner failure/publication, version/callback timing and owned task retirement. Explicit Synchronize preserves the deterministic host transaction. Browser enablement requires its threaded runtime; global debug/query-budget completeness remain independent prerequisites. NavigationIterationTests and separate-process IterationRoutes exercise actual queued frames and changed route pixels on GPU/compatibility."
     }
   ]
 }

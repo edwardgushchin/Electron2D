@@ -6,6 +6,7 @@ internal static class NavigationTests
     { var p = new NavigationPolygon(); p.SetVertices([new(x, y), new(x + width, y), new(x + width, y + height), new(x, y + height)]); p.AddPolygon([0, 1, 2, 3]); return p; }
     internal static void Run()
     {
+        using var synchronousDefaults = new NavigationIterationTests.SynchronousDefaults();
         using var left = Rectangle(0, 0, 10, 20); using var bridge = Rectangle(10, 0, 10, 10); using var right = Rectangle(20, 0, 10, 20);
         left.Clear(); left.SetVertices([new(0, 0), new(10, 0), new(10, 10), new(0, 10), new(10, 20), new(0, 20)]); left.AddPolygon([0, 1, 2, 3]); left.AddPolygon([3, 2, 4, 5]);
         right.Clear(); right.SetVertices([new(20, 0), new(30, 0), new(30, 10), new(20, 10), new(30, 20), new(20, 20)]); right.AddPolygon([0, 1, 2, 3]); right.AddPolygon([3, 2, 4, 5]);
@@ -110,7 +111,7 @@ internal static class NavigationTests
         finally { System.IO.File.Delete(path); }
     }
     internal static void RunChild(string path)
-    { using var scene = ResourceLoader.Load<PackedScene>(path)!; using var node = (NavigationRegion)scene.Instantiate(); Check(node.NavigationPolygon!.GetPolygonCount() == 1 && node.NavigationPolygon.GetVertices()[0] == new Vector2(2, 3) && node.EnterCost == 2 && node.NavigationLayers == 3, "Fresh typed region/polygon reconstruction."); using var tree = new SceneTree(node); tree.PhysicsFrame(0); Check(NavigationServer.MapGetClosestPointOwner(node.GetNavigationMap(), new(3, 4)) == node.GetRID(), "Fresh loaded region supplies real navigation topology."); Console.WriteLine("Fresh navigation scene passed."); }
+    { using var synchronousDefaults = new NavigationIterationTests.SynchronousDefaults(); using var scene = ResourceLoader.Load<PackedScene>(path)!; using var node = (NavigationRegion)scene.Instantiate(); Check(node.NavigationPolygon!.GetPolygonCount() == 1 && node.NavigationPolygon.GetVertices()[0] == new Vector2(2, 3) && node.EnterCost == 2 && node.NavigationLayers == 3, "Fresh typed region/polygon reconstruction."); using var tree = new SceneTree(node); tree.PhysicsFrame(0); Check(NavigationServer.MapGetClosestPointOwner(node.GetNavigationMap(), new(3, 4)) == node.GetRID(), "Fresh loaded region supplies real navigation topology."); Console.WriteLine("Fresh navigation scene passed."); }
     private sealed class Walker : Entity
     {
         internal Vector2[] Path = []; internal bool Done; private int _next = 1;

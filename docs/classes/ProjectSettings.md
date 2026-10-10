@@ -1448,3 +1448,7 @@ Defines `threading/worker_pool/low_priority_thread_ratio`, default .5, finite ze
 ### `public static ProjectSetting<int> WorkerPoolMaxPendingTasks { get; }`
 
 Defines `threading/worker_pool/max_pending_tasks`, default 1024, positive only. The pool prepares this many reusable task/group records and worker-count times this capacity in each queue before dispatch. Completed IDs retain capacity until waited. Excess submissions reject atomically; checked queue-size overflow rejects startup. This is the preparation extension under ADR 0014/0104.
+
+## Navigation worker defaults
+
+The named Boolean keys navigation/world/map_use_async_iterations and navigation/world/region_use_async_iterations default true. New navigation identities sample them with feature overrides; existing identities retain their selected policies until changed through NavigationServer. Threaded browser prerequisites remain explicit.

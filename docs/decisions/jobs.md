@@ -37,3 +37,5 @@ Check callback identity, priority, parallelism, group progress, zero/negative/ov
 Invalid submission arguments are checked before lazy startup. Completion/progress/wait calls with no pending runtime reject their ID without starting workers or freezing startup settings. The cold public API test checks both boundaries before a later valid configured submission.
 
 ResourceLoader may use internal waits restricted to one dependency group, and may help an older root task after its own load-cycle checks and an active worker-stack check. These do not change the public WorkerThreadPool older/self guard. Dedicated target waits do not execute unrelated callbacks under resource staging scopes.
+
+Navigation iteration teardown and deterministic host synchronization may use a target-only older-job wait for pure captured geometry jobs. Those workers cannot call user callbacks or live scene/server code, so this does not relax public older/self dependency guards.

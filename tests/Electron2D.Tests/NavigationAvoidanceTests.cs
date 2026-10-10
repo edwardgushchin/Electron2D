@@ -7,6 +7,7 @@ internal static class NavigationAvoidanceTests
 {
     internal static void Run()
     {
+        using var synchronousDefaults = new NavigationIterationTests.SynchronousDefaults();
         var map = NavigationServer.MapCreate(); NavigationServer.MapSetActive(map, true); var a = Agent(map, new(0, 0), new(10, 0)); var b = Agent(map, new(20, 0), new(-10, 0));
         Check(NavigationServer.AgentGetRadius(a) == 2 && NavigationServer.AgentGetAvoidanceLayers(a) == 1 && NavigationServer.AgentGetAvoidanceMask(a) == 1 && NavigationServer.AgentGetTimeHorizonObstacles(a) == 1, "Real avoidance settings.");
         var deliveries = 0; NavigationServer.AgentSetAvoidanceCallback(a, v => { Check(NavigationServer.AgentGetVelocity(b).X == -8, "Every output publishes before first callback."); deliveries++; Reject<InvalidOperationException>(() => NavigationServer.Step(.1)); Reject<InvalidOperationException>(() => NavigationServer.Synchronize()); }); NavigationServer.Step(.1); Check(NavigationServer.AgentGetVelocity(a) == new Vector2(8, 0) && NavigationServer.AgentGetVelocity(b) == new Vector2(-8, 0) && deliveries == 1, "Head-on reciprocal cutoff matches analytic ORCA constraint."); NavigationServer.Step(0); Check(deliveries == 1, "Zero-step sync does not dispatch."); NavigationServer.AgentSetAvoidanceCallback(a, null); Check(!NavigationServer.AgentHasAvoidanceCallback(a), "Callback removal.");

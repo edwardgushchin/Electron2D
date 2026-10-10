@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+[Background navigation iterations](../components/navigation-maps.md#background-iterations) now compute independently selected region geometry and map topology on workers while preserving committed queries. Four formerly Blocked controls are Implemented; explicit host Synchronize retains deterministic publication. Controlled queued workers, stale-input/failure/lifetime checks and actual GPU/compatibility route pixels verify the exercised profile.
+
 [Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) now reserve every frame, preserve complete authored configuration/file graphs, extrude runtime texture edges and replay real timed cells through existing canvas slices. Twenty-two formerly Blocked declarations are Implemented, with actual GPU/compatibility temporal pixels and zero managed owner allocation across 40 animating frames.
 
 [Tile navigation](../components/tiles.md#navigation-layers) now connects navigation masks and polygon/resource graphs to per-cell scene-owned regions, World/explicit maps, runtime tile data, traversable baking and actual diagnostic/route pixels. Fourteen formerly Blocked rows are Implemented. SceneTree.DebugNavigationHint has a working tile consumer and remains Partial pending global region/link/avoidance diagnostics.

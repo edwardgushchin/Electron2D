@@ -79,6 +79,8 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(NavigationMapAsyncIterations, isBasic: false);
+        RegisterInternal(NavigationRegionAsyncIterations, isBasic: false);
         RegisterInternal(WorkerPoolMaxThreads, isBasic: false);
         RegisterInternal(WorkerPoolLowPriorityThreadRatio, isBasic: false);
         RegisterInternal(WorkerPoolMaxPendingTasks, isBasic: false);

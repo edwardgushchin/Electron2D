@@ -26,8 +26,8 @@ public sealed partial class NavigationServer : ElectronObject
     private NavigationRegionState Region(RID rid) => _regions.TryGetValue(rid, out var region) && (region.Scene is null || region.Scene.TryGetTarget(out var node) && !node.IsDisposed) ? region : throw new ArgumentException("The RID does not identify a live navigation region.", nameof(rid));
     internal RID CreateMap(WorldRuntime? owner = null) { lock (_gate) { var rid = RID.Allocate(); _maps.Add(rid, new(rid, owner)); return rid; } }
     internal RID CreateRegion(Node? node = null) { lock (_gate) { var rid = RID.Allocate(); _regions.Add(rid, new(rid, node)); return rid; } }
-    internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.ContainsKey(rid)) return; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } foreach (var agent in _agents.Values) if (agent.Map == rid) agent.Map = default; foreach (var obstacle in _obstacles.Values) if (obstacle.Map == rid) obstacle.Map = default; _maps.Remove(rid); } }
-    internal void ReleaseSceneRegion(RID rid) { lock (_gate) { if (_regions.Remove(rid, out var region)) { Dirty(region.Map); region.Unsubscribe(); } } }
+    internal void ReleaseWorldMap(RID rid) { lock (_gate) { if (!_maps.TryGetValue(rid, out var released)) return; RetireIteration(released.Pending); released.Pending = null; foreach (var region in _regions.Values) if (region.Map == rid) region.Map = default; foreach (var link in _links.Values) if (link.Map == rid) { link.Map = default; link.Dirty = true; } foreach (var agent in _agents.Values) if (agent.Map == rid) agent.Map = default; foreach (var obstacle in _obstacles.Values) if (obstacle.Map == rid) obstacle.Map = default; _maps.Remove(rid); } }
+    internal void ReleaseSceneRegion(RID rid) { lock (_gate) { if (_regions.Remove(rid, out var region)) { try { RetireIteration(region.Pending); } finally { region.Pending = null; Dirty(region.Map); region.Unsubscribe(); } } } }
     private void Dirty(RID rid) { if (_maps.TryGetValue(rid, out var map)) map.Dirty = true; }
     internal void ValidateTileMap(RID map, SceneTree? tree) { lock (_gate) { Map(map); ValidateSceneMap(map, tree); } }
     private void SetRegionMap(RID region, RID map) { var value = Region(region); if (map.IsValid()) Map(map); Dirty(value.Map); value.Map = map; Dirty(map); value.Dirty = true; }
@@ -37,7 +37,7 @@ public sealed partial class NavigationServer : ElectronObject
         if (polygon is not null) { region.Changed = _ => { lock (_gate) { if (!_regions.ContainsKey(rid)) return; region.Geometry = polygon.Snapshot(); region.Dirty = true; Dirty(region.Map); } if (region.Scene is not null && region.Scene.TryGetTarget(out var node) && node is NavigationRegion { IsDisposed: false } navigationRegion) navigationRegion.NotifyPolygonChanged(); }; region.Disposed = _ => { lock (_gate) { region.Geometry = new([], []); region.Dirty = true; Dirty(region.Map); } }; polygon.Changed += region.Changed; polygon.Disposed += region.Disposed; }
         region.Dirty = true; Dirty(region.Map);
     }
-    internal void SynchronizeCore()
+    internal void SynchronizeCore(bool forceSynchronous = false)
     {
         PumpBakes();
         List<RID>? changed = null; Action<RID>? handlers;
@@ -63,26 +63,31 @@ public sealed partial class NavigationServer : ElectronObject
                 foreach (var obstacle in _obstacles.Values)
                     if (obstacle.Scene is not null && (!obstacle.Scene.TryGetTarget(out var node) || node.IsDisposed)) (expired ??= []).Add(obstacle.RID);
                 if (expired is not null) foreach (var rid in expired) ReleaseSceneObstacle(rid);
-                var dirty = false;
-                foreach (var region in _regions.Values) if (region.Dirty) { dirty = true; break; }
-                if (!dirty) foreach (var map in _maps.Values) if (map.Dirty) { dirty = true; break; }
-                if (!dirty) { Span<int> counts = stackalloc int[10]; ReadProcessInfo(counts, null); counts.CopyTo(_processInfo); _synchronizing = false; return; }
-                var regionIterations = new Dictionary<RID, NavigationMapIteration>();
-                foreach (var region in _regions.Values) if (region.Dirty) { if (region.Geometry.CellSize is { } cell && _maps.TryGetValue(region.Map, out var map) && !Mathf.IsEqualApprox(cell, map.CellSize)) throw new InvalidOperationException("Generated navigation cell size must match its map."); regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region)); }
-                List<(NavigationMapState Map, NavigationMapIteration Iteration)>? pending = null;
-                foreach (var map in _maps.Values)
-                    if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations, _links.Values)));
-                Span<int> counters = stackalloc int[10]; ReadProcessInfo(counters, pending);
-                foreach (var (rid, iteration) in regionIterations) { var region = _regions[rid]; region.Iteration = iteration; region.IterationID = region.IterationID == uint.MaxValue ? 1 : region.IterationID + 1; region.Dirty = false; }
-                foreach (var region in _regions.Values) region.PublishedMap = region.Map;
-                counters.CopyTo(_processInfo);
-                // Build every dirty map before publishing any: failed geometry leaves the previous iterations intact.
-                if (pending is not null) foreach (var (map, snapshot) in pending)
-                    {
-                        map.Iteration = snapshot; map.IterationID = map.IterationID == ulong.MaxValue ? 1 : map.IterationID + 1; map.Dirty = false;
-                        (changed ??= []).Add(map.RID);
-                    }
-                foreach (var link in _links.Values) if (link.Dirty && link.Map.IsValid()) { link.IterationID = link.IterationID == uint.MaxValue ? 1 : link.IterationID + 1; link.Dirty = false; }
+                if (!forceSynchronous) changed = SynchronizeIterationWork();
+                else
+                {
+                    DrainIterationWork();
+                    var dirty = false;
+                    foreach (var region in _regions.Values) if (region.Dirty) { dirty = true; break; }
+                    if (!dirty) foreach (var map in _maps.Values) if (map.Dirty) { dirty = true; break; }
+                    if (!dirty) { Span<int> counts = stackalloc int[10]; ReadProcessInfo(counts, null); counts.CopyTo(_processInfo); _synchronizing = false; return; }
+                    var regionIterations = new Dictionary<RID, NavigationMapIteration>();
+                    foreach (var region in _regions.Values) if (region.Dirty) { if (region.Geometry.CellSize is { } cell && _maps.TryGetValue(region.Map, out var map) && !Mathf.IsEqualApprox(cell, map.CellSize)) throw new InvalidOperationException("Generated navigation cell size must match its map."); regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region)); }
+                    List<(NavigationMapState Map, NavigationMapIteration Iteration)>? pending = null;
+                    foreach (var map in _maps.Values)
+                        if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations, _links.Values)));
+                    Span<int> counters = stackalloc int[10]; ReadProcessInfo(counters, pending);
+                    foreach (var (rid, iteration) in regionIterations) { var region = _regions[rid]; region.Iteration = iteration; region.IterationID = region.IterationID == uint.MaxValue ? 1 : region.IterationID + 1; region.Dirty = false; }
+                    foreach (var region in _regions.Values) region.PublishedMap = region.Map;
+                    counters.CopyTo(_processInfo);
+                    // Build every dirty map before publishing any: failed geometry leaves the previous iterations intact.
+                    if (pending is not null) foreach (var (map, snapshot) in pending)
+                        {
+                            map.Iteration = snapshot; map.IterationID = map.IterationID == ulong.MaxValue ? 1 : map.IterationID + 1; map.Dirty = false;
+                            (changed ??= []).Add(map.RID);
+                        }
+                    foreach (var link in _links.Values) if (link.Dirty && link.Map.IsValid()) { link.IterationID = link.IterationID == uint.MaxValue ? 1 : link.IterationID + 1; link.Dirty = false; }
+                }
                 handlers = _mapChanged;
             }
             catch { _synchronizing = false; throw; }
@@ -93,10 +98,10 @@ public sealed partial class NavigationServer : ElectronObject
         if (errors is not null) throw new AggregateException("Navigation iterations committed with callback failures.", errors);
     }
     /// <summary>Commits staged navigation topology through the same kernel used at a physics boundary.</summary>
-    /// <remarks>Useful for typed batch hosts without a SceneTree. Deprecated force-update operations are not exposed.</remarks>
+    /// <remarks>Drains owned captured jobs and commits current staged input synchronously for typed batch hosts without a SceneTree. Automatic scene progression polls workers without waiting. Deprecated force-update operations are not exposed.</remarks>
     /// <exception cref="InvalidOperationException">Synchronization is re-entered.</exception>
     /// <exception cref="AggregateException">MapChanged observers fail after committed publication.</exception>
-    public static void Synchronize() => Shared.SynchronizeCore();
+    public static void Synchronize() => Shared.SynchronizeCore(forceSynchronous: true);
     /// <inheritdoc />
     protected override void ValidateDisposal() => throw new InvalidOperationException("The shared navigation service cannot be disposed by a consumer.");
 }
@@ -105,6 +110,8 @@ internal sealed class NavigationMapState(RID rid, WorldRuntime? owner)
     internal readonly RID RID = rid;
     internal readonly WorldRuntime? Owner = owner;
     internal bool Active, UseEdgeConnections = true, Dirty = true;
+    internal bool UseAsyncIterations = !OperatingSystem.IsBrowser() && ProjectSettings.GetWithOverride(ProjectSettings.NavigationMapAsyncIterations);
+    internal NavigationServer.IterationWork? Pending;
     internal float EdgeMargin = 1, LinkRadius = 4, CellSize = 1, RasterScale = .1f;
     internal ulong IterationID;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
@@ -116,6 +123,8 @@ internal sealed class NavigationRegionState(RID rid, Node? scene)
     internal RID Map, PublishedMap;
     internal uint IterationID;
     internal bool Enabled = true, UseEdgeConnections = true, Dirty = true;
+    internal bool UseAsyncIterations = !OperatingSystem.IsBrowser() && ProjectSettings.GetWithOverride(ProjectSettings.NavigationRegionAsyncIterations);
+    internal NavigationServer.IterationWork? Pending;
     internal NavigationMapIteration Iteration = NavigationMapIteration.Empty;
     internal uint Layers = 1;
     internal float EnterCost, TravelCost = 1;

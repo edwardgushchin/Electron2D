@@ -17,3 +17,5 @@ Staged map flags/settings, owner and latest committed iteration.
 LinkRadius is initially four world units and consumes strict endpoint-to-polygon attachment in map construction.
 
 CellSize=1 and RasterScale=0.1 stage real raster dimensions and rebuild attached regions. Its immutable iteration carries topology profiling and margin pathways.
+
+Owns the selected automatic worker policy and at most one captured IterationWork. Worker results publish only at owner synchronization after matching current staged state. Release and deterministic host synchronization retire pending jobs. See [background iterations](../components/navigation-maps.md#background-iterations).

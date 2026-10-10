@@ -93,7 +93,7 @@ internal static class NavigationTopologyTests
     }
     private static void ResourceOwnerDelivery()
     {
-        using var polygon = Rectangle(0, 0, 10, 10); var root = new SubViewport(); var region = new NavigationRegion { NavigationPolygon = polygon }; root.AddChild(region); using var tree = new SceneTree(root); tree.PhysicsFrame(0); var delivered = 0; var version = NavigationServer.RegionGetIterationID(region.GetRID());
+        using var polygon = Rectangle(0, 0, 10, 10); var root = new SubViewport(); var region = new NavigationRegion { NavigationPolygon = polygon }; root.AddChild(region); using var tree = new SceneTree(root); NavigationServer.MapSetUseAsyncIterations(region.GetNavigationMap(), false); NavigationServer.RegionSetUseAsyncIterations(region.GetRID(), false); tree.PhysicsFrame(0); var delivered = 0; var version = NavigationServer.RegionGetIterationID(region.GetRID());
         region.NavigationPolygonChanged += () => { Check(tree.IsOwnerThread, "Resource change signal returns to the scene owner."); delivered++; };
         Task.Run(() => polygon.SetVertices([new(1, 0), new(11, 0), new(11, 10), new(1, 10)])).GetAwaiter().GetResult(); Check(delivered == 0 && NavigationServer.RegionGetIterationID(region.GetRID()) == version, "Worker edits stage geometry without publishing versions or invoking scene listeners."); tree.ProcessFrame(.01); tree.PhysicsFrame(0); Check(delivered == 1 && NavigationServer.RegionGetIterationID(region.GetRID()) > version, "Owner signal and next physics publication execute.");
     }

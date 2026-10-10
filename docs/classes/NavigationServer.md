@@ -1728,3 +1728,39 @@ Assigns a typed parser callback, or clears it with null.
 **Parameter parser:** Live parser RID.
 
 **Parameter callback:** Invoked for each selected node after built-in geometry collection. Points added must use the supplied root's local space.
+
+## Background iteration controls
+
+See [background iterations](../components/navigation-maps.md#background-iterations) for defaults, worker ownership, staged/committed snapshots, failure/retry, explicit host boundaries and verification.
+
+### MapGetUseAsyncIterations
+
+```csharp
+public static bool MapGetUseAsyncIterations(RID map)
+```
+
+Returns the selected automatic map topology worker policy.
+
+### MapSetUseAsyncIterations
+
+```csharp
+public static void MapSetUseAsyncIterations(RID map, bool enabled)
+```
+
+Changes the policy for following builds; in-flight work is still owned. Browser enablement rejects without a threaded runtime.
+
+### RegionGetUseAsyncIterations
+
+```csharp
+public static bool RegionGetUseAsyncIterations(RID region)
+```
+
+Returns the selected automatic region geometry worker policy.
+
+### RegionSetUseAsyncIterations
+
+```csharp
+public static void RegionSetUseAsyncIterations(RID region, bool enabled)
+```
+
+Changes the following geometry builds. Queries retain completed snapshots until owner publication.

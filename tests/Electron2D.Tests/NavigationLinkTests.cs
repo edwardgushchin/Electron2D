@@ -4,6 +4,7 @@ internal static class NavigationLinkTests
 {
     internal static void Run()
     {
+        using var synchronousDefaults = new NavigationIterationTests.SynchronousDefaults();
         using var left = NavigationTests.Rectangle(0, 0, 10, 20); using var right = NavigationTests.Rectangle(30, 0, 10, 20);
         var map = NavigationServer.MapCreate(); var a = NavigationServer.RegionCreate(); var b = NavigationServer.RegionCreate(); var link = NavigationServer.LinkCreate();
         NavigationServer.MapSetActive(map, true); Bind(a, left); Bind(b, right); NavigationServer.Synchronize();
