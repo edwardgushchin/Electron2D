@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Overview
 
-Defines tile grid geometry and dimensions, atlas sources and shared physics and navigation layer policies.
+Defines tile grid geometry, terrain definitions, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -39,6 +39,21 @@ set.SetPhysicsLayerPhysicsMaterial(0, material);
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public System.Void AddTerrain(System.Int32 terrainSet, System.Int32 toPosition = -1)`](#terrain-7d0f0f8629f1) | method | Inserts a terrain with a generated name and opaque color, remapping center and peering identities. |
+| [`public System.Void AddTerrainSet(System.Int32 toPosition = -1)`](#terrain-e61ddae54404) | method | Inserts an empty terrain set; a negative insertion position appends. |
+| [`public System.Void ClearTerrains(System.Int32 terrainSet)`](#terrain-400244398cdd) | method | Removes every terrain in a set and clears its atlas assignments. |
+| [`public Electron2D.Color GetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex)`](#terrain-2ef41b760aab) | method | Returns the terrain's opaque diagnostic color. |
+| [`public System.String GetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex)`](#terrain-9804c45c7585) | method | Returns a terrain's name. |
+| [`public Electron2D.TerrainMode GetTerrainSetMode(System.Int32 terrainSet)`](#terrain-da9c2dab0881) | method | Returns the matching mode of a terrain set. |
+| [`public System.Int32 GetTerrainSetsCount()`](#terrain-0acf6ba4eafe) | method | Returns the number of terrain sets. |
+| [`public System.Int32 GetTerrainsCount(System.Int32 terrainSet)`](#terrain-bc861e728e99) | method | Returns the number of terrains in a set. |
+| [`public System.Void MoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex, System.Int32 toPosition)`](#terrain-61ab2e2533c8) | method | Moves a terrain before an insertion position, preserving the meaning of atlas assignments. |
+| [`public System.Void MoveTerrainSet(System.Int32 terrainSet, System.Int32 toPosition)`](#terrain-e07a4f33b753) | method | Moves a terrain set before an insertion position, remapping atlas alternatives. |
+| [`public System.Void RemoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex)`](#terrain-e95eb4bf024c) | method | Removes a terrain and clears its assignments, remapping later identities. |
+| [`public System.Void RemoveTerrainSet(System.Int32 terrainSet)`](#terrain-78f57ec5980b) | method | Removes a terrain set and clears its alternatives' center and peering assignments. |
+| [`public System.Void SetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex, Electron2D.Color color)`](#terrain-fdc307712b65) | method | Sets a finite diagnostic color, coercing its alpha to one. |
+| [`public System.Void SetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex, System.String name)`](#terrain-7bc631cb3ae3) | method | Sets a terrain's name. |
+| [`public System.Void SetTerrainSetMode(System.Int32 terrainSet, Electron2D.TerrainMode mode)`](#terrain-0f81b2539230) | method | Sets the matching mode and updates available peering directions. |
 | [`TileShape TileShape { get; set; }`](#grid-tileshape) | property | The cell outline, default Square. Undefined values throw before state changes; a real edit changes placement in all consuming layers. |
 | [`TileLayout TileLayout { get; set; }`](#grid-tilelayout) | property | The coordinate layout, default Stacked. All six layouts are stored; square cells ignore this setting. |
 | [`TileOffsetAxis TileOffsetAxis { get; set; }`](#grid-tileoffsetaxis) | property | The offset direction, default Horizontal. Non-square cells offset rows horizontally or columns vertically; square cells ignore this setting. |
@@ -614,3 +629,182 @@ TileOffsetAxis TileOffsetAxis { get; set; }
 ```
 
 The offset direction, default Horizontal. Non-square cells offset rows horizontally or columns vertically; square cells ignore this setting.
+
+## Terrain API
+
+See [terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) for the shared lifecycle, defaults, callback, persistence and allocation contract. Owners reject access after disposal. Indices are validated against the live definitions.
+
+<a id="terrain-7d0f0f8629f1"></a>
+### AddTerrain
+
+```csharp
+public System.Void AddTerrain(System.Int32 terrainSet, System.Int32 toPosition = -1)
+```
+
+Inserts a terrain with a generated name and opaque color, remapping center and peering identities.
+
+- `terrainSet`: The terrain set index.
+- `toPosition`: Insertion position, or a negative value to append.
+
+<a id="terrain-e61ddae54404"></a>
+### AddTerrainSet
+
+```csharp
+public System.Void AddTerrainSet(System.Int32 toPosition = -1)
+```
+
+Inserts an empty terrain set; a negative insertion position appends.
+
+- `toPosition`: Insertion position, or a negative value to append.
+
+<a id="terrain-400244398cdd"></a>
+### ClearTerrains
+
+```csharp
+public System.Void ClearTerrains(System.Int32 terrainSet)
+```
+
+Removes every terrain in a set and clears its atlas assignments.
+
+- `terrainSet`: The terrain set index.
+
+<a id="terrain-2ef41b760aab"></a>
+### GetTerrainColor
+
+```csharp
+public Electron2D.Color GetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex)
+```
+
+Returns the terrain's opaque diagnostic color.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain index.
+
+<a id="terrain-9804c45c7585"></a>
+### GetTerrainName
+
+```csharp
+public System.String GetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex)
+```
+
+Returns a terrain's name.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain index.
+
+<a id="terrain-da9c2dab0881"></a>
+### GetTerrainSetMode
+
+```csharp
+public Electron2D.TerrainMode GetTerrainSetMode(System.Int32 terrainSet)
+```
+
+Returns the matching mode of a terrain set.
+
+- `terrainSet`: The terrain set index.
+
+<a id="terrain-0acf6ba4eafe"></a>
+### GetTerrainSetsCount
+
+```csharp
+public System.Int32 GetTerrainSetsCount()
+```
+
+Returns the number of terrain sets.
+
+<a id="terrain-bc861e728e99"></a>
+### GetTerrainsCount
+
+```csharp
+public System.Int32 GetTerrainsCount(System.Int32 terrainSet)
+```
+
+Returns the number of terrains in a set.
+
+- `terrainSet`: The terrain set index.
+
+<a id="terrain-61ab2e2533c8"></a>
+### MoveTerrain
+
+```csharp
+public System.Void MoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex, System.Int32 toPosition)
+```
+
+Moves a terrain before an insertion position, preserving the meaning of atlas assignments.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain to move.
+- `toPosition`: Insertion position between zero and the terrain count, inclusive.
+
+<a id="terrain-e07a4f33b753"></a>
+### MoveTerrainSet
+
+```csharp
+public System.Void MoveTerrainSet(System.Int32 terrainSet, System.Int32 toPosition)
+```
+
+Moves a terrain set before an insertion position, remapping atlas alternatives.
+
+- `terrainSet`: The terrain set to move.
+- `toPosition`: Insertion position between zero and the set count, inclusive.
+
+<a id="terrain-e95eb4bf024c"></a>
+### RemoveTerrain
+
+```csharp
+public System.Void RemoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex)
+```
+
+Removes a terrain and clears its assignments, remapping later identities.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain to remove.
+
+<a id="terrain-78f57ec5980b"></a>
+### RemoveTerrainSet
+
+```csharp
+public System.Void RemoveTerrainSet(System.Int32 terrainSet)
+```
+
+Removes a terrain set and clears its alternatives' center and peering assignments.
+
+- `terrainSet`: The terrain set to remove.
+
+<a id="terrain-fdc307712b65"></a>
+### SetTerrainColor
+
+```csharp
+public System.Void SetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex, Electron2D.Color color)
+```
+
+Sets a finite diagnostic color, coercing its alpha to one.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain index.
+- `color`: Finite color components; alpha is ignored.
+
+<a id="terrain-7bc631cb3ae3"></a>
+### SetTerrainName
+
+```csharp
+public System.Void SetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex, System.String name)
+```
+
+Sets a terrain's name.
+
+- `terrainSet`: The terrain set index.
+- `terrainIndex`: The terrain index.
+- `name`: A nonnull name, including an empty name.
+
+<a id="terrain-0f81b2539230"></a>
+### SetTerrainSetMode
+
+```csharp
+public System.Void SetTerrainSetMode(System.Int32 terrainSet, Electron2D.TerrainMode mode)
+```
+
+Sets the matching mode and updates available peering directions.
+
+- `terrainSet`: The terrain set index.
+- `mode`: A defined matching mode.

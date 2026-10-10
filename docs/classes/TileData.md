@@ -1,12 +1,12 @@
 # TileData
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Source:** [TileData.cs](../../src/Scene/Resources/TileData.cs).
 
 ## Overview
 
-Stores the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.
+Stores terrain assignments and weights, the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.
 
 ## Syntax
 
@@ -40,6 +40,12 @@ data.SetConstantLinearVelocity(0, new Vector2(40, 0));
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public System.Int32 GetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)`](#terrain-df7dd9f01294) | method | Returns an applicable terrain peering value; -1 is an empty terrain. |
+| [`public System.Boolean IsValidTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)`](#terrain-cafe7f73d449) | method | Tests whether a defined peering direction is applicable to this data's attached set, terrain set and mode. |
+| [`public System.Void SetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit, System.Int32 terrainIndex)`](#terrain-d7a2f9cbeaa0) | method | Sets a terrain peering value; -1 clears it. |
+| [`public System.Single Probability { get; set; }`](#terrain-90b9c67335c8) | property | Gets or sets the finite nonnegative weight used to select atlas alternatives with the same terrain pattern. |
+| [`public System.Int32 Terrain { get; set; }`](#terrain-e7a66615d398) | property | Gets or sets the center terrain index, or -1 for an empty center. |
+| [`public System.Int32 TerrainSet { get; set; }`](#terrain-1a9722452594) | property | Gets or sets the terrain set index, or -1 to disable terrain assignments. |
 | [`public event System.Action Changed`](#member-7705766a08ba) | event | Occurs after authored data changes. |
 | [`public System.Void AddCollisionPolygon(System.Int32 layerID)`](#member-0b7923d46bc9) | method | Adds an empty collision polygon to a physics layer. |
 | [`protected override System.Void Dispose(System.Boolean disposing)`](#member-90ae228c5083) | method |  |
@@ -477,3 +483,76 @@ NavigationPolygon? GetNavigationPolygon(int layerID, bool flipH = false, bool fl
 ```
 
 Returns the borrowed original without transforms or a cached data-owned transformed resource. Transpose precedes reflections; polygon indices and outline winding are preserved. Copies are invalidated when the original changes or this data is removed.
+
+## Terrain API
+
+See [terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) for the shared lifecycle, defaults, callback, persistence and allocation contract. Owners reject access after disposal. Indices are validated against the live definitions.
+
+<a id="terrain-df7dd9f01294"></a>
+### GetTerrainPeeringBit
+
+```csharp
+public System.Int32 GetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)
+```
+
+Returns an applicable terrain peering value; -1 is an empty terrain.
+
+- `peeringBit`: A side or corner supported by the attached set's shape and terrain mode.
+
+<a id="terrain-cafe7f73d449"></a>
+### IsValidTerrainPeeringBit
+
+```csharp
+public System.Boolean IsValidTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)
+```
+
+Tests whether a defined peering direction is applicable to this data's attached set, terrain set and mode.
+
+False for unassigned, detached, undefined or unavailable directions.
+
+- `peeringBit`: The direction to test.
+
+<a id="terrain-d7a2f9cbeaa0"></a>
+### SetTerrainPeeringBit
+
+```csharp
+public System.Void SetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit, System.Int32 terrainIndex)
+```
+
+Sets a terrain peering value; -1 clears it.
+
+- `peeringBit`: A defined direction, applicable when attached to a set.
+- `terrainIndex`: A terrain index or -1 for empty terrain.
+
+<a id="terrain-90b9c67335c8"></a>
+### Probability
+
+```csharp
+public System.Single Probability { get; set; }
+```
+
+Gets or sets the finite nonnegative weight used to select atlas alternatives with the same terrain pattern.
+
+The default is one. When all matching weights are zero the first candidate is selected.
+
+<a id="terrain-e7a66615d398"></a>
+### Terrain
+
+```csharp
+public System.Int32 Terrain { get; set; }
+```
+
+Gets or sets the center terrain index, or -1 for an empty center.
+
+A nonempty center requires an assigned terrain set and must belong to the attached set.
+
+<a id="terrain-1a9722452594"></a>
+### TerrainSet
+
+```csharp
+public System.Int32 TerrainSet { get; set; }
+```
+
+Gets or sets the terrain set index, or -1 to disable terrain assignments.
+
+A change on data attached to a set clears its center and peering assignments. Standalone atlas authoring can retain indices before association.

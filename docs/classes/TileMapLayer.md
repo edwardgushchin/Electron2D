@@ -39,6 +39,8 @@ layer.UpdateInternals();
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public System.Void SetCellsTerrainConnect(Electron2D.Vector2i[] cells, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)`](#terrain-18aa2f5a5e89) | method | Paints a terrain and joins adjacent matching centers, updating surrounding transitions when needed. |
+| [`public System.Void SetCellsTerrainPath(Electron2D.Vector2i[] path, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)`](#terrain-8948f8a966cf) | method | Paints a path, constraining successive neighboring cells to connect through the selected terrain. |
 | [`Vector2i GetNeighborCell(Vector2i coords, CellNeighbor neighbor)`](#grid-getneighborcell) | method | Returns a named edge/corner neighbor for the active shape and axis. Undefined or unavailable directions throw ArgumentOutOfRangeException. Widened integer intermediates avoid wraparound; final results outside Vector2i throw OverflowException. |
 | [`Vector2i[] GetSurroundingCells(Vector2i coords)`](#grid-getsurroundingcells) | method | Returns an owned array of four (square/isometric) or six (half-offset/hexagonal) edge-sharing neighbors in clockwise order, omitting corners. Overflow rejects the query. |
 | [`public TileMapLayer()`](#member-535034972235) | constructor | Creates an empty enabled tile layer. |
@@ -793,3 +795,39 @@ Vector2i[] GetSurroundingCells(Vector2i coords)
 ```
 
 Returns an owned array of four (square/isometric) or six (half-offset/hexagonal) edge-sharing neighbors in clockwise order, omitting corners. Overflow rejects the query.
+
+## Terrain API
+
+See [terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) for the shared lifecycle, defaults, callback, persistence and allocation contract. Owners reject access after disposal. Indices are validated against the live definitions.
+
+<a id="terrain-18aa2f5a5e89"></a>
+### SetCellsTerrainConnect
+
+```csharp
+public System.Void SetCellsTerrainConnect(Electron2D.Vector2i[] cells, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)
+```
+
+Paints a terrain and joins adjacent matching centers, updating surrounding transitions when needed.
+
+The tile set must contain the required terrain combinations. Edits are published through the normal layer batch. This authoring operation can allocate.
+
+- `cells`: Cell coordinates to paint.
+- `terrainSet`: The terrain set index.
+- `terrain`: The terrain index, or -1 for empty terrain.
+- `ignoreEmptyTerrains`: Whether existing empty terrain constraints are ignored.
+
+<a id="terrain-8948f8a966cf"></a>
+### SetCellsTerrainPath
+
+```csharp
+public System.Void SetCellsTerrainPath(Electron2D.Vector2i[] path, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)
+```
+
+Paints a path, constraining successive neighboring cells to connect through the selected terrain.
+
+The tile set must contain the required terrain combinations. Neighboring transitions can also change; unconstrained bits are preserved.
+
+- `path`: Ordered neighboring cell coordinates.
+- `terrainSet`: The terrain set index.
+- `terrain`: The terrain index, or -1 for empty terrain.
+- `ignoreEmptyTerrains`: Whether existing empty terrain constraints are ignored.

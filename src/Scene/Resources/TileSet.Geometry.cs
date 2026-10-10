@@ -11,7 +11,7 @@ public sealed partial class TileSet
     public TileShape TileShape
     {
         get { ThrowIfDisposed(); return _tileShape; }
-        set { ThrowIfDisposed(); if ((uint)value > 3) throw new ArgumentOutOfRangeException(nameof(value)); if (_tileShape == value) return; _tileShape = value; NotifyPropertyListChanged(); EmitChanged(); }
+        set { ThrowIfDisposed(); if ((uint)value > 3) throw new ArgumentOutOfRangeException(nameof(value)); if (_tileShape == value) return; ChangeTerrainDefinitions(() => _tileShape = value, data => data.TerrainSchemaChanged(false)); }
     }
     /// <summary>Gets or sets the coordinate layout; stacked is the default and square cells ignore it.</summary>
     /// <exception cref="ArgumentOutOfRangeException">The layout is undefined.</exception>
@@ -25,7 +25,7 @@ public sealed partial class TileSet
     public TileOffsetAxis TileOffsetAxis
     {
         get { ThrowIfDisposed(); return _tileOffsetAxis; }
-        set { ThrowIfDisposed(); if ((uint)value > 1) throw new ArgumentOutOfRangeException(nameof(value)); if (_tileOffsetAxis == value) return; _tileOffsetAxis = value; EmitChanged(); }
+        set { ThrowIfDisposed(); if ((uint)value > 1) throw new ArgumentOutOfRangeException(nameof(value)); if (_tileOffsetAxis == value) return; ChangeTerrainDefinitions(() => _tileOffsetAxis = value, data => data.TerrainSchemaChanged(false)); }
     }
     private float Overlap => _tileShape == TileShape.Isometric ? .5f : _tileShape == TileShape.Hexagon ? .75f : 1;
     private IEnumerable<PropertyDescriptor> GeometryProperties()

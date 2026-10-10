@@ -29,7 +29,7 @@ internal sealed class GPUPhysicsJointImplementation(PhysicsSpace space) : Physic
     internal override void Attach(PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
     {
         if (IsAttached) throw new InvalidOperationException("A joint already has a backend attachment.");
-        _gpuDefinition = new(settings.Type, first.GPUHandle, second?.GPUHandle ?? default, settings.FrameA, settings.FrameB);
+        _gpuDefinition = new(settings.Type, Space.GPUCollider(first).GPUHandle, second is null ? default : Space.GPUCollider(second).GPUHandle, settings.FrameA, settings.FrameB);
         _gpuDefinition = GPUDefinition(settings);
         _gpuJoint = Space.GPUStore!.AddJoint(_gpuDefinition);
     }

@@ -17,18 +17,18 @@ internal sealed partial class GPUPhysicsColliderImplementation
     }
     internal override void Detach()
     {
-        if (GPUHandle.Generation == 0) return;
+        if (GPUHandle.Generation == 0) { GPU.RetireCollider(Owner, this); return; }
         List<Exception>? errors = null;
         foreach (var shape in GPUShapes)
             try { shape.Query?.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         try { if (!Space.HasBackendFailure) GPU.Remove(GPUHandle); } catch (Exception error) { (errors ??= []).Add(error); }
         try { Space.UnregisterGPUCollider(Owner); }
         catch (Exception error) { (errors ??= []).Add(error); }
-        finally { GPUShapes.Clear(); GPUHandle = default; GPUStateValid = false; }
+        finally { GPUShapes.Clear(); GPUHandle = default; GPUStateValid = false; GPU.RetireCollider(Owner, this); }
         if (errors is not null) throw new AggregateException("GPU collider cleanup failed.", errors);
     }
     internal override void SetContactReporting(bool enabled) => GPU.SetContactReporting(GPUHandle, enabled);
-    internal void SetCollisionPriority(float value) => GPU.SetCollisionPriority(GPUHandle, value);
+    internal override void SetCollisionPriority(float value) => GPU.SetCollisionPriority(GPUHandle, value);
     internal override void UpdateFilter(uint layer, uint mask, bool wakeBody)
     {
         Space.EnsureQueryAccess();

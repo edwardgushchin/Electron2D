@@ -88,7 +88,7 @@ internal sealed partial class PhysicsReplayEntry
             surface, surfaceAngular, _rigid?._constantForce ?? _bodyRuntime?.ConstantForce ?? default, _rigid?._constantTorque ?? _bodyRuntime?.ConstantTorque ?? 0,
             _bodyRuntime?.Gravity ?? default, _bodyRuntime?.LinearDamp ?? 0, _bodyRuntime?.AngularDamp ?? 0, _bodyRuntime?.FieldsInitialized ?? false);
         // Keep destination-owned cache identities while replacing the physical/backing values.
-        _backend = Backend.CaptureReplay();
+        _backend = CaptureBackendReplay();
         if (_bodyRuntime is { ContactCount: > 0 }) _runtime!.GetView(Backend.Space!);
         Restore();
     }

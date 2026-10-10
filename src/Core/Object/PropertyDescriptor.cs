@@ -113,6 +113,7 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
     private readonly Action<TOwner, TValue>? _setter;
     private readonly Func<TOwner, TValue>? _revertValue;
     private readonly Func<TOwner, TValue, bool>? _validator;
+    internal Action<TOwner, TValue>? StoredSetter { get; init; }
 
     /// <summary>Initializes a strongly typed tooling property descriptor.</summary>
     /// <param name="name">The nonblank property name.</param>
@@ -274,7 +275,8 @@ public sealed class PropertyDescriptor<TOwner, TValue> : PropertyDescriptor
         if (value is not StoredPropertyValue<TValue> typedValue)
             throw new InvalidOperationException($"Stored property '{Name}' has an incompatible value type.");
 
-        SetValue(GetOwner(owner), typedValue.Resolve(resolveResource));
+        var target = GetOwner(owner); var restored = typedValue.Resolve(resolveResource);
+        if (StoredSetter is { } setter) setter(target, restored); else SetValue(target, restored);
     }
 
     private static void EnsureAlive(TOwner owner)

@@ -16,7 +16,7 @@ internal sealed partial class PhysicsReplayEntry
     private readonly Area.AreaReplay? _area;
     private readonly PhysicsBodyRuntime.ReplayState? _bodyRuntime;
     private PhysicsServerCollider.ReplayState _server;
-    private PhysicsColliderBackend.ReplayState _backend;
+    private GPUPhysicsColliderImplementation.ReplayState _backend;
     private readonly PhysicsShapePairTracker _areaPairs = new();
     private readonly List<RID> _exceptions = [];
     private ShapeState[] _shapes = [];
@@ -69,9 +69,10 @@ internal sealed partial class PhysicsReplayEntry
         return new(slot.Shape, slot.Transform, slot.Active, slot.Index, oneWay, margin, direction, slot.Revision,
             slot.Shape.IsDisposed ? 0 : slot.Shape.CustomSolverBias, Scene.GetShapeOwnerObject(index)?.InstanceID ?? 0);
     }
+    private GPUPhysicsColliderImplementation.ReplayState CaptureBackendReplay() => Backend.Space!.GPUStore?.NativeCollider(Backend).CaptureReplay() ?? default;
     internal void Capture()
     {
-        _attachment = Backend.AttachmentVersion; _configuration = Settings(); _backend = Backend.CaptureReplay();
+        _attachment = Backend.AttachmentVersion; _configuration = Settings(); _backend = CaptureBackendReplay();
         _parent = Scene?.Parent; _tree = Scene?.Tree; _pose = Scene?.GlobalTransform ?? default;
         Depth = 0; for (var ancestor = _parent; ancestor is not null; ancestor = ancestor.Parent) Depth++;
         _shapeCount = ShapeCount; if (_shapes.Length < _shapeCount) Array.Resize(ref _shapes, _shapeCount);
@@ -106,7 +107,7 @@ internal sealed partial class PhysicsReplayEntry
     }
     internal void Restore()
     {
-        Backend.RestoreReplay(_backend);
+        Backend.Space!.GPUStore?.NativeCollider(Backend).RestoreReplay(_backend);
         if (Scene is PhysicsBody body) body.RestoreReplay(_body!);
         if (Scene is RigidBody rigid) rigid.RestoreReplay(_rigid!);
         if (Scene is StaticBody surface) surface.RestoreReplay(_surface!);

@@ -2,6 +2,14 @@
 
 Last updated: 2026-10-11
 
+[GPU collider ownership](../components/physics-backends.md#gpu-collider-ownership) removes
+resident handles and concrete GPU casts from the common collider facade.
+Actual attachments stay in the resident store; selected wrappers retain publication,
+Area/query/joint behavior and local/portable restoration. Identity/priority edits
+reach selected hooks. Public registration and the complete operation family stay open.
+
+[Terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) now connects ordered definitions, all three matching modes, center/peering assignments, weighted alternatives and connect/path edits to retained drawing, selected CPU/GPU collision, navigation and fresh scene files. Twenty-seven formerly Blocked rows are Implemented. All 144 grid/mode configurations match pinned painting fixtures; coherent remapping and typed callback/storage/failure behavior have separate checks. Pattern resources, proxy tables and occlusion/custom/material consumers retain their own prerequisites.
+
 [Tile grid geometry](../components/tiles.md#grid-placement-and-neighbors) now supports all four shapes, six coordinate layouts, two offset axes and named neighbors. Thirty-seven formerly Blocked and two Partial rows are Implemented. The same kernel places retained drawing, CPU/GPU collisions, navigation regions and baked contours; all 48 configurations match pinned executable geometry. Fresh scene files, actual GPU/compatibility pixels and zero-allocation scalar/native owner checks verify the exercised Linux profile. Terrain/pattern/proxy/occlusion retain their own prerequisites.
 
 [CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)

@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Defines tile grid geometry and dimensions, atlas sources and shared physics and navigation layer policies.</summary>
+/// <summary>Defines tile grid geometry, terrain definitions, atlas sources and shared physics and navigation layer policies.</summary>
 /// <remarks>Sources are transferred between sets, while materials are borrowed. Copies duplicate sources
 /// even in shallow mode so copying cannot remove sources from the original set.</remarks>
 public sealed partial class TileSet : Resource
@@ -100,7 +100,10 @@ public sealed partial class TileSet : Resource
         previous?.DetachSourceInstance(source);
         source.ResizePhysicsLayers(PhysicsLayers.Count); source.ResizeNavigationLayers(NavigationLayers.Count); source.OwnerSet = this;
         _sources[id] = source; source.Changed += SourceChanged; source.Disposed += SourceDisposed;
-        try { previous?.ChangedSchema(); } finally { ChangedSchema(); }
+        var data = source is TileSetAtlasSource atlas ? atlas.TerrainData().ToArray() : [];
+        foreach (var item in data) item.TerrainSchemaChanged(false);
+        try { try { previous?.ChangedSchema(); } finally { foreach (var item in data) if (!item.IsDisposed) item.TerrainSchemaChanged(); } }
+        finally { ChangedSchema(); }
         return id;
     }
     /// <summary>Removes a source without disposing its resource.</summary>
@@ -175,7 +178,7 @@ public sealed partial class TileSet : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSet)target; copy.ClearContents(); copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
+        var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
         foreach (var layer in PhysicsLayers)
         {
             copy.PhysicsLayers.Add(new() { Layer = layer.Layer, Mask = layer.Mask, Priority = layer.Priority });
@@ -208,6 +211,7 @@ public sealed partial class TileSet : Resource
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
         foreach (var property in GeometryProperties()) yield return property;
+        foreach (var property in TerrainProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, Vector2i>(nameof(TileSize), n => n.TileSize, (n, v) => n.TileSize = v, _ => new(16, 16), stored: true);
         yield return new PropertyDescriptor<TileSet, int>("PhysicsLayerCount", n => n.GetPhysicsLayersCount(), (n, v) => n.RestoreLayerCount(v), _ => 0, stored: true);
         for (var i = 0; i < PhysicsLayers.Count; i++)

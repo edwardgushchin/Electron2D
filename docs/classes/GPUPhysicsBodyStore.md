@@ -1,6 +1,6 @@
 # GPUPhysicsBodyStore
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable`
 
@@ -34,6 +34,13 @@ Last updated: 2026-10-10
 `ReadPoses(ReadOnlySpan<BodyHandle>, Span<System.Numerics.Vector4>)` selects only position and cosine/sine basis. It validates every handle and output capacity, flushes pending edits/masses, gathers the requested sequence, then downloads 16 bytes per request plus eight status bytes with one fence. Duplicate requests may exceed resident population; capacity grows for the request count without adding physical bodies. The existing snapshot read retains its exact 64-byte ABI; integer result storage preserves mode/flag bits. A submission/read failure retains the terminal store policy.
 
 ## Responsibility
+
+[Collider attachments](../../src/Servers/Physics/GPUPhysicsBodyStore.Colliders.cs)
+are retained by common identity in this store. Creation binds the actual store;
+NativeCollider resolves private handles and caches for the existing GPU driver.
+Retirement checks attachment reference identity, including failed zero-handle
+creation and stale detach. Disposal clears the table. This host identity lookup
+does not mirror physical state or submit device work.
 
 Own authoritative device pose/velocity state without creating a Box2D world or
 retaining CPU live-state arrays. This internal foundation implements body storage,

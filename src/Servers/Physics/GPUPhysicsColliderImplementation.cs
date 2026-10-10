@@ -1,14 +1,14 @@
 namespace Electron2D;
 
-/// <summary>Owns one resident GPU collider's handles, shape leases and publication caches.</summary>
-internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space) : PhysicsColliderImplementation(owner, space)
+/// <summary>Owns one collider's resident handles, shape leases and publication caches in its retained GPU store.</summary>
+internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space, GPUPhysicsBodyStore store) : PhysicsColliderImplementation(owner, space)
 {
     internal bool GPUSensor;
     internal uint GPUMask;
     internal GPUPhysicsBodyStore.BodyHandle GPUHandle { get; private set; }
     internal readonly List<(GPUPhysicsBodyStore.ShapeHandle Handle, int Slot, GPUPhysicsBodyStore.QueryGeometry? Query, Transform Pose)> GPUShapes = [];
     internal override int ShapeCount => GPUShapes.Count;
-    private GPUPhysicsBodyStore GPU => Space.GPUStore!;
+    private GPUPhysicsBodyStore GPU => store;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
     private System.Numerics.Vector4 _gpuPose;
     private bool _gpuPoseValid;
@@ -80,10 +80,9 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         Space!.RegisterGPUShape(Owner, handle, index);
         GPUShapes.Add((handle, index, sensor ? GPU.RetainQueryGeometry(shape) : null, transform)); GPUStateValid = false;
     }
-    internal void RefreshGPUIdentity()
+    internal override void RefreshIdentity()
     {
-        if (GPU is not { } store) return;
-        foreach (var shape in GPUShapes) store.SetQueryIdentity(shape.Handle, (ulong)Owner.RID.GetID(), shape.Slot, Owner.CanvasInstanceID, Owner.ObjectIdentity.ID);
+        foreach (var shape in GPUShapes) GPU.SetQueryIdentity(shape.Handle, (ulong)Owner.RID.GetID(), shape.Slot, Owner.CanvasInstanceID, Owner.ObjectIdentity.ID);
     }
     internal void SetGPUConstants(Vector2 force, float torque)
     {

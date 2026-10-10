@@ -9519,6 +9519,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TerrainMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TerrainMode",
+    "name": "TerrainMode",
+    "signature": "public enum Electron2D.TerrainMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextAutowrapMode",
     "kind": "type",
     "declaringType": "Electron2D.TextAutowrapMode",
@@ -35699,6 +35717,45 @@
     "parameters": [],
     "returnType": "Electron2D.TabContainer.TabPosition",
     "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TerrainMode.MatchCorners()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TerrainMode",
+    "name": "MatchCorners",
+    "signature": "public const Electron2D.TerrainMode MatchCorners = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TerrainMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TerrainMode.MatchCornersAndSides()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TerrainMode",
+    "name": "MatchCornersAndSides",
+    "signature": "public const Electron2D.TerrainMode MatchCornersAndSides = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TerrainMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TerrainMode.MatchSides()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TerrainMode",
+    "name": "MatchSides",
+    "signature": "public const Electron2D.TerrainMode MatchSides = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TerrainMode",
+    "value": "2"
   },
   {
     "id": "enumValue:Electron2D.TextAutowrapMode.Arbitrary()",
@@ -151810,6 +151867,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileData.GetTerrainPeeringBit(Electron2D.CellNeighbor)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetTerrainPeeringBit",
+    "signature": "public System.Int32 GetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peeringBit",
+        "type": "Electron2D.CellNeighbor",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileData.IsCollisionPolygonOneWay(System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileData",
@@ -151827,6 +151903,25 @@
       {
         "name": "polygonIndex",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.IsValidTerrainPeeringBit(Electron2D.CellNeighbor)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "IsValidTerrainPeeringBit",
+    "signature": "public System.Boolean IsValidTerrainPeeringBit(Electron2D.CellNeighbor peeringBit)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peeringBit",
+        "type": "Electron2D.CellNeighbor",
         "default": null
       }
     ],
@@ -152034,6 +152129,30 @@
       {
         "name": "navigationPolygon",
         "type": "Electron2D.NavigationPolygon",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetTerrainPeeringBit(Electron2D.CellNeighbor,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetTerrainPeeringBit",
+    "signature": "public System.Void SetTerrainPeeringBit(Electron2D.CellNeighbor peeringBit, System.Int32 terrainIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "peeringBit",
+        "type": "Electron2D.CellNeighbor",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -152569,6 +152688,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapLayer.SetCellsTerrainConnect(Electron2D.Vector2i[],System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "SetCellsTerrainConnect",
+    "signature": "public System.Void SetCellsTerrainConnect(Electron2D.Vector2i[] cells, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "cells",
+        "type": "Electron2D.Vector2i[]",
+        "default": null
+      },
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrain",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "ignoreEmptyTerrains",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.SetCellsTerrainPath(Electron2D.Vector2i[],System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "SetCellsTerrainPath",
+    "signature": "public System.Void SetCellsTerrainPath(Electron2D.Vector2i[] path, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "path",
+        "type": "Electron2D.Vector2i[]",
+        "default": null
+      },
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrain",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "ignoreEmptyTerrains",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileMapLayer.SetNavigationMap(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.TileMapLayer",
@@ -152740,6 +152927,68 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddTerrain(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddTerrain",
+    "signature": "public System.Void AddTerrain(System.Int32 terrainSet, System.Int32 toPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddTerrainSet(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddTerrainSet",
+    "signature": "public System.Void AddTerrainSet(System.Int32 toPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.ClearTerrains(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "ClearTerrains",
+    "signature": "public System.Void ClearTerrains(System.Int32 terrainSet)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -153036,6 +153285,105 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.GetTerrainColor(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetTerrainColor",
+    "signature": "public Electron2D.Color GetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetTerrainName(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetTerrainName",
+    "signature": "public System.String GetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetTerrainSetMode(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetTerrainSetMode",
+    "signature": "public Electron2D.TerrainMode GetTerrainSetMode(System.Int32 terrainSet)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TerrainMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetTerrainSetsCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetTerrainSetsCount",
+    "signature": "public System.Int32 GetTerrainSetsCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetTerrainsCount(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetTerrainsCount",
+    "signature": "public System.Int32 GetTerrainsCount(System.Int32 terrainSet)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.HasSource(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153103,6 +153451,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.MoveTerrain(System.Int32,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MoveTerrain",
+    "signature": "public System.Void MoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex, System.Int32 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.MoveTerrainSet(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MoveTerrainSet",
+    "signature": "public System.Void MoveTerrainSet(System.Int32 terrainSet, System.Int32 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.RemoveNavigationLayer(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153152,6 +153553,49 @@
     "parameters": [
       {
         "name": "sourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveTerrain(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveTerrain",
+    "signature": "public System.Void RemoveTerrain(System.Int32 terrainSet, System.Int32 terrainIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveTerrainSet(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveTerrainSet",
+    "signature": "public System.Void RemoveTerrainSet(System.Int32 terrainSet)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
         "type": "System.Int32",
         "default": null
       }
@@ -153326,6 +153770,88 @@
       {
         "name": "newSourceID",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetTerrainColor(System.Int32,System.Int32,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetTerrainColor",
+    "signature": "public System.Void SetTerrainColor(System.Int32 terrainSet, System.Int32 terrainIndex, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetTerrainName(System.Int32,System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetTerrainName",
+    "signature": "public System.Void SetTerrainName(System.Int32 terrainSet, System.Int32 terrainIndex, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "terrainIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetTerrainSetMode(System.Int32,Electron2D.TerrainMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetTerrainSetMode",
+    "signature": "public System.Void SetTerrainSetMode(System.Int32 terrainSet, Electron2D.TerrainMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "terrainSet",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.TerrainMode",
         "default": null
       }
     ],
@@ -199864,6 +200390,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.Probability()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "Probability",
+    "signature": "public System.Single Probability { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.Terrain()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "Terrain",
+    "signature": "public System.Int32 Terrain { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.TerrainSet()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "TerrainSet",
+    "signature": "public System.Int32 TerrainSet { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {

@@ -85,7 +85,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Terrain/pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 
@@ -124,3 +124,38 @@ Padded grid stride is region size plus max(two pixels, atlas pixel separation) o
 ### Animation verification
 
 TileAnimationTests covers frame reservations and overlaps, columns/gaps, original/runtime regions, proposed texture removal, shrinkage and portable reconstruction, duration resize/defaults, invalid values/sentinel/frame indices, precision-preserving extrusion, cache identity/invalidation/failed preparation/disposal, duration/speed boundaries including negative time, stable random phases and zero-allocation replay. Linux Wayland GPU and compatibility each passed 100 rendered frames from a scene authored in another process. The first 40 probes observed 11 red/29 green (GPU) and 10 red/30 green (compatibility), synchronized Default cells, random phase differences, padded linear edges and static blue cells after animation-scope reset. Each measured 40 continuously animating intervals with zero managed owner-thread allocation and clean native/resource teardown. Both screenshots were inspected: /tmp/e2d-animated-tiles-gpu.png and /tmp/e2d-animated-tiles-compatibility.png. Unchanged runtime-cache queries and retained timed replay each measured 1024 calls with zero managed allocation. Foreign platforms, editor workflows, NativeAOT, large-map throughput/native allocation and human acceptance are separate gates.
+
+## Terrain authoring and painting
+
+TileSet stores ordered terrain sets, their TerrainMode and terrain names/opaque colors. New terrains receive a generated name and palette color. Insertion, movement, removal and clearing remap all source alternatives' center and peering identities coherently. Structural edits commit all remapping before data notifications, reject recursive structural edits and attempt parent publication even when a listener throws. Changing mode or grid shape filters available peering directions while retaining inactive authored values.
+
+TileData TerrainSet selects a set or -1; changing it while attached clears center/peering assignments. Terrain selects a center or -1. Get/SetTerrainPeeringBit operate on the active shape/mode directions; IsValidTerrainPeeringBit returns false for undefined/unassigned/unavailable directions. Probability is finite, nonnegative and defaults to one. Zero weights do not displace positive alternatives; all-zero candidates use the first sorted candidate. Exact random sequences are not a contract.
+
+```csharp
+// Assumes caller-owned texture and a TileMapLayer named layer.
+var set = new TileSet();
+set.AddTerrainSet();
+set.SetTerrainSetMode(0, TerrainMode.MatchSides);
+set.AddTerrain(0);
+set.SetTerrainName(0, 0, "Grass");
+var atlas = new TileSetAtlasSource { Texture = texture };
+set.AddSource(atlas, 0);
+atlas.CreateTile(Vector2i.Zero);
+TileData data = atlas.GetTileData(Vector2i.Zero, 0);
+data.TerrainSet = 0;
+data.Terrain = 0;
+data.Probability = 1;
+layer.TileSet = set;
+// Populate all required peering combinations before painting a complete map.
+layer.SetCellsTerrainConnect([new(0, 0), new(1, 0)], 0, 0);
+```
+
+This deliberately partial authoring example compiles the same public workflow as tests. One atlas tile does not provide every required transition. Paint uses an authored catalog, preserves unconstrained values, scores requested center/connection constraints, propagates chosen constraints in input order and can update surrounding transitions. Incomplete catalogs produce the closest available patterns, including possible erased cells. Connect joins matching centers; Path constrains successive named neighbors, according to the selected mode's applicable bits. Runtime tile-data copies do not override the authored catalog. A painted atlas alternative supplies its usual image, collision and navigation data.
+
+Painting is an explicit authoring operation and allocates for catalog/constraint preparation. Cell publication uses the existing batch. Missing set, invalid terrain identities, non-neighbor paths and required integer-coordinate overflow fail before cell mutation. Resource setters preserve state after rejected input; listener exceptions propagate after coherent definition commitment. Caller-owned resources still require coordination with consuming scene trees.
+
+Terrain definitions, all authored peering values and weights persist through typed archives, shallow/deep copies and scene-local graphs. Standalone atlas indices are retained until binding; attaching/transferring clips assignments invalid for the new definitions. Typed tooling writes use ordinary validation; internal restoration stages raw fields before associations and preserves inactive peering values.
+
+`TileTerrainTests` compares 144 pinned shape/layout/axis/mode configurations and 1,152 connect/path/clear stages, with ordered unique-pattern selections. It also checks metadata/remapping, quiet/invalid setters, callback/reentry failure, finite weights, weighted distribution, file graphs, CPU/GPU collision/navigation placement and fresh-process re-painting. The reference terrain insertion/move omission and forward insertion-index shifts are corrected; empty/removed assignments reset coherently. Offset-corner paths enumerate actual shared-corner cells instead of asking for unsupported corner neighbor cells. [Pinned fixture production](../../tools/tiles/terrain_reference.gd).
+
+Prepared unchanged updates allocate zero owner-thread managed bytes. Real GPU/compatibility windows on CPU/GPU worlds pass 12 shape/mode panels, connect/path editing, authored-pattern pixel colors and placed collision/navigation. Each combination measures 24 warmed complete owner frame intervals with forced redraw at zero managed bytes. Captures are under ignored bin/terrain-validation/. Other platforms, native/all-thread allocator totals, dense-map authoring throughput and human visual acceptance remain unverified.

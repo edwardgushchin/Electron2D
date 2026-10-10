@@ -38,22 +38,22 @@ internal sealed partial class GPUPhysicsWorldBackend
             var transform = backend.GetTransform();
             Span<ulong> exclude = stackalloc ulong[1] { (ulong)backend.RID.GetID() };
             Span<int> counts = stackalloc int[1];
-            foreach (var local in backend.GPUShapes)
+            foreach (var local in GPUStore.NativeCollider(backend).GPUShapes)
             {
-                _gpuAreaQuery[0] = new(local.Query!, transform * local.Pose, Mask: backend.GPUMask, Areas: true,
+                _gpuAreaQuery[0] = new(local.Query!, transform * local.Pose, Mask: GPUStore.NativeCollider(backend).GPUMask, Areas: true,
                     Limit: capacity, ExclusionCount: 1);
                 GPUStore.QueryShapes(_gpuAreaQuery, exclude, counts, _gpuAreaHits);
                 foreach (ref readonly var hit in _gpuAreaHits.AsSpan(0, counts[0]))
                 {
-                    if (!Space.TryGetGPUCollider((int)hit.Body, out var other) || other.GPUHandle.Generation != hit.BodyGeneration) continue;
-                    if (other.GPUSensor)
+                    if (!Space.TryGetGPUCollider((int)hit.Body, out var other) || GPUStore.NativeCollider(other).GPUHandle.Generation != hit.BodyGeneration) continue;
+                    if (GPUStore.NativeCollider(other).GPUSensor)
                     {
                         var owners = PhysicsServer.Service.ResolveAreaOwners(other.RID);
                         if (!(owners.Scene?.Monitorable ?? owners.Server!.Monitorable)) continue;
                     }
-                    var pair = new PhysicsShapePair(other.RID, other.ObjectIdentity, other.GPUSensor, hit.LogicalShape, local.Slot);
+                    var pair = new PhysicsShapePair(other.RID, other.ObjectIdentity, GPUStore.NativeCollider(other).GPUSensor, hit.LogicalShape, local.Slot);
                     if (sceneMonitoring) scene!.Observe(pair);
-                    if (other.GPUSensor ? runtime?.AreaCallback is not null : runtime?.BodyCallback is not null) runtime!.Pairs.Observe(pair);
+                    if (GPUStore.NativeCollider(other).GPUSensor ? runtime?.AreaCallback is not null : runtime?.BodyCallback is not null) runtime!.Pairs.Observe(pair);
                 }
             }
         }

@@ -1,6 +1,6 @@
 # PropertyDescriptor\<TOwner, TValue\>
 
-Last updated: 2026-10-05
+Last updated: 2026-10-11
 
 **Inherits:** [PropertyDescriptor](PropertyDescriptor.md)
 
@@ -200,3 +200,7 @@ SplitContainer.SplitOffsets adds the exact `int[]` packed profile under ADR 0023
 ## Typed archive storage
 
 File values use the exact TValue schema with registered codecs, graph-aware resource/array references and relative node paths. Capture snapshots explicit value arrays/dictionaries; registered reference-shaped custom values snapshot through their codec. ResourceArchiveTests exercises endian/file reconstruction and typed resource ownership; see [resource files](../components/resource-files.md) for bounds and failures.
+
+## Terrain graph restoration
+
+The internal stored-restore delegate can stage terrain indices before graph association, without exposing a second public setter. Ordinary typed writes keep their configured setter and validation; portable codecs still validate owner/value types and copied values. Terrain file/scene tests verify this distinction, including inactive peering values.

@@ -1,6 +1,6 @@
 # PhysicsColliderBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class PhysicsColliderBackend`
 
@@ -15,11 +15,13 @@ Last updated: 2026-10-10
 
 ## Responsibility and ownership
 
-The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain internal; public registration and complete extension contexts are still open under ADR 0103.
+The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain exclusively in concrete owners; public registration and complete extension contexts are still open under ADR 0103.
 
 PhysicsBody, Area and PhysicsServerCollider share the retained identity facade. The
 selected world constructs concrete attachment storage; the facade holds no CPU world/body
-cache or GPU snapshot cache. Backend handles remain internal borrowed facets.
+cache or GPU snapshot cache. It exposes no CPU/GPU handle or concrete-type aliases.
+Object/canvas refresh and collision-priority edits dispatch through selected hooks;
+GPU publication and replay caches resolve actual attachments from the resident store.
 
 The component keeps the stable public collider RID and a weak scene owner. Raw
 server colliders have no scene owner. Logical shape indices come from the owning

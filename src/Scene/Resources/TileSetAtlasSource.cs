@@ -170,7 +170,8 @@ public sealed partial class TileSetAtlasSource : TileSetSource
     {
         return HasRoomForTile(coords, size, 0, Vector2i.Zero, 1, ignored);
     }
-    private TileData NewData(bool alternative) { var data = new TileData(alternative); data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
+    internal IEnumerable<TileData> TerrainData() => _tiles.Values.SelectMany(t => t.Alternatives.Values);
+    private TileData NewData(bool alternative) { var data = new TileData(alternative) { TerrainSource = this }; data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
     private void ReleaseData(TileData data) { data.Changed -= Change; data.Release(); }
     private void Change() { _paddingDirty = true; NotifyPropertyListChanged(); EmitChanged(); }
     private void TextureChanged(Resource _) { _paddingDirty = true; EmitChanged(); }
@@ -197,7 +198,7 @@ public sealed partial class TileSetAtlasSource : TileSetSource
         foreach (var pair in _tiles)
         {
             var tile = new Tile { Size = pair.Value.Size, Columns = pair.Value.Columns, FrameSeparation = pair.Value.FrameSeparation, Speed = pair.Value.Speed, Mode = pair.Value.Mode, Durations = (float[])pair.Value.Durations.Clone() };
-            foreach (var alt in pair.Value.Alternatives) { var data = alt.Value.Copy(deep ? duplicate : null); data.Changed += copy.Change; tile.Alternatives.Add(alt.Key, data); }
+            foreach (var alt in pair.Value.Alternatives) { var data = alt.Value.Copy(deep ? duplicate : null); data.TerrainSource = copy; data.TerrainSchemaChanged(); data.Changed += copy.Change; tile.Alternatives.Add(alt.Key, data); }
             copy._tiles.Add(pair.Key, tile);
         }
     }

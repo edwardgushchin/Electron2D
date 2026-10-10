@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[GPU collider ownership](../components/physics-backends.md#gpu-collider-ownership) removes
+resident handles and concrete GPU casts from the common collider facade.
+Actual attachments stay in the resident store; selected wrappers retain publication,
+Area/query/joint behavior and local/portable restoration. Identity/priority edits
+reach selected hooks. Public registration and the complete operation family stay open.
+
 [CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)
 now confines native body/shape IDs to the CPU owner and its attachments. Common
 scene/server/facade types have no CPU aliases; fields, queries, Areas, CCD, contacts,
@@ -56,9 +62,9 @@ Each world now retains a distinct internal solver implementation owning either t
 
 `PhysicsServer.BodyGetTransform(space, bodies, transforms)` now provides a caller-owned CPU/GPU pose batch for render consumers. It preserves scalar scene/raw semantics and shared guards; dynamic raw GPU bodies transfer only compact poses without publishing other state. [Contract and measured costs](../components/gpu-demand-publication.md#explicit-pose-batches).
 
-## Square atlas tile integration
+## Tile grid and terrain integration
 
-[Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain/pattern/proxy painting and occlusion retain explicit prerequisites under [ADR 0101](../decisions/tiles.md#adr-0101).
+[Tile resources and layers](../components/tiles.md) now connect square, isometric, half-offset and hexagonal atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. All layouts, animated atlas storage/drawing and navigation now execute; terrain definitions, modes, weighted connect/path painting and fresh file graphs now execute; pattern/proxy painting and occlusion retain explicit prerequisites under [ADR 0101](../decisions/tiles.md#adr-0101).
 
 ## Physical skeletal integration
 
