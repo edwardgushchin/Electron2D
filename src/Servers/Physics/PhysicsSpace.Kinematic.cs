@@ -78,13 +78,13 @@ internal sealed partial class PhysicsSpace
             foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
         }
         _contactStep++;
-        try { b2World_Step(_worldID, delta, substeps); PruneOneWayPairs(); }
-        catch (Exception failure) when (_gpuWorld is not null)
+        try { _backend.StepNative(delta, substeps); PruneOneWayPairs(); }
+        catch (Exception failure) when (_backend.StageGPU is not null)
         {
             // A partially committed GPU interval cannot be replayed through the compatibility solver.
             _gpuFailure = failure;
-            _tasks!.Drain();
-            var world = b2GetWorldFromId(_worldID);
+            _backend.Tasks.Drain();
+            var world = b2GetWorldFromId(WorldID);
             world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();

@@ -86,6 +86,10 @@ internal static partial class GPUPhysicsTests
                 }
                 catch (Exception ex) { throw new InvalidOperationException($"GPU manifold case {i}/{count}, {types[i % types.Length]} differs.", ex); }
             }
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+            GC.WaitForPendingFinalizers();
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+            for (var i = 0; i < 8; i++) gpu.GenerateManifolds(context, count);
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 8; i++)
             {

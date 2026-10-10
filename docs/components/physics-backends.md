@@ -34,6 +34,24 @@ replay or hidden backend change follows a failed GPU step.
 
 ## Runtime flow and ownership
 
+The internal [PhysicsWorldBackend](../classes/PhysicsWorldBackend.md) factory now
+creates a fresh retained implementation for each space. [CPUPhysicsWorldBackend](../classes/CPUPhysicsWorldBackend.md)
+owns the native world, workers and optional diagnostic GPU stages;
+[GPUPhysicsWorldBackend](../classes/GPUPhysicsWorldBackend.md) owns the independent
+resident store. PhysicsSpace gates an interval and dispatches its complete CPU/GPU
+path through that selected object. CPU discrete and CCD native intervals also reach
+the CPU implementation. Common callbacks, event order, authoring and attachment
+identity remain in the space. World release attempts all participants before
+releasing the selected implementation and aggregating failures. Once release starts,
+FreeRID unregisters the space even when cleanup throws. During any live physics
+callback, release and recursive stepping reject without invalidating that context.
+
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs)
+checks fresh ownership, independent simulation, 512 bodies over 64 warmed full
+steps at zero owner/all-thread managed allocation, and no-device selection/fallback. A worker cleanup fault must not skip native world destruction.
+This is a built-in ownership boundary; public manager registration, the complete
+server/direct-state extension family and custom geometry remain open under ADR 0103.
+
 PhysicsSpace retains common scene/server registration, activity, owner-thread guards,
 attachment generations, callbacks and events. PhysicsColliderBackend selects CPU
 fixtures/body state or resident body/shape handles. Shapes retain logical owner indices
@@ -483,3 +501,38 @@ The internal [CPU checkpoint](cpu-checkpoints.md) and [GPU checkpoint](gpu-check
 retain each solver's persistent replay state. They do not yet capture the common
 attachment adapters, resource/scene lifetime or event-confirmation state. Shared
 public world capture/apply and authoritative network correction remain open.
+
+## Selected implementation ownership check (2026-10-10)
+
+Fresh per-world CPU/GPU owners execute the existing full interval paths. The
+512-body check measures 64 warmed full steps after 64 warmup steps; both paths
+allocate 0/0 owner/all-thread managed bytes. Real server Area callbacks reject
+recursive stepping and world release while keeping the registered implementation
+live. An injected CPU worker-cleanup error still destroys the native world and
+unregisters its RID. Strict unavailable GPU and explicit startup fallback pass
+in a separate child without DISPLAY/WAYLAND_DISPLAY and with dummy video plus
+an unavailable GPU driver.
+
+The public-world fixture also ran both complete paths on this worktree, using
+active circles plus a floor, four substeps, 768 warmup steps and 128 samples:
+
+| Bodies | Backend | Full step p50/p95/p99, ms | Managed owner/all bytes | GPU upload/readback bytes per sample | Wait, ms |
+| ---: | --- | --- | --- | --- | ---: |
+| 1024 | CPU | 2.6073 / 2.8821 / 3.0792 | 0 / 0 | 0 / 0 | 0 |
+| 1024 | GPU | 7.5826 / 8.4562 / 9.0034 | 0 / 0 | 240 / 82680 | 3.7628 |
+| 4096 | CPU | 6.1230 / 7.0935 / 7.6039 | 0 / 0 | 0 / 0 | 0 |
+| 4096 | GPU | 8.1307 / 9.1993 / 9.8419 | 0 / 0 | 240 / 328440 | 3.9382 |
+
+Uniform uploads were 61916/64573 bytes per GPU sample at 1024/4096 bodies.
+These measurements leave GPU advantage open; the ownership refactor does not
+change readback policy or establish the target speed requirement. Logs and source
+hashes are retained in `bin/physics-backend-ownership/2026-10-10/` and its evidence
+manifest. Native allocation, foreign targets and real-window FPS are unverified.
+
+CPU/GPU public checkpoints and portable snapshots passed. The existing network
+checker also passed separate CPU-server/GPU-client/late-CPU-client processes through
+tick 360 with delayed, dropped, duplicated and reordered packets, lifecycle and
+correction; warmed step/replay all-thread counters were zero in their measured
+intervals. This verifies those exercised scenarios on the current implementation,
+not every network, platform or numerical acceptance condition. Public registered
+backends, custom geometry and the complete extension dispatch families remain open.

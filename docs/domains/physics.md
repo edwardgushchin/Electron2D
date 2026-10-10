@@ -36,6 +36,8 @@ GPU-world selection/binding now executes through the shared adapter.
 
 Public [query/motion result construction](../components/physics-queries.md) now validates RID/shape/lifetime and samples object associations without accepting forged object IDs. CPU/GPU checks execute from a separate consumer with zero warmed construction allocation. Full registered backend and direct-state extensions remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
+Each world now retains a distinct internal solver implementation owning either the CPU world/workers or the independent resident GPU store. Full interval dispatch and solver destruction use that object; [backend ownership checks](../components/physics-backends.md#runtime-flow-and-ownership) cover isolation, warmed allocation and no-device startup. The public registration and complete extension families remain open.
+
 ## Square atlas tile integration
 
 [Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).

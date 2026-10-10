@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
-    internal GPUPhysicsBodyStore? GPUStore { get; }
+    internal GPUPhysicsBodyStore? GPUStore => _backend.GPUStore;
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
     internal bool ForceGPUParameterRefresh, DecodeGPUTransforms;
@@ -133,7 +133,6 @@ internal sealed partial class PhysicsSpace
         _gpuChanges = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = []; _gpuAreaHits = [];
         _gpuShapeQuery[0] = default; _gpuAreaQuery[0] = default;
-        GPUStore!.Dispose();
     }
     internal void CaptureGPUViewContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState view, int limit)
     {
@@ -150,7 +149,7 @@ internal sealed partial class PhysicsSpace
         }
     }
 
-    private void StepGPU(double delta)
+    internal void StepGPU(double delta)
     {
         _stepping = true; List<Exception>? errors = null; var advanced = false;
         var intervalEntered = false; var intervalSubmissions = 0L;

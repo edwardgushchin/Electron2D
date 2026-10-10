@@ -80,7 +80,7 @@ internal sealed partial class PhysicsSpace
         var delta = context.dt; _continuousDuration = delta;
         _continuousTree ??= b2DynamicTree_Create();
         _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousBoundaries.Clear(); _continuousFraction = 1; _continuousNearStep = delta;
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         foreach (var body in _bodies) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
         foreach (var body in _serverColliders) if (!body.IsArea) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);
@@ -131,7 +131,7 @@ internal sealed partial class PhysicsSpace
     {
         if ((int)data == query.Shape) return true;
         var target = query.Space._continuousShapes[(int)data];
-        if (b2GetShape(b2GetWorldFromId(query.Space._worldID), target.ID).type != B2ShapeType.b2_boundaryShape)
+        if (b2GetShape(b2GetWorldFromId(query.Space.WorldID), target.ID).type != B2ShapeType.b2_boundaryShape)
             query.Space.TestContinuousPair(query.Shape, (int)data);
         return true;
     }
@@ -142,7 +142,7 @@ internal sealed partial class PhysicsSpace
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);
         ref var ba = ref bodies[a.Body]; ref var bb = ref bodies[b.Body];
         if (bb.Dynamic && bb.Mode != CCDMode.Disabled && first > second) return;
-        var world = b2GetWorldFromId(_worldID); var sa = b2GetShape(world, a.ID); var sb = b2GetShape(world, b.ID);
+        var world = b2GetWorldFromId(WorldID); var sa = b2GetShape(world, a.ID); var sb = b2GetShape(world, b.ID);
         if (!b2ShouldShapesCollide(sa.filter, sb.filter) || !b2ShouldBodiesCollide(world, world.bodies.data[sa.bodyId], world.bodies.data[sb.bodyId])) return;
         var ta = sa.userData.GetRef<PhysicsFixtureTag>(); var tb = sb.userData.GetRef<PhysicsFixtureTag>();
         if (ta is null || tb is null || PhysicsServer.Service.BodiesExcepted(ta.ColliderRID, tb.ColliderRID)) return;
@@ -184,7 +184,7 @@ internal sealed partial class PhysicsSpace
         if (ta.SeparationRay is not null || tb.SeparationRay is not null)
         {
             // CastRay may have reduced either proxy to a support point. Directed validation needs the complete authored ray.
-            var world = b2GetWorldFromId(_worldID);
+            var world = b2GetWorldFromId(WorldID);
             var directed = PhysicsSeparationRay.SolverContact(b2GetShape(world, a.ID), xa, b2GetShape(world, b.ID), xb, B2Constants.B2_LINEAR_SLOP);
             if (directed.pointCount == 0) return;
             hit.normal = directed.normal;

@@ -74,7 +74,7 @@ internal sealed partial class PhysicsSpace
                 _oneWayPairs.Add(key, new(pair.Allowed, _contactStep));
             }
             _defaultGravity = DefaultAreaFields.GravityPoint ? default : DefaultAreaFields.GravityVector * DefaultAreaFields.Gravity;
-            b2World_SetGravity(_worldID, PhysicsShapeBackend.ToBackend(_defaultGravity));
+            b2World_SetGravity(WorldID, PhysicsShapeBackend.ToBackend(_defaultGravity));
             PublishStatistics();
         }
     }

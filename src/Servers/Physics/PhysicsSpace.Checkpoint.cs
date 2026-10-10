@@ -86,7 +86,7 @@ internal sealed partial class PhysicsSpace
                 s.SyncGPUExceptions();
                 if (_gpu is null) _gpu = store.CreateCheckpoint(); else _gpu.Capture();
             }
-            else { if (_cpu is null) _cpu = new(s._worldID); else _cpu.Capture(); }
+            else { if (_cpu is null) _cpu = new(s.WorldID); else _cpu.Capture(); }
             var index = 0;
             foreach (var body in s._bodies) CaptureEntry(body.Backend, body, null, ref index);
             foreach (var area in s._areas) CaptureEntry(area.Backend, area, null, ref index);

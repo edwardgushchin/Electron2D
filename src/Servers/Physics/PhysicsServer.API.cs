@@ -1126,9 +1126,12 @@ public sealed partial class PhysicsServer
     /// <remarks>Scene-owned spaces, collision objects and joints are released by their scene owners.
     /// Freeing a body clears dependent joint connections before removing its identity.
     /// After a backend failure, colliders and joints can still be released; their raw storage is reclaimed
-    /// with the failed space without traversing partially published simulation graphs.</remarks>
+    /// with the failed space without traversing partially published simulation graphs. Space release rejects
+    /// during live physics callbacks. Once cleanup starts, all owned participants and the selected solver are
+    /// attempted; the space RID and direct view are unregistered even when cleanup reports aggregated failures.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
-    /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped.</exception>
+    /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped or dispatching callbacks.</exception>
+    /// <exception cref="AggregateException">Space cleanup encountered errors after attempting all owned resources.</exception>
     public static void FreeRID(RID rid) => Service.FreeRIDCore(rid);
 
     /// <summary>Returns the current shape resource RID at a body's global logical index.</summary>

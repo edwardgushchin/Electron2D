@@ -69,7 +69,7 @@ internal sealed partial class PhysicsSpace
         var recovery = new B2Vec2(0, 0);
         var recoveryHit = default(MotionContact);
         var hasRecoveryHit = false;
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         var queryMargin = MathF.Max(margin * MetersPerUnit, 0.0001f * MetersPerUnit);
         Span<System.Numerics.Vector4> recoveryPlanes = stackalloc System.Numerics.Vector4[32];
 

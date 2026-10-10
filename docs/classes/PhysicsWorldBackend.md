@@ -1,0 +1,19 @@
+# PhysicsWorldBackend
+
+Last updated: 2026-10-10
+
+**Declaration:** `internal abstract class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
+
+## Description and internal flow
+
+Owns selection metadata and full interval dispatch for one internal implementation. PhysicsSpace constructs it after validating sampled world settings. Create makes a fresh CPUPhysicsWorldBackend or GPUPhysicsWorldBackend; optional startup fallback constructs an actual CPU implementation and retains the GPU request and failure message. It never changes a running implementation.
+
+Kind, Requested and FallbackReason describe immutable selection. EnsureAccess performs implementation-specific idle/failure/lifetime checks. Step dispatches the complete CPU/GPU interval; StepNative is the CPU discrete/CCD endpoint. WorldID, Tasks and diagnostic stage controls are internal CPU-only facets and reject for a resident GPU implementation. GPUStore is present only for the resident implementation. Dispose releases owned solver resources.
+
+## Ownership and verification
+
+The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. Existing common physics, checkpoint and network checks remain separate acceptance evidence.
+
+## Limits and decisions
+
+PhysicsSpace retains membership, authoring, observer state and event/callback ordering. This internal factory is currently limited to the two built-ins. It is not public backend registration and does not implement custom geometry or the server/direct-state extension families. Native allocator, foreign-platform execution, GPU speed advantage and real-window FPS remain separate gates. See [ADR 0054](../decisions/physics-backends.md#adr-0054) and [ADR 0103](../decisions/physics-extensions.md#adr-0103).

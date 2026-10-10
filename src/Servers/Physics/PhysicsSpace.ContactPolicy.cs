@@ -14,7 +14,7 @@ internal sealed partial class PhysicsSpace
         if (SolverIterations == value) return;
         SolverIterations = value;
         if (GPUStore is not null) { GPUStore.SetSolverIterations(value); InvalidateGPUStates(); return; }
-        b2GetWorldFromId(_worldID).solverIterations = value;
+        b2GetWorldFromId(WorldID).solverIterations = value;
         WakeDynamicBodies();
     }
 
@@ -24,14 +24,14 @@ internal sealed partial class PhysicsSpace
         EnsureQueryAccess(); settings.Validate(); if (ContactSettings == settings) return;
         ContactSettings = settings;
         if (GPUStore is not null) { GPUStore.SetContactSettings(settings); InvalidateGPUStates(); return; }
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         world.contactRecycleRadius = settings.RecycleRadius * MetersPerUnit; world.contactMaxSeparation = settings.MaxSeparation * MetersPerUnit;
         world.contactBias = settings.Bias; world.contactAllowedPenetration = settings.AllowedPenetration * MetersPerUnit;
         WakeDynamicBodies();
     }
     private void WakeDynamicBodies()
     {
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         for (var i = 0; i < world.bodies.count; i++)
         {
             var body = world.bodies.data[i];

@@ -24,7 +24,7 @@ internal sealed partial class PhysicsSpace
             if (limit == 0 || backend.IsDynamic) return;
             if (backend.HasMotionMode(PhysicsServer.BodyMode.Kinematic) && !b2Body_IsAwake(backend.BodyID)) _reportOnlyActive++;
             if (!_aggregateContactImpulses) { BeginFrameContacts(); CaptureIntervalImpulses(); }
-            var world = b2GetWorldFromId(_worldID);
+            var world = b2GetWorldFromId(WorldID);
             var shapes = backend.Shapes;
             for (var i = 0; i < shapes.Count; i++)
             {
@@ -47,7 +47,7 @@ internal sealed partial class PhysicsSpace
     }
     private static bool ReportOnlyCandidate(int proxy, ulong data, ref ReportOnlyQuery query)
     {
-        var space = query.Space; var world = b2GetWorldFromId(space._worldID);
+        var space = query.Space; var world = b2GetWorldFromId(space.WorldID);
         var a = query.Shape; var b = world.shapes.data[(int)data];
         if (a.bodyId == b.bodyId || b.sensorIndex >= 0 || !b2ShouldShapesCollide(a.filter, b.filter) ||
             !b2ShouldBodiesCollide(world, world.bodies.data[a.bodyId], world.bodies.data[b.bodyId], reportOnly: true)) return true;

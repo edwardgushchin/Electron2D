@@ -54,6 +54,8 @@ CCD checks cover this internal optimization; no declaration state changes.
 
 [Kinematic target/surface separation](gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server target and surface adapters now use the resident store.
 
+The built-in world ownership boundary now executes through a fresh internal CPU/GPU implementation object. It owns solver resources and complete interval dispatch, with independent world identities and failure-aware teardown. [Ownership checks](physics-backends.md#runtime-flow-and-ownership) cover 512 bodies, 64 warmed full steps at zero owner/all-thread managed allocation, native release despite an injected worker cleanup error and no-device CPU/fallback startup. This does not implement the public manager, complete server/direct-state extension family or custom geometry; their census rows remain open.
+
 ## Baseline and scope
 
 Original audit baseline: `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.

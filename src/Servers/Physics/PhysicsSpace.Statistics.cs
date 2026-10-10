@@ -9,7 +9,7 @@ internal sealed partial class PhysicsSpace
 
     private void PublishStatistics()
     {
-        var world = B2Worlds.b2GetWorldFromId(_worldID);
+        var world = B2Worlds.b2GetWorldFromId(WorldID);
         var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
         var islands = 0;
         foreach (var sim in awake.islandSims.data.AsSpan(0, awake.islandSims.count))

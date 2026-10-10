@@ -30,7 +30,7 @@ internal sealed partial class PhysicsSpace
     private void StepContinuous(float delta)
     {
         if (!_aggregateContactImpulses) BeginFrameContacts();
-        var world = b2GetWorldFromId(_worldID); var finalizer = world.finalizeBodyStates; var warm = world.enableWarmStarting;
+        var world = b2GetWorldFromId(WorldID); var finalizer = world.finalizeBodyStates; var warm = world.enableWarmStarting;
         _continuousFinalize ??= FinalizeContinuousMotion;
         world.finalizeBodyStates = _continuousFinalize;
         _continuousForces.Clear();
@@ -73,7 +73,7 @@ internal sealed partial class PhysicsSpace
         catch (Exception failure)
         {
             _continuousFailure = failure;
-            _tasks!.Drain(); world.locked = false;
+            _backend.Tasks.Drain(); world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();
             throw;

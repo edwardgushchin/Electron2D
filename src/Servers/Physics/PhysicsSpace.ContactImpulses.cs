@@ -17,7 +17,7 @@ internal sealed partial class PhysicsSpace
     private void CaptureBodyMotions()
     {
         Array.Clear(_bodyMotions);
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         var awake = world.solverSets.data[(int)B2SolverSetType.b2_awakeSet];
         for (var i = 0; i < awake.bodySims.count; i++)
         {
@@ -37,7 +37,7 @@ internal sealed partial class PhysicsSpace
     {
         ref readonly var motion = ref _bodyMotions[id.index1 - 1];
         if (motion.Active) return b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center)));
-        var world = b2GetWorldFromId(_worldID); var sim = b2GetBodySim(world, b2GetBodyFullId(world, id));
+        var world = b2GetWorldFromId(WorldID); var sim = b2GetBodySim(world, b2GetBodyFullId(world, id));
         return b2Add(sim.surfaceLinearVelocity, b2CrossSV(sim.surfaceAngularVelocity, b2Sub(point, sim.center)));
     }
 
@@ -67,7 +67,7 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _callbackBodies)
                 if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) { _aggregateContactImpulses = true; break; }
         if (!_aggregateContactImpulses) return;
-        var count = Math.Max(_preparedBodyCapacity, b2GetWorldFromId(_worldID).bodies.count);
+        var count = Math.Max(_preparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
         if (_frameContactHeads.Length < count)
         {
             Array.Resize(ref _frameContactHeads, count); Array.Resize(ref _frameContactTails, count);
@@ -78,7 +78,7 @@ internal sealed partial class PhysicsSpace
     private void CaptureIntervalImpulses()
     {
         if (!_aggregateContactImpulses) return;
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         foreach (var body in _contactBodies)
             if (body.MaxContactsReported > 0) Capture(body.BackendID);
         foreach (var body in _callbackBodies)
@@ -150,7 +150,7 @@ internal sealed partial class PhysicsSpace
     internal bool CaptureFrameContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState state, B2BodyId id, int limit)
     {
         if (!_aggregateContactImpulses) return false;
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         var contacts = CollectionsMarshal.AsSpan(_frameContacts);
         for (var index = _frameContactHeads[id.index1 - 1]; index >= 0;)
         {
@@ -167,7 +167,7 @@ internal sealed partial class PhysicsSpace
 
     internal B2Vec2 SolvedContactImpulse(B2ContactSim contact, in B2ManifoldPoint point)
     {
-        if (contact.solvedStep == 0 || contact.solvedStep != b2GetWorldFromId(_worldID).stepIndex) return default;
+        if (contact.solvedStep == 0 || contact.solvedStep != b2GetWorldFromId(WorldID).stepIndex) return default;
         return contact.manifold.normal * point.totalNormalImpulse + b2RightPerp(contact.manifold.normal) * point.totalTangentImpulse;
     }
 }

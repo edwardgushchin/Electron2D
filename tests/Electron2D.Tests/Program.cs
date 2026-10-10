@@ -9,6 +9,13 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is { } ownershipBackend)
+{
+    if (ownershipBackend == "no-device-child") PhysicsBackendOwnershipTests.RunNoDeviceChild();
+    else if (ownershipBackend == "no-device") PhysicsBackendOwnershipTests.RunNoDevice();
+    else PhysicsBackendOwnershipTests.Run(ownershipBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESULT_CONSTRUCTION") is { } resultBackend) { PhysicsResultConstructionTests.Run(resultBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPORT_ONLY") is { } reportOnlyBackend) { PhysicsReportOnlyTests.Run(reportOnlyBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTERS") == "1") { PhysicsFilterTests.Run(); PhysicsFilterTests.Run(true); return; }
@@ -742,6 +749,7 @@ PhysicsContactDebugTests.Run(false);
 PhysicsVelocityEditTests.Run(false);
 PhysicsGPUPublicationTests.Run(false);
 PhysicsHostPreparationTests.Run(false);
+PhysicsBackendOwnershipTests.Run(PhysicsServer.Backend.CPU);
 PhysicsResultConstructionTests.Run(PhysicsServer.Backend.CPU);
 PhysicsQueryTests.Run();
 PhysicsCanvasTests.Run();

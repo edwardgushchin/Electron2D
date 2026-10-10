@@ -13,7 +13,7 @@ internal sealed partial class PhysicsSpace
         if (SleepSettings == settings) return;
         SleepSettings = settings;
         if (GPUStore is not null) { GPUStore.SetSleepSettings(settings); InvalidateGPUStates(); return; }
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         world.sleepAngularThreshold = settings.AngularThreshold; world.timeToSleep = settings.TimeToSleep;
         for (var i = 0; i < world.bodies.count; i++)
         {

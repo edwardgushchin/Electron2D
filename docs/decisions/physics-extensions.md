@@ -30,8 +30,7 @@ helpers, not just body simulation.
 Current Electron2D has two built-in per-world implementations behind a static
 sealed PhysicsServer facade. PhysicsDirectBodyState and PhysicsDirectSpaceState
 are sealed; validated query-result construction and reusable motion-result filling now execute through a separate public consumer; RID allocation belongs to the engine.
-Scene attachment/state/motion/joints and query paths branch directly between CPU
-and GPU. A registry returning enum aliases, an unused factory, or facade-only
+The internal factory now creates a retained implementation that owns each built-in solver and complete interval dispatch. Scene attachment/state/motion/joints and query paths still branch directly between CPU and GPU. A registry returning enum aliases, an unused factory, or facade-only
 interception would leave scene behavior and direct queries outside the extension.
 
 ### Decision

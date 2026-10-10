@@ -27,7 +27,7 @@ internal sealed partial class PhysicsSpace
     {
         if (_debugContactLimit == 0) return;
         if (GPUStore is not null) { _debugContactCount = GPUStore.ReadDebugContacts(_debugContacts.AsSpan(0, _debugContactLimit)); return; }
-        var world = b2GetWorldFromId(_worldID);
+        var world = b2GetWorldFromId(WorldID);
         foreach (var color in world.constraintGraph.colors)
             foreach (var contact in color.contactSims.data.AsSpan(0, color.contactSims.count))
             {

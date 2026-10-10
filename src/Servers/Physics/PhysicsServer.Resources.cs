@@ -278,13 +278,16 @@ public sealed partial class PhysicsServer
         }
         if (space is not null)
         {
-            space.EnsureReleaseAccess();
-            space.Dispose();
-            lock (_registryGate)
+            space.EnsureWorldRelease();
+            try { space.Dispose(); }
+            finally
             {
-                _ownedSpaces.Remove(rid);
-                _sceneSpaces.Remove(rid);
-                _directStates.Remove(rid);
+                lock (_registryGate)
+                {
+                    _ownedSpaces.Remove(rid);
+                    _sceneSpaces.Remove(rid);
+                    _directStates.Remove(rid);
+                }
             }
         }
         else if (collider is not null)
