@@ -52,7 +52,7 @@ internal static class PhysicsMassPerformance
         private readonly PhysicsSpace _data;
         private readonly double[] _steps, _waits, _phases = new double[8];
         private readonly long[] _up, _down, _submissions;
-        private long _owner, _all;
+        private long _owner, _all, _uniformBytes;
         private int _tick, _measured;
         internal bool Complete => _measured == Samples;
         internal int Tick => _tick;
@@ -62,7 +62,7 @@ internal static class PhysicsMassPerformance
         internal double[] FrameTimes = new double[16384], PublishTimes;
         internal int Frames, PublishCount;
         internal long FrameOwner, FrameAll, FrameStart;
-        internal long FrameUploadBytes, FrameReadbackBytes, FrameSubmissions;
+        internal long FrameUploadBytes, FrameReadbackBytes, FrameSubmissions, FrameUniformBytes;
         internal double FrameWaitMS;
         internal double WallSeconds;
         internal string VSync = "none";
@@ -78,6 +78,11 @@ internal static class PhysicsMassPerformance
             try
             {
                 Space = PhysicsServer.SpaceCreate(backend); _data = PhysicsServer.Service.GetSceneSpace(Space);
+                if (_data.GPUStore is { } gpu)
+                {
+                    gpu.PackColoredContacts = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_UNPACKED") != "1";
+                    gpu.PackSolverBodyState = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_UNPACKED_BODIES") != "1";
+                }
                 PhysicsServer.SpaceSetActive(Space, true); PhysicsServer.AreaSetGravity(Space, 980);
                 PhysicsServer.SpaceSetSolverIterations(Space, 16);
                 PhysicsServer.AreaSetLinearDamp(Space, .05f); PhysicsServer.AreaSetAngularDamp(Space, .05f);
@@ -106,6 +111,7 @@ internal static class PhysicsMassPerformance
             if (Complete) return;
             var gpu = _data.GPUStore;
             var upload = gpu?.UploadBytes ?? 0; var download = gpu?.ReadbackBytes ?? 0; var submissions = gpu?.SubmissionCount ?? 0; var wait = gpu?.WaitMS ?? 0;
+            var uniforms = gpu?.UniformBytes ?? 0;
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true); var start = Stopwatch.GetTimestamp();
             PhysicsServer.SpaceStep(Space, Delta);
             var elapsed = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
@@ -116,6 +122,7 @@ internal static class PhysicsMassPerformance
             _steps[sample] = elapsed; _waits[sample] = (gpu?.WaitMS ?? 0) - wait;
             _up[sample] = (gpu?.UploadBytes ?? 0) - upload; _down[sample] = (gpu?.ReadbackBytes ?? 0) - download; _submissions[sample] = (gpu?.SubmissionCount ?? 0) - submissions;
             _owner += owner; _all += all;
+            _uniformBytes += (gpu?.UniformBytes ?? 0) - uniforms;
             for (var i = 0; i < _phases.Length; i++) _phases[i] += _data.ProfileMS[i];
         }
         internal void Validate()
@@ -172,6 +179,7 @@ internal static class PhysicsMassPerformance
                 StepMS = Summary(_steps, Samples),
                 WaitMS = Summary(_waits, Samples),
                 PhaseMeanMS = _phases.Select(value => value / Samples).ToArray(),
+                UniformBytes = _uniformBytes,
                 UploadBytes = _up.Sum(),
                 ReadbackBytes = _down.Sum(),
                 Submissions = _submissions.Sum(),
@@ -191,6 +199,7 @@ internal static class PhysicsMassPerformance
                 PhysicsTicksPerSecond = WallSeconds > 0 ? Samples / WallSeconds : 0,
                 FrameMS = Summary(FrameTimes, Frames),
                 PublishMS = Summary(PublishTimes, PublishCount),
+                FrameUniformBytes,
                 FrameOwner,
                 FrameAll,
                 FrameUploadBytes,
@@ -204,7 +213,10 @@ internal static class PhysicsMassPerformance
                 Device = _data.GPUStore?.DeviceName,
                 ContactColors = _data.GPUStore?.ContactColorCount,
                 ColorRounds = _data.GPUStore?.ContactColorRounds,
-                ColorFallbacks = _data.GPUStore?.ContactColorFallbacks
+                ColorFallbacks = _data.GPUStore?.ContactColorFallbacks,
+                PackedContacts = _data.GPUStore?.PackColoredContacts,
+                PackedSolverBodies = _data.GPUStore is { } store ? (bool?)(store.PackColoredContacts && store.PackSolverBodyState) : null,
+                PackedSolverStorageBytes = _data.GPUStore?.PackedSolverStorageBytes
             };
             var text = JsonSerializer.Serialize(report, new JsonSerializerOptions { WriteIndented = true });
             var directory = System.IO.Path.GetFullPath(Environment.GetEnvironmentVariable("ELECTRON2D_MASS_OUTPUT") ?? "bin/physics-mass"); Directory.CreateDirectory(directory);
@@ -222,6 +234,7 @@ internal static class PhysicsMassPerformance
         {
             var gpu = _data.GPUStore;
             FrameUploadBytes = (gpu?.UploadBytes ?? 0) - (begin ? 0 : FrameUploadBytes);
+            FrameUniformBytes = (gpu?.UniformBytes ?? 0) - (begin ? 0 : FrameUniformBytes);
             FrameReadbackBytes = (gpu?.ReadbackBytes ?? 0) - (begin ? 0 : FrameReadbackBytes);
             FrameSubmissions = (gpu?.SubmissionCount ?? 0) - (begin ? 0 : FrameSubmissions);
             FrameWaitMS = (gpu?.WaitMS ?? 0) - (begin ? 0 : FrameWaitMS);

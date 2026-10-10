@@ -7,6 +7,7 @@ layout(std430,set=0,binding=0) readonly buffer Bodies { ResidentBody bodies[]; }
 layout(std430,set=0,binding=1) readonly buffer Heads { uvec2 heads[]; };
 layout(std430,set=0,binding=2) readonly buffer Corrections { vec4 corrections[]; };
 layout(std430,set=0,binding=3) readonly buffer Constraints { Constraint constraints[]; };
+layout(std430,set=0,binding=4) readonly buffer SolverBodies { SolverBody solverBodies[]; };
 layout(std430,set=1,binding=0) buffer Impulses { ContactImpulse impulses[]; };
 layout(std430,set=1,binding=1) buffer Status { uvec2 status; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
@@ -19,6 +20,8 @@ void main()
     Constraint c=constraints[i];if(c.bodies.x==none)return;
     ContactImpulse p=impulses[i];
     ResidentBody a=bodies[c.bodies.x],b=c.bodies.y==none?worldBody():bodies[c.bodies.y];
+    bool packed=(history.w&8u)!=0u;
+    if(packed){a.velocity.xyz=solverBodies[c.bodies.x].velocity.xyz;if(c.bodies.y!=none)b.velocity.xyz=solverBodies[c.bodies.y].velocity.xyz;}
     bool joint=c.tangent.y!=0;
     // A stationary surface can move contact points, but not the pin/guide's fixed anchor.
     if(joint){if(a.flags.y==0u)a.velocity=vec4(0);if(b.flags.y==0u)b.velocity=vec4(0);}
@@ -37,6 +40,7 @@ void main()
     float weight=1.0/float(max(degree,1u));
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);
     vec3 ca=corrections[c.bodies.x].xyz,cb=c.bodies.y==none?vec3(0):corrections[c.bodies.y].xyz;
+    if(packed){ca=solverBodies[c.bodies.x].correction.xyz;cb=c.bodies.y==none?vec3(0):solverBodies[c.bodies.y].correction.xyz;}
     float correctionSpeed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;
     float nextCorrection=p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed-softness*p.correction.x);
     if(c.tangent.y!=2&&!finite4(vec4(correctionSpeed,nextCorrection,0,0))){fail();return;}

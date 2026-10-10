@@ -128,6 +128,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Grow(ref _constraintsGPU, ref _constraintCapacity, Math.Max(1, constraintCount), 64, false);
             Grow(ref _constraintImpulsesGPU, ref _constraintImpulseCapacity, Math.Max(1, constraintCount), 32, false);
             Grow(ref _positionCorrectionsGPU, ref _positionCorrectionCapacity, _highWater, 16, false);
+            Grow(ref _solverBodies, ref _solverBodyCapacity, PackColoredContacts && PackSolverBodyState && ContactPointCount > 0 ? _highWater : 1, 48, false);
             Grow(ref _contactHeadsGPU, ref _contactHeadCapacity, _highWater, 8, false);
             Grow(ref _solverHistoryGPU, ref _solverHistoryCapacity, Math.Max(1, Math.Max(ContactPointCount, _previousPointCount)), 96, true);
             var previousTableCapacity = _solverHistoryTableCapacity;
@@ -199,6 +200,9 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             ContactColorCount = 0;
             var colorStart = ProfileSolverPasses ? Stopwatch.GetTimestamp() : 0;
             var colors = ContactPointCount > 0 ? BuildContactColors(ref command) : 0;
+            if (colors > 0 && PackColoredContacts) PackSolverState(command, 0);
+            var packedBodies = colors > 0 && PackColoredContacts && PackSolverBodyState;
+            if (packedBodies) { PackSolverState(command, 2); settings.Flags |= 8; }
             if (ProfileSolverPasses) SolverPassMS[7] += Stopwatch.GetElapsedTime(colorStart).TotalMilliseconds;
             for (var iteration = 0; settings.Points > 0 && iteration < iterations; iteration++)
             {
@@ -227,6 +231,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     SolverPass(ref command, settings, 3, _highWater);
                 }
             }
+            if (colors > 0 && PackColoredContacts) PackSolverState(command, 1);
+            if (packedBodies) { PackSolverState(command, 3); settings.Flags &= ~8u; }
             if (JointCount > 0) JointPass(command, settings, 2);
             SolverPass(ref command, settings, 4, ContactPointCount);
             SolverPass(ref command, settings, 5, _solverHistoryTableCapacity);
@@ -285,20 +291,22 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (count == 0) return;
         var start = ProfileSolverPasses ? Stopwatch.GetTimestamp() : 0;
         var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[8];
-        var inputs = stackalloc nint[4];
+        var inputs = stackalloc nint[5];
         RenderHandle pipeline; uint inputCount, outputCount;
         if (stage == 2)
         {
-            pipeline = _solverUpdatePipeline!; inputCount = 4; outputCount = 2;
+            pipeline = _solverUpdatePipeline!; inputCount = 5; outputCount = 2;
             inputs[0] = _bodies!.DangerousGetHandle(); inputs[1] = _contactHeadsGPU!.DangerousGetHandle(); inputs[2] = _positionCorrectionsGPU!.DangerousGetHandle();
             inputs[3] = _constraintsGPU!.DangerousGetHandle();
+            inputs[4] = _solverBodies!.DangerousGetHandle();
             outputs[0] = new() { Buffer = _constraintImpulsesGPU!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _spatialSummary!.DangerousGetHandle() };
         }
         else if (stage == 3)
         {
-            pipeline = _solverGatherPipeline!; inputCount = 3; outputCount = 3;
+            pipeline = _solverGatherPipeline!; inputCount = 3; outputCount = 4;
             inputs[0] = _constraintsGPU!.DangerousGetHandle(); inputs[1] = _contactHeadsGPU!.DangerousGetHandle(); inputs[2] = _constraintImpulsesGPU!.DangerousGetHandle();
             outputs[0] = new() { Buffer = _bodies!.DangerousGetHandle() }; outputs[1] = new() { Buffer = _positionCorrectionsGPU!.DangerousGetHandle() }; outputs[2] = new() { Buffer = _spatialSummary!.DangerousGetHandle() };
+            outputs[3] = new() { Buffer = _solverBodies!.DangerousGetHandle() };
         }
         else
         {

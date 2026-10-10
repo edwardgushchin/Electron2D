@@ -22,6 +22,12 @@ reducing population or iterations. Colored contact solving, including joint-worl
 integration, remains GPU-resident. Overflow schedules use complete Jacobi; their
 convergence and the corrected dense-world 60 Hz/FPS target remain open.
 
+Packed iterative GPU state now reduces repeated scattered contact/body reads without
+changing the solver equations or iteration count. Contact/joint coupling, reports,
+checkpoints and portable snapshots are exercised with that layout. Its measured
+benefit and retained device capacity are recorded with the dense-world workload;
+this internal storage change closes no additional public declaration gap.
+
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the independent public backend now receives the same CCD policy. Full cross-backend shape-family acceptance remains open.
 
 [Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion and CharacterBody now route to these kernels; full CharacterBody conformance remains open.

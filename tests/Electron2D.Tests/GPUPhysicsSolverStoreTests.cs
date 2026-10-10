@@ -17,6 +17,7 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyBatchedStep();
         VerifyBatchedCapacityRetry();
         VerifyColoredContacts();
+        for (var layout = 0; layout < 3; layout++) VerifyCoupledLayout(layout);
         VerifyStack();
         VerifyResidency(64);
         VerifyResidency(256);
@@ -294,6 +295,26 @@ internal static class GPUPhysicsSolverStoreTests
         Near(momentum.X, 12, .002f, "Every contact color preserves total linear momentum");
         Check(energy <= 72.002f, "Inelastic colored constraints cannot add kinetic energy");
         Console.WriteLine($"Resident colored contacts: {store.ContactColorCount} colors/{store.ContactColorRounds} proposal rounds, momentum, energy and frame impulses passed.");
+    }
+
+    private static void VerifyCoupledLayout(int layout)
+    {
+        using var store = new GPUPhysicsBodyStore { CaptureContactReports = true, PackColoredContacts = layout > 0, PackSolverBodyState = layout > 1 };
+        using var circle = new CircleShape { Radius = 1 };
+        var a = Add(store, new(-2, 0), new(12, 0)); var b = Add(store); var c = Add(store, new(0, 10));
+        store.AddShape(a, circle, friction: 0); store.AddShape(b, circle, friction: 0);
+        store.AddJoint(new(PhysicsServer.JointType.Pin, b, c, Transform.Identity, new(0, new(0, -10))) { MaxForce = 1000, MaxBias = 100 });
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
+        var states = new GPUPhysicsBodyStore.Snapshot[3]; store.Read([a, b, c], states);
+        Near(states[0].Velocity.X, 6, .001f, "Equal-mass inelastic impact shares the incoming velocity");
+        Check(states[2].Velocity.X > .01f && states[2].Velocity.X < 6, "The coupled pin consumes the velocity produced by the contact sweep");
+        Near(states[1].Velocity.X + states[2].Velocity.X, 6, .001f, "Joint gather preserves the contact's momentum contribution");
+        Near(states[2].Position.Y, 10, .001f, "Packed velocity solving preserves world poses");
+        var reports = new GPUPhysicsBodyStore.ContactReport[1]; var counts = new int[1];
+        store.ReadContactReports([b], [1], counts, reports);
+        Check(counts[0] == 1, "Only the collision contributes a contact report");
+        Near(reports[0].Impulse.X, 6, .001f, "Unpacked reports contain contact impulses without the later joint impulse");
+        Console.WriteLine($"Resident solver layout {layout}: coupled contact/joint velocity, momentum and report isolation passed.");
     }
 
     private static void VerifyStack()

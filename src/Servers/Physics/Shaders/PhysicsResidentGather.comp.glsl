@@ -9,6 +9,7 @@ layout(std430,set=0,binding=2) readonly buffer Impulses { ContactImpulse impulse
 layout(std430,set=1,binding=0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430,set=1,binding=1) buffer Corrections { vec4 corrections[]; };
 layout(std430,set=1,binding=2) buffer Status { uvec2 status; };
+layout(std430,set=1,binding=3) buffer SolverBodies { SolverBody solverBodies[]; };
 layout(std140,set=2,binding=0) uniform Settings { uvec4 control; vec4 time; vec4 policy; uvec4 history; vec4 correctionPolicy; };
 const uint none=0xffffffffu;
 void fail(){atomicOr(status.x,1u);}
@@ -16,6 +17,8 @@ void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y||status.x!=0u)return;
     ResidentBody b=bodies[i];if(b.flags.w==0u||b.flags.y<2u||(b.flags.z&16u)!=0u)return;
+    bool packed=(history.w&8u)!=0u;
+    if(packed)b.velocity.xyz=solverBodies[i].velocity.xyz;
     uvec2 list=heads[i];uint at=list.x;vec3 total=vec3(0),correction=vec3(0);
     for(uint visited=0u;visited<list.y;visited++)
     {
@@ -29,7 +32,8 @@ void main()
     }
     if(at!=none){fail();return;}
     vec2 m=inverseMass(b);b.velocity.xyz+=vec3(m.x*total.xy,m.y*total.z);
-    vec4 position=corrections[i]+vec4(m.x*correction.xy,m.y*correction.z,0);
+    vec4 position=vec4(packed?solverBodies[i].correction.xyz:corrections[i].xyz,0)+vec4(m.x*correction.xy,m.y*correction.z,0);
     if(!finite4(b.velocity)||!finite4(position)){fail();return;}
-    bodies[i].velocity=b.velocity;corrections[i]=position;
+    if(packed){solverBodies[i].velocity.xyz=b.velocity.xyz;solverBodies[i].correction.xyz=position.xyz;}
+    else{bodies[i].velocity=b.velocity;corrections[i]=position;}
 }

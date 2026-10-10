@@ -293,6 +293,13 @@ Color overflow retains all constraints on the GPU Jacobi path. ContactColorCount
 ContactColorRounds and ContactColorFallbacks are internal diagnostics. Derived
 schedule scratch is rebuilt after checkpoint restore and has no public identity.
 
+Colored solving packs coefficients/impulses by color and velocity/correction/mass/
+surface data into 48-byte body records. Joints consume those current velocities;
+final values return to the owning records before integration, history and reports.
+All scratch remains on device, is reused after warmup and released by the store.
+The [layout measurements](../components/gpu-contact-colors.md#packed-iterative-state)
+state the additional capacity and diagnostic layout controls.
+
 SimulateFields records velocity integration before spatial kernels, or before the
 solver for shape-free worlds. Discrete position integration and connected sleep
 follow report capture in the solver command buffer. Body and solver/spatial status

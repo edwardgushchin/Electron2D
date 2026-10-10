@@ -33,6 +33,10 @@ Public CPU/GPU native-window checks measure geometry, energy, latency and warmed
 managed allocations. No declaration state changes; high-degree fallback convergence,
 massive-world performance and the other linked contract gaps remain open.
 
+The same contact solver now packs iterative contact/body state on device. Shared
+contact/joint velocity checks and snapshot/report tests cover the storage change;
+it does not expand public signatures or upgrade declaration coverage states.
+
 The following paragraph records the historical CPU-hosted stage experiment. The independent public backend is described in [backend selection](../components/physics-backends.md).
 
 The internal [GPU physics stage](../components/gpu-physics.md) now executes resident GPU AABB hierarchy construction/refitting/traversal, built-in pair filtering with incremental resident shape/joint metadata and GPU-maintained resident contact lookup, GPU contact ID allocation/initialization with generation-checked resident slots and deterministic resident adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists and compact publication and disconnected-island splitting, collision-batch constraint coloring with ordered sleeping-set wakes, fused body-pose/sleep-eligibility/fast-body finalization, lazy resident manifold-shape geometry and complete built-in contact updates (materials, state flags and mass-relative anchors). Pair search retains complete grow-and-retry candidate output and exact CPU pair/custom-filter order checks. CPU query/CCD tree mirrors and publication ranking, adjacency mirror, authoring graph coloring and island changes, external edit handling and backend selection remain incomplete GPU-world obligations. User callbacks deliberately remain on the owner thread. Full host graph validation now reads independent packed CPU liveness/membership flags; snapshot/journal updates replace repeated native-object scans without trusting GPU output or removing list checks. No public declaration coverage is closed by this internal stage.

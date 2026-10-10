@@ -11,6 +11,7 @@ struct ContactImpulse
     vec4 physical; // Accumulated normal/tangent, then this iteration's deltas.
     vec4 correction; // Accumulated/delta positional impulse, then joint impulse lower/upper bounds.
 };
+struct SolverBody { vec4 velocity; vec4 correction; vec4 surface; }; // Spare velocity/correction lanes store inverse mass/inertia.
 float dot2(vec2 a,vec2 b) {return a.x*b.x+a.y*b.y;}
 float cross2(vec2 a,vec2 b) {return a.x*b.y-a.y*b.x;}
 vec2 rotate(vec2 q,vec2 p) {return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}

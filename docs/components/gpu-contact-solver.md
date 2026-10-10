@@ -101,8 +101,10 @@ than 112 bytes per point (14.3% less logical storage; retained capacity rounds u
 The device-linked incident lists remain complete, including high-degree bodies.
 
 The [colored contact path](gpu-contact-colors.md) adds resident schedule and compact
-color ranges to improve dense-stack convergence. The update/gather measurements
-below describe the earlier Jacobi path; current large-world acceptance also checks
+color ranges to improve dense-stack convergence. Compact contact/body records now
+share current velocities across contact and joint iteration while retaining the
+same equations and publications. The update/gather measurements below describe
+the earlier Jacobi path; current large-world acceptance also checks
 geometric penetration so throughput cannot hide collapsing particles.
 
 Impulse updates and body gathers have separate small shaders. Update binds four

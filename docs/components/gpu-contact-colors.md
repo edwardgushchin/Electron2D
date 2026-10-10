@@ -55,6 +55,33 @@ Ordinary completed coloring adds one submission per substep; growing round budge
 can require another completion check. All traffic and waits enter existing store
 counters. Native driver allocations remain outside managed-allocation measurements.
 
+## Packed iterative state
+
+After warm starting and coloring, the device now gathers contact coefficients and
+impulses into contiguous color ranges. Iterative reads no longer follow a contact
+index for each coefficient and impulse access. A separate 48-byte body record keeps
+physical velocity/inverse mass, correction velocity/inverse inertia and surface
+velocity together, instead of revisiting the 96-byte owning body and separate
+16-byte correction records. The equations, configured iterations and color schedule
+are unchanged. This is derived device scratch, not a new host mirror or wire format.
+
+Joint updates and gathers consume the same compact current velocities while colored
+contacts execute. Applied contact deltas stay zero in the original impulse storage,
+so joint gathering cannot double-apply the warm start or contact sweep. Before
+history, joint-state save, reporting, integration or publication, the device writes
+the final contact impulses and body velocities/corrections back to their owning
+records. Sleep clocks, poses, identity and authored properties remain in those
+records. Checkpoints need no new payload; the compact state rebuilds on the next solve.
+
+Packing/unpacking adds four compute dispatches per colored substep, without another
+host fence or readback. Retained logical buffer capacity is 96 bytes per rounded
+contact slot plus 48 bytes per rounded body slot; the mass report includes this as
+PackedSolverStorageBytes. It is a memory-for-bandwidth tradeoff, not a claim about
+driver heap overhead. The internal diagnostic controls PackColoredContacts and
+PackSolverBodyState retain comparisons against indirect rows and full body records;
+they change no public backend selection or physical features. Jacobi overflow still
+uses the original complete path.
+
 ## Public workload and native window
 
 [PhysicsMassPerformance](../../tests/Electron2D.Tests/PhysicsMassPerformance.cs)
@@ -106,7 +133,51 @@ WARMUP and SAMPLES use the same ELECTRON2D_MASS_ prefix. OUTPUT selects the repo
 directory (default bin/physics-mass). Reports and captures are generated artifacts,
 not source files. An unsupported GPU renderer/backend fails explicitly.
 
-## Measured result
+## Packed-layout measurements
+
+The 2026-10-10 layout comparison used the same Release binary, physical workload and
+host described below. Headless development repetitions measured full-step p50 of
+53.02 ms for indirect rows, 51.39–52.37 ms for packed contacts alone and
+44.85–44.97 ms with compact body state too. All retained 65,536 awake bodies, four
+substeps, 16 iterations, penetration about .30 and zero warmed managed allocation.
+
+The final native comparison ran each process to a checked zero exit, including
+validation, actual window capture and disposal. It uses 240 warmup and 240 measured
+ticks, the same final build and a public pose/MultiMesh render consumer:
+
+| Native-window measurement | CPU / Box2D.NET | GPU / indirect layout | GPU / packed layout |
+| --- | ---: | ---: | ---: |
+| Full step p50 / p95 / p99, ms | 237.42 / 256.92 / 291.58 | 64.22 / 71.10 / 73.33 | 54.11 / 56.07 / 56.93 |
+| FPS and actual physics ticks/s | 3.89 | 12.40 | 13.91 |
+| Full frame p50 / p95 / p99, ms | 254.43 / 277.25 / 314.38 | 79.70 / 87.90 / 90.33 | 71.81 / 74.24 / 76.17 |
+| GPU physics wait p50, ms | 0 | 40.16 | 30.66 |
+| Maximum penetration, scene units | .2694 | .2998 | .2996 |
+| Warmed physics and frame bytes, owner/all threads | 0 | 0 | 0 |
+| Additional iterative buffer capacity | — | 3 KiB binding buffer | 30 MiB |
+
+Packed iteration reduced median full-step latency by 15.7% and increased window
+FPS by 12.2% against the indirect control in this run. GPU median full-step latency
+was 4.39 times lower than CPU, with 3.57 times the window FPS. The actual compositor
+VSync mode remained Enabled. Background host work was not isolated; the repeats
+establish the direction and scale on this host rather than a universal speedup.
+
+Both GPU layouts submitted 4,560 batches over the 240 measured ticks, uploaded
+57,600 buffer bytes and read back 1,258,473,600 bytes. The separate UniformBytes
+counter recorded 16,420,288 bytes indirect and 16,498,208 bytes packed; small color
+schedule differences also affect that total. Both retained ten colors at the final
+tick and no fallback. Packing adds no host state mirror or extra readback/fence.
+Renderer-native transfers remain outside these physical-store counters; the
+logical MultiMesh payload is reported separately. The 30 MiB capacity is derived
+GPU scratch, not a measurement of driver heap overhead or native allocation rate.
+
+For a same-build diagnostic comparison, set ELECTRON2D_MASS_UNPACKED=1 to use the
+indirect layout, or ELECTRON2D_MASS_UNPACKED_BODIES=1 to pack only contact rows.
+Both are test-host controls, not public physics configuration. Normal GPU worlds
+use the packed layout. Generated final reports, PNGs and check logs are retained
+locally in bin/physics-layout-validation/2026-10-10; development layout trials are
+saved alongside them. All are ignored build artifacts.
+
+## Measurement before packed iterative state
 
 The final sequential native runs on 2026-10-10 used the same Release build on
 Linux 7.2.9 CachyOS, .NET 10.0.1, Ryzen 7 5700X and NVIDIA RTX 3090 Ti/Vulkan.
@@ -152,7 +223,10 @@ they remain ignored build artifacts rather than committed generated output.
 Colored chain checks verify momentum, nonincreasing inelastic kinetic energy,
 per-body reported impulses and fixed poses for standalone velocity solving, also
 with an unrelated capped pin in the world. Device schedule validation checks actual
-conflicts. Existing contact, surface, material, CCD, sleep, one-way, joint, report,
+conflicts. A separate analytic collision/pin chain checks all three storage layouts:
+the joint must consume the velocity produced by the preceding collision, preserve
+linear momentum and leave the collision-only reported impulse unchanged. Existing
+contact, surface, material, CCD, sleep, one-way, joint, report,
 checkpoint and portable-snapshot tests remain the behavioral gates. The separate
 network example additionally checks authoritative correction under impaired delivery.
 Its scripted drift is now injected at a validated correction boundary, so physical

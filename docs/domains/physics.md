@@ -413,3 +413,8 @@ convergence through a device schedule and compact color ranges. Public CPU/GPU
 headless and native-window workloads now measure penetration and energy alongside
 full-step latency, allocations and actual frame/tick rates. The corrected massive
 world performance target remains open.
+
+The same colored solver now uses packed contact ranges and compact shared body
+velocities for contact/joint iteration, then restores owning records before reports,
+history and integration. This adds device scratch and no host state mirror; compare
+full-step and native-window results in the contact-layout report.
