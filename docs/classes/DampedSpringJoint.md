@@ -1,6 +1,10 @@
 # DampedSpringJoint
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
+
+[Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
+exercises this family through explicitly selected CPU and independent GPU worlds.
+The report records force/motion regressions, numerical tolerances and failure limits.
 
 **Inherits:** [Joint](Joint.md), Entity, CanvasItem, Node, ElectronObject
 
@@ -55,7 +59,7 @@ The relaxed anchor separation in scene units. Zero consistently selects the magn
 <a id="stiffness"></a>
 ### `Stiffness`
 
-The Hooke coefficient: force in scene units is `(relaxed separation - current separation) * Stiffness`. Zero disables elastic force while preserving damping. Finite nonnegative values are accepted. Excessive derived impulse or velocity fails the interval before any spring response is applied; correct the setting and advance again. Suitable stiffness and fixed-step duration determine the explicit force-integration stability profile.
+The Hooke coefficient: force in scene units is `(relaxed separation - current separation) * Stiffness`. Zero disables elastic force while preserving damping. Finite nonnegative values are accepted. Finite MaxForce bounds the combined impulse before velocity validation. CPU numeric preflight rejects an unrepresentable batch before application and permits correction. A begun GPU execution failure leaves a failed world which must be disposed; it never replays on CPU. Suitable stiffness and fixed-step duration determine the explicit force-integration stability profile.
 
 <a id="damping"></a>
 ### `Damping`

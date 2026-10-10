@@ -154,7 +154,11 @@ internal static class GPUPhysicsMotionQueryTests
         s.SetCollisionException(b, a, true); Check(!Test(s, q).Collided, "Reverse directed exception excludes body motion");
         s.SetCollisionException(b, a, false); s.SetCollisionException(a, b, true); Check(!Test(s, q).Collided, "Forward exception excludes body motion"); s.SetCollisionException(a, b, false);
         var joint = s.AddJoint(new(PhysicsServer.JointType.Pin, a, b, Transform.Identity, Transform.Identity));
-        Check(Test(s, q).Collided, "Joint collision vetoes do not change explicit body-query exceptions"); s.RemoveJoint(joint);
+        Check(!Test(s, q).Collided, "A collision-disabled joint also suppresses body motion");
+        s.SetJoint(joint, s.GetJointDefinition(joint) with { DisableCollision = false });
+        Check(Test(s, q).Collided, "A live joint collision edit restores body motion response"); s.RemoveJoint(joint);
+        joint = s.AddJoint(new(PhysicsServer.JointType.Pin, a, default, Transform.Identity, Transform.Identity));
+        Check(Test(s, q).Collided, "A fixed-world pin does not exclude unrelated bodies"); s.RemoveJoint(joint);
         s.SetShapeFilter(target, 1, 0, false); Check(!Test(s, q).Collided, "Reciprocal target mask is required"); s.SetShapeFilter(target, 1, 1, true);
         Check(!Test(s, q).Collided, "Sensors never block body motion"); s.SetShapeFilter(target, 1, 1, false);
         s.SetQueryIdentity(target, 99, 7); Check(Test(s, q with { ObjectExclusionCount = 1 }, objects: [0]).Collided, "Object zero cannot exclude a server-only collider");

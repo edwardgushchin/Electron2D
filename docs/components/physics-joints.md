@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Physical skeletal integration
 
@@ -21,13 +21,13 @@ rotation through detach/reentry; a membership change does not resample anchors.
 
 The scene world registers each joint on tree entry. After all body siblings enter, the pin converts the joint origin to both bodies' local anchor frames; the groove also stores its local axis and samples body B's anchor at InitialOffset. The fixed step prepares bodies and joints after user physics callbacks and before four solver substeps. Path edits rebuild scene geometry; body departure releases the native handle, and collision-policy edits preserve anchors. Moving the joint node alone does not retune already attached body-local anchors. Body exit destroys the joint before its native body. Missing, duplicate or world-mismatched endpoints leave the node configured but inactive, with `GetConfigurationWarnings()` explaining the issue. A later body entry can connect on a subsequent fixed step.
 
-One scene unit is 0.01 backend meters. Pin angle and motor speed use radians and radians per second. The motor has a caller-tunable torque cap in newton-meters; enabled angle limits must be ordered within ±0.99π. Groove Length and InitialOffset are signed scene-unit distances along its local Y axis, bounded to ten million scene units by the backend joint extent; the solver limits its anchor to the two endpoints while retaining free rotation. A live Length edit changes limits without reanchoring, while InitialOffset resamples the body-B anchor on the next step. Invalid scaled/skewed or unrepresentable geometry fails the frame and can be corrected. A connected collision-policy change refreshes both endpoints' fixtures so an existing overlap starts or stops producing contacts without moving the bodies.
+The CPU adapter maps one scene unit to 0.01 backend meters; the independent GPU solver uses scene units directly. Pin angle and motor speed use radians and radians per second. The motor has a caller-tunable torque cap in newton-meters; enabled angle limits must be ordered within ±0.99π. Groove Length and InitialOffset are signed scene-unit distances along its local Y axis, bounded to ten million scene units by the backend joint extent; the solver limits its anchor to the two endpoints while retaining free rotation. A live Length edit changes limits without reanchoring, while InitialOffset resamples the body-B anchor on the next step. Invalid scaled/skewed or unrepresentable geometry fails the frame and can be corrected. A connected collision-policy change refreshes both endpoints' fixtures so an existing overlap starts or stops producing contacts without moving the bodies.
 
 ## Current implementation and limits
 
-The spring adapter samples local anchors through backend transforms and uses a native filter joint for island/collision ownership. Before each native interval it evaluates Hooke impulse and effective-mass axial exponential drag, then applies equal opposite impulses at the anchor points. All spring responses preflight before any are applied in that interval. Pure damping with zero stiffness is supported; Length does not cap stretch and zero RestLength uses its magnitude. Kinematic subdivision durations prevent multiplying the spring force by the number of native calls. Static/frozen bodies remain immovable, relaxed sleepers stay asleep, and nonzero impulses wake dynamic endpoints. The initial spring slice used existing native body APIs; the current [solver-policy integration](physics-joint-policies.md) also updates native pin/groove kernels and caps the combined spring impulse.
+The spring adapter samples local anchors through backend transforms and uses a native filter joint for island/collision ownership. Before each native interval it evaluates Hooke impulse and effective-mass axial exponential drag, then applies equal opposite impulses at the anchor points. CPU spring responses preflight before any are applied in that interval. The independent GPU solver evaluates springs on device substeps and retains the defined failed-world state after a begun execution error. Pure damping with zero stiffness is supported; Length does not cap stretch and zero RestLength uses its magnitude. Kinematic subdivision durations prevent multiplying the spring force by the number of native calls. Static/frozen bodies remain immovable, relaxed sleepers stay asleep, and nonzero impulses wake dynamic endpoints. The initial spring slice used existing native body APIs; the current [solver-policy integration](physics-joint-policies.md) also updates native pin/groove kernels and caps the combined spring impulse.
 
-The Joint base, PinJoint, GrooveJoint and DampedSpringJoint provide executable scene connections. Stable joint RIDs and raw server creation now execute through the shared runtime. Positional bias, maximum correction speed/force and linear pin-anchor softness now execute through the [shared public policy](physics-joint-policies.md). Joint debug drawing awaits a scene debug-canvas flag and draw pass. See [Joint2D](../coverage/classes/Joint2D.md), [PinJoint2D](../coverage/classes/PinJoint2D.md), [DampedSpringJoint2D](../coverage/classes/DampedSpringJoint2D.md) and [GrooveJoint2D](../coverage/classes/GrooveJoint2D.md) coverage.
+The Joint base, PinJoint, GrooveJoint and DampedSpringJoint provide executable scene connections. Stable joint RIDs and raw server creation now execute through the shared runtime. Positional bias, maximum correction speed/force and linear pin-anchor softness now execute through the [shared public policy](physics-joint-policies.md). Authored joint debug drawing executes through the retained canvas under ADR 0100. See [Joint2D](../coverage/classes/Joint2D.md), [PinJoint2D](../coverage/classes/PinJoint2D.md), [DampedSpringJoint2D](../coverage/classes/DampedSpringJoint2D.md) and [GrooveJoint2D](../coverage/classes/GrooveJoint2D.md) coverage.
 
 [PinJointTests](../../tests/Electron2D.Tests/PinJointTests.cs), [GrooveJointTests](../../tests/Electron2D.Tests/GrooveJointTests.cs) and [DampedSpringJointTests](../../tests/Electron2D.Tests/DampedSpringJointTests.cs) check actual solver motion, live settings, lifecycle, packing, invalid-state recovery and warmed zero managed allocation on Linux/.NET 10. Both static-state allocation fixes are tracked in [Box2D.NET#102](https://github.com/ikpil/Box2D.NET/pull/102). Native allocation, other platforms and owner acceptance remain unverified. [ADR 0084](../decisions/physics-joints.md#adr-0084) and [ADR 0085](../decisions/physics-joints.md#adr-0085) define the constraint slices; [ADR 0086](../decisions/physics-joints.md#adr-0086) defines spring forces.
 
@@ -42,7 +42,7 @@ stage-host suite. PhysicsServerJointTests runs the same rotated/off-center pin a
 world-replacement assertions on both paths, including motor/limits and rejection
 of invalid replacement. Each world runs 120 steps at 1/120 s; one scene unit of
 anchor error and 0.05 rad beyond the configured angle limit allow the existing
-solver tolerances. Independent GPU joint ownership and spring evaluation execute internally; independent public-world integration and network replay remain open.
+solver tolerances. Independent GPU joint ownership, spring evaluation, public-world integration and portable replay now execute; full physics/network acceptance remains open.
 
 ## Independent GPU foundation
 
@@ -50,3 +50,7 @@ solver tolerances. Independent GPU joint ownership and spring evaluation execute
 and warm history, solves pins/grooves together with contacts and applies Hooke/axial
 spring impulses on GPU. Joint collision vetoes are device-resident. This internal
 path does not yet replace the scene/server CPU attachment. Public CPU bias/compliance/caps and the stage GPU equivalents now execute; independent public sleep/CCD/event integration and network replay remain open.
+
+The [shared public CPU/GPU family run](physics-joint-policies.md#public-cpu-gpu-conformance)
+now covers all five joint suites, including motion vetoes from multiple joints,
+finite caps with extreme stiffness, failure/disposal and numerical error bounds.

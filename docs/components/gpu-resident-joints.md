@@ -1,6 +1,11 @@
 # Resident GPU joints
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
+
+[Public CPU/GPU joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance)
+now exercises scene/server pin, groove and spring behavior through explicitly
+selected worlds. Finite spring caps saturate extreme elastic terms before range
+validation; zero force and complete decay retain their physical meaning.
 
 ## Executing boundary
 
@@ -139,7 +144,7 @@ at the violated one. The analytic bias check caught that pre-existing defect; bo
 groove and pin angular stops now share the corrected rule.
 
 These semantics follow the accepted policy boundary in [ADR 0087](../decisions/physics-joints.md#adr-0087).
-The CPU/native and common scene/server projections now execute as documented in [joint policies](physics-joint-policies.md); independent public-world integration now executes; complete policy-family acceptance on that path remains open.
+The CPU/native and common scene/server projections now execute as documented in [joint policies](physics-joint-policies.md); independent public-world integration and the shared joint family suite now execute. Full physics, platform and workload acceptance remain open.
 
 ## Verification
 

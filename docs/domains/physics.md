@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-10
 
+[Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
+pin/groove/spring, server identity/lifecycle and solver policies through explicitly
+selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;
+finite spring caps and complete decay handle extreme coefficients before range
+validation. Full physics, platform and performance acceptance remain open.
+
 [GPU host preparation](../components/gpu-host-preparation.md) batches changed body
 policies before shared pre-step snapshots and reuses the current resident rotation
 basis for pose reads. Explicit public CPU/GPU tests cover authored edits, CCD,

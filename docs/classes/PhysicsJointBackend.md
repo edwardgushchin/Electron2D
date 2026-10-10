@@ -1,6 +1,10 @@
 # PhysicsJointBackend
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
+
+[Shared public family checks](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
+now run through explicitly selected CPU and independent GPU worlds, including
+motion filtering, extreme finite spring caps and begun-GPU-failure lifetime.
 
 **Declaration:** `internal sealed partial class PhysicsJointBackend`
 
@@ -11,8 +15,8 @@ Last updated: 2026-10-09
 ## Ownership and operations
 
 One retained adapter belongs to each PhysicsJointRuntime. It owns the current
-Box2D joint/body handles, private compiled local frames, attached space reference
-and transient spring impulses. It borrows both endpoint bodies; an empty second
+CPU joint/body handles or a resident GPU joint handle, private compiled local
+frames, attached space reference and CPU transient spring impulses. It borrows both endpoint bodies; an empty second
 endpoint uses the existing space-owned static world anchor. Public identity and
 settings remain with the runtime, independently of attachment generations.
 
@@ -26,10 +30,11 @@ settings remain with the runtime, independently of attachment generations.
 | Pin/collision/groove setters | Update live solver settings without resampling the stored anchors; groove distances convert from scene units here. |
 | `PrepareSolverStep`, `ValidateSolverStep`, `ApplySolverStep` | Evaluate the existing Hooke/axial-drag impulse, preflight cumulative world motion, then apply equal opposite anchor impulses. |
 
-The world still prepares every spring before validating every spring and applying
-any impulse. This preserves numeric rejection without partially applying earlier
-springs. These stages remain CPU operations even in the current GPU stage-host
-experiment. Independent [resident GPU joints](../components/gpu-resident-joints.md) execute separately; their public-world adapter remains open.
+CPU prepares every spring before validating and applying the batch, preserving
+recoverable numeric rejection. The historical stage host retains that CPU phase.
+Independent [resident GPU joints](../components/gpu-resident-joints.md) evaluate and
+apply springs on device through this adapter; begun execution errors retain the
+defined failed-world state.
 
 Frame publication preserves the sampled rotation basis instead of decoding and
 rebuilding angles at every reattachment. Engine frames remain in scene units;
@@ -41,11 +46,11 @@ retain a second body world, add callbacks, or own scene objects.
 Scene pin/groove/spring and raw server suites verify real response, mutable
 settings, numeric validation, endpoint lifetime, exception accounting and warmed
 zero managed allocations. PhysicsServerJointTests.VerifyFrameReattachment runs
-the same public assertions on CPU and the GPU prototype: rotated off-center
+the same public assertions on explicitly selected CPU and GPU worlds: rotated off-center
 anchors, motor/limits, world replacement and rejected reconfiguration. It steps
 each world 120 times at 1/120 s; anchor error must remain below one scene unit and
 the motor angle within the configured limit plus 0.05 rad solver tolerance.
-This is not independent GPU acceptance or a new throughput measurement.
+The old stage overload remains a diagnostic check; this is no new throughput measurement.
 
 The [public joint policies](../components/physics-joint-policies.md) now include bias, pin linear softness and common force/correction caps. Native joint copy/clear and GPU stage packets preserve the policy; spring preflight caps the combined impulse before validating all resulting velocities.
 

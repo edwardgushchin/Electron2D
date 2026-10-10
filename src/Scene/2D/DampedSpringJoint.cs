@@ -53,6 +53,7 @@ public sealed class DampedSpringJoint : Joint
 
     /// <summary>Gets or sets the spring force per unit of extension in kilograms per second squared.</summary>
     /// <value>20 by default. Zero disables the elastic force while retaining damping.</value>
+    /// <remarks>The combined elastic and damping impulse observes <see cref="Joint.MaxForce"/>. Unrepresentable uncapped GPU execution leaves the world failed until disposal.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative or nonfinite.</exception>
     /// <exception cref="InvalidOperationException">Attached access is off-owner, or a write occurs during a solver step.</exception>
     public float Stiffness

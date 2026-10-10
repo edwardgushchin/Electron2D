@@ -100,16 +100,19 @@ void main()
     ra-=rotate(a.pose.zw,centers[j.ids.z]);rb-=rotate(b.pose.zw,j.ids.w==none?vec2(0):centers[j.ids.w]);
     if(control.x==0u)
     {
-        if(j.ids.y!=2u)return;
+        if(j.ids.y!=2u||j.solverPolicy.z==0)return;
         float distance=length(d);if(isnan(distance)||isinf(distance)){fail();return;}
         if(distance<1.1920928955078125e-5)return;
         vec2 n=d/distance;float aa=cross2(ra,n),ab=cross2(rb,n),k=ma.x+mb.x+ma.y*aa*aa+mb.y*ab*ab;
         if(k==0)return;
         float speed=dot2(b.velocity.xy-a.velocity.xy,n)+b.velocity.z*ab-a.velocity.z*aa;
         float decay=exp(-j.policy.x*time.x*k);
-        float impulse=(j.motorSpring.z-distance)*j.motorSpring.w*time.x*decay-speed*(1-decay)/k;
-        if(isnan(impulse)||isinf(impulse)){fail();return;}
-        float cap=impulseCap(j);impulse=clamp(impulse,-cap,cap);
+        // Decay can eliminate an extreme elastic term; finite caps saturate before range validation.
+        float impulse=((j.motorSpring.z-distance)*time.x*decay)*j.motorSpring.w-speed*(1-decay)/k;
+        if(isnan(impulse)){fail();return;}
+        float cap=impulseCap(j);
+        if(j.solverPolicy.z<maximum)impulse=clamp(impulse,-cap,cap);
+        if(isinf(impulse)){fail();return;}
         emitRow(base,j,ma,mb,n,aa,ab,0,0,vec2(impulse),impulse,true);return;
     }
     if(j.ids.y==2u)return;

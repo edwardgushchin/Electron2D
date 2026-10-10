@@ -1,14 +1,14 @@
 # Resident GPU body-motion queries
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Boundary
 
 GPUPhysicsBodyStore.TestMotion tests a registered body's shapes at a supplied pose,
 without changing its live transform, advancing simulation or creating a CPU world.
 A batch reads current GPU geometry, tree, poses and center-aware point velocities.
-The CPU uploads authored queries, attached shape tokens and incident explicit
-exceptions; it does not read all body state or enumerate potential collision pairs.
+The CPU uploads authored queries, attached shape tokens, incident explicit
+exceptions and collision-disabled joint peers; it does not read all body state or enumerate potential collision pairs.
 Public PhysicsServer.BodyTestMotion, PhysicsBody movement and CharacterBody use
 this path in a GPU World; CPU worlds retain their solver. [Public scene motion
 conformance](physics-backends.md#public-scene-motion-conformance) records the shared
@@ -32,7 +32,9 @@ requested travel, and clears collision identity/contact fields.
 
 Reciprocal masks, both directions of explicit body exceptions, caller collider and
 object exclusion spans, sensor rejection and one-way direction/margin rules apply.
-Joint contact vetoes do not implicitly exclude a body-motion query. Non-sliding rays
+Each active collision-disabled joint also excludes its peer, as required by ADR 0087.
+Multiple joints and explicit exceptions contribute independently; a fixed-world
+pin has no peer to exclude. Non-sliding rays
 require CollideSeparationRay for the motion phase; sliding rays participate
 normally, and both participate in recovery. Ray/ray and ray-origin containment
 reject. Shared directed geometry serves both standalone shape and body-motion
@@ -76,7 +78,7 @@ GPUPhysicsMotionQueryTests compares circle/rectangle/capsule/segment/full convex
 paired concave and directed ray motion with public CPU body queries, including
 rotated local/supplied poses, both ray policies, one-way surfaces, initial/deep
 penetration and unchanged live transforms. Independent checks exercise explicit
-exceptions, joint independence, exclusion ranges, logical/object identity,
+exceptions, joint vetoes and live toggles, fixed-world pins, exclusion ranges, logical/object identity,
 sensor/mask policy, angular surface velocity with custom COM, batch tails,
 slot reuse, validation and lifecycle errors.
 
@@ -86,7 +88,7 @@ position, 0.001 normal and one unit of depth; complex families allow 1.2 travel.
 Compound/ray cases avoid equal-depth vertex-normal ties and allow one unit of
 travel. These are scoped convergence tolerances, not bitwise parity promises.
 
-Each request uploads 80 bytes plus 8-byte shape/exception tokens and supplied
+Each request uploads 80 bytes plus 8-byte shape/exception/joint-peer tokens and supplied
 exclusion keys. One result reserves 128 bytes plus a 4-byte count; the batch has an
 8-byte status exchange. Recovery reserves another 512 bytes per query in the GPU
 output buffer; this tail is never uploaded or read back. Inputs, outputs, scratch and transfers retain warmed

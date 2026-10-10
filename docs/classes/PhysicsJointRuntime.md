@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
@@ -55,8 +55,8 @@ in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
 
 The backend extraction also checks rotated off-center pin frames, angular limits
-and motor after a common rigid transform and world replacement on both CPU and the
-GPU prototype. Invalid replacement preserves settings and the working connection.
+and motor after a common rigid transform and world replacement on explicit public
+CPU and GPU worlds. Invalid replacement preserves settings and the working connection.
 This common public-response check does not depend on vendor handle values or graph
 ordering; old CPU handle checks remain supplementary lifecycle diagnostics.
 

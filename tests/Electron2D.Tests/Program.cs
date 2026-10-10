@@ -62,6 +62,23 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_IMPULSES") == "1
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_ACTIVITY") == "1") { PhysicsActivityTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_SERVER_STATE") == "1") { PhysicsServerStateTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SURFACE_VELOCITY") == "1") { PhysicsSurfaceVelocityTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_JOINT_CONTRACT") == "1")
+{
+    using var device = new GPUPhysicsBodyStore();
+    var failures = new List<Exception>();
+    (string Name, Action<PhysicsServer.Backend> Run)[] suites =
+    [ ("policies", PhysicsJointPolicyTests.Run), ("pin", PinJointTests.Run), ("groove", GrooveJointTests.Run),
+      ("spring", DampedSpringJointTests.Run), ("server", PhysicsServerJointTests.Run) ];
+    foreach (var backend in new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU })
+        foreach (var suite in suites)
+        {
+            Console.WriteLine($"Joint contract: {backend}/{suite.Name}");
+            try { suite.Run(backend); }
+            catch (Exception error) { Console.WriteLine(error); failures.Add(error); }
+        }
+    if (failures.Count != 0) throw new AggregateException("Public joint contract failed.", failures);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_POLICIES") == "1") { PhysicsJointPolicyTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); PinJointTests.Run(); GrooveJointTests.Run(); DampedSpringJointTests.Run(); PhysicsServerJointTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CCD") == "1") { PhysicsCCDTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") == "1") { GPUPhysicsMotionQueryTests.Run(); PhysicsMotionTests.Run(); SeparationRayShapeTests.Run(); return; }

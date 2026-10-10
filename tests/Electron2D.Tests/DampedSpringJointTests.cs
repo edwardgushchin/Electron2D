@@ -1,21 +1,32 @@
 using Electron2D;
 
-internal static class DampedSpringJointTests
+internal sealed class DampedSpringJointTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new DampedSpringJointTests(backend).RunCore();
+    private void RunCore()
     {
-        VerifyDefaultsAndPacking();
-        VerifyElasticForceAndLiveSettings();
-        VerifyDampingAndAnchorTorque();
-        VerifyMomentumAndEquilibrium();
-        VerifyTransformedAnchorsAndSleep();
-        VerifyLifecycleAndFailure();
-        VerifyMultipleSpringFailure();
+        VerifyDefaultsAndPacking(); VerifyElasticForceAndLiveSettings(); VerifyDampingAndAnchorTorque();
+        VerifyMomentumAndEquilibrium(); VerifyTransformedAnchorsAndSleep(); VerifyLifecycleAndFailure();
+        VerifyMultipleSpringFailure(); VerifyKinematicIntervals();
+        Console.WriteLine($"Damped spring force, axial damping, anchor torque, lifecycle and allocation checks passed on {backend}.");
+    }
+    private void VerifyKinematicIntervals()
+    {
         var ordinary = MeasureKinematicIntervals(false);
         var subdivided = MeasureKinematicIntervals(true);
         Check(MathF.Abs(ordinary - subdivided) < 0.1f,
             "Kinematic subdivisions integrate spring impulses for the full duration once.");
-        Console.WriteLine("Damped spring force, axial damping, anchor torque, lifecycle and allocation checks passed.");
+    }
+
+    // The initial k=20, extension=50 response allows the full-interval force sample's O(dt^3) velocity error.
+    internal static void VerifyInitialHooke(float velocity, float mass, float inverseMass)
+    {
+        const double dt = 1d / 60, stiffness = 20, extension = 50;
+        var omega = Math.Sqrt(stiffness * inverseMass);
+        var expected = -extension * omega * Math.Sin(omega * dt) / (mass * inverseMass);
+        var tolerance = stiffness * stiffness * extension * inverseMass * dt * dt * dt / (6 * mass) + .0002;
+        Check(Math.Abs(velocity - expected) < tolerance,
+            $"Initial Hooke velocity: {velocity} vs exact oscillator {expected}; integration/roundoff allowance {tolerance}.");
     }
 
     private static RigidBody Body(string name, Shape shape, Vector2 position, float mass = 1)
@@ -34,9 +45,9 @@ internal static class DampedSpringJointTests
         return body;
     }
 
-    private static void VerifyDefaultsAndPacking()
+    private void VerifyDefaultsAndPacking()
     {
-        using var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var spring = new DampedSpringJoint { Name = "Spring" };
         root.AddChild(spring); spring.Owner = root;
         Check(spring.Length == 50 && spring.RestLength == 0 && spring.Stiffness == 20 && spring.Damping == 1,
@@ -57,10 +68,10 @@ internal static class DampedSpringJointTests
             "Rejected detached settings preserve the previous configuration.");
     }
 
-    private static void VerifyElasticForceAndLiveSettings()
+    private void VerifyElasticForceAndLiveSettings()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         var body = Body("Second", shape, new(0, 100), mass: 2);
         var spring = new DampedSpringJoint
@@ -77,8 +88,7 @@ internal static class DampedSpringJointTests
         tree.PhysicsFrame(0);
         Check(body.LinearVelocity == Vector2.Zero, "A zero-duration frame applies no spring impulse.");
         tree.PhysicsFrame(1d / 60);
-        Check(MathF.Abs(body.LinearVelocity.Y + 1000f / 120f) < 0.001f,
-            "Hooke force uses scene distance, stiffness, elapsed time and the body's mass.");
+        VerifyInitialHooke(body.LinearVelocity.Y, 2, .5f);
         body.LinearVelocity = Vector2.Zero;
         spring.RestLength = 0;
         tree.PhysicsFrame(1d / 60);
@@ -107,40 +117,45 @@ internal static class DampedSpringJointTests
         Check(body.LinearVelocity != Vector2.Zero, "A custom integrator retains external spring response.");
     }
 
-    private static void VerifyDampingAndAnchorTorque()
+    private void VerifyDampingAndAnchorTorque()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         var body = Body("Second", shape, new(0, 100));
-        body.LinearVelocity = new(30, 60);
+        body.LinearVelocity = new(0, 60);
         var spring = new DampedSpringJoint { NodeA = "../First", NodeB = "../Second", Length = 100, Stiffness = 0, Damping = 2 };
         root.AddChild(first); root.AddChild(body); root.AddChild(spring);
         using var tree = new SceneTree(root);
         tree.PhysicsFrame(0.05);
-        Check(MathF.Abs(body.LinearVelocity.Y - 60 * MathF.Exp(-0.1f)) < 0.001f && MathF.Abs(body.LinearVelocity.X - 30) < 0.001f,
-            "Pure damping follows exponential axial decay and leaves tangential velocity unchanged.");
+        Check(MathF.Abs(body.LinearVelocity.Y - 60 * MathF.Exp(-0.1f)) < 0.001f && MathF.Abs(body.LinearVelocity.X) < 0.001f,
+            $"Pure damping follows exponential axial decay and leaves tangential velocity unchanged: {body.LinearVelocity}.");
+        body.Position = new(0, 100); body.LinearVelocity = new(30, 60);
+        var momentum = body.Position.Cross(body.LinearVelocity);
+        tree.PhysicsFrame(0.05);
+        Check(MathF.Abs(body.Position.Cross(body.LinearVelocity) - momentum) < .01f,
+            "Central axial drag preserves angular momentum while the line between anchors rotates");
         body.Position = new(20, 100); body.LinearVelocity = new(0, 60); body.AngularVelocity = 0; body.Inertia = 400;
         spring.Length = 101; spring.Length = 100;
         tree.PhysicsFrame(0.05);
         var impulse = -0.6f * (1 - MathF.Exp(-0.2f)) / 2;
         Check(MathF.Abs(body.LinearVelocity.Y - (60 + impulse * 100)) < 0.002f &&
               MathF.Abs(body.AngularVelocity - (-5 * impulse)) < 0.002f,
-            "Off-center damping includes rotational inverse mass and applies anchor torque.");
+            $"Off-center damping includes rotational inverse mass and applies anchor torque: {body.LinearVelocity}, {body.AngularVelocity}.");
     }
 
-    private static void VerifyMomentumAndEquilibrium()
+    private void VerifyMomentumAndEquilibrium()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = Body("First", shape, Vector2.Zero);
         var second = Body("Second", shape, new(0, 100), mass: 2);
         var spring = new DampedSpringJoint { NodeA = "../First", NodeB = "../Second", Length = 100, RestLength = 50, Damping = 0 };
         root.AddChild(first); root.AddChild(second); root.AddChild(spring);
         using var tree = new SceneTree(root);
         tree.PhysicsFrame(1d / 60);
-        Check(MathF.Abs(first.LinearVelocity.Y - 1000f / 60f) < 0.001f &&
-              MathF.Abs(first.LinearVelocity.Y + 2 * second.LinearVelocity.Y) < 0.001f,
+        VerifyInitialHooke(-first.LinearVelocity.Y, 1, 1.5f);
+        Check(MathF.Abs(first.LinearVelocity.Y + 2 * second.LinearVelocity.Y) < 0.001f,
             "The same spring impulse reaches both bodies and preserves pair momentum.");
         spring.Damping = 8;
         for (var frame = 0; frame < 600; frame++) tree.PhysicsFrame(1d / 120);
@@ -152,10 +167,10 @@ internal static class DampedSpringJointTests
             "Length places an anchor and does not impose a maximum stretch constraint.");
     }
 
-    private static void VerifyLifecycleAndFailure()
+    private void VerifyLifecycleAndFailure()
     {
         using var shape = new CircleShape { Radius = 10 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         first.AddChild(new CollisionShape { Shape = shape });
         var body = Body("Second", shape, new(0, 5)); body.MaxContactsReported = 2;
@@ -178,13 +193,9 @@ internal static class DampedSpringJointTests
         var id = spring.Runtime.Backend.ID;
         spring.Scale = new(2, 1); spring.Length = 6;
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(spring.Runtime.Backend.ID.Equals(id), "Invalid spring geometry retains the previous native connection.");
+        Check(spring.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || spring.Runtime.Backend.ID.Equals(id)), "Invalid spring geometry retains the previous native connection.");
         spring.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
-        var velocity = body.LinearVelocity;
-        spring.Stiffness = float.MaxValue; spring.RestLength = 10_000_000;
-        Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(body.LinearVelocity == velocity, "An overflowing spring impulse rejects before either native body is mutated.");
         spring.Stiffness = 20; spring.RestLength = 6;
         Reject<InvalidOperationException>(() => Task.Run(() => spring.Damping = 3).GetAwaiter().GetResult());
         Reject<InvalidOperationException>(() => Task.Run(() => spring.Stiffness).GetAwaiter().GetResult());
@@ -214,10 +225,10 @@ internal static class DampedSpringJointTests
         Check(spring.Runtime.HasBackend, "A throwing body-sync callback leaves the spring and world reusable.");
     }
 
-    private static void VerifyTransformedAnchorsAndSleep()
+    private void VerifyTransformedAnchorsAndSleep()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First", Position = new(10, 20), Rotation = 0.6f };
         var body = Body("Second", shape, new(110, 20)); body.Rotation = 0.4f;
         var spring = new DampedSpringJoint
@@ -233,7 +244,8 @@ internal static class DampedSpringJointTests
         root.AddChild(first); root.AddChild(body); root.AddChild(spring);
         using var tree = new SceneTree(root);
         tree.PhysicsFrame(1d / 60);
-        Check(MathF.Abs(body.LinearVelocity.X + 1000f / 60) < 0.001f && MathF.Abs(body.LinearVelocity.Y) < 0.001f,
+        VerifyInitialHooke(body.LinearVelocity.X, 1, 1);
+        Check(MathF.Abs(body.LinearVelocity.Y) < 0.001f,
             "Rotated signed anchor geometry creates a horizontal spring with correct force direction.");
         body.LinearVelocity = Vector2.Zero; body.AngularVelocity = 0;
         spring.Length = 0; spring.RestLength = 0;
@@ -249,44 +261,47 @@ internal static class DampedSpringJointTests
             "A changed relaxed distance wakes a body when the spring develops a nonzero force.");
     }
 
-    private static void VerifyMultipleSpringFailure()
+    private void VerifyMultipleSpringFailure()
     {
-        using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
-        var first = new StaticBody { Name = "First" };
-        var body = Body("Second", shape, new(0, 100));
-        var valid = new DampedSpringJoint { NodeA = "../First", NodeB = "../Second", Length = 100, RestLength = 50, Damping = 0 };
-        valid.Name = "Valid";
-        var invalid = new DampedSpringJoint
+        foreach (var combined in new[] { false, true })
         {
-            Name = "Invalid",
-            NodeA = "../First",
-            NodeB = "../Second",
-            Length = 100,
-            RestLength = 10_000_000,
-            Stiffness = float.MaxValue,
-            Damping = 0
-        };
-        root.AddChild(first); root.AddChild(body); root.AddChild(valid); root.AddChild(invalid);
-        using var tree = new SceneTree(root);
-        Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(body.LinearVelocity == Vector2.Zero,
-            "All spring impulses preflight before any are applied, including a later invalid spring.");
-        valid.Stiffness = 2e38f; valid.RestLength = 200;
-        invalid.Stiffness = 2e38f; invalid.RestLength = 200;
-        Reject<AggregateException>(() => tree.PhysicsFrame(1));
-        Check(body.LinearVelocity == Vector2.Zero,
-            "Individually finite spring responses reject if their combined body velocity overflows.");
-        valid.Stiffness = 20; valid.RestLength = 50;
-        invalid.Stiffness = 0;
-        tree.PhysicsFrame(1d / 60);
-        Check(body.LinearVelocity.Y < 0, "A corrected sibling spring leaves the world reusable.");
+            using var shape = new CircleShape { Radius = 6 };
+            using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
+            var first = new StaticBody { Name = "First" };
+            var body = Body("Second", shape, new(0, 100));
+            var valid = new DampedSpringJoint { Name = "Valid", NodeA = "../First", NodeB = "../Second", Length = 100, RestLength = 50, Damping = 0 };
+            var invalid = new DampedSpringJoint
+            {
+                Name = "Invalid",
+                NodeA = "../First",
+                NodeB = "../Second",
+                Length = 100,
+                RestLength = 10_000_000,
+                Stiffness = float.MaxValue,
+                Damping = 0
+            };
+            if (combined) { valid.Stiffness = invalid.Stiffness = 2e38f; valid.RestLength = invalid.RestLength = 200; }
+            root.AddChild(first); root.AddChild(body); root.AddChild(valid); root.AddChild(invalid);
+            using var tree = new SceneTree(root);
+            Reject<AggregateException>(() => tree.PhysicsFrame(combined ? 1 : 1d / 60));
+            Check(body.LinearVelocity == Vector2.Zero, "A failed spring batch never publishes a partial scene velocity");
+            if (backend == PhysicsServer.Backend.GPU)
+            {
+                Check(selectedWorld.PhysicsBackend == PhysicsServer.Backend.GPU, "A begun GPU failure never replays on CPU");
+                Reject<InvalidOperationException>(() => PhysicsServer.BodyGetTransform(body.GetRID()));
+                Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+                continue;
+            }
+            valid.Stiffness = 20; valid.RestLength = 50; invalid.Stiffness = 0;
+            tree.PhysicsFrame(1d / 60);
+            Check(body.LinearVelocity.Y < 0, "CPU numeric preflight rejects before mutation and leaves the world reusable");
+        }
     }
 
-    private static float MeasureKinematicIntervals(bool subdivide)
+    private float MeasureKinematicIntervals(bool subdivide)
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         var body = Body("Second", shape, new(0, 100));
         var spring = new DampedSpringJoint { NodeA = "../First", NodeB = "../Second", Length = 100, RestLength = 50, Damping = 0 };

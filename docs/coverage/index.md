@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-10
 
+[Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
+pin/groove/spring, server identity/lifecycle and solver policies through explicitly
+selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;
+finite spring caps and complete decay handle extreme coefficients before range
+validation. Full physics, platform and performance acceptance remain open.
+
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
 queued callbacks and views validate a per-collider attachment version. Public GPU-world selection/binding now executes; [shared scene motion checks](../components/physics-backends.md#public-scene-motion-conformance) cover characters, platforms, frozen bodies and directed rays.

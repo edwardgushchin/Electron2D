@@ -1,23 +1,25 @@
 using Electron2D;
 
-internal static class PhysicsServerJointTests
+internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsServerJointTests(backend).RunCore();
+    private void RunCore()
     {
         VerifyServerRolesAndReplacement();
         VerifySceneIdentityAndProjection();
         VerifyLifetimeAndRollback();
         VerifyJointExceptionContributions();
         VerifyMixedBodiesAndPhaseGuards();
-        VerifyFrameReattachment(false);
+        VerifyFrameReattachmentCore(false);
         Console.WriteLine("Physics joint RID, server/scene roles, native response, ownership and lifetime checks passed.");
     }
 
-    internal static void VerifyFrameReattachment(bool gpu)
+    internal static void VerifyFrameReattachment(bool gpu) => new PhysicsServerJointTests(PhysicsServer.Backend.CPU).VerifyFrameReattachmentCore(gpu);
+    private void VerifyFrameReattachmentCore(bool gpu)
     {
         var server = PhysicsServer.Service;
-        var source = PhysicsServer.SpaceCreate();
-        var replacement = PhysicsServer.SpaceCreate();
+        var source = PhysicsServer.SpaceCreate(backend);
+        var replacement = PhysicsServer.SpaceCreate(backend);
         var shape = PhysicsServer.CircleShapeCreate();
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, Vector2.Zero);
@@ -77,7 +79,7 @@ internal static class PhysicsServerJointTests
             PhysicsServer.FreeRID(joint); PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second);
             PhysicsServer.FreeRID(shape); PhysicsServer.FreeRID(source); PhysicsServer.FreeRID(replacement);
         }
-        Console.WriteLine($"Joint sampled frames and world replacement passed on {(gpu ? "GPU" : "CPU")}.");
+        Console.WriteLine($"Joint sampled frames and world replacement passed on {(gpu ? "CPU host/GPU stages" : backend.ToString())}.");
     }
 
     private static RID CreateBody(PhysicsServer server, RID shape, Vector2 position, bool stationary = false, float mass = 1)
@@ -93,10 +95,10 @@ internal static class PhysicsServerJointTests
         return body;
     }
 
-    private static void VerifyServerRolesAndReplacement()
+    private void VerifyServerRolesAndReplacement()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var shape = PhysicsServer.CircleShapeCreate();
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); var shape = PhysicsServer.CircleShapeCreate();
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 100), mass: 2);
         var joint = PhysicsServer.JointCreate();
@@ -119,8 +121,7 @@ internal static class PhysicsServerJointTests
             PhysicsServer.BodySetSpace(first, space); PhysicsServer.BodySetSpace(second, space);
             PhysicsServer.SpaceStep(space, 1d / 60);
             var state = PhysicsServer.BodyGetDirectState(second)!;
-            Check(MathF.Abs(state.LinearVelocity.Y + 1000f / 120) < 0.001f,
-                "A server-only spring executes the same Hooke/mass response as the scene role.");
+            DampedSpringJointTests.VerifyInitialHooke(state.LinearVelocity.Y, 2, .5f);
             PhysicsServer.DampedSpringJointSetDamping(joint, 1);
             for (var step = 0; step < 40; step++) PhysicsServer.SpaceStep(space, 1d / 120);
             var before = GC.GetAllocatedBytesForCurrentThread();
@@ -179,10 +180,10 @@ internal static class PhysicsServerJointTests
         Reject<ArgumentException>(() => PhysicsServer.JointGetType(joint));
     }
 
-    private static void VerifySceneIdentityAndProjection()
+    private void VerifySceneIdentityAndProjection()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         var body = new RigidBody { Name = "Body", Position = new(0, 50), GravityScale = 0, CanSleep = false };
         body.AddChild(new CollisionShape { Shape = shape });
@@ -246,10 +247,10 @@ internal static class PhysicsServerJointTests
         Reject<ObjectDisposedException>(() => pin.GetRID());
     }
 
-    private static void VerifyLifetimeAndRollback()
+    private void VerifyLifetimeAndRollback()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true); var other = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(other, true); var shape = PhysicsServer.CircleShapeCreate();
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true); var other = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(other, true); var shape = PhysicsServer.CircleShapeCreate();
         var first = CreateBody(server, shape, Vector2.Zero, stationary: true);
         var second = CreateBody(server, shape, new(0, 20));
         var joint = PhysicsServer.JointCreate(); var area = PhysicsServer.AreaCreate();
@@ -276,7 +277,7 @@ internal static class PhysicsServerJointTests
             Reject<InvalidOperationException>(() => Task.Run(() => PhysicsServer.FreeRID(second)).GetAwaiter().GetResult());
             Task.Run(() =>
             {
-                var workerSpace = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(workerSpace, true);
+                var workerSpace = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(workerSpace, true);
                 try { Reject<InvalidOperationException>(() => PhysicsServer.BodySetSpace(second, workerSpace)); }
                 finally { PhysicsServer.FreeRID(workerSpace); }
             }).GetAwaiter().GetResult();
@@ -301,7 +302,7 @@ internal static class PhysicsServerJointTests
             PhysicsServer.FreeRID(space);
             Check(PhysicsServer.JointGetType(joint) == PhysicsServer.JointType.Pin,
                 "World destruction releases native joints while retaining live body/local-frame configuration.");
-            space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+            space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
             PhysicsServer.BodySetSpace(first, space); PhysicsServer.BodySetSpace(second, space); PhysicsServer.SpaceStep(space, 1d / 60);
             Check(PhysicsServer.JointGetType(joint) == PhysicsServer.JointType.Pin,
                 "Detached bodies can reconnect the same joint RID in a replacement world.");
@@ -313,10 +314,10 @@ internal static class PhysicsServerJointTests
         }
     }
 
-    private static void VerifyJointExceptionContributions()
+    private void VerifyJointExceptionContributions()
     {
         using var shape = new CircleShape { Radius = 10 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         first.AddChild(new CollisionShape { Shape = shape });
         var body = new RigidBody { Name = "Body", Position = new(0, 5), GravityScale = 0, CanSleep = false };
@@ -333,6 +334,13 @@ internal static class PhysicsServerJointTests
             Check(body.GetCollisionExceptions() is [var peer] && ReferenceEquals(peer, first) &&
                   !body.TestMove(body.GlobalTransform, Vector2.Zero, recoveryAsCollision: true),
                 "Joint collision suppression appears once in exception snapshots and participates in body motion tests.");
+            Check(!first.TestMove(first.GlobalTransform, Vector2.Zero, recoveryAsCollision: true) &&
+                !body.TestMove(new(0, new(-100, 0)), new(200, 0)), "Joint veto applies from either endpoint and to supplied-pose sweeps");
+            for (var i = 0; i < 32; i++) body.TestMove(body.GlobalTransform, Vector2.Zero, recoveryAsCollision: true);
+            var ownerBytes = GC.GetAllocatedBytesForCurrentThread(); var allBytes = GC.GetTotalAllocatedBytes(true); var hit = false;
+            for (var i = 0; i < 64; i++) hit |= body.TestMove(body.GlobalTransform, Vector2.Zero, recoveryAsCollision: true);
+            allBytes = GC.GetTotalAllocatedBytes(true) - allBytes; ownerBytes = GC.GetAllocatedBytesForCurrentThread() - ownerBytes;
+            Check(!hit && ownerBytes == 0 && allBytes == 0, $"Warm joint-filtered motion: {ownerBytes}/{allBytes} owner/all-thread bytes");
             PhysicsServer.JointDisableCollisionsBetweenBodies(one, false);
             body.RemoveCollisionExceptionWith(first);
             Check(body.GetCollisionExceptions().Length == 1 &&
@@ -356,10 +364,10 @@ internal static class PhysicsServerJointTests
         finally { PhysicsServer.FreeRID(one); PhysicsServer.FreeRID(two); }
     }
 
-    private static void VerifyMixedBodiesAndPhaseGuards()
+    private void VerifyMixedBodiesAndPhaseGuards()
     {
         using var shape = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var first = new StaticBody { Name = "First" };
         var body = new RigidBody
         {

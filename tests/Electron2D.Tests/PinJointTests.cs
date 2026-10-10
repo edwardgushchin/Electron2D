@@ -1,9 +1,10 @@
 using Electron2D;
 using static Box2D.NET.B2Joints;
 
-internal static class PinJointTests
+internal sealed class PinJointTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PinJointTests(backend).RunCore();
+    private void RunCore()
     {
         VerifyConstraintAndLifecycle();
         VerifyMotorLimitsAndPacking();
@@ -12,10 +13,10 @@ internal static class PinJointTests
         Console.WriteLine("Pin joint solver, lifecycle, limits, motor and packing checks passed.");
     }
 
-    private static void VerifyConstraintAndLifecycle()
+    private void VerifyConstraintAndLifecycle()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var anchor = new StaticBody { Name = "Anchor" };
         var bob = new RigidBody { Name = "Bob", Position = new(100, 0), CanSleep = false };
         bob.AddChild(new CollisionShape { Shape = circle });
@@ -61,7 +62,7 @@ internal static class PinJointTests
         pin.NodeB = "../Missing";
         pin.NodeB = "../Bob";
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(pin.Runtime.Backend.ID.Equals(previousID), "Invalid joint geometry preserves the previous backend constraint.");
+        Check(pin.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || pin.Runtime.Backend.ID.Equals(previousID)), "Invalid joint geometry preserves the previous backend constraint.");
         pin.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
         Check(pin.Runtime.HasBackend && pin.GetConfigurationWarnings().Length == 0,
@@ -75,10 +76,10 @@ internal static class PinJointTests
         Check(pin.DisableCollision, "Off-owner mutation rejects before changing joint configuration.");
     }
 
-    private static void VerifyMotorLimitsAndPacking()
+    private void VerifyMotorLimitsAndPacking()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var anchor = new StaticBody { Name = "Anchor" };
         var bob = new RigidBody { Name = "Bob", GravityScale = 0, CanSleep = false };
         bob.AddChild(new CollisionShape { Shape = circle });
@@ -134,10 +135,10 @@ internal static class PinJointTests
         Check(!pin.AngularLimitEnabled, "Unsupported solver limits reject before enabling the constraint.");
     }
 
-    private static void VerifyConnectedCollisionPolicy()
+    private void VerifyConnectedCollisionPolicy()
     {
         using var circle = new CircleShape { Radius = 20 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var anchor = new StaticBody { Name = "Anchor" };
         anchor.AddChild(new CollisionShape { Shape = circle });
         var body = new RigidBody { Name = "Body", Position = new(10, 0), GravityScale = 0, MaxContactsReported = 2, CanSleep = false };
@@ -149,17 +150,17 @@ internal static class PinJointTests
         Check(body.GetContactCount() == 0, "Connected-body contacts are disabled by default.");
         pin.DisableCollision = false;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
-        Check(b2Joint_GetCollideConnected(pin.Runtime.Backend.ID), "Enabled connected collisions reach the solver joint.");
+        if (backend == PhysicsServer.Backend.CPU) Check(b2Joint_GetCollideConnected(pin.Runtime.Backend.ID), "Enabled connected collisions reach the solver joint.");
         Check(body.GetContactCount() > 0, "Enabling connected collisions creates solver contacts.");
         pin.DisableCollision = true;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
         Check(body.GetContactCount() == 0, "Disabling connected collisions removes existing contacts.");
     }
 
-    private static void VerifyLateAttachment()
+    private void VerifyLateAttachment()
     {
         using var circle = new CircleShape();
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var anchor = new StaticBody { Name = "Anchor" };
         var pin = new PinJoint { NodeA = "../Anchor", NodeB = "../Late" };
         root.AddChild(anchor); root.AddChild(pin);

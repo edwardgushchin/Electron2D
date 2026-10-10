@@ -943,82 +943,82 @@
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitLower(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitUpper(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorTargetVelocity(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitLower(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitUpper(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorTargetVelocity(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetRestLength(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetStiffness(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetDamping(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetRestLength(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetStiffness(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetDamping(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitEnabled(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorEnabled(Electron2D.RID)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitEnabled(Electron2D.RID,System.Boolean)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorEnabled(Electron2D.RID,System.Boolean)",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds."
     },
     {
       "godot": "PhysicsServer2D::enum_value:JointType.JOINT_TYPE_MAX",
@@ -1138,42 +1138,42 @@
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetBias(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetBias(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxBias(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxBias(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxForce(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxForce(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointGetSoftness(Electron2D.RID)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.PinJointSetSoftness(Electron2D.RID,System.Single)",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": "PhysicsServer2D::method:space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
@@ -3275,14 +3275,14 @@
         "Joint2D::property:bias"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": [
         "PinJoint2D::property:softness"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": [
@@ -3794,7 +3794,7 @@
         "Joint2D::method:get_rid()"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; rotated frame/motor/limit preservation passes the same public assertions on CPU and the current GPU prototype. Pin permits an empty second body; groove/spring require two. Empty=3 adapts the actual unconfigured MAX return, not an additional solver role. Raw spring factory damping is 1.5; scene damping is 1 and automatic zero-rest differs from literal server zero."
+      "reason": "ADR 0087: shared scene/server RID and engine-valued frames/settings, with concrete pin/groove/spring operations in PhysicsJointBackend. PhysicsServerJointTests checks defaults, response, bidirectional settings, clear/replacement, pending/foreign/replacement worlds, lifetime/phase/thread rejection and warmed zero managed allocation; the full server-joint suite, including rotated frame/motor/limit preservation and independently contributed motion exceptions, now runs through explicitly selected CPU and independent GPU worlds. Pin permits an empty second body; groove/spring require two. Empty=3 adapts the actual unconfigured MAX return, not an additional solver role. Raw spring factory damping is 1.5; scene damping is 1 and automatic zero-rest differs from literal server zero."
     },
     {
       "godot": [
@@ -3802,7 +3802,7 @@
         "PhysicsServer2D::method:pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": [
@@ -3917,7 +3917,7 @@
         "PhysicsServer2D::method:joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0087: common CPU and GPU joint-policy equations, shared scene/server settings, finite rollback, packing, wake/lifetime and zero warmed allocation are exercised by PhysicsJointPolicyTests. Independent resident GPU policies also execute; Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "ADR 0087: PhysicsJointPolicyTests exercises shared scene/server settings, analytic bias/softness/caps, extreme finite capped spring forces, packing, wake/lifetime and zero warmed allocation through explicitly selected CPU and independent GPU worlds. The common scene/server joint suites also pass; native allocations, foreign devices and full physics acceptance remain separate."
     },
     {
       "godot": [

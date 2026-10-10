@@ -2,9 +2,10 @@ using Electron2D;
 using static Box2D.NET.B2WheelJoints;
 using static Box2D.NET.B2Worlds;
 
-internal static class GrooveJointTests
+internal sealed class GrooveJointTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new GrooveJointTests(backend).RunCore();
+    private void RunCore()
     {
         VerifySlidingAndRotation();
         VerifyGeometryChangesAndPacking();
@@ -12,10 +13,10 @@ internal static class GrooveJointTests
         Console.WriteLine("Groove joint finite sliding, free rotation, geometry and lifecycle checks passed.");
     }
 
-    private static void VerifySlidingAndRotation()
+    private void VerifySlidingAndRotation()
     {
         using var circle = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var rail = new StaticBody { Name = "Rail" };
         var slider = new RigidBody
         {
@@ -36,7 +37,7 @@ internal static class GrooveJointTests
         Check(MathF.Abs(slider.GlobalPosition.X) < 4 && slider.GlobalPosition.Y is > 45 and < 55,
             "The wheel constraint removes sideways velocity and stops at the far groove endpoint.");
         Check(slider.GlobalRotation > 0.5f, "Sliding does not lock the second body's rotation.");
-        Check(b2WheelJoint_GetUpperLimit(groove.Runtime.Backend.ID) == 0.5f,
+        if (backend == PhysicsServer.Backend.CPU) Check(b2WheelJoint_GetUpperLimit(groove.Runtime.Backend.ID) == 0.5f,
             "The finite 50-unit groove maps to a half-meter solver limit.");
 
         var before = GC.GetAllocatedBytesForCurrentThread();
@@ -50,7 +51,7 @@ internal static class GrooveJointTests
             "Reverse motion stops at the near groove endpoint without escaping sideways.");
     }
 
-    private static void VerifyGeometryChangesAndPacking()
+    private void VerifyGeometryChangesAndPacking()
     {
         using var bounds = new GrooveJoint { Length = -10_000_000f, InitialOffset = 10_000_000f };
         Reject<ArgumentOutOfRangeException>(() => bounds.Length = 10_000_001f);
@@ -58,7 +59,7 @@ internal static class GrooveJointTests
         Check(bounds.Length == -10_000_000f && bounds.InitialOffset == 10_000_000f,
             "The documented solver extent boundary is accepted and larger edits roll back.");
         using var circle = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var rail = new StaticBody { Name = "Rail" };
         var slider = new RigidBody { Name = "Slider", Position = new(0, 25), GravityScale = 0, CanSleep = false };
         slider.AddChild(new CollisionShape { Shape = circle });
@@ -87,7 +88,7 @@ internal static class GrooveJointTests
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
         var originalID = groove.Runtime.Backend.ID;
         groove.Length = 20;
-        Check(groove.Runtime.Backend.ID.Equals(originalID) &&
+        if (backend == PhysicsServer.Backend.CPU) Check(groove.Runtime.Backend.ID.Equals(originalID) &&
               MathF.Abs(b2WheelJoint_GetUpperLimit(groove.Runtime.Backend.ID) - 0.2f) < 0.00001f,
             "Live groove length updates the limit without dropping body-local anchors.");
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
@@ -96,7 +97,7 @@ internal static class GrooveJointTests
 
         groove.InitialOffset = 75;
         tree.PhysicsFrame(1d / 60);
-        Check(!groove.Runtime.Backend.ID.Equals(originalID) && !b2Joint_IsValid(originalID),
+        if (backend == PhysicsServer.Backend.CPU) Check(!groove.Runtime.Backend.ID.Equals(originalID) && !b2Joint_IsValid(originalID),
             "Changing the second-body offset replaces the old native constraint.");
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
         Check(slider.GlobalPosition.Y < -20,
@@ -113,7 +114,7 @@ internal static class GrooveJointTests
         groove.Scale = new(2, 1);
         groove.InitialOffset = 70;
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(groove.Runtime.Backend.ID.Equals(previousID) && groove.Length == 20,
+        Check(groove.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || groove.Runtime.Backend.ID.Equals(previousID)) && groove.Length == 20,
             "Unrepresentable groove geometry preserves the previous constraint and stored length.");
         groove.Scale = Vector2.One;
         groove.InitialOffset = 75;
@@ -126,10 +127,10 @@ internal static class GrooveJointTests
         Check(groove.Runtime.HasBackend, "Body reentry reconnects the groove.");
     }
 
-    private static void VerifyRotatedAndDegenerateGrooves()
+    private void VerifyRotatedAndDegenerateGrooves()
     {
         using var circle = new CircleShape { Radius = 6 };
-        var root = new Node();
+        using var selectedWorld = new World(backend); using var root = new SubViewport { World = selectedWorld };
         var rail = new StaticBody { Name = "Rail" };
         var slider = new RigidBody
         {

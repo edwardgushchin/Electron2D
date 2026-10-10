@@ -1,6 +1,10 @@
 # PinJoint
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
+
+[Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
+exercises this family through explicitly selected CPU and independent GPU worlds.
+The report records force/motion regressions, numerical tolerances and failure limits.
 
 **Inherits:** [Joint](Joint.md), Entity, CanvasItem, Node, ElectronObject
 

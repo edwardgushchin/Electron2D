@@ -1,15 +1,15 @@
 # Joint solver policies
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Public boundary
 
 Joint bias, correction-speed limits, force limits and pin linear softness now run
-through shared scene/server state and the CPU solver. The existing internal GPU
-stage host carries the same policies. The [independent resident GPU solver](gpu-resident-joints.md#joint-solver-policies)
-also implements these policies, but its public-world adapter remains absent.
-This closes the named public parameter capabilities; it does not establish a
-complete selectable independent GPU world or networked physics.
+through shared scene/server state and the explicitly selected CPU or independent
+GPU world. The [resident GPU solver](gpu-resident-joints.md#joint-solver-policies)
+owns its joint constraints and spring evaluation. The old CPU-hosted GPU stage
+remains a separate diagnostic path. The shared family checks below exercise the
+public independent backends; complete physics and platform acceptance stay open.
 
 | Public surface | Default and behavior |
 | --- | --- |
@@ -18,7 +18,7 @@ complete selectable independent GPU world or networked physics.
 | `Joint.MaxForce`, `PhysicsServer.JointGetMaxForce(RID)`, `JointSetMaxForce(RID, float)` | Finite nonnegative per-second impulse budget; float.MaxValue is unlimited. Linear channels use kg·scene-unit/s² and separate pure-angular channels use kg·scene-unit²/s². Each substep allows the value times its duration in each channel. Linear axes share one vector cap. |
 | `PinJoint.Softness`, `PhysicsServer.PinJointGetSoftness(RID)`, `PinJointSetSoftness(RID, float)` | Finite nonnegative inverse-kilogram anchor compliance, default zero. Adds to the two linear inverse-mass diagonals and supplies accumulated-impulse feedback. It does not tune an angular spring. |
 | `ProjectSettings.Physics2DDefaultConstraintBias` | Typed physics/2d/solver/default_constraint_bias, default 0.2, finite [0,1], with feature overrides sampled when a space is created. |
-| `PhysicsServer.SpaceGetConstraintDefaultBias(RID)`, `SpaceSetConstraintDefaultBias(RID, float)` | Read/replace the captured space default. Live changes update and wake zero-bias joints; explicit nonzero joint bias is preserved. Contact-separation bias is a separate unfinished capability. |
+| `PhysicsServer.SpaceGetConstraintDefaultBias(RID)`, `SpaceSetConstraintDefaultBias(RID, float)` | Read/replace the captured space default. Live changes update and wake zero-bias joints; explicit nonzero joint bias is preserved. Contact-separation bias is a separate contact policy. |
 
 MaxBias and MaxForce on Joint are serializable scene projections of the same
 server settings. All four scene properties survive PackedScene. Raw joint
@@ -109,8 +109,8 @@ assertions are exact.
 Both CPU and stage GPU execute 128 warmup then 128 frames alternating actual
 MaxForce and body-velocity edits, with zero owner-thread managed allocations.
 This is not a native allocator measurement or full CPU/GPU performance comparison.
-The remaining space parameters, public independent backend selection, portable
-snapshots/replay, network processes and foreign-device acceptance stay open.
+Public independent selection, portable snapshots and the network example now
+execute. Full-contract, workload and foreign-device acceptance remain open.
 
 The complete adaptation and units are defined in [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
@@ -142,3 +142,92 @@ SHA-256: `bd798f1d6a3afc23c1973bceeaf428f6eefc6e6cb324abc7d2e8eb864cd03f83`.
 Temporary logs and generated shader/wiki files are not shipped. The timing loops
 inside the regression suites ran on a shared desktop and do not establish a
 controlled throughput comparison, window FPS or network acceptance.
+
+## Public CPU/GPU conformance
+
+The 2026-10-10 joint family run selects a public `World(backend)` or
+`PhysicsServer.SpaceCreate(backend)` for every simulated case. PinJointTests,
+GrooveJointTests, DampedSpringJointTests, PhysicsServerJointTests and
+PhysicsJointPolicyTests execute on both backends. Supplementary CPU handle checks
+remain CPU diagnostics; common acceptance checks poses, velocities, identities,
+contacts, queries, callbacks and lifecycle. The stage-host switches are retained
+for their separate regression coverage.
+
+```sh
+ELECTRON2D_TEST_GPU_JOINT_CONTRACT=1 dotnet run --project tests/Electron2D.Tests -c Release
+```
+
+The shared cases cover pendulum motion, motor/limits/torque, finite/reversed/zero
+length guides, live reanchoring, bias/softness/caps, force and axial damping,
+transformed/off-center anchors, momentum/equilibrium, sleeping/frozen/custom
+integration, raw/scene settings and packing, pending/replaced worlds, reentry,
+wrong-thread/phase writes and callback failures.
+
+Two implementation defects were exposed and corrected:
+
+- Resident body-motion queries now include incident collision-disabled joints
+  alongside explicit pair exceptions. Both endpoint directions, supplied-pose
+  sweeps, overlap recovery, multiple joints and independently owned explicit
+  exceptions retain their contributions. Fixed-world pins exclude no unrelated
+  body. Previously the internal query deliberately omitted joint vetoes, which
+  contradicted the common contact/motion contract in ADR 0087.
+- The GPU spring kernel applies a finite MaxForce cap before rejecting an
+  unbounded intermediate elastic impulse. MaxForce=0 supplies no impulse. Decay
+  is multiplied before extreme stiffness so complete decay removes the elastic
+  term. NaN still rejects; an unrepresentable unlimited impulse still fails the
+  world. Tests use float.MaxValue stiffness, both force directions, complete
+  axial decay, MaxForce 10 and zero over .1 s. The finite case changes unit-mass
+  speed by at most one scene unit/s, within .002 roundoff allowance.
+
+No physical stage, body or solver iteration is removed. Query metadata adds one
+8-byte peer token per applicable incident joint, using retained request storage.
+There is no extra GPU fence, state mirror or body readback. Sixty-four warmed
+joint-filtered motion queries check **zero owner/all-thread managed bytes**;
+existing 64/128-frame active joint and live-policy checks retain zero owner-thread
+managed allocation. These are bounded checks, not native allocator measurements.
+
+### Numerical and error boundaries
+
+Hooke tests now compare against the exact initial oscillator velocity rather than
+requiring the CPU interval sampler's exact value from a different integrator.
+For stiffness k=20, initial extension x=50, inverse mass sum K and dt=1/60 s,
+body mass m gives `v=-x*sqrt(k*K)*sin(sqrt(k*K)*dt)/(m*K)`.
+The allowance is `k*k*x*K*dt^3/(6*m) + .0002` scene-unit/s: the constant initial
+force sample's leading integration-error bound plus float roundoff. This covers
+the CPU interval sample and GPU substep samples without relaxing mass/sign or
+momentum checks. Pair momentum remains within .001; long-term relaxed distance
+within .3 scene units. Analytic pin/groove correction, softness and impulse budgets
+retain their .001–.003 velocity/position and .002 rad tolerances.
+
+Pure axial damping with a fixed direction retains the .001 scene-unit/s
+exponential check over .05 s. A moving tangent rotates the line between anchors;
+its central drag preserves angular momentum within .01 for initial magnitude
+3000 (unit mass), rather than preserving a fixed world-axis velocity component.
+Off-center damping/torque retains .002 scene-unit/s and rad/s at .05 s. The existing
+rotated pin/world replacement permits one unit of anchor error and .05 rad beyond
+the configured angular limit over 120 steps at 1/120 s.
+
+Malformed authored geometry rejects before starting a solve and remains repairable
+on either backend. CPU spring numeric preflight can reject a batch before mutation
+and resume after correction. An unrepresentable begun GPU solve instead leaves a
+failed GPU world under ADR 0054: no partial scene velocity is published, further
+physics/state reads reject, and ordinary disposal releases that world. Tests create
+fresh worlds for separate overflow cases and preserve this explicit distinction.
+Other physics families, cross-platform numerics, native allocations and full-game
+performance remain governed by the physics audit.
+
+### Recorded checks, 2026-10-10
+
+The final matrix passes the public joint family, retained stage control, resident
+joints and motion queries, shared public motion scenes, GPU checkpoints, portable
+snapshots, separate CPU-server/GPU-client network correction and the default suite.
+A real-window regression with 4,096 awake circles, four substeps, 16 iterations,
+240 warmup/64 measured ticks passes CPU and GPU with zero owner/all-thread managed
+allocation in physics and complete rendered frames. The actual GPU capture was
+inspected. This is a workload regression check; the 65,536-body 60 Hz/FPS target
+and general game/platform acceptance remain open.
+
+Local ignored evidence is retained in
+`bin/physics-joint-validation/2026-10-10/final/`: `checks.json`, suite logs, separate
+network-process logs and `mass/` CPU/GPU JSON/PNG. Earlier failing query/spring-cap
+runs and the initial integration-comparison failures are stored beside it.

@@ -42,7 +42,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     private int[] _motionQueryCounts = [];
 
     /// <summary>Tests each body's shapes at a supplied pose, including recovery and first impact; the live bodies stay unchanged.</summary>
-    /// <remarks>Exclusion keys and object IDs are authored query identities. Results include recovery travel even on a miss; collision fields then clear.</remarks>
+    /// <remarks>Exclusion keys and object IDs are authored query identities. Explicit pair exceptions and collision-disabled joints suppress either endpoint. Results include recovery travel even on a miss; collision fields then clear.</remarks>
     internal void TestMotion(ReadOnlySpan<MotionQuery> queries, ReadOnlySpan<ulong> excludedBodies, ReadOnlySpan<ulong> excludedObjects, Span<MotionQueryResult> results)
     {
         EnsureAccess();
@@ -57,6 +57,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 throw new ArgumentOutOfRangeException(nameof(queries));
             for (var shape = _slots[q.Body.Index].FirstShape; shape >= 0; shape = _shapeSlots[shape].NextOnBody) payloadCount = checked(payloadCount + 1);
             for (var edge = _slots[q.Body.Index].FirstException; edge >= 0; edge = ExceptionNext(edge, q.Body.Index)) payloadCount = checked(payloadCount + 1);
+            for (var joint = _slots[q.Body.Index].FirstJoint; joint >= 0; joint = JointNext(joint, q.Body.Index))
+                if (_jointSlots[joint].Definition is { DisableCollision: true, BodyB: var second } && second != default) payloadCount = checked(payloadCount + 1);
         }
         if (queries.IsEmpty) return;
         PrepareQueryRequests(queries.Length);
@@ -87,6 +89,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             {
                 var pair = _exceptionSlots[edge].Pair; var ownA = pair.A == q.Body.Index;
                 _motionPayload[at++] = (ulong)(ownA ? pair.GenerationB : pair.GenerationA) << 32 | (ownA ? pair.B : pair.A);
+            }
+            // Joint and explicit vetoes are independent; removing one contribution must retain the others.
+            for (var joint = _slots[q.Body.Index].FirstJoint; joint >= 0; joint = JointNext(joint, q.Body.Index))
+            {
+                var definition = _jointSlots[joint].Definition;
+                if (!definition.DisableCollision || definition.BodyB == default) continue;
+                var other = definition.BodyA == q.Body ? definition.BodyB : definition.BodyA;
+                _motionPayload[at++] = (ulong)other.Generation << 32 | (uint)other.Index;
             }
             input.ExceptionsCount = (uint)at - input.ExceptionsStart; _motionQueryInputs[i] = input; _queryLimits[i] = 1;
         }
