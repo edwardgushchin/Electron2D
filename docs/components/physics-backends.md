@@ -95,6 +95,30 @@ This implements the internal ownership route; public named registration, the
 complete server implementation bridge, custom algorithms and platform/native
 acceptance remain open under ADR 0103.
 
+## Shared joint inputs and native ownership
+
+Selected joint Attach and ApplySolverPolicy receive an immutable
+[PhysicsJointConfiguration](../classes/PhysicsJointConfiguration.md) value. It
+contains complete engine-unit frames, collision policy, pin/groove settings,
+bias/force/correction caps and effective spring rest/stiffness/damping. Scene zero
+rest fallback is resolved by the common runtime before compilation. Concrete
+implementations receive no mutable PhysicsJointRuntime record.
+
+CPUPhysicsWorldBackend retains native joint attachments by shared joint identity.
+Its spring prepare/validate/apply passes resolve that actual owner even when the
+selected implementation is a delegating wrapper. The common joint facade exposes
+no native joint ID or CPU spring cast. Retirement removes only the matching
+attachment; failed creation/release and world disposal clear ownership. Resident
+GPU spring execution stays on device, with no new mirror, transfer or wait.
+Detached frame sampling still uses the existing CPU numeric convention.
+
+[Selected-view checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedViews.cs)
+wrap real CPU/GPU pin, groove and spring implementations, verify refreshed policy
+values, real constrained motion and native clear/replacement retirement. Shared
+public joint suites retain their numerical, lifecycle and zero-allocation checks.
+This internal input family does not close public registration or custom solver
+operation coverage under ADR 0103.
+
 ## Shared collider shape inputs
 
 The selected collider now receives one borrowed ReadOnlySpan of PhysicsColliderShape

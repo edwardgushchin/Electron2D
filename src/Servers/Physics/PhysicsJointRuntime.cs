@@ -230,9 +230,9 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal void SetSpringStiffness(float value) { Coefficient(value); SpringStiffness = value; }
     internal void SetSpringDamping(float value) { Coefficient(value); SpringDamping = value; }
 
-    internal void PrepareSolverStep(float delta) => Backend.PrepareSolverStep(delta, this);
-    internal void ValidateSolverStep(CPUPhysicsWorldBackend space) => Backend.ValidateSolverStep(space);
-    internal void ApplySolverStep() => Backend.ApplySolverStep();
+    internal PhysicsJointConfiguration Configuration => new(Type, FrameA, FrameB, DisableCollision, LowerTranslation, UpperTranslation,
+        Bias, MaxBias, MaxForce, PinSoftness, PinLimitEnabled, PinLimitLower, PinLimitUpper, PinMotorEnabled,
+        PinMotorVelocity, PinMotorMaxTorque, EffectiveSpringRestLength, SpringStiffness, SpringDamping);
 
     private static (PhysicsSpace? Space, PhysicsColliderBackend? Backend, Transform Pose) Snapshot(RID body)
     {

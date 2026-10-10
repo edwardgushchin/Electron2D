@@ -57,12 +57,12 @@ internal sealed class PinJointTests(PhysicsServer.Backend backend)
         bob.Name = "Bob";
         tree.PhysicsFrame(1d / 60);
         Check(pin.Runtime.HasBackend, "Restoring the endpoint name reconnects the path.");
-        var previousID = pin.Runtime.Backend.ID;
+        var previousID = ((pin.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default);
         pin.Scale = new(2, 1);
         pin.NodeB = "../Missing";
         pin.NodeB = "../Bob";
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(pin.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || pin.Runtime.Backend.ID.Equals(previousID)), "Invalid joint geometry preserves the previous backend constraint.");
+        Check(pin.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || ((pin.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default).Equals(previousID)), "Invalid joint geometry preserves the previous backend constraint.");
         pin.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
         Check(pin.Runtime.HasBackend && pin.GetConfigurationWarnings().Length == 0,
@@ -150,7 +150,7 @@ internal sealed class PinJointTests(PhysicsServer.Backend backend)
         Check(body.GetContactCount() == 0, "Connected-body contacts are disabled by default.");
         pin.DisableCollision = false;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);
-        if (backend == PhysicsServer.Backend.CPU) Check(b2Joint_GetCollideConnected(pin.Runtime.Backend.ID), "Enabled connected collisions reach the solver joint.");
+        if (backend == PhysicsServer.Backend.CPU) Check(b2Joint_GetCollideConnected(((pin.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default)), "Enabled connected collisions reach the solver joint.");
         Check(body.GetContactCount() > 0, "Enabling connected collisions creates solver contacts.");
         pin.DisableCollision = true;
         for (var frame = 0; frame < 4; frame++) tree.PhysicsFrame(1d / 60);

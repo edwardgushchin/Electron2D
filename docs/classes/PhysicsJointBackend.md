@@ -1,6 +1,6 @@
 # PhysicsJointBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 [Shared public family checks](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 now run through explicitly selected CPU and independent GPU worlds, including
@@ -8,8 +8,7 @@ motion filtering, extreme finite spring caps and begun-GPU-failure lifetime.
 
 **Declaration:** `internal sealed partial class PhysicsJointBackend`
 
-**Source:** [PhysicsJointBackend.cs](../../src/Servers/Physics/PhysicsJointBackend.cs),
-[spring evaluation](../../src/Servers/Physics/PhysicsJointBackend.Spring.cs)
+**Source:** [PhysicsJointBackend.cs](../../src/Servers/Physics/PhysicsJointBackend.cs)
 **Component:** [Physics joints](../components/physics-joints.md)
 
 ## Ownership and operations
@@ -27,9 +26,8 @@ settings remain with the runtime, independently of attachment generations.
 | `Detach` | Attempt selected constraint retirement with endpoint wakeup, or skip native calls after world failure; clear handles/frame/impulse state in finally and remove the retained attachment. |
 | `ApplySolverPolicy` | Resolve inherited bias, convert linear/angular limits to backend units, wake and reacquire transferred records, update policy and clear old impulses. |
 | Pin/collision/groove setters | Update live solver settings without resampling the stored anchors; groove distances convert from scene units here. |
-| `PrepareSolverStep`, `ValidateSolverStep`, `ApplySolverStep` | Evaluate the existing Hooke/axial-drag impulse, preflight cumulative world motion, then apply equal opposite anchor impulses. |
 
-CPU prepares every spring before validating and applying the batch, preserving
+The CPU world resolves its actual native attachments independently of the selected wrapper. This facade has no native joint ID or CPU spring cast. Attach and policy updates project [PhysicsJointConfiguration](PhysicsJointConfiguration.md) values. CPU prepares every spring before validating and applying the batch, preserving
 recoverable numeric rejection. The historical stage host retains that CPU phase.
 Independent [resident GPU joints](../components/gpu-resident-joints.md) evaluate and
 apply springs on device through this adapter; begun execution errors retain the

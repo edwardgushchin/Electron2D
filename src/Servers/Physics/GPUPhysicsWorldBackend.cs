@@ -28,7 +28,7 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
         if (GPUStore.HasFailed) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.");
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return GPUStore.CreateCollider(collider, Space); }
-    internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new GPUPhysicsJointImplementation(Space); }
+    internal override PhysicsJointImplementation CreateJoint(PhysicsJointBackend joint) { EnsureAccess(); return new GPUPhysicsJointImplementation(Space); }
     internal override MotionResultData TestBodyMotion(RID body, Transform from, Vector2 motion, float margin,
         bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
     {

@@ -29,6 +29,10 @@ CreateCollider constructs a fresh selected CPU/GPU PhysicsColliderImplementation
 
 CreateJoint creates a fresh selected CPU/GPU PhysicsJointImplementation for each constraint attachment. Shared settings and physical RID stay in PhysicsJointRuntime. Generic policy/setters/portable-frame/release operations dispatch to that attachment.
 
+## Joint input ownership
+
+CreateJoint receives the retained common joint identity. Attachments consume [PhysicsJointConfiguration](PhysicsJointConfiguration.md) values rather than the mutable runtime. CPU retains native joint ownership by that identity, schedules actual spring phases and retires matching entries; GPU keeps resident execution. See [the shared input contract](../components/physics-backends.md#shared-joint-inputs-and-native-ownership).
+
 ## World policy, capacity and statistics
 
 The selected owner now applies sleep/contact thresholds, solver iterations and world joint defaults. PhysicsSpace validates and retains authored values, then dispatches implementation work. CPU owns native threshold updates, waking, worker selection, sensor scratch, solver/arena capacity and native sensor/process-statistics traversal. GPU applies resident settings and epoch invalidation, prepares existing GPU publication/report scratch and reads completed store statistics; it creates no CPU motion-history mirror.

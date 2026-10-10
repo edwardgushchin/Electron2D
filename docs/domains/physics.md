@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Shared joint inputs and ownership](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
+now pass complete engine-unit configuration values to selected constraints. CPU
+spring scheduling resolves actual native attachments from its owner, including
+wrapped implementations; matching retirement preserves replacement attachments.
+Public named registration and the complete external family remain open.
+
 [Shared collider inputs](../components/physics-backends.md#shared-collider-shape-inputs)
 now project scene/raw body and Area authoring into one selected implementation
 span. Exact resources, transforms, logical disabled indices and one-way policy

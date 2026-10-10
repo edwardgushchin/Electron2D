@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Physical skeletal integration
 
@@ -16,7 +16,7 @@ The selected PhysicsWorldBackend now creates a fresh PhysicsJointImplementation 
 
 PhysicsJointRuntime retains shared RID identity, scene-unit local frames and guide
 bounds, scalar settings, world membership and pair-exception accounting.
-[PhysicsJointBackend](../classes/PhysicsJointBackend.md) routes creation, live updates, release and spring evaluation to the selected concrete attachment. Scene joint classes and the
+[PhysicsJointBackend](../classes/PhysicsJointBackend.md) routes creation, live updates and release to the selected concrete attachment. Attach and policy updates receive immutable [PhysicsJointConfiguration](../classes/PhysicsJointConfiguration.md) values. CPU native spring scheduling resolves attachments through the CPU world ownership table, including selected wrappers; device spring execution stays resident. Scene joint classes and the
 runtime no longer depend on vendor types. Stored frame bases preserve the sampled
 rotation through detach/reentry; a membership change does not resample anchors.
 

@@ -182,9 +182,39 @@ internal static partial class PhysicsBackendOwnershipTests
             {
                 var anchor = rawView.Transform.Origin;
                 PhysicsServer.JointMakePin(joint, anchor, raw, floor.GetRID());
+                var runtime = space.SnapshotJoints.Single(value => value.RID == joint);
+                Check(runtime.Backend.Implementation is WrappedJoint { Attachments: 1 }, "Selected joint creation receives immutable parameter values");
+                PhysicsServer.JointSetBias(joint, .2f); PhysicsServer.JointSetMaxForce(joint, 1000);
+                Check(runtime.Backend.Implementation is WrappedJoint { Policies: > 0, Last.Bias: .2f, Last.MaxForce: 1000 }, "Live selected joint policy receives a complete refreshed value");
+                PhysicsServer.JointSetMaxForce(joint, float.MaxValue);
                 rawView.ApplyCentralImpulse(new(2, 0));
                 for (var i = 0; i < 8; i++) tree.PhysicsFrame(1d / 60);
-                Check(rawView.Transform.Origin.DistanceTo(anchor) < .5f, "Wrapped collider handles bind a real two-body pin constraint");
+                Check(rawView.Transform.Origin.DistanceTo(anchor) < .5f, $"Wrapped collider handles bind a real two-body pin constraint: error={rawView.Transform.Origin.DistanceTo(anchor)}, pose={rawView.Transform.Origin}, anchor={anchor}");
+                if (backend == PhysicsServer.Backend.CPU)
+                {
+                    var retiredJoint = selected.NativeJoint(runtime.Backend);
+                    PhysicsServer.JointClear(joint);
+                    Reject<InvalidOperationException>(() => selected.NativeJoint(runtime.Backend));
+                    PhysicsServer.JointMakePin(joint, anchor, raw, floor.GetRID());
+                    var currentJoint = selected.NativeJoint(runtime.Backend); retiredJoint.Detach();
+                    Check(ReferenceEquals(currentJoint, selected.NativeJoint(runtime.Backend)), "Retiring an old native joint preserves its replacement");
+                }
+                PhysicsServer.JointMakeGroove(joint, anchor - new Vector2(0, 5), anchor + new Vector2(0, 5), anchor, floor.GetRID(), raw);
+                tree.PhysicsFrame(1d / 60);
+                PhysicsServer.JointMakeDampedSpring(joint, anchor, anchor + new Vector2(0, 4), floor.GetRID(), raw);
+                PhysicsServer.DampedSpringJointSetRestLength(joint, 2); PhysicsServer.DampedSpringJointSetStiffness(joint, 3);
+                PhysicsServer.DampedSpringJointSetDamping(joint, .5f);
+                PhysicsServer.BodySetGravityScale(raw, 0);
+                rawView.LinearVelocity = default; rawView.AngularVelocity = 0;
+                for (var i = 0; i < 8; i++) tree.PhysicsFrame(1d / 60);
+                Check(rawView.LinearVelocity.Y < -.01f && rawView.Transform.IsFinite(), "Wrapped spring pulls the isolated stretched anchor without common CPU casts");
+                Collect();
+                for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
+                owner = GC.GetAllocatedBytesForCurrentThread(); all = GC.GetTotalAllocatedBytes(true);
+                for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
+                owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
+                Check(owner == 0 && all == 0, $"Wrapped selected joint full intervals allocated {owner}/{all} bytes");
+                Console.WriteLine($"{backend}: wrapped pin/groove/spring, matching native retirement and 64 warmed joint intervals: {owner}/{all} B.");
             }
             finally { PhysicsServer.FreeRID(joint); }
             using var map = new PhysicsSnapshotMap(world.Space);

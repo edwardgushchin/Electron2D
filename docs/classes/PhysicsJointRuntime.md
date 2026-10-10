@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
@@ -12,7 +12,7 @@ One internal configuration and native lifetime record per caller-owned or scene-
 
 The runtime now retains only engine-valued frames/settings and common identity,
 world membership and exception accounting. Its owned [PhysicsJointBackend](PhysicsJointBackend.md)
-handles concrete constraint creation, live updates, release and spring evaluation.
+handles concrete constraint creation, live updates and release. Native spring evaluation belongs to the CPU world owner; GPU springs execute on device.
 Neither this runtime nor the scene joint classes expose or store vendor types.
 
 ## Internal state and operations
@@ -30,7 +30,7 @@ Neither this runtime nor the scene joint classes expose or store vendor types.
 | `RefreshSpace()` | Select active owner, suspend mismatch or attach the retained backend using the endpoints' current collider adapters. |
 | `BodyLeaving(RID body)`, `DetachSpace()`, `Clear()` | Release native handle before body/world destruction; clear additionally forgets role/endpoints. |
 | Scalar setters | Validate finite/range values, update shared settings and native solver without resampling anchors. |
-| `PrepareSolverStep`, `ValidateSolverStep`, `ApplySolverStep` | Forward the world's prepare/validate/apply lane to the backend, preserving its all-springs preflight order. |
+| `Configuration` | Sample complete immutable engine-unit values, including effective spring rest length, for the selected attachment and CPU spring pass. |
 
 ## Lifecycle and invariants
 

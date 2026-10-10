@@ -9,7 +9,7 @@ using static Box2D.NET.B2WheelJoints;
 namespace Electron2D;
 
 /// <summary>Owns one CPU constraint's native handles, exact local frames and transient spring state.</summary>
-internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, CPUPhysicsWorldBackend worldOwner) : PhysicsJointImplementation(space)
+internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, CPUPhysicsWorldBackend worldOwner, PhysicsJointBackend owner) : PhysicsJointImplementation(space)
 {
     private B2BodyId BodyAID, BodyBID;
     private B2Transform _localFrameA, _localFrameB;
@@ -34,7 +34,7 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
             new(local.X * PhysicsSpace.UnitsPerMeter, local.Y * PhysicsSpace.UnitsPerMeter));
     }
 
-    internal override void Attach(PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
+    internal override void Attach(PhysicsColliderBackend first, PhysicsColliderBackend? second, in PhysicsJointConfiguration settings)
     {
         if (IsAttached) throw new InvalidOperationException("A joint already has a backend attachment.");
         var space = Space;
@@ -71,7 +71,7 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         ApplySolverPolicy(settings);
     }
 
-    internal override void ApplySolverPolicy(PhysicsJointRuntime settings)
+    internal override void ApplySolverPolicy(in PhysicsJointConfiguration settings)
     {
         var world = B2Worlds.b2GetWorld(ID.world0);
         var joint = b2GetJointSim(world, b2GetJointFullId(world, ID));
@@ -112,6 +112,7 @@ internal sealed partial class CPUPhysicsJointImplementation(PhysicsSpace space, 
         {
             ID = default; BodyAID = BodyBID = default; _localFrameA = _localFrameB = default;
             _pointA = _pointB = _pendingImpulse = default;
+            worldOwner.RetireJoint(owner, this);
         }
     }
 

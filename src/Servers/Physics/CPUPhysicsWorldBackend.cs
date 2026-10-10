@@ -81,7 +81,18 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         }
         return _jointWorldBody;
     }
-    internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new CPUPhysicsJointImplementation(Space, this); }
+    private readonly Dictionary<PhysicsJointBackend, CPUPhysicsJointImplementation> _jointAttachments = [];
+    internal CPUPhysicsJointImplementation NativeJoint(PhysicsJointBackend joint) =>
+        _jointAttachments.TryGetValue(joint, out var value) ? value : throw new InvalidOperationException("The joint has no attachment owned by this CPU world.");
+    internal void RetireJoint(PhysicsJointBackend joint, CPUPhysicsJointImplementation implementation)
+    {
+        if (_jointAttachments.TryGetValue(joint, out var current) && ReferenceEquals(current, implementation)) _jointAttachments.Remove(joint);
+    }
+    internal override PhysicsJointImplementation CreateJoint(PhysicsJointBackend joint)
+    {
+        EnsureAccess(); var implementation = new CPUPhysicsJointImplementation(Space, this, joint);
+        _jointAttachments.Add(joint, implementation); return implementation;
+    }
     internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); b2World_Step(_worldID, delta, substeps); }
 
     internal override GPUPhysicsWorld EnableGPUIntegration()

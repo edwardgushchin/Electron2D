@@ -1,10 +1,12 @@
 # GPUPhysicsJointImplementation
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed class GPUPhysicsJointImplementation : PhysicsJointImplementation` · **Source:** [GPUPhysicsJointImplementation.cs](../../src/Servers/Physics/GPUPhysicsJointImplementation.cs) · **Component:** [Physics joints](../components/physics-joints.md#runtime-flow-and-invariants)
 
 ## Ownership and execution
+
+Attach and ApplySolverPolicy consume immutable [PhysicsJointConfiguration](PhysicsJointConfiguration.md) values in engine units. They do not borrow the mutable resource runtime; effective spring rest length is sampled before solver compilation.
 
 Owns one resident constraint handle and definition. Applies pin/groove/spring, collision vetoes, motor/limits, bias/softness/caps and portable frames through the independent store. Spring impulses execute on device; the implementation exposes no fake CPU spring phase. A world pin uses the virtual empty endpoint without creating a CPU body.
 

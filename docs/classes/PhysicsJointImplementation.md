@@ -1,10 +1,12 @@
 # PhysicsJointImplementation
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal abstract class PhysicsJointImplementation` · **Source:** [PhysicsJointImplementation.cs](../../src/Servers/Physics/PhysicsJointImplementation.cs) · **Component:** [Physics joints](../components/physics-joints.md#runtime-flow-and-invariants)
 
 ## Ownership and execution
+
+Attach and ApplySolverPolicy consume immutable [PhysicsJointConfiguration](PhysicsJointConfiguration.md) values in engine units. They do not borrow the mutable resource runtime; effective spring rest length is sampled before solver compilation.
 
 Captures one immutable selected world context for a concrete constraint. Attach/Detach, IsAttached, solver policy, portable frame replacement, collision policy, pin limit/motor settings and groove bounds form its complete internal operation family. The public resource RID, authored frames/settings and endpoint membership remain in PhysicsJointRuntime.
 
