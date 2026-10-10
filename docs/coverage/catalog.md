@@ -1052,7 +1052,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [WebSocketPeer](classes/WebSocketPeer.md) | PacketPeer | Implemented | 30 |
 | [WebXRInterface](classes/WebXRInterface.md) | XRInterface | Excluded | 32 |
 | [Window](classes/Window.md) | Viewport | Partial | 199 |
-| [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Blocked | 9 |
+| [WorkerThreadPool](classes/WorkerThreadPool.md) | Object | Implemented | 9 |
 | [World2D](classes/World2D.md) | Resource | Implemented | 4 |
 | [World3D](classes/World3D.md) | Resource | Excluded | 7 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | Shape2D | Implemented | 2 |

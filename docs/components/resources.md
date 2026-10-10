@@ -63,3 +63,7 @@ X509Certificate and CryptoKey implement copied Resource state, change/failure be
 ## Typed file integration
 
 See [resource-file contracts](resource-files.md) for registered typed schemas, cache/UID resolution, file-root and scene-instance ownership, public extension hooks and exercised verification. File operations allocate outside frame processing. UID paths resolve through the permanent catalog before directory-backed path resolution; unknown UIDs fail explicitly. The archive profile does not add an editor, arbitrary import/remap rules or every resource schema.
+
+## Background loading prerequisite
+
+[WorkerThreadPool](worker-pool.md) now executes typed jobs and indexed groups under ADR 0104. ResourceLoader remains synchronous: resource request ownership, progress/status, cooperative cancellation, graph/cache lifetime, owner callback delivery and parallel dependency loading across its load gate are the exact remaining threaded-loading dependencies. A worker wrapper around Load does not implement those missing contracts.

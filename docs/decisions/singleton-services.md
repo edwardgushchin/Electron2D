@@ -13,7 +13,7 @@ Accepted.
 
 ### Context
 
-`Engine.Instance.Run(window)` repeats an access step for a service that is already process-wide. Engine, OS, ProjectSettings, Input, InputMap, ThemeDB, AudioServer, PhysicsServer, Performance, ResourceLoader, ResourceSaver and ResourceUID retain permanent objects; DisplayServer and RenderingServer retain objects only during an active native session. Those objects also support identity, typed property discovery, service lookup and native resource ownership.
+`Engine.Instance.Run(window)` repeats an access step for a service that is already process-wide. Engine, OS, WorkerThreadPool, ProjectSettings, Input, InputMap, ThemeDB, AudioServer, PhysicsServer, Performance, ResourceLoader, ResourceSaver and ResourceUID retain permanent objects; DisplayServer and RenderingServer retain objects only during an active native session. Those objects also support identity, typed property discovery, service lookup and native resource ownership.
 
 The selected convention shortens ordinary calls to `Engine.Run(window)` across the family while preserving the stateful implementations.
 
@@ -58,3 +58,5 @@ Check compiled declared public operations for static access and absence of Insta
 - [0040: Display lifecycle](display.md#adr-0040)
 - [0047: Audio service](audio.md#adr-0047)
 - [0083: Theme service](rendering.md#adr-0083)
+
+- [0104: Worker execution and completion ownership](jobs.md#adr-0104)

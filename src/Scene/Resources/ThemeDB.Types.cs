@@ -379,6 +379,7 @@ public sealed partial class ThemeDB
         ["WebSocketMultiplayerPeer"] = ["WebSocketMultiplayerPeer", "MultiplayerPeer", "PacketPeer", "ElectronObject"],
         ["WebSocketPeer"] = ["WebSocketPeer", "PacketPeer", "ElectronObject"],
         ["Window"] = ["Window", "Viewport", "Node", "ElectronObject"],
+        ["WorkerThreadPool"] = ["WorkerThreadPool", "ElectronObject"],
         ["World"] = ["World", "Resource", "ElectronObject"],
         ["WorldBoundaryShape"] = ["WorldBoundaryShape", "Shape", "Resource", "ElectronObject"],
         ["X509Certificate"] = ["X509Certificate", "Resource", "ElectronObject"],

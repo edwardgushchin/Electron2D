@@ -262,6 +262,22 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<bool> RenderingFallback { get; } =
         new("rendering/rendering_device/fallback_to_opengl3", true);
 
+    /// <summary>Defines the worker count sampled on the first pool submission.</summary>
+    /// <value>threading/worker_pool/max_threads; -1 uses max(1, processor count minus one), otherwise a positive count.</value>
+    public static ProjectSetting<int> WorkerPoolMaxThreads { get; } =
+        new("threading/worker_pool/max_threads", -1, value => value == -1 || value > 0);
+
+    /// <summary>Defines the fraction of workers available for ordinary priority jobs at pool startup.</summary>
+    /// <value>threading/worker_pool/low_priority_thread_ratio; finite zero through one, default .5; at least one slot is available and a multi-worker pool reserves one for high priority.</value>
+    public static ProjectSetting<float> WorkerPoolLowPriorityThreadRatio { get; } =
+        new("threading/worker_pool/low_priority_thread_ratio", .5f, value => float.IsFinite(value) && value >= 0 && value <= 1);
+
+    /// <summary>Defines the positive number of pending task/group records prepared on first submission.</summary>
+    /// <value>threading/worker_pool/max_pending_tasks; defaults to 1024. Completed IDs occupy capacity until waited.
+    /// Queue ticket capacity is this value times the worker count; checked overflow rejects startup.</value>
+    public static ProjectSetting<int> WorkerPoolMaxPendingTasks { get; } =
+        new("threading/worker_pool/max_pending_tasks", 1024, value => value > 0);
+
     /// <summary>Defines the render-clock wrap period in seconds.</summary>
     /// <remarks>Defaults to 3600. Must be finite and positive. Active feature overrides apply on each submitted frame.
     /// Drives canvas animation intervals and the optional float32 TIME built-in in GPU fragment shaders.

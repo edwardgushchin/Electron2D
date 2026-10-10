@@ -1,6 +1,6 @@
 # ProjectSettings
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [ProjectSettingsRegistry](ProjectSettingsRegistry.md)
 
@@ -64,6 +64,9 @@ string resourcePath = ProjectSettings.GlobalizePath("res://levels/intro.scene");
 | [`public static ProjectSetting<string> RenderingMethod { get; }`](#p-electron2d-projectsettings-renderingmethod) | Selects `gpu` or `compatibility` at renderer startup. |
 | [`public static ProjectSetting<double> RenderingTimeRolloverSeconds { get; }`](#renderingtimerolloverseconds) | Sets the render-clock wrap period, default 3600 seconds. |
 | [`public static ProjectSetting<bool> RenderingFallback { get; }`](#p-electron2d-projectsettings-renderingfallback) | Allows compatibility rendering if GPU initialization fails. |
+| [`public static ProjectSetting<int> WorkerPoolMaxThreads { get; }`](#workerpoolmaxthreads) | Worker count sampled on first submission; -1 selects processor count minus one, minimum one. |
+| [`public static ProjectSetting<float> WorkerPoolLowPriorityThreadRatio { get; }`](#workerpoollowprioritythreadratio) | Ordinary worker fraction; default .5, at least one slot and one reserved high-priority worker when possible. |
+| [`public static ProjectSetting<int> WorkerPoolMaxPendingTasks { get; }`](#workerpoolmaxpendingtasks) | Positive startup preparation capacity, default 1024 pending regular/group records. |
 | [`public static ProjectSetting<bool> SnapTransformsToPixel { get; }`](#snaptransformstopixel) | Initial transform snapping for a new root Window; false. |
 | [`public static ProjectSetting<bool> SnapVerticesToPixel { get; }`](#snapverticestopixel) | Initial vertex snapping for a new root Window; false. |
 | [`public static ProjectSetting<bool> UseNearestMipmapFilter { get; }`](#usenearestmipmapfilter) | Selects canvas mip interpolation at GPU startup; false by default. |
@@ -1430,3 +1433,18 @@ settings. [Physics diagnostics](../components/physics-debug.md) documents their
 consumers and native verification. Each penetrating manifold contributes up to two
 points. Storage is prepared when diagnostics are enabled; addressability or memory
 limits reject preparation. Editing these two settings does not alter existing trees.
+
+<a id="workerpoolmaxthreads"></a>
+### `public static ProjectSetting<int> WorkerPoolMaxThreads { get; }`
+
+Defines `threading/worker_pool/max_threads`, default -1. Positive values explicitly select a worker count. The first WorkerThreadPool submission samples feature overrides; later setting changes do not resize a running pool.
+
+<a id="workerpoollowprioritythreadratio"></a>
+### `public static ProjectSetting<float> WorkerPoolLowPriorityThreadRatio { get; }`
+
+Defines `threading/worker_pool/low_priority_thread_ratio`, default .5, finite zero through one. Ordinary slots are clamp(floor(workers * ratio), 1, max(1, workers - 1)). High-priority work may use every worker; callbacks already running are not interrupted.
+
+<a id="workerpoolmaxpendingtasks"></a>
+### `public static ProjectSetting<int> WorkerPoolMaxPendingTasks { get; }`
+
+Defines `threading/worker_pool/max_pending_tasks`, default 1024, positive only. The pool prepares this many reusable task/group records and worker-count times this capacity in each queue before dispatch. Completed IDs retain capacity until waited. Excess submissions reject atomically; checked queue-size overflow rejects startup. This is the preparation extension under ADR 0014/0104.

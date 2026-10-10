@@ -5,7 +5,7 @@ internal static class StaticServiceTests
 {
     internal static void Run()
     {
-        Type[] services = [typeof(Engine), typeof(OS), typeof(ProjectSettings), typeof(Input), typeof(InputMap), typeof(ThemeDB), typeof(AudioServer), typeof(PhysicsServer), typeof(Performance), typeof(DisplayServer), typeof(RenderingServer)];
+        Type[] services = [typeof(Engine), typeof(OS), typeof(WorkerThreadPool), typeof(ProjectSettings), typeof(Input), typeof(InputMap), typeof(ThemeDB), typeof(AudioServer), typeof(PhysicsServer), typeof(Performance), typeof(DisplayServer), typeof(RenderingServer)];
         foreach (var type in services)
         {
             Check(type.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static) is null, $"{type.Name} hides its service accessor.");

@@ -79,6 +79,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         RegisterInternal(PhysicsJitterFix, isBasic: false);
         RegisterInternal(RenderingMethod, isBasic: true);
         RegisterInternal(RenderingFallback, isBasic: false);
+        RegisterInternal(WorkerPoolMaxThreads, isBasic: false);
+        RegisterInternal(WorkerPoolLowPriorityThreadRatio, isBasic: false);
+        RegisterInternal(WorkerPoolMaxPendingTasks, isBasic: false);
         RegisterInternal(RenderingTimeRolloverSeconds, isBasic: false);
         RegisterInternal(SnapTransformsToPixel, isBasic: false);
         RegisterInternal(SnapVerticesToPixel, isBasic: false);
@@ -1177,6 +1180,9 @@ public partial class ProjectSettingsRegistry : ElectronObject
         ReferenceEquals(setting, PhysicsJitterFix) ||
         ReferenceEquals(setting, RenderingMethod) ||
         ReferenceEquals(setting, RenderingFallback) ||
+        ReferenceEquals(setting, WorkerPoolMaxThreads) ||
+        ReferenceEquals(setting, WorkerPoolLowPriorityThreadRatio) ||
+        ReferenceEquals(setting, WorkerPoolMaxPendingTasks) ||
         ReferenceEquals(setting, RenderingTimeRolloverSeconds) ||
         ReferenceEquals(setting, SnapTransformsToPixel) ||
         ReferenceEquals(setting, SnapVerticesToPixel) ||

@@ -420,7 +420,7 @@
         "ResourceLoader::method:load_threaded_request(String:,String:,bool:,int:ResourceLoader.CacheMode)"
       ],
       "state": "Blocked",
-      "reason": "Trigger: typed worker load tokens, cancellation/progress ownership and callback delivery over the synchronous loader after a portable job-system decision."
+      "reason": "Trigger: typed resource-load request ownership, status/progress and cooperative cancellation, cache/graph lifetime across completion, owner-thread callback delivery, and actual parallel dependency loading over WorkerThreadPool (ADR 0104). The portable job pool now executes; synchronous ResourceLoader still serializes format/cache decisions under its load gate (ADR 0013)."
     },
     {
       "godot": [

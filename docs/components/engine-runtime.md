@@ -1,6 +1,6 @@
 # Engine runtime component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-10
 
 ## Scope
 
@@ -66,3 +66,5 @@ Executable checks cover success, invalid values/order, wrong threads, lifecycle 
 ## Canvas render time
 
 [Canvas animation intervals](canvas-rendering.md#animation-intervals-and-rectangles) use captured scaled process steps and a live typed rollover setting; ordered transform state is replayed alongside retained geometry. The clock is per Engine.Run and also supplies the optional GPU fragment [TIME built-in](shader-materials.md#render-time).
+
+The built-in WorkerThreadPool registry entry retains its typed object identity without starting threads. Static worker submissions lazily prepare its portable runtime; completion ownership and target-threading limits follow [ADR 0104](../decisions/jobs.md#adr-0104). Scene owners publish worker results through SceneTree.Defer.

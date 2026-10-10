@@ -1,6 +1,6 @@
 # Configuration files component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-10
 
 ## Scope
 
@@ -86,3 +86,5 @@ The directory-destination failure check covers plain, raw-key and password saves
 - [0035: Foreseeable public type-family completeness](../decisions/core-math.md#adr-0035)
 - [0029: Typed Transform2D value and affine semantics](../decisions/core-math.md#adr-0029)
 - [0033: Dimensioned engine-owned vector family](../decisions/core-math.md#adr-0033)
+
+Typed WorkerPoolMaxThreads, WorkerPoolLowPriorityThreadRatio and WorkerPoolMaxPendingTasks definitions are registered built-in settings in process-wide and isolated registries. The worker service samples feature overrides only on first submission; running pools retain prepared capacity and thread/priority limits. See [worker execution](worker-pool.md).

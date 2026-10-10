@@ -10925,6 +10925,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.WorkerThreadPool",
+    "kind": "type",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "WorkerThreadPool",
+    "signature": "public sealed class Electron2D.WorkerThreadPool",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.World",
     "kind": "type",
     "declaringType": "Electron2D.World",
@@ -163199,6 +163214,208 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.WorkerThreadPool.AddGroupTask(System.Action\u003CSystem.Int32\u003E,System.Int32,System.Int32,System.Boolean,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "AddGroupTask",
+    "signature": "public static System.Int64 AddGroupTask(System.Action\u003CSystem.Int32\u003E action, System.Int32 elements, System.Int32 tasksNeeded = -1, System.Boolean highPriority = false, System.String description = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "action",
+        "type": "System.Action\u003CSystem.Int32\u003E",
+        "default": null
+      },
+      {
+        "name": "elements",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "tasksNeeded",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "highPriority",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.AddTask(System.Action,System.Boolean,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "AddTask",
+    "signature": "public static System.Int64 AddTask(System.Action action, System.Boolean highPriority = false, System.String description = \u0022\u0022)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "action",
+        "type": "System.Action",
+        "default": null
+      },
+      {
+        "name": "highPriority",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "description",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.GetCallerGroupID()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "GetCallerGroupID",
+    "signature": "public static System.Int64 GetCallerGroupID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.GetCallerTaskID()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "GetCallerTaskID",
+    "signature": "public static System.Int64 GetCallerTaskID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.GetGroupProcessedElementCount(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "GetGroupProcessedElementCount",
+    "signature": "public static System.Int32 GetGroupProcessedElementCount(System.Int64 groupID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "groupID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.IsGroupTaskCompleted(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "IsGroupTaskCompleted",
+    "signature": "public static System.Boolean IsGroupTaskCompleted(System.Int64 groupID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "groupID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.IsTaskCompleted(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "IsTaskCompleted",
+    "signature": "public static System.Boolean IsTaskCompleted(System.Int64 taskID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "taskID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.WaitForGroupTaskCompletion(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "WaitForGroupTaskCompletion",
+    "signature": "public static System.Void WaitForGroupTaskCompletion(System.Int64 groupID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "groupID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.WorkerThreadPool.WaitForTaskCompletion(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.WorkerThreadPool",
+    "name": "WaitForTaskCompletion",
+    "signature": "public static System.Void WaitForTaskCompletion(System.Int64 taskID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "taskID",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.World.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.World",
@@ -189543,6 +189760,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WorkerPoolLowPriorityThreadRatio()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WorkerPoolLowPriorityThreadRatio",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Single\u003E WorkerPoolLowPriorityThreadRatio { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WorkerPoolMaxPendingTasks()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WorkerPoolMaxPendingTasks",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WorkerPoolMaxPendingTasks { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.WorkerPoolMaxThreads()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "WorkerPoolMaxThreads",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E WorkerPoolMaxThreads { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

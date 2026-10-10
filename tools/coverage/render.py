@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "texture_arrays", "device", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "jobs", "display", "rendering", "texture_arrays", "device", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -397,8 +397,8 @@ def reason_for_type(item, lookup):
         ({"OggPacketSequence", "OggPacketSequencePlayback"}, "first audio decoding and playback slice"),
         ({"Crypto", "CryptoKey", "X509Certificate"}, "first typed networking-security integration slice with a portable crypto backend (ADR 0021)"),
         ({"RID"}, "first executable shared server resource-identity and lifetime slice under ADR 0063; renderer and navigation consumers retain their own domain gates"),
-        ({"Thread", "Mutex", "Semaphore", "WorkerThreadPool"},
-         "a typed engine job-system decision with ownership, cancellation and target threading guarantees (ADRs 0001 and 0021)"),
+        ({"Thread", "Mutex", "Semaphore"},
+         "typed portable synchronization/explicit thread ownership over the accepted worker foundation (ADRs 0021 and 0104)"),
         ({"WeakRef"},
          "an accepted public weak-reference contract beyond System.WeakReference<T>; Resource currently uses only an internal weak path cache (ADR 0013)"),
     )
@@ -474,7 +474,7 @@ def special_reason(item, member):
             "animation": "first 2D animation and typed animation-settings slice",
             "accessibility": "first typed GUI accessibility integration and settings slice",
             "dotnet": "first self-hosted editor C# scripting workflow (ADR 0027)",
-            "threading": "an accepted portable engine job-system contract and settings slice (ADR 0021)",
+            "threading": "remaining portable synchronization and operation-specific runtime settings over the worker foundation (ADRs 0021 and 0104)",
             "memory": "an accepted runtime memory-settings contract after measured need (ADR 0014)",
         }
         if root == "internationalization":

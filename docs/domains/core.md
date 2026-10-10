@@ -1,6 +1,6 @@
 # Core domain
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 ## Skeletal schema policy
 
@@ -20,10 +20,11 @@ Its production sources are grouped by upstream module under `src/Core/`: `Config
 
 ## Current state
 
-The domain currently contains fifteen active components:
+The domain contains the following active components:
 
 | Component | Responsibility | State |
 | --- | --- | --- |
+| [Worker execution](../components/worker-pool.md) | Typed background regular/group jobs, priority, progress, nested/concurrent waits and completion ownership | Applicable own API Implemented; Linux Wayland GPU/compatibility scene workflow verified; browser/foreign/native allocation gates remain |
 | [Object lifecycle](../components/object-lifecycle.md) | Process-local identity, runtime type diagnostics, deterministic disposal, typed weak references, and disposed-state protection | Implemented and verified |
 | [Typed event connections](../components/event-connections.md) | Disposable typed subscriptions with one-shot and deferred delivery | Implemented and verified |
 | [Typed editor properties](../components/editor-properties.md) | Variant-free property discovery, typed access, validation, and revert behavior | Implemented and verified |
@@ -214,3 +215,5 @@ static GetMonitor access. Its three current producers read completed CPU/GPU
 [physics statistics](../components/physics-statistics.md) on any thread without
 allocating or synchronizing devices. Other built-in producers and custom monitors
 remain open coverage obligations.
+
+WorkerThreadPool schedules synchronized or independently owned data computations. It does not grant scene/render thread access: the executable WorkerRoutes consumer publishes through SceneTree.Defer. Threaded ResourceLoader, asynchronous baking and their ownership/cancellation contracts remain separate consumers under ADR 0104.

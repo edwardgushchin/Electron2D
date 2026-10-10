@@ -179,10 +179,13 @@ def main():
         for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D", "PhysicsDirectBodyState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
-                     "Texture2DArray", "TextureLayered", "PlaceholderTexture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
+                     "Texture2DArray", "TextureLayered", "PlaceholderTexture2DArray", "WorkerThreadPool", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
                      "RefCounted", "Line2D", "NativeMenu", "GDScriptLanguageProtocol",
                      "EditorNode3DGizmo")
     }
+    worker_rows = [row for row in pages[CLASS_PAGES / "WorkerThreadPool.md"].splitlines() if row.startswith("| [`")]
+    assert len(worker_rows) == 10 and all(" | Implemented | " in row for row in worker_rows)
+    assert "../../classes/WorkerThreadPool.md" in class_rows["WorkerThreadPool"]
     astar_rows = [row for row in pages[CLASS_PAGES / "AStar2D.md"].splitlines()
                   if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(astar_rows) == 28 and all(" | Implemented | " in row for row in astar_rows)

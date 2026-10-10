@@ -1,6 +1,6 @@
 # Engine
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -491,3 +491,5 @@ The permanent named service list includes `PhysicsServer` and `Performance` afte
 `UnregisterSingleton` reject. Public operations remain static under ADR 0095.
 [Physics statistics](../components/physics-statistics.md) reads completed CPU/GPU
 samples without starting the renderer or acquiring a world owner thread.
+
+The built-in WorkerThreadPool registry entry retains its typed object identity without starting threads. Static worker submissions lazily prepare its portable runtime; completion ownership and target-threading limits follow [ADR 0104](../decisions/jobs.md#adr-0104). Scene owners publish worker results through SceneTree.Defer.
