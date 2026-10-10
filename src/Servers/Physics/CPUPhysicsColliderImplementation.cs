@@ -72,42 +72,20 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         }
     }
 
-    internal override void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
+    internal override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask,
         bool sensor, float density, float friction = 1, float bounce = 0)
     {
-        foreach (var slot in slots)
+        foreach (ref readonly var slot in slots)
         {
-            if (!slot.Active) continue;
-            _ = slot.Shape.GetGeometryData();
+            if (!slot.Enabled) continue;
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
+            if (!slot.Shape.IsDisposed) _ = slot.Shape.GetGeometryData();
         }
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
-        for (var index = 0; index < slots.Count; index++)
-        {
-            var slot = slots[index];
-            if (slot.Active) AppendShape(slot.Shape, slot.Transform, index, sensor ? null : slot.OneWay, ref definition);
-        }
-    }
-
-    internal override void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask,
-        bool sensor, float density, float friction = 1, float bounce = 0)
-    {
-        foreach (var slot in slots)
-            if (!slot.Disabled)
-            {
-                PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
-                if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
-            }
-        var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
-        for (var index = 0; index < slots.Count; index++)
-        {
-            var slot = slots[index];
-            if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
-            var contact = !sensor && slot.OneWay
-                ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
-            AppendShape(slot.Shape.Geometry, slot.LocalTransform, index, contact, ref definition);
-        }
+        foreach (ref readonly var slot in slots)
+            if (slot.Enabled && !slot.Shape.IsDisposed)
+                AppendShape(slot.Shape, slot.Transform, slot.Index, sensor ? null : slot.OneWay, ref definition);
     }
 
     private B2ShapeDef BeginShapeUpdate(uint layer, uint mask, bool sensor, float density, float friction, float bounce)

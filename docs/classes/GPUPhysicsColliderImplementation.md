@@ -8,6 +8,12 @@ An explicitly requested compact pose has an independent epoch-qualified cache. I
 
 ## Responsibility and flow
 
+The one RebuildShapes span consumes neutral PhysicsColliderShape values projected
+from all scene/server bodies and Areas. Disabled/disposed slots retain their
+logical indices without producing fixtures. Complete source preflight occurs
+before mutation; this owner retains concrete geometry validation and storage.
+See [shared inputs](../components/physics-backends.md#shared-collider-shape-inputs).
+
 The actual resident store retains this concrete attachment by common collider
 identity. Its immutable store reference supplies device operations even when the
 selected implementation is a wrapper. Native handles, shape leases and publication

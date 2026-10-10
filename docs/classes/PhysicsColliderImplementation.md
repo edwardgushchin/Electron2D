@@ -6,6 +6,12 @@ Last updated: 2026-10-11
 
 ## Responsibility and flow
 
+RebuildShapes receives one borrowed ReadOnlySpan of
+[PhysicsColliderShape](PhysicsColliderShape.md) inputs for scene/raw bodies and
+Areas. Logical disabled slots and exact resource/transform/one-way data survive
+projection; private scene/server slot stores never cross this implementation
+boundary. Native preparation still preflights before fixture removal.
+
 RefreshIdentity and SetCollisionPriority receive shared object/canvas and priority
 edits through the selected implementation. GPU publishes resident query/solver
 metadata; CPU reads shared identity and priority directly. Common collider code

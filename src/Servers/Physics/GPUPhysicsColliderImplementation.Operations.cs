@@ -37,40 +37,20 @@ internal sealed partial class GPUPhysicsColliderImplementation
         foreach (var shape in GPUShapes) GPU.SetShapeFilter(shape.Handle, layer, mask, GPUSensor);
         Space.InvalidateGPUStates();
     }
-    internal override void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
+    internal override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask,
         bool sensor, float density, float friction, float bounce)
     {
-        foreach (var slot in slots)
+        foreach (ref readonly var slot in slots)
         {
-            if (!slot.Active) continue;
-            _ = slot.Shape.GetGeometryData();
+            if (!slot.Enabled) continue;
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
+            if (!slot.Shape.IsDisposed) _ = slot.Shape.GetGeometryData();
         }
         GPUSensor = sensor; GPUMask = mask; ClearGPUShapes();
-        for (var index = 0; index < slots.Count; index++)
-        {
-            var slot = slots[index];
-            if (slot.Active) AddGPUShape(slot.Shape, slot.Transform, index, sensor, layer, mask, friction, bounce, sensor ? null : slot.OneWay);
-        }
-    }
-    internal override void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask,
-        bool sensor, float density, float friction, float bounce)
-    {
-        foreach (var slot in slots)
-            if (!slot.Disabled)
-            {
-                PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
-                if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
-            }
-        GPUSensor = sensor; GPUMask = mask; ClearGPUShapes();
-        for (var index = 0; index < slots.Count; index++)
-        {
-            var slot = slots[index];
-            if (slot.Disabled || slot.Shape.Geometry.IsDisposed) continue;
-            var oneWay = !sensor && slot.OneWay ? new OneWayContactData(slot.Direction.Rotated(slot.LocalTransform.Rotation), slot.Margin) : null;
-            AddGPUShape(slot.Shape.Geometry, slot.LocalTransform, index, sensor, layer, mask, friction, bounce, oneWay);
-        }
+        foreach (ref readonly var slot in slots)
+            if (slot.Enabled && !slot.Shape.IsDisposed)
+                AddGPUShape(slot.Shape, slot.Transform, slot.Index, sensor, layer, mask, friction, bounce, sensor ? null : slot.OneWay);
     }
     internal override (Vector2 Position, float Rotation) GetPose()
     {

@@ -6,6 +6,12 @@ Last updated: 2026-10-11
 
 ## Responsibility and flow
 
+The one RebuildShapes span consumes neutral PhysicsColliderShape values projected
+from all scene/server bodies and Areas. Disabled/disposed slots retain their
+logical indices without producing fixtures. Complete source preflight occurs
+before mutation; this owner retains concrete geometry validation and storage.
+See [shared inputs](../components/physics-backends.md#shared-collider-shape-inputs).
+
 The CPU creator retains this concrete attachment in its private collider table.
 Native body/shape IDs are absent from common scene/server identities. Selected
 wrappers can delegate operations while the creator resolves native storage for

@@ -55,7 +55,10 @@ transform reads reuse the qualified GPU basis while CPU keeps its angle conventi
 | `UpdateFilter` | Update existing CPU/GPU fixture metadata, preserve geometry identity and wake body/contact neighbors when requested; query/failed-world guards precede mutation. |
 | `Space`, `AttachmentVersion`, `ShapeCount` | Common attachment context and selected shape count. CPU body/shape IDs remain private to their actual owner. |
 
-Scene and server slot overloads use the selected implementation's shape-definition/append path. It
+[Scene/raw projection](../../src/Servers/Physics/PhysicsColliderBackend.Shapes.cs)
+preflights authored slots, snapshots them into a retained neutral input array and
+calls the single selected implementation span operation. Reentry rejects while
+that array is borrowed; finally clears resource/contact references. It
 installs category/mask bits, sensor/density policy, surface material, one-way
 metadata and exception pre-solve eligibility. Shape resources supply their existing
 borrowed scene-unit geometry through PhysicsShapeBackend. Definitions are temporary locals; the component does not retain
