@@ -17,8 +17,7 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract void RefreshIdentity();
     internal abstract void SetCollisionPriority(float value);
     internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
-    internal abstract void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
-    internal abstract void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
+    internal abstract void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     internal abstract (Vector2 Position, float Rotation) GetPose();
     internal abstract Transform GetTransform();
     internal abstract Transform SampleJointLocalFrame(Vector2 point, float angle);

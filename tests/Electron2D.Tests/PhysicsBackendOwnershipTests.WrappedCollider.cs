@@ -5,6 +5,7 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class WrappedCollider(PhysicsColliderBackend owner, PhysicsSpace space, PhysicsColliderImplementation inner) : PhysicsColliderImplementation(owner, space)
     {
         internal int PolicyCalls, ImpulseCalls, IdentityCalls, PriorityCalls;
+        internal ShapeInputHook? ShapeInputs;
         internal override int ShapeCount => inner.ShapeCount;
         internal override Vector2 LinearVelocity => inner.LinearVelocity;
         internal override float AngularVelocity => inner.AngularVelocity;
@@ -25,8 +26,11 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void SetCollisionPriority(float value) { PriorityCalls++; inner.SetCollisionPriority(value); }
         internal override void PrepareContactPolicy() { PolicyCalls++; inner.PrepareContactPolicy(); }
         internal override void UpdateFilter(uint layer, uint mask, bool wakeBody) => inner.UpdateFilter(layer, mask, wakeBody);
-        internal override void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce) => inner.RebuildShapes(slots, layer, mask, sensor, density, friction, bounce);
-        internal override void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce) => inner.RebuildShapes(slots, layer, mask, sensor, density, friction, bounce);
+        internal override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
+        {
+            ShapeInputs?.Invoke(Owner, slots, sensor);
+            inner.RebuildShapes(slots, layer, mask, sensor, density, friction, bounce);
+        }
         internal override (Vector2 Position, float Rotation) GetPose() => inner.GetPose();
         internal override Transform GetTransform() => inner.GetTransform();
         internal override Transform SampleJointLocalFrame(Vector2 point, float angle) => inner.SampleJointLocalFrame(point, angle);

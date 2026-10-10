@@ -11,6 +11,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal Func<PhysicsDirectSpaceState>? SpaceFactory;
         internal Func<PhysicsBodyRuntime, PhysicsDirectBodyState>? BodyFactory;
         internal int SpaceCreations, BodyCreations;
+        internal ShapeInputHook? ShapeHook;
         internal Action? InitializeHook, FlushHook;
         internal Action<bool>? ActiveHook;
         internal Action<Exception?>? EndSyncHook;
@@ -52,7 +53,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
         {
             var created = _inner.CreateCollider(collider);
-            return new WrappedCollider(collider, Space, created);
+            return new WrappedCollider(collider, Space, created) { ShapeInputs = ShapeHook };
         }
         internal override PhysicsJointImplementation CreateJoint() => _inner.CreateJoint();
         internal override void BeginStep(double delta) => _inner.BeginStep(delta);

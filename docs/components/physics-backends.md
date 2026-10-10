@@ -95,6 +95,29 @@ This implements the internal ownership route; public named registration, the
 complete server implementation bridge, custom algorithms and platform/native
 acceptance remain open under ADR 0103.
 
+## Shared collider shape inputs
+
+The selected collider now receives one borrowed ReadOnlySpan of PhysicsColliderShape
+values rather than separate scene/server slot types. Each value retains the exact
+resource, local transform, logical index, enabled policy and body-local one-way
+metadata. Disabled slots remain in the sequence; sensor inputs omit body-only
+one-way response. CPU/GPU compilation consumes the same complete input family.
+
+The common identity facade projects authored scene/raw slots into reusable scratch,
+preserving each source's preflight order before native fixtures are removed.
+Recursive preparation of that collider rejects; all exits clear scratch references
+and release the guard. The array contains temporary authoring inputs, not physical
+state, and adds no device transfer or host simulation mirror. Native owners retain
+their own geometry validation and concrete shape storage.
+
+[Input checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ShapeInputs.cs)
+exercise real selected scene/raw bodies and Areas, three logical slots with a
+middle disabled slot, exact public query indices, rotated one-way metadata and
+recursive geometry-hook failure/retry on CPU/GPU/no-device. The rotation check uses
+0.00001 vector-distance tolerance for float sine/cosine rounding; logical IDs,
+enabled state, resources and margins compare exactly. Complete public registration,
+external operation dispatch and custom algorithm geometry remain open.
+
 ## Selected lifecycle and activity
 
 The retained owner now receives Initialize after its immutable space RID and

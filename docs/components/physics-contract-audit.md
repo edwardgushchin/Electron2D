@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Shared collider inputs](physics-backends.md#shared-collider-shape-inputs)
+now project scene/raw body and Area authoring into one selected implementation
+span. Exact resources, transforms, logical disabled indices and one-way policy
+remain observable; source preflight, recursive preparation and scratch lifetime
+are guarded. Public registration and the complete external family remain open.
+
 [Selected lifecycle](physics-backends.md#selected-lifecycle-and-activity)
 now dispatches owner initialization, atomic local activation, query/event flushing
 and end-sync with guarded context. Empty active intervals reach that owner;

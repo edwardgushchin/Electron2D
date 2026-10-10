@@ -86,8 +86,4 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal void SetContactReporting(bool enabled) => Attached.SetContactReporting(enabled);
     internal void UpdateFilter(uint layer, uint mask, bool wakeBody) => Attached.UpdateFilter(layer, mask, wakeBody);
 
-    internal void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
-        bool sensor, float density, float friction = 1, float bounce = 0) => Attached.RebuildShapes(slots, layer, mask, sensor, density, friction, bounce);
-    internal void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask,
-        bool sensor, float density, float friction = 1, float bounce = 0) => Attached.RebuildShapes(slots, layer, mask, sensor, density, friction, bounce);
 }
