@@ -20,7 +20,7 @@ internal sealed partial class PhysicsSpace
             backend.PrepareWorld(delta); RecordStepPhase(1, ref profileMark);
             backend.PrepareBodies(delta); RecordStepPhase(2, ref profileMark);
             backend.Solve(delta); RecordStepPhase(3, ref profileMark);
-            backend.SyncResults(); RecordStepPhase(4, ref profileMark);
+            backend.SynchronizeResults(); RecordStepPhase(4, ref profileMark);
             foreach (var body in _serverColliders) backend.CompleteBody(body);
             foreach (var body in _bodies)
             {
@@ -48,7 +48,9 @@ internal sealed partial class PhysicsSpace
         }
         try { if (backend.ResultsReady) DispatchBodyStates(); else _callbackBodies.Clear(); }
         catch (Exception error) { (errors ??= []).Add(error); }
-        try { DispatchEvents(); }
+        try { backend.FlushQueryEvents(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+        try { backend.EndSynchronization(failure ?? (errors is { Count: > 0 } ? errors[0] : null)); }
         catch (Exception error) { (errors ??= []).Add(error); }
         RecordStepPhase(7, ref profileMark);
         if (errors is not null) throw new AggregateException(backend.Kind == PhysicsServer.Backend.GPU ? "GPU physics-world step failed." : "Physics-world step failed.", errors);
