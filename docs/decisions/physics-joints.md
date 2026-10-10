@@ -11,7 +11,7 @@ Last updated: 2026-10-10
 
 - Status: Accepted
 - Scope: Joint and PinJoint scene-node ownership, collision policy, angular limits and motor
-- Depends on: [0008](scene.md#adr-0008), [0054](physics.md#adr-0054), [0061](physics.md#adr-0061), [0063](physics.md#adr-0063)
+- Depends on: [0008](scene.md#adr-0008), [0054](physics-backends.md#adr-0054), [0061](physics.md#adr-0061), [0063](physics.md#adr-0063)
 
 ### Decision
 
@@ -31,7 +31,7 @@ Last updated: 2026-10-10
 
 - Status: Accepted
 - Scope: GrooveJoint scene geometry and solver integration
-- Depends on: [0084](#adr-0084), [0054](physics.md#adr-0054), [0008](scene.md#adr-0008)
+- Depends on: [0084](#adr-0084), [0054](physics-backends.md#adr-0054), [0008](scene.md#adr-0008)
 
 ### Decision
 
@@ -50,7 +50,7 @@ Last updated: 2026-10-10
 
 - Status: Accepted
 - Scope: DampedSpringJoint geometry, coefficients and native-body force integration
-- Depends on: [0084](#adr-0084), [0054](physics.md#adr-0054), [0074](physics-forces.md#adr-0074), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
+- Depends on: [0084](#adr-0084), [0054](physics-backends.md#adr-0054), [0074](physics-forces.md#adr-0074), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
 
 ### Context
 

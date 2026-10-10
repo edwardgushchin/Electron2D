@@ -20,7 +20,7 @@ are 2 scene units/s, 0.13962634 rad/s and 0.5 s. The shared
 accessors. Step remains the integration-only control and observes explicit sleep without evaluating automatic
 island sleep. SolveConstraints propagates wake without advancing poses or timers.
 
-This implements the resident stage required by [ADR 0054](../decisions/physics.md#adr-0054).
+This implements the resident stage required by [ADR 0054](../decisions/physics-backends.md#adr-0054).
 [Public backend selection and ownership](physics-backends.md), scene/server
 publication and sleep callbacks now execute. Local checkpoints and portable
 network snapshots remain distinct consumers; internal selected snapshots are not

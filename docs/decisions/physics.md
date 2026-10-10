@@ -4,53 +4,6 @@ Last updated: 2026-10-10
 
 This bounded document owns executable two-dimensional bodies, shapes and areas. [The decision index](index.md) routes other domains.
 
-<a id="adr-0054"></a>
-## ADR 0054: CPU compatibility and GPU physics worlds
-
-Last updated: 2026-10-10
-
-- Status: Accepted
-- Scope: Scene/server physics world backends, body integration and collision shapes
-- Depends on: [0012](product.md#adr-0012), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014), [0094](networking.md#adr-0094)
-
-### Context
-
-ADR 0012 selected vendored managed Box2D.NET for CPU physics. Scene/server bodies, direct queries, monitoring, joints and kinematic motion now execute. The existing GPU experiment replaces stages inside that CPU world's data model; it is not an independent GPU backend. The current objective requires two complete implementations of the applicable public contract. The [contract audit](../components/physics-contract-audit.md) and [generated declaration ledger](../coverage/physics-status.md) establish the current baseline; historical gap lists do not override current source evidence.
-
-### Decision
-
-- Preserve managed Box2D.NET as the CPU backend and develop an Electron2D-owned GPU backend through the already vendored SDL GPU/ShaderCross interface. Game developers explicitly choose CPU/Box2D or GPU according to their simulation and deployment goals; CPU is a first-class selectable backend. Physical computation and canvas rendering have independent selection; GPU rendering must continue to support CPU physics. Startup fallback to CPU when GPU is unavailable is a separate configurable policy, not a replacement for explicit backend choice. A failed or partially committed GPU step must not silently replay on CPU. Requested and actual backend identity and startup fallback must be observable. Expose `PhysicsServer.Backend` with CPU/GPU, `SpaceCreate(Backend, bool allowCPUFallback = false)` and the parallel `World` constructor. Keep existing parameterless creation CPU-only. Requested/actual backend and a nullable startup fallback reason are readable for spaces and worlds. World physics stays lazy; duplicates retain the same selected runtime. Backend choice is immutable for that runtime; assigning another viewport World uses ordinary detach/reattach. Fallback catches startup capability/native-load failures only during construction, preserving the failure diagnostic, and never catches a begun physics step. Shared-world integration is now in progress; acceptance remains bounded by the executed common tests.
-- Preserve public Electron2D capabilities, parameter meanings, object/RID identity, ownership, queries and promised callback/event semantics. Box2D internal APIs, storage, lists, island topology and algorithms are replaceable implementation details. Bitwise CPU/GPU equality and exact internal ordering are diagnostic tools only, never acceptance requirements or reasons to retain CPU mirrors. Backend-specific numerical methods must satisfy the same observable contract; this does not authorize dropping features or changing public units.
-- The GPU backend owns persistent device state and executes broad phase, contact generation, contact/joint constraints, integration, sleeping and CCD on the device. Authoring changes, synchronous queries, direct-state callbacks, events and scene publication determine CPU traffic. Each full host mirror, bulk readback and device wait requires an identified public consumer, lifetime/freshness rule and measured cost. CPU copies maintained only to replay or validate Box2D internals must be replaced; diagnostic comparison remains opt-in. Existing experimental hooks can be reused only where they fit this boundary.
-- Accept both backends through shared public API, physical-invariant, stability, lifecycle and error tests. Each numerical assertion states its units, step duration, tolerance and physical justification; identity, filtering, lifetime and promised event transitions remain exact. Exercise startup capability failure/fallback, user callbacks, partial GPU-step failure and resource cleanup. Compare complete CPU and GPU steps at one revision with identical reproducible workloads, population and features; label individual-stage controls separately. Record latency distributions, transfers/waits and warmed managed allocations. Required completion includes zero warmed engine-owned allocation and measurable GPU benefit on the target large scenes, not merely successful dispatch or isolated kernel speedups.
-- Support authoritative-server games through the existing typed networking surface under ADR 0094. CPU dedicated servers run without a window, renderer or GPU device. Fixed-tick commands, portable network identities, authoritative snapshots, application/correction, client prediction/replay and remote interpolation require a common public physics contract. Keep sufficient body/contact/sleep/joint and lifecycle state to restore and replay unacknowledged input; separate predicted from confirmed events to avoid repeated effects. Creation/destruction, control-authority transfer and late join are part of that contract. CPU-server/GPU-client correction must work without cross-backend or cross-platform bitwise identity; document actual reproducibility and error guarantees separately. Portable snapshots and the separate-process PhysicsNetwork example now exercise these capabilities; full performance and platform acceptance remain required.
-- The authoritative-physics extension explicitly permits `PhysicsCheckpoint` and `PhysicsServer.SpaceCreateCheckpoint`/`SpaceGetTick` under ADR 0004. A world tick counts each active positive-duration interval once, including an empty world; inactive and zero-duration calls do not advance it. Successful solving advances the tick before result callbacks, whose failure does not undo the interval. Counter exhaustion rejects before advancing simulation. A local checkpoint retains its captured tick and restores that world's tick with its simulation and observer state; it never rewinds SceneTree clocks, timers, scripts or another world. Applications use a fixed step duration for a tick-based protocol; this API does not turn variable steps into fixed time. Public checkpoint lifetime is owner-thread, source-world-bound, fixed-configuration and nonportable. Failed worlds remain failed; checkpoints cannot hide device failure or resurrect disposed/rebound objects. Portable authoritative snapshots and confirmed events remain distinct required work.
-- The portable-state contract uses a caller-owned `PhysicsSnapshotMap` bound to one space, with explicit nonzero network IDs and generations for collision objects and joints. `PhysicsSnapshot` owns a bounded reusable little-endian payload and carries the world tick/step. Local RIDs are binding inputs only, never wire identities. Capture/apply require complete world bindings and compatible authored configuration, validated independently of creation order and backend storage. Wire validation and local compatibility checks precede applying incoming values; preparation may flush pre-existing local authoring; an execution/device failure during apply fails the world rather than exposing partial usable state. Apply restores observer history without gameplay callbacks, resets presentation interpolation and replaces backend-derived warm caches where cross-backend history has no common representation. Sampled joint-local frames are authoritative physical state and are applied without replacing joint identity; differing backend trigonometry must not make equivalent authoring incompatible. Portable one-way episodes, sleep and pending commands remain physical state, not disposable solver scratch. Authentication, stale-packet policy, lifecycle replication and confirmed-event reconciliation remain separate required integration under ADR 0094; this decision does not declare them implemented.
-- Network snapshot publication is an explicit GPU-readback consumer. Separate portable wire state from any backend-private local replay checkpoint; neither exposes vendor structures or process-local RIDs as wire identity. Bound and measure history storage, snapshot bytes, correction latency and replay cost. Accept networking through separate server/client processes with controlled latency, jitter, loss and reordering, including collisions/joints, sleep/wake, lifecycle, late join and divergence recovery. Verify a no-GPU CPU server and a real GPU client, plus a working public-API example. Window FPS, whole physics-step timing and networking/replay measurements remain separate.
-- Optional latest-state publication compares observable snapshots on device and returns only changed bodies to a single retained consumer. Include generation changes and removals; ignore private sleep clocks and solver bookkeeping alone. Keep comparison history on GPU, qualify host display/picking caches by generation, and measure the count/prefix waits and dense-world cost. This coalesced stream is not a lifecycle event log or replay checkpoint. Explicit selected reads remain independent. The developer Smash window uses this path; public-world and network integration remain open.
-- WorldBoundaryShape represents the analytic solid half-plane `Normal.Dot(localPoint) <= Distance`; preserve a finite nonzero authored normal, including nonunit magnitude, and normalize only its geometric representation. Zero distance and upward normal are the defaults. CPU and GPU use a distinct primitive and unbounded candidate handling, never a finite wall approximation. Boundary/boundary response is empty; other shapes separate toward the free normal. The shape has no geometric mass/inertia; explicit body parameters remain applicable. Point/ray/shape/motion/Area and resource collision consumers share the half-plane semantics. Its finite GetRect is an editing marker around the normalized nearest plane point, not a finite collision envelope; this intentionally avoids scaling the marker by authored normal magnitude. Public independent-GPU selection and the other open groups remain required.
-- Per-body continuous detection uses shared `CCDMode` (Disabled=0, CastRay=1, CastShape=2) for RigidBody.ContinuousCD and PhysicsServer body getter/setter, with descriptor storage and a default of Disabled. Configuration survives detached/static/kinematic roles and changed modes wake dynamic bodies. CPU continuous detection inspects solved displacements through the existing owner finalization hook before pose publication, divides the world interval at potential impacts and delegates force/contact/joint response to the existing solver. Continuations preserve remaining time, nominal force/motor budgets and frame contact totals. CastRay uses a leading support point and ignores its own rotational sweep; CastShape uses complete geometry and rotational trajectories. Other bodies retain their configured modes. The independent GPU store uses the same enum and retains its device impact-interval algorithm. Full public GPU integration and cross-backend acceptance remain open.
-
-- Keep body runtime mass/force/field policy in engine-valued types. The attachment adapter owns concrete body/world state, mass compilation, unit conversion and contact traversal. Direct views and queued callbacks qualify the adapter with a monotonically increasing attachment version; reentry to the same world/RID must not revive older views or callbacks. The same attachment adapter now has CPU and independent GPU storage paths. GPU publication caches observable per-body state for scene transforms and direct views; forces, contacts, constraints and queries execute on device. Complete conformance and performance acceptance remain required.
-- Keep the scene/server RID, resource, owner-thread, query, live-state, callback/event order and world lifecycle contracts common to both paths. GPU computation includes broad-phase pairs, manifolds, contact/joint constraints, integration, sleeping and continuous collision; moving graphics or particle effects alone does not satisfy the GPU world. GPU data uses packed caller-retained storage, completed submissions define publication points, and unsupported hardware retains the CPU path. Shader binaries are built offline; runtime source compilers and public backend handles are excluded. The current internal bring-up executes velocity/position integration, circle/capsule/segment/polygon manifold generation and contact/revolute/wheel constraint preparation and solving; [GPU physics implementation status](../components/gpu-physics.md) records the remaining stages and verification limits.
-- Vendor all 233 C# source files of `ikpil/Box2D.NET` tag `3.1.654` at commit `5efc96def866edbb4e5a9368d84de5bf8c2dcaca` under `src/Vendor/Box2D.NET`, retaining the MIT license and [patch record](../../src/Vendor/Box2D.NET/VENDOR.md). Compile them into the single `Electron2D.dll`; make namespace-level backend declarations internal and expose no backend type through public/protected Electron2D signatures. Nullable and malformed upstream XML-comment compiler diagnostics are scoped to vendored files.
-- Map the reference's `Shape2D`, `CircleShape2D`, `RectangleShape2D`, `CollisionShape2D`, `CollisionObject2D`, `PhysicsBody2D`, `RigidBody2D` and `StaticBody2D` to `Shape`, `CircleShape`, `RectangleShape`, `CollisionShape`, `CollisionObject`, `PhysicsBody`, `RigidBody` and `StaticBody`. Preserve `RigidBody : PhysicsBody : CollisionObject : Entity` and the parallel `StaticBody` branch; `CollisionShape : Entity` is a direct collision-object child that borrows its shape resource. ADR 0055 extends that child role to Area. These names remove only the redundant dimensional suffix, not inherited responsibilities.
-- A `SceneTree` retains the distinct runtime worlds selected by its viewports, plus a fallback world for a viewport-free scene. Each world lazily owns one selected physics space and one logical canvas; the tree steps each distinct selected runtime once. CPU spaces create a Box2D world; GPU spaces create the independent resident store and no Box2D world. Direct body entry creates a backend body; collision-shape children supply geometry. Shape changes, disables and collision-layer/mask edits synchronize before the next step. Tree exit and disposal release bodies, geometry and world, while borrowed Shape resources remain caller-owned. Failed geometry validation rejects before replacing existing geometry.
-- One scene unit is 0.01 Box2D meters. Default downward gravity is 980 scene units per second squared. Scene fixed physics callbacks run before a four-substep world step; body transforms and velocities synchronize back before timers, tweens and the physics-interpolation end snapshot. Geometry accepts translation and rotation with unit global scale and zero skew; unsupported scaled/skewed active physics transforms fail explicitly. This is an initial profile, not a claim that every inherited or own physics member is complete.
-- The initial public body profile includes circle/rectangle dimensions and bounds, managed shape copying, collision-shape assignment and enablement, 32 collision-layer/mask bits, dynamic/static contact response, mass, gravity scale, linear/angular velocity and damping, sleep, freeze, rotation lock, central force and impulse. Other applicable members retain operation-specific Partial, Unimplemented or Blocked coverage rows.
-- Large worlds with at least 256 awake backend bodies use up to four retained workers, bounded by available processors; smaller worlds and browser hosts use one. Worker tasks cover collision ranges, the existing colored constraint stages and independent per-body solved-contact snapshots without changing the four substeps or public callback lane. Threads and task storage belong to each world and are released on disposal. Contact workers read the finished solver and private receiver storage; the owner joins them and queues their changes in scene-body order before invoking user code. One-way pair state is synchronized internally; user integration/contact/area callbacks remain on the world owner. The backend uses eight-lane `Vector256<float>` arithmetic with .NET fallback and separate multiply/add operations. [The performance report](../components/box2d-performance.md) defines measured throughput and platform limits.
-- Engine-owned warmed resting-contact, active-contact and moving-body fixed steps allocate zero managed bytes in the checked Linux/.NET 8 profile. The pinned Box2D.NET port needed per-world reuse of its step context and graph-color block array plus zero-overflow-contact fast exits; the applicable current-upstream buffer reuse is proposed in [ikpil/Box2D.NET#101](https://github.com/ikpil/Box2D.NET/pull/101). No allocation claim is made for unmeasured native/platform paths or user callbacks.
-
-### Consequences
-
-Existing CPU bodies, characters, areas, shapes, queries, joints, physical bones and shared viewport worlds remain required behavior of both implementations. Public selection and shared-world GPU integration now exist; the remaining applicable API, full conformance, performance and networking acceptance remain open work. The stage-hosted GPU experiment and its diagnostic hashes are retained evidence, not dual-backend acceptance. Backend extraction must remove concrete B2 body/shape/world ownership from common scene/server runtime consumers without exposing vendor types publicly. Platform and visual acceptance remain scoped to actual recorded checks.
-
-### Rejected alternatives
-
-- Ship Box2D.NET as a managed package or expose its types publicly: ADRs 0004 and 0012 require one Electron2D-owned managed surface.
-- Add public PhysicsServer or RID placeholders around the first scene bodies: their resource-identity and direct-space contracts need a complete separate vertical slice.
-- Replace the CPU compatibility backend with a GPU-only solver: unsupported devices and headless CPU execution must remain supported.
-
 <a id="adr-0055"></a>
 ### World-boundary verification in the current implementation
 
@@ -97,7 +50,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Concrete capsule Shape resource for existing body and area fixtures
-- Depends on: [0054](#adr-0054), [0055](#adr-0055), [0013](resources.md#adr-0013)
+- Depends on: [0054](physics-backends.md#adr-0054), [0055](#adr-0055), [0013](resources.md#adr-0013)
 
 ### Context
 
@@ -120,7 +73,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: AnimatableBody scene role and synchronized kinematic movement
-- Depends on: [0054](#adr-0054), [0059](#adr-0059), [0008](scene.md#adr-0008)
+- Depends on: [0054](physics-backends.md#adr-0054), [0059](#adr-0059), [0008](scene.md#adr-0008)
 
 ### Context
 
@@ -143,7 +96,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: SegmentShape resource and executable static, dynamic and area fixtures
-- Depends on: [0054](#adr-0054), [0059](#adr-0059), [0013](resources.md#adr-0013)
+- Depends on: [0054](physics-backends.md#adr-0054), [0059](#adr-0059), [0013](resources.md#adr-0013)
 
 ### Context
 
@@ -168,7 +121,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Convex polygon resource, point-cloud hull and multiple fixtures per CollisionShape
-- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0013](resources.md#adr-0013)
+- Depends on: [0054](physics-backends.md#adr-0054), [0061](#adr-0061), [0013](resources.md#adr-0013)
 
 ### Context
 
@@ -191,7 +144,7 @@ Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: Public identity, ownership and access model for 2D physics server resources and direct queries
-- Depends on: [0001](product.md#adr-0001), [0004](product.md#adr-0004), [0008](scene.md#adr-0008), [0054](#adr-0054), [0028](rendering.md#adr-0028)
+- Depends on: [0001](product.md#adr-0001), [0004](product.md#adr-0004), [0008](scene.md#adr-0008), [0054](physics-backends.md#adr-0054), [0028](rendering.md#adr-0028)
 
 ### Context
 
@@ -260,7 +213,7 @@ Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: CollisionShape one-way flag and local direction on scene physics bodies
-- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0008](scene.md#adr-0008)
+- Depends on: [0054](physics-backends.md#adr-0054), [0061](#adr-0061), [0008](scene.md#adr-0008)
 
 ### Context
 
@@ -284,7 +237,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionPolygon scene node, solid convex decomposition and closed hollow edges
-- Depends on: [0008](scene.md#adr-0008), [0054](#adr-0054), [0062](#adr-0062), [0064](#adr-0064), [0065](#adr-0065)
+- Depends on: [0008](scene.md#adr-0008), [0054](physics-backends.md#adr-0054), [0062](#adr-0062), [0064](#adr-0064), [0065](#adr-0065)
 
 ### Context
 
@@ -307,7 +260,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Caller-driven CharacterBody grounded/floating motion and typed slide snapshots
-- Depends on: [0008](scene.md#adr-0008), [0054](#adr-0054), [0056](#adr-0056), [0060](#adr-0060), [0063](#adr-0063), [0065](#adr-0065)
+- Depends on: [0008](scene.md#adr-0008), [0054](physics-backends.md#adr-0054), [0056](#adr-0056), [0060](#adr-0060), [0063](#adr-0063), [0065](#adr-0065)
 
 ### Context
 
@@ -337,7 +290,7 @@ Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: SeparationRayShape resource, directed sensing, shared body-motion and dynamic contact
-- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0063](#adr-0063), [0067](#adr-0067)
+- Depends on: [0054](physics-backends.md#adr-0054), [0061](#adr-0061), [0063](#adr-0063), [0067](#adr-0067)
 
 ### Context
 
@@ -366,7 +319,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: Shape.Collide, CollideWithMotion and the two contact-array variants
-- Depends on: [0054](#adr-0054), [0061](#adr-0061), [0064](#adr-0064), [0068](#adr-0068), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0061](#adr-0061), [0064](#adr-0064), [0068](#adr-0068), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -397,7 +350,7 @@ Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: PhysicsDirectBodyState, RigidBody custom integration and typed body callbacks
-- Depends on: [0054](#adr-0054), [0056](#adr-0056), [0057](#adr-0057), [0058](#adr-0058), [0063](#adr-0063), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0056](#adr-0056), [0057](#adr-0057), [0058](#adr-0058), [0063](#adr-0063), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -433,7 +386,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionObject owner API, child binding and shared body/Area geometry
-- Depends on: [0054](#adr-0054), [0063](#adr-0063), [0065](#adr-0065), [0066](#adr-0066), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0063](#adr-0063), [0065](#adr-0065), [0066](#adr-0066), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -463,7 +416,7 @@ Last updated: 2026-09-30
 
 - Status: Accepted
 - Scope: CollisionObject disable policy across all current Body and Area siblings
-- Depends on: [0054](#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0070](#adr-0070), [0071](#adr-0071), [0055](physics-monitoring.md#adr-0055)
+- Depends on: [0054](physics-backends.md#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0070](#adr-0070), [0071](#adr-0071), [0055](physics-monitoring.md#adr-0055)
 
 ### Context
 
@@ -488,7 +441,7 @@ Last updated: 2026-10-10
 
 - Status: Accepted
 - Scope: RigidBody freeze policy, kinematic body-path integration and stationary surface velocity
-- Depends on: [0054](#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0072](#adr-0072), [0073](physics-mass.md#adr-0073), [0074](physics-forces.md#adr-0074)
+- Depends on: [0054](physics-backends.md#adr-0054), [0060](#adr-0060), [0067](#adr-0067), [0072](#adr-0072), [0073](physics-mass.md#adr-0073), [0074](physics-forces.md#adr-0074)
 
 ### Context
 

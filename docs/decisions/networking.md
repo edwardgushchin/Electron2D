@@ -112,7 +112,7 @@ SceneReplicationTests verifies native public WS/WSS authoring/replication, pre-R
 
 ### Authoritative physics replication boundary
 
-[ADR 0054](physics.md#adr-0054) requires CPU and independent GPU physics for
+[ADR 0054](physics-backends.md#adr-0054) requires CPU and independent GPU physics for
 authoritative-server games. Reuse the existing transports, typed codecs, peer
 authority and scene lifetime. Add a shared public physics contract for fixed-tick
 input/acknowledgement, portable world-object identity, authoritative state and

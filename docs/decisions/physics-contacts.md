@@ -7,7 +7,7 @@ Last updated: 2026-10-09
 
 - Status: Accepted
 - Scope: Shape custom solver bias, contact correction, collision recovery priority and world solver policy
-- Depends on: [0054](physics.md#adr-0054), [0063](physics.md#adr-0063), [0069](physics.md#adr-0069), [0087](physics-joints.md#adr-0087), [0089](physics-activity.md#adr-0089)
+- Depends on: [0054](physics-backends.md#adr-0054), [0063](physics.md#adr-0063), [0069](physics.md#adr-0069), [0087](physics-joints.md#adr-0087), [0089](physics-activity.md#adr-0089)
 
 ### Decision
 

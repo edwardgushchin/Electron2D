@@ -11,7 +11,7 @@ Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: Area overlap snapshots and object-level events
-- Depends on: [0054](physics.md#adr-0054), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0008](scene.md#adr-0008), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -42,7 +42,7 @@ Last updated: 2026-10-07
 
 - Status: Accepted
 - Scope: Object-level RigidBody contact reports, point counts and solver sleep events
-- Depends on: [0054](physics.md#adr-0054), [0055](#adr-0055), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0055](#adr-0055), [0014](resources.md#adr-0014)
 
 ### Context
 

@@ -79,7 +79,7 @@ useful diagnostics; preserving Box2D ordering, CPU mirrors or bitwise results is
 not an acceptance requirement. The current prototype has not established a full
 GPU advantage over a complete CPU backend.
 
-[ADR 0054](../decisions/physics.md#adr-0054) now requires persistent authoritative
+[ADR 0054](../decisions/physics-backends.md#adr-0054) now requires persistent authoritative
 GPU state, API-driven transfers and a cost/necessity record for every bulk
 readback, mirror and wait. Public semantic, invariant, stability and lifetime
 tests with justified numerical tolerances govern acceptance. Extending the
@@ -87,7 +87,7 @@ existing host mirrors is not the architecture for the independent backend.
 The audit records the known transfer costs, unmeasured costs and remaining
 conformance work. The public selector and independent GPU world now execute; full product acceptance is still open.
 
-[ADR 0054](../decisions/physics.md#adr-0054) selects a full GPU world alongside the
+[ADR 0054](../decisions/physics-backends.md#adr-0054) selects a full GPU world alongside the
 managed CPU compatibility backend. Implementation is in progress. The existing
 public physics API defaults to CPU and now exposes explicit GPU selection with configurable startup fallback.
 

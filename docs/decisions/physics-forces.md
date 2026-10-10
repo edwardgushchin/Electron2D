@@ -11,7 +11,7 @@ Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: RigidBody force, impulse, torque and axis-velocity vertical slice
-- Depends on: [0054](physics.md#adr-0054), [0056](physics.md#adr-0056), [0008](scene.md#adr-0008)
+- Depends on: [0054](physics-backends.md#adr-0054), [0056](physics.md#adr-0056), [0008](scene.md#adr-0008)
 
 ### Context
 

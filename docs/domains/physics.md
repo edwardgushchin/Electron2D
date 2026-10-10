@@ -50,7 +50,7 @@ Jiggle uses the existing direct-world ray query during Physics execution, with b
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
-Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree retains distinct viewport-selected worlds and a fallback for viewport-free scenes. Each selects a CPU Box2D.NET space or the independent resident GPU backend, stepped once during the fixed physics lane, with dynamic transforms and overlap snapshots published before timers and tweens. CPU is the default and remains available without a GPU. The managed CPU implementation is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012); [ADR 0054](../decisions/physics.md#adr-0054) defines explicit backend choice and startup fallback.
+Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree retains distinct viewport-selected worlds and a fallback for viewport-free scenes. Each selects a CPU Box2D.NET space or the independent resident GPU backend, stepped once during the fixed physics lane, with dynamic transforms and overlap snapshots published before timers and tweens. CPU is the default and remains available without a GPU. The managed CPU implementation is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012); [ADR 0054](../decisions/physics-backends.md#adr-0054) defines explicit backend choice and startup fallback.
 
 ## Component inventory
 
@@ -134,7 +134,7 @@ disabled participation, CharacterBody and physical-bone activation/reentry.
 
 ## Verification and limits
 
-GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)
+GPU physics is being developed under [ADR 0054](../decisions/physics-backends.md#adr-0054)
 alongside the retained CPU backend. The internal compute host
 currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists, compact publication and complete host validation using independent packed CPU flags and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, collision-batch constraint coloring, fused body-pose/sleep-eligibility/fast-body finalization, and contact/revolute/wheel preparation and solving; this historical stage host remains CPU-owned. Public GPU worlds use the independent
 resident store described below. [The implementation status](../components/gpu-physics.md) separates
@@ -184,7 +184,7 @@ Standalone Shape methods, other shape resources, kinematic bodies, area audio in
 
 ## Decisions
 
-- [0054: Box2D-backed scene bodies](../decisions/physics.md#adr-0054)
+- [0054: Box2D-backed scene bodies](../decisions/physics-backends.md#adr-0054)
 - [0055: Directional scene area monitoring](../decisions/physics.md#adr-0055)
 - [0056: Area field priority and body damping](../decisions/physics.md#adr-0056)
 - [0057: Positioned and persistent rigid-body forces](../decisions/physics.md#adr-0057)

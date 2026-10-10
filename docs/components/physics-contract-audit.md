@@ -61,7 +61,7 @@ Current filter review continues local `main` at `36d8dfcf3f5fedb2414446926cb1bd1
 The historical `119bd016` gap list is superseded by current source and coverage.
 The repository pins Godot `4.7.2-stable`, commit
 `ed1daf0bf001b61586d9930840f2f1394092c079`; this audit does not substitute a newer
-online reference. [ADR 0054](../decisions/physics.md#adr-0054) defines the revised
+online reference. [ADR 0054](../decisions/physics-backends.md#adr-0054) defines the revised
 CPU and independent GPU objective. This is an audit baseline, not a completion claim.
 
 The [generated declaration ledger](../coverage/physics-status.md) takes all
@@ -297,3 +297,19 @@ existing CPU/GPU contact pipelines. [Report-only verification](physics-report-on
 covers either receiver, cap changes, frozen scene events, quiet activity, identity,
 restore and warmed allocations. This does not close the server-extension or full
 inherited contract.
+
+## Backend extension audit, 2026-10-10
+
+The pinned census contains two manager members, 140 server-extension members,
+48 direct-body-state members and seven direct-space members, plus their four
+owning types. No owning type/member deprecated metadata excludes these families;
+the old one-way compatibility binding remains separately excluded. Current
+PhysicsServer is a sealed static facade, direct states are sealed, RID allocation
+and query result constructors are internal, Shape has an internal abstract geometry
+member, and attachment/state/motion/joint/query dispatch assumes CPU or GPU. These
+are concrete integration prerequisites, not a reason to exclude extension behavior.
+[ADR 0103](../decisions/physics-extensions.md#adr-0103) resolves the implementation
+object/static-service role boundary and requires complete typed dispatch and
+supporting construction/lifetime paths. Registration-only enum aliases and virtual
+signatures with no scene/query consumer are rejected. The four extension-family
+coverage pages remain Blocked until implementation and executable acceptance.

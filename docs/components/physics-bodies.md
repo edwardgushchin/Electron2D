@@ -57,7 +57,7 @@ Box2D.NET 3.1.654 source and the scoped hot-path patch record live in [`src/Vend
 
 ## Decision
 
-- [0054: First Box2D-backed scene-body profile](../decisions/physics.md#adr-0054)
+- [0054: First Box2D-backed scene-body profile](../decisions/physics-backends.md#adr-0054)
 - [0056: Area field priority and body damping](../decisions/physics.md#adr-0056)
 - [0057: Positioned and persistent rigid-body forces](../decisions/physics.md#adr-0057)
 - [0058: Rigid-body contact and sleep snapshots](../decisions/physics.md#adr-0058)

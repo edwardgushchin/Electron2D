@@ -14,7 +14,7 @@ with other authored commands, including CanSleep. Reused slots start with their 
 definition. Step and SolveConstraints remain their existing partial-stage controls.
 
 This is an internal independent GPU implementation under
-[ADR 0054](../decisions/physics.md#adr-0054). [Public CPU CCD modes](cpu-continuous-collision.md) now execute through scene/server
+[ADR 0054](../decisions/physics-backends.md#adr-0054). [Public CPU CCD modes](cpu-continuous-collision.md) now execute through scene/server
 settings, and this store reuses the shared public CCDMode enum. [Independent GPU world selection](physics-backends.md) and public contact/event projection now execute. The common public CCD, world-boundary and directed-ray suites now run on explicit CPU/GPU worlds; see the [current conformance record](cpu-continuous-collision.md#public-cpugpu-conformance-2026-10-10). Full physics, performance and platform acceptance remain separate.
 
 The pinned [reference API](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/doc/classes/RigidBody2D.xml)

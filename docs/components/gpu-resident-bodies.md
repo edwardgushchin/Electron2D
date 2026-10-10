@@ -5,7 +5,7 @@ Last updated: 2026-10-09
 ## Implemented boundary
 
 [GPUPhysicsBodyStore](../classes/GPUPhysicsBodyStore.md) is the first independent
-device-state component under [ADR 0054](../decisions/physics.md#adr-0054). It creates
+device-state component under [ADR 0054](../decisions/physics-backends.md#adr-0054). It creates
 no CPU solver world. Body slots, generation changes, sparse edits, force/mass/gravity/
 damping integration, geometry edits, transformed bounds, broad-phase tree maintenance,
 complete candidate pairs and narrow-phase contact points execute through offline GPU pipelines. Authored values and read results use scene units. The original

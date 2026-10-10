@@ -40,7 +40,7 @@ an independent GPU implementation or a throughput claim.
 
 ## Decision
 
-- [0054: First Box2D-backed scene-body profile](../decisions/physics.md#adr-0054)
+- [0054: First Box2D-backed scene-body profile](../decisions/physics-backends.md#adr-0054)
 - [0055: Directional scene area monitoring](../decisions/physics.md#adr-0055)
 - [0059: Capsule collision geometry](../decisions/physics.md#adr-0059)
 - [0061: Segment collision geometry](../decisions/physics.md#adr-0061)

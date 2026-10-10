@@ -23,7 +23,9 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Typed 2D meshes and skeletal palettes | [mesh.md](mesh.md) | 0092 |
 | Tile resources and layers | [tiles.md](tiles.md) | 0101 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053, 0097 |
-| CPU and independent GPU physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
+| Physics world backends | [physics-backends.md](physics-backends.md) | 0054 |
+| Physics bodies, shapes and queries | [physics.md](physics.md) | 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
+| Physics backend extensions | [physics-extensions.md](physics-extensions.md) | 0103 |
 | Physics collision filters | [physics-filters.md](physics-filters.md) | 0102 |
 | Physics contact correction | [physics-contacts.md](physics-contacts.md) | 0098 |
 | Physics world activity | [physics-activity.md](physics-activity.md) | 0089 |

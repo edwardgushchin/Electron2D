@@ -372,7 +372,7 @@ Runs one host-driven physics-process frame, attached scene-body simulation and a
 - `ObjectDisposedException`: Tree disposal has started or finished.
 - `AggregateException`: One or more frame events, node callbacks, timers, tweens, or deferred operations fail.
 
-**Remarks:** Attached rigid and static bodies step in an internal Box2D world after node physics callbacks and before timers, tweens and interpolation end capture. Zero delta leaves the world unchanged. Other physics services remain incomplete under [ADR 0054](../decisions/physics.md#adr-0054).
+**Remarks:** Attached rigid and static bodies step in an internal Box2D world after node physics callbacks and before timers, tweens and interpolation end capture. Zero delta leaves the world unchanged. Other physics services remain incomplete under [ADR 0054](../decisions/physics-backends.md#adr-0054).
 
 <a id="m-electron2d-scenetree-setinputashandled"></a>
 ### `public void SetInputAsHandled()`

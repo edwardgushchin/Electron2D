@@ -114,6 +114,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first video decoding, timed texture playback and audio synchronization slice. | 3 |
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 2 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
+| Trigger: complete typed backend registration/factory and world-scoped implementation dispatch, shared RID lifecycle, callbacks, direct state/query result construction and CPU/GPU scene integration (ADRs 0054 and 0103); current facade is static/sealed and attachment/step paths select built-in implementations only. | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |
@@ -124,12 +125,13 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed networking, address-resolution and RPC slice. | 2 |
 | Trigger: first typed packed-asset container and loader slice (ADRs 0013 and 0023). | 2 |
 | Trigger: first writable GPU texture and blit-command lifetime slice (ADR 0028). | 2 |
-| Trigger: typed backend registration/factory and extension operations with shared RID lifetime, callbacks, direct state and query contracts on CPU and independent GPU worlds (ADR 0054). | 2 |
 | Trigger: typed mesh topology/adjacency and incremental geometry editing, attribute conversion and transactional commit to the now executable ArrayMesh; missing advanced channels enter their own shader/skeleton producer slices (ADR 0092). | 2 |
 | ADR 0094: Typed MultiplayerPeer now executes. Requires executable WebRTCPeerConnection/DataChannel SDP/ICE/DTLS/SCTP host integration and an owned WebRTC multiplayer cohort. | 1 |
 | Animation: trigger is the first missing type-specific animation resource utility or persistence slice on the executable graph/state-machine/BlendSpace/action foundation (ADR 0093); applicable event tracks already execute. | 1 |
 | The public Electron2D name is Marker : Entity under ADR 0004. A runtime-only anchor without the pinned editor cross would be an inert compatibility shell. Trigger: implement editor canvas gizmo drawing in the self-hosted editor, including configurable gizmo extents, then add Marker and verify the inherited spatial API; no runtime type exists yet. | 1 |
 | Trigger: accepted MIDI-domain and native host-API decision, then the first MIDI device/event slice (ADR 0038). | 1 |
+| Trigger: complete typed body-state extension hooks and context construction preserving live attachment, owner/callback lifetime, contact identity and inherited operations (ADRs 0054 and 0103); current direct-body state is sealed and its constructor is internal. | 1 |
+| Trigger: complete typed direct-space extension dispatch, scoped exclusion helpers and usable typed result construction with shared identity/lifetime semantics (ADRs 0054 and 0103); current direct-space state is sealed and query result constructors are internal. | 1 |
 | Trigger: concrete applicable 2D mesh import/library entry model, owned resource graphs and loader/authoring format integration over the implemented mesh resources (ADRs 0013/0092); audit 3D-only entry fields separately. | 1 |
 | Trigger: first 2D world/render-environment integration slice after SDL3 GPU rendering (ADRs 0008 and 0028). | 1 |
 | Trigger: first applicable typed 2D procedural geometry producer with concrete generation parameters and visible mesh output; static surface rendering already executes (ADR 0092). | 1 |
@@ -139,8 +141,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Trigger: first typed 2D mesh-data and MeshInstance2D rendering slice; audit 3D-only members individually (ADR 0028). | 1 |
 | Trigger: first typed 2D navigation and pathfinding slice. | 1 |
 | Trigger: first typed GUI DPI-scale and theme-texture slice (ADR 0028). | 1 |
-| Trigger: typed backend-extensible direct-space queries and exclusion helpers with shared result/lifetime semantics (ADR 0054). | 1 |
-| Trigger: typed backend-extensible live body-state operations preserving owner/callback lifetime over existing PhysicsServer spaces (ADR 0054). | 1 |
 | Trigger: typed missing-asset mesh placeholder producer/loader and its 2D drawing/bounds policy over the implemented Mesh resource (ADR 0092). | 1 |
 | Separate product-scope decision for each of 1 currently unassigned families; see their catalog pages for exact names. | 1 |
 

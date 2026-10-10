@@ -1,6 +1,6 @@
 # Process-wide service API decisions
 
-Last updated: 2026-10-05
+Last updated: 2026-10-10
 
 This document owns public access to process-wide engine services. Owning domain decisions continue to define state, lifetime, threading and resource ownership.
 
@@ -27,6 +27,14 @@ The selected convention shortens ordinary calls to `Engine.Run(window)` across t
 - Permanent events retain their subscription lifetime. Native event subscriptions belong to the active object: subscribe and unsubscribe during that session. Cleanup does not transfer subscriptions to a later session.
 - Existing typed object inspection and named-service lookup remain available. SettingsChanged uses ProjectSettingsRegistry as its sender type; the permanent sender is still the same ProjectSettings object. They do not authorize instance calls to static operations.
 - Migrate runtime integration, consumers, tests, XML, current documents and coverage together. This deliberately changes source and binary API; isolated construction migrates from new ProjectSettings(...) to new ProjectSettingsRegistry(...); do not add obsolete aliases.
+
+The physics implementation-object role is scoped separately under
+[ADR 0103](physics-extensions.md#adr-0103): PhysicsServerBackend/Extension
+operations belong to an owned world context, while the retained PhysicsServer
+and PhysicsServerManager facades keep static process-wide access. This follows
+the explicit-context principle of ProjectSettingsRegistry and does not authorize
+public Instance accessors or instance calls to permanent service operations.
+Implementation and full extension-family acceptance remain open.
 
 ### Consequences
 

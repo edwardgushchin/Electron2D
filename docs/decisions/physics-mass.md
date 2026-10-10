@@ -11,7 +11,7 @@ Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: RigidBody center/inertia and scene/server mass parameter branches
-- Depends on: [0054](physics.md#adr-0054), [0061](physics.md#adr-0061), [0062](physics.md#adr-0062), [0070](physics.md#adr-0070), [0072](physics.md#adr-0072), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
+- Depends on: [0054](physics-backends.md#adr-0054), [0061](physics.md#adr-0061), [0062](physics.md#adr-0062), [0070](physics.md#adr-0070), [0072](physics.md#adr-0072), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
 
 ### Context
 
@@ -37,7 +37,7 @@ Last updated: 2026-09-26
 
 - Status: Accepted
 - Scope: All ten body parameter capabilities across scene/server RIDs
-- Depends on: [0073](#adr-0073), [0056](physics.md#adr-0056), [0054](physics.md#adr-0054), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
+- Depends on: [0073](#adr-0073), [0056](physics.md#adr-0056), [0054](physics-backends.md#adr-0054), [0001](product.md#adr-0001), [0014](resources.md#adr-0014)
 
 ### Context
 

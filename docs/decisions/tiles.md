@@ -31,7 +31,7 @@ The CPU and GPU backends receive the same authored shapes and owner identities. 
 
 - Hidden `StaticBody` child nodes: changes the authored hierarchy and reports the wrong collider owner.
 - A body per cell regardless of quadrant policy: changes RID lookup and creates unnecessary solver objects.
-- CPU-only tile collision: violates explicit world backend selection in [ADR 0054](physics.md#adr-0054).
+- CPU-only tile collision: violates explicit world backend selection in [ADR 0054](physics-backends.md#adr-0054).
 
 ### Verification boundary
 
