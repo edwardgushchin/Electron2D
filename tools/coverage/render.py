@@ -17,7 +17,7 @@ CLASS_PAGES = COVERAGE / "classes"
 UPSTREAM = DATA / "godot-4.7.2.json"
 ENGINE = DATA / "electron2d.json"
 ALIASES = Path(__file__).with_name("type_aliases.json")
-OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "device", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "tiles")]
+OVERRIDES = [Path(__file__).with_name(f"overrides_{family}.json") for family in ("math", "scene", "core", "display", "rendering", "texture_arrays", "device", "navigation", "resources", "physics", "text", "buttons", "scroll", "item_list", "tree", "tabs", "popup", "menu", "menu_button", "menu_bar", "file_dialog", "spinbox", "color_picker", "dialogs", "layout_containers", "gui_drag", "text_delivery", "code_edit", "rich_text", "graph", "audio", "mesh", "particles", "skeleton", "networking", "tiles")]
 COMMIT = "ed1daf0bf001b61586d9930840f2f1394092c079"
 PHYSICS_AUDITED_TYPES = {
     "AnimatableBody2D",
@@ -297,8 +297,8 @@ def reason_for_type(item, lookup):
         return "Blocked", "Trigger: first native-menu service slice with ownership, callbacks and target checks (ADR 0041)."
     if name in {"CameraFeed", "CameraServer", "CameraTexture"}:
         return "Blocked", "Trigger: first native camera-capture host slice with device lifetime and 2D texture delivery (ADR 0021)."
-    if name in {"TextureLayered", "ImageTextureLayered", "Texture2DArray", "CompressedTexture2DArray", "CompressedTextureLayered", "PlaceholderTexture2DArray", "PlaceholderTextureLayered"}:
-        return "Blocked", "Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028)."
+    if name in {"CompressedTexture2DArray", "CompressedTextureLayered"}:
+        return "Blocked", "Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028)."
     if name in {"PlaceholderMaterial", "PlaceholderTexture2D"}:
         return "Blocked", "Trigger: first typed missing-asset placeholder and loader slice (ADRs 0013 and 0023)."
     if name in {"BlitMaterial", "DrawableTexture2D"}:

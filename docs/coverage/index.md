@@ -591,3 +591,5 @@ three project-default rows are Implemented. The overall space parameter dispatch
 remains Partial for contact and iteration settings. [PhysicsSleepPolicyTests](../../tests/Electron2D.Tests/PhysicsSleepPolicyTests.cs)
 checks CPU/public and internal GPU behavior; [measurements](../components/physics-sleep.md)
 do not certify public GPU selection or large-world speedup.
+
+The [image-array slice](../components/texture-arrays.md) adds typed TextureLayered/ImageTextureLayered/TextureArray resources, metadata placeholders, the shared array-only enum and three server endpoints. HLSL/GLSL pixels, all layer/mip readbacks, HDR/compatible updates, owned/proxy replacement, typed storage/default/override/reload/duplication and warmed allocation checks execute. Compressed/integer formats activate five exact Partial dependencies; cube values remain Excluded and RD/compressed import integration remains Blocked. Twenty-six rows become Implemented, with zero unmapped declarations.

@@ -179,7 +179,7 @@ def main():
         for name in ("AStar2D", "AStarGrid2D", "Area2D", "AnimatableBody2D", "CharacterBody2D", "Shape2D", "CircleShape2D", "CapsuleShape2D", "SegmentShape2D", "SeparationRayShape2D", "ConvexPolygonShape2D", "ConcavePolygonShape2D", "CollisionPolygon2D", "RectangleShape2D", "RayCast2D", "ShapeCast2D", "KinematicCollision2D", "PhysicsTestMotionParameters2D", "PhysicsTestMotionResult2D", "RID", "World2D", "PhysicsServer2D", "PhysicsRayQueryParameters2D", "PhysicsPointQueryParameters2D", "PhysicsDirectSpaceState2D", "PhysicsDirectBodyState2D",
                      "CollisionShape2D", "CollisionObject2D", "PhysicsBody2D", "StaticBody2D", "RigidBody2D",
                      "AESContext", "InputEventMIDI", "Shortcut",
-                     "Texture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
+                     "Texture2DArray", "TextureLayered", "PlaceholderTexture2DArray", "RenderingDevice", "FramebufferCacheRD", "BoxMesh",
                      "RefCounted", "Line2D", "NativeMenu", "GDScriptLanguageProtocol",
                      "EditorNode3DGizmo")
     }
@@ -569,7 +569,9 @@ def main():
         assert rows and all(" | Implemented | " in row for row in rows), name
         button_rows += len(rows)
     assert button_rows == 136
-    assert "layered/array texture storage" in class_rows["Texture2DArray"]
+    assert "Partial" in class_rows["Texture2DArray"] and "Compressed and integer-sampled" in class_rows["Texture2DArray"]
+    assert "Implemented" in class_rows["TextureLayered"] and "separate typed layered resources" in class_rows["TextureLayered"]
+    assert "Implemented" in class_rows["PlaceholderTexture2DArray"]
     assert " | Partial | " in class_rows["Line2D"] and "../../classes/Line.md" in class_rows["Line2D"]
     line_rows = [row for row in pages[CLASS_PAGES / "Line2D.md"].splitlines() if row.startswith("| [`")]
     assert len(line_rows) == 33 and all(" | Unimplemented | " not in row and " | Blocked | " not in row for row in line_rows)

@@ -294,6 +294,11 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
                 stream.Put32(texture.GetWidth());
                 stream.Put32(texture.GetHeight());
             }
+            else if (resource is TextureArray array)
+            {
+                var pixels = array.CaptureLayers(); stream.Put32(pixels?.Layers.Length ?? 0);
+                if (pixels is not null) foreach (var layer in pixels.Layers) { using var layerImage = layer.CopyImage(); WriteImage(stream, layerImage); }
+            }
             else WriteProperties(stream, resource, null);
             _internal.Add(resource);
             var sceneID = resource.ResourceSceneUniqueID;
@@ -479,6 +484,14 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
                 }
                 texture.SetSizeOverride(new Vector2i(value.Get32(), value.Get32()));
             }
+            else if (resource is TextureArray array)
+            {
+                var layerCount = value.Get32();
+                if (layerCount < 0 || layerCount > value.GetAvailableBytes() / 17) throw new InvalidDataException("Invalid stored texture-array layer layerCount.");
+                var layers = new Image[layerCount];
+                try { for (var layer = 0; layer < layerCount; layer++) { layers[layer] = new Image(); ReadImage(value, layers[layer]); } if (layerCount != 0) array.CreateFromImages(layers); }
+                finally { foreach (var layer in layers) layer?.Dispose(); }
+            }
             else _ = ReadProperties(value, resource);
             if (value.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing resource bytes.");
         }
@@ -580,7 +593,7 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
         var original = Root;
         Resource Redirect(Resource resource) => ReferenceEquals(resource, original) ? replacement : resource;
         foreach (var resource in Owned) if (resource is PackedScene packed) packed.LoadFileData(packed.FileData.TransformResources(Redirect));
-            else if (resource is not Image && resource is not ImageTexture) foreach (var descriptor in resource.GetPropertyList().Where(p => p.IsStored))
+            else if (resource is not Image && resource is not ImageTexture && resource is not TextureArray) foreach (var descriptor in resource.GetPropertyList().Where(p => p.IsStored))
                 {
                     var stored = descriptor.CaptureStoredValue(resource);
                     descriptor.RestoreStoredValue(resource, stored.TransformResources(Redirect), static r => r);

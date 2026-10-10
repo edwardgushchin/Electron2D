@@ -1,11 +1,13 @@
 # ShaderProgram
 
-Last updated: 2026-10-04
+Last updated: 2026-10-10
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
+
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
 ## Description
 

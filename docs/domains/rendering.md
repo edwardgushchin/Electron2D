@@ -1,8 +1,10 @@
 # Rendering domain
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 Private native runtime binaries come from versioned Linux/macOS packages in ordinary desktop builds; `Electron2DBuildNativeFromSource=true` rebuilds those libraries. Source builds separately prepare pinned host shader tools on first use and generate built-in shaders under `obj/`. [Shader delivery](../components/shader-materials.md#built-in-shader-delivery) keeps these tools out of game packages. [Native delivery](../native-packaging.md) separates audited packages, executable consumer checks and public publication; macOS runtime integration verification is pending.
+
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
 ## Executable shader and material identities
 

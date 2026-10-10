@@ -1,11 +1,13 @@
 # MaterialState
 
-Last updated: 2026-10-04
+Last updated: 2026-10-10
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
+
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
 ## Description
 
@@ -27,7 +29,7 @@ state?.PushUniforms(commandBuffer, (float)renderTime, inverseTargetSize);
 | `internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)` | [Construction and migration](#construction-and-migration) |
 | `internal readonly ShaderProgram Program` | [Program](#program) |
 | `internal readonly byte[][] Buffers` | [Buffers](#buffers) |
-| `internal readonly Texture?[] Textures` | [Textures](#textures) |
+| `internal readonly Resource?[] Textures` | [Textures](#textures) |
 | `internal readonly Shader? Shader` | [Shader](#shader) |
 | `internal void CopyTextures(Span<Texture?> target)` | [Texture capture](#texture-capture) |
 | `internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)` | [Uniform upload](#uniform-upload) |
@@ -56,9 +58,9 @@ Owned padded uniform bytes, accessed under the shared material gate.
 
 ### Textures
 
-`internal readonly Texture?[] Textures`
+`internal readonly Resource?[] Textures`
 
-Borrowed explicit overrides, indexed by reflected binding. Null means resolve the Shader default.
+Borrowed ordinary or layered texture overrides, indexed by reflected binding. Null resolves the Shader default; sampled-shape migration, disposal and type validation preserve the reflected role.
 
 ### Shader
 

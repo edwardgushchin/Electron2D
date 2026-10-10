@@ -215,5 +215,10 @@ internal sealed class TexturePixels
         return new(image.CopyPixels());
     }
 
+    internal static TexturePixels FromImage(Image image, int maximumBytes)
+    {
+        ArgumentNullException.ThrowIfNull(image); return new(image.CopyTexturePixels(maximumBytes));
+    }
+
     internal Image CopyImage() => Image.CreateFromData(Source.Width, Source.Height, Source.HasMipmaps, Source.Format, Source.Data);
 }

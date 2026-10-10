@@ -1,0 +1,391 @@
+{
+  "mappings": [
+    {
+      "godot": "class:TextureLayered",
+      "electron2d": "T:Electron2D.TextureLayered",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::enum:LayeredType",
+      "electron2d": "T:Electron2D.TextureLayered.LayeredType",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::enum_value:LayeredType.LAYERED_TYPE_2D_ARRAY",
+      "electron2d": "enumValue:Electron2D.TextureLayered.LayeredType.Array()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_format()",
+      "electron2d": "method:Electron2D.TextureLayered.GetFormat()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_height()",
+      "electron2d": "method:Electron2D.TextureLayered.GetHeight()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_layer_data(int:)",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayerData(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_layered_type()",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayeredType()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_layers()",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayers()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_get_width()",
+      "electron2d": "method:Electron2D.TextureLayered.GetWidth()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:_has_mipmaps()",
+      "electron2d": "method:Electron2D.TextureLayered.HasMipmaps()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_format()",
+      "electron2d": "method:Electron2D.TextureLayered.GetFormat()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_height()",
+      "electron2d": "method:Electron2D.TextureLayered.GetHeight()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_layer_data(int:)",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayerData(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_layered_type()",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayeredType()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_layers()",
+      "electron2d": "method:Electron2D.TextureLayered.GetLayers()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:get_width()",
+      "electron2d": "method:Electron2D.TextureLayered.GetWidth()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "TextureLayered::method:has_mipmaps()",
+      "electron2d": "method:Electron2D.TextureLayered.HasMipmaps()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "class:ImageTextureLayered",
+      "electron2d": "T:Electron2D.ImageTextureLayered",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "ImageTextureLayered::method:create_from_images(Image[]:)",
+      "electron2d": "method:Electron2D.ImageTextureLayered.CreateFromImages(System.ReadOnlySpan<Electron2D.Image>)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "ImageTextureLayered::method:update_layer(Image:,int:)",
+      "electron2d": "method:Electron2D.ImageTextureLayered.UpdateLayer(Electron2D.Image,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "class:Texture2DArray",
+      "electron2d": "T:Electron2D.TextureArray",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "Texture2DArray::method:create_placeholder()",
+      "electron2d": "method:Electron2D.TextureArray.CreatePlaceholder()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "class:PlaceholderTextureLayered",
+      "electron2d": "T:Electron2D.PlaceholderTextureLayered",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "PlaceholderTextureLayered::property:layers",
+      "electron2d": "property:Electron2D.PlaceholderTextureLayered.Layers()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "PlaceholderTextureLayered::property:size",
+      "electron2d": "property:Electron2D.PlaceholderTextureLayered.Size()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "class:PlaceholderTexture2DArray",
+      "electron2d": "T:Electron2D.PlaceholderTextureArray",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum:TextureLayeredType",
+      "electron2d": "T:Electron2D.TextureLayered.LayeredType",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:TextureLayeredType.TEXTURE_LAYERED_2D_ARRAY",
+      "electron2d": "enumValue:Electron2D.TextureLayered.LayeredType.Array()",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_layer_get(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DLayerGet(Electron2D.RID,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_layered_create(Image[]:,int:RenderingServer.TextureLayeredType)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DLayeredCreate(System.ReadOnlySpan<Electron2D.Image>,Electron2D.TextureLayered.LayeredType)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:texture_2d_layered_placeholder_create(int:RenderingServer.TextureLayeredType)",
+      "electron2d": "method:Electron2D.RenderingServer.Texture2DLayeredPlaceholderCreate(Electron2D.TextureLayered.LayeredType)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "Shader::method:get_default_texture_parameter(StringName:,int:)",
+      "electron2d": "method:Electron2D.Shader.GetDefaultTextureParameter(System.String,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "Shader::method:get_default_texture_parameter(StringName:,int:)",
+      "electron2d": "method:Electron2D.Shader.GetDefaultLayeredTextureParameter(System.String,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "Shader::method:set_default_texture_parameter(StringName:,Texture:,int:)",
+      "electron2d": "method:Electron2D.Shader.SetDefaultTextureParameter(System.String,Electron2D.Texture,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "Shader::method:set_default_texture_parameter(StringName:,Texture:,int:)",
+      "electron2d": "method:Electron2D.Shader.SetDefaultLayeredTextureParameter(System.String,Electron2D.TextureLayered,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.GetShaderLayeredParameter(System.String)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.SetShaderLayeredParameter(System.String,Electron2D.TextureLayered)",
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "godot": "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.SetShaderParameter(System.String,Electron2D.Texture)",
+      "reason": "Existing typed scalar/array/ordinary-texture setters remain mappings alongside the layered resource setter; no Variant boundary is added. Array sampler shape is validated independently of ordinary textures."
+    },
+    {
+      "godot": "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.SetShaderParameter`1(System.String,ReadOnlySpan<T>)",
+      "reason": "Existing typed scalar/array/ordinary-texture setters remain mappings alongside the layered resource setter; no Variant boundary is added. Array sampler shape is validated independently of ordinary textures."
+    },
+    {
+      "godot": "ShaderMaterial::method:set_shader_parameter(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.ShaderMaterial.SetShaderParameter`1(System.String,T)",
+      "reason": "Existing typed scalar/array/ordinary-texture setters remain mappings alongside the layered resource setter; no Variant boundary is added. Array sampler shape is validated independently of ordinary textures."
+    }
+  ],
+  "statusGroups": [
+    {
+      "state": "Implemented",
+      "godot": [
+        "class:TextureLayered",
+        "TextureLayered::enum:LayeredType",
+        "TextureLayered::enum_value:LayeredType.LAYERED_TYPE_2D_ARRAY",
+        "TextureLayered::method:_get_format()",
+        "TextureLayered::method:_get_height()",
+        "TextureLayered::method:_get_layer_data(int:)",
+        "TextureLayered::method:_get_layered_type()",
+        "TextureLayered::method:_get_layers()",
+        "TextureLayered::method:_get_width()",
+        "TextureLayered::method:_has_mipmaps()",
+        "TextureLayered::method:get_format()",
+        "TextureLayered::method:get_height()",
+        "TextureLayered::method:get_layer_data(int:)",
+        "TextureLayered::method:get_layered_type()",
+        "TextureLayered::method:get_layers()",
+        "TextureLayered::method:get_width()",
+        "TextureLayered::method:has_mipmaps()",
+        "Texture2DArray::method:create_placeholder()",
+        "class:PlaceholderTextureLayered",
+        "PlaceholderTextureLayered::property:layers",
+        "PlaceholderTextureLayered::property:size",
+        "class:PlaceholderTexture2DArray",
+        "RenderingServer::enum:TextureLayeredType",
+        "RenderingServer::enum_value:TextureLayeredType.TEXTURE_LAYERED_2D_ARRAY",
+        "RenderingServer::method:texture_2d_layer_get(RID:,int:)",
+        "RenderingServer::method:texture_2d_layered_placeholder_create(int:RenderingServer.TextureLayeredType)"
+      ],
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:ImageTextureLayered",
+        "ImageTextureLayered::method:create_from_images(Image[]:)",
+        "ImageTextureLayered::method:update_layer(Image:,int:)",
+        "class:Texture2DArray",
+        "RenderingServer::method:texture_2d_layered_create(Image[]:,int:RenderingServer.TextureLayeredType)"
+      ],
+      "reason": "ADRs 0004/0013/0014/0028: separate typed layered resources and array-only identity execute copied homogeneous image layers, stable borrowed/owned RIDs, atomic compatible updates, custom producer snapshots, metadata placeholders, typed default/override descriptors, reload shape migration, duplication and bounded resource archives. Native Wayland GPU checks both HLSL/GLSL, all two-layer mip data, compatible allocation reuse, HDR reallocation, RID proxies/replacement and 64 active frames after 24 warmup with zero owner-thread managed bytes. Compatibility rejects shader use explicitly; native allocations and foreign/human acceptance remain unverified. Compressed and integer-sampled source formats remain Partial: require operation-specific compressed array upload/decoding and integer sampler reflection/binding over the existing float TexturePixels profile; CPU metadata and float/RGBA storage/sampling execute."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "TextureLayered::enum_value:LayeredType.LAYERED_TYPE_CUBEMAP",
+        "TextureLayered::enum_value:LayeredType.LAYERED_TYPE_CUBEMAP_ARRAY",
+        "RenderingServer::enum_value:TextureLayeredType.TEXTURE_LAYERED_CUBEMAP",
+        "RenderingServer::enum_value:TextureLayeredType.TEXTURE_LAYERED_CUBEMAP_ARRAY"
+      ],
+      "reason": "ADR 0004: cube/cubemap-array sampling is three-dimensional and outside the 2D product. The applicable array value preserves numeric zero; cube values are not exposed and have no implementation trigger."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.ImageTextureLayered..ctor()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PlaceholderTextureArray..ctor()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PlaceholderTextureLayered..ctor()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureArray..ctor()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureLayered..ctor()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.Dispose(System.Boolean)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.GetFormat()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.GetHeight()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.GetLayerData(System.Int32)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.GetLayers()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.GetWidth()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.ImageTextureLayered.HasMipmaps()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureArray.CreateDuplicateInstance()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetFormat()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetHeight()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetLayerData(System.Int32)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetLayers()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetPropertyDescriptors()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.GetWidth()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderTextureLayered.HasMipmaps()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureArray.CreateDuplicateInstance()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayered.Dispose(System.Boolean)",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayered.GetRID()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayered.ValidateDisposal()",
+      "reason": "Typed C# construction, inherited Resource duplication/property/disposal hooks, or inherited layered getter override for the executable array resource family; backend identities remain weak/borrowed for resource-owned instances and owned only for server-created objects. No public native handles or new semantic domain.",
+      "adr": "ADRs 0004/0013/0014/0028"
+    }
+  ]
+}

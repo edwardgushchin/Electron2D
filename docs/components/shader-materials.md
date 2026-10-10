@@ -1,6 +1,8 @@
 # Shader materials
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
+
+[Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
 ## Built-in shader delivery
 
@@ -127,8 +129,8 @@ Delivery checks passed: `dotnet publish tools/shaders/ShaderImport.csproj -c Rel
 ## Texture bindings and pixel ownership
 
 - At most sixteen fragment texture bindings in descriptor set 2, with unique contiguous slots starting at zero. Names are nonblank, case-sensitive and unique across textures and uniform members.
-- GLSL uses combined `sampler2D` resources. HLSL uses paired `Texture2D<float4>` and `SamplerState` declarations at the same binding; reflection checks actual image/sampler pairings in sampling operations. These are shader-language intrinsic names, not engine resource names.
-- Only ordinary float-sampled 2D images are integrated. Texture arrays, depth comparison, multisampling, storage images and vertex textures fail explicitly. Resource reflection uses active variables, matching SDL_shadercross; unused declarations do not add material slots.
+- GLSL uses combined `sampler2D` or `sampler2DArray` resources. HLSL uses paired `Texture2D<float4>` or `Texture2DArray<float4>` and `SamplerState` declarations at the same binding; reflection checks actual image/sampler pairings in sampling operations. These are shader-language intrinsic names, not engine resource names.
+- Ordinary and array float-sampled 2D images are integrated. Descriptor binding arrays, depth comparison, multisampling, storage images and vertex textures fail explicitly. Resource reflection uses active variables, matching SDL_shadercross; unused declarations do not add material slots.
 - `Texture` derives from Resource and ImageTexture, AtlasTexture, CurveTexture and CurveXYZTexture derive directly from Texture. All textures are 2D by product definition; there is no separate dimension-neutral parent or dimension suffix in the public type name.
 - `AtlasTexture` borrows a source and maps regions/margins through virtual drawing, including nested views. Its CPU image excludes margins; named material bindings resolve to full source storage and share the GPU allocation. Only nested atlas changes forward; Sprite redraws on view changes. Stored view state participates in resource duplication and packed-scene local ownership. See [AtlasTexture](../classes/AtlasTexture.md) for zero-axis, opacity, clipping and no-tiling semantics.
 - `ImageTexture.CreateFromImage` and SetImage copy pixels. SetImage resets logical size and replaces allocation identity; Update requires matching original dimensions/format/mips and retains logical overrides and allocation identity. GetImage returns an independent original image. Size overrides use zero to retain an axis, reject negative axes, and never resample pixels.

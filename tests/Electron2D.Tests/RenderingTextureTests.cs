@@ -126,7 +126,7 @@ internal static partial class RenderingRuntimeTests
         using var graphTexture = graph.GetShaderParameter("colorMap")!;
         Check(graphTexture != texture && graph.GetShaderParameter("detailMap") == graphTexture && graphShader.GetDefaultTextureParameter("colorMap") == graphTexture,
             "Deep resource copying preserves aliases across material overrides and Shader defaults.");
-        var scratch = new Texture?[16];
+        var scratch = new Resource?[16];
         material.SetShaderParameter("colorMap", (Texture?)null);
         material.GetCanvasState()!.CopyTextures(scratch);
         Check(scratch[0] == texture, "Null overrides resolve the Shader default.");

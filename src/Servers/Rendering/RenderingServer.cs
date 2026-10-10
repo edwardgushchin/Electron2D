@@ -129,7 +129,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly List<RenderEntry> Order = [];
         internal readonly Dictionary<CanvasItem, Transform> Repeats = [], Transforms = [];
         internal readonly List<YSortEntry> YSort = [];
-        internal readonly Texture?[] TextureScratch = new Texture?[16];
+        internal readonly Resource?[] TextureScratch = new Resource?[16];
         internal int State;
         internal bool Wanted, Drawn;
     }
@@ -210,7 +210,7 @@ public sealed partial class RenderingServer : ElectronObject
             if (batch.Material is { } material)
             {
                 material.CopyTextures(frame.TextureScratch);
-                for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i], tree);
+                for (var i = 0; i < material.Textures.Length; i++) SubmitTexture(frame.TextureScratch[i] as Texture, tree);
                 Array.Clear(frame.TextureScratch);
             }
         }

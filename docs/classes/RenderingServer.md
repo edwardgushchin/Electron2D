@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1079,3 +1079,98 @@ item through their own canvas transforms; they do not create duplicate markers.
 Empty samples clear old commands. Toggle-off, world detach and renderer shutdown
 release ownership. Ordinary canvas storage handles warmed rerecording without new
 managed allocations. See [physics diagnostics](../components/physics-debug.md).
+
+## Array sampler and RID operations
+
+See [array resources](../components/texture-arrays.md) for copied storage, ownership, verification and format dependencies. Sampled shape changes clear incompatible overrides/defaults.
+
+| Member | Kind | Summary |
+| --- | --- | --- |
+| [`public static Electron2D.Image Texture2DLayerGet(Electron2D.RID texture, System.Int32 layer)`](#member-e2ffba22a7ad) | method | Copies an array layer from a live resource-owned or server-owned texture RID. |
+| [`public static Electron2D.RID Texture2DLayeredCreate(System.ReadOnlySpan<Electron2D.Image> layers, Electron2D.TextureLayered.LayeredType layeredType)`](#member-efef72e59765) | method | Creates a server-owned array from copied homogeneous image layers. |
+| [`public static Electron2D.RID Texture2DLayeredPlaceholderCreate(Electron2D.TextureLayered.LayeredType layeredType)`](#member-baf9bd084533) | method | Creates a server-owned diagnostic image-array placeholder. |
+
+<a id="member-e2ffba22a7ad"></a>
+### `Texture2DLayerGet(Electron2D.RID, System.Int32)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.Image Texture2DLayerGet(Electron2D.RID texture, System.Int32 layer)
+```
+
+#### Summary
+
+Copies an array layer from a live resource-owned or server-owned texture RID.
+
+#### Returns
+
+A caller-owned image; null for a metadata-only resource.
+
+#### Parameters
+
+- `texture`: A layered texture or layered proxy identity.
+- `layer`: The zero-based image layer.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The RID is stale or belongs to another resource role.
+- `T:System.ArgumentOutOfRangeException`: The readable image layer is outside the stored range.
+- `T:System.InvalidOperationException`: The service is absent/off-owner, or a proxy source is absent.
+
+
+<a id="member-efef72e59765"></a>
+### `Texture2DLayeredCreate(System.ReadOnlySpan<Electron2D.Image>, Electron2D.TextureLayered.LayeredType)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.RID Texture2DLayeredCreate(System.ReadOnlySpan<Electron2D.Image> layers, Electron2D.TextureLayered.LayeredType layeredType)
+```
+
+#### Summary
+
+Creates a server-owned array from copied homogeneous image layers.
+
+#### Returns
+
+A stable RID owned until FreeRID or renderer shutdown.
+
+#### Parameters
+
+- `layers`: Nonempty images sharing size, format and mipmap state.
+- `layeredType`: The independent image-array sampling role.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: Image configuration is invalid.
+- `T:System.ArgumentOutOfRangeException`: The sampling role is invalid.
+- `T:System.NotSupportedException`: A source format is unsupported.
+- `T:System.InvalidOperationException`: The native service is absent, off-owner, submitting or closing.
+
+
+<a id="member-baf9bd084533"></a>
+### `Texture2DLayeredPlaceholderCreate(Electron2D.TextureLayered.LayeredType)`
+
+Kind: `method`
+
+```csharp
+public static Electron2D.RID Texture2DLayeredPlaceholderCreate(Electron2D.TextureLayered.LayeredType layeredType)
+```
+
+#### Summary
+
+Creates a server-owned diagnostic image-array placeholder.
+
+#### Returns
+
+A stable RID for one diagnostic layer until FreeRID or shutdown.
+
+#### Parameters
+
+- `layeredType`: The independent image-array sampling role.
+
+#### Exceptions
+
+- `T:System.ArgumentOutOfRangeException`: The sampling role is invalid.
+- `T:System.InvalidOperationException`: The native service is absent, off-owner, submitting or closing.

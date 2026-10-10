@@ -15,18 +15,18 @@ public sealed partial class RenderingServer
     internal byte[] ShaderGetSPIRVCore(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetSPIRV(); }
     internal void ShaderSetPathHintCore(RID rid, string path) { EnsureTextureChange(); ArgumentNullException.ThrowIfNull(path); RenderingProgramRegistry<Shader>.OwnedEntry(rid, this).PathHint = path; }
     internal IReadOnlyList<PropertyDescriptor> GetShaderParameterListCore(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetShaderUniformList(); }
-    internal void ShaderSetDefaultTextureParameterCore(RID rid, string name, RID texture, int index) { EnsureTextureChange(); var shader = RenderingProgramRegistry<Shader>.Owned(rid, this); shader.SetDefaultTextureParameter(name, texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null, index); }
-    internal RID ShaderGetDefaultTextureParameterCore(RID rid, string name, int index) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetDefaultTextureParameter(name, index)?.GetRID() ?? default; }
+    internal void ShaderSetDefaultTextureParameterCore(RID rid, string name, RID texture, int index) { EnsureTextureChange(); var shader = RenderingProgramRegistry<Shader>.Owned(rid, this); shader.SetDefaultSampledResource(name, texture.IsValid() ? RenderingTextureRegistry.ResolveResource(texture) : null, index); }
+    internal RID ShaderGetDefaultTextureParameterCore(RID rid, string name, int index) { EnsureOwner(); return RenderingProgramRegistry<Shader>.Resolve(rid).GetDefaultSampledResource(name, index)?.GetRID() ?? default; }
     private ShaderMaterial MutableProgramMaterial(RID rid) { EnsureTextureChange(); return RenderingProgramRegistry<Material>.Owned(rid, this) as ShaderMaterial ?? throw new ArgumentException("Material is not programmable.", nameof(rid)); }
     private ShaderMaterial ReadProgramMaterial(RID rid) { EnsureOwner(); return RenderingProgramRegistry<Material>.Resolve(rid) as ShaderMaterial ?? throw new ArgumentException("Material is not programmable.", nameof(rid)); }
     internal void MaterialSetShaderCore(RID rid, RID shader) { var material = MutableProgramMaterial(rid); material.Shader = shader.IsValid() ? RenderingProgramRegistry<Shader>.Resolve(shader) : null; }
     internal void MaterialSetParamCore<T>(RID rid, string name, T value) where T : unmanaged => MutableProgramMaterial(rid).SetShaderParameter(name, value);
     internal void MaterialSetParamCore<T>(RID rid, string name, ReadOnlySpan<T> values) where T : unmanaged => MutableProgramMaterial(rid).SetShaderParameter(name, values);
-    internal void MaterialSetParamTextureCore(RID rid, string name, RID texture) => MutableProgramMaterial(rid).SetShaderParameter(name, texture.IsValid() ? RenderingTextureRegistry.Resolve(texture) : null);
+    internal void MaterialSetParamTextureCore(RID rid, string name, RID texture) => MutableProgramMaterial(rid).SetSampledResource(name, texture.IsValid() ? RenderingTextureRegistry.ResolveResource(texture) : null);
     internal T MaterialGetParamCore<T>(RID rid, string name) where T : unmanaged => ReadProgramMaterial(rid).GetShaderParameter<T>(name);
     internal T[] MaterialGetParamArrayCore<T>(RID rid, string name) where T : unmanaged => ReadProgramMaterial(rid).GetShaderParameterArray<T>(name);
     internal void MaterialGetParamCore<T>(RID rid, string name, Span<T> destination) where T : unmanaged => ReadProgramMaterial(rid).CopyShaderParameterArray(name, destination);
-    internal RID MaterialGetParamTextureCore(RID rid, string name) => ReadProgramMaterial(rid).GetShaderParameter(name)?.GetRID() ?? default;
+    internal RID MaterialGetParamTextureCore(RID rid, string name) => ReadProgramMaterial(rid).GetSampledResource(name)?.GetRID() ?? default;
     internal void CanvasItemSetMaterialCore(RID rid, RID material)
     { var state = Change(rid, out _); if (material.IsValid()) RenderingProgramRegistry<Material>.Resolve(material); state.Material = material; state.MaterialAssigned = true; }
     private bool ReleaseProgramRID(RID rid)

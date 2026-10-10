@@ -163,10 +163,12 @@ internal static unsafe partial class SpirvReflection
                 throw new NotSupportedException("Texture names and bindings must be unique and must not collide with material uniforms.");
             var imageType = GetType(compiler, resource.BaseTypeId);
             var sampleType = GetType(compiler, GetSampledType(imageType));
-            if (GetImageDimension(imageType) != 1 || ImageIsArray(imageType) != 0 || ImageIsDepth(imageType) != 0 ||
+            if (GetImageDimension(imageType) != 1 || ImageIsDepth(imageType) != 0 ||
                 ImageIsMultisampled(imageType) != 0 || ImageIsStorage(imageType) != 0 || GetBaseType(sampleType) != 13 || GetBitWidth(sampleType) != 32)
-                throw new NotSupportedException($"Texture '{name}' requires an ordinary non-array, non-depth 2D float-sampled image.");
-            textures[slot] = new(name, (int)slot);
+                throw new NotSupportedException($"Texture '{name}' requires a non-depth 2D or image-array float-sampled image.");
+            var array = ImageIsArray(imageType) != 0;
+            if (array && name is "TEXTURE" or "SCREEN_TEXTURE") throw new NotSupportedException("Renderer-owned samplers require ordinary 2D images.");
+            textures[slot] = new(name, (int)slot, array);
         }
         var samplerSlots = new bool[(int)samplerCount];
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)samplerPointer, (int)samplerCount))

@@ -1,15 +1,17 @@
 # GPUTexture
 
-Last updated: 2026-10-01
+Last updated: 2026-10-10
 
 - Declaration: `internal sealed unsafe class GPUTexture : IDisposable`
 - Source: [GPUTexture.cs](../../src/Servers/Rendering/GPUTexture.cs)
 - Component: [shader-materials](../components/shader-materials.md)
 - Visibility: internal; unavailable to engine consumers.
 
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+
 ## Description
 
-Owns a sampled native 2D texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update or RenderingServer.Texture2DUpdate replaces Pixels instead. TextureReplace transfers a different allocation token when needed and triggers ordinary backend replacement.
+Owns a sampled native 2D texture or image-array texture and upload transfer buffer under a retained GPU device. It holds managed TexturePixels snapshots but never owns the public Texture resource. GPUCanvasBackend replaces this allocation when the snapshot allocation identity changes; a compatible ImageTexture.Update or RenderingServer.Texture2DUpdate replaces Pixels instead. TextureReplace transfers a different allocation token when needed and triggers ordinary backend replacement.
 
 ## Internal usage
 
@@ -26,6 +28,8 @@ gpuTexture.CommitUpload();
 | Declaration | Contract |
 | --- | --- |
 | `internal GPUTexture(RenderHandle device, TexturePixels pixels)` | [Construction](#construction) |
+| `internal GPUTexture(RenderHandle device, LayeredTexturePixels pixels)` | Creates real array storage and bounded transfer capacity. |
+| `internal LayeredTexturePixels? ArrayPixels` | Current immutable array snapshot; upload version commits after submission. |
 | `internal TexturePixels Pixels` | [Pending pixels](#pending-pixels) |
 | `internal nint Handle { get; }` | [Native handle](#native-handle) |
 | `internal void Upload(nint command)` | [Upload](#upload) |

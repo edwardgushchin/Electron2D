@@ -25,7 +25,9 @@ public sealed partial class RenderingServer
     internal RID TextureProxyCreateCore(RID baseTexture)
     {
         EnsureTextureChange();
-        var source = RenderingTextureRegistry.Resolve(baseTexture);
+        var resource = RenderingTextureRegistry.ResolveResource(baseTexture);
+        if (resource is TextureLayered) return OwnLayered(new LayeredTextureProxy(baseTexture));
+        var source = (Texture)resource;
         var texture = new ServerTexture(baseTexture, source);
         var rid = RenderingTextureRegistry.Register(texture, this);
         texture.Bind(rid); _ownedTextureRIDs.Add(rid);
@@ -35,8 +37,16 @@ public sealed partial class RenderingServer
     internal void TextureProxyUpdateCore(RID texture, RID proxyTo)
     {
         EnsureTextureChange();
-        var target = RenderingTextureRegistry.Owned(texture, this);
-        var source = RenderingTextureRegistry.Resolve(proxyTo);
+        var owned = RenderingTextureRegistry.OwnedResource(texture, this);
+        var sampled = RenderingTextureRegistry.ResolveResource(proxyTo);
+        if (owned is LayeredTextureProxy layered)
+        {
+            if (sampled is not TextureLayered) throw new ArgumentException("Proxy source shapes do not match.", nameof(proxyTo));
+            if (sampled is LayeredTextureProxy) throw new InvalidOperationException("Layered proxy updates require a non-proxy source.");
+            layered.SetTarget(proxyTo); return;
+        }
+        var target = owned as ServerTexture ?? throw new InvalidOperationException("The destination is not a proxy.");
+        var source = sampled as Texture ?? throw new ArgumentException("Proxy source shapes do not match.", nameof(proxyTo));
         if (!target.IsProxy || source is ServerTexture { IsProxy: true })
             throw new InvalidOperationException("Proxy updates require an owned proxy and a non-proxy source.");
         target.SetProxyTarget(proxyTo, source);
@@ -45,15 +55,25 @@ public sealed partial class RenderingServer
     internal void TextureReplaceCore(RID texture, RID byTexture)
     {
         EnsureTextureChange();
-        var target = RenderingTextureRegistry.Owned(texture, this);
-        var source = RenderingTextureRegistry.Owned(byTexture, this);
+        var destination = RenderingTextureRegistry.OwnedResource(texture, this);
+        var replacement = RenderingTextureRegistry.OwnedResource(byTexture, this);
+        if (destination is TextureArray array && replacement is TextureArray byArray)
+        {
+            if (texture == byTexture) return;
+            array.ReplaceLayers(byArray.CaptureLayers()); array.ServerPath = byArray.ServerPath;
+            foreach (var rid in _ownedTextureRIDs)
+                if (RenderingTextureRegistry.OwnedResource(rid, this) is LayeredTextureProxy proxy && proxy.ProxyTarget == byTexture) proxy.SetTarget(texture);
+            FreeRIDCore(byTexture); return;
+        }
+        var target = destination as ServerTexture ?? throw new InvalidOperationException("Replacement requires matching concrete texture roles.");
+        var source = replacement as ServerTexture ?? throw new InvalidOperationException("Replacement requires matching concrete texture roles.");
         if (target.IsProxy || source.IsProxy) throw new InvalidOperationException("A proxy cannot be replaced or consumed as replacement pixels.");
         if (texture == byTexture) return;
         target.Pixels = source.Pixels; target.Size = source.Size; target.Path = source.Path;
         foreach (var rid in _ownedTextureRIDs)
         {
-            var proxy = RenderingTextureRegistry.Owned(rid, this);
-            if (proxy.IsProxy && proxy.ProxyTarget == byTexture) proxy.RedirectProxy(texture);
+            var proxy = RenderingTextureRegistry.OwnedResource(rid, this) as ServerTexture;
+            if (proxy is { IsProxy: true } && proxy.ProxyTarget == byTexture) proxy.RedirectProxy(texture);
         }
         FreeRIDCore(byTexture);
     }
@@ -73,8 +93,10 @@ public sealed partial class RenderingServer
     internal void Texture2DUpdateCore(RID texture, Image image, int layer = 0)
     {
         EnsureTextureChange();
+        var resource = RenderingTextureRegistry.OwnedResource(texture, this);
+        if (resource is TextureArray array) { array.UpdateLayer(image, layer); return; }
         if (layer != 0) throw new ArgumentOutOfRangeException(nameof(layer));
-        var target = RenderingTextureRegistry.Owned(texture, this);
+        var target = resource as ServerTexture ?? throw new InvalidOperationException("Update the concrete image-array source of a proxy.");
         if (target.IsProxy) throw new InvalidOperationException("Update the source pixels of a proxy texture.");
         var pixels = TexturePixels.FromImage(image);
         var old = target.Pixels.Source; var next = pixels.Source;
@@ -86,7 +108,9 @@ public sealed partial class RenderingServer
 
     internal Image.Format TextureGetFormatCore(RID texture)
     {
-        EnsureOwner(); var source = RenderingTextureRegistry.Resolve(texture);
+        EnsureOwner(); var resource = RenderingTextureRegistry.ResolveResource(texture);
+        if (resource is TextureLayered array) return array.GetFormat();
+        var source = (Texture)resource;
         return source is ServerTexture { IsProxy: true } proxy ? proxy.PixelFormat : source.CapturePixels()?.Source.Format ?? Image.Format.Rgba8;
     }
 
@@ -102,13 +126,14 @@ public sealed partial class RenderingServer
     internal void TextureSetPathCore(RID texture, string path)
     {
         EnsureTextureChange(); ArgumentNullException.ThrowIfNull(path);
-        RenderingTextureRegistry.Owned(texture, this).Path = path;
+        var resource = RenderingTextureRegistry.OwnedResource(texture, this);
+        if (resource is TextureLayered array) array.ServerPath = path; else ((ServerTexture)resource).Path = path;
     }
 
     internal string TextureGetPathCore(RID texture)
     {
-        EnsureOwner(); var target = RenderingTextureRegistry.Resolve(texture);
-        return target is ServerTexture owned ? owned.Path : target.ResourcePath;
+        EnsureOwner(); var target = RenderingTextureRegistry.ResolveResource(texture);
+        return target is ServerTexture owned ? owned.Path : target is TextureLayered { ServerOwner: not null } array ? array.ServerPath : target.ResourcePath;
     }
 
     internal void FreeRIDCore(RID rid)
@@ -116,8 +141,10 @@ public sealed partial class RenderingServer
         EnsureTextureChange(); if (ReleaseProgramRID(rid) || ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
         if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
-        var texture = RenderingTextureRegistry.Owned(rid, this);
-        _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid); texture.Released = true; texture.Dispose();
+        var texture = RenderingTextureRegistry.OwnedResource(rid, this);
+        _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid);
+        if (texture is ServerTexture ordinary) ordinary.Released = true; else ((TextureLayered)texture).ServerReleased = true;
+        texture.Dispose();
     }
 
     private void EnsureTextureChange()
@@ -132,8 +159,9 @@ public sealed partial class RenderingServer
         while (_ownedTextureRIDs.Count > 0)
         {
             var rid = _ownedTextureRIDs[^1]; _ownedTextureRIDs.RemoveAt(_ownedTextureRIDs.Count - 1);
-            var texture = RenderingTextureRegistry.Owned(rid, this);
-            RenderingTextureRegistry.Remove(rid); texture.Released = true;
+            var texture = RenderingTextureRegistry.OwnedResource(rid, this);
+            RenderingTextureRegistry.Remove(rid);
+            if (texture is ServerTexture ordinary) ordinary.Released = true; else ((TextureLayered)texture).ServerReleased = true;
             try { texture.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         }
         if (errors is not null) throw new AggregateException("Texture cleanup failed.", errors);

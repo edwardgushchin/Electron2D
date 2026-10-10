@@ -505,6 +505,23 @@ public sealed partial class Image : Resource
     }
 
     internal State CopyPixels() => Snapshot();
+    internal State CopyTexturePixels(int maximumBytes)
+    {
+        ThrowIfDisposed();
+        lock (_stateGate)
+        {
+            ThrowIfDisposed(); var state = CaptureState(copyData: false);
+            long bytes = state.Data.Length;
+            var pixelBytes = state.Format <= Format.Rgba8 ? 4 : 16;
+            for (int w = state.Width, h = state.Height; ; w = Math.Max(1, w / 2), h = Math.Max(1, h / 2))
+            {
+                bytes += (long)w * h * pixelBytes;
+                if (bytes > maximumBytes) throw new ArgumentException("Texture array source and upload pixels exceed their bounded storage.");
+                if (!state.HasMipmaps || w <= 1 && h <= 1) break;
+            }
+            return CaptureState(copyData: true);
+        }
+    }
     internal static State ConvertPixels(State state, Format format) => ConvertState(state, format);
     internal static Color ReadTexturePixel(State state, int x, int y) => ReadColor(state.Data,
         (y * state.Width + x) * GetBytesPerPixel(state.Format), state.Format);

@@ -377,7 +377,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ImageFormatLoaderExtension](classes/ImageFormatLoaderExtension.md) | ImageFormatLoader | Blocked | 4 |
 | [ImageTexture](classes/ImageTexture.md) | Texture2D | Partial | 5 |
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
-| [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Blocked | 2 |
+| [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Partial | 2 |
 | [ImmediateMesh](classes/ImmediateMesh.md) | Mesh | Partial | 10 |
 | [ImporterMesh](classes/ImporterMesh.md) | Resource | Blocked | 25 |
 | [ImporterMeshInstance3D](classes/ImporterMeshInstance3D.md) | Node3D | Excluded | 10 |
@@ -643,9 +643,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaceholderMaterial](classes/PlaceholderMaterial.md) | Material | Blocked | 0 |
 | [PlaceholderMesh](classes/PlaceholderMesh.md) | Mesh | Blocked | 1 |
 | [PlaceholderTexture2D](classes/PlaceholderTexture2D.md) | Texture2D | Blocked | 2 |
-| [PlaceholderTexture2DArray](classes/PlaceholderTexture2DArray.md) | PlaceholderTextureLayered | Blocked | 0 |
+| [PlaceholderTexture2DArray](classes/PlaceholderTexture2DArray.md) | PlaceholderTextureLayered | Implemented | 0 |
 | [PlaceholderTexture3D](classes/PlaceholderTexture3D.md) | Texture3D | Excluded | 1 |
-| [PlaceholderTextureLayered](classes/PlaceholderTextureLayered.md) | TextureLayered | Blocked | 2 |
+| [PlaceholderTextureLayered](classes/PlaceholderTextureLayered.md) | TextureLayered | Implemented | 2 |
 | [Plane](classes/Plane.md) | — | Excluded | 31 |
 | [PlaneMesh](classes/PlaneMesh.md) | PrimitiveMesh | Excluded | 9 |
 | [PointLight2D](classes/PointLight2D.md) | Light2D | Blocked | 4 |
@@ -856,7 +856,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextServerManager](classes/TextServerManager.md) | Object | Blocked | 10 |
 | [Texture](classes/Texture.md#godot-texture) | Resource | Partial | 0 |
 | [Texture2D](classes/Texture.md#godot-texture2d) | Texture | Partial | 23 |
-| [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Blocked | 1 |
+| [Texture2DArray](classes/TextureArray.md) | ImageTextureLayered | Partial | 1 |
 | [Texture2DArrayRD](classes/TextureArrayRD.md) | TextureLayeredRD | Blocked | 0 |
 | [Texture2DRD](classes/TextureRD.md) | Texture2D | Blocked | 2 |
 | [Texture3D](classes/Texture3D.md) | Texture | Excluded | 13 |
@@ -864,7 +864,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TextureButton](classes/TextureButton.md) | BaseButton | Implemented | 18 |
 | [TextureCubemapArrayRD](classes/TextureCubemapArrayRD.md) | TextureLayeredRD | Excluded | 0 |
 | [TextureCubemapRD](classes/TextureCubemapRD.md) | TextureLayeredRD | Excluded | 0 |
-| [TextureLayered](classes/TextureLayered.md) | Texture | Blocked | 18 |
+| [TextureLayered](classes/TextureLayered.md) | Texture | Implemented | 18 |
 | [TextureLayeredRD](classes/TextureLayeredRD.md) | TextureLayered | Blocked | 1 |
 | [TextureProgressBar](classes/TextureProgressBar.md) | Range | Implemented | 31 |
 | [TextureRect](classes/TextureRect.md) | Control | Implemented | 21 |

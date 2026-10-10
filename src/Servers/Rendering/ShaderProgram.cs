@@ -21,16 +21,28 @@ internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<s
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         for (var i = 0; i < Textures.Length; i++) if (!Textures[i].IsEngineTexture && Textures[i].Name == name) return i;
-        throw new ArgumentException($"Shader has no sampled 2D texture named '{name}'.", nameof(name));
+        throw new ArgumentException($"Shader has no sampled texture named '{name}'.", nameof(name));
     }
 }
 
-internal sealed record ShaderTexture(string Name, int Binding)
+internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false)
 {
     internal bool IsCanvasTexture => Name == "TEXTURE";
     internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
     internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture;
-    internal PropertyDescriptor Describe(string propertyName) => new PropertyDescriptor<ShaderMaterial, Texture?>(propertyName,
+    internal void RequireShape(bool array)
+    {
+        if (IsArray != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(IsArray ? "layered" : "ordinary")} images.");
+    }
+    internal void Validate(Resource? texture)
+    {
+        if (texture is null) return;
+        if (texture.IsDisposed) throw new ObjectDisposedException(nameof(texture));
+        if (IsArray ? texture is not TextureLayered : texture is not Texture) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled image shape.");
+    }
+    internal PropertyDescriptor Describe(string propertyName) => IsArray
+        ? new PropertyDescriptor<ShaderMaterial, TextureLayered?>(propertyName, m => m.GetShaderLayeredParameter(Name), (m, t) => m.SetShaderLayeredParameter(Name, t), _ => null, stored: true)
+        : new PropertyDescriptor<ShaderMaterial, Texture?>(propertyName,
         m => m.GetShaderParameter(Name), (m, t) => m.SetShaderParameter(Name, t), _ => null, stored: true);
 }
 

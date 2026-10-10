@@ -1,15 +1,17 @@
 # RenderingTextureRegistry
 
-Last updated: 2026-10-01
+Last updated: 2026-10-10
 
 - Declaration: `internal static class RenderingTextureRegistry`
 - Source: [RenderingTextureRegistry.cs](../../src/Servers/Rendering/RenderingTextureRegistry.cs)
 - Component: [Canvas rendering](../components/canvas-rendering.md#texture-resource-identities)
 - Visibility: internal; unavailable to engine consumers.
 
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+
 ## Description
 
-Maps process-wide, non-reused RIDs to logical Texture resources. A borrowed entry is weak and independent of the active renderer; atlas views forward the current source RID rather than register another entry; a server entry strongly retains its ServerTexture and owning RenderingServer until free/shutdown. One registry gate protects registration, lookup and removal. No native handles live here. The lazy immutable 4×4 magenta/black RGBA8 checkerboard supplies empty-resource server queries and explicit placeholder creation.
+Maps process-wide, non-reused RIDs to logical Texture resources. A borrowed entry is weak and independent of the active renderer; atlas views forward the current source RID rather than register another entry; a server entry strongly retains its ordinary or layered server resource and owning RenderingServer until free/shutdown. One registry gate protects registration, lookup and removal. No native handles live here. The lazy immutable 4×4 magenta/black RGBA8 checkerboard supplies empty-resource server queries and explicit placeholder creation.
 
 ## Internal example
 
@@ -25,7 +27,7 @@ var texture = RenderingTextureRegistry.Resolve(rid);
 | `internal static Texture PlaceholderTexture { get; }` | Lazy immutable checkerboard drawable shared by empty-source proxy replay. |
 | `internal static Texture? ResolveProxySource(RID rid)` | Iteratively follows live alias links to a root, or returns null. |
 | `internal static TexturePixels PlaceholderPixels { get; }` | Immutable lazy fallback pixel payload. |
-| `internal static RID Register(Texture texture, RenderingServer? owner = null)` | Assigns a fresh identity and records borrowed/owned lifetime. |
+| `internal static RID Register(Resource texture, RenderingServer? owner = null)` | Assigns a fresh identity and records borrowed/owned lifetime. |
 | `internal static Texture Resolve(RID rid)` | Returns a live logical resource or rejects an invalid/stale/wrong-kind identity. |
 | `internal static ServerTexture Owned(RID rid, RenderingServer owner)` | Requires a live server texture belonging to this exact renderer. |
 | `internal static void Remove(RID rid)` | Removes identity registration without invoking resource callbacks. |

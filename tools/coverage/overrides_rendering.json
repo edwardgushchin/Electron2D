@@ -4766,15 +4766,6 @@
     },
     {
       "godot": [
-        "RenderingServer::method:texture_2d_layer_get(RID:,int:)",
-        "RenderingServer::method:texture_2d_layered_create(Image[]:,int:RenderingServer.TextureLayeredType)",
-        "RenderingServer::method:texture_2d_layered_placeholder_create(int:RenderingServer.TextureLayeredType)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: actual typed TextureArray storage with per-layer configuration, native 2D-array upload/sampling/capability checks and shader binding; these methods enter that first complete array integration slice. Ordinary owned 2D texture RIDs now exist; a raw flag/store is insufficient."
-    },
-    {
-      "godot": [
         "RenderingServer::method:texture_get_native_handle(RID:,bool:)",
         "RenderingServer::method:texture_create_from_native_handle(int:RenderingServer.TextureType,int:Image.Format,int:,int:,int:,int:,int:,int:RenderingServer.TextureLayeredType)"
       ],

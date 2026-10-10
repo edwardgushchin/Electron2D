@@ -52,6 +52,8 @@ public static partial class ResourceFileTypes
         RegisterNode("TileMapLayer", CreateTileMapLayer);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
+        RegisterResource("TextureArray", CreateTextureArray);
+        RegisterResource("PlaceholderTextureArray", CreatePlaceholderTextureArray);
         RegisterResource("AtlasTexture", CreateAtlasTexture);
 
         RegisterBuiltInNodes();
@@ -115,6 +117,8 @@ public static partial class ResourceFileTypes
     private static Sprite CreateSprite() => new();
     private static Image CreateImage() => new();
     private static ImageTexture CreateImageTexture() => new();
+    private static TextureArray CreateTextureArray() => new();
+    private static PlaceholderTextureArray CreatePlaceholderTextureArray() => new();
     private static AtlasTexture CreateAtlasTexture() => new();
     private static CircleShape CreateCircleFileResource() => new();
     private static ConvexPolygonShape CreateConvexPolygonFileResource() => new();

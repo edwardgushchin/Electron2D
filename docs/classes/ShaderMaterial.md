@@ -1,6 +1,6 @@
 # ShaderMaterial
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Declaration: `public sealed class ShaderMaterial : Material`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -80,3 +80,68 @@ Inherited property discovery includes Shader and typed parameter descriptors nam
 Renderer-owned SCREEN_TEXTURE and SCREEN_PIXEL_SIZE do not appear in stored material descriptors or typed user parameter/default access. They resolve per target draw; ordinary uniforms still use the existing lock/capture/migration rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 `CopyShaderParameterArray` validates name, element type, array shape and exact destination length before touching caller storage. It uses the same locked state migration as the allocating array getter. [RenderingProgramTests](../../tests/Electron2D.Tests/RenderingProgramTests.cs) checks independent RID identities, lifetime and 2000 prepared copies.
+
+## Array sampler and RID operations
+
+See [array resources](../components/texture-arrays.md) for copied storage, ownership, verification and format dependencies. Sampled shape changes clear incompatible overrides/defaults.
+
+| Member | Kind | Summary |
+| --- | --- | --- |
+| [`public Electron2D.TextureLayered GetShaderLayeredParameter(System.String name)`](#member-3192b6a8e6c8) | method | Gets the explicitly assigned image-array override. |
+| [`public System.Void SetShaderLayeredParameter(System.String name, Electron2D.TextureLayered texture)`](#member-8506ee080f15) | method | Sets a borrowed image-array override for a reflected array sampler. |
+
+<a id="member-3192b6a8e6c8"></a>
+### `GetShaderLayeredParameter(System.String)`
+
+Kind: `method`
+
+```csharp
+public Electron2D.TextureLayered GetShaderLayeredParameter(System.String name)
+```
+
+#### Summary
+
+Gets the explicitly assigned image-array override.
+
+#### Returns
+
+The borrowed override, or null when the shader default is used.
+
+#### Parameters
+
+- `name`: The exact sampler parameter name.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The parameter is not a layered sampler.
+- `T:System.InvalidOperationException`: No shader is assigned.
+- `T:System.ObjectDisposedException`: The material or shader is disposed.
+
+
+<a id="member-8506ee080f15"></a>
+### `SetShaderLayeredParameter(System.String, Electron2D.TextureLayered)`
+
+Kind: `method`
+
+```csharp
+public System.Void SetShaderLayeredParameter(System.String name, Electron2D.TextureLayered texture)
+```
+
+#### Summary
+
+Sets a borrowed image-array override for a reflected array sampler.
+
+#### Remarks
+
+Sampling uses linear filtering, clamp addressing and base-level LOD. Changes need no geometry rerecording. An unbound parameter fails before drawing. Ownership remains with the caller.
+
+#### Parameters
+
+- `name`: The exact sampler parameter name.
+- `texture`: A live array resource, or null to use the shader default.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The parameter is not a layered sampler.
+- `T:System.InvalidOperationException`: No shader is assigned.
+- `T:System.ObjectDisposedException`: The material, shader or array is disposed.

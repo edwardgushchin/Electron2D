@@ -21,14 +21,14 @@ internal static class RenderingTextureRegistry
             for (var x = 0; x < 4; x++) image.SetPixel(x, y, (x + y) % 2 == 0 ? Colors.Magenta : Colors.Black);
         return TexturePixels.FromImage(image);
     }
-    private sealed class Entry(Texture texture, RenderingServer? owner)
+    private sealed class Entry(Resource texture, RenderingServer? owner)
     {
-        internal readonly WeakReference<Texture> Borrowed = new(texture);
-        internal readonly Texture? Owned = owner is null ? null : texture;
+        internal readonly WeakReference<Resource> Borrowed = new(texture);
+        internal readonly Resource? Owned = owner is null ? null : texture;
         internal readonly RenderingServer? Owner = owner;
     }
 
-    internal static RID Register(Texture texture, RenderingServer? owner = null)
+    internal static RID Register(Resource texture, RenderingServer? owner = null)
     {
         var rid = RID.Allocate();
         lock (Gate)
@@ -46,7 +46,7 @@ internal static class RenderingTextureRegistry
         return rid;
     }
 
-    internal static Texture Resolve(RID rid)
+    internal static Resource ResolveResource(RID rid)
     {
         lock (Gate)
         {
@@ -57,28 +57,45 @@ internal static class RenderingTextureRegistry
         }
     }
 
+    internal static Texture Resolve(RID rid) => ResolveResource(rid) as Texture ?? throw new ArgumentException("The RID identifies layered rather than ordinary texture data.", nameof(rid));
+    internal static TextureLayered ResolveLayered(RID rid) => ResolveResource(rid) as TextureLayered ?? throw new ArgumentException("The RID does not identify layered texture data.", nameof(rid));
+    internal static Resource OwnedResource(RID rid, RenderingServer owner)
+    {
+        lock (Gate)
+        {
+            if (!Entries.TryGetValue(rid, out var entry) || !entry.Borrowed.TryGetTarget(out var live) || live.IsDisposed) throw new ArgumentException("The texture RID is not live.", nameof(rid));
+            if (entry.Owner != owner || entry.Owned is null) throw new InvalidOperationException("The texture RID belongs to another rendering or resource owner.");
+            return entry.Owned;
+        }
+    }
+    internal static TextureLayered OwnedLayered(RID rid, RenderingServer owner) => OwnedResource(rid, owner) as TextureLayered ?? throw new ArgumentException("The RID does not identify an owned layered texture.", nameof(rid));
+    private static readonly Lazy<LayeredTexturePixels> ArrayPlaceholder = new(() => new([PlaceholderPixels]));
+    internal static LayeredTexturePixels PlaceholderLayers => ArrayPlaceholder.Value;
+
     internal static Texture? ResolveProxySource(RID rid)
     {
         lock (Gate)
         {
             while (Entries.TryGetValue(rid, out var entry) && entry.Borrowed.TryGetTarget(out var texture) && !texture.IsDisposed)
             {
-                if (texture is not ServerTexture { IsProxy: true } proxy) return texture;
+                if (texture is not ServerTexture { IsProxy: true } proxy) return texture as Texture;
                 rid = proxy.ProxyTarget;
             }
             return null;
         }
     }
 
-    internal static ServerTexture Owned(RID rid, RenderingServer owner)
+    internal static ServerTexture Owned(RID rid, RenderingServer owner) => OwnedResource(rid, owner) as ServerTexture ?? throw new ArgumentException("The RID is not an owned ordinary texture.", nameof(rid));
+    internal static TextureLayered? ResolveLayeredProxySource(RID rid)
     {
         lock (Gate)
         {
-            if (!Entries.TryGetValue(rid, out var entry) || !entry.Borrowed.TryGetTarget(out var live) || live.IsDisposed)
-                throw new ArgumentException("The texture RID is not live.", nameof(rid));
-            if (entry.Owner != owner || entry.Owned is not ServerTexture texture)
-                throw new InvalidOperationException("The texture RID belongs to another rendering or resource owner.");
-            return texture;
+            while (Entries.TryGetValue(rid, out var entry) && entry.Borrowed.TryGetTarget(out var texture) && !texture.IsDisposed)
+            {
+                if (texture is not LayeredTextureProxy proxy) return texture as TextureLayered;
+                rid = proxy.ProxyTarget;
+            }
+            return null;
         }
     }
 

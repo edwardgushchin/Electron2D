@@ -174,7 +174,7 @@ public sealed class ShaderMaterial : Material
         lock (_gate)
         {
             var state = RequireState();
-            var slot = state.Program.FindTexture(name);
+            var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false);
             if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
             state.Textures[slot] = texture;
         }
@@ -189,7 +189,43 @@ public sealed class ShaderMaterial : Material
     /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
     public Texture? GetShaderParameter(string name)
     {
-        lock (_gate) { var state = RequireState(); return state.Textures[state.Program.FindTexture(name)]; }
+        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false); return (Texture?)state.Textures[slot]; }
+    }
+
+    /// <summary>Sets a borrowed image-array override for a reflected array sampler.</summary>
+    /// <param name="name">The exact sampler parameter name.</param>
+    /// <param name="texture">A live array resource, or null to use the shader default.</param>
+    /// <remarks>Sampling uses linear filtering, clamp addressing and base-level LOD. Changes need no geometry
+    /// rerecording. An unbound parameter fails before drawing. Ownership remains with the caller.</remarks>
+    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
+    /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
+    /// <exception cref="ObjectDisposedException">The material, shader or array is disposed.</exception>
+    public void SetShaderLayeredParameter(string name, TextureLayered? texture)
+    {
+        lock (_gate)
+        {
+            var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true);
+            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            state.Textures[slot] = texture;
+        }
+        EmitChanged();
+    }
+    /// <summary>Gets the explicitly assigned image-array override.</summary>
+    /// <param name="name">The exact sampler parameter name.</param>
+    /// <returns>The borrowed override, or null when the shader default is used.</returns>
+    /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
+    /// <exception cref="InvalidOperationException">No shader is assigned.</exception>
+    /// <exception cref="ObjectDisposedException">The material or shader is disposed.</exception>
+    public TextureLayered? GetShaderLayeredParameter(string name)
+    {
+        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true); return (TextureLayered?)state.Textures[slot]; }
+    }
+    internal Resource? GetSampledResource(string name)
+    { lock (_gate) { var state = RequireState(); return state.Textures[state.Program.FindTexture(name)]; } }
+    internal void SetSampledResource(string name, Resource? texture)
+    {
+        lock (_gate) { var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].Validate(texture); state.Textures[slot] = texture; }
+        EmitChanged();
     }
 
     private static void ValidateValue<T>(in T value) where T : unmanaged
@@ -231,7 +267,7 @@ public sealed class ShaderMaterial : Material
         var copy = (ShaderMaterial)target;
         var copiedShader = deep ? (Shader?)duplicateSubresource(shader) : shader;
         if (deep && state is not null)
-            for (var i = 0; i < state.Textures.Length; i++) state.Textures[i] = (Texture?)duplicateSubresource(state.Textures[i]);
+            for (var i = 0; i < state.Textures.Length; i++) state.Textures[i] = duplicateSubresource(state.Textures[i]);
         lock (copy._gate)
         {
             copy._shader = copiedShader;
@@ -257,7 +293,7 @@ internal sealed class MaterialState
     private readonly object _gate;
     internal readonly ShaderProgram Program;
     internal readonly byte[][] Buffers;
-    internal readonly Texture?[] Textures;
+    internal readonly Resource?[] Textures;
     internal readonly Shader? Shader;
 
     internal MaterialState(object gate, ShaderProgram program, MaterialState? previous, Shader? shader = null)
@@ -266,7 +302,7 @@ internal sealed class MaterialState
         Program = program;
         Shader = shader;
         Buffers = program.BufferSizes.Select(size => new byte[size]).ToArray();
-        Textures = new Texture?[program.Textures.Length];
+        Textures = new Resource?[program.Textures.Length];
         foreach (var uniform in program.Uniforms.Values)
             if (uniform.Type == typeof(Transform))
                 for (var i = 0; i < uniform.Count; i++)
@@ -283,15 +319,18 @@ internal sealed class MaterialState
                 }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
-                if (program.Textures[i].Name == previous.Program.Textures[j].Name) Textures[i] = previous.Textures[j];
+                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].IsArray == previous.Program.Textures[j].IsArray) Textures[i] = previous.Textures[j];
     }
 
-    internal void CopyTextures(Span<Texture?> target)
+    internal void CopyTextures(Span<Resource?> target)
     {
         lock (_gate)
             for (var i = 0; i < Textures.Length; i++)
+            {
                 target[i] = Program.Textures[i].IsEngineTexture ? null : Textures[i] ?? Shader?.DefaultTexture(Program.Textures[i].Name)
                     ?? throw new InvalidOperationException($"Texture parameter '{Program.Textures[i].Name}' has no texture or Shader default.");
+                Program.Textures[i].Validate(target[i]);
+            }
     }
 
     internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)

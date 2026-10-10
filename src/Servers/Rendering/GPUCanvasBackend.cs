@@ -12,10 +12,12 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
     private readonly Dictionary<(byte[] Code, BlendMode Blend, bool Instanced), RenderHandle> _pipelines = [];
     private readonly HashSet<(byte[] Code, BlendMode Blend, bool Instanced)> _usedPrograms = [];
     private readonly Dictionary<Texture, GPUTexture> _textures = [];
+    private readonly Dictionary<TextureLayered, GPUTexture> _layeredTextures = [];
+    private readonly HashSet<TextureLayered> _usedLayeredTextures = [];
     private readonly HashSet<Texture> _usedTextures = [];
     private readonly Dictionary<MaterialState, SDL.GPUTextureSamplerBinding[]> _textureBindings = [];
     private readonly HashSet<MaterialState> _usedMaterials = [];
-    private readonly Texture?[] _textureScratch = new Texture?[16];
+    private readonly Resource?[] _textureScratch = new Resource?[16];
     private readonly Dictionary<(TextureFilter, TextureRepeat, int, bool), RenderHandle> _samplers = [];
     private readonly bool _nearestMipmaps = ProjectSettings.GetWithOverride(ProjectSettings.UseNearestMipmapFilter);
     private ImageTexture? _whiteTexture;
@@ -185,6 +187,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         try
         {
             foreach (var texture in _textures.Values) texture.Upload(command);
+            foreach (var texture in _layeredTextures.Values) texture.Upload(command);
             if (!vertices.IsEmpty)
             {
                 var mapped = SDL.MapGPUTransferBuffer(Device, _transfer!.DangerousGetHandle(), true);
@@ -289,7 +292,8 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
                 }
             }
             var submitted = command; command = 0; Check(SDL.SubmitGPUCommandBuffer(submitted), "submit canvas frame");
-            foreach (var texture in _textures.Values) texture.CommitUpload(); output.Commit();
+            foreach (var texture in _textures.Values) texture.CommitUpload();
+            foreach (var texture in _layeredTextures.Values) texture.CommitUpload(); output.Commit();
         }
         finally
         {
@@ -383,6 +387,22 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         return _textures[texture].Handle;
     }
 
+    private nint PrepareLayeredTexture(TextureLayered texture)
+    {
+        if (_usedLayeredTextures.Add(texture))
+        {
+            if (texture.GetLayeredType() != TextureLayered.LayeredType.Array) throw new NotSupportedException("Only independent image-array sampling is applicable.");
+            var pixels = texture.CaptureLayers() ?? RenderingTextureRegistry.PlaceholderLayers;
+            if (!_layeredTextures.TryGetValue(texture, out var gpu) || !ReferenceEquals(gpu.ArrayPixels!.Allocation, pixels.Allocation))
+            {
+                var replacement = new GPUTexture(_device, pixels);
+                gpu?.Dispose(); _layeredTextures[texture] = replacement;
+            }
+            else gpu.ArrayPixels = pixels;
+        }
+        return _layeredTextures[texture].Handle;
+    }
+
     private void PrepareTextures(MaterialState material)
     {
         if (!_textureBindings.TryGetValue(material, out var bindings))
@@ -393,7 +413,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 if (material.Program.Textures[i].IsEngineTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = PrepareTexture(_textureScratch[i]!), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
             }
         }
         finally { Array.Clear(_textureScratch); }
@@ -409,11 +429,12 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         display.SetWindowVisible(visible);
         if (visible) { Check(SDL.ClaimWindowForGPUDevice(Device, _window), "reclaim visible window"); _windowClaimed = true; SetVSync(_vSync); }
     }
-    internal override void BeginFrame() { _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix, false)); _usedTextures.Clear(); _usedMaterials.Clear(); }
+    internal override void BeginFrame() { _usedPrograms.Clear(); _usedPrograms.Add((_defaultFragment, BlendMode.Mix, false)); _usedTextures.Clear(); _usedLayeredTextures.Clear(); _usedMaterials.Clear(); }
     internal override void EndFrame()
     {
         foreach (var pair in _pipelines) if (!_usedPrograms.Contains(pair.Key) && !ReferenceEquals(pair.Key.Code, _defaultFragment)) { pair.Value.Dispose(); _pipelines.Remove(pair.Key); }
         foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _textures.Remove(pair.Key); }
+        foreach (var pair in _layeredTextures) if (!_usedLayeredTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Dispose(); _layeredTextures.Remove(pair.Key); }
         foreach (var pair in _textureBindings) if (!_usedMaterials.Contains(pair.Key)) _textureBindings.Remove(pair.Key);
     }
     internal override RenderHandle CreateTarget(Vector2i size, Color clear, bool mipmaps = false)
@@ -490,6 +511,8 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         var idle = SDL.WaitForGPUIdle(Device);
         foreach (var pipeline in _pipelines.Values) pipeline.Dispose();
         foreach (var texture in _textures.Values) texture.Dispose();
+        foreach (var texture in _layeredTextures.Values) texture.Dispose();
+        _layeredTextures.Clear(); _usedLayeredTextures.Clear();
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
         _samplers.Clear(); _whiteTexture?.Dispose();

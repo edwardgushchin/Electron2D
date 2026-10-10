@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1404 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 1354 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1409 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 1353 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -15,7 +15,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
 | [RenderingDevice](classes/RenderingDevice.md) | 527 | 7 |
-| [RenderingServer](classes/RenderingServer.md) | 446 | 29 |
+| [RenderingServer](classes/RenderingServer.md) | 445 | 30 |
 | [OS](classes/OS.md) | 94 | 6 |
 | [Node](classes/Node.md) | 58 | 63 |
 | [Window](classes/Window.md) | 35 | 57 |
@@ -70,6 +70,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [AudioStreamPlayback](classes/AudioStreamPlayback.md) | 0 | 2 |
 | [Camera2D](classes/Camera2D.md) | 0 | 2 |
 | [GraphNode](classes/GraphNode.md) | 0 | 2 |
+| [ImageTextureLayered](classes/ImageTextureLayered.md) | 0 | 2 |
 | [InputEventMouse](classes/InputEventMouse.md) | 0 | 2 |
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
 | [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
@@ -103,7 +104,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 19 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 8 |
-| Trigger: first layered/array texture storage, upload and sampling slice in the 2D renderer (ADR 0028). | 7 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |
 | Trigger: first type-specific OS, clock, diagnostics, logging, capture or tray-service integration beyond the existing SDL host, with target capability reporting (ADRs 0015, 0016 and 0021). | 6 |
 | Trigger: first 2D light and occlusion renderer slice (ADR 0028). | 5 |
@@ -115,6 +115,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | Navigation2D: trigger is the next operation-specific navigation link, agent/obstacle avoidance, source-geometry bake or typed query slice beyond the authored map/region backend (ADRs 0052/0097). | 2 |
 | Trigger: actual GPU particle simulation, process-material shader/data integration, native storage and compute/collision/attractor ownership under ADR 0028. CPUParticles baseline does not provide GPU compute or process-material conversion. | 2 |
 | Trigger: complete typed backend registration/factory and world-scoped implementation dispatch, shared RID lifecycle, callbacks, direct state/query result construction and CPU/GPU scene integration (ADRs 0054 and 0103); current facade is static/sealed, step/direct-space queries and fresh body/Area attachments dispatch through retained built-in owners; joint/other server operations and public extension contexts remain open. | 2 |
+| Trigger: compressed array-file parsing/decoding or direct compressed native upload, source format/mipmap ownership and reproducible sampling over the executable TextureArray pipeline (ADR 0028). | 2 |
 | Trigger: first 2D light/mesh texture renderer integration (ADR 0028). | 2 |
 | Trigger: first compressed-texture import, decoder and verified GPU sampling slice (ADRs 0028 and 0039). | 2 |
 | Trigger: first missing 2D material, canvas-modulation and shader-global renderer integration (ADR 0028). | 2 |

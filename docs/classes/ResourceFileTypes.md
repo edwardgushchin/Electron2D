@@ -6,6 +6,8 @@ Last updated: 2026-10-10
 
 **Inherits:** None (static registry or enum).
 
+[Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
+
 ## Executable mesh skin integration
 
 ArrayMesh exact file factory and Material resource-array registration now support bounded geometry/skin bytes with separate material graphs and fresh-process executable mesh consumers.

@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -90,3 +90,70 @@ Fragment programs may consume raw float4 at location two, alongside tint locatio
 Reserved SCREEN_TEXTURE and optional float2 SCREEN_PIXEL_SIZE now share the validated SPIR-V path with TEXTURE/TIME. They are excluded from material/default parameter lists and value migration; the renderer supplies the screen image and inverse current target dimensions. HLSL/GLSL fixtures exercise actual screen copying and group LOD. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 CreateFromSPIRV/SetSPIRV resolve packaged native reflection before renderer startup; the cold factory in CPUParticlesTests then feeds its custom-data shader to a real GPU host. No active graphics device is required to validate stored bytecode. Platform package/library availability remains required.
+
+## Array sampler and RID operations
+
+See [array resources](../components/texture-arrays.md) for copied storage, ownership, verification and format dependencies. Sampled shape changes clear incompatible overrides/defaults.
+
+| Member | Kind | Summary |
+| --- | --- | --- |
+| [`public Electron2D.TextureLayered GetDefaultLayeredTextureParameter(System.String name, System.Int32 index = 0)`](#member-5c554c6e1090) | method | Gets the borrowed default image-array resource. |
+| [`public System.Void SetDefaultLayeredTextureParameter(System.String name, Electron2D.TextureLayered texture, System.Int32 index = 0)`](#member-f5d8c3215912) | method | Sets a borrowed default resource for an image-array sampler. |
+
+<a id="member-5c554c6e1090"></a>
+### `GetDefaultLayeredTextureParameter(System.String, System.Int32)`
+
+Kind: `method`
+
+```csharp
+public Electron2D.TextureLayered GetDefaultLayeredTextureParameter(System.String name, System.Int32 index = 0)
+```
+
+#### Summary
+
+Gets the borrowed default image-array resource.
+
+#### Returns
+
+The assigned resource, or null.
+
+#### Parameters
+
+- `name`: The exact reflected array sampler name.
+- `index`: Zero; descriptor binding arrays are not integrated.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The parameter is not a layered sampler.
+- `T:System.ArgumentOutOfRangeException`: The index is not zero.
+- `T:System.ObjectDisposedException`: The shader is disposed.
+
+
+<a id="member-f5d8c3215912"></a>
+### `SetDefaultLayeredTextureParameter(System.String, Electron2D.TextureLayered, System.Int32)`
+
+Kind: `method`
+
+```csharp
+public System.Void SetDefaultLayeredTextureParameter(System.String name, Electron2D.TextureLayered texture, System.Int32 index = 0)
+```
+
+#### Summary
+
+Sets a borrowed default resource for an image-array sampler.
+
+#### Remarks
+
+Material overrides take precedence. Ownership remains with the caller; Changed follows mutation.
+
+#### Parameters
+
+- `name`: The exact reflected array sampler name.
+- `texture`: A live array resource, or null to clear its default.
+- `index`: Zero; descriptor binding arrays are not integrated.
+
+#### Exceptions
+
+- `T:System.ArgumentException`: The parameter is not a layered sampler.
+- `T:System.ArgumentOutOfRangeException`: The index is not zero.
+- `T:System.ObjectDisposedException`: The shader or resource is disposed.
