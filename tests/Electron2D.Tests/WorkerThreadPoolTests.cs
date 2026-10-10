@@ -111,6 +111,11 @@ internal static class WorkerThreadPoolTests
     }
     private static void PublicSceneWorkflow()
     {
+        Check(!WorkerThreadPool.Service.HasRuntime, "Named service and internal isolated pools do not start the public pool.");
+        Reject<ArgumentNullException>(() => WorkerThreadPool.AddTask(null!)); Reject<ArgumentNullException>(() => WorkerThreadPool.AddTask(static () => { }, description: null!));
+        Reject<ArgumentNullException>(() => WorkerThreadPool.AddGroupTask(null!, 0)); Reject<ArgumentOutOfRangeException>(() => WorkerThreadPool.AddGroupTask(static _ => { }, -1)); Reject<ArgumentOutOfRangeException>(() => WorkerThreadPool.AddGroupTask(static _ => { }, 1, 0)); Reject<ArgumentNullException>(() => WorkerThreadPool.AddGroupTask(static _ => { }, 1, description: null!));
+        Reject<ArgumentException>(() => WorkerThreadPool.IsTaskCompleted(-1)); Reject<ArgumentException>(() => WorkerThreadPool.IsGroupTaskCompleted(1)); Reject<ArgumentException>(() => WorkerThreadPool.GetGroupProcessedElementCount(1)); Reject<ArgumentException>(() => WorkerThreadPool.WaitForTaskCompletion(1)); Reject<ArgumentException>(() => WorkerThreadPool.WaitForGroupTaskCompletion(1));
+        Check(!WorkerThreadPool.Service.HasRuntime, "Rejected submissions and missing-ID queries preserve startup settings and do not start workers.");
         ProjectSettings.Set(ProjectSettings.WorkerPoolMaxThreads, 2); ProjectSettings.Set(ProjectSettings.WorkerPoolLowPriorityThreadRatio, 1); ProjectSettings.Set(ProjectSettings.WorkerPoolMaxPendingTasks, 64);
         Check(WorkerThreadPool.GetCallerTaskID() == -1 && WorkerThreadPool.GetCallerGroupID() == -1, "Unstarted caller queries.");
         Check(ReferenceEquals(Engine.GetSingleton<WorkerThreadPool>(nameof(WorkerThreadPool)), WorkerThreadPool.Service), "Retained named service identity.");

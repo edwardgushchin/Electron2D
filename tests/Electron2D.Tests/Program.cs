@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_TRANSFORMS") is { } transformBackend) { PhysicsBodyTransformTests.Run(transformBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is { } ownershipBackend)
 {
     if (ownershipBackend == "no-device-child") PhysicsBackendOwnershipTests.RunNoDeviceChild();
@@ -843,6 +844,7 @@ NavigationQueryTests.Run();
 NavigationAgentTests.Run();
 NavigationAvoidanceTests.Run();
 WorldTests.Run();
+PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);
 RenderingProgramTests.Run();
 MeshSkinTests.Run();
 MultiMeshTests.Run();

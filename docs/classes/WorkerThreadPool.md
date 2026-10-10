@@ -10,7 +10,7 @@ Last updated: 2026-10-10
 
 ## Description
 
-Process-owned typed background jobs under [ADR 0104](../decisions/jobs.md#adr-0104). Public operations are static; Engine.GetSingleton<WorkerThreadPool>(nameof(WorkerThreadPool)) returns its borrowed retained identity for typed inspection. There is no public constructor or Instance accessor. The first submission prepares threads and bounded storage from typed ProjectSettings worker settings. Queries outside callbacks return -1 without starting workers.
+Process-owned typed background jobs under [ADR 0104](../decisions/jobs.md#adr-0104). Public operations are static; Engine.GetSingleton<WorkerThreadPool>(nameof(WorkerThreadPool)) returns its borrowed retained identity for typed inspection. There is no public constructor or Instance accessor. The first validated submission prepares threads and bounded storage from typed ProjectSettings worker settings. Queries outside callbacks return -1 without starting workers.
 
 Callbacks borrow their state until completion is waited. Synchronize shared state or give each worker independent data. Scene/render ownership remains in force: publish mutations with SceneTree.Defer. Every submitted ID requires a wait; completion queries do not release it. Concurrent waiters registered before retirement finish safely; after the final waiter, all access to that ID rejects with ArgumentException. Waiting rethrows callback failure after cleanup.
 
@@ -48,3 +48,5 @@ The example owns its arrays and delegates; their construction is outside a hot i
 ## Verification limits
 
 [Worker execution](../components/worker-pool.md) records managed edge cases, warmed zero-byte sender/dispatch checks and actual Linux Wayland GPU/compatibility route pixels and cleanup. Browser submission requires a threaded bootstrap and rejects explicitly. Foreign profiles, AOT, native/OS allocations and human acceptance remain unverified. Threaded ResourceLoader and asynchronous bake consumers retain separate ownership/progress/cancellation dependencies.
+
+Invalid submission arguments are checked before lazy startup. Completion/progress/wait calls with no pending runtime reject their ID without starting workers or freezing startup settings. The cold public API test checks both boundaries before a later valid configured submission.

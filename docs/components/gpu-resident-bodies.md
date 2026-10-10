@@ -1,8 +1,15 @@
 # Resident GPU physics stages
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Implemented boundary
+
+The public [caller-owned pose batch](gpu-demand-publication.md#explicit-pose-batches)
+now selects 16-byte position/basis records without downloading full body state.
+Its gather shares validated handles, pending-command/mass preparation and terminal
+failure policy with the existing 64-byte snapshot read. Both formats use integer
+result storage to preserve flag/mode bits; requested duplicates can exceed resident
+body population without adding physical objects.
 
 [GPUPhysicsBodyStore](../classes/GPUPhysicsBodyStore.md) is the first independent
 device-state component under [ADR 0054](../decisions/physics-backends.md#adr-0054). It creates

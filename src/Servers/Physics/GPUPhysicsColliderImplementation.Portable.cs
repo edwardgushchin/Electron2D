@@ -15,7 +15,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
     {
         GPU.SetPortableMotion(GPUHandle, pose, linear, angular, sleepTime, canSleep, sleeping, surface, surfaceAngular, force, torque, gravity, linearDamp, angularDamp, fieldsInitialized);
         _gpuSurfaceLinear = surface; _gpuSurfaceAngular = surfaceAngular; _gpuConstantForce = force; _gpuConstantTorque = torque;
-        GPUStateValid = false;
+        GPUStateValid = false; _gpuPoseValid = false;
     }
     internal GPUPhysicsBodyStore.ShapeHandle PortableGPUShape(int slot)
     {

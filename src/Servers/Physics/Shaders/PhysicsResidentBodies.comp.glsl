@@ -4,13 +4,12 @@
 layout(local_size_x = 64) in;
 
 struct Command { uvec4 header; ResidentBody body; vec4 center; vec4 impulse; vec4 transientForce; vec4 target; };
-struct Snapshot { vec4 pose; vec4 velocity; vec4 fields; float clock; uint flags; uvec2 padding; };
 layout(std430, set = 0, binding = 0) readonly buffer Commands { Command commands[]; };
 layout(std430, set = 0, binding = 1) readonly buffer Requests { uvec4 requests[]; };
 layout(std430, set = 0, binding = 2) readonly buffer Corrections { vec4 corrections[]; };
 layout(std430, set = 1, binding = 0) buffer Bodies { ResidentBody bodies[]; };
 layout(std430, set = 1, binding = 1) buffer Status { uint status; };
-layout(std430, set = 1, binding = 2) buffer Results { Snapshot results[]; };
+layout(std430, set = 1, binding = 2) buffer Results { uint results[]; };
 layout(std430,set=1,binding=3) buffer Centers { vec2 centers[]; };
 layout(std430,set=1,binding=4) buffer TransientForces { vec4 transientForces[]; };
 layout(std430,set=1,binding=5) buffer Targets { vec4 targets[]; };
@@ -20,6 +19,7 @@ layout(std140, set = 2, binding = 0) uniform Settings { vec4 step; uvec4 control
 bool finite4(vec4 v) { return !any(isnan(v)) && !any(isinf(v)); }
 vec2 rotate(vec2 q,vec2 p) {return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
 void fail(uint value) { atomicOr(status, value); }
+void put(uint at,uvec4 value){results[at]=value.x;results[at+1u]=value.y;results[at+2u]=value.z;results[at+3u]=value.w;}
 
 void main()
 {
@@ -158,6 +158,11 @@ void main()
         if (request.x >= control.z) { fail(1u); return; }
         ResidentBody b = bodies[request.x];
         if (b.flags.w == 0u || b.flags.x != request.y) { fail(1u); return; }
-        results[i] = Snapshot(b.pose, vec4(b.velocity.xyz+b.surface.xyz,0), fields[request.x], b.velocity.w, b.flags.z, uvec2(b.flags.y,0));
+        if(control.x==5u)put(i*4u,floatBitsToUint(b.pose));
+        else
+        {
+            uint at=i*16u;put(at,floatBitsToUint(b.pose));put(at+4u,floatBitsToUint(vec4(b.velocity.xyz+b.surface.xyz,0)));
+            put(at+8u,floatBitsToUint(fields[request.x]));put(at+12u,uvec4(floatBitsToUint(b.velocity.w),b.flags.z,b.flags.y,0));
+        }
     }
 }

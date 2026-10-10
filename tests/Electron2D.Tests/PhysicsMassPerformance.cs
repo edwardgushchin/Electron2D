@@ -61,6 +61,7 @@ internal static class PhysicsMassPerformance
         internal double MaxSpeed, MaxEscape, Energy, InitialEnergy, MaxPenetration;
         internal int OverlappingPairs;
         internal double[] FrameTimes = new double[16384], PublishTimes;
+        internal readonly Transform[] Transforms;
         internal int Frames, PublishCount;
         internal long FrameOwner, FrameAll, FrameStart;
         internal long FrameUploadBytes, FrameReadbackBytes, FrameSubmissions, FrameUniformBytes;
@@ -71,7 +72,7 @@ internal static class PhysicsMassPerformance
         internal Pile(PhysicsServer.Backend backend, int count, int warmup, int samples)
         {
             Backend = backend; Warmup = warmup; Samples = samples;
-            Bodies = new RID[count]; _steps = new double[samples]; _waits = new double[samples];
+            Bodies = new RID[count]; Transforms = new Transform[count]; _steps = new double[samples]; _waits = new double[samples];
             _up = new long[samples]; _down = new long[samples]; _submissions = new long[samples]; PublishTimes = new double[samples];
             var columns = (int)Math.Ceiling(Math.Sqrt(count * 1.5)); var rows = (count + columns - 1) / columns;
             Width = (columns + 1) * 8; Height = (rows - 1) * 7 + 16;
@@ -310,9 +311,10 @@ internal static class PhysicsMassPerformance
         {
             Check(Math.Abs(delta - Delta) < 1e-9, "Window retains the requested fixed physical interval");
             pile.Step(); var start = Stopwatch.GetTimestamp();
+            PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
             for (var i = 0; i < pile.Count; i++)
             {
-                var position = PhysicsServer.BodyGetTransform(pile.Bodies[i]).Origin; var data = pixels.AsSpan(i * 12, 12);
+                var position = pile.Transforms[i].Origin; var data = pixels.AsSpan(i * 12, 12);
                 data[0] = data[5] = Pile.Radius * scale; data[3] = position.X * scale; data[7] = position.Y * scale;
                 data[8] = i % 3 == 0 ? .94f : .91f; data[9] = i % 3 == 0 ? .62f : .48f; data[10] = i % 3 == 0 ? .45f : .68f; data[11] = 1;
             }

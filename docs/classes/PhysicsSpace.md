@@ -8,6 +8,8 @@ Last updated: 2026-10-10
 
 [GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
 
+`ReadBodyTransforms` validates the complete body sequence and retains staging, selected handles, input indices and compact pose scratch. CPU and scene/static projection use the scalar path; GPU raw dynamic projection reads one 16-byte pose per request. Output commits only after successful reads; retained body references are cleared in `finally`. Empty requests still run the common space guards. Source: [PhysicsSpace.BodyTransforms.cs](../../src/Servers/Physics/PhysicsSpace.BodyTransforms.cs).
+
 ## Description and internal flow
 
 One owner-thread world shared by scene bodies/Areas/joints and caller-owned colliders. It retains one selected [PhysicsWorldBackend](PhysicsWorldBackend.md), which owns the native CPU world/workers or the resident GPU store and full interval dispatch. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
@@ -74,11 +76,9 @@ capture. Managed bindings/views are released; the failed space reclaims raw stor
 in bulk. Queries and further simulation remain rejected. See the
 [GPU island graph failure contract](../components/gpu-physics.md#gpu-contact-driven-island-graph-2026-10-08).
 
-
 ## Joint correction default
 
 ConstraintDefaultBias captures ProjectSettings.Physics2DDefaultConstraintBias with active feature overrides at construction (default 0.2). SetConstraintDefaultBias validates a finite [0,1] value under the normal owner/phase/error guard, then updates attached zero-bias joints and wakes their connected bodies. Explicit nonzero joint bias is preserved. The typed PhysicsServer accessors project this value. It governs joint recovery, not the separately pending contact-bias setting.
-
 
 ## Complete convex motion geometry
 
@@ -88,7 +88,6 @@ origins inside the complete contour or its swept region before selecting pieces.
 The fixture tag borrows the contour weakly; shared resource collision scratch stays
 allocation-free after warmup. PhysicsMotionTests covers both polygon roles and
 both directed-containment directions. See [body-motion verification](../components/gpu-resident-motion-queries.md).
-
 
 ## Continuous collision policy
 
@@ -130,7 +129,6 @@ up to 32 deepest accepted contact planes and applies normalized weighted project
 over four attempts; compound convex fixtures contribute their full contour once.
 The fixed stack buffer avoids managed allocation. [Collision priority](../components/physics-contact-policy.md#collision-priority)
 retains one-way/exclusion rules, query identity and motion/reporting semantics.
-
 
 ObjectTreeChanged publishes scene monitor visibility changes for external Node bindings independently of physical body lifetime. Raw Area callbacks retain physical pair semantics. See [object associations](../components/physics-object-bindings.md).
 

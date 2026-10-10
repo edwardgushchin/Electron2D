@@ -31,6 +31,8 @@ Last updated: 2026-10-10
 [body gather](../../src/Servers/Physics/Shaders/PhysicsResidentGather.comp.glsl)
 **Component:** [Resident GPU body state](../components/gpu-resident-bodies.md)
 
+`ReadPoses(ReadOnlySpan<BodyHandle>, Span<System.Numerics.Vector4>)` selects only position and cosine/sine basis. It validates every handle and output capacity, flushes pending edits/masses, gathers the requested sequence, then downloads 16 bytes per request plus eight status bytes with one fence. Duplicate requests may exceed resident population; capacity grows for the request count without adding physical bodies. The existing snapshot read retains its exact 64-byte ABI; integer result storage preserves mode/flag bits. A submission/read failure retains the terminal store policy.
+
 ## Responsibility
 
 Own authoritative device pose/velocity state without creating a Box2D world or
@@ -159,7 +161,6 @@ Local centers use a separate 8-byte device record and no hot full-state mirror.
 
 GPUPhysicsSleepStoreTests verifies contact/joint components, scoped wake after support removal, generation reuse, ordered commands, body/world policy and zero-allocation active sleep cycles. Selected Snapshot now includes Sleeping, CanSleep and SleepTime; the current 64-byte record also includes resolved fields. PhysicsSpace consumes it before public sleep/contact callbacks.
 
-
 GPUPhysicsJointPolicyTests checks internal per-joint bias, vector correction/force
 caps, inverse-mass pin softness, shared physical/correction budgets, original
 substep budgeting through CCD, rejected edits and warmed allocation. The independent GPU public-world adapter now executes; full policy-family conformance remains open; see [joint policy verification](../components/gpu-resident-joints.md#policy-verification-2026-10-09).
@@ -192,7 +193,6 @@ ReportDeviceCapacityBytes/ReportTransferCapacityBytes expose retained report sto
 contact mirror is retained; [publication storage and traffic](../components/gpu-resident-reports.md)
 are separate from integration/solver benchmarks. GPUPhysicsReportTests checks the
 shared public momentum/reporting contract and the internal publication lifecycle.
-
 
 ## Continuous collision policy
 

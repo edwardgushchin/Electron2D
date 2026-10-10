@@ -284,6 +284,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         Submit(0, default, bodies, results);
     }
 
+    internal void ReadPoses(ReadOnlySpan<BodyHandle> bodies, Span<Float4> results)
+    {
+        EnsureAccess();
+        if (results.Length < bodies.Length) throw new ArgumentException("The pose destination is too small.", nameof(results));
+        foreach (var body in bodies) Validate(body);
+        if (bodies.IsEmpty) return;
+        PrepareMasses(); Reserve(Math.Max(_highWater, bodies.Length));
+        Submit(0, default, bodies, default, poses: results[..bodies.Length]);
+    }
+
     private ref Command Edit(int index)
     {
         ref var slot = ref _slots[index];
@@ -366,7 +376,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         finally { bodies?.Dispose(); centers?.Dispose(); transientForces?.Dispose(); targets?.Dispose(); resolvedFields?.Dispose(); commands?.Dispose(); requests?.Dispose(); results?.Dispose(); status?.Dispose(); upload?.Dispose(); download?.Dispose(); }
     }
 
-    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false)
+    private void Submit(float delta, Vector2 gravity, ReadOnlySpan<BodyHandle> requests, Span<Snapshot> results, uint motionStage = 1, bool positionCorrections = false, float? sleepDelta = null, float? dampingDelta = null, bool beginTick = false, bool endTick = false, bool resolvedFields = false, Span<Float4> poses = default)
     {
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident body commands");
@@ -374,7 +384,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         {
             var commandBytes = checked((uint)(_pendingCount * sizeof(Command)));
             var requestBytes = checked((uint)(requests.Length * sizeof(BodyHandle)));
-            var outputBytes = checked((uint)(requests.Length * sizeof(Snapshot)));
+            var poseOnly = !poses.IsEmpty;
+            var outputBytes = checked((uint)(requests.Length * (poseOnly ? sizeof(Float4) : sizeof(Snapshot))));
             var publishStatistics = motionStage == 4 && (sleepDelta ?? delta) > 0 && endTick;
             var headerBytes = publishStatistics ? 16u : 8u;
             var mapped = SDL.MapGPUTransferBuffer(Device, _upload!.DangerousGetHandle(), false);
@@ -396,7 +407,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
             Dispatch(command, ref settings, 0, _pendingCount);
             if (delta > 0 || endTick) Dispatch(command, ref settings, motionStage, _highWater);
             if (motionStage == 4 && (sleepDelta ?? delta) > 0) FinishSleep(command, sleepDelta ?? delta);
-            Dispatch(command, ref settings, 2, requests.Length);
+            Dispatch(command, ref settings, poseOnly ? 5u : 2u, requests.Length);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident results");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = headerBytes }, new() { TransferBuffer = _download!.DangerousGetHandle() });
@@ -419,7 +430,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
                     PublishedActiveBodyCount = checked((int)((uint*)mapped)[2]);
                     PublishedIslandCount = checked((int)((uint*)mapped)[3]);
                 }
-                fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + headerBytes, destination, outputBytes, outputBytes);
+                if (poseOnly)
+                {
+                    fixed (Float4* destination = poses) System.Buffer.MemoryCopy((byte*)mapped + headerBytes, destination, outputBytes, outputBytes);
+                }
+                else
+                {
+                    fixed (Snapshot* destination = results) System.Buffer.MemoryCopy((byte*)mapped + headerBytes, destination, outputBytes, outputBytes);
+                }
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _download.DangerousGetHandle()); }
             var spatialEdit = delta > 0;

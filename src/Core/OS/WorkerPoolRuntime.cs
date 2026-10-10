@@ -91,11 +91,16 @@ internal sealed class WorkerPoolRuntime : IDisposable
     internal int PendingCount { get { lock (_gate) return _jobs.Count; } }
     internal int WaitingCount(long id, bool group) { lock (_gate) return Find(id, group).Waiters; }
     internal long AddTask(Action action, bool highPriority = false, string description = "") => Add(action, null, 0, 1, highPriority, description);
-    internal long AddGroup(Action<int> action, int elements, int tasksNeeded = -1, bool highPriority = false, string description = "")
+    internal static void ValidateGroupArguments(Action<int> action, int elements, int tasksNeeded, string description)
     {
         ArgumentNullException.ThrowIfNull(action);
         ArgumentOutOfRangeException.ThrowIfNegative(elements);
         if (elements != 0 && tasksNeeded == 0) throw new ArgumentOutOfRangeException(nameof(tasksNeeded));
+        ArgumentNullException.ThrowIfNull(description);
+    }
+    internal long AddGroup(Action<int> action, int elements, int tasksNeeded = -1, bool highPriority = false, string description = "")
+    {
+        ValidateGroupArguments(action, elements, tasksNeeded, description);
         return Add(null, action, elements, elements == 0 ? 0 : Math.Min(elements, tasksNeeded < 0 ? _workers.Length : Math.Min(tasksNeeded, _workers.Length)), highPriority, description);
     }
     private long Add(Action? action, Action<int>? groupAction, int elements, int runners, bool high, string description)

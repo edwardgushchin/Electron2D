@@ -113498,6 +113498,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyGetTransform(Electron2D.RID,System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Span\u003CElectron2D.Transform\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyGetTransform",
+    "signature": "public static System.Void BodyGetTransform(Electron2D.RID space, System.ReadOnlySpan\u003CElectron2D.RID\u003E bodies, System.Span\u003CElectron2D.Transform\u003E transforms)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "bodies",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "transforms",
+        "type": "System.Span\u003CElectron2D.Transform\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyIsOmittingForceIntegration(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
