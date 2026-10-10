@@ -11,6 +11,8 @@ dotnet run --project examples/PhysicsNetwork -c Release -- --check --output bin/
 
 The check uses ephemeral loopback ports and writes `server.json`, `gpu.json`,
 `late.json` and their logs. It runs real ENet connections across three processes.
+The late client starts after the authority confirms tick 90, so startup speed cannot
+turn this into simultaneous admission.
 Application packets incur 20–99 ms delay, deterministic loss, duplication and
 reordering before transport submission. The two CPU processes have display variables
 removed and an unavailable Vulkan driver path; the server checks that it created

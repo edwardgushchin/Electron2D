@@ -17,9 +17,10 @@ internal static class ProcessCheck
             var server = Start("server", 0, "cpu", headless: true); children.Add(server);
             var ready = await server.StandardOutput.ReadLineAsync().WaitAsync(TimeSpan.FromSeconds(15));
             if (ready is null || !ready.StartsWith("LISTENING ")) throw new InvalidOperationException("Server did not report its listening port: " + ready);
-            var port = int.Parse(ready[10..]); drains.Add(Drain(server, "server", ready));
+            var lateJoinReady = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+            var port = int.Parse(ready[10..]); drains.Add(Drain(server, "server", ready, lateJoinReady));
             var gpu = Start("gpu", port, "gpu", headless: false); children.Add(gpu); drains.Add(Drain(gpu, "gpu", ""));
-            await Task.Delay(2500);
+            await lateJoinReady.Task.WaitAsync(TimeSpan.FromSeconds(30));
             var late = Start("late", port, "cpu", headless: true); children.Add(late); drains.Add(Drain(late, "late", ""));
             foreach (var child in children) await child.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(40));
             await Task.WhenAll(drains);
@@ -49,7 +50,7 @@ internal static class ProcessCheck
                     Check(Math.Abs(a.X - b.X) < .002 && Math.Abs(a.Y - b.Y) < .002 && Math.Abs(a.VX - b.VX) < .002 && Math.Abs(a.VY - b.VY) < .002 && a.Sleeping == b.Sleeping, "Final authoritative correction converges");
                 }
             }
-            Check(Read("gpu").Backend == "GPU" && Read("late").JoinTick > 60, "Independent GPU client and real late join");
+            Check(Read("gpu").Backend == "GPU" && Read("gpu").JoinTick < Read("late").JoinTick && Read("late").JoinTick >= 90, "Independent GPU client and real late join");
             Console.WriteLine("PASS: separate CPU authority, GPU prediction, late CPU client, impaired packets, lifecycle, ownership, event confirmation and final convergence."); return 0;
         }
         catch (Exception error) { Console.Error.WriteLine(error); return 1; }
@@ -68,10 +69,16 @@ internal static class ProcessCheck
             }
             return Process.Start(info) ?? throw new InvalidOperationException("Could not start child process.");
         }
-        async Task Drain(Process process, string role, string first)
+        async Task Drain(Process process, string role, string first, TaskCompletionSource? lateJoinReady = null)
         {
-            var stdout = process.StandardOutput.ReadToEndAsync(); var stderr = process.StandardError.ReadToEndAsync();
-            await Task.WhenAll(stdout, stderr); await File.WriteAllTextAsync(System.IO.Path.Combine(output, role + ".log"), first + "\n" + stdout.Result + "\n" + stderr.Result);
+            var stdout = new System.Text.StringBuilder(first).AppendLine(); var stderr = process.StandardError.ReadToEndAsync();
+            while (await process.StandardOutput.ReadLineAsync() is { } line)
+            {
+                stdout.AppendLine(line);
+                if (line.StartsWith("LATE_JOIN_READY ") && ulong.TryParse(line.AsSpan(16), out var tick) && tick >= 90) lateJoinReady?.TrySetResult();
+            }
+            lateJoinReady?.TrySetException(new IOException("Authority exited before the late-join tick."));
+            await File.WriteAllTextAsync(System.IO.Path.Combine(output, role + ".log"), stdout + "\n" + await stderr);
         }
         SessionReport Read(string name) => JsonSerializer.Deserialize(File.ReadAllText(System.IO.Path.Combine(output, name + ".json")), ReportJSON.Default.SessionReport)!;
     }

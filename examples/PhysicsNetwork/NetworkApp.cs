@@ -30,7 +30,16 @@ internal static class NetworkApp
             var reportPath = Value("--report", authority ? "physics-server.json" : "physics-client.json");
             using var session = new NetworkSession(authority, backend, port, token, ticks, args.Contains("--impaired"));
             if (authority) { Console.WriteLine($"LISTENING {session.Port}"); Console.Out.Flush(); }
-            while (!session.Done) { session.Poll(); Thread.Sleep(1); }
+            var announcedLateJoin = false;
+            while (!session.Done)
+            {
+                session.Poll();
+                if (authority && !announcedLateJoin && session.Simulation.Tick >= 90)
+                {
+                    Console.WriteLine($"LATE_JOIN_READY {session.Simulation.Tick}"); Console.Out.Flush(); announcedLateJoin = true;
+                }
+                Thread.Sleep(1);
+            }
             var report = session.Report();
             if (authority && backend == PhysicsServer.Backend.CPU && (DisplayServer.IsAvailable || RenderingServer.IsAvailable)) throw new InvalidOperationException("Dedicated CPU authority created a graphics service.");
             File.WriteAllText(reportPath, JsonSerializer.Serialize(report, ReportJSON.Default.SessionReport));

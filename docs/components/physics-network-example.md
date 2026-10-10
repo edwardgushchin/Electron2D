@@ -68,7 +68,9 @@ there is no window or rendered visual acceptance in this example.
 
 `--check` first validates input wire truncation, finite/range/bool/generation guards.
 It then starts a no-GPU CPU server, an independent GPU client, and a later no-GPU CPU
-client. Prepared queues delay application packets by 20–99 ms, drop each seventh,
+client. The launcher waits for the authority's tick-90 signal before starting the
+late client; admission order does not depend on process startup time. Prepared queues
+delay application packets by 20–99 ms, drop each seventh,
 duplicate each eleventh and deliver by scheduled due time. ENet still performs real
 cross-process UDP I/O; this is application delivery impairment, not an operating-system
 or routed Internet loss test. The reports assert nonzero actual impairment counts,
@@ -82,7 +84,7 @@ correction. Two ordinary players, a pin pair, an Area and a transient/recreated 
 exercise contacts, joints, topology and authority changes. At tick 300 the server
 asserts that the recreated crate is sleeping, then wakes it with an impulse; clients
 must observe both sleep and wake transitions. The latter
-client must join after tick 60. A successful process exit alone is insufficient:
+client must join at or after tick 90 and after the GPU client. A successful process exit alone is insufficient:
 the parent reads all three reports and compares their actual world contents.
 
 Allocation measurements wrap actual SceneTree steps. Tick 300 onward measures
