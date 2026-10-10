@@ -32,6 +32,10 @@ GPU-world selection/binding now executes through the shared adapter.
 
 [Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes; full conformance remains open.
 
+## Square atlas tile integration
+
+[Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).
+
 ## Physical skeletal integration
 
 [PhysicalBone](../classes/PhysicalBone.md) adds real skeletal rigid bodies with inherited forces, freeze, contacts and authored joints. Static followers use effective zero collision filters while preserving configured filters; the idle modification consumer publishes solved poses to the rig.
@@ -55,7 +59,7 @@ Physics owns the executable 2D rigid-body, collision-shape, surface-material and
 | [Scene physics bodies](../components/physics-bodies.md) | [`CollisionObject`](../classes/CollisionObject.md), [`PhysicsBody`](../classes/PhysicsBody.md), [`KinematicCollision`](../classes/KinematicCollision.md), [`CharacterBody`](../classes/CharacterBody.md), [`CharacterMotionMode`](../classes/CharacterMotionMode.md), [`CharacterPlatformOnLeave`](../classes/CharacterPlatformOnLeave.md), [`RigidBody`](../classes/RigidBody.md), [`StaticBody`](../classes/StaticBody.md), [`AnimatableBody`](../classes/AnimatableBody.md), [`PhysicsMaterial`](../classes/PhysicsMaterial.md) | Dynamic/static/kinematic motion, grounded/floating character sliding, platform carry, body sweeps, contacts, forces, fields and filtering executable; wider body/server contracts incomplete |
 | [Scene physics joints](../components/physics-joints.md) | [`Joint`](../classes/Joint.md), [`PinJoint`](../classes/PinJoint.md), [`GrooveJoint`](../classes/GrooveJoint.md), [`DampedSpringJoint`](../classes/DampedSpringJoint.md) | Shared scene/server joint RIDs, revolute/guide/spring kernels, collision suppression, angular limits and motor executable; positional bias/correction caps and pin softness execute; retained debug drawing executes |
 | [Physics server and direct queries](../components/physics-queries.md) | [`RID`](../classes/RID.md), [`PhysicsServer`](../classes/PhysicsServer.md), [`World`](../classes/World.md), [`PhysicsDirectSpaceState`](../classes/PhysicsDirectSpaceState.md), [`RayCast`](../classes/RayCast.md), [`ShapeCast`](../classes/ShapeCast.md), typed ray/point/shape/motion parameters and results | Shared scene/server space identity, resource lifecycle, direct and body motion queries, cached scene ray/shape casts executable; canvas/navigation RIDs execute; collider canvas filtering and wider server methods remain incomplete |
-| [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio routing and logical shape events execute; virtual tile-body payloads remain incomplete |
+| [Physics areas](../components/physics-areas.md) | [`Area`](../classes/Area.md), [`Area.SpaceOverride`](../classes/Area.SpaceOverride.md) | Directional monitoring, snapshots, object events and priority gravity/damping fields executable; audio routing and logical shape events execute; tile-layer object and shape payloads execute through the shared association contract |
 
 ## Completion boundary
 
@@ -279,7 +283,7 @@ CPU scalar/SIMD and GPU solvers now expose total normal and signed tangent impul
 The outer frame combines internal kinematic intervals, suppresses stale sleeping
 impulses, and applies the same bounded deepest-point selection to direct state and
 RigidBody monitoring. PhysicsContactImpulseTests checks momentum and allocation;
-virtual tile identities remain separate from this completed reporting behavior.
+square-atlas tile identities now execute through the shared association contract and TileMapLayerTests.
 
 Independent [resident sleep](../components/gpu-resident-sleep.md) now builds dynamic contact/joint components, sleeps eligible groups, wakes old/current neighbours after edits, and skips a device-confirmed unchanged inactive world. It retains no CPU island/velocity mirror. Internal [GPU CCD](../components/gpu-resident-ccd.md) now executes per-body ray/full-shape sweeps and impact intervals. [Resident joint policies](../components/gpu-resident-joints.md#joint-solver-policies) execute internally. Public backend selection, independent GPU joint/CCD adapters and sleep/contact-event publication now execute. Full conformance and network replay remain open.
 
@@ -358,7 +362,7 @@ extensions, networking and whole-application performance requirements stay open.
 CollisionShape.DebugColor and SceneTree.DebugCollisionsHint to retained shape/cast/joint
 geometry and bounded contact-point snapshots on both renderers and explicit
 CPU/GPU worlds (ADR 0100). Contact color/limits are sampled typed settings; GPU
-reads only selected coordinates. Tile owners, extensions and networking remain open.
+reads only selected coordinates. Square-atlas tile owners now execute; full extensions, networking and broader physics acceptance remain open.
 
 GPU linear/angular setters now queue independent command components instead of
 reading the other velocity component back first. Scene/server and direct-state

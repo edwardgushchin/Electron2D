@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -141,7 +141,7 @@ The [CollisionObject owner registry](CollisionObject.md#createshapeowner) now su
 
 Monitoring scans deduplicate all native fixtures contributing the same collider RID/remote/local logical slot pair. Multiple manifold points or compound convex fixtures do not produce duplicate logical entries. Each nonzero step commits both pair and deduplicated scene-object snapshots before callbacks. Unchanged pairs do not replay. First entry of an object precedes its first shape entry. Ordinary last-pair departure emits object exit before that pair exit; scene-tree departure emits object exit then all retained shape exits without another step. Exits preserve the sampled indices, which may be stale after structural slot reindexing.
 
-Server-only body/Area colliders produce shape payloads with their RID and null scene object. They do not appear in GetOverlappingBodies/Areas object arrays. Server-created Areas default non-monitorable; PhysicsServer.AreaSetMonitorable enables detection. Scene object values preserve the typed declaring role, including Entity for bodies and Area for Areas. Virtual tile body payloads remain Partial until typed tile-body integration; the Area/Area branch is executable for current scene/server Area identities.
+Unassigned server-only body/Area colliders produce RID shape payloads without an object entry. Bodies associated with a live TileMapLayer report the layer and participate in deduplicated object arrays. Server-created Areas default non-monitorable; PhysicsServer.AreaSetMonitorable enables detection. Scene object values preserve the typed declaring role, including Entity for bodies and Area for Areas. Square-atlas tile bodies now preserve layer and per-body identities through the same events (TileMapLayerTests); the Area/Area branch is executable for current scene/server Area identities.
 
 A failed callback does not replay committed transitions and later queued object/shape transitions still run. Changes to Monitoring or Monitorable during an in/out callback throw InvalidOperationException before mutation; equal assignments are harmless. Apply changed policies after the callback returns. Body/Area removal clears retained pairs and queues exits; server collider free completes registry cleanup even if a departure handler throws. Steady and pre-warmed entry/exit callbacks allocate zero managed bytes in ShapePairEventTests on Linux/.NET 10.
 

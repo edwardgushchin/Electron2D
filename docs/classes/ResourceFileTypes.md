@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -122,3 +122,7 @@ The built-in shape registrations include ConvexPolygonShape, ConcavePolygonShape
 SeparationRayShape and WorldBoundaryShape beside the four primitive types. Their
 stored geometry and inherited CustomSolverBias use ordinary descriptors and exact
 concrete factories; PhysicsContactPolicyTests exercises all eight .e2dres round trips.
+
+## Tile integration
+
+Built-in factories now register TileSet, TileSetAtlasSource and TileMapLayer, plus TileSetSource resource arrays, for typed tile graph and scene reconstruction. See [the tile component](../components/tiles.md) for behavior and verification.

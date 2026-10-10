@@ -322,7 +322,7 @@ physical steps remained at zero on both backends. Log:
 `/tmp/e2d-publication-native-window.log`; contact pixels:
 `/tmp/e2d-publication-native-contacts.log`. Timing variation requires paired follow-up
 before claiming a window-FPS improvement. Large rendered worlds, native allocations,
-other platforms, extensions/tile owners and authoritative networking remain open.
+other platforms, extensions and complete authoritative networking acceptance remain open. Square-atlas tile owners now execute through TileMapLayerTests on both backends.
 
 A subsequent paired rerun used the unchanged 512-body window first on `d37b6f09`,
 then on this implementation, with other test/build processes stopped. Baseline

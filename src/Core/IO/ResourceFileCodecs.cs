@@ -119,6 +119,7 @@ internal static class ResourceFileCodecs
         Arrays<int>();
         Arrays<byte>();
         Arrays<Vector2>();
+        Arrays<Vector2i>();
         Arrays<Color>();
         Arrays<int[]>();
     }

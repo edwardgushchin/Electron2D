@@ -1,6 +1,6 @@
 # ResourceFileCodecs
 
-Last updated: 2026-10-05
+Last updated: 2026-10-10
 
 Internal/private runtime implementation. **Source:** [ResourceFileCodecs.cs](../../src/Core/IO/ResourceFileCodecs.cs).
 
@@ -15,3 +15,7 @@ See [resource-file component](../components/resource-files.md) for ownership, in
 ## Verification
 
 ResourceArchiveTests exercises the public producer/consumer boundary, graph and scene state, metadata, malformed rollback, exact file ownership and separate-process lifecycle. Foreign/AOT/rendered/editor/native-allocation and human gates remain separate.
+
+## Tile integration
+
+Vector2i arrays now have a typed portable codec used by atlas tile-coordinate storage; fresh-process tile scene loading exercises cloning and decoding. See [the tile component](../components/tiles.md) for behavior and verification.

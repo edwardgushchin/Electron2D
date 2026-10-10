@@ -9,6 +9,9 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILES_NATIVE") == "1") { TileMapLayerTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILES_FILE") is { } tileFile) { TileMapLayerTests.RunFile(tileFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILES") is { } tilesBackend) { TileMapLayerTests.Run(tilesBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_WAKE_STORAGE") == "1") { PhysicsServerJointTests.VerifyWakeStorage(PhysicsServer.Backend.CPU); PhysicsServerJointTests.VerifyWakeStorage(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PIPELINE") is { } pipelinePath) { PhysicsCollisionPriorityTests.MeasurePipeline(pipelinePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLISION_PRIORITY") == "1") { PhysicsCollisionPriorityTests.Run(); return; }
@@ -736,6 +739,7 @@ PhysicsHostPreparationTests.Run(false);
 PhysicsQueryTests.Run();
 PhysicsCanvasTests.Run();
 PhysicsObjectBindingTests.Run();
+TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
 PhysicsShapeQueryTests.Run();
 PhysicsMotionTests.Run();
 PhysicsCCDTests.Run();

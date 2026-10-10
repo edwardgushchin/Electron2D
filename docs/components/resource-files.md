@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 ## Executable mesh skin integration
 
@@ -92,3 +92,7 @@ geometry descriptors, including convex/concave polygons, separation rays and wor
 boundaries. Shape.CustomSolverBias is inherited storage. PhysicsContactPolicyTests
 checks same-process save/load alongside duplicate and in-place copy; this check alone
 does not establish fresh-process editor authoring acceptance.
+
+## Tile resource graphs
+
+TileSet/TileSetAtlasSource factories and source-owned TileData descriptors now preserve source identities, atlas regions, alternatives and physical layers. TileMapLayer stores authored cells and selected resources; body RIDs are rebuilt after tree entry. Vector2i arrays use a built-in value codec. TileMapLayerTests verifies portable resource graphs and fresh-process executable scenes; see [tile ownership and limits](tiles.md).

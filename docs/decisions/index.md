@@ -21,6 +21,7 @@ This file routes architecture work to bounded domain decision documents. Read th
 | Localization | [localization.md](localization.md) | 0007 |
 | Rendering | [rendering.md](rendering.md) | 0028, 0046, 0078, 0079, 0080, 0081, 0082, 0083 |
 | Typed 2D meshes and skeletal palettes | [mesh.md](mesh.md) | 0092 |
+| Tile resources and layers | [tiles.md](tiles.md) | 0101 |
 | Navigation | [navigation.md](navigation.md) | 0052, 0053, 0097 |
 | CPU and independent GPU physics | [physics.md](physics.md) | 0054, 0059, 0060, 0061, 0062, 0063, 0064, 0065, 0066, 0067, 0068, 0069, 0070, 0071, 0072, 0075 |
 | Physics contact correction | [physics-contacts.md](physics-contacts.md) | 0098 |

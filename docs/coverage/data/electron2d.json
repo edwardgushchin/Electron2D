@@ -9783,6 +9783,99 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TileData",
+    "kind": "type",
+    "declaringType": "Electron2D.TileData",
+    "name": "TileData",
+    "signature": "public sealed class Electron2D.TileData",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileMapLayer",
+    "kind": "type",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "TileMapLayer",
+    "signature": "public class Electron2D.TileMapLayer",
+    "visibility": "public",
+    "baseType": "Electron2D.Entity",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileMapLayer.DebugVisibilityMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "name": "DebugVisibilityMode",
+    "signature": "public enum Electron2D.TileMapLayer.DebugVisibilityMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileSet",
+    "kind": "type",
+    "declaringType": "Electron2D.TileSet",
+    "name": "TileSet",
+    "signature": "public sealed class Electron2D.TileSet",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileSetAtlasSource",
+    "kind": "type",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "TileSetAtlasSource",
+    "signature": "public sealed class Electron2D.TileSetAtlasSource",
+    "visibility": "public",
+    "baseType": "Electron2D.TileSetSource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TileSetSource",
+    "kind": "type",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "TileSetSource",
+    "signature": "public abstract class Electron2D.TileSetSource",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Timer",
     "kind": "type",
     "declaringType": "Electron2D.Timer",
@@ -12225,6 +12318,45 @@
     "parameters": [],
     "returnType": "System.Int64",
     "value": "-1"
+  },
+  {
+    "id": "constant:Electron2D.TileSetAtlasSource.TransformFlipH()",
+    "kind": "constant",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "TransformFlipH",
+    "signature": "public const System.Int32 TransformFlipH = 4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "4096"
+  },
+  {
+    "id": "constant:Electron2D.TileSetAtlasSource.TransformFlipV()",
+    "kind": "constant",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "TransformFlipV",
+    "signature": "public const System.Int32 TransformFlipV = 8192",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "8192"
+  },
+  {
+    "id": "constant:Electron2D.TileSetAtlasSource.TransformTranspose()",
+    "kind": "constant",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "TransformTranspose",
+    "signature": "public const System.Int32 TransformTranspose = 16384",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "16384"
   },
   {
     "id": "constant:Electron2D.Window.NotificationThemeChanged()",
@@ -17904,6 +18036,58 @@
     "name": ".ctor",
     "signature": "public Theme()",
     "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileMapLayer..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": ".ctor",
+    "signature": "public TileMapLayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileSet..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileSet",
+    "name": ".ctor",
+    "signature": "public TileSet()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileSetAtlasSource..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": ".ctor",
+    "signature": "public TileSetAtlasSource()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileSetSource..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": ".ctor",
+    "signature": "protected TileSetSource()",
+    "visibility": "protected",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
@@ -36209,6 +36393,45 @@
     "value": "5"
   },
   {
+    "id": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.Default()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "name": "Default",
+    "signature": "public const Electron2D.TileMapLayer.DebugVisibilityMode Default = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceHide()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "name": "ForceHide",
+    "signature": "public const Electron2D.TileMapLayer.DebugVisibilityMode ForceHide = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceShow()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "name": "ForceShow",
+    "signature": "public const Electron2D.TileMapLayer.DebugVisibilityMode ForceShow = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": "1"
+  },
+  {
     "id": "enumValue:Electron2D.TransferMode.Reliable()",
     "kind": "enumValue",
     "declaringType": "Electron2D.TransferMode",
@@ -41466,6 +41689,32 @@
     "declaringType": "Electron2D.ThemeDB",
     "name": "FallbackChanged",
     "signature": "public static event System.Action FallbackChanged",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TileData.Changed()",
+    "kind": "event",
+    "declaringType": "Electron2D.TileData",
+    "name": "Changed",
+    "signature": "public event System.Action Changed",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.TileMapLayer.Changed()",
+    "kind": "event",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "Changed",
+    "signature": "public event System.Action Changed",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -146081,6 +146330,2028 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileData.AddCollisionPolygon(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "AddCollisionPolygon",
+    "signature": "public System.Void AddCollisionPolygon(System.Int32 layerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetCollisionPolygonOneWayMargin(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetCollisionPolygonOneWayMargin",
+    "signature": "public System.Single GetCollisionPolygonOneWayMargin(System.Int32 layerID, System.Int32 polygonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetCollisionPolygonPoints(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetCollisionPolygonPoints",
+    "signature": "public Electron2D.Vector2[] GetCollisionPolygonPoints(System.Int32 layerID, System.Int32 polygonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetCollisionPolygonsCount(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetCollisionPolygonsCount",
+    "signature": "public System.Int32 GetCollisionPolygonsCount(System.Int32 layerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetConstantAngularVelocity(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetConstantAngularVelocity",
+    "signature": "public System.Single GetConstantAngularVelocity(System.Int32 layerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetConstantLinearVelocity(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetConstantLinearVelocity",
+    "signature": "public Electron2D.Vector2 GetConstantLinearVelocity(System.Int32 layerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.IsCollisionPolygonOneWay(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "IsCollisionPolygonOneWay",
+    "signature": "public System.Boolean IsCollisionPolygonOneWay(System.Int32 layerID, System.Int32 polygonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.RemoveCollisionPolygon(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "RemoveCollisionPolygon",
+    "signature": "public System.Void RemoveCollisionPolygon(System.Int32 layerID, System.Int32 polygonIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCollisionPolygonOneWay(System.Int32,System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCollisionPolygonOneWay",
+    "signature": "public System.Void SetCollisionPolygonOneWay(System.Int32 layerID, System.Int32 polygonIndex, System.Boolean oneWay)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "oneWay",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCollisionPolygonOneWayMargin(System.Int32,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCollisionPolygonOneWayMargin",
+    "signature": "public System.Void SetCollisionPolygonOneWayMargin(System.Int32 layerID, System.Int32 polygonIndex, System.Single oneWayMargin)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "oneWayMargin",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCollisionPolygonPoints(System.Int32,System.Int32,Electron2D.Vector2[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCollisionPolygonPoints",
+    "signature": "public System.Void SetCollisionPolygonPoints(System.Int32 layerID, System.Int32 polygonIndex, Electron2D.Vector2[] polygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygon",
+        "type": "Electron2D.Vector2[]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCollisionPolygonsCount(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCollisionPolygonsCount",
+    "signature": "public System.Void SetCollisionPolygonsCount(System.Int32 layerID, System.Int32 polygonsCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "polygonsCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetConstantAngularVelocity(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetConstantAngularVelocity",
+    "signature": "public System.Void SetConstantAngularVelocity(System.Int32 layerID, System.Single velocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetConstantLinearVelocity(System.Int32,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetConstantLinearVelocity",
+    "signature": "public System.Void SetConstantLinearVelocity(System.Int32 layerID, Electron2D.Vector2 velocity)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "velocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.EraseCell(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "EraseCell",
+    "signature": "public System.Void EraseCell(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.FixInvalidTiles()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "FixInvalidTiles",
+    "signature": "public System.Void FixInvalidTiles()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetCellAlternativeTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetCellAlternativeTile",
+    "signature": "public System.Int32 GetCellAlternativeTile(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetCellAtlasCoords(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetCellAtlasCoords",
+    "signature": "public Electron2D.Vector2i GetCellAtlasCoords(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetCellSourceID(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetCellSourceID",
+    "signature": "public System.Int32 GetCellSourceID(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetCellTileData(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetCellTileData",
+    "signature": "public Electron2D.TileData GetCellTileData(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TileData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetCoordsForBodyRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetCoordsForBodyRID",
+    "signature": "public Electron2D.Vector2i GetCoordsForBodyRID(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetUsedCells()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetUsedCells",
+    "signature": "public Electron2D.Vector2i[] GetUsedCells()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetUsedCellsByID(System.Int32,System.Nullable\u003CElectron2D.Vector2i\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetUsedCellsByID",
+    "signature": "public Electron2D.Vector2i[] GetUsedCellsByID(System.Int32 sourceID = -1, System.Nullable\u003CElectron2D.Vector2i\u003E atlasCoords = null, System.Int32 alternativeTile = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "atlasCoords",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.GetUsedRect()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetUsedRect",
+    "signature": "public Electron2D.Rect2i GetUsedRect()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.HasBodyRID(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "HasBodyRID",
+    "signature": "public System.Boolean HasBodyRID(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.IsCellFlippedH(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "IsCellFlippedH",
+    "signature": "public System.Boolean IsCellFlippedH(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.IsCellFlippedV(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "IsCellFlippedV",
+    "signature": "public System.Boolean IsCellFlippedV(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.IsCellTransposed(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "IsCellTransposed",
+    "signature": "public System.Boolean IsCellTransposed(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.LocalToMap(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "LocalToMap",
+    "signature": "public Electron2D.Vector2i LocalToMap(Electron2D.Vector2 localPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.MapToLocal(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "MapToLocal",
+    "signature": "public Electron2D.Vector2 MapToLocal(Electron2D.Vector2i mapPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mapPosition",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.NotifyRuntimeTileDataUpdate()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "NotifyRuntimeTileDataUpdate",
+    "signature": "public System.Void NotifyRuntimeTileDataUpdate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.OnDraw()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "OnDraw",
+    "signature": "protected override System.Void OnDraw()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.OnEnterTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "OnEnterTree",
+    "signature": "protected override System.Void OnEnterTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.OnExitTree()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "OnExitTree",
+    "signature": "protected override System.Void OnExitTree()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.OnNotification(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "OnNotification",
+    "signature": "protected override System.Void OnNotification(System.Int32 what)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "what",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.SetCell(Electron2D.Vector2i,System.Int32,System.Nullable\u003CElectron2D.Vector2i\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "SetCell",
+    "signature": "public System.Void SetCell(Electron2D.Vector2i coords, System.Int32 sourceID = -1, System.Nullable\u003CElectron2D.Vector2i\u003E atlasCoords = null, System.Int32 alternativeTile = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "atlasCoords",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.TileDataRuntimeUpdate(Electron2D.Vector2i,Electron2D.TileData)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "TileDataRuntimeUpdate",
+    "signature": "protected virtual System.Void TileDataRuntimeUpdate(Electron2D.Vector2i coords, Electron2D.TileData tileData)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "tileData",
+        "type": "Electron2D.TileData",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.UpdateCells(Electron2D.Vector2i[],System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "UpdateCells",
+    "signature": "protected virtual System.Void UpdateCells(Electron2D.Vector2i[] coords, System.Boolean forcedCleanup)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i[]",
+        "default": null
+      },
+      {
+        "name": "forcedCleanup",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.UpdateInternals()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "UpdateInternals",
+    "signature": "public System.Void UpdateInternals()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.UseTileDataRuntimeUpdate(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "UseTileDataRuntimeUpdate",
+    "signature": "protected virtual System.Boolean UseTileDataRuntimeUpdate(Electron2D.Vector2i coords)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddPhysicsLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddPhysicsLayer",
+    "signature": "public System.Void AddPhysicsLayer(System.Int32 toPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddSource(Electron2D.TileSetSource,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddSource",
+    "signature": "public System.Int32 AddSource(Electron2D.TileSetSource source, System.Int32 atlasSourceIDOverride = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "Electron2D.TileSetSource",
+        "default": null
+      },
+      {
+        "name": "atlasSourceIDOverride",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetNextSourceID()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetNextSourceID",
+    "signature": "public System.Int32 GetNextSourceID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPhysicsLayerCollisionLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPhysicsLayerCollisionLayer",
+    "signature": "public System.UInt32 GetPhysicsLayerCollisionLayer(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPhysicsLayerCollisionMask(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPhysicsLayerCollisionMask",
+    "signature": "public System.UInt32 GetPhysicsLayerCollisionMask(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPhysicsLayerCollisionPriority(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPhysicsLayerCollisionPriority",
+    "signature": "public System.Single GetPhysicsLayerCollisionPriority(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPhysicsLayerPhysicsMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPhysicsLayerPhysicsMaterial",
+    "signature": "public Electron2D.PhysicsMaterial GetPhysicsLayerPhysicsMaterial(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsMaterial",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPhysicsLayersCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPhysicsLayersCount",
+    "signature": "public System.Int32 GetPhysicsLayersCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetSource(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetSource",
+    "signature": "public Electron2D.TileSetSource GetSource(System.Int32 sourceID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TileSetSource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetSourceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetSourceCount",
+    "signature": "public System.Int32 GetSourceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetSourceID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetSourceID",
+    "signature": "public System.Int32 GetSourceID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.HasSource(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "HasSource",
+    "signature": "public System.Boolean HasSource(System.Int32 sourceID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.MovePhysicsLayer(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MovePhysicsLayer",
+    "signature": "public System.Void MovePhysicsLayer(System.Int32 layerIndex, System.Int32 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemovePhysicsLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemovePhysicsLayer",
+    "signature": "public System.Void RemovePhysicsLayer(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveSource(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveSource",
+    "signature": "public System.Void RemoveSource(System.Int32 sourceID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetPhysicsLayerCollisionLayer(System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetPhysicsLayerCollisionLayer",
+    "signature": "public System.Void SetPhysicsLayerCollisionLayer(System.Int32 layerIndex, System.UInt32 layer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layer",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetPhysicsLayerCollisionMask(System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetPhysicsLayerCollisionMask",
+    "signature": "public System.Void SetPhysicsLayerCollisionMask(System.Int32 layerIndex, System.UInt32 mask)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "mask",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetPhysicsLayerCollisionPriority(System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetPhysicsLayerCollisionPriority",
+    "signature": "public System.Void SetPhysicsLayerCollisionPriority(System.Int32 layerIndex, System.Single priority)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "priority",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetPhysicsLayerPhysicsMaterial(System.Int32,Electron2D.PhysicsMaterial)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetPhysicsLayerPhysicsMaterial",
+    "signature": "public System.Void SetPhysicsLayerPhysicsMaterial(System.Int32 layerIndex, Electron2D.PhysicsMaterial physicsMaterial)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "physicsMaterial",
+        "type": "Electron2D.PhysicsMaterial",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetSourceID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetSourceID",
+    "signature": "public System.Void SetSourceID(System.Int32 sourceID, System.Int32 newSourceID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "newSourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.ClearTilesOutsideTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "ClearTilesOutsideTexture",
+    "signature": "public System.Void ClearTilesOutsideTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.CreateAlternativeTile(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "CreateAlternativeTile",
+    "signature": "public System.Int32 CreateAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeIDOverride = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeIDOverride",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.CreateTile(Electron2D.Vector2i,System.Nullable\u003CElectron2D.Vector2i\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "CreateTile",
+    "signature": "public System.Void CreateTile(Electron2D.Vector2i atlasCoords, System.Nullable\u003CElectron2D.Vector2i\u003E size = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetAlternativeTileID",
+    "signature": "public override System.Int32 GetAlternativeTileID(Electron2D.Vector2i atlasCoords, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetAlternativeTilesCount",
+    "signature": "public override System.Int32 GetAlternativeTilesCount(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetAtlasGridSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetAtlasGridSize",
+    "signature": "public Electron2D.Vector2i GetAtlasGridSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetNextAlternativeTileID(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetNextAlternativeTileID",
+    "signature": "public System.Int32 GetNextAlternativeTileID(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAtCoords(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAtCoords",
+    "signature": "public Electron2D.Vector2i GetTileAtCoords(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileData(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileData",
+    "signature": "public Electron2D.TileData GetTileData(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TileData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileID",
+    "signature": "public override Electron2D.Vector2i GetTileID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileSizeInAtlas(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileSizeInAtlas",
+    "signature": "public Electron2D.Vector2i GetTileSizeInAtlas(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileTextureRegion(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileTextureRegion",
+    "signature": "public Electron2D.Rect2i GetTileTextureRegion(Electron2D.Vector2i atlasCoords, System.Int32 frame = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.Rect2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTilesCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTilesCount",
+    "signature": "public override System.Int32 GetTilesCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "HasAlternativeTile",
+    "signature": "public override System.Boolean HasAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.HasTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "HasTile",
+    "signature": "public override System.Boolean HasTile(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.HasTilesOutsideTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "HasTilesOutsideTexture",
+    "signature": "public System.Boolean HasTilesOutsideTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.MoveTileInAtlas(Electron2D.Vector2i,System.Nullable\u003CElectron2D.Vector2i\u003E,System.Nullable\u003CElectron2D.Vector2i\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "MoveTileInAtlas",
+    "signature": "public System.Void MoveTileInAtlas(Electron2D.Vector2i atlasCoords, System.Nullable\u003CElectron2D.Vector2i\u003E newAtlasCoords = null, System.Nullable\u003CElectron2D.Vector2i\u003E newSize = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "newAtlasCoords",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      },
+      {
+        "name": "newSize",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.RemoveAlternativeTile(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "RemoveAlternativeTile",
+    "signature": "public System.Void RemoveAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.RemoveTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "RemoveTile",
+    "signature": "public System.Void RemoveTile(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetAlternativeTileID(Electron2D.Vector2i,System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetAlternativeTileID",
+    "signature": "public System.Void SetAlternativeTileID(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile, System.Int32 newID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "newID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "GetAlternativeTileID",
+    "signature": "public abstract System.Int32 GetAlternativeTileID(Electron2D.Vector2i atlasCoords, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "GetAlternativeTilesCount",
+    "signature": "public abstract System.Int32 GetAlternativeTilesCount(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.GetTileID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "GetTileID",
+    "signature": "public abstract Electron2D.Vector2i GetTileID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.GetTilesCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "GetTilesCount",
+    "signature": "public abstract System.Int32 GetTilesCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "HasAlternativeTile",
+    "signature": "public abstract System.Boolean HasAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetSource.HasTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetSource",
+    "name": "HasTile",
+    "signature": "public abstract System.Boolean HasTile(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Timer.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.Timer",
@@ -190862,6 +193133,227 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.StyleBox",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.FlipH()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "FlipH",
+    "signature": "public System.Boolean FlipH { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.FlipV()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "FlipV",
+    "signature": "public System.Boolean FlipV { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.Modulate()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "Modulate",
+    "signature": "public Electron2D.Color Modulate { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.TextureOrigin()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "TextureOrigin",
+    "signature": "public Electron2D.Vector2i TextureOrigin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.Transpose()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "Transpose",
+    "signature": "public System.Boolean Transpose { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.CollisionEnabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "CollisionEnabled",
+    "signature": "public System.Boolean CollisionEnabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.CollisionVisibilityMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "CollisionVisibilityMode",
+    "signature": "public Electron2D.TileMapLayer.DebugVisibilityMode CollisionVisibilityMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.Enabled()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "Enabled",
+    "signature": "public System.Boolean Enabled { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.PhysicsQuadrantSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "PhysicsQuadrantSize",
+    "signature": "public System.Int32 PhysicsQuadrantSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.TileMapData()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "TileMapData",
+    "signature": "public System.Byte[] TileMapData { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.TileSet()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "TileSet",
+    "signature": "public Electron2D.TileSet TileSet { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileSet",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.UseKinematicBodies()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "UseKinematicBodies",
+    "signature": "public System.Boolean UseKinematicBodies { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSet.TileSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSet",
+    "name": "TileSize",
+    "signature": "public Electron2D.Vector2i TileSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSetAtlasSource.Margins()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "Margins",
+    "signature": "public Electron2D.Vector2i Margins { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSetAtlasSource.Separation()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "Separation",
+    "signature": "public Electron2D.Vector2i Separation { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSetAtlasSource.Texture()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "Texture",
+    "signature": "public Electron2D.Texture Texture { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSetAtlasSource.TextureRegionSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "TextureRegionSize",
+    "signature": "public Electron2D.Vector2i TextureRegionSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
     "value": null
   },
   {

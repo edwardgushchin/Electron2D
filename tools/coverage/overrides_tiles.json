@@ -1,0 +1,1010 @@
+{
+  "mappings": [
+    {
+      "godot": "class:TileData",
+      "electron2d": "T:Electron2D.TileData",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:add_collision_polygon(int:)",
+      "electron2d": "method:Electron2D.TileData.AddCollisionPolygon(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:get_collision_polygon_one_way_margin(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.GetCollisionPolygonOneWayMargin(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:get_collision_polygon_points(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.GetCollisionPolygonPoints(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:get_collision_polygons_count(int:)",
+      "electron2d": "method:Electron2D.TileData.GetCollisionPolygonsCount(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:get_constant_angular_velocity(int:)",
+      "electron2d": "method:Electron2D.TileData.GetConstantAngularVelocity(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:get_constant_linear_velocity(int:)",
+      "electron2d": "method:Electron2D.TileData.GetConstantLinearVelocity(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:is_collision_polygon_one_way(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.IsCollisionPolygonOneWay(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:remove_collision_polygon(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.RemoveCollisionPolygon(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_collision_polygon_one_way(int:,int:,bool:)",
+      "electron2d": "method:Electron2D.TileData.SetCollisionPolygonOneWay(System.Int32,System.Int32,System.Boolean)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_collision_polygon_one_way_margin(int:,int:,float:)",
+      "electron2d": "method:Electron2D.TileData.SetCollisionPolygonOneWayMargin(System.Int32,System.Int32,System.Single)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_collision_polygon_points(int:,int:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.TileData.SetCollisionPolygonPoints(System.Int32,System.Int32,Electron2D.Vector2[])",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_collision_polygons_count(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.SetCollisionPolygonsCount(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_constant_angular_velocity(int:,float:)",
+      "electron2d": "method:Electron2D.TileData.SetConstantAngularVelocity(System.Int32,System.Single)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::method:set_constant_linear_velocity(int:,Vector2:)",
+      "electron2d": "method:Electron2D.TileData.SetConstantLinearVelocity(System.Int32,Electron2D.Vector2)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::property:flip_h",
+      "electron2d": "property:Electron2D.TileData.FlipH()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::property:flip_v",
+      "electron2d": "property:Electron2D.TileData.FlipV()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::property:modulate",
+      "electron2d": "property:Electron2D.TileData.Modulate()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::property:texture_origin",
+      "electron2d": "property:Electron2D.TileData.TextureOrigin()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::property:transpose",
+      "electron2d": "property:Electron2D.TileData.Transpose()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileData::signal:changed()",
+      "electron2d": "event:Electron2D.TileData.Changed()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "class:TileMapLayer",
+      "electron2d": "T:Electron2D.TileMapLayer",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::enum:DebugVisibilityMode",
+      "electron2d": "T:Electron2D.TileMapLayer.DebugVisibilityMode",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_DEFAULT",
+      "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.Default()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_HIDE",
+      "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceHide()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_SHOW",
+      "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceShow()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:_tile_data_runtime_update(Vector2i:,TileData:)",
+      "electron2d": "method:Electron2D.TileMapLayer.TileDataRuntimeUpdate(Electron2D.Vector2i,Electron2D.TileData)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:_update_cells(Vector2i[]:,bool:)",
+      "electron2d": "method:Electron2D.TileMapLayer.UpdateCells(Electron2D.Vector2i[],System.Boolean)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:_use_tile_data_runtime_update(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.UseTileDataRuntimeUpdate(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:clear()",
+      "electron2d": "method:Electron2D.TileMapLayer.Clear()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:erase_cell(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.EraseCell(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:fix_invalid_tiles()",
+      "electron2d": "method:Electron2D.TileMapLayer.FixInvalidTiles()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_cell_alternative_tile(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetCellAlternativeTile(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_cell_atlas_coords(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetCellAtlasCoords(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_cell_source_id(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetCellSourceID(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_cell_tile_data(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetCellTileData(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_coords_for_body_rid(RID:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetCoordsForBodyRID(Electron2D.RID)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_used_cells()",
+      "electron2d": "method:Electron2D.TileMapLayer.GetUsedCells()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_used_cells_by_id(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileMapLayer.GetUsedCellsByID(System.Int32,System.Nullable<Electron2D.Vector2i>,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:get_used_rect()",
+      "electron2d": "method:Electron2D.TileMapLayer.GetUsedRect()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:has_body_rid(RID:)",
+      "electron2d": "method:Electron2D.TileMapLayer.HasBodyRID(Electron2D.RID)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:is_cell_flipped_h(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.IsCellFlippedH(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:is_cell_flipped_v(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.IsCellFlippedV(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:is_cell_transposed(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.IsCellTransposed(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:local_to_map(Vector2:)",
+      "electron2d": "method:Electron2D.TileMapLayer.LocalToMap(Electron2D.Vector2)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:map_to_local(Vector2i:)",
+      "electron2d": "method:Electron2D.TileMapLayer.MapToLocal(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:notify_runtime_tile_data_update()",
+      "electron2d": "method:Electron2D.TileMapLayer.NotifyRuntimeTileDataUpdate()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:set_cell(Vector2i:,int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileMapLayer.SetCell(Electron2D.Vector2i,System.Int32,System.Nullable<Electron2D.Vector2i>,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::method:update_internals()",
+      "electron2d": "method:Electron2D.TileMapLayer.UpdateInternals()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:collision_enabled",
+      "electron2d": "property:Electron2D.TileMapLayer.CollisionEnabled()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:collision_visibility_mode",
+      "electron2d": "property:Electron2D.TileMapLayer.CollisionVisibilityMode()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:enabled",
+      "electron2d": "property:Electron2D.TileMapLayer.Enabled()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:physics_quadrant_size",
+      "electron2d": "property:Electron2D.TileMapLayer.PhysicsQuadrantSize()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:tile_map_data",
+      "electron2d": "property:Electron2D.TileMapLayer.TileMapData()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:tile_set",
+      "electron2d": "property:Electron2D.TileMapLayer.TileSet()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::property:use_kinematic_bodies",
+      "electron2d": "property:Electron2D.TileMapLayer.UseKinematicBodies()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileMapLayer::signal:changed()",
+      "electron2d": "event:Electron2D.TileMapLayer.Changed()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "class:TileSet",
+      "electron2d": "T:Electron2D.TileSet",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:add_physics_layer(int:)",
+      "electron2d": "method:Electron2D.TileSet.AddPhysicsLayer(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:add_source(TileSetSource:,int:)",
+      "electron2d": "method:Electron2D.TileSet.AddSource(Electron2D.TileSetSource,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_next_source_id()",
+      "electron2d": "method:Electron2D.TileSet.GetNextSourceID()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_physics_layer_collision_layer(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionLayer(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_physics_layer_collision_mask(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionMask(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_physics_layer_collision_priority(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionPriority(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_physics_layer_physics_material(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerPhysicsMaterial(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_physics_layers_count()",
+      "electron2d": "method:Electron2D.TileSet.GetPhysicsLayersCount()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_source(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetSource(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_source_count()",
+      "electron2d": "method:Electron2D.TileSet.GetSourceCount()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:get_source_id(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetSourceID(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:has_source(int:)",
+      "electron2d": "method:Electron2D.TileSet.HasSource(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:move_physics_layer(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.MovePhysicsLayer(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:remove_physics_layer(int:)",
+      "electron2d": "method:Electron2D.TileSet.RemovePhysicsLayer(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:remove_source(int:)",
+      "electron2d": "method:Electron2D.TileSet.RemoveSource(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:set_physics_layer_collision_layer(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionLayer(System.Int32,System.UInt32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:set_physics_layer_collision_mask(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionMask(System.Int32,System.UInt32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:set_physics_layer_collision_priority(int:,float:)",
+      "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionPriority(System.Int32,System.Single)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:set_physics_layer_physics_material(int:,PhysicsMaterial:)",
+      "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerPhysicsMaterial(System.Int32,Electron2D.PhysicsMaterial)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::method:set_source_id(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetSourceID(System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSet::property:tile_size",
+      "electron2d": "property:Electron2D.TileSet.TileSize()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "class:TileSetAtlasSource",
+      "electron2d": "T:Electron2D.TileSetAtlasSource",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::constant:TRANSFORM_FLIP_H",
+      "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformFlipH()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::constant:TRANSFORM_FLIP_V",
+      "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformFlipV()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::constant:TRANSFORM_TRANSPOSE",
+      "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformTranspose()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:clear_tiles_outside_texture()",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.ClearTilesOutsideTexture()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:create_alternative_tile(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.CreateAlternativeTile(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:create_tile(Vector2i:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.CreateTile(Electron2D.Vector2i,System.Nullable<Electron2D.Vector2i>)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_atlas_grid_size()",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetAtlasGridSize()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_next_alternative_tile_id(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetNextAlternativeTileID(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_at_coords(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAtCoords(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_data(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileData(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_size_in_atlas(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileSizeInAtlas(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_texture_region(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileTextureRegion(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:has_tiles_outside_texture()",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.HasTilesOutsideTexture()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:move_tile_in_atlas(Vector2i:,Vector2i:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.MoveTileInAtlas(Electron2D.Vector2i,System.Nullable<Electron2D.Vector2i>,System.Nullable<Electron2D.Vector2i>)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:remove_alternative_tile(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.RemoveAlternativeTile(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:remove_tile(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.RemoveTile(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_alternative_tile_id(Vector2i:,int:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetAlternativeTileID(Electron2D.Vector2i,System.Int32,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::property:margins",
+      "electron2d": "property:Electron2D.TileSetAtlasSource.Margins()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::property:separation",
+      "electron2d": "property:Electron2D.TileSetAtlasSource.Separation()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::property:texture",
+      "electron2d": "property:Electron2D.TileSetAtlasSource.Texture()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetAtlasSource::property:texture_region_size",
+      "electron2d": "property:Electron2D.TileSetAtlasSource.TextureRegionSize()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "class:TileSetSource",
+      "electron2d": "T:Electron2D.TileSetSource",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:get_alternative_tile_id(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:get_alternative_tiles_count(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:get_tile_id(int:)",
+      "electron2d": "method:Electron2D.TileSetSource.GetTileID(System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:get_tiles_count()",
+      "electron2d": "method:Electron2D.TileSetSource.GetTilesCount()",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:has_alternative_tile(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": "TileSetSource::method:has_tile(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetSource.HasTile(Electron2D.Vector2i)",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "constructor:Electron2D.TileMapLayer..ctor()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TileSet..ctor()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TileSetAtlasSource..ctor()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TileSetSource..ctor()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileData.Dispose(System.Boolean)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileData.GetPropertyDescriptors()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileData.ValidateDisposal()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.CreateSceneInstanceFactory()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.Dispose(System.Boolean)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.GetPropertyDescriptors()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.OnDraw()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.OnEnterTree()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.OnExitTree()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.OnNotification(System.Int32)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileMapLayer.ValidateDisposal()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSet.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSet.CreateDuplicateInstance()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSet.Dispose(System.Boolean)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSet.GetPropertyDescriptors()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.CreateDuplicateInstance()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.Dispose(System.Boolean)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetPropertyDescriptors()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileID(System.Int32)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTilesCount()",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetAtlasSource.HasTile(Electron2D.Vector2i)",
+      "reason": "ADR 0101 preserves typed construction, inherited scene/resource callbacks, owned tile-data lifetime, duplication and compiled storage schema without backend types in public signatures.",
+      "adr": "ADR 0004/0008/0014/0101"
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:TileData"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "class:TileMapLayer"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "class:TileSet"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "class:TileSetAtlasSource"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "class:TileSetSource"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "TileData::method:add_collision_polygon(int:)",
+        "TileData::method:get_collision_polygon_one_way_margin(int:,int:)",
+        "TileData::method:get_collision_polygon_points(int:,int:)",
+        "TileData::method:get_collision_polygons_count(int:)",
+        "TileData::method:get_constant_angular_velocity(int:)",
+        "TileData::method:get_constant_linear_velocity(int:)",
+        "TileData::method:is_collision_polygon_one_way(int:,int:)",
+        "TileData::method:remove_collision_polygon(int:,int:)",
+        "TileData::method:set_collision_polygon_one_way(int:,int:,bool:)",
+        "TileData::method:set_collision_polygon_one_way_margin(int:,int:,float:)",
+        "TileData::method:set_collision_polygon_points(int:,int:,PackedVector2Array:)",
+        "TileData::method:set_collision_polygons_count(int:,int:)",
+        "TileData::method:set_constant_angular_velocity(int:,float:)",
+        "TileData::method:set_constant_linear_velocity(int:,Vector2:)",
+        "TileData::property:flip_h",
+        "TileData::property:flip_v",
+        "TileData::property:modulate",
+        "TileData::property:texture_origin",
+        "TileData::property:transpose",
+        "TileData::signal:changed()",
+        "TileMapLayer::enum:DebugVisibilityMode",
+        "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_DEFAULT",
+        "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_HIDE",
+        "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_SHOW",
+        "TileMapLayer::method:_tile_data_runtime_update(Vector2i:,TileData:)",
+        "TileMapLayer::method:_update_cells(Vector2i[]:,bool:)",
+        "TileMapLayer::method:_use_tile_data_runtime_update(Vector2i:)",
+        "TileMapLayer::method:clear()",
+        "TileMapLayer::method:erase_cell(Vector2i:)",
+        "TileMapLayer::method:fix_invalid_tiles()",
+        "TileMapLayer::method:get_cell_alternative_tile(Vector2i:)",
+        "TileMapLayer::method:get_cell_atlas_coords(Vector2i:)",
+        "TileMapLayer::method:get_cell_source_id(Vector2i:)",
+        "TileMapLayer::method:get_cell_tile_data(Vector2i:)",
+        "TileMapLayer::method:get_coords_for_body_rid(RID:)",
+        "TileMapLayer::method:get_used_cells()",
+        "TileMapLayer::method:get_used_cells_by_id(int:,Vector2i:,int:)",
+        "TileMapLayer::method:get_used_rect()",
+        "TileMapLayer::method:has_body_rid(RID:)",
+        "TileMapLayer::method:is_cell_flipped_h(Vector2i:)",
+        "TileMapLayer::method:is_cell_flipped_v(Vector2i:)",
+        "TileMapLayer::method:is_cell_transposed(Vector2i:)",
+        "TileMapLayer::method:notify_runtime_tile_data_update()",
+        "TileMapLayer::method:set_cell(Vector2i:,int:,Vector2i:,int:)",
+        "TileMapLayer::method:update_internals()",
+        "TileMapLayer::property:collision_enabled",
+        "TileMapLayer::property:collision_visibility_mode",
+        "TileMapLayer::property:enabled",
+        "TileMapLayer::property:physics_quadrant_size",
+        "TileMapLayer::property:tile_map_data",
+        "TileMapLayer::property:tile_set",
+        "TileMapLayer::property:use_kinematic_bodies",
+        "TileMapLayer::signal:changed()",
+        "TileSet::method:add_physics_layer(int:)",
+        "TileSet::method:add_source(TileSetSource:,int:)",
+        "TileSet::method:get_next_source_id()",
+        "TileSet::method:get_physics_layer_collision_layer(int:)",
+        "TileSet::method:get_physics_layer_collision_mask(int:)",
+        "TileSet::method:get_physics_layer_collision_priority(int:)",
+        "TileSet::method:get_physics_layer_physics_material(int:)",
+        "TileSet::method:get_physics_layers_count()",
+        "TileSet::method:get_source(int:)",
+        "TileSet::method:get_source_count()",
+        "TileSet::method:get_source_id(int:)",
+        "TileSet::method:has_source(int:)",
+        "TileSet::method:move_physics_layer(int:,int:)",
+        "TileSet::method:remove_physics_layer(int:)",
+        "TileSet::method:remove_source(int:)",
+        "TileSet::method:set_physics_layer_collision_layer(int:,int:)",
+        "TileSet::method:set_physics_layer_collision_mask(int:,int:)",
+        "TileSet::method:set_physics_layer_collision_priority(int:,float:)",
+        "TileSet::method:set_physics_layer_physics_material(int:,PhysicsMaterial:)",
+        "TileSet::method:set_source_id(int:,int:)",
+        "TileSet::property:tile_size",
+        "TileSetAtlasSource::constant:TRANSFORM_FLIP_H",
+        "TileSetAtlasSource::constant:TRANSFORM_FLIP_V",
+        "TileSetAtlasSource::constant:TRANSFORM_TRANSPOSE",
+        "TileSetAtlasSource::method:clear_tiles_outside_texture()",
+        "TileSetAtlasSource::method:create_alternative_tile(Vector2i:,int:)",
+        "TileSetAtlasSource::method:create_tile(Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:get_atlas_grid_size()",
+        "TileSetAtlasSource::method:get_next_alternative_tile_id(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_at_coords(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_data(Vector2i:,int:)",
+        "TileSetAtlasSource::method:get_tile_size_in_atlas(Vector2i:)",
+        "TileSetAtlasSource::method:has_tiles_outside_texture()",
+        "TileSetAtlasSource::method:move_tile_in_atlas(Vector2i:,Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:remove_alternative_tile(Vector2i:,int:)",
+        "TileSetAtlasSource::method:remove_tile(Vector2i:)",
+        "TileSetAtlasSource::method:set_alternative_tile_id(Vector2i:,int:,int:)",
+        "TileSetAtlasSource::property:margins",
+        "TileSetAtlasSource::property:separation",
+        "TileSetAtlasSource::property:texture",
+        "TileSetAtlasSource::property:texture_region_size",
+        "TileSetSource::method:get_alternative_tile_id(Vector2i:,int:)",
+        "TileSetSource::method:get_alternative_tiles_count(Vector2i:)",
+        "TileSetSource::method:get_tile_id(int:)",
+        "TileSetSource::method:get_tiles_count()",
+        "TileSetSource::method:has_alternative_tile(Vector2i:,int:)",
+        "TileSetSource::method:has_tile(Vector2i:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases, navigation and occlusion remain separate prerequisites."
+    },
+    {
+      "godot": [
+        "TileMapLayer::method:local_to_map(Vector2:)",
+        "TileMapLayer::method:map_to_local(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_texture_region(Vector2i:,int:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101 initial atlas/grid slice: static frame zero and square-cell coordinate mapping execute. Other frame indices are rejected until animated-atlas integration; other layouts require TileSet layout/shape authoring and matching mapping/render/physics tests."
+    },
+    {
+      "godot": [
+        "TileData::method:add_occluder_polygon(int:)",
+        "TileData::method:get_custom_data(String:)",
+        "TileData::method:get_custom_data_by_layer_id(int:)",
+        "TileData::method:get_navigation_polygon(int:,bool:,bool:,bool:)",
+        "TileData::method:get_occluder(int:,bool:,bool:,bool:)",
+        "TileData::method:get_occluder_polygon(int:,int:,bool:,bool:,bool:)",
+        "TileData::method:get_occluder_polygons_count(int:)",
+        "TileData::method:get_terrain_peering_bit(int:TileSet.CellNeighbor)",
+        "TileData::method:has_custom_data(String:)",
+        "TileData::method:is_valid_terrain_peering_bit(int:TileSet.CellNeighbor)",
+        "TileData::method:remove_occluder_polygon(int:,int:)",
+        "TileData::method:set_custom_data(String:,Variant:)",
+        "TileData::method:set_custom_data_by_layer_id(int:,Variant:)",
+        "TileData::method:set_navigation_polygon(int:,NavigationPolygon:)",
+        "TileData::method:set_occluder(int:,OccluderPolygon2D:)",
+        "TileData::method:set_occluder_polygon(int:,int:,OccluderPolygon2D:)",
+        "TileData::method:set_occluder_polygons_count(int:,int:)",
+        "TileData::method:set_terrain_peering_bit(int:TileSet.CellNeighbor,int:)",
+        "TileData::property:material",
+        "TileData::property:probability",
+        "TileData::property:terrain",
+        "TileData::property:terrain_set",
+        "TileData::property:y_sort_origin",
+        "TileData::property:z_index",
+        "TileMapLayer::method:get_navigation_map()",
+        "TileMapLayer::method:get_neighbor_cell(Vector2i:,int:TileSet.CellNeighbor)",
+        "TileMapLayer::method:get_pattern(Vector2i[]:)",
+        "TileMapLayer::method:get_surrounding_cells(Vector2i:)",
+        "TileMapLayer::method:map_pattern(Vector2i:,Vector2i:,TileMapPattern:)",
+        "TileMapLayer::method:set_cells_terrain_connect(Vector2i[]:,int:,int:,bool:)",
+        "TileMapLayer::method:set_cells_terrain_path(Vector2i[]:,int:,int:,bool:)",
+        "TileMapLayer::method:set_navigation_map(RID:)",
+        "TileMapLayer::method:set_pattern(Vector2i:,TileMapPattern:)",
+        "TileMapLayer::property:navigation_enabled",
+        "TileMapLayer::property:navigation_visibility_mode",
+        "TileMapLayer::property:occlusion_enabled",
+        "TileMapLayer::property:rendering_quadrant_size",
+        "TileMapLayer::property:x_draw_order_reversed",
+        "TileMapLayer::property:y_sort_origin",
+        "TileSet::enum:CellNeighbor",
+        "TileSet::enum:TerrainMode",
+        "TileSet::enum:TileLayout",
+        "TileSet::enum:TileOffsetAxis",
+        "TileSet::enum:TileShape",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_LEFT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_RIGHT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_BOTTOM_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_LEFT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_LEFT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_RIGHT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_RIGHT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_LEFT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_CORNER",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_RIGHT_SIDE",
+        "TileSet::enum_value:CellNeighbor.CELL_NEIGHBOR_TOP_SIDE",
+        "TileSet::enum_value:TerrainMode.TERRAIN_MODE_MATCH_CORNERS",
+        "TileSet::enum_value:TerrainMode.TERRAIN_MODE_MATCH_CORNERS_AND_SIDES",
+        "TileSet::enum_value:TerrainMode.TERRAIN_MODE_MATCH_SIDES",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_DIAMOND_DOWN",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_DIAMOND_RIGHT",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_STACKED",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_STACKED_OFFSET",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_STAIRS_DOWN",
+        "TileSet::enum_value:TileLayout.TILE_LAYOUT_STAIRS_RIGHT",
+        "TileSet::enum_value:TileOffsetAxis.TILE_OFFSET_AXIS_HORIZONTAL",
+        "TileSet::enum_value:TileOffsetAxis.TILE_OFFSET_AXIS_VERTICAL",
+        "TileSet::enum_value:TileShape.TILE_SHAPE_HALF_OFFSET_SQUARE",
+        "TileSet::enum_value:TileShape.TILE_SHAPE_HEXAGON",
+        "TileSet::enum_value:TileShape.TILE_SHAPE_ISOMETRIC",
+        "TileSet::enum_value:TileShape.TILE_SHAPE_SQUARE",
+        "TileSet::method:add_custom_data_layer(int:)",
+        "TileSet::method:add_navigation_layer(int:)",
+        "TileSet::method:add_occlusion_layer(int:)",
+        "TileSet::method:add_pattern(TileMapPattern:,int:)",
+        "TileSet::method:add_terrain(int:,int:)",
+        "TileSet::method:add_terrain_set(int:)",
+        "TileSet::method:cleanup_invalid_tile_proxies()",
+        "TileSet::method:clear_terrains(int:)",
+        "TileSet::method:clear_tile_proxies()",
+        "TileSet::method:get_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:get_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:get_custom_data_layer_by_name(String:)",
+        "TileSet::method:get_custom_data_layer_name(int:)",
+        "TileSet::method:get_custom_data_layer_type(int:)",
+        "TileSet::method:get_custom_data_layers_count()",
+        "TileSet::method:get_navigation_layer_layer_value(int:,int:)",
+        "TileSet::method:get_navigation_layer_layers(int:)",
+        "TileSet::method:get_navigation_layers_count()",
+        "TileSet::method:get_occlusion_layer_light_mask(int:)",
+        "TileSet::method:get_occlusion_layer_sdf_collision(int:)",
+        "TileSet::method:get_occlusion_layers_count()",
+        "TileSet::method:get_pattern(int:)",
+        "TileSet::method:get_patterns_count()",
+        "TileSet::method:get_source_level_tile_proxy(int:)",
+        "TileSet::method:get_terrain_color(int:,int:)",
+        "TileSet::method:get_terrain_name(int:,int:)",
+        "TileSet::method:get_terrain_set_mode(int:)",
+        "TileSet::method:get_terrain_sets_count()",
+        "TileSet::method:get_terrains_count(int:)",
+        "TileSet::method:has_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:has_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:has_custom_data_layer_by_name(String:)",
+        "TileSet::method:has_source_level_tile_proxy(int:)",
+        "TileSet::method:map_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:move_custom_data_layer(int:,int:)",
+        "TileSet::method:move_navigation_layer(int:,int:)",
+        "TileSet::method:move_occlusion_layer(int:,int:)",
+        "TileSet::method:move_terrain(int:,int:,int:)",
+        "TileSet::method:move_terrain_set(int:,int:)",
+        "TileSet::method:remove_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:remove_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:remove_custom_data_layer(int:)",
+        "TileSet::method:remove_navigation_layer(int:)",
+        "TileSet::method:remove_occlusion_layer(int:)",
+        "TileSet::method:remove_pattern(int:)",
+        "TileSet::method:remove_source_level_tile_proxy(int:)",
+        "TileSet::method:remove_terrain(int:,int:)",
+        "TileSet::method:remove_terrain_set(int:)",
+        "TileSet::method:set_alternative_level_tile_proxy(int:,Vector2i:,int:,int:,Vector2i:,int:)",
+        "TileSet::method:set_coords_level_tile_proxy(int:,Vector2i:,int:,Vector2i:)",
+        "TileSet::method:set_custom_data_layer_name(int:,String:)",
+        "TileSet::method:set_custom_data_layer_type(int:,int:Variant.Type)",
+        "TileSet::method:set_navigation_layer_layer_value(int:,int:,bool:)",
+        "TileSet::method:set_navigation_layer_layers(int:,int:)",
+        "TileSet::method:set_occlusion_layer_light_mask(int:,int:)",
+        "TileSet::method:set_occlusion_layer_sdf_collision(int:,bool:)",
+        "TileSet::method:set_source_level_tile_proxy(int:,int:)",
+        "TileSet::method:set_terrain_color(int:,int:,Color:)",
+        "TileSet::method:set_terrain_name(int:,int:,String:)",
+        "TileSet::method:set_terrain_set_mode(int:,int:TileSet.TerrainMode)",
+        "TileSet::property:tile_layout",
+        "TileSet::property:tile_offset_axis",
+        "TileSet::property:tile_shape",
+        "TileSet::property:uv_clipping",
+        "TileSetAtlasSource::enum:TileAnimationMode",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_DEFAULT",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_MAX",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_RANDOM_START_TIMES",
+        "TileSetAtlasSource::method:get_runtime_texture()",
+        "TileSetAtlasSource::method:get_runtime_tile_texture_region(Vector2i:,int:)",
+        "TileSetAtlasSource::method:get_tile_animation_columns(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_frame_duration(Vector2i:,int:)",
+        "TileSetAtlasSource::method:get_tile_animation_frames_count(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_mode(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_separation(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_speed(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_total_duration(Vector2i:)",
+        "TileSetAtlasSource::method:get_tiles_to_be_removed_on_change(Texture2D:,Vector2i:,Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:has_room_for_tile(Vector2i:,Vector2i:,int:,Vector2i:,int:,Vector2i:)",
+        "TileSetAtlasSource::method:set_tile_animation_columns(Vector2i:,int:)",
+        "TileSetAtlasSource::method:set_tile_animation_frame_duration(Vector2i:,int:,float:)",
+        "TileSetAtlasSource::method:set_tile_animation_frames_count(Vector2i:,int:)",
+        "TileSetAtlasSource::method:set_tile_animation_mode(Vector2i:,int:TileSetAtlasSource.TileAnimationMode)",
+        "TileSetAtlasSource::method:set_tile_animation_separation(Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:set_tile_animation_speed(Vector2i:,float:)",
+        "TileSetAtlasSource::property:use_texture_padding"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: the owning tile capability after ADR 0101 square-atlas physics. Terrain/pattern/proxy painting requires terrain and pattern resources; non-square layouts require layout mapping; tile animation/padding requires atlas scheduling/padded texture generation; navigation/occlusion/material/Z ordering/custom tile data require their tile-specific consumers and typed storage. No inert public switches are supplied."
+    }
+  ]
+}

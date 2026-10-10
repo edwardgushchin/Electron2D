@@ -40,12 +40,16 @@ public static partial class ResourceFileTypes
         RegisterResource("FontVariation", CreateFontVariation);
         RegisterResource("Script", CreateScript);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
+        RegisterResource("TileSet", CreateTileSet);
+        RegisterResource("TileSetAtlasSource", CreateTileSetAtlasSource);
+        RegisterResourceArray<TileSetSource>();
         RegisterResource("RDShaderSPIRV", CreateRDShaderSPIRV);
         RegisterResource("ColorPalette", CreateColorPalette);
         RegisterResource("SyntaxHighlighter", CreateSyntaxHighlighter);
         RegisterResource("CodeHighlighter", CreateCodeHighlighter);
         RegisterResource("RichTextEffect", CreateRichTextEffect);
         RegisterNode("Sprite", CreateSprite);
+        RegisterNode("TileMapLayer", CreateTileMapLayer);
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
         RegisterResource("AtlasTexture", CreateAtlasTexture);
@@ -103,8 +107,11 @@ public static partial class ResourceFileTypes
     private static FontVariation CreateFontVariation() => new();
     private static Script CreateScript() => new();
     private static RDShaderSPIRV CreateRDShaderSPIRV() => new();
+    private static TileSet CreateTileSet() => new();
+    private static TileSetAtlasSource CreateTileSetAtlasSource() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();
     private static ColorPalette CreateColorPalette() => new();
+    private static TileMapLayer CreateTileMapLayer() => new();
     private static Sprite CreateSprite() => new();
     private static Image CreateImage() => new();
     private static ImageTexture CreateImageTexture() => new();

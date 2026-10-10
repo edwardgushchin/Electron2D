@@ -1,6 +1,10 @@
 # Resources domain
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
+
+## Square atlas tile integration
+
+[Tile resources and layers](../components/tiles.md) now connect square atlas authoring and typed storage to actual merged static/kinematic bodies in CPU/GPU worlds, with tile-owner queries/events, runtime data callbacks and real retained-canvas output. Other tile layouts, terrain, animation, navigation and occlusion remain explicit gaps under [ADR 0101](../decisions/tiles.md#adr-0101).
 
 ## Executable mesh skin integration
 

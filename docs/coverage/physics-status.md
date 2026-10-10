@@ -587,11 +587,11 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [Performance](classes/Performance.md) | [Object](classes/Object.md) | 3 | 1 | 0 | 0 | 0 |
 | [ProjectSettings](classes/ProjectSettings.md) | [Object](classes/Object.md) | 19 | 3 | 2 | 0 | 0 |
 | [SceneTree](classes/SceneTree.md) | [MainLoop](classes/MainLoop.md) | 2 | 1 | 0 | 0 | 0 |
-| [TileData](classes/TileData.md) | [Object](classes/Object.md) | 0 | 0 | 14 | 0 | 0 |
-| [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 0 | 0 | 10 | 0 | 0 |
-| [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 0 | 0 | 12 | 0 | 0 |
+| [TileData](classes/TileData.md) | [Object](classes/Object.md) | 14 | 0 | 0 | 0 | 0 |
+| [TileMapLayer](classes/TileMapLayer.md) | [Node2D](classes/Node2D.md) | 10 | 0 | 0 | 0 | 0 |
+| [TileSet](classes/TileSet.md) | [Resource](classes/Resource.md) | 12 | 0 | 0 | 0 | 0 |
 | [Viewport](classes/Viewport.md) | [Node](classes/Node.md) | 3 | 0 | 1 | 0 | 0 |
-| **Total** | | 27 | 12 | 39 | 0 | 0 |
+| **Total** | | 63 | 12 | 3 | 0 | 0 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -611,40 +611,4 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`ProjectSettings::property:physics/common/physics_jitter_fix`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`ProjectSettings::property:physics/common/physics_ticks_per_second`](classes/ProjectSettings.md) | Partial | Typed key identity for upstream setting; Get/Set access values (ADR 0019). |
 | [`SceneTree::signal:physics_frame()`](classes/SceneTree.md) | Partial | Typed frame-start event; exact signal ordering requires audit under ADR 0002. |
-| [`TileData::method:add_collision_polygon(int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:get_collision_polygon_one_way_margin(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:get_collision_polygon_points(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:get_collision_polygons_count(int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:get_constant_angular_velocity(int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:get_constant_linear_velocity(int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:is_collision_polygon_one_way(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:remove_collision_polygon(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_collision_polygon_one_way(int:,int:,bool:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_collision_polygon_one_way_margin(int:,int:,float:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_collision_polygon_points(int:,int:,PackedVector2Array:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_collision_polygons_count(int:,int:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_constant_angular_velocity(int:,float:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileData::method:set_constant_linear_velocity(int:,Vector2:)`](classes/TileData.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::enum:DebugVisibilityMode`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_DEFAULT`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_HIDE`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_SHOW`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::method:get_coords_for_body_rid(RID:)`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::method:has_body_rid(RID:)`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::property:collision_enabled`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::property:collision_visibility_mode`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::property:physics_quadrant_size`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileMapLayer::property:use_kinematic_bodies`](classes/TileMapLayer.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:add_physics_layer(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:get_physics_layer_collision_layer(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:get_physics_layer_collision_mask(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:get_physics_layer_collision_priority(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:get_physics_layer_physics_material(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:get_physics_layers_count()`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:move_physics_layer(int:,int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:remove_physics_layer(int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:set_physics_layer_collision_layer(int:,int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:set_physics_layer_collision_mask(int:,int:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:set_physics_layer_collision_priority(int:,float:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
-| [`TileSet::method:set_physics_layer_physics_material(int:,PhysicsMaterial:)`](classes/TileSet.md) | Blocked | Tiles: trigger is the first tile and atlas resource slice after 2D rendering. |
 | [`Viewport::property:physics_interpolation_mode`](classes/Viewport.md) | Blocked | Remaining viewport-specific physics interpolation policy over existing worlds and renderer; trigger: its complete default/override integration. Pointer picking now executes under ADR 0099. |

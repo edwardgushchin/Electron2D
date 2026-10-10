@@ -1,6 +1,6 @@
 # SceneTree
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [MainLoop](MainLoop.md)
 
@@ -990,3 +990,7 @@ stops diagnostic GPU work; it remains available after a failed step for cleanup.
 A closed/disposed tree or off-owner call rejects access. No renderer startup or
 application UI is created. GPU contact capture adds selected-point readback. See [ADR 0100](../decisions/physics-debug.md#adr-0100)
 for live-toggle behavior and [diagnostics](../components/physics-debug.md) for use and tests.
+
+## Tile integration
+
+DebugCollisionsHint also invalidates TileMapLayer retained commands; each layer can follow, force or hide its collision overlay. See [the tile component](../components/tiles.md) for behavior and verification.

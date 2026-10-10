@@ -1,6 +1,6 @@
 # Physics server and direct queries component
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the [world adapter](physics-backends.md) also dispatches GPU worlds to their resident CCD path. Full-contract acceptance remains tracked separately.
 
@@ -141,8 +141,7 @@ whole-step GPU advantage or window FPS. Evidence: `/tmp/e2d-canvas-cpu.log` and
 Run `ELECTRON2D_TEST_PHYSICS_CANVAS=1` or
 `ELECTRON2D_TEST_PHYSICS_CANVAS_GPU=1` with the Release test runner; the complete
 collider and GPU suites also include the respective checks. Public independent-GPU
-binding, tile collision generation, picking and networking remain
-open. Native allocations, other devices/platforms and rendered acceptance were
+binding, picking and networking have separate acceptance records. Square-atlas tile collision generation and owner queries now execute through TileMapLayerTests; broader tile capabilities remain open. Native allocations, other devices/platforms and rendered acceptance were
 not measured by these headless tests.
 
 The complete collider suite and complete GPU suite passed after integration:

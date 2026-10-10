@@ -1,6 +1,6 @@
 # PhysicsDirectBodyState
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -132,7 +132,7 @@ Adds TotalGravity * Step to linear velocity, then applies max(0, 1 - Step * damp
 <a id="contacts"></a>
 ### Contact methods
 
-GetContactCount is capped by the body's configured contact limit, zero by default. Each zero-based index yields both direct shape indices, collider RID/instance identity, global contact points, global outward normal and global-axis point velocities. GetContactColliderObject returns the live scene CollisionObject or null for server-only or released objects. Virtual tile collider identity remains Partial until typed tile-body integration. Contact snapshots survive fixture edits and queries during callbacks.
+GetContactCount is capped by the body's configured contact limit, zero by default. Each zero-based index yields both direct shape indices, collider RID/instance identity, global contact points, global outward normal and global-axis point velocities. GetContactColliderObject returns the live scene CollisionObject or null for server-only or released objects. GetContactColliderObject<TileMapLayer> returns a live generated tile owner, while GetContactCollider retains its distinct physical body RID; the CollisionObject convenience overload remains null for that role. Contact snapshots survive fixture edits and queries during callbacks.
 
 GetContactImpulse uses scene units times kg/s and reports impulse applied to this
 body. Both normal and signed friction components sum warm starting and every solver
