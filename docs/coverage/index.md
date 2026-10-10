@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-10
 
+[Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) now reserve every frame, preserve complete authored configuration/file graphs, extrude runtime texture edges and replay real timed cells through existing canvas slices. Twenty-two formerly Blocked declarations are Implemented, with actual GPU/compatibility temporal pixels and zero managed owner allocation across 40 animating frames.
+
 [Tile navigation](../components/tiles.md#navigation-layers) now connects navigation masks and polygon/resource graphs to per-cell scene-owned regions, World/explicit maps, runtime tile data, traversable baking and actual diagnostic/route pixels. Fourteen formerly Blocked rows are Implemented. SceneTree.DebugNavigationHint has a working tile consumer and remains Partial pending global region/link/avoidance diagnostics.
 
 [Quantized navigation topology](../components/navigation-maps.md#geometry-and-routes) now executes cell/raster controls, two-owner grouping, directed margin pathways, per-region versions, all process counters and filtered area/nonuniform sampling. Twenty-two formerly Blocked rows and six topology-control Partial rows are Implemented. Twelve independent pinned-runtime fixtures and actual GPU/compatibility route-driven pixels verify the slice; comprehensive weighted search/tie/budget/fallback and baking/async/debug/global activation remain precise dependencies.

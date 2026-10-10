@@ -6,7 +6,7 @@ Last updated: 2026-10-10
 
 ## Overview
 
-Defines static texture-atlas tiles and their owned alternatives.
+Defines texture-atlas tiles with retained frame animation and their owned alternatives.
 
 ## Syntax
 
@@ -59,7 +59,7 @@ atlas.GetTileData(Vector2i.Zero, alternate).FlipH = true;
 | [`public Electron2D.TileData GetTileData(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)`](#member-953a07048bb3) | method | Returns borrowed data for an alternative, ignoring cell transform flags. |
 | [`public override Electron2D.Vector2i GetTileID(System.Int32 index)`](#member-1c206810b2b2) | method |  |
 | [`public Electron2D.Vector2i GetTileSizeInAtlas(Electron2D.Vector2i atlasCoords)`](#member-96058d4ac30e) | method | Returns the tile's dimensions in atlas cells. |
-| [`public Electron2D.Rect2i GetTileTextureRegion(Electron2D.Vector2i atlasCoords, System.Int32 frame = 0)`](#member-122a17e0b055) | method | Returns a static tile's pixel region; only frame zero exists. |
+| [`public Electron2D.Rect2i GetTileTextureRegion(Electron2D.Vector2i atlasCoords, System.Int32 frame = 0)`](#member-122a17e0b055) | method | Returns an animation frame's original pixel region. |
 | [`public override System.Int32 GetTilesCount()`](#member-bdb58bdf0b7c) | method |  |
 | [`public override System.Boolean HasAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)`](#member-9ae554414339) | method |  |
 | [`public override System.Boolean HasTile(Electron2D.Vector2i atlasCoords)`](#member-1c80ed7e2a24) | method |  |
@@ -356,16 +356,16 @@ public Electron2D.Rect2i GetTileTextureRegion(Electron2D.Vector2i atlasCoords, S
 
 #### Summary
 
-Returns a static tile's pixel region; only frame zero exists.
+Returns an animation frame's original pixel region.
 
 #### Returns
 
-Returns a static tile's pixel region; only frame zero exists.
+Returns an animation frame's original pixel region.
 
 #### Parameters
 
 - `atlasCoords`: Base atlas tile coordinates.
-- `frame`: Static frame index; only zero is currently available.
+- `frame`: Zero-based animation frame.
 
 <a id="member-bdb58bdf0b7c"></a>
 ### `GetTilesCount()`
@@ -543,3 +543,151 @@ TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed res
 ## Navigation polygon storage
 
 Navigation layer counts and original borrowed polygons are restored by typed descriptors. Layer policies remap all alternatives. Deep duplication preserves sharing while duplicating original navigation resources; runtime transformed cache resources remain transient. See [tile navigation](../components/tiles.md#navigation-layers).
+
+## Frame animation and runtime atlas
+
+See [atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) for reservation rules, defaults, duration/speed units, cached texture ownership, file graphs and verification. Layout getters/setters use base atlas coordinates; frame gaps use grid cells while Margins/Separation use pixels.
+
+### GetTileAnimationColumns
+
+```csharp
+int GetTileAnimationColumns(Vector2i atlasCoords)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationColumns
+
+```csharp
+void SetTileAnimationColumns(Vector2i atlasCoords, int frameColumns)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### GetTileAnimationSeparation
+
+```csharp
+Vector2i GetTileAnimationSeparation(Vector2i atlasCoords)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationSeparation
+
+```csharp
+void SetTileAnimationSeparation(Vector2i atlasCoords, Vector2i separation)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### GetTileAnimationSpeed
+
+```csharp
+float GetTileAnimationSpeed(Vector2i atlasCoords)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationSpeed
+
+```csharp
+void SetTileAnimationSpeed(Vector2i atlasCoords, float speed)
+```
+
+Sets a finite positive playback multiplier.
+
+### GetTileAnimationMode
+
+```csharp
+TileAnimationMode GetTileAnimationMode(Vector2i atlasCoords)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationMode
+
+```csharp
+void SetTileAnimationMode(Vector2i atlasCoords, TileAnimationMode mode)
+```
+
+Selects Default or RandomStartTimes; Max and undefined values throw.
+
+### GetTileAnimationFramesCount
+
+```csharp
+int GetTileAnimationFramesCount(Vector2i atlasCoords)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationFramesCount
+
+```csharp
+void SetTileAnimationFramesCount(Vector2i atlasCoords, int framesCount)
+```
+
+Resizes reservations only after validation, preserves surviving durations and initializes added durations to one.
+
+### GetTileAnimationFrameDuration
+
+```csharp
+float GetTileAnimationFrameDuration(Vector2i atlasCoords, int frameIndex)
+```
+
+Gets or changes the corresponding authored animation value; see the complete defaults, units, validation and timing contract in the linked component.
+
+### SetTileAnimationFrameDuration
+
+```csharp
+void SetTileAnimationFrameDuration(Vector2i atlasCoords, int frameIndex, float duration)
+```
+
+Sets a finite positive unscaled duration while keeping the sum float-representable.
+
+### GetTileAnimationTotalDuration
+
+```csharp
+float GetTileAnimationTotalDuration(Vector2i atlasCoords)
+```
+
+Returns the unscaled finite duration sum.
+
+### HasRoomForTile
+
+```csharp
+bool HasRoomForTile(Vector2i atlasCoords, Vector2i size, int animationColumns, Vector2i animationSeparation, int framesCount, Vector2i? ignoredTile = null)
+```
+
+Tests every frame footprint against grid bounds and other tiles; optional ignoredTile excludes that base tile during edits.
+
+### GetTilesToBeRemovedOnChange
+
+```csharp
+Vector2i[] GetTilesToBeRemovedOnChange(Texture? texture, Vector2i margins, Vector2i separation, Vector2i textureRegionSize)
+```
+
+Previews base tile identities with a frame outside the proposed texture/grid policy without mutating the source.
+
+### UseTexturePadding
+
+```csharp
+bool UseTexturePadding { get; set; }
+```
+
+True initially; chooses the borrowed padded runtime atlas rather than original coordinates.
+
+### GetRuntimeTexture
+
+```csharp
+Texture? GetRuntimeTexture()
+```
+
+Returns a borrowed source-owned padded cache or the original when padding is disabled; null without readable pixels. Preparing allocates, unchanged queries reuse the cache.
+
+### GetRuntimeTileTextureRegion
+
+```csharp
+Rect2i GetRuntimeTileTextureRegion(Vector2i atlasCoords, int frame)
+```
+
+Returns the requested frame region in the runtime texture, accounting for extrusion stride.

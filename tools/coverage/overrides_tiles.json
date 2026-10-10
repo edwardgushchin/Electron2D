@@ -398,7 +398,7 @@
     {
       "godot": "class:TileSetAtlasSource",
       "electron2d": "T:Electron2D.TileSetAtlasSource",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; full tile layouts/terrain/animation/occlusion and server-global debug remain separate dependencies."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends. Own source authoring/runtime rows are exercised; class correspondence retains inherited Resource service/editor behavior in the owning resource families."
     },
     {
       "godot": "TileSetAtlasSource::constant:TRANSFORM_FLIP_H",
@@ -418,7 +418,7 @@
     {
       "godot": "TileSetAtlasSource::method:clear_tiles_outside_texture()",
       "electron2d": "method:Electron2D.TileSetAtlasSource.ClearTilesOutsideTexture()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:create_alternative_tile(Vector2i:,int:)",
@@ -428,7 +428,7 @@
     {
       "godot": "TileSetAtlasSource::method:create_tile(Vector2i:,Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.CreateTile(Electron2D.Vector2i,System.Nullable<Electron2D.Vector2i>)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:get_atlas_grid_size()",
@@ -443,7 +443,7 @@
     {
       "godot": "TileSetAtlasSource::method:get_tile_at_coords(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAtCoords(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:get_tile_data(Vector2i:,int:)",
@@ -458,17 +458,17 @@
     {
       "godot": "TileSetAtlasSource::method:get_tile_texture_region(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileTextureRegion(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:has_tiles_outside_texture()",
       "electron2d": "method:Electron2D.TileSetAtlasSource.HasTilesOutsideTexture()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:move_tile_in_atlas(Vector2i:,Vector2i:,Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.MoveTileInAtlas(Electron2D.Vector2i,System.Nullable<Electron2D.Vector2i>,System.Nullable<Electron2D.Vector2i>)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Non-square layouts, terrain, animated atlases and occlusion remain separate prerequisites."
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     },
     {
       "godot": "TileSetAtlasSource::method:remove_alternative_tile(Vector2i:,int:)",
@@ -614,6 +614,116 @@
       "godot": "SceneTree::property:debug_navigation_hint",
       "electron2d": "property:Electron2D.SceneTree.DebugNavigationHint()",
       "reason": "ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; full tile layouts/terrain/animation/occlusion and server-global debug remain separate dependencies."
+    },
+    {
+      "godot": "TileSetAtlasSource::enum:TileAnimationMode",
+      "electron2d": "T:Electron2D.TileSetAtlasSource.TileAnimationMode",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_DEFAULT",
+      "electron2d": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.Default()",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_MAX",
+      "electron2d": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.Max()",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_RANDOM_START_TIMES",
+      "electron2d": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.RandomStartTimes()",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_runtime_texture()",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetRuntimeTexture()",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_runtime_tile_texture_region(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetRuntimeTileTextureRegion(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_columns(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationColumns(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_frame_duration(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationFrameDuration(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_frames_count(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationFramesCount(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_mode(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationMode(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_separation(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationSeparation(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_speed(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationSpeed(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tile_animation_total_duration(Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileAnimationTotalDuration(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:get_tiles_to_be_removed_on_change(Texture2D:,Vector2i:,Vector2i:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.GetTilesToBeRemovedOnChange(Electron2D.Texture,Electron2D.Vector2i,Electron2D.Vector2i,Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:has_room_for_tile(Vector2i:,Vector2i:,int:,Vector2i:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.HasRoomForTile(Electron2D.Vector2i,Electron2D.Vector2i,System.Int32,Electron2D.Vector2i,System.Int32,System.Nullable<Electron2D.Vector2i>)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_columns(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationColumns(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_frame_duration(Vector2i:,int:,float:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationFrameDuration(Electron2D.Vector2i,System.Int32,System.Single)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_frames_count(Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationFramesCount(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_mode(Vector2i:,int:TileSetAtlasSource.TileAnimationMode)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationMode(Electron2D.Vector2i,Electron2D.TileSetAtlasSource.TileAnimationMode)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_separation(Vector2i:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationSeparation(Electron2D.Vector2i,Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::method:set_tile_animation_speed(Vector2i:,float:)",
+      "electron2d": "method:Electron2D.TileSetAtlasSource.SetTileAnimationSpeed(Electron2D.Vector2i,System.Single)",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
+    },
+    {
+      "godot": "TileSetAtlasSource::property:use_texture_padding",
+      "electron2d": "property:Electron2D.TileSetAtlasSource.UseTexturePadding()",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     }
   ],
   "extras": [
@@ -1040,32 +1150,10 @@
         "TileSet::property:tile_layout",
         "TileSet::property:tile_offset_axis",
         "TileSet::property:tile_shape",
-        "TileSet::property:uv_clipping",
-        "TileSetAtlasSource::enum:TileAnimationMode",
-        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_DEFAULT",
-        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_MAX",
-        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_RANDOM_START_TIMES",
-        "TileSetAtlasSource::method:get_runtime_texture()",
-        "TileSetAtlasSource::method:get_runtime_tile_texture_region(Vector2i:,int:)",
-        "TileSetAtlasSource::method:get_tile_animation_columns(Vector2i:)",
-        "TileSetAtlasSource::method:get_tile_animation_frame_duration(Vector2i:,int:)",
-        "TileSetAtlasSource::method:get_tile_animation_frames_count(Vector2i:)",
-        "TileSetAtlasSource::method:get_tile_animation_mode(Vector2i:)",
-        "TileSetAtlasSource::method:get_tile_animation_separation(Vector2i:)",
-        "TileSetAtlasSource::method:get_tile_animation_speed(Vector2i:)",
-        "TileSetAtlasSource::method:get_tile_animation_total_duration(Vector2i:)",
-        "TileSetAtlasSource::method:get_tiles_to_be_removed_on_change(Texture2D:,Vector2i:,Vector2i:,Vector2i:)",
-        "TileSetAtlasSource::method:has_room_for_tile(Vector2i:,Vector2i:,int:,Vector2i:,int:,Vector2i:)",
-        "TileSetAtlasSource::method:set_tile_animation_columns(Vector2i:,int:)",
-        "TileSetAtlasSource::method:set_tile_animation_frame_duration(Vector2i:,int:,float:)",
-        "TileSetAtlasSource::method:set_tile_animation_frames_count(Vector2i:,int:)",
-        "TileSetAtlasSource::method:set_tile_animation_mode(Vector2i:,int:TileSetAtlasSource.TileAnimationMode)",
-        "TileSetAtlasSource::method:set_tile_animation_separation(Vector2i:,Vector2i:)",
-        "TileSetAtlasSource::method:set_tile_animation_speed(Vector2i:,float:)",
-        "TileSetAtlasSource::property:use_texture_padding"
+        "TileSet::property:uv_clipping"
       ],
       "state": "Blocked",
-      "reason": "Trigger: the owning tile capability after ADR 0101 square-atlas physics. Terrain/pattern/proxy painting requires terrain and pattern resources; non-square layouts require layout mapping; tile animation/padding requires atlas scheduling/padded texture generation; occlusion/material/Z ordering/custom tile data require their tile-specific consumers and typed storage. No inert public switches are supplied."
+      "reason": "Trigger: the owning tile capability after ADR 0101 square-atlas physics. Terrain/pattern/proxy painting requires terrain and pattern resources; non-square layouts require layout mapping; occlusion/material/Z ordering/custom tile data require their tile-specific consumers and typed storage. No inert public switches are supplied."
     },
     {
       "godot": [
@@ -1093,6 +1181,34 @@
       ],
       "state": "Partial",
       "reason": "The typed tree hint executes tile navigation diagnostics with retained canvas invalidation and actual GPU/compatibility pixels. Trigger: complete owning NavigationServer debug consumer for scene regions, links and avoidance diagnostics; tile coverage does not claim those global consumers."
+    },
+    {
+      "godot": [
+        "TileSetAtlasSource::enum:TileAnimationMode",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_DEFAULT",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_MAX",
+        "TileSetAtlasSource::enum_value:TileAnimationMode.TILE_ANIMATION_MODE_RANDOM_START_TIMES",
+        "TileSetAtlasSource::method:get_runtime_texture()",
+        "TileSetAtlasSource::method:get_runtime_tile_texture_region(Vector2i:,int:)",
+        "TileSetAtlasSource::method:get_tile_animation_columns(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_frame_duration(Vector2i:,int:)",
+        "TileSetAtlasSource::method:get_tile_animation_frames_count(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_mode(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_separation(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_speed(Vector2i:)",
+        "TileSetAtlasSource::method:get_tile_animation_total_duration(Vector2i:)",
+        "TileSetAtlasSource::method:get_tiles_to_be_removed_on_change(Texture2D:,Vector2i:,Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:has_room_for_tile(Vector2i:,Vector2i:,int:,Vector2i:,int:,Vector2i:)",
+        "TileSetAtlasSource::method:set_tile_animation_columns(Vector2i:,int:)",
+        "TileSetAtlasSource::method:set_tile_animation_frame_duration(Vector2i:,int:,float:)",
+        "TileSetAtlasSource::method:set_tile_animation_frames_count(Vector2i:,int:)",
+        "TileSetAtlasSource::method:set_tile_animation_mode(Vector2i:,int:TileSetAtlasSource.TileAnimationMode)",
+        "TileSetAtlasSource::method:set_tile_animation_separation(Vector2i:,Vector2i:)",
+        "TileSetAtlasSource::method:set_tile_animation_speed(Vector2i:,float:)",
+        "TileSetAtlasSource::property:use_texture_padding"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0013/0021/0101: complete animated atlas reservations/configuration, source-owned transient edge/corner extrusion, byte-preserving runtime texture and retained timed cell drawing. TileAnimationTests covers fit/overlap/move/shrink/storage, duration/speed/wrap/random phase/cache lifetime and zero-allocation replay; separate-process AnimatedTiles runs actual GPU/compatibility pixels. Large pixel separation uses safe padding stride instead of overlapping multi-cell regions; compressed texture and CanvasTexture normal/specular prerequisites remain in their owning absent backends."
     }
   ]
 }

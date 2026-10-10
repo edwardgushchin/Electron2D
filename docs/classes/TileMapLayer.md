@@ -760,3 +760,7 @@ void SetNavigationMap(RID map)
 ```
 
 Validates and assigns a borrowed map; empty restores World selection. The caller retains the explicit map lifetime. The override is transient and is not serialized.
+
+## Retained animated tiles
+
+Tile drawing uses the selected runtime atlas and all frame intervals. Default is synchronized; stable random phases use layer/cell identity. Frame time updates reuse recorded commands without rebuilding authored physics/navigation. See [atlas animation](../components/tiles.md#atlas-frame-animation-and-padding).

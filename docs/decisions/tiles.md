@@ -21,7 +21,7 @@ A layer batches authored cell/resource changes. `UpdateInternals` explicitly pub
 
 `GetCoordsForBodyRID` returns quadrant coordinates; a quadrant size of one makes these cell coordinates. Owner projections preserve the layer and the individual body RID through queries, motion results, direct-state contacts and overlap events. Hiding drawing does not disable collision. Disabling the layer or collision removes generated bodies. Exit, disposal and world replacement release or move their server resources, including canvas association.
 
-The first executable implementation targets square cells, static atlas tiles and physical layers/polygons, including one-way margins and constant surface velocities. Other layouts, terrain painting, animated atlases and occlusion remain explicit coverage gaps. They are not represented by inert public switches. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
+The first executable implementation targets square cells, atlas tiles and physical layers/polygons, including one-way margins and constant surface velocities. Other layouts, terrain painting and occlusion remain explicit coverage gaps. They are not represented by inert public switches. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
 
 ### Navigation layers
 
@@ -30,6 +30,16 @@ TileSet navigation layers own 32-bit membership masks; insertion, movement and r
 TileMapLayer generates one node-owned server region per nonempty cell/navigation-layer pair, with its instance identity, cell transform and navigation mask. Regions use the selected World map or a borrowed explicit map and are batched through UpdateInternals. Disabling navigation, disabling the layer, erasing cells, removing source data and leaving the tree release regions; hiding ordinary drawing retains navigation. World replacement and transform changes rebind surviving regions. Generated RIDs cannot be freed by callers. Map publication follows [ADR 0097](navigation.md#adr-0097); invalid preparation retains the preceding cell regions. Navigation diagnostics consume actual polygons through NavigationVisibilityMode and SceneTree.DebugNavigationHint, with ordinary canvas routing/visibility.
 
 Source parsing consumes tile navigation outlines as traversable contours independently of collider parsing mode, with the same runtime tile data and cell transforms. It also consumes stored polygon faces when no outlines exist, making manually authored navigation usable for baking. Collision contours retain their existing obstruction/mask policy. Generated regions and transformed cache resources are transient.
+
+### Animated atlas storage and drawing
+
+Atlas tiles reserve every animation-frame rectangle, including multi-cell dimensions, columns (zero means a horizontal row) and grid-unit frame separation. Frame reservations participate in overlap/fit checks, lookup, movement/resizing and outside-texture/removal queries. Duration and speed values are finite positive numbers; duration totals stay float-representable. Copies and portable schemas store the complete authored configuration and preserve outside-texture authored data after texture shrinkage.
+
+Tile drawing uses the existing retained canvas animation slices, with duration divided by speed and a stable hashed phase for RandomStartTimes based on layer identity and cell position. The hash distribution is accepted, not an exact reference RNG sequence. Commands record all frames once; ongoing rendering consumes the server clock without per-frame tile-data copies, callbacks or scene processing. Physics/navigation remain authored cell geometry, independent of visual frames.
+
+UseTexturePadding defaults true. GetRuntimeTexture returns a borrowed source-owned cached texture with one pixel of edge/corner extrusion per frame; false returns the borrowed original. Padding is lazily rebuilt on the consuming owner thread after source/layout edits. Cache preparation succeeds before replacing prior data; runtime caches are transient. Current renderable texture formats provide readable uncompressed images; block-compressed texture decode retains the owning image/rendering prerequisite. A source with no readable image returns no runtime texture instead of a fabricated image. Original pixels and format are preserved, including multi-cell internal spacing.
+
+Correct the pinned padding overlap when atlas Separation exceeds two pixels: padded grid stride uses region size plus max(two pixels, separation) on each axis. Ordinary zero-to-two spacing retains the reference positions; larger spacing receives enough room for the complete multi-cell image and its extruded edge. Bounds and integer overflow reject before altering authored layout or replacing a prepared cache. Padding does not claim unsupported CanvasTexture normal/specular consumers.
 
 ### Consequences
 

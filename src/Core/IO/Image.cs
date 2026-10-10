@@ -522,6 +522,7 @@ public sealed partial class Image : Resource
             return CaptureState(copyData: true);
         }
     }
+    internal static int TexturePixelByteSize(Format format) => GetBytesPerPixel(format);
     internal static State ConvertPixels(State state, Format format) => ConvertState(state, format);
     internal static Color ReadTexturePixel(State state, int x, int y) => ReadColor(state.Data,
         (y * state.Width + x) * GetBytesPerPixel(state.Format), state.Format);

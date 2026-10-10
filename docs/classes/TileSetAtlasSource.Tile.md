@@ -6,7 +6,7 @@ Internal/private implementation. **Source:** [TileSetAtlasSource.cs](../../src/S
 
 ## Description
 
-Atlas cell extent and sorted source-owned TileData alternatives.
+Atlas cell extent, animation columns/gaps/speed/mode/duration array and sorted source-owned TileData alternatives.
 
 ## Ownership and verification
 

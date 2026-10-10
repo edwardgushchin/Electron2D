@@ -14,6 +14,7 @@
     <Compile Include="../PhysicsBodyExtension.Consumer/ControlledState.cs" Link="Consumers/ControlledState.cs" />
     <Compile Include="../../examples/PhysicsResultConstruction/ResultConstructionChecks.cs" Link="Examples/PhysicsResultConstruction/ResultConstructionChecks.cs" />
     <Compile Include="../../examples/WorkerRoutes/RoutePlanner.cs" Link="Examples/WorkerRoutes/RoutePlanner.cs" />
+    <Compile Include="../../examples/AnimatedTiles/AnimatedTileScene.cs;../../examples/AnimatedTiles/AnimatedTileAssets.cs" Link="Examples/AnimatedTiles/%(Filename)%(Extension)" />
     <Compile Include="../../examples/TileRoutes/TileRouteScene.cs;../../examples/TileRoutes/TileRouteAssets.cs" Link="Examples/TileRoutes/%(Filename)%(Extension)" />
     <Compile Include="../../examples/BakedRoutes/RouteScene.cs;../../examples/BakedRoutes/RouteAssets.cs" Link="Examples/BakedRoutes/%(Filename)%(Extension)" />
     <Compile Include="../../examples/AsyncGallery/Gallery.cs;../../examples/AsyncGallery/GalleryAssets.cs" Link="Examples/AsyncGallery/%(Filename)%(Extension)" />

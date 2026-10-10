@@ -10130,6 +10130,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "kind": "type",
+    "declaringType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "name": "TileAnimationMode",
+    "signature": "public enum Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TileSetSource",
     "kind": "type",
     "declaringType": "Electron2D.TileSetSource",
@@ -37389,6 +37407,45 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.TileMapLayer.DebugVisibilityMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.Default()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "name": "Default",
+    "signature": "public const Electron2D.TileSetAtlasSource.TileAnimationMode Default = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "name": "Max",
+    "signature": "public const Electron2D.TileSetAtlasSource.TileAnimationMode Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.TileSetAtlasSource.TileAnimationMode.RandomStartTimes()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "name": "RandomStartTimes",
+    "signature": "public const Electron2D.TileSetAtlasSource.TileAnimationMode RandomStartTimes = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
     "value": "1"
   },
   {
@@ -152499,6 +152556,181 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSetAtlasSource.GetRuntimeTexture()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetRuntimeTexture",
+    "signature": "public Electron2D.Texture GetRuntimeTexture()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Texture",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetRuntimeTileTextureRegion(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetRuntimeTileTextureRegion",
+    "signature": "public Electron2D.Rect2i GetRuntimeTileTextureRegion(Electron2D.Vector2i atlasCoords, System.Int32 frame)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "frame",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Rect2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationColumns(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationColumns",
+    "signature": "public System.Int32 GetTileAnimationColumns(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationFrameDuration(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationFrameDuration",
+    "signature": "public System.Single GetTileAnimationFrameDuration(Electron2D.Vector2i atlasCoords, System.Int32 frameIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "frameIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationFramesCount(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationFramesCount",
+    "signature": "public System.Int32 GetTileAnimationFramesCount(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationMode(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationMode",
+    "signature": "public Electron2D.TileSetAtlasSource.TileAnimationMode GetTileAnimationMode(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationSeparation(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationSeparation",
+    "signature": "public Electron2D.Vector2i GetTileAnimationSeparation(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationSpeed(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationSpeed",
+    "signature": "public System.Single GetTileAnimationSpeed(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTileAnimationTotalDuration(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTileAnimationTotalDuration",
+    "signature": "public System.Single GetTileAnimationTotalDuration(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSetAtlasSource.GetTileAtCoords(Electron2D.Vector2i)",
     "kind": "method",
     "declaringType": "Electron2D.TileSetAtlasSource",
@@ -152617,6 +152849,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSetAtlasSource.GetTilesToBeRemovedOnChange(Electron2D.Texture,Electron2D.Vector2i,Electron2D.Vector2i,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "GetTilesToBeRemovedOnChange",
+    "signature": "public Electron2D.Vector2i[] GetTilesToBeRemovedOnChange(Electron2D.Texture texture, Electron2D.Vector2i margins, Electron2D.Vector2i separation, Electron2D.Vector2i textureRegionSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.Texture",
+        "default": null
+      },
+      {
+        "name": "margins",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "separation",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "textureRegionSize",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSetAtlasSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSetAtlasSource",
@@ -152635,6 +152901,50 @@
         "name": "alternativeTile",
         "type": "System.Int32",
         "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.HasRoomForTile(Electron2D.Vector2i,Electron2D.Vector2i,System.Int32,Electron2D.Vector2i,System.Int32,System.Nullable\u003CElectron2D.Vector2i\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "HasRoomForTile",
+    "signature": "public System.Boolean HasRoomForTile(Electron2D.Vector2i atlasCoords, Electron2D.Vector2i size, System.Int32 animationColumns, Electron2D.Vector2i animationSeparation, System.Int32 framesCount, System.Nullable\u003CElectron2D.Vector2i\u003E ignoredTile = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "animationColumns",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "animationSeparation",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "framesCount",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "ignoredTile",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
       }
     ],
     "returnType": "System.Boolean",
@@ -152767,6 +153077,155 @@
       {
         "name": "newID",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationColumns(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationColumns",
+    "signature": "public System.Void SetTileAnimationColumns(Electron2D.Vector2i atlasCoords, System.Int32 frameColumns)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "frameColumns",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationFrameDuration(Electron2D.Vector2i,System.Int32,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationFrameDuration",
+    "signature": "public System.Void SetTileAnimationFrameDuration(Electron2D.Vector2i atlasCoords, System.Int32 frameIndex, System.Single duration)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "frameIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "duration",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationFramesCount(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationFramesCount",
+    "signature": "public System.Void SetTileAnimationFramesCount(Electron2D.Vector2i atlasCoords, System.Int32 framesCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "framesCount",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationMode(Electron2D.Vector2i,Electron2D.TileSetAtlasSource.TileAnimationMode)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationMode",
+    "signature": "public System.Void SetTileAnimationMode(Electron2D.Vector2i atlasCoords, Electron2D.TileSetAtlasSource.TileAnimationMode mode)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.TileSetAtlasSource.TileAnimationMode",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationSeparation(Electron2D.Vector2i,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationSeparation",
+    "signature": "public System.Void SetTileAnimationSeparation(Electron2D.Vector2i atlasCoords, Electron2D.Vector2i separation)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "separation",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetAtlasSource.SetTileAnimationSpeed(Electron2D.Vector2i,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "SetTileAnimationSpeed",
+    "signature": "public System.Void SetTileAnimationSpeed(Electron2D.Vector2i atlasCoords, System.Single speed)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "speed",
+        "type": "System.Single",
         "default": null
       }
     ],
@@ -198577,6 +199036,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSetAtlasSource.UseTexturePadding()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSetAtlasSource",
+    "name": "UseTexturePadding",
+    "signature": "public System.Boolean UseTexturePadding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

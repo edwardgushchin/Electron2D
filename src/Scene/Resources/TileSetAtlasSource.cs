@@ -1,9 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Defines static texture-atlas tiles and their owned alternatives.</summary>
+/// <summary>Defines texture-atlas tiles with retained frame animation and their owned alternatives.</summary>
 /// <remarks>Texture and material resources are borrowed. Tile data is invalidated by removal or source disposal.
 /// Texture changes preserve authored tiles even when their regions no longer fit.</remarks>
-public sealed class TileSetAtlasSource : TileSetSource
+public sealed partial class TileSetAtlasSource : TileSetSource
 {
     /// <summary>Cell alternative flag for horizontal reflection.</summary>
     public const int TransformFlipH = 4096;
@@ -15,6 +15,11 @@ public sealed class TileSetAtlasSource : TileSetSource
     private sealed class Tile
     {
         internal Vector2i Size = Vector2i.One;
+        internal int Columns;
+        internal Vector2i FrameSeparation;
+        internal float Speed = 1;
+        internal TileAnimationMode Mode;
+        internal float[] Durations = [1];
         internal readonly SortedDictionary<int, TileData> Alternatives = [];
     }
     private readonly Dictionary<Vector2i, Tile> _tiles = [];
@@ -34,23 +39,20 @@ public sealed class TileSetAtlasSource : TileSetSource
             if (ReferenceEquals(value, _texture)) return;
             DetachTexture(); _texture = value;
             if (value is not null) { value.Changed += TextureChanged; value.Disposed += TextureDisposed; }
-            EmitChanged();
+            _paddingDirty = true; EmitChanged();
         }
     }
     /// <summary>Gets or sets the nonnegative top and left texture margins in pixels.</summary>
-    public Vector2i Margins { get { ThrowIfDisposed(); return _margins; } set { ThrowIfDisposed(); Nonnegative(value); if (_margins == value) return; _margins = value; EmitChanged(); } }
+    public Vector2i Margins { get { ThrowIfDisposed(); return _margins; } set { ThrowIfDisposed(); Nonnegative(value); if (_margins == value) return; _margins = value; _paddingDirty = true; EmitChanged(); } }
     /// <summary>Gets or sets nonnegative spacing between atlas cells in pixels.</summary>
-    public Vector2i Separation { get { ThrowIfDisposed(); return _separation; } set { ThrowIfDisposed(); Nonnegative(value); CheckSum(value, _regionSize); if (_separation == value) return; _separation = value; EmitChanged(); } }
+    public Vector2i Separation { get { ThrowIfDisposed(); return _separation; } set { ThrowIfDisposed(); Nonnegative(value); CheckSum(value, _regionSize); if (_separation == value) return; _separation = value; _paddingDirty = true; EmitChanged(); } }
     /// <summary>Gets or sets positive atlas cell dimensions in pixels.</summary>
-    public Vector2i TextureRegionSize { get { ThrowIfDisposed(); return _regionSize; } set { ThrowIfDisposed(); TileSet.Positive(value); CheckSum(value, _separation); if (_regionSize == value) return; _regionSize = value; EmitChanged(); } }
+    public Vector2i TextureRegionSize { get { ThrowIfDisposed(); return _regionSize; } set { ThrowIfDisposed(); TileSet.Positive(value); CheckSum(value, _separation); if (_regionSize == value) return; _regionSize = value; _paddingDirty = true; EmitChanged(); } }
     /// <summary>Returns the number of complete atlas cells inside the current texture.</summary>
     /// <returns>Returns the number of complete atlas cells inside the current texture.</returns>
     public Vector2i GetAtlasGridSize()
     {
-        ThrowIfDisposed(); if (_texture is null) return default;
-        var size = _texture.GetSize() - (Vector2)_margins;
-        if (size.X < _regionSize.X || size.Y < _regionSize.Y) return default;
-        return new(1 + (int)((size.X - _regionSize.X) / (_regionSize.X + _separation.X)), 1 + (int)((size.Y - _regionSize.Y) / (_regionSize.Y + _separation.Y)));
+        ThrowIfDisposed(); return Grid(_texture, _margins, _separation, _regionSize);
     }
     /// <summary>Creates a base tile occupying a positive rectangular region of currently unused atlas cells.</summary>
     /// <param name="atlasCoords">Base atlas tile coordinates.</param>
@@ -73,20 +75,20 @@ public sealed class TileSetAtlasSource : TileSetSource
     /// <returns>Returns the tile occupying an atlas cell, or (-1,-1) when unused.</returns>
     public Vector2i GetTileAtCoords(Vector2i atlasCoords)
     {
-        ThrowIfDisposed(); foreach (var pair in _tiles) if (Contains(pair.Key, pair.Value.Size, atlasCoords)) return pair.Key; return new(-1, -1);
+        ThrowIfDisposed(); foreach (var pair in _tiles) for (var frame = 0; frame < pair.Value.Durations.Length; frame++) if (Contains(FrameCoords(pair.Key, pair.Value, frame), pair.Value.Size, atlasCoords)) return pair.Key; return new(-1, -1);
     }
     /// <summary>Returns the tile's dimensions in atlas cells.</summary>
     /// <param name="atlasCoords">Base atlas tile coordinates.</param>
     /// <returns>Returns the tile's dimensions in atlas cells.</returns>
     public Vector2i GetTileSizeInAtlas(Vector2i atlasCoords) => GetTile(atlasCoords).Size;
-    /// <summary>Returns a static tile's pixel region; only frame zero exists.</summary>
+    /// <summary>Returns an animation frame's original pixel region.</summary>
     /// <param name="atlasCoords">Base atlas tile coordinates.</param>
-    /// <param name="frame">Static frame index; only zero is currently available.</param>
-    /// <returns>Returns a static tile's pixel region; only frame zero exists.</returns>
+    /// <param name="frame">Zero-based animation frame.</param>
+    /// <returns>Returns an animation frame's original pixel region.</returns>
     public Rect2i GetTileTextureRegion(Vector2i atlasCoords, int frame = 0)
     {
-        var tile = GetTile(atlasCoords); if (frame != 0) throw new ArgumentOutOfRangeException(nameof(frame));
-        return new(new(checked(_margins.X + atlasCoords.X * (_regionSize.X + _separation.X)), checked(_margins.Y + atlasCoords.Y * (_regionSize.Y + _separation.Y))),
+        var tile = GetTile(atlasCoords); ValidateFrame(tile, frame); var coords = FrameCoords(atlasCoords, tile, frame);
+        return new(new(checked(_margins.X + coords.X * (_regionSize.X + _separation.X)), checked(_margins.Y + coords.Y * (_regionSize.Y + _separation.Y))),
             new(checked(_regionSize.X * tile.Size.X + _separation.X * (tile.Size.X - 1)), checked(_regionSize.Y * tile.Size.Y + _separation.Y * (tile.Size.Y - 1))));
     }
     /// <summary>Moves or resizes a tile while retaining its alternatives; null leaves that component unchanged.</summary>
@@ -98,14 +100,14 @@ public sealed class TileSetAtlasSource : TileSetSource
         var tile = GetTile(atlasCoords); var coords = newAtlasCoords ?? atlasCoords; var size = newSize ?? tile.Size;
         if (coords == new Vector2i(-1, -1)) coords = atlasCoords; if (size == new Vector2i(-1, -1)) size = tile.Size;
         Nonnegative(coords); TileSet.Positive(size);
-        if (!HasRoom(coords, size, atlasCoords)) throw new ArgumentException("The atlas region is occupied or outside the texture.");
+        if (!HasRoomForTile(coords, size, tile.Columns, tile.FrameSeparation, tile.Durations.Length, atlasCoords)) throw new ArgumentException("The atlas region is occupied or outside the texture.");
         _tiles.Remove(atlasCoords); tile.Size = size; _tiles.Add(coords, tile); Change();
     }
     /// <summary>Tests whether any authored tile extends outside the current texture.</summary>
     /// <returns>Tests whether any authored tile extends outside the current texture.</returns>
-    public bool HasTilesOutsideTexture() { ThrowIfDisposed(); foreach (var pair in _tiles) if (!HasRoom(pair.Key, pair.Value.Size, pair.Key)) return true; return false; }
+    public bool HasTilesOutsideTexture() { ThrowIfDisposed(); foreach (var pair in _tiles) if (!TileFits(pair.Key, pair.Value, GetAtlasGridSize())) return true; return false; }
     /// <summary>Removes tiles extending outside the current texture.</summary>
-    public void ClearTilesOutsideTexture() { ThrowIfDisposed(); foreach (var coords in _tiles.Keys.ToArray()) if (!HasRoom(coords, _tiles[coords].Size, coords)) RemoveTile(coords); }
+    public void ClearTilesOutsideTexture() { ThrowIfDisposed(); foreach (var coords in _tiles.Keys.ToArray()) if (!TileFits(coords, _tiles[coords], GetAtlasGridSize())) RemoveTile(coords); }
     /// <summary>Adds an alternative with empty physics data and returns its nonzero identity.</summary>
     /// <param name="atlasCoords">Base atlas tile coordinates.</param>
     /// <param name="alternativeIDOverride">Nonzero alternative identity without transform bits, or minus one for automatic selection.</param>
@@ -166,16 +168,13 @@ public sealed class TileSetAtlasSource : TileSetSource
     private static bool Contains(Vector2i origin, Vector2i size, Vector2i point) => point.X >= origin.X && point.Y >= origin.Y && (long)point.X < (long)origin.X + size.X && (long)point.Y < (long)origin.Y + size.Y;
     private bool HasRoom(Vector2i coords, Vector2i size, Vector2i ignored)
     {
-        var grid = GetAtlasGridSize(); if ((long)coords.X + size.X > grid.X || (long)coords.Y + size.Y > grid.Y) return false;
-        foreach (var pair in _tiles)
-            if (pair.Key != ignored && coords.X < (long)pair.Key.X + pair.Value.Size.X && pair.Key.X < (long)coords.X + size.X && coords.Y < (long)pair.Key.Y + pair.Value.Size.Y && pair.Key.Y < (long)coords.Y + size.Y) return false;
-        return true;
+        return HasRoomForTile(coords, size, 0, Vector2i.Zero, 1, ignored);
     }
     private TileData NewData(bool alternative) { var data = new TileData(alternative); data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
     private void ReleaseData(TileData data) { data.Changed -= Change; data.Release(); }
-    private void Change() { NotifyPropertyListChanged(); EmitChanged(); }
-    private void TextureChanged(Resource _) => EmitChanged();
-    private void TextureDisposed(ElectronObject _) { DetachTexture(); EmitChanged(); }
+    private void Change() { _paddingDirty = true; NotifyPropertyListChanged(); EmitChanged(); }
+    private void TextureChanged(Resource _) { _paddingDirty = true; EmitChanged(); }
+    private void TextureDisposed(ElectronObject _) { DetachTexture(); _paddingDirty = true; EmitChanged(); }
     private void DetachTexture() { if (_texture is not null) { _texture.Changed -= TextureChanged; _texture.Disposed -= TextureDisposed; _texture = null; } }
     internal override void ResizePhysicsLayers(int count) { _physicsLayers = count; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.ResizeLayers(count); }
     internal override void InsertPhysicsLayer(int index) { _physicsLayers++; foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) data.Layers.Insert(index, new()); }
@@ -187,17 +186,17 @@ public sealed class TileSetAtlasSource : TileSetSource
     internal override void MoveNavigationLayer(int from, int to) { foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) TileSet.Move(data.Navigation, from, to); }
     private void ClearTiles() { foreach (var tile in _tiles.Values) foreach (var data in tile.Alternatives.Values) ReleaseData(data); _tiles.Clear(); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { DetachTexture(); ClearTiles(); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { DetachTexture(); ClearTiles(); ReleasePadding(); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new TileSetAtlasSource();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
         var copy = (TileSetAtlasSource)target; copy.ClearTiles(); copy._physicsLayers = _physicsLayers; copy._navigationLayers = _navigationLayers;
-        copy._margins = _margins; copy._separation = _separation; copy._regionSize = _regionSize; copy.Texture = deep ? (Texture?)duplicate(_texture) : _texture;
+        copy._margins = _margins; copy._separation = _separation; copy._regionSize = _regionSize; copy._usePadding = _usePadding; copy._paddingDirty = true; copy.Texture = deep ? (Texture?)duplicate(_texture) : _texture;
         foreach (var pair in _tiles)
         {
-            var tile = new Tile { Size = pair.Value.Size };
+            var tile = new Tile { Size = pair.Value.Size, Columns = pair.Value.Columns, FrameSeparation = pair.Value.FrameSeparation, Speed = pair.Value.Speed, Mode = pair.Value.Mode, Durations = (float[])pair.Value.Durations.Clone() };
             foreach (var alt in pair.Value.Alternatives) { var data = alt.Value.Copy(deep ? duplicate : null); data.Changed += copy.Change; tile.Alternatives.Add(alt.Key, data); }
             copy._tiles.Add(pair.Key, tile);
         }
@@ -221,6 +220,7 @@ public sealed class TileSetAtlasSource : TileSetSource
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
+        yield return new PropertyDescriptor<TileSetAtlasSource, bool>(nameof(UseTexturePadding), n => n.UseTexturePadding, (n, v) => n.UseTexturePadding = v, _ => true, stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, Texture?>(nameof(Texture), n => n.Texture, (n, v) => n.Texture = v, _ => null, stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i>(nameof(Margins), n => n.Margins, (n, v) => n.Margins = v, _ => default, stored: true);
         yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i>(nameof(Separation), n => n.Separation, (n, v) => n.Separation = v, _ => default, stored: true);
@@ -232,6 +232,7 @@ public sealed class TileSetAtlasSource : TileSetSource
         {
             var c = coord; var prefix = $"Tiles/{c.X},{c.Y}/";
             yield return new PropertyDescriptor<TileSetAtlasSource, Vector2i>(prefix + "Size", n => n._tiles[c].Size, (n, v) => { TileSet.Positive(v); n._tiles[c].Size = v; n.Change(); }, _ => Vector2i.One, stored: true);
+            foreach (var property in AnimationProperties(c, prefix)) yield return property;
             yield return new PropertyDescriptor<TileSetAtlasSource, int[]>(prefix + "Alternatives", n => n._tiles[c].Alternatives.Keys.ToArray(), (n, v) => n.RestoreAlternatives(c, v), _ => [0], stored: true);
             foreach (var alternative in _tiles[c].Alternatives)
             {

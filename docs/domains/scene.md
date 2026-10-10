@@ -258,3 +258,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Menu strips](../components/menu-strips.md) now present direct PopupMenu children with identity-preserving headers, pointer/keyboard/hover switching, shortcut gates and child-bound fresh scene/file factories. System global menus retain the precise NativeMenu decision/backend dependency in ADR 0041.
 
 [Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
+
+[Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) provide complete frame reservations/configuration, source-owned transient padded textures and retained timed TileMapLayer drawing. Physics/navigation geometry remains independent of visual frames.
