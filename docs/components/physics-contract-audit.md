@@ -291,7 +291,9 @@ both the moving-mask rejection and the target-mask non-veto cases. RigidBody
 contact-departure fixtures now reject both pair directions explicitly.
 
 The pinned body-pair implementation also reports contacts between interacting
-nonresponsive body roles when reporting is enabled. Static/kinematic report-only
-pairs are not closed by the directional dynamic-response tests and remain an
-explicit implementation/conformance gap. Do not mark all CollisionObject or
-server-extension behavior complete from this slice.
+nonresponsive roles when reporting is enabled. The broad phase excludes two static
+bodies; kinematic/static and kinematic/kinematic reporting now executes through the
+existing CPU/GPU contact pipelines. [Report-only verification](physics-report-only.md)
+covers either receiver, cap changes, frozen scene events, quiet activity, identity,
+restore and warmed allocations. This does not close the server-extension or full
+inherited contract.

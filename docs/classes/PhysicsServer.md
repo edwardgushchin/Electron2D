@@ -811,3 +811,9 @@ Stores any unsigned 32-bit layer value. Scene properties and server reads agree 
 ### `BodySetCollisionMask(RID body, uint mask)`
 
 Uses the same mutation, wake, lifetime and failure rules. Body motion tests compare the moving mask with target layers, independently of target masks. A physical pair is admitted by either endpoint; each dynamic endpoint responds only when its own mask matches. See [collision filter execution and checks](../components/physics-filters.md).
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
+
+BodySetMaxContactsReported synchronizes live reporting eligibility for both scene
+and caller-owned bodies. A positive cap immediately exposes a kinematic receiver
+as active; contact membership still refreshes on the next completed step.

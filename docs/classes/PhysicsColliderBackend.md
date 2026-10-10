@@ -151,3 +151,10 @@ this removes repeated owner resolution without a new cache or changed public API
 See [parameter preparation measurements](../components/physics-backends.md#parameter-owner-resolution).
 
 [Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
+
+Idle kinematic velocity clearing and unchanged targets do not generate a wake
+when real motion is already zero. Actual platform movement/stopping still wakes
+contacts, while explicit assignments retain their wake and ordering semantics.
+See [resident kinematics](../components/gpu-resident-kinematic.md#idle-platform-wake-policy).

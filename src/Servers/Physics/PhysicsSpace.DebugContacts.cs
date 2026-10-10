@@ -36,17 +36,18 @@ internal sealed partial class PhysicsSpace
                     ref readonly var point = ref contact.manifold.points[i];
                     if (point.separation >= 0) continue;
                     var half = point.separation * .5f * contact.manifold.normal;
-                    Add(point.point - half);
+                    AddDebugContact(point.point - half);
                     if (_debugContactCount == _debugContactLimit) return;
-                    Add(point.point + half);
+                    AddDebugContact(point.point + half);
                     if (_debugContactCount == _debugContactLimit) return;
                 }
             }
-        void Add(B2Vec2 point)
-        {
-            var value = ToScene(point);
-            if (!value.IsFinite()) throw new InvalidOperationException("Physics contact diagnostics contain a nonfinite point.");
-            _debugContacts[_debugContactCount++] = value;
-        }
+    }
+    private void AddDebugContact(B2Vec2 point)
+    {
+        if (_debugContactCount == _debugContactLimit) return;
+        var value = ToScene(point);
+        if (!value.IsFinite()) throw new InvalidOperationException("Physics contact diagnostics contain a nonfinite point.");
+        _debugContacts[_debugContactCount++] = value;
     }
 }

@@ -78,7 +78,8 @@ bool accept(uint aIndex, uint bIndex)
     }
     if(bIndex<aIndex)return false;
     if (excepted(a.owner.x,b.owner.x)) return false;
-    if (bodies[a.owner.x].flags.y<2u && bodies[b.owner.x].flags.y<2u) return false;
+    ResidentBody ba=bodies[a.owner.x],bb=bodies[b.owner.x];
+    if(ba.flags.y<2u&&bb.flags.y<2u&&((ba.flags.y|bb.flags.y)==0u||((ba.flags.z|bb.flags.z)&128u)==0u))return false;
     return ((a.policy.z&b.policy.y)!=0u || (b.policy.z&a.policy.y)!=0u) && boundaryOverlap(aIndex,bIndex);
 }
 void main()
@@ -124,7 +125,7 @@ void main()
     Proxy query=proxies[i];
     if(query.data.z==0)return;
     Shape a=shapes[i];
-    int types=(a.policy.w&2u)!=0u?8:query.data.x==2?7:12;
+    int types=(a.policy.w&2u)!=0u?8:query.data.x==2?7:filterInfo.z!=0u?15:12;
     int at=1;
     while(at!=0)
     {

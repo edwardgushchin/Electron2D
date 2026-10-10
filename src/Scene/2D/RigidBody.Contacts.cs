@@ -40,7 +40,8 @@ public partial class RigidBody
     /// <summary>Gets or sets the maximum number of contact points reported from a fixed step.</summary>
     /// <value>Zero by default, which disables contact-point reporting and contact entry/exit.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned count is outside zero through 4095.</exception>
-    /// <remarks>Attached access requires the scene owner thread. The assignment prepares bounded point storage. A full slot set keeps the deepest contacts; equal-depth candidates retain existing slots.</remarks>
+    /// <remarks>Attached access requires the scene owner thread. The assignment prepares bounded point storage. A full slot set keeps the deepest contacts; equal-depth candidates retain existing slots.
+    /// Enabling reports keeps a body in kinematic freeze mode active immediately; contact membership is refreshed on the next completed step.</remarks>
     public int MaxContactsReported
     {
         get { ThrowIfDisposed(); return _maxContactsReported; }
@@ -53,6 +54,7 @@ public partial class RigidBody
             PhysicsServer.Service.BodyRuntime(PhysicsRID).View?.PrepareContacts(value);
             _maxContactsReported = value;
             _contactCount = 0;
+            if (HasBackend) Backend.SetContactReporting(value > 0);
             Space?.PrepareMonitoringCapacity();
         }
     }

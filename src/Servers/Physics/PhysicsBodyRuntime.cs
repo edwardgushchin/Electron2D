@@ -79,6 +79,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal void ApplyBeforeStep(PhysicsBody? scene)
     {
         var backend = Backend;
+        backend.SetContactReporting(ContactLimit > 0);
         ActiveBeforeStep = !backend.HasMotionMode(PhysicsServer.BodyMode.Static) && backend.IsAwake;
         if (backend.HasMotionMode(PhysicsServer.BodyMode.Static) || backend.IsDynamic && !ActiveBeforeStep) return;
         var rigid = scene as RigidBody;

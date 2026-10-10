@@ -496,7 +496,7 @@ internal sealed partial class PhysicsSpace : IDisposable
             try { if (_portableColdStep) world.enableWarmStarting = false; StepKinematicPaths(delta, hasKinematicBodies); _portableColdStep = false; }
             finally { world.enableWarmStarting = warmStarting; }
             RecordStepPhase(3, ref profileMark);
-            solverAdvanced = true; Tick++; CaptureDebugContacts();
+            solverAdvanced = true; Tick++;
             foreach (var collider in _serverColliders) collider.CompleteMotion();
             foreach (var body in _bodies)
             {

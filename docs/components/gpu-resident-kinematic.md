@@ -154,3 +154,22 @@ Current [integration batching](gpu-contact-solver.md#integration-batching-measur
 reduces the shape-free four-substep status budget to 72 upload / 80 readback bytes
 per tick with pending edits. Historical measurements above retain their original
 submission policy and payloads. Current tests keep exact traffic and zero-allocation assertions.
+
+## Idle platform wake policy
+
+An unchanged target derives zero real motion without marking a structural wake.
+Internal clearing of consumed kinematic velocity wakes connected bodies only
+when the device previously held nonzero real motion. Explicit velocity
+assignments keep their existing wake semantics and later assignments supersede
+that clear in the coalesced command. Virtual surface velocities are retained.
+This allows dynamic bodies supported by an idle AnimatableBody to sleep with
+either SyncToPhysics value; moving the platform still wakes them.
+`PhysicsReportOnlyTests` verifies the public sleep/move behavior with platform
+reporting enabled, and `GPUPhysicsKinematicTests` verifies both clear/assignment
+orders with and without intermediate reads.
+
+CCD retains first-impact sampling for report-only pairs but advances normally
+from an existing overlap when neither endpoint can respond dynamically. A
+zero-impulse observation cannot remove prescribed closing velocity. Applying the
+ordinary response interval bound to it exhausted the GPU advancement budget;
+`PhysicsReportOnlyTests` now checks the complete sweep and subsequent clear.

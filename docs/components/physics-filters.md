@@ -76,8 +76,9 @@ independent sensor membership each measure zero owner/all-thread managed
 bytes on both backends. This capacity-prepared fixture is an allocation check;
 it is not a throughput benchmark or a native-allocation measurement.
 
-Nonresponsive body-role pairs that only report contacts remain an open separate
-audit item. Full physics conformance, large scenes, network topology, renderer FPS,
+Kinematic/static and kinematic/kinematic report-only pairs now execute under the
+shared contact pipeline when either endpoint reports; two static bodies remain
+ineligible. [Report-only verification](physics-report-only.md) covers the boundary. Full physics conformance, large scenes, network topology, renderer FPS,
 native allocations and additional device/platform acceptance retain their gates.
 [ADR 0102](../decisions/physics-filters.md#adr-0102) owns the policy.
 
@@ -101,3 +102,13 @@ and performance acceptance is still open.
 Release runtime build, both formatting checks, compiled API/coverage, wiki tests
 and generation/check, production identity scan and diff validation pass. Raw logs
 and network reports are retained in ignored `bin/physics-filter-validation/2026-10-10/`.
+
+Resident CCD policy tests now reject both pair directions explicitly in the
+masked pass-through fixture. The response/friction fixture keeps the wall mask
+zero while the moving body admits its layer, verifying that this reverse mask
+does not veto continuous physical response.
+
+The randomized resident spatial oracle now admits either mask direction for
+ordinary body pairs, while retaining directional sensor checks and role/AABB
+conditions. Its complete expected pair set still checks canonical identity and
+uniqueness across 36 authored motion frames.

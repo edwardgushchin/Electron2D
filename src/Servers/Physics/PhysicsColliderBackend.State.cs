@@ -40,12 +40,13 @@ internal sealed partial class PhysicsColliderBackend
                 snapshot.Velocity.Z - _gpuSurfaceAngular, !IsAwake);
         }
         var state = b2GetBodyState(_world!, _body!);
-        return (ToScene(state?.linearVelocity ?? default), state?.angularVelocity ?? 0, state is null);
+        return (ToScene(state?.linearVelocity ?? default), state?.angularVelocity ?? 0, !IsAwake);
     }
 
     internal Vector2 LinearVelocity => GPU is not null ? new(GPUState.Velocity.X, GPUState.Velocity.Y) : ToScene(b2Body_GetLinearVelocity(BodyID));
     internal float AngularVelocity => GPU is not null ? GPUState.Velocity.Z : b2Body_GetAngularVelocity(BodyID);
-    internal bool IsAwake => GPU is not null ? !HasMotionMode(PhysicsServer.BodyMode.Static) && !GPUState.Sleeping : b2Body_IsAwake(BodyID);
+    internal bool IsAwake => GPU is not null ? !HasMotionMode(PhysicsServer.BodyMode.Static) && !GPUState.Sleeping :
+        _contactReporting && HasMotionMode(PhysicsServer.BodyMode.Kinematic) || b2Body_IsAwake(BodyID);
 
     internal void SetPose(Vector2 position, float rotation)
     {
@@ -72,7 +73,12 @@ internal sealed partial class PhysicsColliderBackend
     }
     internal void ClearVelocity()
     {
-        if (GPU is { } gpu) { gpu.SetSolverVelocity(GPUHandle, default, 0); Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu)
+        {
+            if (HasMotionMode(PhysicsServer.BodyMode.Kinematic)) gpu.ClearKinematicVelocity(GPUHandle);
+            else gpu.SetSolverVelocity(GPUHandle, default, 0);
+            Space!.InvalidateGPUStates();
+        }
         else { b2Body_SetLinearVelocity(BodyID, default); b2Body_SetAngularVelocity(BodyID, 0); }
     }
     internal void SetAwake(bool awake)

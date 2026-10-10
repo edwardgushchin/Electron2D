@@ -43,11 +43,13 @@ void main()
         if(!finite4(pending)){fail(2u);return;}
         bool velocityChanged=((mask&8u)!=0u&&b.velocity!=c.body.velocity)||
             ((mask&1048576u)!=0u&&b.velocity.xy!=c.body.velocity.xy)||
-            ((mask&2097152u)!=0u&&b.velocity.z!=c.body.velocity.z);
+            ((mask&2097152u)!=0u&&b.velocity.z!=c.body.velocity.z)||
+            ((mask&16777216u)!=0u&&b.velocity.xyz!=vec3(0));
         // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
         if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u|4194304u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
         if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
+        if ((mask & 8388608u) != 0u) b.flags.z=(b.flags.z&~128u)|(c.header.w&128u);
         if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
         if ((mask & 262144u) != 0u) b.flags.z&=~6144u;
         if ((mask & 131072u) != 0u) {targets[index]=c.target;b.flags.z|=2048u;}
@@ -57,6 +59,11 @@ void main()
             b.flags.z=(b.flags.z&~50180u)|(c.body.flags.z&50180u);
         }
         if ((mask & 4u) != 0u) b.pose = c.body.pose;
+        if ((mask & 16777216u) != 0u)
+        {
+            if(b.velocity.xyz!=vec3(0))b.flags.z=(b.flags.z&~80u)|32u;
+            b.velocity.xyz=vec3(0);
+        }
         if ((mask & 8u) != 0u) b.velocity = c.body.velocity;
         if ((mask & 1048576u) != 0u) b.velocity.xy = c.body.velocity.xy;
         if ((mask & 2097152u) != 0u) b.velocity.z = c.body.velocity.z;
@@ -111,6 +118,7 @@ void main()
                 float dot=b.pose.z*target.z+b.pose.w*target.w;
                 b.velocity.z=atan(cross,dot)/step.w;
                 b.flags.z|=4096u;
+                if(b.velocity.xyz!=vec3(0))b.flags.z=(b.flags.z&~80u)|32u;
             }
         }
         if(b.flags.y!=0u&&(b.flags.z&16u)==0u)

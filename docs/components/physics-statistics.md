@@ -1,6 +1,6 @@
 # Completed physics statistics
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 [PhysicsServer.GetProcessInfo](../classes/PhysicsServer.md#statistics) and
 [Performance.GetMonitor](../classes/Performance.md) read the same completed-step
@@ -89,3 +89,10 @@ GPU path. The resident role/policy, force and kinematic traffic regressions veri
 104 B status readback per full tick versus their previous 96 B budget, with
 unchanged uploads and zero warmed allocation. The full GPU conformance suite and
 runtime shader checks pass on this device.
+
+Kinematic/static and kinematic/kinematic report-only pairs contribute once to
+collision-pair statistics when their current geometry touches and either endpoint
+requests a snapshot. Native-dormant CPU kinematics with reporting enabled count
+as logically active without holding a dynamic sleep island awake. Two static
+bodies remain ineligible, and report-only pairs add no dynamic constraint island.
+See [contact reporting](physics-report-only.md).

@@ -259,3 +259,9 @@ Contact monitoring uses sampled bound object identity, including Entity owners o
 [Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
 now run RigidFreezeModeTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
+
+MaxContactsReported assignment immediately synchronizes live reporting eligibility.
+A positive cap exposes a frozen Kinematic body as active before another step;
+contact membership and monitor events still refresh after the next completed step.

@@ -17,12 +17,12 @@ internal sealed partial class PhysicsSpace
         _aggregateContactImpulses = false; _frameContactIndices.Clear(); _frameContacts.Clear();
         if (!hasKinematicBodies) { StepBackend((float)delta); return; }
         var minimumExtent = B2_HUGE;
+        var kinematicExtent = B2_HUGE; var reportOnly = false;
         foreach (var body in _bodies)
-            if (body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
-                minimumExtent = MathF.Min(minimumExtent, PhysicsColliderBackend.Simulation(body.BackendID).minExtent);
+            if (body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
         foreach (var body in _serverColliders)
-            if (!body.IsArea && body.BackendShapes.Count > 0 && b2Body_GetType(body.BackendID) == B2BodyType.b2_dynamicBody)
-                minimumExtent = MathF.Min(minimumExtent, PhysicsColliderBackend.Simulation(body.BackendID).minExtent);
+            if (!body.IsArea && body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
+        if (reportOnly) minimumExtent = MathF.Min(minimumExtent, kinematicExtent);
         if (minimumExtent == B2_HUGE) { StepBackend((float)delta); return; }
         var travel = 0d;
         foreach (var body in _bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
@@ -50,6 +50,16 @@ internal sealed partial class PhysicsSpace
                 }
             StepBackend(subDelta);
             CaptureIntervalImpulses();
+        }
+        void MeasureExtent(PhysicsColliderBackend backend, int limit)
+        {
+            var type = b2Body_GetType(backend.BodyID); var extent = PhysicsColliderBackend.Simulation(backend.BodyID).minExtent;
+            if (type == B2BodyType.b2_dynamicBody) minimumExtent = MathF.Min(minimumExtent, extent);
+            else
+            {
+                reportOnly |= limit > 0;
+                if (type == B2BodyType.b2_kinematicBody) kinematicExtent = MathF.Min(kinematicExtent, extent);
+            }
         }
     }
 
@@ -80,6 +90,8 @@ internal sealed partial class PhysicsSpace
             world.reusableStepContext.Reset();
             throw;
         }
+        _debugContactCount = 0; CaptureDebugContacts();
+        CaptureReportOnlyContacts();
     }
 
     internal void ValidateJointImpulse(B2BodyId id, B2Vec2 impulse, B2Vec2 point)

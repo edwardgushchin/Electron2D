@@ -165,6 +165,20 @@ namespace Box2D.NET
             return entry.fcn != null;
         }
 
+        internal static B2Manifold b2ReportManifold(ref B2Shape shapeA, ref B2Transform transformA, ref B2Shape shapeB, ref B2Transform transformB)
+        {
+            B2ContactRegister entry = s_registers[(int)shapeA.type, (int)shapeB.type];
+            if (entry.fcn != null && !entry.primary)
+            {
+                (shapeA, shapeB) = (shapeB, shapeA);
+                (transformA, transformB) = (transformB, transformA);
+                entry = s_registers[(int)shapeA.type, (int)shapeB.type];
+            }
+            b2ManifoldFcn fcn = shapeA.manifoldOverride ?? shapeB.manifoldOverride ?? entry.fcn;
+            B2SimplexCache cache = default;
+            return fcn == null ? default : fcn(shapeA, transformA, shapeB, transformB, ref cache);
+        }
+
         public static void b2CreateContact(B2World world, B2Shape shapeA, B2Shape shapeB)
         {
             B2ShapeType type1 = shapeA.type;

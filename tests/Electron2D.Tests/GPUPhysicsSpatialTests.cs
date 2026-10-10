@@ -135,7 +135,7 @@ internal static class GPUPhysicsSpatialTests
                 {
                     var eligible = sensors[i] || sensors[j]
                         ? (sensors[i] && (masks[i] & layers[j]) != 0) || (sensors[j] && (masks[j] & layers[i]) != 0)
-                        : (modes[i] >= Mode.Rigid || modes[j] >= Mode.Rigid) && (masks[i] & layers[j]) != 0 && (masks[j] & layers[i]) != 0;
+                        : (modes[i] >= Mode.Rigid || modes[j] >= Mode.Rigid) && ((masks[i] & layers[j]) != 0 || (masks[j] & layers[i]) != 0);
                     if (eligible && MathF.Abs(positions[i].X - positions[j].X) <= 3 && MathF.Abs(positions[i].Y - positions[j].Y) <= 3)
                         expected.Add(shapes[i].Index < shapes[j].Index ? new(shapes[i], shapes[j]) : new(shapes[j], shapes[i]));
                 }

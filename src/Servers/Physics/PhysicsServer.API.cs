@@ -294,6 +294,9 @@ public sealed partial class PhysicsServer
     /// <summary>Sets the maximum retained contact-point count for a body.</summary>
     /// <param name="body">A live body RID.</param>
     /// <param name="amount">A cap from zero through 4095; zero disables snapshots. Assignment clears the old point count.</param>
+    /// <remarks>Contact reports include overlapping kinematic/static and kinematic/kinematic pairs without impulse response.
+    /// Two static bodies do not create a pair. Enabling reports keeps a kinematic body active immediately;
+    /// contact membership is refreshed on the next completed physics step.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The cap is outside zero through 4095.</exception>
     public static void BodySetMaxContactsReported(RID body, int amount) => Service.BodySetMaxContactsReportedCore(body, amount);
 

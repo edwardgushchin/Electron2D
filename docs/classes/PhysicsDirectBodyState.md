@@ -216,3 +216,5 @@ changes. See [typed body state](PhysicsServer.md#body-state).
 
 
 GetContactColliderObject<T>(int contactIndex), where T : ElectronObject, returns the live assigned object sampled with that contact. The existing nongeneric method retains physical scene-collider convenience. The sampled instance ID survives target disposal and rebind. See [object associations](../components/physics-object-bindings.md).
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.

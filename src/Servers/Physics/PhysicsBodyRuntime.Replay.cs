@@ -28,6 +28,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal void ValidateReplay(ReplayState state) => PhysicsReplayCopy.Require(!Released && CurrentReplayConfiguration() == state.Configuration && View?.CallbackActive != true);
     internal void RestoreReplay(ReplayState state)
     {
+        Backend.SetContactReporting(ContactLimit > 0);
         ConstantForce = state.ConstantForce; ConstantTorque = state.ConstantTorque; PendingForce = state.PendingForce; PendingTorque = state.PendingTorque;
         Gravity = state.Gravity; LinearDamp = state.LinearDamp; AngularDamp = state.AngularDamp; FieldsInitialized = state.FieldsInitialized; ActiveBeforeStep = state.Active;
         _surfaceLinear = state.Surface; _surfaceAngular = state.SurfaceAngular; _canSleep = state.CanSleep;

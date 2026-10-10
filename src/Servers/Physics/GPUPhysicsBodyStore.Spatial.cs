@@ -250,7 +250,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Pairs = (uint)_pairCapacity,
             Tolerances = new(_pairMargin, _pairSweepDelta, _pairSweepCorrections ? 1 : 0, 0),
             CollisionFilters = JointCount > 0 || CollisionExceptionCount > 0 ? (uint)_jointFilterCapacity : 0,
-            FilterPairs = (uint)(_jointHighWater + _exceptionHighWater)
+            FilterPairs = (uint)(_jointHighWater + _exceptionHighWater),
+            Padding1 = _captureReports ? 1u : 0u
         };
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SpatialSettings));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);

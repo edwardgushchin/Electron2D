@@ -57,6 +57,14 @@ internal static class GPUPhysicsKinematicTests
         {
             using var s = new Store(); var b = Body(s, Mode.Kinematic, velocity: new(2, 3), angular: 0.5f);
             void Flush() { if (flush) Read(s, b); }
+            s.ClearKinematicVelocity(b); Flush(); s.SetSolverLinearVelocity(b, new(7, 8)); s.SetSolverAngularVelocity(b, 2);
+            var assigned = Read(s, b);
+            Near(new Vector2(assigned.Velocity.X, assigned.Velocity.Y), new(9, 11), 0, "Explicit velocity after idle clearing retains real and virtual motion");
+            Near(assigned.Velocity.Z, 2.5f, 0, "Angular assignment after idle clearing survives command coalescing");
+            s.SetSolverVelocity(b, new(12, 13), 4); Flush(); s.ClearKinematicVelocity(b);
+            var cleared = Read(s, b);
+            Near(new Vector2(cleared.Velocity.X, cleared.Velocity.Y), new(2, 3), 0, "Later idle clearing supersedes real motion and retains surface velocity");
+            Near(cleared.Velocity.Z, .5f, 0, "Clearing retains authored angular surface velocity");
             s.SetKinematicTarget(b, new(10, 20), 0.2f); Flush(); s.SetVelocity(b, new(3, 4), 1); Flush();
             s.SetPose(b, new(5, 7), 0.3f); Flush(); s.Step(0.1f, Vector2.Zero);
             Near(Read(s, b).Position, new(5, 7), 0, "A later teleport cancels the prior target while preserving virtual motion");

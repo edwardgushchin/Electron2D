@@ -23,3 +23,9 @@ Bodies, contacts, joints, sleep/islands, sensor histories, spatial/pair data and
 completed event buffers rewind together. This is not a public PhysicsSpace or
 SceneTree checkpoint, a copy of user objects, a lifecycle log or a network payload.
 See the component for executable tests, measured costs and remaining integration.
+
+Report-only geometry does not create native constraint contacts. The containing
+[PhysicsSpaceCheckpoint](PhysicsSpaceCheckpoint.md) restores retained frame
+observations, receiver snapshots and adapter reporting eligibility alongside this
+solver checkpoint. A standalone CPUPhysicsCheckpoint remains a solver-only
+snapshot and does not capture those adapter observations.

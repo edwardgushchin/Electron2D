@@ -141,14 +141,14 @@ internal static class GPUPhysicsCCDStoreTests
         using var circle = new CircleShape { Radius = 1 }; using var wall = new RectangleShape { Size = new(0.2f, 100) };
         foreach (var sensor in new[] { false, true })
         {
-            using var s = new Store(); var b = Body(s, speed: new(3000, 0), ccd: CCD.CastShape); s.AddShape(b, circle);
+            using var s = new Store(); var b = Body(s, speed: new(3000, 0), ccd: CCD.CastShape); s.AddShape(b, circle, mask: sensor ? uint.MaxValue : 0);
             s.AddShape(Body(s, new(20, 0), mode: Mode.Static), wall, sensor: sensor, mask: sensor ? uint.MaxValue : 0);
-            Tick(s); Near(Read(s, b).Position.X, 60, 0.001f, "Sensors and masked pairs do not create continuous physical stops");
+            Tick(s); Near(Read(s, b).Position.X, 60, 0.001f, "Sensors and pairs rejected in both mask directions do not create continuous physical stops");
         }
         using (var s = new Store())
         {
             var b = Body(s, speed: new(3000, 100), ccd: CCD.CastShape); s.AddShape(b, circle);
-            s.AddShape(Body(s, new(20, 0), mode: Mode.Static), wall); Tick(s); var state = Read(s, b);
+            s.AddShape(Body(s, new(20, 0), mode: Mode.Static), wall, mask: 0); Tick(s); var state = Read(s, b);
             Near(state.Velocity.X, 0, 0.01f, "Continuous contact stops the normal component");
             Near(state.Velocity.Y, 200f / 3, 0.02f, "Continuous friction retains rolling translation");
             Near(state.Velocity.Y - 0.5f * state.Velocity.Z, 100, 0.03f, "Continuous friction preserves angular momentum about the contact");

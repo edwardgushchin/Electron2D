@@ -88,3 +88,10 @@ policy are unchanged. The temporary solver probes were removed. Evidence:
 The common layer is now available to game code through the public
 [PhysicsCheckpoint](../classes/PhysicsCheckpoint.md) factory and world-local tick.
 Its storage remains same-world and cannot serve as a wire payload.
+
+[Report-only contact verification](physics-report-only.md) exercises restoration
+through the public [world checkpoint wrapper](physics-space-checkpoints.md),
+including validated receiver caps, observations and identity. The wrapper restores
+frame storage and body runtime eligibility; the native CPU snapshot does not own
+report-only observer state. GPU reporting retains its existing resident metadata
+and device snapshot rather than adding a CPU body-state mirror.

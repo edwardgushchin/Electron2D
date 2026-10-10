@@ -36,7 +36,9 @@ internal sealed partial class PhysicsSpace
     internal B2Vec2 SolvedPointVelocity(B2BodyId id, B2Vec2 point)
     {
         ref readonly var motion = ref _bodyMotions[id.index1 - 1];
-        return motion.Active ? b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center))) : default;
+        if (motion.Active) return b2Add(motion.Velocity, b2CrossSV(motion.Angular, b2Sub(point, motion.Center)));
+        var world = b2GetWorldFromId(_worldID); var sim = b2GetBodySim(world, b2GetBodyFullId(world, id));
+        return b2Add(sim.surfaceLinearVelocity, b2CrossSV(sim.surfaceAngularVelocity, b2Sub(point, sim.center)));
     }
 
     private bool _aggregateContactImpulses;
@@ -93,50 +95,56 @@ internal sealed partial class PhysicsSpace
                 for (var i = 0; i < sim.manifold.pointCount; i++)
                 {
                     ref readonly var point = ref sim.manifold.points[i];
-                    var pair = ImpulseKey(sim, point.id);
-                    ref var index = ref CollectionsMarshal.GetValueRefOrAddDefault(_frameContactIndices, pair, out var found);
-                    if (!found)
-                    {
-                        index = _frameContacts.Count;
-                        _frameContacts.Add(new()
-                        {
-                            ShapeA = pair.A,
-                            ShapeB = pair.B,
-                            BodyA = world.shapes.data[pair.A].bodyId,
-                            BodyB = world.shapes.data[pair.B].bodyId,
-                            NextA = -1,
-                            NextB = -1,
-                            Depth = -point.separation
-                        });
-                    }
-                    ref var total = ref CollectionsMarshal.AsSpan(_frameContacts)[index];
-                    var first = total.BodyA == id.index1 - 1;
-                    if (first ? !total.LinkedA : !total.LinkedB)
-                    {
-                        var body = id.index1 - 1; var tail = _frameContactTails[body];
-                        if (tail < 0) _frameContactHeads[body] = index;
-                        else
-                        {
-                            ref var previous = ref CollectionsMarshal.AsSpan(_frameContacts)[tail];
-                            if (previous.BodyA == body) previous.NextA = index; else previous.NextB = index;
-                        }
-                        _frameContactTails[body] = index;
-                        if (first) total.LinkedA = true; else total.LinkedB = true;
-                    }
-                    if (total.Seen == world.stepIndex) continue;
-                    var normal = sim.shapeIdA < sim.shapeIdB ? sim.manifold.normal : -sim.manifold.normal;
-                    if (sim.solvedStep == world.stepIndex)
-                    {
-                        var impulse = normal * point.totalNormalImpulse + b2RightPerp(normal) * point.totalTangentImpulse;
-                        var sum = total.Impulse + impulse;
-                        if (!float.IsFinite(sum.X) || !float.IsFinite(sum.Y)) throw new InvalidOperationException("Contact impulse total exceeds the finite physics range.");
-                        total.Impulse = sum;
-                    }
-                    total.Point = point.point; total.Normal = normal; total.Separation = point.separation;
-                    total.Depth = MathF.Max(total.Depth, -point.separation); total.Seen = world.stepIndex;
+                    CaptureFramePoint(world, id, sim, point);
                 }
             }
         }
+    }
+
+    private bool CaptureFramePoint(B2World world, B2BodyId id, B2ContactSim sim, in B2ManifoldPoint point)
+    {
+        var pair = ImpulseKey(sim, point.id);
+        ref var index = ref CollectionsMarshal.GetValueRefOrAddDefault(_frameContactIndices, pair, out var found);
+        if (!found)
+        {
+            index = _frameContacts.Count;
+            _frameContacts.Add(new()
+            {
+                ShapeA = pair.A,
+                ShapeB = pair.B,
+                BodyA = world.shapes.data[pair.A].bodyId,
+                BodyB = world.shapes.data[pair.B].bodyId,
+                NextA = -1,
+                NextB = -1,
+                Depth = -point.separation
+            });
+        }
+        ref var total = ref CollectionsMarshal.AsSpan(_frameContacts)[index];
+        var first = total.BodyA == id.index1 - 1;
+        if (first ? !total.LinkedA : !total.LinkedB)
+        {
+            var body = id.index1 - 1; var tail = _frameContactTails[body];
+            if (tail < 0) _frameContactHeads[body] = index;
+            else
+            {
+                ref var previous = ref CollectionsMarshal.AsSpan(_frameContacts)[tail];
+                if (previous.BodyA == body) previous.NextA = index; else previous.NextB = index;
+            }
+            _frameContactTails[body] = index;
+            if (first) total.LinkedA = true; else total.LinkedB = true;
+        }
+        if (total.Seen == world.stepIndex) return false;
+        var normal = sim.shapeIdA < sim.shapeIdB ? sim.manifold.normal : -sim.manifold.normal;
+        if (sim.solvedStep == world.stepIndex)
+        {
+            var impulse = normal * point.totalNormalImpulse + b2RightPerp(normal) * point.totalTangentImpulse;
+            var sum = total.Impulse + impulse;
+            if (!float.IsFinite(sum.X) || !float.IsFinite(sum.Y)) throw new InvalidOperationException("Contact impulse total exceeds the finite physics range.");
+            total.Impulse = sum;
+        }
+        total.Point = point.point; total.Normal = normal; total.Separation = point.separation;
+        total.Depth = MathF.Max(total.Depth, -point.separation); total.Seen = world.stepIndex;
+        return true;
     }
 
     internal bool CaptureFrameContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState state, B2BodyId id, int limit)

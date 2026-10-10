@@ -154,7 +154,9 @@ Internal owner-thread `SetDebugContacts` prepares storage, while `DebugContacts`
 borrows the current span. Positive active steps clear the previous sample, then
 publish penetrating surface samples from the latest manifold batch. CPU uses its
 retained pre-solve midpoint/separation; GPU supplies a bounded compact result.
-Disabled/sleeping/sensor pairs do not become markers. Reading a failed world still
+Disabled geometry and sensor pairs do not become markers; report-only kinematics
+also contribute current penetrating samples without native constraint membership.
+Reading a failed world still
 rejects, while disabling is permitted for release. These internal operations do not
 expand the public PhysicsServer API. See [diagnostics](../components/physics-debug.md).
 
@@ -187,3 +189,25 @@ The world retains reusable one-way translation scratch and disposes its register
 maps. A correction execution error shares the failed-world guard with local replay.
 CPU correction disables warm start for one following interval; local checkpoints
 also preserve that pending policy. See [portable snapshots](../components/physics-snapshots.md).
+
+## Report-only contacts
+
+The [report-only partial](../../src/Servers/Physics/PhysicsSpace.ReportOnly.cs)
+queries CPU static/kinematic trees after each internal interval only for receivers
+with a positive contact cap. Kinematic subdivision also covers report-only
+receivers without dynamic participants; earlier observations remain in the outer
+frame snapshot while bounded diagnostics retain the latest interval.
+Its private `ReportOnlyQuery` struct borrows this space, the receiver's current
+`B2BodyId`, and one live `B2Shape` for the synchronous tree callback. It owns no
+resources and never escapes the owner-thread capture interval. The callback
+validates pair masks, body/joint vetoes and contact policy, then projects an
+existing manifold into retained frame contacts with zero impulse. The same pair
+contributes once to statistics and bounded diagnostics without joining native
+constraint or sleep islands. Infinite boundaries also query their explicit proxy
+list.
+
+Partial internal use: `new ReportOnlyQuery { Space = this, Receiver = backend.BodyID, Shape = shape }`
+borrows already prepared attachments; callers must not retain it across a step.
+`PhysicsReportOnlyTests` exercises both receiver orders, masks/exceptions/joints,
+quiet lifecycle, geometry, snapshots and allocation limits through public API.
+See [the complete contract](../components/physics-report-only.md).

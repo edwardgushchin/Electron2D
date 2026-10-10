@@ -212,4 +212,4 @@ disposal. Property writes keep normal scene owner/capture guards. See
 [Physics picking](../components/physics-picking.md) for canvas limits, lifecycle,
 CPU/GPU/native tests and costs.
 
-[Shared filter verification](../components/physics-filters.md) covers CPU/GPU one-sided response, CCD, contacts, sensors, queries, sleeping neighbors, callbacks and warmed edits. Nonresponsive body-pair report-only roles retain an explicit open audit item.
+[Shared filter verification](../components/physics-filters.md) covers CPU/GPU one-sided response, CCD, contacts, sensors, queries, sleeping neighbors, callbacks and warmed edits. Kinematic/static and kinematic/kinematic report-only roles now execute; two static bodies remain ineligible.

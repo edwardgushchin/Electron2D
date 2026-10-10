@@ -104,6 +104,7 @@ internal sealed partial class PhysicsSpace
         void Add(PhysicsColliderBackend backend, PhysicsBodyRuntime runtime)
         {
             var limit = runtime.ContactLimit;
+            backend.SetContactReporting(limit > 0);
             if (limit == 0) return;
             _gpuReportBodies[_gpuReportBodyCount] = backend.GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);

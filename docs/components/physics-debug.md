@@ -1,6 +1,6 @@
 # Physics canvas diagnostics
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Scope
 
@@ -159,3 +159,10 @@ single-body reads. Phase timing and submission counts exposed this adapter bottl
 [Independent component commands](gpu-resident-bodies.md#component-velocity-writes)
 now remove those setter reads; the linked report contains new whole-path and real
 window measurements. Representative massive-scene GPU advantage remains required.
+
+Kinematic/static and kinematic/kinematic report-only pairs also contribute bounded
+penetrating point samples. CPU diagnostics use the latest internal interval,
+while completed contact snapshots may retain an earlier transient observation.
+Exactly touching report-only geometry remains a contact but creates no
+penetration marker. These checks use captured coordinates and canvas records;
+they do not establish real-window rendered acceptance.

@@ -2764,7 +2764,7 @@
         "PhysicsServer2D::method:body_set_state_sync_callback(RID:,Callable:)"
       ],
       "state": "Implemented",
-      "reason": "Cached body attachment views, typed force/sync callbacks including generic userdata, omission policy and contact caps execute for scene/server bodies with mutation/failure/lifetime checks (ADR 0070, PhysicsBodyStateTests). PhysicsGPUPublicationTests checks CPU/GPU mixed scene/server/static contact receivers, sensor exclusion, live caps and attachment-view invalidation; GPU selection reads retained body runtimes without registry lookups."
+      "reason": "Cached body attachment views, typed force/sync callbacks including generic userdata, omission policy and contact caps execute for scene/server bodies with mutation/failure/lifetime checks (ADR 0070, PhysicsBodyStateTests). PhysicsGPUPublicationTests checks CPU/GPU mixed scene/server/static contact receivers, sensor exclusion, live caps and attachment-view invalidation; GPU selection reads retained body runtimes without registry lookups. PhysicsReportOnlyTests now verifies public CPU/GPU kinematic/static and kinematic/kinematic reports with zero impulse, either reporting receiver, directional filters/exceptions, caps, slot reuse, frozen scene events, quiet-period activity and zero warmed allocations under ADR 0102; static/static pairs remain ineligible."
     },
     {
       "godot": [
@@ -3502,7 +3502,7 @@
         "RigidBody2D::property:max_contacts_reported"
       ],
       "state": "Implemented",
-      "reason": "Zero through 4095 accepted; setters clear the old point count and reject other values before mutation. All candidates are scanned, replacing the first shallowest retained slot only for a strictly deeper point. Scene monitoring and direct state share selection; PhysicsContactImpulseTests checks scene/server limits, ties and deeper late candidates."
+      "reason": "Zero through 4095 accepted; setters clear the old point count and reject other values before mutation. All candidates are scanned, replacing the first shallowest retained slot only for a strictly deeper point. Scene monitoring and direct state share selection; PhysicsContactImpulseTests checks scene/server limits, ties and deeper late candidates. PhysicsReportOnlyTests now verifies public CPU/GPU kinematic/static and kinematic/kinematic reports with zero impulse, either reporting receiver, directional filters/exceptions, caps, slot reuse, frozen scene events, quiet-period activity and zero warmed allocations under ADR 0102; static/static pairs remain ineligible."
     },
     {
       "godot": [
@@ -3510,7 +3510,7 @@
         "RigidBody2D::signal:sleeping_state_changed()"
       ],
       "state": "Implemented",
-      "reason": "Opt-in monitoring and solver sleep transitions execute with pinned defaults and callback policy; RigidBodyContactTests covers sleep/wake, direct assignment, packing, owner thread and callback mutation."
+      "reason": "Opt-in monitoring and solver sleep transitions execute with pinned defaults and callback policy; RigidBodyContactTests covers sleep/wake, direct assignment, packing, owner thread and callback mutation. PhysicsReportOnlyTests now verifies public CPU/GPU kinematic/static and kinematic/kinematic reports with zero impulse, either reporting receiver, directional filters/exceptions, caps, slot reuse, frozen scene events, quiet-period activity and zero warmed allocations under ADR 0102; static/static pairs remain ineligible."
     },
     {
       "godot": [
@@ -4327,7 +4327,7 @@
         "CollisionObject2D::property:collision_mask"
       ],
       "state": "Implemented",
-      "reason": "ADR 0102: all 32 authored bits share scene/server/tile body access, detached/disabled lifetime and guarded mutation. Existing fixtures update without geometry replacement. CPU/GPU public tests verify one-sided impulse/correction, motion/CCD, contact/sensor transitions, unchanged-assignment neighbor wake, callback failure and zero warmed allocations (PhysicsFilterTests, TileMapLayerTests). Report-only nonresponsive body-pair behavior remains open separately."
+      "reason": "ADR 0102: all 32 authored bits share scene/server/tile body access, detached/disabled lifetime and guarded mutation. Existing fixtures update without geometry replacement. CPU/GPU public tests verify one-sided impulse/correction, motion/CCD, contact/sensor transitions, unchanged-assignment neighbor wake, callback failure and zero warmed allocations (PhysicsFilterTests, TileMapLayerTests). PhysicsReportOnlyTests now exercises nonresponsive kinematic/static and kinematic/kinematic reporting, caps, receiver and lifecycle rules on CPU/GPU; two static bodies remain ineligible."
     }
   ]
 }

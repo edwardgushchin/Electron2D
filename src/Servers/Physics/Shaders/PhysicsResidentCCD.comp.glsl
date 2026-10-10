@@ -143,6 +143,9 @@ float sweep(Shape sa,Geometry ga,Shape sb,Geometry gb,ResidentBody startA,Reside
             // Existing contact is handled by the ordinary solver, including overlap recovery.
             if(time==0)
             {
+                bool responseA=startA.flags.y>=2u&&(sa.policy.z&sb.policy.y)!=0u;
+                bool responseB=startB.flags.y>=2u&&(sb.policy.z&sa.policy.y)!=0u;
+                if(!responseA&&!responseB)return 1;
                 float curvature=bound*tolerances.w*max(wa,wb);
                 // Residual closing is a contact constraint, so it includes prescribed surface motion.
                 // Geometric sampling and first-impact advancement above still use actual motion only.

@@ -93,3 +93,5 @@ resident GPU configuration for synchronization before the next pre-step snapshot
 [Host preparation tests](../components/gpu-host-preparation.md) exercise live CCD,
 force, damping and role edits through explicit public CPU/GPU worlds.
 See [implementation and verification](../components/cpu-continuous-collision.md).
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.

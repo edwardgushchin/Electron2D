@@ -66,7 +66,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         internal Float4 Surface;
         internal MassProfile MassProfile;
         internal PhysicsMass.Properties MassProperties;
-        internal bool Alive, MassDirty, CanSleep;
+        internal bool Alive, MassDirty, CanSleep, ReportContacts;
     }
 
     private const uint Create = 1, Destroy = 2, Pose = 4, Velocity = 8, Impulse = 16, Force = 32, Mass = 64;
@@ -118,7 +118,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         ref var slot = ref _slots[index];
         slot.Generation = checked(slot.Generation + 1); slot.Alive = true; slot.FirstShape = slot.FirstJoint = slot.FirstException = -1; Count++;
         slot.Integration = new(definition.GravityScale, definition.LinearDamp, definition.AngularDamp, definition.LockRotation, definition.OmitForceIntegration, definition.LinearDampMode, definition.AngularDampMode);
-        slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep; slot.CCDMode = definition.ContinuousMode;
+        slot.Mode = definition.Mode; slot.CanSleep = definition.CanSleep; slot.CCDMode = definition.ContinuousMode; slot.ReportContacts = false;
         if (slot.Mode >= PhysicsServer.BodyMode.Rigid && slot.CCDMode != CCDMode.Disabled) _ccdBodyCount++;
         if (slot.Mode == PhysicsServer.BodyMode.Kinematic) _kinematicBodyCount++;
         slot.Surface = slot.Mode < PhysicsServer.BodyMode.Rigid ? new(definition.Velocity.X, definition.Velocity.Y, definition.AngularVelocity, 0) : default;

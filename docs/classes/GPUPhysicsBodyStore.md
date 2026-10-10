@@ -316,3 +316,10 @@ republishes bodies and invalidates derived query/debug caches. It is separate fr
 observable `Snapshot`/`ReadChanges` data and is not a public, CPU or portable network
 checkpoint. [Scope, validation and measurements](../components/gpu-checkpoints.md)
 keep those remaining requirements explicit.
+
+[Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
+
+Idle kinematic velocity clearing and unchanged targets do not generate a wake
+when real motion is already zero. Actual platform movement/stopping still wakes
+contacts, while explicit assignments retain their wake and ordering semantics.
+See [resident kinematics](../components/gpu-resident-kinematic.md#idle-platform-wake-policy).

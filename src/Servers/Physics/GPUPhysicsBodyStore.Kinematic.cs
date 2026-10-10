@@ -13,8 +13,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Wake(body.Index, structural: true);
     }
 
-    private const uint SurfaceEdit = 65536, TargetEdit = 131072, CancelTarget = 262144;
+    private const uint SurfaceEdit = 65536, TargetEdit = 131072, CancelTarget = 262144, ClearKinematicVelocityEdit = 16777216;
     private int _kinematicBodyCount;
+    internal void ClearKinematicVelocity(BodyHandle body)
+    {
+        Validate(body);
+        ref var command = ref Edit(body.Index);
+        command.Mask = (command.Mask | ClearKinematicVelocityEdit) & ~(Velocity | LinearVelocityEdit | AngularVelocityEdit);
+    }
 
     /// <summary>Replaces the pending kinematic destination; reads and zero-time steps retain it.</summary>
     internal void SetKinematicTarget(BodyHandle body, Vector2 position, float rotation)
@@ -25,7 +31,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         if (!position.IsFinite() || !float.IsFinite(rotation)) throw new ArgumentOutOfRangeException(nameof(position));
         ref var command = ref Edit(body.Index); command.Mask |= TargetEdit;
         command.Target = new(position.X, position.Y, MathF.Cos(rotation), MathF.Sin(rotation));
-        Wake(body.Index);
     }
 
     private void CancelKinematicTarget(int index)

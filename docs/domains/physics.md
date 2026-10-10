@@ -28,6 +28,8 @@ GPU-world selection/binding now executes through the shared adapter.
 
 [Resident contact publication](../components/gpu-resident-reports.md) now retains complete outer-tick normal/friction impulses, transient contacts and capped per-body snapshots on the independent GPU store. Public GPU direct-state/event projection now executes.
 
+[Contacts without impulse response](../components/physics-report-only.md) now cover kinematic/static and kinematic/kinematic reporting, independent receiver caps, scene events, immediate logical activity, transient snapshots and bounded diagnostics on both public backends. Native CPU sleep islands stay independent; a reported idle platform still permits supported dynamics to sleep.
+
 [Resident Area fields](../components/gpu-resident-fields.md) now reduce directional/point gravity and independent damping on device, using current deduplicated sensor membership, body Combine/Replace policy and scoped changed-field waking. Mixed sensor/body pair work is distributed across receiver queries; public GPU field/event projection now executes.
 
 [Kinematic target/surface separation](../components/gpu-resident-kinematic.md) now executes on the independent GPU store, including full-shape paths against default-CCD dynamics, exact target/idle poses and contact/joint velocity separation. Public scene/server integration now executes; full conformance remains open.
@@ -434,4 +436,4 @@ velocities for contact/joint iteration, then restores owning records before repo
 history and integration. This adds device scratch and no host state mirror; compare
 full-step and native-window results in the contact-layout report.
 
-[Directional filters](../components/physics-filters.md) now expose body layer/mask getters and shared scene/server/tile setters, preserving all bits and existing geometry. One-sided response and CCD run on both public backends; queries update immediately and overlap/contact events publish on the next step. Report-only nonresponsive body pairs remain open in the audit.
+[Directional filters](../components/physics-filters.md) now expose body layer/mask getters and shared scene/server/tile setters, preserving all bits and existing geometry. One-sided response and CCD run on both public backends; queries update immediately and overlap/contact events publish on the next step. Kinematic/static and kinematic/kinematic report-only pairs now execute under the same reporting contract; static/static pairs remain ineligible.

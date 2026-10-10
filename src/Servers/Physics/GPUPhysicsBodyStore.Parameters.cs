@@ -7,6 +7,16 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         bool LockRotation = false, bool OmitForceIntegration = false, RigidBody.DampMode LinearDampMode = RigidBody.DampMode.Combine, RigidBody.DampMode AngularDampMode = RigidBody.DampMode.Combine);
     private const uint ModeEdit = 4096, PolicyEdit = 8192, ClearAngular = 16384;
     private const uint CollisionPriorityEdit = 524288;
+    private const uint ContactReportingEdit = 8388608;
+
+    internal void SetContactReporting(BodyHandle body, bool value)
+    {
+        Validate(body);
+        ref var slot = ref _slots[body.Index]; if (slot.ReportContacts == value) return;
+        slot.ReportContacts = value;
+        ref var command = ref Edit(body.Index); command.Mask |= ContactReportingEdit;
+        command.Padding = (command.Padding & ~128u) | (value ? 128u : 0u);
+    }
 
     internal float GetCollisionPriority(BodyHandle body) { Validate(body); return _slots[body.Index].Surface.W; }
     internal void SetCollisionPriority(BodyHandle body, float value)

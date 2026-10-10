@@ -166,3 +166,5 @@ retain 32 deepest contact planes and apply weighted recovery with bounded scratc
 Live edits preserve identity, sleep and rigid impulses. See [policy](physics-contact-policy.md#collision-priority).
 
 [Directional filter mutation](physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU. It updates existing fixtures without rebuilding geometry; body assignments wake contact neighbors even for unchanged bits.
+
+[Report-only contact verification](physics-report-only.md) now covers nonresponding kinematic/static and kinematic/kinematic pairs, current receiver caps, identity, lifecycle and restoration on both public backends. Existing contact storage and publication are reused; no CPU body-state mirror is added to GPU physics.

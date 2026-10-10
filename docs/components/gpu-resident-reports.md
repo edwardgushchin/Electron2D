@@ -1,6 +1,6 @@
 # Resident GPU contact publication
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Boundary
 
@@ -190,3 +190,5 @@ Final Release SPIR-V SHA-256:
 | --- | --- |
 | PhysicsResidentReports.comp.spv | `50e0f6562ed396a50328e22575674a77c454f6539eb0c8c00834ae00c1391f62` |
 | PhysicsResidentJoints.comp.spv | `09cf14036fb3b8d957088f121b683f5dafa2ed6f775fe63d79ef141558d33208` |
+
+[Report-only contact verification](physics-report-only.md) now covers nonresponding kinematic/static and kinematic/kinematic pairs, current receiver caps, identity, lifecycle and restoration on both public backends. Existing contact storage and publication are reused; no CPU body-state mirror is added to GPU physics.

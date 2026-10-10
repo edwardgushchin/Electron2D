@@ -102,7 +102,14 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         _shapes.Clear();
         _world = null; _body = null; _savedPose = default;
         BodyID = default;
-        Space = null;
+        Space = null; _contactReporting = false;
+    }
+
+    private bool _contactReporting;
+    internal void SetContactReporting(bool enabled)
+    {
+        _contactReporting = enabled;
+        if (GPU is { } gpu) gpu.SetContactReporting(GPUHandle, enabled);
     }
 
     internal void UpdateFilter(uint layer, uint mask, bool wakeBody)

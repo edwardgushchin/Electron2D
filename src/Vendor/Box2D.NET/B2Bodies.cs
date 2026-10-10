@@ -2041,11 +2041,11 @@ namespace Box2D.NET
         }
 
 
-        internal static bool b2ShouldBodiesCollide(B2World world, B2Body bodyA, B2Body bodyB)
+        internal static bool b2ShouldBodiesCollide(B2World world, B2Body bodyA, B2Body bodyB, bool reportOnly = false)
         {
             if (bodyA.type != B2BodyType.b2_dynamicBody && bodyB.type != B2BodyType.b2_dynamicBody)
             {
-                return false;
+                if (!reportOnly || bodyA.type == B2BodyType.b2_staticBody && bodyB.type == B2BodyType.b2_staticBody) return false;
             }
 
             int jointKey;

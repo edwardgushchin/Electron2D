@@ -152,3 +152,5 @@ Logs: `/tmp/e2d-canvas-colliders.log`, `/tmp/e2d-canvas-full-gpu.log`.
 [Object associations](physics-object-bindings.md) now supply typed Body/Area bindings and sampled weak identities across queries, motion, contacts and scene/server monitoring.
 
 [Directional filter mutation](physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU. It updates existing fixtures without rebuilding geometry; body assignments wake contact neighbors even for unchanged bits.
+
+[Report-only contact verification](physics-report-only.md) now covers nonresponding kinematic/static and kinematic/kinematic pairs, current receiver caps, identity, lifecycle and restoration on both public backends. Existing contact storage and publication are reused; no CPU body-state mirror is added to GPU physics.
