@@ -11,7 +11,46 @@ internal sealed class PhysicsServerJointTests(PhysicsServer.Backend backend)
         VerifyJointExceptionContributions();
         VerifyMixedBodiesAndPhaseGuards();
         VerifyFrameReattachmentCore(false);
+        VerifyWakeStorage(backend);
         Console.WriteLine("Physics joint RID, server/scene roles, native response, ownership and lifetime checks passed.");
+    }
+
+    internal static void VerifyWakeStorage(PhysicsServer.Backend backend)
+    {
+        using var shape = new CircleShape { Radius = 10 };
+        var space = PhysicsServer.SpaceCreate(backend); var joint = PhysicsServer.JointCreate();
+        var first = CreateBody(PhysicsServer.Service, shape.GetRID(), default);
+        var second = CreateBody(PhysicsServer.Service, shape.GetRID(), new(40, 0));
+        var contact = CreateBody(PhysicsServer.Service, shape.GetRID(), new(0, 19));
+        try
+        {
+            PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 0);
+            PhysicsServer.BodySetSpace(first, space); PhysicsServer.BodySetSpace(second, space); PhysicsServer.BodySetSpace(contact, space);
+            PhysicsServer.BodySetMaxContactsReported(first, 4);
+            PhysicsServer.JointMakePin(joint, new(20, 0), first, second);
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            PhysicsServer.BodyApplyCentralForce(first, new(1, 0));
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            using var state = PhysicsServer.BodyGetDirectState(first)!;
+            Check(state.GetContactCount() > 0, "Joint component has a real body contact before sleeping");
+            PhysicsServer.BodySetSleeping(first, true); PhysicsServer.BodySetSleeping(second, true); PhysicsServer.BodySetSleeping(contact, true);
+            Check(PhysicsServer.BodyGetSleeping(first) && PhysicsServer.BodyGetSleeping(second) && PhysicsServer.BodyGetSleeping(contact), "Prepared component is asleep");
+            var total = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
+            PhysicsServer.BodyApplyCentralForce(first, new(1, 0));
+            var bytes = GC.GetAllocatedBytesForCurrentThread() - before; total = GC.GetTotalAllocatedBytes(true) - total;
+            Console.WriteLine($"Joint wake storage {backend}: {bytes}/{total} owner/all-thread bytes");
+            Check(bytes == 0 && total == 0, "Waking an existing joint component reuses prepared solver storage");
+            Check(!PhysicsServer.BodyGetSleeping(first) && !PhysicsServer.BodyGetSleeping(second) && !PhysicsServer.BodyGetSleeping(contact), "Force wakes the entire component");
+            PhysicsServer.BodyApplyCentralImpulse(first, new(0, -100));
+            for (var i = 0; i < 32; i++) PhysicsServer.SpaceStep(space, 1d / 60);
+            // One scene unit covers the half-unit linear contact slop and joint integration error.
+            Check((PhysicsServer.BodyGetTransform(first) * new Vector2(20, 0)).DistanceTo(PhysicsServer.BodyGetTransform(second) * new Vector2(-20, 0)) < 1, "Wake preserves the sampled pin anchors");
+            Check(PhysicsServer.BodyGetTransform(first).Origin.IsFinite() && PhysicsServer.JointGetType(joint) == PhysicsServer.JointType.Pin, "Waking preserves joint identity and finite response");
+        }
+        finally
+        {
+            PhysicsServer.FreeRID(joint); PhysicsServer.FreeRID(first); PhysicsServer.FreeRID(second); PhysicsServer.FreeRID(contact); PhysicsServer.FreeRID(space);
+        }
     }
 
     internal static void VerifyFrameReattachment(bool gpu) => new PhysicsServerJointTests(PhysicsServer.Backend.CPU).VerifyFrameReattachmentCore(gpu);

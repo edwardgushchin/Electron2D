@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_JOINT_WAKE_STORAGE") == "1") { PhysicsServerJointTests.VerifyWakeStorage(PhysicsServer.Backend.CPU); PhysicsServerJointTests.VerifyWakeStorage(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_PIPELINE") is { } pipelinePath) { PhysicsCollisionPriorityTests.MeasurePipeline(pipelinePath); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLISION_PRIORITY") == "1") { PhysicsCollisionPriorityTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_COLLISION_PRIORITY_GPU") == "1") { PhysicsCollisionPriorityTests.Run(true); return; }

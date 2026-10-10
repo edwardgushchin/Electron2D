@@ -272,7 +272,19 @@ namespace Box2D.NET
 
             int colorIndex = b2SelectConstraintColor(world, 1, joint.jointId, bodyIdA, bodyIdB, bodyA.type, bodyB.type);
 
-            ref B2JointSim jointSim = ref b2Array_Add(ref graph.colors[colorIndex].jointSims);
+            ref B2Array<B2JointSim> storage = ref graph.colors[colorIndex].jointSims;
+            // Wake can recolor existing joints; reuse an empty prepared color before growing storage.
+            if (storage.capacity == 0)
+            {
+                for (int i = 0; i < B2_GRAPH_COLOR_COUNT; ++i)
+                {
+                    ref B2Array<B2JointSim> spare = ref graph.colors[i].jointSims;
+                    if (spare.count != 0 || spare.capacity == 0) continue;
+                    (storage, spare) = (spare, storage);
+                    break;
+                }
+            }
+            ref B2JointSim jointSim = ref b2Array_Add(ref storage);
             //memset( jointSim, 0, sizeof( b2JointSim ) );
             jointSim.Clear();
 

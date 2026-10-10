@@ -173,9 +173,11 @@ The public test log is retained in the ignored local evidence directory
 Regression networking is a separate gate: one separate-process check observed
 856 managed bytes during warmed replay on the late CPU client, while GPU prediction/
 replay and the CPU authority remained at zero. The next run and a rebuilt baseline
-`84b9c443` run passed with zero. The intermittent allocation's source is unresolved;
-these results do not establish unconditional zero-allocation network replay.
-Both failing and passing process reports are retained with the local evidence.
+`84b9c443` run passed with zero. The subsequent [joint wake regression](physics-network-example.md#joint-wake-allocation-regression-2026-10-10)
+located an unused joint color allocating storage instead of reusing an empty
+prepared color. The captured replay and reduced public regression now pass with
+zero after that fix. Both failing and passing reports remain in the local evidence;
+this does not establish unconditional zero allocation for arbitrary new workloads.
 
 
 The final native-window regression used 4,096 awake circles, four substeps,

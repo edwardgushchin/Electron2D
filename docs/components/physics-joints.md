@@ -54,3 +54,11 @@ path does not yet replace the scene/server CPU attachment. Public CPU bias/compl
 The [shared public CPU/GPU family run](physics-joint-policies.md#public-cpu-gpu-conformance)
 now covers all five joint suites, including motion vetoes from multiple joints,
 finite caps with extreme stiffness, failure/disposal and numerical error bounds.
+
+
+CPU sleep/wake may recolor a joint after moving its contacts. An empty prepared
+joint-color buffer is now transferred to a previously unused color before growing
+storage. Populated colors retain their buffers. The common public server-joint suite
+checks a pin/contact component's first recoloring, zero owner/all-thread managed
+allocation and its subsequent anchor response on CPU and GPU. See the
+[network regression record](physics-network-example.md#joint-wake-allocation-regression-2026-10-10).

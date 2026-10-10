@@ -139,3 +139,39 @@ public scene/network view; each replay step currently also retains ordinary scen
 publication/callback semantics. These many submissions and the measured correction
 latency identify remaining GPU integration work. No networked rendering/FPS or
 production-performance acceptance follows from successful final-state convergence.
+
+
+## Joint wake allocation regression, 2026-10-10
+
+A later separate-process run found 856 managed bytes in a late CPU client's
+warmed replay. Temporary allocation tracing located `b2CreateJointInGraph` while
+player input woke a sleeping connected component: contacts took their colors
+first, moving an existing pin into a previously unused joint color. That color
+allocated a two-slot joint array although the pin's former color retained an empty
+prepared buffer. The fixed CPU path transfers that empty buffer before allocating.
+It leaves populated colors untouched and retains ordinary growth when no empty
+prepared buffer is available. No public state, solver order or GPU mirror is added.
+
+A captured sequence reproduces the problem without sockets: the baseline runtime
+allocates 632 bytes across its 220 warmed steps, while the candidate runtime allocates
+zero with the same trace and replay driver. The original live 856-byte observation
+and the isolated 632-byte observation are both retained, rather than treated as
+identical measurements. `PhysicsServerJointTests.VerifyWakeStorage` reduces the
+case to three bodies, a pin and a real contact. Its first sleep/wake recoloring
+allocated 632 bytes before the fix and zero owner/all-thread bytes afterward on
+CPU and GPU. It also checks component wake, joint identity and anchor response;
+the one-unit anchor tolerance includes half-unit contact slop and integration error.
+
+The local trace, baseline/candidate results and diagnostic sources are retained in
+`bin/physics-replay-validation/2026-10-10/`. Diagnostic logging and recording hooks
+are not part of the runtime or example. This resolves the observed allocation
+source; new populations/capacity and arbitrary gameplay remain separate workloads.
+
+
+Three subsequent ordinary separate-process checks passed without diagnostic hooks.
+The combined measured groups were 183 CPU-authority steps, 110 predicted plus 440
+replayed GPU-client steps, and 182 predicted plus 483 replayed late-CPU-client steps.
+Every group reported zero owner/all-thread managed bytes. Joint, CPU/common-world
+checkpoint, portable snapshot, CPU-hosted GPU joint controls and the default test
+runner also passed. Reports retain whole-step/correction latency and traffic for
+these live concurrent runs; they are not a controlled backend speedup comparison.

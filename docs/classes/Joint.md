@@ -110,3 +110,8 @@ edits invalidate recording. Markers follow local transforms and ordinary visibil
 clipping and modulation. They describe authored local anchors, not solved impulses.
 The [shared diagnostic component](../components/physics-debug.md) verifies ordering,
 zero warmed allocation and real pixels for CPU/GPU physics and both renderers.
+
+
+`PhysicsServerJointTests` also verifies that waking an existing pin/contact component
+uses prepared storage without managed allocation and preserves its anchor response
+on CPU and GPU. See [joint storage](../components/physics-joints.md).
