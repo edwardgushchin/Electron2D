@@ -125,15 +125,18 @@ internal sealed class SeparationRayDynamicsTests(bool gpu, PhysicsServer.Backend
     private void VerifyFilters(bool gpu)
     {
         using var ray = new SeparationRayShape(); using var floor = new RectangleShape { Size = new(200, 10) };
-        for (var variant = 0; variant < 4; variant++)
+        for (var variant = 0; variant < 5; variant++)
         {
+            ray.Length = 20;
             using var world = new World(gpu, backend); var body = world.Add(ray, new(0, 14), true); var target = world.Add(variant == 2 ? ray : floor, new(0, 40));
-            if (variant == 0) PhysicsServer.BodySetCollisionMask(target, 0);
+            if (variant == 0) PhysicsServer.BodySetCollisionMask(body, 0);
+            if (variant == 4) PhysicsServer.BodySetCollisionMask(target, 0);
             if (variant == 1) PhysicsServer.BodyAddCollisionException(body, target);
             if (variant == 3) ray.Length = 0;
             PhysicsServer.BodySetContinuousCollisionDetectionMode(body, CCDMode.CastShape);
             PhysicsServer.BodySetLinearVelocity(body, new(0, 60)); world.Step(45);
-            Check(PhysicsServer.BodyGetTransform(body).Origin.Y > 50, "Masks, exceptions, ray pairs and zero length reject response.");
+            Check(variant == 4 ? PhysicsServer.BodyGetTransform(body).Origin.Y < 20 : PhysicsServer.BodyGetTransform(body).Origin.Y > 50,
+                "The moving ray mask gates response; a target mask cannot veto it. Exceptions, ray pairs and zero length reject response.");
         }
     }
     private void VerifyCoupled(bool gpu)

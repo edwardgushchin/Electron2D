@@ -329,7 +329,9 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 152, "Partial": 6, "Unimplemented": 3, "Blocked": 0, "Excluded": 54}
+                "Implemented": 154, "Partial": 6, "Unimplemented": 1, "Blocked": 0, "Excluded": 54}
+    assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
+               for name in ("body_get_collision_layer", "body_get_collision_mask", "body_set_collision_layer", "body_set_collision_mask"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_attach_canvas_instance_id", "body_get_canvas_instance_id",
                             "area_attach_canvas_instance_id", "area_get_canvas_instance_id"))

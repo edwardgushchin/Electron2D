@@ -30,7 +30,7 @@ advancement uses the existing CPU skin and 1/256 motion bracket; a one-unit
 post-impact advance obtains contact geometry. A miss still returns recovery plus
 requested travel, and clears collision identity/contact fields.
 
-Reciprocal masks, both directions of explicit body exceptions, caller collider and
+Moving-mask/target-layer filtering, both directions of explicit body exceptions, caller collider and
 object exclusion spans, sensor rejection and one-way direction/margin rules apply.
 Each active collision-disabled joint also excludes its peer, as required by ADR 0087.
 Multiple joints and explicit exceptions contribute independently; a fixed-world

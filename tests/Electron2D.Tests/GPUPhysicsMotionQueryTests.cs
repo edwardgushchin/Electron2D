@@ -9,7 +9,7 @@ internal static class GPUPhysicsMotionQueryTests
     internal static void Run()
     {
         CompareCPU(); ShapesAndRays(); CompoundRays(); FiltersAndLifetime(); PointVelocityAndBatch(); Measure();
-        Console.WriteLine("Resident body motion: CPU recovery/sweep/one-way semantics, identity, reciprocal filters, exceptions, unchanged poses and warmed allocation passed.");
+        Console.WriteLine("Resident body motion: CPU recovery/sweep/one-way semantics, identity, directional filters, exceptions, unchanged poses and warmed allocation passed.");
     }
     private static Store.BodyHandle Body(Store s, Vector2 position = default, Mode mode = Mode.Static) => s.Add(new(mode, position, 0, default, 0));
     private static Store.MotionQueryResult Test(Store s, Query query, ReadOnlySpan<ulong> bodies = default, ReadOnlySpan<ulong> objects = default)
@@ -159,7 +159,9 @@ internal static class GPUPhysicsMotionQueryTests
         Check(Test(s, q).Collided, "A live joint collision edit restores body motion response"); s.RemoveJoint(joint);
         joint = s.AddJoint(new(PhysicsServer.JointType.Pin, a, default, Transform.Identity, Transform.Identity));
         Check(Test(s, q).Collided, "A fixed-world pin does not exclude unrelated bodies"); s.RemoveJoint(joint);
-        s.SetShapeFilter(target, 1, 0, false); Check(!Test(s, q).Collided, "Reciprocal target mask is required"); s.SetShapeFilter(target, 1, 1, true);
+        s.SetShapeFilter(target, 1, 0, false); Check(Test(s, q).Collided, "The target mask cannot veto a body-motion query");
+        s.SetShapeFilter(own, 1, 0, false); Check(!Test(s, q).Collided, "The moving shape mask gates a body-motion query");
+        s.SetShapeFilter(own, 1, 1, false); s.SetShapeFilter(target, 1, 1, true);
         Check(!Test(s, q).Collided, "Sensors never block body motion"); s.SetShapeFilter(target, 1, 1, false);
         s.SetQueryIdentity(target, 99, 7); Check(Test(s, q with { ObjectExclusionCount = 1 }, objects: [0]).Collided, "Object zero cannot exclude a server-only collider");
         Reject<ArgumentOutOfRangeException>(() => Test(s, q with { Margin = -1 }));

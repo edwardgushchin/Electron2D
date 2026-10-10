@@ -111,7 +111,7 @@ internal static class PhysicsMotionTests
         floor.CollisionLayer = 2;
         Check(!mover.TestMove(Transform.Identity, new(0, 120), tested) &&
               !tested.GetColliderRID().IsValid(),
-            "Body motion obeys reciprocal collision filters and clears a stale result on a miss.");
+            "Body motion obeys the moving mask against target layers and clears a stale result on a miss.");
         floor.CollisionLayer = 1;
         using var serverQuery = new PhysicsTestMotionParameters
         {

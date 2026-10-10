@@ -47,7 +47,7 @@ bool acceptPair(Query q, Shape a, Node n)
     {
         if (a.bodyGroupJoints.y < 0) return false;
     }
-    else if (!any(notEqual(a.bits.zw & b.bits.xy, uvec2(0))) ||
+    else if (!any(notEqual(a.bits.zw & b.bits.xy, uvec2(0))) &&
              !any(notEqual(a.bits.xy & b.bits.zw, uvec2(0)))) return false;
 
     // Walk the smaller adjacency list, including mixed collideConnected joints.

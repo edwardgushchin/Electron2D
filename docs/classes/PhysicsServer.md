@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -13,7 +13,7 @@ Explicit CPU/GPU selection and startup diagnostics are in
 
 Public operations and events use static access to the retained object under [ADR 0095](../decisions/singleton-services.md#adr-0095). Object state, identity, property discovery and the owning domain lifetime rules remain intact.
 
-The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's selected CPU/GPU world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the seven implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
+The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's selected CPU/GPU world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the eight implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
 ## Example
 
@@ -68,8 +68,9 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 | `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
 | `public static void BodySetContinuousCollisionDetectionMode(RID body, CCDMode mode)` / `CCDMode BodyGetContinuousCollisionDetectionMode(RID body)` | Store/read the same per-body policy as RigidBody.ContinuousCD, including detached/non-dynamic roles; validates live body identity, owner/phase and enum values. |
 | `public static void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
-| `public static void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Rebuild body fixtures with 32-bit filters. |
-| `public static void AreaSetCollisionLayer(RID area, uint layer)` | Rebuild Area sensor fixtures with 32-bit queryable layers. |
+| `public static void BodySetCollisionLayer(RID body, uint layer)` / `BodySetCollisionMask(RID body, uint mask)` | Update existing scene/server/tile fixtures and wake contact neighbors. |
+| `public static uint BodyGetCollisionLayer(RID body)` / `BodyGetCollisionMask(RID body)` | Read complete authored filter bits even while detached or geometry is disabled. |
+| `public static void AreaSetCollisionLayer(RID area, uint layer)` | Update existing Area sensor metadata with 32-bit queryable layers. |
 | `public static void FreeRID(RID rid)` | Free a caller-owned space, body, Area, joint or shape. |
 | `protected override void ValidateDisposal()` | Reject consumer disposal of the singleton. |
 
@@ -788,3 +789,25 @@ intervals, including empty ones, advance once; skipped intervals do not.
 that restores this tick together with local simulation/observer state. It is not a
 portable network snapshot. See [local checkpoints](../components/physics-space-checkpoints.md)
 for timing, error and ownership boundaries.
+
+## Body collision filters
+
+<a id="bodygetcollisionlayer"></a>
+### `BodyGetCollisionLayer(RID body)`
+
+Reads all 32 authored category bits, including zero and bit 32. Scene bodies, caller-owned bodies and generated tile bodies use the same operation. Attachment, disabled geometry and tree exit do not replace the metadata. The RID must identify a live body; wrong-kind, stale and freed identities throw ArgumentException. Attached off-owner, solver-owned and failed-world access throws InvalidOperationException.
+
+<a id="bodygetcollisionmask"></a>
+### `BodyGetCollisionMask(RID body)`
+
+Reads all 32 authored accepted-category bits with the same identity and access rules as BodyGetCollisionLayer. For a PhysicalBone, these are configured bits; inactive-follower fixtures can still use effective zero filters.
+
+<a id="bodysetcollisionlayer"></a>
+### `BodySetCollisionLayer(RID body, uint layer)`
+
+Stores any unsigned 32-bit layer value. Scene properties and server reads agree immediately. Attached fixture metadata updates without recompiling geometry or replacing public body/shape identity. Assignments wake the body and existing contact neighbors even for unchanged bits. Queries observe the edit immediately; contact/sensor snapshots publish on the next step. Generated tile-body edits are runtime state; a tile-authoring rebuild may reassert its TileSet policy. Errors use the getter's identity/access contract and reject before changing authoring.
+
+<a id="bodysetcollisionmask"></a>
+### `BodySetCollisionMask(RID body, uint mask)`
+
+Uses the same mutation, wake, lifetime and failure rules. Body motion tests compare the moving mask with target layers, independently of target masks. A physical pair is admitted by either endpoint; each dynamic endpoint responds only when its own mask matches. See [collision filter execution and checks](../components/physics-filters.md).

@@ -79,7 +79,7 @@ bool accept(uint aIndex, uint bIndex)
     if(bIndex<aIndex)return false;
     if (excepted(a.owner.x,b.owner.x)) return false;
     if (bodies[a.owner.x].flags.y<2u && bodies[b.owner.x].flags.y<2u) return false;
-    return (a.policy.z&b.policy.y)!=0u && (b.policy.z&a.policy.y)!=0u && boundaryOverlap(aIndex,bIndex);
+    return ((a.policy.z&b.policy.y)!=0u || (b.policy.z&a.policy.y)!=0u) && boundaryOverlap(aIndex,bIndex);
 }
 void main()
 {

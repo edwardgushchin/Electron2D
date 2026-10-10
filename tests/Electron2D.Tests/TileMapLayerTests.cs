@@ -128,6 +128,19 @@ internal static partial class TileMapLayerTests
         Check(rayNode.GetCollider() == layer && layer.HasBodyRID(rayNode.GetColliderRID()), "RayCast owner projection");
         var castNode = new ShapeCast { Name = "Cast", Shape = circle, Position = new(24, -40), TargetPosition = new(0, 80), Enabled = false }; root.AddChild(castNode); castNode.AddException(mover); castNode.ForceShapecastUpdate();
         Check(castNode.GetCollider(0) == layer && layer.HasBodyRID(castNode.GetColliderRID(0)), "ShapeCast owner projection");
+        foreach (var rid in raw)
+        {
+            var geometry = PhysicsServer.BodyGetShape(rid, 0);
+            Check(PhysicsServer.BodyGetCollisionLayer(rid) == 1 && PhysicsServer.BodyGetCollisionMask(rid) == 1, "Generated tile filters retain authoring defaults");
+            PhysicsServer.BodySetCollisionLayer(rid, 0x80000000u); PhysicsServer.BodySetCollisionMask(rid, 0);
+            Check(PhysicsServer.BodyGetCollisionLayer(rid) == 0x80000000u && PhysicsServer.BodyGetCollisionMask(rid) == 0 && PhysicsServer.BodyGetShape(rid, 0) == geometry && layer.HasBodyRID(rid), "Tile filter edits preserve body and geometry identity");
+        }
+        using var tileQuery = new PhysicsPointQueryParameters { Position = new(8, 8), CollisionMask = 0x80000000u };
+        var tileHits = world.DirectSpaceState.IntersectPoint(tileQuery);
+        Check(tileHits.Length == 1 && tileHits[0].ColliderObject == layer && raw.Contains(tileHits[0].ColliderRID), "Tile filter query updates immediately with the original owner");
+        tree.PhysicsFrame(1d / 60); Check(!sensor.OverlapsBody(layer), "Tile category edits update monitored owner membership");
+        foreach (var rid in raw) { PhysicsServer.BodySetCollisionLayer(rid, 1); PhysicsServer.BodySetCollisionMask(rid, 1); }
+        tree.PhysicsFrame(1d / 60); Check(sensor.OverlapsBody(layer), "Restored tile filters recover monitored owner membership");
         layer.CollisionEnabled = false; tree.FlushDeferred(); tree.PhysicsFrame(1d / 60); Check(!sensor.OverlapsBody(layer), "Removing tile bodies updates area membership");
     }
     private static void OneWay(PhysicsServer.Backend backend)

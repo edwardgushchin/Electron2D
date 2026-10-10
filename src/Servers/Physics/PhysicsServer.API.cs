@@ -1077,15 +1077,35 @@ public sealed partial class PhysicsServer
     /// <returns>The current mode.</returns>
     public static BodyMode BodyGetMode(RID body) => Service.BodyGetModeCore(body);
 
-    /// <summary>Sets a body's 32 collision-layer bits.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
+    /// <summary>Sets a body's 32 collision-layer bits without replacing its geometry.</summary>
+    /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
+    /// <param name="layer">All layer bits, including zero and bit 32.</param>
+    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
     public static void BodySetCollisionLayer(RID body, uint layer) => Service.BodySetCollisionLayerCore(body, layer);
 
-    /// <summary>Sets a body's 32 collision-mask bits.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <param name="mask">All accepted mask bits, including zero and bit 32.</param>
+    /// <summary>Gets a body's complete 32-bit collision-layer mask.</summary>
+    /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
+    /// <returns>The authored category bits, including while detached or without active shapes.</returns>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    public static uint BodyGetCollisionLayer(RID body) => Service.BodyGetCollisionLayerCore(body);
+
+    /// <summary>Sets a body's 32 collision-mask bits without replacing its geometry.</summary>
+    /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
+    /// <param name="mask">All accepted category bits, including zero and bit 32.</param>
+    /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Motion queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
     public static void BodySetCollisionMask(RID body, uint mask) => Service.BodySetCollisionMaskCore(body, mask);
+
+    /// <summary>Gets a body's complete 32-bit collision-mask value.</summary>
+    /// <param name="body">A live scene or server body RID, including a generated tile body.</param>
+    /// <returns>The authored accepted-category bits, including while detached or without active shapes.</returns>
+    /// <exception cref="ArgumentException">The RID is not a live body.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    public static uint BodyGetCollisionMask(RID body) => Service.BodyGetCollisionMaskCore(body);
 
     /// <summary>Sets an Area's 32 collision-layer bits.</summary>
     /// <param name="area">A live scene or server Area RID.</param>

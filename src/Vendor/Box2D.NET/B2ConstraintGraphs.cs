@@ -117,6 +117,9 @@ namespace Box2D.NET
             //memcpy( newContact, contactSim, sizeof( b2ContactSim ) );
             newContact.CopyFrom(contactSim);
 
+            var shapeA = world.shapes.data[contactSim.shapeIdA];
+            var shapeB = world.shapes.data[contactSim.shapeIdB];
+
             // todo perhaps skip this if the contact is already awake
 
             if (typeA == B2BodyType.b2_staticBody)
@@ -134,8 +137,8 @@ namespace Box2D.NET
                 newContact.bodySimIndexA = localIndex;
 
                 B2BodySim bodySimA = b2Array_Get(ref awakeSet.bodySims, localIndex);
-                newContact.invMassA = bodySimA.invMass;
-                newContact.invIA = bodySimA.invInertia;
+                newContact.invMassA = B2Shapes.b2ShapeRespondsTo(shapeA.filter, shapeB.filter) ? bodySimA.invMass : 0;
+                newContact.invIA = B2Shapes.b2ShapeRespondsTo(shapeA.filter, shapeB.filter) ? bodySimA.invInertia : 0;
             }
 
             if (typeB == B2BodyType.b2_staticBody)
@@ -153,8 +156,8 @@ namespace Box2D.NET
                 newContact.bodySimIndexB = localIndex;
 
                 B2BodySim bodySimB = b2Array_Get(ref awakeSet.bodySims, localIndex);
-                newContact.invMassB = bodySimB.invMass;
-                newContact.invIB = bodySimB.invInertia;
+                newContact.invMassB = B2Shapes.b2ShapeRespondsTo(shapeB.filter, shapeA.filter) ? bodySimB.invMass : 0;
+                newContact.invIB = B2Shapes.b2ShapeRespondsTo(shapeB.filter, shapeA.filter) ? bodySimB.invInertia : 0;
             }
         }
 

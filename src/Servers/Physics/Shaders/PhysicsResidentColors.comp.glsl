@@ -35,7 +35,7 @@ void main()
             uint offset=0u;for(uint c=0u;c<32u;c++){buckets[32u+c]=offset;offset+=buckets[c];}return;
         }
         Constraint c=constraints[i];if(c.bodies.x==none)return;
-        uint color=colors[i];if(color>=32u||c.tangent.y!=0){atomicOr(status.w,1u);return;}
+        uint color=colors[i];if(color>=32u||rowMode(c)!=0u){atomicOr(status.w,1u);return;}
         if(control.x==9u){order[buckets[32u+color]+atomicAdd(buckets[64u+color],1u)]=i;return;}
         atomicAdd(buckets[color],1u);
         uint bit=1u<<color;

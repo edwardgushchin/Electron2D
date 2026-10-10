@@ -29,6 +29,7 @@ void main()
         ResidentBody a=bodies[c.bodies.x],b=bodies[c.bodies.y];ma=inverseMass(a);mb=inverseMass(b);
         va0=a.velocity.xyz;vb0=b.velocity.xyz;av=va0+a.surface.xyz;bv=vb0+b.surface.xyz;ca=corrections[c.bodies.x].xyz;cb=corrections[c.bodies.y].xyz;
     }
+    if(!responds(c,false))ma=vec2(0);if(!responds(c,true))mb=vec2(0);
     float vn=dot2(bv.xy-av.xy,n)+bv.z*c.normal.w-av.z*c.normal.z;
     float vt=dot2(bv.xy-av.xy,t)+bv.z*c.tangent.w-av.z*c.tangent.z;
     float pn=max(0,p.physical.x+c.parameters.x*(c.parameters.z-vn));

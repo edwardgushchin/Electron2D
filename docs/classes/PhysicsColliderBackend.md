@@ -48,6 +48,7 @@ transform reads reuse the qualified GPU basis while CPU keeps its angle conventi
 | `CaptureViewContacts`, `CaptureViewContact` | Project CPU solved/frame contacts or resident GPU reports into existing engine contact values; common runtime contains no fixture tags or backend contact records. |
 | `Detach` | Destroy the body and its fixtures, clear IDs and space, retain list capacity. If the world has failed, skip backend calls and leave final backend cleanup to world disposal. |
 | `RebuildShapes` | Validate all active slot transforms before removing existing fixtures; preserve disabled/disposed-slot indexing and append the current active geometry. |
+| `UpdateFilter` | Update existing CPU/GPU fixture metadata, preserve geometry identity and wake body/contact neighbors when requested; query/failed-world guards precede mutation. |
 | `Shapes`, `BodyID`, `Space` | Internal borrowed backend state; shape IDs can change on rebuild, body IDs on reattachment. Public RID identity is independent. |
 
 Scene and server slot overloads use one shared shape-definition/append path. It
@@ -148,3 +149,5 @@ non-rigid owners, rotation locking reads the current attachment directly. Existi
 GPU handle/access validation and per-step authored parameter sampling remain;
 this removes repeated owner resolution without a new cache or changed public API.
 See [parameter preparation measurements](../components/physics-backends.md#parameter-owner-resolution).
+
+[Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.

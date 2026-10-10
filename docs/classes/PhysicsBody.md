@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -97,3 +97,5 @@ PhysicsBody and its descendants, including StaticBody, AnimatableBody, RigidBody
 CharacterBody and PhysicalBone. Enable it explicitly for viewport physics picking.
 Its typed stored descriptor exposes the same false revert default. This does not
 change simulation, collision layers or ordinary direct-space queries.
+
+[Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.

@@ -113,7 +113,7 @@ bool excluded(uvec2 key,uint start,uint count)
 {for(uint i=0u;i<count;i++)if(payload[start+i]==key)return true;return false;}
 bool candidate(Shape s,Mapping mapping)
 {
-    if(s.owner.x==q.body.x||(s.policy.w&2u)!=0u||(shapeA.policy.z&s.policy.y)==0u||(s.policy.z&shapeA.policy.y)==0u)return false;
+    if(s.owner.x==q.body.x||(s.policy.w&2u)!=0u||(shapeA.policy.z&s.policy.y)==0u)return false;
     if(excluded(mapping.identity.xy,q.exclusions.x,q.exclusions.y)||excluded(s.owner.xy,q.policy.x,q.policy.y))return false;
     return mapping.associations.zw==uvec2(0)||!excluded(mapping.associations.zw,q.exclusions.z,q.exclusions.w);
 }

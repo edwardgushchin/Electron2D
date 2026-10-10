@@ -78,8 +78,9 @@ internal sealed unsafe partial class GPUPhysicsWorld
             // arithmetic and ordinary state classification are already done.
             contact.bodySimIndexA = bodyA.setIndex == (int)B2SolverSetType.b2_awakeSet ? bodyA.localIndex : -1;
             contact.bodySimIndexB = bodyB.setIndex == (int)B2SolverSetType.b2_awakeSet ? bodyB.localIndex : -1;
-            contact.invMassA = simA.invMass; contact.invMassB = simB.invMass;
-            contact.invIA = simA.invInertia; contact.invIB = simB.invInertia;
+            var respondsA = B2Shapes.b2ShapeRespondsTo(a.filter, b.filter); var respondsB = B2Shapes.b2ShapeRespondsTo(b.filter, a.filter);
+            contact.invMassA = respondsA ? simA.invMass : 0; contact.invMassB = respondsB ? simB.invMass : 0;
+            contact.invIA = respondsA ? simA.invInertia : 0; contact.invIB = respondsB ? simB.invInertia : 0;
             contact.surfaceLinearA = simA.surfaceLinearVelocity; contact.surfaceAngularA = simA.surfaceAngularVelocity;
             contact.surfaceLinearB = simB.surfaceLinearVelocity; contact.surfaceAngularB = simB.surfaceAngularVelocity;
             contact.manifold = _manifolds[i];

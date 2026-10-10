@@ -338,7 +338,7 @@ namespace Box2D.NET
 
 
             // Skip filtered shapes
-            bool canCollide = b2ShouldShapesCollide(fastShape.filter, shape.filter);
+            bool canCollide = b2ShapeRespondsTo(fastShape.filter, shape.filter);
             if (canCollide == false)
             {
                 return true;

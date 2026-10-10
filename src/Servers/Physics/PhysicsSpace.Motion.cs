@@ -324,8 +324,7 @@ internal sealed partial class PhysicsSpace
             {
                 var own = ownShapes[ownIndex];
                 var ownFilter = b2Shape_GetFilter(own);
-                if ((ownFilter.maskBits & filter.categoryBits) != 0 &&
-                    (filter.maskBits & ownFilter.categoryBits) != 0) { eligible = true; break; }
+                if ((ownFilter.maskBits & filter.categoryBits) != 0) { eligible = true; break; }
             }
             if (eligible) _motionCandidates.Add(new(shape, tag, priority));
         }

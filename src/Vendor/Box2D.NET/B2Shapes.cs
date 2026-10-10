@@ -49,8 +49,16 @@ namespace Box2D.NET
                 return filterA.groupIndex > 0;
             }
 
-            return (filterA.maskBits & filterB.categoryBits) != 0 && (filterA.categoryBits & filterB.maskBits) != 0;
+            return b2ShapeRespondsTo(filterA, filterB) || b2ShapeRespondsTo(filterB, filterA);
         }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool b2ShapeRespondsTo(in B2Filter self, in B2Filter other) =>
+            self.groupIndex != 0 && self.groupIndex == other.groupIndex ? self.groupIndex > 0 : (self.maskBits & other.categoryBits) != 0;
+
+        // Either endpoint may request contact, including an endpoint with no category bits.
+        internal static ulong b2ProxyFilterBits(in B2Filter filter) =>
+            filter.groupIndex > 0 ? ulong.MaxValue : filter.categoryBits | filter.maskBits;
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         internal static bool b2ShouldQueryCollide(in B2Filter shapeFilter, in B2QueryFilter queryFilter)
@@ -1002,7 +1010,7 @@ namespace Box2D.NET
 
             // Create proxies in the broad-phase.
             shape.proxyKey =
-                b2BroadPhase_CreateProxy(bp, type, shape.fatAABB, shape.filter.categoryBits, shape.id, forcePairCreation, shape.type == B2ShapeType.b2_boundaryShape);
+                b2BroadPhase_CreateProxy(bp, type, shape.fatAABB, b2ProxyFilterBits(shape.filter), shape.id, forcePairCreation, shape.type == B2ShapeType.b2_boundaryShape);
             B2_ASSERT(B2_PROXY_TYPE(shape.proxyKey) < B2BodyType.b2_bodyTypeCount);
         }
 
@@ -1317,7 +1325,7 @@ namespace Box2D.NET
                     b2BroadPhase_DestroyProxy(world.broadPhase, shape.proxyKey);
 
                     bool forcePairCreation = true;
-                    shape.proxyKey = b2BroadPhase_CreateProxy(world.broadPhase, proxyType, shape.fatAABB, shape.filter.categoryBits,
+                    shape.proxyKey = b2BroadPhase_CreateProxy(world.broadPhase, proxyType, shape.fatAABB, b2ProxyFilterBits(shape.filter),
                         shapeId, forcePairCreation, shape.type == B2ShapeType.b2_boundaryShape);
                 }
                 else
@@ -1353,8 +1361,8 @@ namespace Box2D.NET
                 return;
             }
 
-            // If the category bits change, I need to destroy the proxy because it affects the tree sorting.
-            bool destroyProxy = filter.categoryBits != shape.filter.categoryBits;
+            // A changed conservative filter must reach the tree before the next pair search.
+            bool destroyProxy = b2ProxyFilterBits(filter) != b2ProxyFilterBits(shape.filter);
 
             shape.filter = filter;
             world.shapeFilterChanged?.Invoke(shape.id);

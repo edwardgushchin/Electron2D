@@ -268,7 +268,7 @@ public abstract partial class PhysicsBody : CollisionObject
         if (!float.IsFinite(margin) || margin < 0) throw new ArgumentOutOfRangeException(nameof(margin));
     }
 
-    internal override void OnCollisionFilterChanged() => MarkShapesDirty();
+    internal override void OnCollisionFilterChanged() { if (Space is not null) Backend.UpdateFilter(EffectiveCollisionLayer, EffectiveCollisionMask, wakeBody: true); }
 
     /// <inheritdoc />
     protected override void OnEnterTree()

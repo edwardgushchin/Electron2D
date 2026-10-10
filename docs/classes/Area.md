@@ -181,3 +181,5 @@ in bulk. Queries and further simulation remain rejected. See the
 
 
 Explicitly bound Entity/Area instances participate in typed overlap arrays and events even for raw server colliders. Object events deduplicate shared owners; node departure/reentry changes scene visibility immediately while physical pair callbacks remain unchanged. See [object associations](../components/physics-object-bindings.md).
+
+[Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.

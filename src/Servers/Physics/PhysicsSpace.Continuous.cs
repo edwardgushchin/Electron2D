@@ -158,12 +158,14 @@ internal sealed partial class PhysicsSpace
             sweepB = bb.Sweep,
             maxFraction = 1
         };
-        var full = ba.Mode == CCDMode.CastShape || bb.Dynamic && bb.Mode == CCDMode.CastShape;
+        var modeA = ba.Dynamic && b2ShapeRespondsTo(sa.filter, sb.filter) ? ba.Mode : CCDMode.Disabled;
+        var modeB = bb.Dynamic && b2ShapeRespondsTo(sb.filter, sa.filter) ? bb.Mode : CCDMode.Disabled;
+        var full = modeA == CCDMode.CastShape || modeB == CCDMode.CastShape;
         if (full) TestContinuousCast(input, a, b, ta, tb);
         else
         {
-            if (ba.Mode == CCDMode.CastRay && MakeLeadingRay(ref input.proxyA, ref input.sweepA, input.sweepB, ta.Compound)) TestContinuousCast(input, a, b, ta, tb);
-            if (bb.Dynamic && bb.Mode == CCDMode.CastRay)
+            if (modeA == CCDMode.CastRay && MakeLeadingRay(ref input.proxyA, ref input.sweepA, input.sweepB, ta.Compound)) TestContinuousCast(input, a, b, ta, tb);
+            if (modeB == CCDMode.CastRay)
             {
                 input.proxyA = b2MakeShapeDistanceProxy(sa); input.sweepA = ba.Sweep;
                 if (MakeLeadingRay(ref input.proxyB, ref input.sweepB, input.sweepA, tb.Compound)) TestContinuousCast(input, a, b, ta, tb);

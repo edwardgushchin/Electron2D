@@ -42,7 +42,7 @@ CCD checks cover this internal optimization; no declaration state changes.
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the independent public backend now receives the same CCD policy. Full cross-backend shape-family acceptance remains open.
 
-[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion and CharacterBody now route to these kernels; full CharacterBody conformance remains open.
+[Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with moving-mask/target-layer filtering, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion and CharacterBody now route to these kernels; full CharacterBody conformance remains open.
 
 [Resident shape queries](gpu-resident-shape-queries.md) now execute intersections, contact pairs, deepest rest information and motion brackets over standalone leased geometry on GPU. CPU compound casts and directed-query containment now ignore internal decomposition seams. Public GPU direct-space and scene casts now use these kernels.
 
@@ -56,7 +56,8 @@ CCD checks cover this internal optimization; no declaration state changes.
 
 ## Baseline and scope
 
-Source baseline: local `main` at `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.
+Original audit baseline: `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.
+Current filter review continues local `main` at `36d8dfcf3f5fedb2414446926cb1bd162c328109` plus the directional filter change described below.
 The historical `119bd016` gap list is superseded by current source and coverage.
 The repository pins Godot `4.7.2-stable`, commit
 `ed1daf0bf001b61586d9930840f2f1394092c079`; this audit does not substitute a newer
@@ -99,7 +100,7 @@ operations remain open in the ledger.
 | Server bodies | PhysicsServerCollider and PhysicsBodyRuntime delegate lifetime/state/forces to the selected attachment adapter | Public raw GPU bodies now use resident poses, mass, force/field policy, contacts and queries. Shared server scenarios execute on both backends; full parameter-family conformance remains open. |
 | Joints | PhysicsJointRuntime retains engine-valued frames/settings; PhysicsJointBackend selects CPU handles or independent resident pin/groove/spring handles | Public scene/server settings now reach either implementation. Shared public pin/motor, groove, spring and reattachment tests pass; full joint-policy acceptance on the public GPU path remains open. |
 | Queries/contacts | Direct-space/body state and scene motion/casts route through CPU operations or resident kernels/reports | Public GPU queries return common RID/object/slot metadata; direct-state contacts and queued events reuse attachment versions and common dispatch. Full cross-family conformance remains open. |
-| Independent device body/geometry state | [GPUPhysicsBodyStore](../../src/Servers/Physics/GPUPhysicsBodyStore.cs) retains authoritative state and the complete independent device simulation | Sparse edits, geometry, contacts, solver, joints, mass, sleep, CCD, fields and queries execute. Public worlds now consume compact state publication and capped contact reports. Full costs, device profiles, conformance and network protocol remain open. |
+| Independent device body/geometry state | [GPUPhysicsBodyStore](../../src/Servers/Physics/GPUPhysicsBodyStore.cs) retains authoritative state and the complete independent device simulation | Sparse edits, geometry, contacts, solver, joints, mass, sleep, CCD, fields and queries execute. Public worlds now consume compact state publication and capped contact reports. Portable snapshots and the separate-process network example execute; full costs, device profiles and exhaustive conformance remain open. |
 | GPU experiment | [GPU implementation status](gpu-physics.md) retains historical stage measurements | The older stage host still uses Box2D mirrors as a diagnostic control. The selectable independent GPU world does not use that host. Stage success is not full-backend acceptance. |
 
 The public RID/resource/object layer can retain its contract. No B2 type should
@@ -112,10 +113,10 @@ query ordering are constraints; existing diagnostic hashes are not such promises
 | Requirement | Current evidence | Remaining obligation |
 | --- | --- | --- |
 | Static linear/angular surface velocity with stationary pose | StaticBody stores both velocities; scalar/SIMD and experimental GPU contacts consume them. PhysicsSurfaceVelocityTests covers contacts, queries, carrying, waking, packing and lifetime | Preserve on the independent GPU backend; not missing CPU work. |
-| Full tangential impulse and contact cap selection | CPU scalar/SIMD constraints accumulate totalTangentImpulse; GPU packets publish totals. PhysicsSpace aggregates subdivided intervals. Direct state retains deepest points, replacing the first shallowest only for a strictly deeper candidate | Preserve frame totals, signs, ties and all public payloads on the new backend. Virtual tile owners remain missing. |
+| Full tangential impulse and contact cap selection | CPU scalar/SIMD constraints accumulate totalTangentImpulse; GPU packets publish totals. PhysicsSpace aggregates subdivided intervals. Direct state retains deepest points, replacing the first shallowest only for a strictly deeper candidate | Preserve frame totals, signs, ties and all public payloads on the new backend. Square atlas tile owners now execute through the shared association path. |
 | Axis velocity, angular velocity, sleeping and can-sleep | PhysicsServer.API and PhysicsServer.BodyState route to shared PhysicsBodyRuntime; PhysicsServerStateTests exercises scene/server state and wake/lifetime guards | Already implemented on the CPU host and stage experiment; independent GPU preservation is open. |
 | Joint RID creation/free and reconfiguration | PhysicsServerJointTests and PhysicsJointRuntime cover real pin/groove/spring kernels and lifetime | Old FreeRID text incorrectly listed all joints as absent. Shared public correction/softness/caps now execute with PhysicsJointPolicyTests; independent GPU-world integration now executes; full public joint-policy conformance remains open. |
-| World/canvas identity, area audio and logical shape events | WorldTests, AudioSpatialTests and ShapePairEventTests support implemented coverage | Old triggers claiming absent world canvases, all audio or all shape events were stale. Collider canvas filtering and tile event owners remain open. |
+| World/canvas identity, area audio and logical shape events | WorldTests, AudioSpatialTests and ShapePairEventTests support implemented coverage | Old triggers claiming absent world canvases, all audio or all shape events were stale. Collider canvas filtering and square atlas tile owners now execute on both public backends; remaining tile authoring/network topology retains its ledger. |
 | Directed separation-ray resource | SeparationRayShape and its factory, special queries, Area sensing and character recovery/snap execute | Ordinary CPU directed manifolds now provide material/impulse response, sleep and contacts; old stage-GPU mode uploads these host constraints. Independent public GPU binding now executes; full cross-family conformance remains open. |
 
 Fresh audit verification rebuilds the checked revision and reruns the CPU surface,
@@ -158,15 +159,15 @@ current CPU host does not certify new geometry, tile owners or independent GPU u
 
 | Group | Missing behavior and affected families |
 | --- | --- |
-| Independent backend ownership and selection | Separate CPU/Box2D and resident GPU worlds; explicit selection independent of rendering; independently configurable startup fallback; observable requested/actual selection; defined failed-world state after a started GPU step; no hidden CPU replay. Extract scene/server body, shape, joint, direct-state and query consumers from B2 ownership. |
-| Continuous collision | CPU RigidBody/PhysicsServer modes now execute from solved trajectories with force/motor budgets and full frame impulses. Resident GPU CCD shares the enum and executes independently. Remaining: public GPU binding and common cross-backend acceptance; WorldBoundaryTests now verifies analytic boundary geometry on both implementations. |
-| Shapes | WorldBoundary resource, factory, type/data access, queries and body/Area response now execute on CPU and internally on GPU. Custom solver bias now executes under ADR 0098. Public GPU binding remains open. Extension-defined geometry must follow the accepted extension contract; a custom type enum is not a working custom-shape API. |
+| Independent backend ownership and selection | Public CPU/Box2D and resident GPU worlds now execute with rendering-independent selection, startup-only fallback and requested/actual reporting. CPU startup without a device and failed GPU-step/no-replay teardown are exercised in physics-backends. Full conformance and performance acceptance remain open. |
+| Continuous collision | Public CPU/GPU RigidBody/PhysicsServer modes now execute with force/motor budgets, frame impulses, directed-ray contacts and per-moving-body masks. Common CCD, ray and boundary suites exercise both implementations; wider cross-family trajectories and long-run acceptance remain open. |
+| Shapes | WorldBoundary, SeparationRay, logical type/data access, body/Area response, resource queries and custom solver bias now execute on both public backends. Extension-defined geometry remains dependent on a working extension contract; a reserved enum identity is not custom-shape support. |
 | Constraints | Joint bias, common caps, linear PinJoint softness and the project/space correction default now execute through scene/server settings on CPU and stage GPU, with independent resident GPU kernels. The public GPU adapter owns resident constraints. The shared policy, scene pin/groove/spring and server family suites now pass on explicitly selected CPU/GPU worlds, including joint motion vetoes and extreme finite spring caps. Broader coupled workloads, inherited and extension contracts retain their independent gates. |
 | Solver/world settings | CollisionObject collision_priority plus server getter/setter now execute in weighted motion recovery on public CPU and independent GPU; constraint bias and shape/world contact bias/slack now execute; solver iteration counts also execute through shared typed policy; all nine SpaceParameter capabilities now execute through concrete typed operations, including geometric contact recycling/separation. Linear/angular sleep thresholds and time-to-sleep now execute through typed public CPU operations and shared independent GPU policy (PhysicsSleepPolicyTests); public GPU binding now executes; full cross-family conformance remains open. Project-level defaults, separate-thread behavior and engine selection retain their exact coverage/adaptation rules. Hardcoded tolerances/substep counts do not implement writable settings. |
 | Pointer interaction | [Completed under ADR 0099](physics-picking.md): scene callbacks/signals and differing defaults, viewport enable/first-only/sort and root project default, canvas/world routing, GUI/capture/exit, mutation/error/lifetime and warmed allocation. GPU queries now transfer predicted hit prefixes and exact missing tails; [measured picking cost](physics-picking.md#current-complete-frame-cost) keeps overall frame/FPS acceptance separate. |
 | Tiles and object identity | TileSet physics layers/filter/priority/material; TileData polygons, one-way margins and constant surface velocities; TileMapLayer body-RID lookup, collision enable/visibility, quadrant grouping and kinematic mode. Carry tile owners through Area/RigidBody object and shape events, direct contacts, direct-space queries, ray/shape casts and kinematic/motion results. ADR 0101 now implements these policies for square atlas tiles, including actual generated bodies and owner projections through all listed consumers; TileMapLayerTests runs CPU/GPU and native rendering. Remaining general tile capabilities and tile-specific network topology remain open. |
-| Server identity and queries | Body collision-layer/mask getters; typed Body/AreaAttachObject and GetObjectInstanceID now execute through weak sampled associations across queries/contacts/events (PhysicsObjectBindingTests); canvas attach/get and exact point filtering now execute through scene/server metadata and the resident GPU query kernel (PhysicsCanvasTests); ShapeGetType; [ProcessInfo and the three Performance physics monitors](physics-statistics.md) now execute on public CPU/GPU worlds, including completed-step lifecycle, sensor pairs and zero-allocation reads. Share semantics with scene owners and reject dead/foreign IDs correctly. |
-| Debug drawing | [Authored shape/cast/joint diagnostics](physics-debug.md) now execute through existing canvas RIDs with Shape.Draw, CollisionShape.DebugColor, a live SceneTree hint, shape color and outlines (ADR 0100). Contact-point/Space debug APIs, max-contact limits/contact color and extension diagnostics retain their own records; square-atlas tile overlays now execute under ADR 0101. Sandbox UI stays unchanged. |
+| Server identity and queries | BodyGetCollisionLayer/Mask and shared scene/server/tile filter setters now execute under ADR 0102, with guarded authoring reads, immediate query edits, next-step monitoring and unchanged-assignment wake. Typed object/canvas associations, ShapeGetType, completed ProcessInfo and three Performance monitors now execute. Wider extension/state semantics and full conformance remain open. |
+| Debug drawing | Authored shape/cast/joint and contact-point diagnostics now execute through retained canvas commands, including live hints, colors/outlines and bounded Space contact snapshots (physics-debug). Square atlas tile overlays execute under ADR 0101. Extension diagnostics, wider visual/device and full-frame performance acceptance remain open. |
 | Backend registration and extensions | PhysicsServer manager register/default/factory behavior; the whole server extension family and direct body/space state extension families, including step/sync/end-sync/flush/finish, exclusion helpers, callbacks and resource lifetime. Adapt to typed C# under ADRs 0004/0095 without exporting vendor handles or adding inert stubs. |
 | Inherited contract | All remaining Partial/Blocked/Unimplemented declarations on Node, Entity/CanvasItem, Object/RefCounted/Resource, SkeletonModification and relevant shared ancestors remain listed separately. Existing role mappings, packing, ownership, process disable, worlds, transforms and callbacks must survive both implementations. Generic inherited gaps must not disappear behind a class marked Implemented. |
 
@@ -266,7 +267,7 @@ The goal remains open until both complete implementations are publicly selectabl
 the applicable contract is closed and the semantic, failure, allocation and full
    performance gates pass. This audit changes no runtime behavior or public API.
 
-World contact bias/slack and Shape.CustomSolverBias now execute under [ADR 0098](../decisions/physics-contacts.md#adr-0098), with policy/storage/response tests on CPU and independent resident GPU. Iteration controls now execute with PhysicsSolverIterationTests; geometric contact recycling/max separation now execute with PhysicsContactPersistenceTests; public independent-GPU binding remains open. This addition does not close the full backend or networking goal.
+World contact bias/slack and Shape.CustomSolverBias now execute under [ADR 0098](../decisions/physics-contacts.md#adr-0098), with policy/storage/response tests on CPU and independent resident GPU. Iteration controls now execute with PhysicsSolverIterationTests; geometric contact recycling/max separation now execute with PhysicsContactPersistenceTests; public independent-GPU binding now executes. This addition does not close the full backend or networking goal.
 
 ## Pointer-input completion
 
@@ -276,3 +277,21 @@ Viewport picking policies on CPU/GPU. Native SDL delivery also executes with bot
 renderers. Remaining debug drawing, tile owners, backend extensions and network
 requirements are unchanged. Metadata readback capacity remains a measured GPU
 optimization target; this slice does not close the full physics goal.
+
+## Directional filter review
+
+[ADR 0102](../decisions/physics-filters.md#adr-0102) now supplies shared body
+layer/mask getters/setters without geometry recompilation and removes the old
+reciprocal-mask restriction from physical response and motion/CCD. The common
+PhysicsFilterTests execute on CPU/GPU; TileMapLayerTests exercise generated
+identities. Full details, numeric bounds and prepared allocation intervals are in
+[filter verification](physics-filters.md). Older SeparationRay/CCD filter fixtures
+that zeroed only a static target mask assumed reciprocal response; they now check
+both the moving-mask rejection and the target-mask non-veto cases. RigidBody
+contact-departure fixtures now reject both pair directions explicitly.
+
+The pinned body-pair implementation also reports contacts between interacting
+nonresponsive body roles when reporting is enabled. Static/kinematic report-only
+pairs are not closed by the directional dynamic-response tests and remain an
+explicit implementation/conformance gap. Do not mark all CollisionObject or
+server-extension behavior complete from this slice.

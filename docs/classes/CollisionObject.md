@@ -1,6 +1,6 @@
 # CollisionObject
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-09
 
 ## Description
 
-The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture; changing layer or mask marks fixtures for reconstruction before the next fixed step. Bodies use reciprocal filters for contact response. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class keeps backend IDs private and supplies viewport pointer picking under ADR 0099.
+The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture. Layer/mask assignments update existing fixture metadata without rebuilding geometry. A body pair is eligible when either mask includes the opposite layer; each dynamic endpoint receives impulse and position correction only when its own mask includes the other layer. The other endpoint still contributes its actual point velocity. Assignments wake the body and touching neighbors, including when bits are unchanged. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class keeps backend IDs private and supplies viewport pointer picking under ADR 0099.
 
 ## API summary
 
@@ -41,12 +41,12 @@ Returns the collider's opaque [RID](RID.md) even while detached. Fixture rebuild
 <a id="collisionlayer"></a>
 ### `CollisionLayer`
 
-Any 32-bit mask is valid, including zero. Assignment marks attached collision shapes dirty; the next physics step installs the new backend category. This property does not own or dispose shapes.
+Any 32-bit mask is valid, including zero. Attached queries observe the new category immediately; solved contacts and Area snapshots update on the next step. Geometry resources, logical indices, shape owners and RID identity are retained. Detached authoring is applied on attachment. Attached owner/solver/failed-world guards run before changing state.
 
 <a id="collisionmask"></a>
 ### `CollisionMask`
 
-Any 32-bit mask is valid, including zero. Assignment marks shapes dirty and changes which categories can generate contact response or area detection after the next step.
+Any 32-bit mask is valid, including zero. Body motion queries test this mask against target layers immediately; target masks do not veto the query. Physical pair admission and per-endpoint response use the directional rules above. Area monitoring uses the observing mask against the target layer and publishes changes on the next step. Shape identity and unchanged-assignment wake behavior match CollisionLayer.
 
 <a id="bitmethods"></a>
 ### Layer and mask bit methods
@@ -211,3 +211,5 @@ or disposal prevents further delivery to a stale hit. Subscriptions are cleared 
 disposal. Property writes keep normal scene owner/capture guards. See
 [Physics picking](../components/physics-picking.md) for canvas limits, lifecycle,
 CPU/GPU/native tests and costs.
+
+[Shared filter verification](../components/physics-filters.md) covers CPU/GPU one-sided response, CCD, contacts, sensors, queries, sleeping neighbors, callbacks and warmed edits. Nonresponsive body-pair report-only roles retain an explicit open audit item.

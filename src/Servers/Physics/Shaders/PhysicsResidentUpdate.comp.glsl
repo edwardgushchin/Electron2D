@@ -22,7 +22,7 @@ void main()
     ResidentBody a=bodies[c.bodies.x],b=c.bodies.y==none?worldBody():bodies[c.bodies.y];
     bool packed=(history.w&8u)!=0u;
     if(packed){a.velocity.xyz=solverBodies[c.bodies.x].velocity.xyz;if(c.bodies.y!=none)b.velocity.xyz=solverBodies[c.bodies.y].velocity.xyz;}
-    bool joint=c.tangent.y!=0;
+    bool joint=rowMode(c)!=0u;
     // A stationary surface can move contact points, but not the pin/guide's fixed anchor.
     if(joint){if(a.flags.y==0u)a.velocity=vec4(0);if(b.flags.y==0u)b.velocity=vec4(0);}
     else {a.velocity.xyz+=a.surface.xyz;b.velocity.xyz+=b.surface.xyz;}
@@ -35,7 +35,7 @@ void main()
     pn=joint?clamp(pn,p.correction.z,p.correction.w):max(0,pn);
     float limit=joint?0:c.tangent.x*pn;
     float pt=clamp(p.physical.y-c.parameters.y*vt,-limit,limit);
-    uint degree=max(inverseMass(a).x>0?heads[c.bodies.x].y:0u,inverseMass(b).x>0?heads[c.bodies.y].y:0u);
+    uint degree=max(responds(c,false)&&inverseMass(a).x>0?heads[c.bodies.x].y:0u,responds(c,true)&&inverseMass(b).x>0?heads[c.bodies.y].y:0u);
     // shortcut: degree-damped Jacobi handles joints and color overflow; improve its convergence for high-degree stacks.
     float weight=1.0/float(max(degree,1u));
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);
@@ -43,9 +43,9 @@ void main()
     if(packed){ca=solverBodies[c.bodies.x].correction.xyz;cb=c.bodies.y==none?vec3(0):solverBodies[c.bodies.y].correction.xyz;}
     float correctionSpeed=dot2(cb.xy-ca.xy,n)+cb.z*c.normal.w-ca.z*c.normal.z;
     float nextCorrection=p.correction.x+c.parameters.x*(c.parameters.w-correctionSpeed-softness*p.correction.x);
-    if(c.tangent.y!=2&&!finite4(vec4(correctionSpeed,nextCorrection,0,0))){fail();return;}
+    if(rowMode(c)!=2u&&!finite4(vec4(correctionSpeed,nextCorrection,0,0))){fail();return;}
     nextCorrection=joint?clamp(nextCorrection,p.correction.z,p.correction.w):max(0,nextCorrection);
-    if(c.tangent.y==2)nextCorrection=0;
+    if(rowMode(c)==2u)nextCorrection=0;
     float correctionDelta=weight*(nextCorrection-p.correction.x);
     p.correction.xy=vec2(p.correction.x+correctionDelta,correctionDelta);
     p.physical=vec4(p.physical.xy+delta,delta);

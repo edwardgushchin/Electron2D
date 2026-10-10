@@ -150,3 +150,5 @@ The complete collider suite and complete GPU suite passed after integration:
 Logs: `/tmp/e2d-canvas-colliders.log`, `/tmp/e2d-canvas-full-gpu.log`.
 
 [Object associations](physics-object-bindings.md) now supply typed Body/Area bindings and sampled weak identities across queries, motion, contacts and scene/server monitoring.
+
+[Directional filter mutation](physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU. It updates existing fixtures without rebuilding geometry; body assignments wake contact neighbors even for unchanged bits.

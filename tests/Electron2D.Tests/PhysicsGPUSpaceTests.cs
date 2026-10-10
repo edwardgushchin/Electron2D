@@ -37,6 +37,10 @@ internal static class PhysicsGPUSpaceTests
             Check(PhysicsServer.Service.GetSceneSpace(space).HasBackendFailure && PhysicsServer.SpaceGetBackend(space) == PhysicsServer.Backend.GPU,
                 "Started GPU failure remains failed GPU even when startup fallback was allowed");
             Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(space, 1d / 60));
+            Reject<InvalidOperationException>(() => PhysicsServer.BodyGetCollisionLayer(body));
+            Reject<InvalidOperationException>(() => PhysicsServer.BodyGetCollisionMask(body));
+            Reject<InvalidOperationException>(() => PhysicsServer.BodySetCollisionLayer(body, 8));
+            Reject<InvalidOperationException>(() => PhysicsServer.BodySetCollisionMask(body, 8));
             Console.WriteLine("GPU step failure is terminal without CPU replay; failed bodies and world release normally.");
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }

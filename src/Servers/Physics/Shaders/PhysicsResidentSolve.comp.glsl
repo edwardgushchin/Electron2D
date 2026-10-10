@@ -113,7 +113,8 @@ void main()
         bool continuous=(continuousMode(a)|continuousMode(b))!=0u;
         float contactThreshold=continuous?policy.w:0;
         if(p.normal.z>contactThreshold&&continuous){constraints[i]=c;return;}
-        vec2 ma=inverseMass(a),mb=inverseMass(b);
+        bool respondsA=(sa.policy.z&sb.policy.y)!=0u,respondsB=(sb.policy.z&sa.policy.y)!=0u;
+        vec2 ma=respondsA?inverseMass(a):vec2(0),mb=respondsB?inverseMass(b):vec2(0);
         if(ma.x+mb.x==0){constraints[i]=c;return;}
         vec2 ra=rotate(a.pose.zw,p.anchors.xy-centers[ai]),rb=rotate(b.pose.zw,p.anchors.zw-centers[bi]),n=p.normal.xy,t=vec2(n.y,-n.x);
         float an=cross2(ra,n),bn=cross2(rb,n),at=cross2(ra,t),bt=cross2(rb,t);
@@ -128,7 +129,7 @@ void main()
         // Preserve impact velocity before speculative separation impulses remove it.
         bool reachesContact=p.normal.z<=contactThreshold||(!continuous&&p.normal.z+vn*time.x<=0);
         if(reachesContact&&vn< -policy.y)target=max(target,-material.y*vn);
-        c.normal=vec4(n,an,bn);c.tangent=vec4(material.x,0,at,bt);
+        c.normal=vec4(n,an,bn);c.tangent=vec4(material.x,float((respondsA?0u:4u)|(respondsB?0u:8u)),at,bt);
         c.parameters=vec4(kn>0?1/kn:0,kt>0?1/kt:0,target,correction);
         vec2 warm=previousImpulse(p,sa,sb,material.x);vec4 impulse=vec4(warm,warm);
         if(!finite4(c.normal)||!finite4(c.tangent)||!finite4(c.parameters)||!finite4(impulse)||!finite4(vec4(kn,kt,0,0))){fail();return;}

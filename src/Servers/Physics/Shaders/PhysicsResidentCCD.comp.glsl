@@ -181,7 +181,7 @@ void main()
     if(((sa.policy.w|sb.policy.w)&2u)!=0u)return;
     ResidentBody startA=bodies[sa.owner.x],startB=bodies[sb.owner.x];
     if(startA.flags.x!=sa.owner.y||startB.flags.x!=sb.owner.y||startA.flags.w==0u||startB.flags.w==0u){fail();return;}
-    uint modeA=continuousMode(startA),modeB=continuousMode(startB);
+    uint modeA=(sa.policy.z&sb.policy.y)!=0u?continuousMode(startA):0u,modeB=(sb.policy.z&sa.policy.y)!=0u?continuousMode(startB):0u;
     if((modeA|modeB)==0u)return;
     Geometry ga=geometries[sa.owner.z],gb=geometries[sb.owner.z];
     if(ga.data.w!=sa.owner.w||gb.data.w!=sb.owner.w){fail();return;}

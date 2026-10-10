@@ -424,12 +424,12 @@ namespace Box2D.NET
 
                     // avoid cache misses in b2PrepareContactsTask
                     contactSim.bodySimIndexA = bodyA.setIndex == (int)B2SolverSetType.b2_awakeSet ? bodyA.localIndex : B2_NULL_INDEX;
-                    contactSim.invMassA = bodySimA.invMass;
-                    contactSim.invIA = bodySimA.invInertia;
+                    contactSim.invMassA = B2Shapes.b2ShapeRespondsTo(shapeA.filter, shapeB.filter) ? bodySimA.invMass : 0;
+                    contactSim.invIA = B2Shapes.b2ShapeRespondsTo(shapeA.filter, shapeB.filter) ? bodySimA.invInertia : 0;
 
                     contactSim.bodySimIndexB = bodyB.setIndex == (int)B2SolverSetType.b2_awakeSet ? bodyB.localIndex : B2_NULL_INDEX;
-                    contactSim.invMassB = bodySimB.invMass;
-                    contactSim.invIB = bodySimB.invInertia;
+                    contactSim.invMassB = B2Shapes.b2ShapeRespondsTo(shapeB.filter, shapeA.filter) ? bodySimB.invMass : 0;
+                    contactSim.invIB = B2Shapes.b2ShapeRespondsTo(shapeB.filter, shapeA.filter) ? bodySimB.invInertia : 0;
                     contactSim.surfaceLinearA = bodySimA.surfaceLinearVelocity; contactSim.surfaceAngularA = bodySimA.surfaceAngularVelocity;
                     contactSim.surfaceLinearB = bodySimB.surfaceLinearVelocity; contactSim.surfaceAngularB = bodySimB.surfaceAngularVelocity;
 

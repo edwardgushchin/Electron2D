@@ -77,19 +77,23 @@ public abstract partial class CollisionObject : Entity
     }
 
     /// <summary>Gets or sets the 32-bit collision category mask.</summary>
+    /// <remarks>Assignments update existing fixtures without rebuilding geometry. Body assignments also wake the body and contact neighbors, including for unchanged bits.</remarks>
     /// <value>One by default.</value>
     public uint CollisionLayer
     {
         get { ThrowIfDisposed(); return _collisionLayer; }
-        set { EnsureMutable(); _collisionLayer = value; OnCollisionFilterChanged(); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _collisionLayer = value; OnCollisionFilterChanged(); }
     }
 
     /// <summary>Gets or sets the 32-bit categories accepted for collision.</summary>
+    /// <remarks>Each dynamic body responds when its own mask includes the other layer; either direction admits the pair.
+    /// Body motion queries use only the moving mask against target layers. Body assignments wake the body and contact neighbors.
+    /// Changed contact and overlap membership is published on the next physical step.</remarks>
     /// <value>One by default.</value>
     public uint CollisionMask
     {
         get { ThrowIfDisposed(); return _collisionMask; }
-        set { EnsureMutable(); _collisionMask = value; OnCollisionFilterChanged(); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _collisionMask = value; OnCollisionFilterChanged(); }
     }
 
     /// <summary>Tests a one-based collision-layer bit.</summary>

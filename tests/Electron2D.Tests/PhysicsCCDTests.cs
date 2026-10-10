@@ -253,10 +253,13 @@ internal sealed class PhysicsCCDTests(bool gpu, PhysicsServer.Backend backend)
             f.Step(); var y = PhysicsServer.BodyGetTransform(a).Origin.Y;
             Check(fromBelow ? y < 0 : y < 20, $"One-way CCD side: below={fromBelow}, y={y}");
         }
-        using (var f = new Fixture(gpu, backend))
+        foreach (var accepts in new[] { false, true })
         {
+            using var f = new Fixture(gpu, backend);
             var a = f.Add(ball, velocity: new(0, 3000), ccd: CCDMode.CastShape); var b = f.Add(floor, new(0, 20), mode: Mode.Static);
-            PhysicsServer.BodySetCollisionMask(b, 0); f.Step(); Check(PhysicsServer.BodyGetTransform(a).Origin.Y > 50, "CCD requires reciprocal masks.");
+            PhysicsServer.BodySetCollisionMask(accepts ? b : a, 0); f.Step();
+            Check(accepts ? PhysicsServer.BodyGetTransform(a).Origin.Y < 20 : PhysicsServer.BodyGetTransform(a).Origin.Y > 50,
+                "CCD follows the moving body mask against target layers, independently of the target mask.");
         }
     }
     private void VerifyAllocation(bool gpu)

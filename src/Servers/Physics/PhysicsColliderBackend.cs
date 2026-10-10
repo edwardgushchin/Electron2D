@@ -105,6 +105,25 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         Space = null;
     }
 
+    internal void UpdateFilter(uint layer, uint mask, bool wakeBody)
+    {
+        Space!.EnsureQueryAccess();
+        if (wakeBody) { WakeTouching(); SetAwake(true); }
+        if (GPU is { } gpu)
+        {
+            GPUMask = mask;
+            foreach (var shape in GPUShapes) gpu.SetShapeFilter(shape.Handle, layer, mask, GPUSensor);
+            Space.InvalidateGPUStates();
+            return;
+        }
+        foreach (var id in _shapes)
+        {
+            var filter = b2Shape_GetFilter(id);
+            filter.categoryBits = layer; filter.maskBits = mask;
+            b2Shape_SetFilter(id, filter);
+        }
+    }
+
     internal void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask,
         bool sensor, float density, float friction = 1, float bounce = 0)
     {

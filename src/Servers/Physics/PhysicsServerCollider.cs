@@ -277,9 +277,9 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 
     internal void SetFilter(uint layer, uint mask)
     {
+        if (Space is not null) _backend.UpdateFilter(layer, mask, wakeBody: !IsArea);
         _layer = layer;
         _mask = mask;
-        if (Space is not null) RebuildShapes();
     }
 
     internal uint CollisionLayer => _layer;

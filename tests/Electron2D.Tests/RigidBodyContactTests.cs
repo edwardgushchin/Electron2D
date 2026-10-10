@@ -95,10 +95,11 @@ internal static class RigidBodyContactTests
             "An explicit Sleeping property assignment does not emit the solver event.");
 
         floor.CollisionLayer = 0;
+        floor.CollisionMask = 0;
         body.Sleeping = false;
         tree.PhysicsFrame(1d / 60);
         Check(exits == 1 && body.GetCollidingBodies().Length == 0 && body.GetContactCount() == 0,
-            "Changing the filter ends the body-level contact on the next fixed step.");
+            "Rejecting both directions ends the body-level contact on the next fixed step.");
         before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) tree.PhysicsFrame(1d / 60);
         Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,

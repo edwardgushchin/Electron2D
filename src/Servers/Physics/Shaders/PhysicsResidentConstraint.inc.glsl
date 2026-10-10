@@ -3,7 +3,7 @@ struct Constraint
 {
     uvec4 bodies; // Body A/B and incident next links A/B.
     vec4 normal; // Normal xy and cross(lever, normal) for A/B.
-    vec4 tangent; // Friction, row mode (contact/bilateral/physical-only) and cross(lever, tangent) for A/B; tangent=(ny,-nx).
+    vec4 tangent; // Friction, row mode (low two bits: contact/bilateral/physical-only; bits 2/3 disable response A/B) and cross(lever, tangent) for A/B; tangent=(ny,-nx).
     vec4 parameters; // Normal effective mass, tangent effective mass (joint softness), physical/correction target speeds.
 };
 struct ContactImpulse
@@ -18,6 +18,8 @@ vec2 rotate(vec2 q,vec2 p) {return vec2(q.x*p.x-q.y*p.y,q.y*p.x+q.x*p.y);}
 vec2 angular(float w,vec2 p) {return vec2(-w*p.y,w*p.x);}
 bool finite4(vec4 v) {return !any(isnan(v))&&!any(isinf(v));}
 vec2 inverseMass(ResidentBody b) {return b.flags.y>=2u&&(b.flags.z&16u)==0u?vec2(b.properties.x,(b.flags.z&4u)==0u?b.properties.y:0):vec2(0);}
+uint rowMode(Constraint c) {return uint(c.tangent.y)&3u;}
+bool responds(Constraint c,bool second) {return (uint(c.tangent.y)&(second?8u:4u))==0u;}
 vec2 velocity(ResidentBody b,vec2 r) {return b.velocity.xy+b.surface.xy+angular(b.velocity.z+b.surface.z,r);}
 
 ResidentBody worldBody() {return ResidentBody(vec4(0,0,1,0),vec4(0),vec4(0),vec4(0),vec4(0),uvec4(0,0,0,1));}

@@ -1469,6 +1469,16 @@
       "godot": "ProjectSettings::property:debug/shapes/collision/max_contacts_displayed",
       "electron2d": "property:Electron2D.ProjectSettings.DebugCollisionMaxContacts()",
       "reason": "Typed bounded contact diagnostics sampled at tree construction, with shared CPU/GPU and native canvas consumers under ADR 0100."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_collision_layer(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionLayer(Electron2D.RID)",
+      "reason": "Unsigned 32-bit bits retain the complete reference mask; shared static service access under ADRs 0095/0102."
+    },
+    {
+      "godot": "PhysicsServer2D::method:body_get_collision_mask(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionMask(Electron2D.RID)",
+      "reason": "Unsigned 32-bit bits retain the complete reference mask; shared static service access under ADRs 0095/0102."
     }
   ],
   "extras": [
@@ -3170,8 +3180,6 @@
         "PhysicsServer2D::method:area_get_space(RID:)",
         "PhysicsServer2D::method:body_set_mode(RID:,int:PhysicsServer2D.BodyMode)",
         "PhysicsServer2D::method:body_get_mode(RID:)",
-        "PhysicsServer2D::method:body_set_collision_layer(RID:,int:)",
-        "PhysicsServer2D::method:body_set_collision_mask(RID:,int:)",
         "PhysicsServer2D::method:area_set_collision_layer(RID:,int:)",
         "PhysicsServer2D::method:body_get_shape_count(RID:)",
         "PhysicsServer2D::method:area_get_shape_count(RID:)",
@@ -3371,9 +3379,7 @@
         "CollisionObject2D::method:get_collision_layer_value(int:)",
         "CollisionObject2D::method:get_collision_mask_value(int:)",
         "CollisionObject2D::method:set_collision_layer_value(int:,bool:)",
-        "CollisionObject2D::method:set_collision_mask_value(int:,bool:)",
-        "CollisionObject2D::property:collision_layer",
-        "CollisionObject2D::property:collision_mask"
+        "CollisionObject2D::method:set_collision_mask_value(int:,bool:)"
       ],
       "state": "Implemented",
       "reason": "Pinned defaults and typed behavior execute through the Box2D.NET-backed scene-world slice; PhysicsBodyTests covers shape geometry, gravity, contact resolution, impulse, collision masks, live shape edits, scene packing, failure recovery and disposal."
@@ -4310,6 +4316,18 @@
       ],
       "state": "Implemented",
       "reason": "PhysicsContactDebugTests and native tests verify finite color/nonnegative point limits, sampled defaults, bounded CPU/GPU capture, shared-world canvas ownership, failure cleanup and zero warm managed allocation (ADR 0100)."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_get_collision_layer(RID:)",
+        "PhysicsServer2D::method:body_set_collision_layer(RID:,int:)",
+        "PhysicsServer2D::method:body_get_collision_mask(RID:)",
+        "PhysicsServer2D::method:body_set_collision_mask(RID:,int:)",
+        "CollisionObject2D::property:collision_layer",
+        "CollisionObject2D::property:collision_mask"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0102: all 32 authored bits share scene/server/tile body access, detached/disabled lifetime and guarded mutation. Existing fixtures update without geometry replacement. CPU/GPU public tests verify one-sided impulse/correction, motion/CCD, contact/sensor transitions, unchanged-assignment neighbor wake, callback failure and zero warmed allocations (PhysicsFilterTests, TileMapLayerTests). Report-only nonresponsive body-pair behavior remains open separately."
     }
   ]
 }
