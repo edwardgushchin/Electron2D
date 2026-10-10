@@ -45,7 +45,7 @@ void main()
             ((mask&1048576u)!=0u&&b.velocity.xy!=c.body.velocity.xy)||
             ((mask&2097152u)!=0u&&b.velocity.z!=c.body.velocity.z);
         // A nonzero alive word also versions explicit pose/velocity/mass/role/policy edits for contact and joint history.
-        if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
+        if ((mask & 1u) == 0u && ((mask & (4096u|8192u|16384u|65536u|4194304u)) != 0u || ((mask & 4u) != 0u && b.pose != c.body.pose) || velocityChanged || ((mask & 64u) != 0u && (centers[index] != c.center.xy || b.properties.xy != c.body.properties.xy)))) b.flags.w = b.flags.w == 0xffffffffu ? 1u : b.flags.w + 1u;
         if ((mask & 4096u) != 0u) b.flags.y=c.body.flags.y;
         if ((mask & 65536u) != 0u) b.surface.xyz=c.body.surface.xyz;
         if ((mask & 524288u) != 0u) b.surface.w=c.body.surface.w;
@@ -68,6 +68,12 @@ void main()
         if ((mask & 128u) != 0u) {b.flags.z=(b.flags.z&~80u)|32u;b.velocity.w=0;}
         if ((mask & 256u) != 0u) {b.flags.z=b.flags.z|80u;b.velocity=vec4(0);}
         if ((mask & 1u) != 0u && (b.flags.z&16u)!=0u) b.velocity=vec4(0);
+        if ((mask & 4194304u) != 0u)
+        {
+            b.velocity.w=c.body.velocity.w;
+            b.flags.z=(b.flags.z&~(8u|16u|32u|64u|6144u|8192u))|c.body.flags.z;
+            pending=vec4(0); targets[index]=vec4(0); fields[index]=c.center;
+        }
         if ((mask & 16384u) != 0u) b.velocity.z=0;
         if ((mask & 16u) != 0u && b.flags.y >= 2u)
         {

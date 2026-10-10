@@ -7136,6 +7136,34 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsSnapshot",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "PhysicsSnapshot",
+    "signature": "public sealed class Electron2D.PhysicsSnapshot",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsSnapshotMap",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "PhysicsSnapshotMap",
+    "signature": "public sealed class Electron2D.PhysicsSnapshotMap",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsTestMotionParameters",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsTestMotionParameters",
@@ -15995,6 +16023,44 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsSnapshot..ctor(System.Int32)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": ".ctor",
+    "signature": "public PhysicsSnapshot(System.Int32 maxBytes = 67108864)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "maxBytes",
+        "type": "System.Int32",
+        "default": "67108864"
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsSnapshotMap..ctor(Electron2D.RID)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": ".ctor",
+    "signature": "public PhysicsSnapshotMap(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -114385,6 +114451,156 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsSnapshot.GetEncodedSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "GetEncodedSize",
+    "signature": "public System.Int32 GetEncodedSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshot.ReadFrom(System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "ReadFrom",
+    "signature": "public System.Void ReadFrom(System.ReadOnlySpan\u003CSystem.Byte\u003E source)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "source",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshot.WriteTo(System.Span\u003CSystem.Byte\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "WriteTo",
+    "signature": "public System.Int32 WriteTo(System.Span\u003CSystem.Byte\u003E destination)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "destination",
+        "type": "System.Span\u003CSystem.Byte\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshotMap.Apply(Electron2D.PhysicsSnapshot)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "Apply",
+    "signature": "public System.Void Apply(Electron2D.PhysicsSnapshot snapshot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "snapshot",
+        "type": "Electron2D.PhysicsSnapshot",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshotMap.Bind(System.UInt64,System.UInt32,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "Bind",
+    "signature": "public System.Void Bind(System.UInt64 networkID, System.UInt32 generation, Electron2D.RID objectRID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "networkID",
+        "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "generation",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "objectRID",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshotMap.Capture(Electron2D.PhysicsSnapshot)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "Capture",
+    "signature": "public System.Void Capture(Electron2D.PhysicsSnapshot snapshot)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "snapshot",
+        "type": "Electron2D.PhysicsSnapshot",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshotMap.Dispose()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "Dispose",
+    "signature": "public virtual System.Void Dispose()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsSnapshotMap.Unbind(System.UInt64)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "Unbind",
+    "signature": "public System.Boolean Unbind(System.UInt64 networkID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "networkID",
+        "type": "System.UInt64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsTestMotionResult.GetCollider()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsTestMotionResult",
@@ -182781,6 +182997,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsSnapshot.MaxBytes()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "MaxBytes",
+    "signature": "public System.Int32 MaxBytes { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsSnapshot.ObjectCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "ObjectCount",
+    "signature": "public System.Int32 ObjectCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsSnapshot.Tick()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsSnapshot",
+    "name": "Tick",
+    "signature": "public System.UInt64 Tick { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsSnapshotMap.IsDisposed()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsSnapshotMap",
+    "name": "IsDisposed",
+    "signature": "public System.Boolean IsDisposed { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -492,7 +492,9 @@ internal sealed partial class PhysicsSpace : IDisposable
             world.workerCount = (_gpuWorld is null || world.solveConstraints is not null) && world.solverSets.data[(int)B2SolverSetType.b2_awakeSet].bodySims.count >= 256 ? _tasks!.WorkerCount : 1;
             RecordStepPhase(2, ref profileMark);
             world.contactBiasDuration = (float)delta;
-            StepKinematicPaths(delta, hasKinematicBodies);
+            var warmStarting = world.enableWarmStarting;
+            try { if (_portableColdStep) world.enableWarmStarting = false; StepKinematicPaths(delta, hasKinematicBodies); _portableColdStep = false; }
+            finally { world.enableWarmStarting = warmStarting; }
             RecordStepPhase(3, ref profileMark);
             solverAdvanced = true; Tick++; CaptureDebugContacts();
             foreach (var collider in _serverColliders) collider.CompleteMotion();
@@ -554,6 +556,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_disposed) return;
         if (_stepping || _dispatchingBodyStates) throw new InvalidOperationException("A physics world cannot be disposed during a step.");
+        while (_snapshotMaps.Count > 0) _snapshotMaps[^1].Dispose();
         while (_checkpoints.Count > 0) _checkpoints[^1].Dispose();
         _debugContacts = []; _debugContactLimit = _debugContactCount = 0;
         _tasks?.Dispose();
@@ -594,6 +597,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _contactEvents.Clear();
         _sleepEvents.Clear();
         _oneWayPairs.Clear();
+        _portableShapeLookup.Clear(); _portableOneWayKeys.Clear(); _portableGPUOneWays = [];
         _staleOneWayPairs.Clear();
         if (GPUStore is null) b2DestroyWorld(_worldID);
         else ReleaseGPUState();
@@ -615,8 +619,8 @@ internal sealed partial class PhysicsSpace : IDisposable
 
         lock (_oneWayPairs)
         {
-            var firstKey = PackShapeID(first);
-            var secondKey = PackShapeID(second);
+            var firstKey = OneWayShapeKey(first, firstTag);
+            var secondKey = OneWayShapeKey(second, secondTag);
             var key = firstKey < secondKey ? (firstKey, secondKey) : (secondKey, firstKey);
             if (_oneWayPairs.TryGetValue(key, out var previous))
             {

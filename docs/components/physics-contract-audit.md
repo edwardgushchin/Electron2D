@@ -179,15 +179,16 @@ solver/contact/sleep/joint/sensor state with stable authored identities. The int
 [common-world checkpoint](physics-space-checkpoints.md) now also restores attached
 scene/server forces, targets, observer contacts and overlap history without callbacks.
 The public `PhysicsCheckpoint` factory and world-local tick counter now expose
-that local replay point to game code. Portable authoritative capture/apply,
-lifecycle rewind and network reconciliation remain absent; these foundations close none of the complete
-integration rows below.
+that local replay point to game code. [Portable snapshots](physics-snapshots.md) now
+add bounded capture/apply between compatible CPU/GPU worlds and explicit identity
+bindings. Lifecycle rewind and network reconciliation remain absent; these primitives
+do not close the complete integration rows below.
 
 | Required integration | Existing prerequisite | Open acceptance |
 | --- | --- | --- |
 | Dedicated authority | Headless SceneTree stepping and CPU physics; transports do not require a renderer | Separate CPU server process with no window/renderer and GPU unavailable; command ownership/validation and fixed tick acknowledgements. |
 | Portable identity/lifecycle | SceneMultiplayer has source/spawn IDs and typed codecs; RIDs are process-local | Explicit physics network identity across processes and correction, create/despawn generations, control transfer and late-join world state; never serialize vendor IDs or RIDs as identity. |
-| Authoritative snapshots | Typed property encode/decode and packet budgets | Complete body/contact/one-way-side/sleep/joint state semantics, public capture/apply, validation and atomic error handling, backend-neutral wire payload, measured GPU publication. Pose/velocity property replication alone is insufficient. |
+| Authoritative snapshots | Public PhysicsSnapshot/PhysicsSnapshotMap with portable IDs, CPU/GPU capture/apply, observer history, one-way/sleep state and measured publication | Integrate authenticated transport, lifecycle/authoring changes and correction policy; demonstrate separate-process CPU-authority/GPU-client acceptance under adverse delivery. |
 | Prediction/correction | Fixed scene physics lane, public forces/state operations and tick-qualified local PhysicsCheckpoint | Bounded tick/input/state history, acknowledgement pruning, restore/replay of unconfirmed inputs and divergence recovery on CPU and GPU; documented numerical/reproducibility bounds. |
 | Remote presentation | Existing transform interpolation infrastructure | Snapshot-buffer interpolation for remote objects and correction smoothing separated from authoritative/locally predicted physical state. |
 | Events | Current owner-thread physical event ordering | Distinguish predicted/confirmed events and retain stable event identity across replay so collisions/triggers do not repeat game effects; reconcile despawn and authority changes. |

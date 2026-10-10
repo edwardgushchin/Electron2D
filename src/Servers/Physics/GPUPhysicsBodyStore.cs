@@ -480,6 +480,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("GPU body state requires its owner thread.");
         if (_checkpointCopyActive) throw new InvalidOperationException("A checkpoint copy cannot be disposed while executing.");
         while (_checkpoints.Count != 0) _checkpoints[^1].Dispose();
+        _portableOneWays = []; _portableOneWayTable = [];
         _disposed = true; DisposeDebugContacts(); DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

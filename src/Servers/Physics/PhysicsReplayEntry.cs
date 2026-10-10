@@ -1,7 +1,7 @@
 namespace Electron2D;
 
 /// <summary>Common attached scene/server state accompanying a backend-local replay checkpoint.</summary>
-internal sealed class PhysicsReplayEntry
+internal sealed partial class PhysicsReplayEntry
 {
     internal readonly PhysicsColliderBackend Backend;
     internal readonly CollisionObject? Scene;

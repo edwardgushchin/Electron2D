@@ -34,9 +34,9 @@ point.Restore(); // Simulation and this world's tick return to confirmedTick.
 // The caller restores game state and replays the still-unconfirmed input.
 ```
 
-This is an executable local history prerequisite. Portable authoritative state,
-network identities, input ownership/acknowledgement, lifecycle rewind and confirmed
-events remain open in the contract audit. A checkpoint cannot be sent to another
+This is an executable local history prerequisite. The separate [portable snapshot](physics-snapshots.md) now supplies authoritative
+state bytes and explicit network identities. Input ownership/acknowledgement,
+lifecycle rewind and confirmed events remain open in the contract audit. A checkpoint cannot be sent to another
 process or applied to a different backend/world.
 
 ## State and boundaries

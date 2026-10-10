@@ -172,3 +172,12 @@ attachments; consumers/pre-publication/fields; body/joint preparation/wakes;
 simulation/debug; post-publication/reports; scene/server completion;
 contacts/Areas/views; callbacks/events. Mean profiling does not add GPU fences.
 See [public-world measurement and limits](../components/physics-backends.md#conditional-body-publication).
+
+## Portable correction
+
+`PhysicsSnapshotMap` borrows a world, validates complete network identity bindings
+and compatible authoring, then replaces portable physical/observer state silently.
+The world retains reusable one-way translation scratch and disposes its registered
+maps. A correction execution error shares the failed-world guard with local replay.
+CPU correction disables warm start for one following interval; local checkpoints
+also preserve that pending policy. See [portable snapshots](../components/physics-snapshots.md).

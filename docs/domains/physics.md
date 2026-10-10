@@ -386,3 +386,13 @@ advance, skipped intervals retain time, and restoring rewinds only its world.
 These verify local same-world replay only. Portable authoritative snapshots,
 topology/lifecycle rewind, portable identity, network correction and
 predicted/confirmed event handling remain open.
+
+## Portable authoritative state
+
+[PhysicsSnapshot and PhysicsSnapshotMap](../components/physics-snapshots.md) transfer
+compatible physical and observer state between CPU/GPU worlds using caller-assigned
+network IDs and generations. Capture/apply retain tick, contacts, one-way episodes,
+sleep clocks, forces, targets and joint authoring while rebuilding private solver
+caches. Matching authored worlds are required; local RIDs never become wire IDs.
+Transport integration, lifecycle, prediction orchestration and confirmed-event
+reconciliation remain open in the contract audit.

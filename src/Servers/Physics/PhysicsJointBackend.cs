@@ -106,6 +106,17 @@ internal sealed partial class PhysicsJointBackend
         }
     }
 
+    internal void ApplyPortableFrames(Transform first, Transform second)
+    {
+        if (_space?.GPUStore is not null)
+        {
+            SetGPUJoint(_gpuDefinition with { FrameA = first, FrameB = second });
+            return;
+        }
+        _localFrameA = ToBackend(first); _localFrameB = ToBackend(second);
+        b2Joint_SetLocalFrameA(ID, _localFrameA); b2Joint_SetLocalFrameB(ID, _localFrameB);
+    }
+
     internal void Detach()
     {
         if (_gpuJoint.Generation != 0)

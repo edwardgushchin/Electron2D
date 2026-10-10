@@ -49,6 +49,7 @@ internal static partial class GPUPhysicsTests
         VerifyOwnedWorldFailure();
         GPUPhysicsBodyStoreTests.Run();
         GPUPhysicsCheckpointTests.Run();
+        PhysicsSnapshotTests.Run(gpu: true);
         GPUPhysicsChangeTests.Run();
         WorldBoundaryTests.RunResident();
         GPUPhysicsBodyParameterTests.Run();

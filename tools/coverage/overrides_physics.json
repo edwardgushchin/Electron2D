@@ -2461,35 +2461,99 @@
     },
     {
       "electron2d": "T:Electron2D.PhysicsCheckpoint",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "method:Electron2D.PhysicsCheckpoint.Capture()",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "method:Electron2D.PhysicsCheckpoint.Dispose()",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "method:Electron2D.PhysicsCheckpoint.Restore()",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceCreateCheckpoint(Electron2D.RID)",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceGetTick(Electron2D.RID)",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "property:Electron2D.PhysicsCheckpoint.IsDisposed()",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
     },
     {
       "electron2d": "property:Electron2D.PhysicsCheckpoint.Tick()",
-      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; portable authority snapshots remain separate open work."
+      "reason": "Explicit authoritative-physics extension accepted by ADR 0004/0054/0094: typed source-world-bound replay history and simulation tick for CPU/GPU prediction. PhysicsCheckpointTests verifies executable lifetime, numbered-input replay, skipped/empty intervals and prepared allocation; transport, lifecycle and authority reconciliation remain separate open work."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsSnapshot",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsSnapshotMap",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsSnapshot..ctor(System.Int32)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsSnapshotMap..ctor(Electron2D.RID)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshot.GetEncodedSize()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshot.ReadFrom(System.ReadOnlySpan<System.Byte>)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshot.WriteTo(System.Span<System.Byte>)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshotMap.Apply(Electron2D.PhysicsSnapshot)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshotMap.Bind(System.UInt64,System.UInt32,Electron2D.RID)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshotMap.Capture(Electron2D.PhysicsSnapshot)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshotMap.Dispose()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSnapshotMap.Unbind(System.UInt64)",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSnapshot.MaxBytes()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSnapshot.ObjectCount()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSnapshot.Tick()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSnapshotMap.IsDisposed()",
+      "reason": "Authoritative-physics extension accepted by ADR 0004/0054/0094: bounded portable physical-state encoding and explicit network ID/incarnation mappings. PhysicsSnapshotTests verifies compatible CPU/GPU capture/apply, observer history, validation, lifetime and warmed allocation. Transport, lifecycle and authority reconciliation remain open."
     }
   ],
   "statusGroups": [

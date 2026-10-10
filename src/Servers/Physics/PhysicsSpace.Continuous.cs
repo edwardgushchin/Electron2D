@@ -222,7 +222,7 @@ internal sealed partial class PhysicsSpace
     private bool? CurrentContinuousSide(B2ShapeId a, B2ShapeId b)
     {
         if (_oneWayPairs.Count == 0) return null;
-        var first = PackShapeID(a); var second = PackShapeID(b); var key = first < second ? (first, second) : (second, first);
+        var first = OneWayShapeKey(a, b2Shape_GetUserData(a).GetRef<PhysicsFixtureTag>()); var second = OneWayShapeKey(b, b2Shape_GetUserData(b).GetRef<PhysicsFixtureTag>()); var key = first < second ? (first, second) : (second, first);
         return _oneWayPairs.TryGetValue(key, out var pair) && pair.SeenStep == _contactStep ? pair.Allowed : null;
     }
 

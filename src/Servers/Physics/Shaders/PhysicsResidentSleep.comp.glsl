@@ -71,6 +71,7 @@ void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
     uint stage=control.x;
+    if(stage==11u){awakeCount=0u;activeBodies=0u;activeIslands=0u;return;}
     if(stage==10u)
     {
         if(bodies[i].flags.x!=graph[i].w)return;
@@ -182,13 +183,13 @@ void main()
         if(!asleep&&!eligible)atomicOr(graph[r].y,4u);
         return;
     }
-    if(stage==9u)
+    if(stage==9u||stage==12u)
     {
         ResidentBody b=bodies[i];if(b.flags.w==0u)return;
         if(dynamicBody(i))
         {
             uint r=root(i,control.z);if(r==none)return;
-            if((graph[r].y&4u)==0u&&uintBitsToFloat(graph[r].z)>policy.z)
+            if(stage==9u&&(graph[r].y&4u)==0u&&uintBitsToFloat(graph[r].z)>policy.z)
             {b.flags.z|=16u;b.velocity.xyz=vec3(0);bodies[i]=b;}
             if((b.flags.z&16u)==0u)
             {
