@@ -4787,7 +4787,7 @@
         "class:PhysicsDirectBodyState2DExtension"
       ],
       "state": "Partial",
-      "reason": "ADR 0103: complete guarded caller-created body-state/force/contact family executes with exact base inheritance and generation-qualified context. Registered backend factories do not yet supply these views to scene/server callbacks; that integration remains open."
+      "reason": "ADR 0103: complete guarded caller-created body-state/force/contact family executes with exact base inheritance and generation-qualified context. Binding prepares selected geometry/state without acquiring or reopening the built-in view cache. Registered backend factories do not yet supply these views to scene/server callbacks; that integration remains open."
     }
   ]
 }

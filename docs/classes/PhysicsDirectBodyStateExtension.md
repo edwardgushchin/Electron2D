@@ -8,7 +8,7 @@ Last updated: 2026-10-10
 
 ## Description and example
 
-Implements the complete live state/force/contact/space operation family for one current scene/raw body attachment. The protected constructor binds an engine body RID, prepares its selected attachment and samples its generation. It owns no body/world and does not replace the server's cached built-in view. Detach/reentry/transfer/free permanently retire this context; cached built-in view disposal alone does not.
+Implements the complete live state/force/contact/space operation family for one current scene/raw body attachment. The protected constructor binds an engine body RID, prepares its selected attachment and samples its generation without acquiring or replacing a cached built-in view. It owns no body/world and does not replace the server's cached built-in view. Detach/reentry/transfer/free permanently retire this context; cached built-in view disposal alone does not.
 
 The [complete public-only implementation](../../tests/PhysicsBodyExtension.Consumer/ControlledState.cs) supplies every required hook and changes a real impulse response. With its current body RID in scope:
 

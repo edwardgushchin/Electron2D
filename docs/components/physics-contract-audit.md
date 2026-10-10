@@ -344,14 +344,18 @@ PhysicsColliderBackend. Both implementations execute real scene/raw default-forc
 preparation; CPU field integration remains concrete and GPU stays resident. This is
 an internal extension prerequisite, not public backend registration.
 
-The registration audit also identifies two remaining concrete binding boundaries.
+The registration audit still identifies a concrete live-space initialization boundary.
 PhysicsSpace constructs its implementation before PhysicsServer registers the live
 space RID, so a user Init hook cannot yet construct a live direct-space extension
-at that point. PhysicsDirectBodyState's protected-context constructor currently
-prepares through BodyGetDirectStateCore, which supplies the cached built-in view;
-using the same getter as a factory callback would recurse. Existing direct-state
-constructors enforce ordinary off-solver access, while built-in callback/contact
-views are prepared during the common interval. Registered factories therefore need
-engine-assigned initialization and qualified factory-view construction phases, plus
-the full selected operation bridge. These are implementation requirements rather
-than missing user permission; current caller-created views do not prove this path.
+at that point. Body-context preparation is now independent of cached view acquisition:
+the protected constructor prepares geometry/state and samples attachment identity
+without calling BodyGetDirectStateCore or reopening its cache. Scene/raw CPU/GPU
+and no-device binding tests observe this before the consumer's explicit getter;
+owner/solver/failure and generation guards remain enforced.
+Existing direct-state constructors enforce ordinary off-solver access, while built-in
+callback/contact views are prepared during the common interval. Registered factories
+still need engine-assigned initialization and qualified factory-view construction
+phases, plus the full selected operation bridge. Independent body binding closes
+that cache-bootstrap prerequisite, not registered callback delivery. These are
+implementation requirements rather than missing user permission; current
+caller-created views do not prove the registered path.

@@ -47,8 +47,8 @@ try
     extension.BadTransform = true; Reject<InvalidOperationException>(() => _ = view.Transform); extension.BadTransform = false;
     extension.BadCount = true; Reject<InvalidOperationException>(() => view.GetContactCount()); extension.BadCount = false;
     extension.WrongSpace = other.DirectSpaceState; Reject<InvalidOperationException>(() => view.GetSpaceState()); extension.WrongSpace = null;
-    var validContact = sceneExtension.Contact; sceneExtension.Contact = default;
-    Reject<InvalidOperationException>(() => sceneView.GetContactImpulse(0)); sceneExtension.Contact = validContact;
+    var validContact = sceneExtension.CapturedContact; sceneExtension.CapturedContact = default;
+    Reject<InvalidOperationException>(() => sceneView.GetContactImpulse(0)); sceneExtension.CapturedContact = validContact;
     var depth = 0;
     extension.OnRead = () =>
     {
@@ -104,7 +104,7 @@ try
         "Immutable contact survives collider release with sampled identity/impulse and expired weak target.");
     root.RemoveChild(scene); Reject<ObjectDisposedException>(() => _ = sceneView.LinearVelocity); root.AddChild(scene);
     Reject<ObjectDisposedException>(() => _ = sceneView.LinearVelocity);
-    using var returnedScene = new ControlledState(scene.GetRID()) { HasContact = true, Contact = validContact };
+    using var returnedScene = new ControlledState(scene.GetRID()) { HasContact = true, CapturedContact = validContact };
     Reject<InvalidOperationException>(() => returnedScene.GetContactImpulse(0));
     var ownedSpace = PhysicsServer.SpaceCreate(backend); var ownedBody = PhysicsServer.BodyCreate();
     try
@@ -135,7 +135,7 @@ try
     }
     void VerifyContacts()
     {
-        var c = sceneExtension.Contact;
+        var c = sceneExtension.CapturedContact;
         Check(sceneView.GetContactCount() == 1 && sceneView.GetContactCollider(0) == c.ColliderRID && sceneView.GetContactColliderID(0) == c.ColliderID &&
             sceneView.GetContactLocalShape(0) == c.LocalShape && sceneView.GetContactColliderShape(0) == c.ColliderShape &&
             sceneView.GetContactLocalPosition(0) == c.LocalPosition && sceneView.GetContactColliderPosition(0) == c.ColliderPosition &&

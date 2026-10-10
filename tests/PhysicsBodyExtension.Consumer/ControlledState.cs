@@ -5,17 +5,21 @@ internal sealed class ControlledState : PhysicsDirectBodyStateExtension
     private readonly RID _body;
     private PhysicsDirectBodyState _inner;
     private PhysicsDirectBodyState Inner => _inner.IsDisposed ? _inner = PhysicsServer.BodyGetDirectState(_body)! : _inner;
-    internal ulong Seen;
-    internal Action? OnRead;
-    internal bool Fail, BadScalar, BadVector, BadTransform, BadCount;
-    internal PhysicsDirectSpaceState? WrongSpace;
-    internal PhysicsBodyContact Contact;
-    internal bool HasContact;
-    internal ControlledState(RID body) : base(body) { _body = body; _inner = PhysicsServer.BodyGetDirectState(body)!; }
+    internal ulong Seen = 0;
+    internal Action? OnRead = null;
+    internal bool Fail = false, BadScalar = false, BadVector = false, BadTransform = false, BadCount = false;
+    internal PhysicsDirectSpaceState? WrongSpace = null;
+    internal PhysicsBodyContact CapturedContact = default;
+    internal bool HasContact = false;
+    internal ControlledState(RID body, Action? afterBinding = null) : base(body)
+    {
+        afterBinding?.Invoke();
+        _body = body; _inner = PhysicsServer.BodyGetDirectState(body)!;
+    }
     internal bool CaptureContact()
     {
         if (Inner.GetContactCount() == 0) return false;
-        Contact = new(_body, Inner.GetContactLocalShape(0), Inner.GetContactCollider(0), Inner.GetContactColliderShape(0),
+        CapturedContact = new(_body, Inner.GetContactLocalShape(0), Inner.GetContactCollider(0), Inner.GetContactColliderShape(0),
             Inner.GetContactLocalPosition(0), Inner.GetContactColliderPosition(0), Inner.GetContactLocalNormal(0),
             Inner.GetContactLocalVelocityAtPosition(0), Inner.GetContactColliderVelocityAtPosition(0), Inner.GetContactImpulse(0));
         HasContact = true; return true;
@@ -57,5 +61,5 @@ internal sealed class ControlledState : PhysicsDirectBodyStateExtension
     protected override void ApplyTorqueCore(float torque) { Seen |= 1UL << 34; Inner.ApplyTorque(torque); }
     protected override void ApplyTorqueImpulseCore(float impulse) { Seen |= 1UL << 35; Inner.ApplyTorqueImpulse(impulse); }
     protected override void IntegrateForcesCore() { Seen |= 1UL << 36; Inner.IntegrateForces(); }
-    protected override PhysicsBodyContact GetContactCore(int contactIndex) { Seen |= 1UL << 37; return Contact; }
+    protected override PhysicsBodyContact GetContactCore(int contactIndex) { Seen |= 1UL << 37; return CapturedContact; }
 }

@@ -35,9 +35,8 @@ public class PhysicsDirectBodyState : ElectronObject
     }
     internal PhysicsDirectBodyState(RID body)
     {
-        _runtime = PhysicsServer.Service.BodyRuntime(body);
+        _runtime = PhysicsServer.Service.PrepareBodyStateAccess(body);
         _space = _runtime.Space ?? throw new InvalidOperationException("A body extension requires a current physics attachment.");
-        _ = PhysicsServer.Service.BodyGetDirectStateCore(body);
         _extensionBackend = _runtime.Backend; _extensionAttachment = _extensionBackend.AttachmentVersion;
     }
     internal bool CallbackActive => _callbackDepth != 0;

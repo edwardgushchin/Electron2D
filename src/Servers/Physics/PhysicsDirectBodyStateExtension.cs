@@ -9,6 +9,7 @@ namespace Electron2D;
 public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState
 {
     /// <summary>Binds the view to a live scene/server body's current solver attachment.</summary>
+    /// <remarks>Prepares current geometry and state without acquiring or replacing a cached built-in body view.</remarks>
     /// <param name="body">The live engine-assigned body RID; an Area or detached body is rejected.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
     /// <exception cref="InvalidOperationException">The body is detached, access is off-owner or the world is solving/failed.</exception>

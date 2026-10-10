@@ -2,10 +2,11 @@ using System.Diagnostics;
 using Electron2D;
 using static Box2D.NET.B2Worlds;
 
-internal static class PhysicsBackendOwnershipTests
+internal static partial class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        ExtensionBinding(backend);
         IntegrationOwnership(backend);
         PhysicsAreaBackendTests.Run(backend);
         if (backend == PhysicsServer.Backend.CPU) ContinuousFailure();
@@ -158,6 +159,7 @@ internal static class PhysicsBackendOwnershipTests
             Reject<InvalidOperationException>(owner.EnsureAccess);
             Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(rid, 1d / 60));
             Reject<InvalidOperationException>(() => PhysicsServer.BodyGetDirectState(body));
+            Reject<InvalidOperationException>(() => new ControlledState(body));
             PhysicsServer.FreeRID(body); body = default; PhysicsServer.FreeRID(rid); rid = default;
             Check(!b2World_IsValid(native), "A terminal CPU interval still releases its native world and owned sweep scratch");
             Console.WriteLine("CPU: injected native continuous interval failure, terminal access guards and native resource release passed.");
@@ -425,6 +427,7 @@ internal static class PhysicsBackendOwnershipTests
                 PhysicsServer.SpaceSetActive(first, true);
                 Reject<AggregateException>(() => PhysicsServer.SpaceStep(first, float.MaxValue));
                 GuardAll<InvalidOperationException>(reopened);
+                Reject<InvalidOperationException>(() => new ControlledState(body));
             }
             PhysicsServer.FreeRID(first); first = default;
             GuardAll<ArgumentException>(reopened);

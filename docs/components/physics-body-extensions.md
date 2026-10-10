@@ -8,7 +8,7 @@ Last updated: 2026-10-10
 
 ## Runtime flow and invariants
 
-Construction prepares the selected body's current geometry/state and records its attachment generation. Cached built-in view disposal does not retire a separate extension. Detach, transfer, free and same-world reentry permanently invalidate the old context. Owner/solver/failure guards execute before user code and validate the context again after it returns.
+Construction prepares the selected body's current geometry/state and records its attachment generation without acquiring, reopening or replacing its cached built-in view. The ordinary server getter uses the same preparation before explicit view acquisition. Cached built-in view disposal does not retire a separate extension. Detach, transfer, free and same-world reentry permanently invalidate the old context. Owner/solver/failure guards execute before user code and validate the context again after it returns.
 
 Public inherited scalar properties, force/impulse operations, sleep, layers/masks, point velocity, integration and direct-space access invoke their own hooks. The library rejects nonfinite inputs before invocation, validates finite output vectors/scalars, nonnegative inverse mass/inertia/step, rigid transforms, bounded contact count and matching live space view. Signed finite damping is preserved. Static lambda dispatch caches callbacks outside warmed intervals; no closure or boxing is created per call.
 
@@ -17,6 +17,8 @@ Nested operations borrow current body/world lifetime. Sealed view-disposal valid
 PhysicsBodyContact construction validates live same-world body RIDs/logical slots, finite geometry/velocities/impulse and samples collider weak object association plus observed-body attachment generation. Retained values, shape indices and collider ID survive later geometry/rebind/free; expired object targets become null. A default, wrong-body or previous-generation contact cannot enter the current view. Geometry, impulse accumulation and contact selection remain the implementation's responsibility; complete built-in physics stays unchanged.
 
 ## Verification and limits
+
+[Binding ownership checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ExtensionBinding.cs) observe the protected constructor before the consumer explicitly acquires an ordinary view. Scene/raw bodies start without a cached view; selected geometry and dirty authored mass are already prepared. A disposed cache remains disposed through binding. Separate extensions retain real impulse access through ordinary view reopening and reject off-owner, detached and stale attachments. CPU solver-lock and CPU/GPU failed-world checks also reject construction. These checks run in CPU, GPU and no-device ownership profiles.
 
 [The separate public-only consumer](../../tests/PhysicsBodyExtension.Consumer/PhysicsBodyExtension.Consumer.csproj) implements every hook and verifies a hook doubles a real impulse over a two-kilogram raw body. Its scene fixture captures actual solved floor contacts and projects every retained contact field. It covers full hook reachability, inherited setters/forces/state, finite/identity/count/space rejection, nested calls/failure, borrowed release/binding/hierarchy/step/checkpoint guards, owner thread, cached-view disposal, raw transfer/reentry/free, scene reentry and previous-generation contact rejection. Identity/snapshot values are exact; physical velocity/force checks use .001 scene-unit tolerances.
 

@@ -35,15 +35,21 @@ public sealed partial class PhysicsServer
 
     internal PhysicsDirectBodyState? BodyGetDirectStateCore(RID body)
     {
+        var runtime = PrepareBodyStateAccess(body);
+        return runtime.Space is { } space ? runtime.GetView(space) : null;
+    }
+
+    internal PhysicsBodyRuntime PrepareBodyStateAccess(RID body)
+    {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
         var space = runtime.Space;
-        if (space is null) return null;
+        if (space is null) return runtime;
         space.EnsureQueryAccess();
         var owner = runtime.Owners;
         if (owner.Scene is { } scene) scene.PrepareBackend(); else owner.Server!.PrepareBackend();
         if (space.GPUStore is not null) runtime.Backend.PublishGPUFields(runtime);
-        return runtime.GetView(space);
+        return runtime;
     }
 
     internal void BodySetForceIntegrationCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)
