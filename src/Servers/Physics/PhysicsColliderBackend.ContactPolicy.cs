@@ -4,6 +4,6 @@ internal sealed partial class PhysicsColliderBackend
 {
     internal void PrepareContactPolicy()
     {
-        if (_implementation is CPUPhysicsColliderImplementation cpu) cpu.PrepareContactPolicy();
+        _implementation?.PrepareContactPolicy();
     }
 }

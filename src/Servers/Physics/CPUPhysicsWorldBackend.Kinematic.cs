@@ -19,15 +19,15 @@ internal sealed partial class CPUPhysicsWorldBackend
         var minimumExtent = B2_HUGE;
         var kinematicExtent = B2_HUGE; var reportOnly = false;
         foreach (var body in Space.Bodies)
-            if (body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
+            if (NativeCollider(body.Backend).Shapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
         foreach (var body in Space.ServerColliders)
-            if (!body.IsArea && body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
+            if (!body.IsArea && NativeCollider(body.Backend).Shapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
         if (reportOnly) minimumExtent = MathF.Min(minimumExtent, kinematicExtent);
         if (minimumExtent == B2_HUGE) { StepBackend((float)delta); return; }
         var travel = 0d;
-        foreach (var body in Space.Bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
+        foreach (var body in Space.Bodies) MeasureTravel(NativeCollider(body.Backend).BodyID, NativeCollider(body.Backend).Shapes.Count, delta, ref minimumExtent, ref travel);
         foreach (var body in Space.ServerColliders)
-            if (!body.IsArea) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
+            if (!body.IsArea) MeasureTravel(NativeCollider(body.Backend).BodyID, NativeCollider(body.Backend).Shapes.Count, delta, ref minimumExtent, ref travel);
         // ponytail: Solver calls scale with travel and the smallest collider; use native kinematic TOI if profiling shows a cost.
         var interval = Math.Max(0.5 * minimumExtent, B2_LINEAR_SLOP);
         var countValue = Math.Ceiling(travel / interval);
@@ -37,8 +37,8 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (steps == 1) { StepBackend((float)delta); return; }
         BeginFrameContacts();
         _kinematicStepForces.Clear();
-        foreach (var body in Space.Bodies) Capture(body.BackendID);
-        foreach (var body in Space.ServerColliders) if (!body.IsArea) Capture(body.BackendID);
+        foreach (var body in Space.Bodies) Capture(NativeCollider(body.Backend).BodyID);
+        foreach (var body in Space.ServerColliders) if (!body.IsArea) Capture(NativeCollider(body.Backend).BodyID);
         var subDelta = (float)(delta / steps);
         for (var step = 0; step < steps; step++)
         {
@@ -53,7 +53,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
         void MeasureExtent(PhysicsColliderBackend backend, int limit)
         {
-            var type = b2Body_GetType(backend.BodyID); var extent = CPUPhysicsColliderImplementation.Simulation(backend.BodyID).minExtent;
+            var type = b2Body_GetType(NativeCollider(backend).BodyID); var extent = CPUPhysicsColliderImplementation.Simulation(NativeCollider(backend).BodyID).minExtent;
             if (type == B2BodyType.b2_dynamicBody) minimumExtent = MathF.Min(minimumExtent, extent);
             else
             {

@@ -74,11 +74,11 @@ internal static class PhysicsCanvasTests
                 Check(counts[0] == 1 && nativeHits[0].Collider == (ulong)colliders[0].GetID(), "GPU rays ignore the point-only canvas selector.");
             }
             var backend = PhysicsServer.Service.BodyRuntime(colliders[1]).Backend;
-            var bodyID = backend.BodyID; var fixture = backend.Shapes[0];
+            var bodyID = ((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID; var fixture = ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0];
             PhysicsServer.BodyAttachCanvasInstanceID(colliders[1], OtherCanvas);
             gpu?.SetQueryIdentity(shapes[1], (ulong)colliders[1].GetID(), 0, OtherCanvas);
             Check(Query() == 1 && hits[0].ColliderRID == colliders[3], "Live metadata edits affect the next query without a step.");
-            Check(backend.BodyID.Equals(bodyID) && backend.Shapes[0].Equals(fixture), "Canvas edits preserve body and fixture identities.");
+            Check(((CPUPhysicsColliderImplementation)backend.Implementation!).BodyID.Equals(bodyID) && ((CPUPhysicsColliderImplementation)backend.Implementation!).Shapes[0].Equals(fixture), "Canvas edits preserve body and fixture identities.");
             PhysicsServer.BodySetSpace(colliders[1], default); PhysicsServer.BodySetSpace(colliders[1], space);
             PhysicsServer.AreaSetSpace(colliders[3], default); PhysicsServer.AreaSetSpace(colliders[3], space);
             Check(PhysicsServer.BodyGetCanvasInstanceID(colliders[1]) == OtherCanvas, "Server detach and reattachment retain authored canvas association.");

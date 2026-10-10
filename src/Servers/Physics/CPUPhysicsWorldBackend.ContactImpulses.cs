@@ -84,9 +84,9 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (!_aggregateContactImpulses) return;
         var world = b2GetWorldFromId(WorldID);
         foreach (var body in Space.ContactBodies)
-            if (body.MaxContactsReported > 0) Capture(body.BackendID);
+            if (body.MaxContactsReported > 0) Capture(NativeCollider(body.Backend).BodyID);
         foreach (var body in Space.CallbackBodies)
-            if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) Capture(body.Backend.BodyID);
+            if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) Capture(NativeCollider(body.Backend).BodyID);
 
         void Capture(B2BodyId id)
         {
@@ -163,7 +163,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             var own = world.shapes.data[first ? contact.ShapeA : contact.ShapeB].userData.GetRef<PhysicsFixtureTag>();
             var other = world.shapes.data[first ? contact.ShapeB : contact.ShapeA].userData.GetRef<PhysicsFixtureTag>();
             if (own is null || other is null) continue;
-            backend.CaptureViewContact(state, contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
+            NativeCollider(backend).CaptureViewContact(state, contact.Normal, contact.Point, contact.Separation, contact.Depth, contact.Impulse,
                 b2MakeBodyId(world, first ? contact.BodyB : contact.BodyA), first, own, other, limit);
         }
         return true;

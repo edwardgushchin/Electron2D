@@ -17,8 +17,8 @@ internal sealed partial class CPUPhysicsWorldBackend
             var runtime = body.Runtime;
             if (body is RigidBody or CharacterBody)
             {
-                if (!uniform) ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
-                ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
+                if (!uniform) ResolveAreaFields(body.CollisionLayer, NativeCollider(body.Backend).Shapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
+                NativeCollider(body.Backend).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
                 if (body is CharacterBody character) character.SetResolvedGravity(runtime.Gravity);
             }
             runtime.ApplyBeforeStep(body);
@@ -34,8 +34,8 @@ internal sealed partial class CPUPhysicsWorldBackend
             var runtime = body.Runtime;
             if (body.Mode != PhysicsServer.BodyMode.Static)
             {
-                if (!uniform) ResolveAreaFields(body.CollisionLayer, body.BackendShapes, body.GetTransform().Origin, out gravity, out linearDamp, out angularDamp);
-                ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
+                if (!uniform) ResolveAreaFields(body.CollisionLayer, NativeCollider(body.Backend).Shapes, body.GetTransform().Origin, out gravity, out linearDamp, out angularDamp);
+                NativeCollider(body.Backend).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
             }
             runtime.ApplyBeforeStep(null);
             body.PrepareMotion(delta);

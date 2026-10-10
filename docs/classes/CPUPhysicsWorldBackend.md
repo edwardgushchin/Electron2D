@@ -1,10 +1,17 @@
 # CPUPhysicsWorldBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [CPUPhysicsWorldBackend.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
 ## Description and internal flow
+
+The owner retains concrete native collider attachments keyed by common collider
+identity. NativeCollider serves its field, query, Area, contact, CCD and joint paths;
+common scene/server objects carry no CPU handles. Matching retirement removes an
+entry, delayed stale retirement preserves a newer attachment and world disposal
+clears the table. Selected wrappers can implement collider operations while this
+owner keeps actual CPU storage. See [ownership](../components/physics-backends.md#cpu-collider-ownership).
 
 Owns one native CPU world, its retained PhysicsTaskScheduler and any diagnostic GPUPhysicsWorld stages. Creation applies the existing world definition, sleep/contact/iteration settings and pre-solve callback. Partial construction releases already-created native resources; the implementation does not initialize a renderer.
 

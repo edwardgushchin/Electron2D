@@ -211,15 +211,15 @@ internal sealed partial class CPUPhysicsWorldBackend
         var mask = parameters.CollisionMask;
         if (parameters.CollideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
-                AddCandidates(space.Bodies[index].BackendShapes, mask, excluded);
+                AddCandidates(NativeCollider(space.Bodies[index].Backend).Shapes, mask, excluded);
         if (parameters.CollideWithAreas)
             for (var index = 0; index < space.Areas.Count; index++)
-                AddCandidates(space.Areas[index].BackendShapes, mask, excluded);
+                AddCandidates(NativeCollider(space.Areas[index].Backend).Shapes, mask, excluded);
         for (var index = 0; index < space.ServerColliders.Count; index++)
         {
             var collider = space.ServerColliders[index];
             if (collider.IsArea ? parameters.CollideWithAreas : parameters.CollideWithBodies)
-                AddCandidates(collider.BackendShapes, mask, excluded);
+                AddCandidates(NativeCollider(collider.Backend).Shapes, mask, excluded);
         }
         RemoveContainedRaySlots(PhysicsShapeBackend.ToBackend(parameters.Motion));
         return space;

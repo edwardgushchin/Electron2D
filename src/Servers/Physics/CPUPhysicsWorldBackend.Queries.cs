@@ -17,17 +17,17 @@ internal sealed partial class CPUPhysicsWorldBackend
         var bestFraction = float.PositiveInfinity;
         if (collideWithBodies)
             for (var index = 0; index < space.Bodies.Count; index++)
-                ScanRayShapes(space.Bodies[index].BackendShapes, input, from, mask, excluded, hitFromInside,
+                ScanRayShapes(NativeCollider(space.Bodies[index].Backend).Shapes, input, from, mask, excluded, hitFromInside,
                     ref best, ref bestFraction);
         if (collideWithAreas)
             for (var index = 0; index < space.Areas.Count; index++)
-                ScanRayShapes(space.Areas[index].BackendShapes, input, from, mask, excluded, hitFromInside,
+                ScanRayShapes(NativeCollider(space.Areas[index].Backend).Shapes, input, from, mask, excluded, hitFromInside,
                     ref best, ref bestFraction);
         for (var index = 0; index < space.ServerColliders.Count; index++)
         {
             var collider = space.ServerColliders[index];
             if (collider.IsArea ? collideWithAreas : collideWithBodies)
-                ScanRayShapes(collider.BackendShapes, input, from, mask, excluded, hitFromInside, ref best, ref bestFraction);
+                ScanRayShapes(NativeCollider(collider.Backend).Shapes, input, from, mask, excluded, hitFromInside, ref best, ref bestFraction);
         }
         return best;
     }
@@ -103,11 +103,11 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
     }
 
-    private static void ScanPointShapes(PhysicsColliderBackend backend, B2Vec2 point, uint mask,
+    private void ScanPointShapes(PhysicsColliderBackend backend, B2Vec2 point, uint mask,
         ulong canvasInstanceID, RID[] excluded, List<PhysicsPointResult> hits)
     {
         if (backend.CanvasInstanceID != canvasInstanceID) return;
-        var shapes = backend.Shapes;
+        var shapes = NativeCollider(backend).Shapes;
         for (var index = 0; index < shapes.Count; index++)
         {
             var shape = shapes[index];

@@ -20,14 +20,14 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         EnsureAccess();
         var owners = PhysicsServer.Service.ResolveBodyOwners(ownerRID);
-        var ownShapes = owners.Scene?.BackendShapes ?? owners.Server!.BackendShapes;
+        var ownShapes = NativeCollider(owners.Scene?.Backend ?? owners.Server!.Backend).Shapes;
         _motionCandidates.Clear();
         foreach (var other in Space.Bodies)
             if (other.GetRID() != ownerRID)
-                AddMotionCandidates(other.BackendShapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
+                AddMotionCandidates(NativeCollider(other.Backend).Shapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
         foreach (var other in Space.ServerColliders)
             if (!other.IsArea && other.RID != ownerRID)
-                AddMotionCandidates(other.BackendShapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
+                AddMotionCandidates(NativeCollider(other.Backend).Shapes, other.Backend.CollisionPriority, ownerRID, ownShapes, excludedBodies, excludedObjects);
 
         var requested = PhysicsShapeBackend.ToBackend(motion);
         var fromTransform = new B2Transform(PhysicsShapeBackend.ToBackend(from.Origin), b2MakeRot(from.Rotation));

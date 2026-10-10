@@ -2,6 +2,8 @@ namespace Electron2D;
 
 internal sealed partial class GPUPhysicsColliderImplementation
 {
+    // Resident shape rebuilding publishes contact policy with the device geometry.
+    internal override void PrepareContactPolicy() { }
     private static PhysicsServer.BodyMode MotionMode(PhysicsServer.BodyMode mode) => mode switch
     {
         PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic or PhysicsServer.BodyMode.Rigid => mode,

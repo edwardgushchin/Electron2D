@@ -1,10 +1,15 @@
 # PhysicsColliderImplementation
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal abstract class PhysicsColliderImplementation` · **Source:** [PhysicsColliderImplementation.cs](../../src/Servers/Physics/PhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
 ## Responsibility and flow
+
+PrepareContactPolicy belongs to the selected implementation. CPU refreshes current
+native shape policy; GPU keeps its policy publication in geometry rebuilding.
+The common facade has no CPU ID/shape aliases or concrete CPU cast. The wrapped
+CPU fixture exercises actual policy/impulse hooks, Areas, CCD and portable state.
 
 The selected world creates this engine-unit operation boundary for one current collider attachment. The owner identity facade and physics space are captured once; reattachment constructs another implementation. It dispatches body/Area creation and release, shape rebuild/filtering, pose/motion/sleep/lock/force/mass/surface/contact operations and portable pose/motion/piece validation. CPU/GPU-specific diagnostic and checkpoint facets remain concrete internal operations.
 

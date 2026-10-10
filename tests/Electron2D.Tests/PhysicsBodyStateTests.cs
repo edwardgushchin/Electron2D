@@ -29,7 +29,7 @@ internal static class PhysicsBodyStateTests
         target.Position = new(10, 20); other.Position = new(30, 40);
         var view = PhysicsServer.BodyGetDirectState(target.GetRID())!;
         Check(view.Transform.Origin.IsEqualApprox(target.Position) &&
-            Box2D.NET.B2Bodies.b2Body_GetPosition(other.BackendID) == default,
+            Box2D.NET.B2Bodies.b2Body_GetPosition(((CPUPhysicsColliderImplementation)other.Backend.Implementation!).BodyID) == default,
             "A direct body view synchronizes its own pose without scanning unrelated bodies.");
         tree.PhysicsFrame(1d / 60);
         Check(other.Position.DistanceTo(new(30, 40)) < .001f, "The world step synchronizes the remaining body normally.");

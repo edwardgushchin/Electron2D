@@ -2,6 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class GPUPhysicsColliderImplementation
 {
+    internal float PortableSleepTime => GPUState.SleepTime;
     internal override Transform PortablePose
     {
         get

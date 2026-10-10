@@ -5,7 +5,7 @@ namespace Electron2D;
 internal sealed partial class CPUPhysicsColliderImplementation
 {
     private long _shapePolicyEpoch = -1;
-    internal void PrepareContactPolicy()
+    internal override void PrepareContactPolicy()
     {
         if (Space is null || _shapePolicyEpoch == Shape.SolverPolicyEpoch) return;
         var changed = false;

@@ -13,7 +13,7 @@ internal sealed partial class PhysicsJointBackend
     internal bool IsAttached => _implementation?.IsAttached == true;
 
     internal static Transform SampleLocalFrame(PhysicsColliderBackend? body, Transform pose, Vector2 point, float angle) =>
-        body?.Space is not null ? body.SampleJointLocalFrame(point, angle) : CPUPhysicsJointImplementation.SampleLocalFrame(null, pose, point, angle);
+        body?.Space is not null ? body.SampleJointLocalFrame(point, angle) : CPUPhysicsJointImplementation.SampleDetachedLocalFrame(pose, point, angle);
 
     internal void Attach(PhysicsSpace space, PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
     {

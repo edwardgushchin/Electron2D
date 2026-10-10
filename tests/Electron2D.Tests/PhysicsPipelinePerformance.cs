@@ -71,7 +71,7 @@ internal static class PhysicsPipelinePerformance
             var contactValues = new List<float>(count * 8 * 16);
             for (var i = 0; i < count; i++)
             {
-                var id = bodies[i].BackendID;
+                var id = ((CPUPhysicsColliderImplementation)bodies[i].Backend.Implementation!).BodyID;
                 var t = b2Body_GetTransform(id); var v = b2Body_GetLinearVelocity(id);
                 states[i * 7] = t.p.X; states[i * 7 + 1] = t.p.Y;
                 states[i * 7 + 2] = t.q.c; states[i * 7 + 3] = t.q.s;

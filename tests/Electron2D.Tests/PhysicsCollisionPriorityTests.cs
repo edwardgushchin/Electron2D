@@ -169,8 +169,8 @@ internal static class PhysicsCollisionPriorityTests
         }
         using var shape = new CircleShape { Radius = 5 }; body.AddChild(new CollisionShape { Shape = shape });
         using var tree = new SceneTree(root); tree.PhysicsFrame(.01); body.Sleeping = true;
-        var fixture = body.BackendShapes[0]; var rid = body.GetRID(); body.CollisionPriority = 9;
-        Check(body.Sleeping && body.GetRID() == rid && body.BackendShapes[0].Equals(fixture), "Live priority preserves sleep, RID and fixture.");
+        var fixture = ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).Shapes[0]; var rid = body.GetRID(); body.CollisionPriority = 9;
+        Check(body.Sleeping && body.GetRID() == rid && ((CPUPhysicsColliderImplementation)body.Backend.Implementation!).Shapes[0].Equals(fixture), "Live priority preserves sleep, RID and fixture.");
         Task.Run(() => Reject<InvalidOperationException>(() => _ = body.CollisionPriority)).GetAwaiter().GetResult();
         var guarded = false; body.NotifyLocalTransformChanges = true;
         body.LocalTransformChanged += _ => { Reject<InvalidOperationException>(() => body.CollisionPriority = 2); guarded = true; };

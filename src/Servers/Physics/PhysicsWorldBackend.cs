@@ -14,6 +14,8 @@ internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Ba
     internal abstract void BeginPortableRestore();
     internal abstract void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick);
     internal abstract void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination);
+    internal abstract float ReadPortableSleepTime(PhysicsColliderBackend collider);
+    internal abstract void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping);
     internal abstract int ReadDebugContacts(Span<Vector2> output);
     internal abstract PhysicsServer.Backend Kind { get; }
     internal virtual GPUPhysicsBodyStore? GPUStore => null;
