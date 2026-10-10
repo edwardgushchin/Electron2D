@@ -23,6 +23,8 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SLEEP_POLICY") == "1") {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY_GPU") == "1") { WorldBoundaryTests.RunResident(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORLD_BOUNDARY") == "1") { WorldBoundaryTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RAY_DYNAMICS") == "1") { SeparationRayDynamicsTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
+if (args.Length > 0 && args[0] == "--physics-network") { Environment.ExitCode = Electron2D.Examples.PhysicsNetwork.NetworkApp.Run(args[1..]).GetAwaiter().GetResult(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_NETWORK") == "1") { Environment.ExitCode = Electron2D.Examples.PhysicsNetwork.NetworkApp.Run(["--check", "--output", "bin/physics-network-check"]).GetAwaiter().GetResult(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PORTABLE") == "1")
 {
     GeometryTests.Run();

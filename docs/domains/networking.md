@@ -1,6 +1,6 @@
 # Networking
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 ## Responsibility and public surface
 
@@ -41,3 +41,12 @@ Consumer-defined transports inherit StreamPeer or PacketPeer and override typed 
 [UPNP gateway discovery/control](../components/upnp.md) now supplies synchronous SSDP and per-device description/connection assessment plus typed SOAP query/add/delete commands. Borrowed membership and owner-thread lifetimes are explicit. Independent native multicast and IPv4/IPv6 SOAP fixtures execute; a real IPv4 gateway passed read-only querying. Actual gateway mapping changes, routed IPv6 discovery/connectivity, foreign hosts and owner acceptance remain separate.
 
 [Native DTLS packets](../components/dtls.md) now supplies PacketPeerDTLS and DTLSServer over borrowed connected UDP peers, with shared TLSStatus, existing TLSOptions/security resources, cookie exchange, retransmission timers and complete authenticated packet delivery. Native Linux OpenSSL 3.2+ is required. Independent OpenSSL processes in both roles and prepared allocation/public-scene checks execute; ENet/routed/foreign/native allocator/human gates remain separate.
+
+## Authoritative physics consumer
+
+The [PhysicsNetwork example](../components/physics-network-example.md) runs the existing
+SceneMultiplayer/ENet byte API with PhysicsSnapshot and complete game manifests.
+It exercises CPU authority, GPU prediction/replay, later joining, control transfer,
+ID reuse and confirmed events in separate processes under application-level loss,
+delay, duplication and reordering. Game-state recipes and policy remain in the
+consumer; the engine does not infer a generic game protocol from property replication.

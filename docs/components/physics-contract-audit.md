@@ -181,21 +181,22 @@ scene/server forces, targets, observer contacts and overlap history without call
 The public `PhysicsCheckpoint` factory and world-local tick counter now expose
 that local replay point to game code. [Portable snapshots](physics-snapshots.md) now
 add bounded capture/apply between compatible CPU/GPU worlds and explicit identity
-bindings. Lifecycle rewind and network reconciliation remain absent; these primitives
-do not close the complete integration rows below.
+bindings. The [PhysicsNetwork example](physics-network-example.md) now exercises authoritative
+lifecycle and reconciliation in separate processes. General game-state rollback,
+rendered presentation and the complete performance/platform gates remain open.
 
 | Required integration | Existing prerequisite | Open acceptance |
 | --- | --- | --- |
-| Dedicated authority | Headless SceneTree stepping and CPU physics; transports do not require a renderer | Separate CPU server process with no window/renderer and GPU unavailable; command ownership/validation and fixed tick acknowledgements. |
-| Portable identity/lifecycle | SceneMultiplayer has source/spawn IDs and typed codecs; RIDs are process-local | Explicit physics network identity across processes and correction, create/despawn generations, control transfer and late-join world state; never serialize vendor IDs or RIDs as identity. |
-| Authoritative snapshots | Public PhysicsSnapshot/PhysicsSnapshotMap with portable IDs, CPU/GPU capture/apply, observer history, one-way/sleep state and measured publication | Integrate authenticated transport, lifecycle/authoring changes and correction policy; demonstrate separate-process CPU-authority/GPU-client acceptance under adverse delivery. |
-| Prediction/correction | Fixed scene physics lane, public forces/state operations and tick-qualified local PhysicsCheckpoint | Bounded tick/input/state history, acknowledgement pruning, restore/replay of unconfirmed inputs and divergence recovery on CPU and GPU; documented numerical/reproducibility bounds. |
-| Remote presentation | Existing transform interpolation infrastructure | Snapshot-buffer interpolation for remote objects and correction smoothing separated from authoritative/locally predicted physical state. |
-| Events | Current owner-thread physical event ordering | Distinguish predicted/confirmed events and retain stable event identity across replay so collisions/triggers do not repeat game effects; reconcile despawn and authority changes. |
-| Network testing/performance | Existing socket/ENet/replication tests and bounded buffers | Separate server/client processes under delay, jitter, loss and reordering; CPU-server/GPU-client collisions, joints, sleep/wake, late join and correction; executable public example; snapshot bytes, history memory and replay latency/allocation measurements. |
+| Dedicated authority | PhysicsNetwork CPU authority executes separate-process fixed ticks with display/GPU unavailable and validates numbered peer-owned commands | The required Linux headless authority and input validation scenario is verified; broader host/game deployment is outside that evidence. |
+| Portable identity/lifecycle | PhysicsNetwork manifests verify portable IDs/generations, removal/recreation, control epochs and late join | The required lifecycle scenario is verified. Other game recipes and speculative client spawning need application policy; keep RIDs and backend identities private. |
+| Authoritative snapshots | Public PhysicsSnapshot/PhysicsSnapshotMap with portable IDs, CPU/GPU capture/apply, observer history, one-way/sleep state and measured publication | PhysicsNetwork verifies token admission, lifecycle correction and CPU-authority/GPU-client convergence under adverse delivery. Internet authentication and other game authoring policies are outside the example. |
+| Prediction/correction | Fixed scene physics lane, public forces/state operations and tick-qualified local PhysicsCheckpoint | The example now verifies bounded input replay and injected-divergence correction for CPU/GPU clients. Cross-platform numerical verification remains open; custom nonphysical game state needs application rollback policy. |
+| Remote presentation | Existing transform interpolation infrastructure | The example numerically verifies a 16-snapshot interpolation ring and local smoothing without moving solved bodies; rendered/network-window acceptance remains open. |
+| Events | Current owner-thread physical event ordering | PhysicsNetwork verifies phase-separated callbacks and exactly-once confirmed contact/Area records across replay, generations and ownership. The checked contact/Area effects satisfy the example; other game effects need their own policy and evidence. |
+| Network testing/performance | Existing socket/ENet/replication tests and bounded buffers | PhysicsNetwork covers these scenarios with real ENet processes and application-level impairment. Routed/OS-level loss, broader game workloads, cross-platform runs and the full GPU/window performance targets remain open. |
 
 These capabilities extend the physics objective beyond reference declaration
-coverage. They stay open here even if the generated API ledger eventually has no
+coverage. Remaining acceptance gates stay open even if the generated API ledger eventually has no
 open rows. [ADR 0094](../decisions/networking.md#adr-0094) and ADR 0054 record the
 required integration; the public local-checkpoint prerequisite does not close the
 portable authoritative networking rows.

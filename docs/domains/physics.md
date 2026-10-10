@@ -394,5 +394,11 @@ compatible physical and observer state between CPU/GPU worlds using caller-assig
 network IDs and generations. Capture/apply retain tick, contacts, one-way episodes,
 sleep clocks, forces, targets and joint authoring while rebuilding private solver
 caches. Matching authored worlds are required; local RIDs never become wire IDs.
-Transport integration, lifecycle, prediction orchestration and confirmed-event
-reconciliation remain open in the contract audit.
+The executable transport, lifecycle, prediction and confirmed-event integration
+and its remaining acceptance limits are recorded in the contract audit.
+
+[PhysicsNetwork](../components/physics-network-example.md) is the executable public-API
+authority/prediction example: separate CPU/GPU processes, numbered input, incarnation
+and owner validation, lifecycle correction, confirmed events and numerical
+presentation interpolation. Its measured scope does not close rendered-window or
+whole-engine performance acceptance.

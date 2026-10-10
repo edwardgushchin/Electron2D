@@ -1,6 +1,6 @@
 # Electron2D networking decisions
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 This bounded log owns native stream and packet transport behavior. The [decision index](index.md) routes other work; current classes and [networking](../domains/networking.md) describe the executable surface.
 
@@ -133,8 +133,11 @@ CPU/GPU internal state or cross-platform bitwise determinism.
 The first executable public prerequisite is a world-local, tick-qualified
 `PhysicsCheckpoint` under ADR 0054. Its counter is independent of packet sequences
 and its state is backend-private; never transmit a local checkpoint or RID as a
-portable authority snapshot. Snapshot decoding, validation, correction and event
-confirmation remain required integration, not current replication behavior. Acceptance
+portable authority snapshot. Portable `PhysicsSnapshot`/`PhysicsSnapshotMap` now provide bounded cross-backend
+state. The [PhysicsNetwork example](../components/physics-network-example.md) supplies
+an executable application protocol for input, lifecycle, correction and confirmed
+events through these public APIs. It does not make arbitrary game-state rollback
+a generic SceneMultiplayer property-replication feature. Acceptance
 requires separate server/client processes, a CPU server with no GPU/window,
 GPU clients, controlled latency/jitter/loss/reordering, joint/contact and sleep
 scenarios, divergence recovery and an executable example. Measure wire bytes,
