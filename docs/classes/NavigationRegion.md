@@ -218,6 +218,41 @@ The node caches source properties; direct server edits do not mutate those prope
 
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining baking/source parsing, async, debug/global activation and comprehensive weighted query acceptance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining async map iteration, debug/global activation and comprehensive weighted query acceptance prerequisites.
 
 Worker edits of the borrowed polygon stage server geometry immediately, while NavigationPolygonChanged delivery for an attached node returns to the scene owner queue. Queued delivery skips disposed or reparented-to-another-tree nodes.
+
+## Source geometry and baking API
+
+[Navigation baking](../components/navigation-baking.md) records the complete consumer and verification.
+
+| Member | Contract |
+| --- | --- |
+| [`public event Action BakeFinished`](#member-0) | Occurs after successful geometry publication for a requested region bake. |
+| [`public void BakeNavigationPolygon(bool onThread = true)`](#member-1) | Parses this region's source selection and bakes its navigation resource. |
+| [`public bool IsBaking()`](#member-2) | Reports whether this region's current resource is still preparing or awaiting publication. |
+
+## Member descriptions
+
+<a id="member-0"></a>
+### `public event Action BakeFinished`
+
+Occurs after successful geometry publication for a requested region bake.
+
+<a id="member-1"></a>
+### `public void BakeNavigationPolygon(bool onThread = true)`
+
+Parses this region's source selection and bakes its navigation resource.
+
+**Parameter onThread:** True prepares on a worker; false publishes before returning.
+
+**Remarks:** Scene parsing and completion run on the owner. A selected map supplies the compatible bake CellSize. Detached root traversal supports programmatic authoring.
+
+**Exception System.InvalidOperationException:** No navigation resource is assigned or a bake is already pending.
+
+<a id="member-2"></a>
+### `public bool IsBaking()`
+
+Reports whether this region's current resource is still preparing or awaiting publication.
+
+**Returns:** False when no resource/bake is present.

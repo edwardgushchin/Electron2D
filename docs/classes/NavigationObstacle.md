@@ -1,6 +1,6 @@
 # NavigationObstacle
 
-Last updated: 2026-10-07
+Last updated: 2026-10-10
 
 - Source: [NavigationObstacle.cs](../../src/Navigation/2D/NavigationObstacle.cs)
 - Inherits: [Entity](Entity.md)
@@ -10,7 +10,7 @@ Last updated: 2026-10-07
 
 Node-owned moving disc plus oriented static contour in the same ORCA map. Radius predicts motion with Velocity; contour prediction remains static. Public local vertices are copied. Source transforms publish world translation separately from basis-transformed offsets and scale radius with the largest absolute axis clamped to .001. Two contour points form a two-sided wall; winding controls the constrained side of larger convex/concave outlines. Finite simple contours reject duplicates, zero area and intersections before publication. Empty/single-point contours have no static segments.
 
-Map source selection, World replacement, immediate pause detachment/resume restoration, tree exit/reentry and disposal follow the same server obstacle storage. Direct server edits do not rewrite cached source descriptors. Five own source properties persist through fresh-process scene archives; RIDs and map overrides remain runtime state. The RID is borrowed and cannot be freed independently. Bake-affect/carve properties retain their exact geometry parsing/carving producer dependencies in coverage; avoidance is fully executable.
+Map source selection, World replacement, immediate pause detachment/resume restoration, tree exit/reentry and disposal follow the same server obstacle storage. Direct server edits do not rewrite cached source descriptors. Seven own source properties persist through fresh-process scene archives; RIDs and map overrides remain runtime state. The RID is borrowed and cannot be freed independently. Bake-affect/carve properties now feed scene source parsing and clearance/carve output; avoidance retains its independent ORCA consumer.
 
 ## Example
 
@@ -184,3 +184,28 @@ Changes a live override; empty restores the attached World map.
 ## Verification
 
 [NavigationAvoidanceTests](../../tests/Electron2D.Tests/NavigationAvoidanceTests.cs) verifies masks, pause, transforms, source arrays, native movement and fresh-process reconstruction; the component records allocation and platform limits.
+
+## Source geometry and baking API
+
+[Navigation baking](../components/navigation-baking.md) records the complete consumer and verification.
+
+| Member | Contract |
+| --- | --- |
+| [`public bool AffectNavigationMesh { get; set; }`](#member-0) | Gets or changes whether scene baking includes this obstacle. |
+| [`public bool CarveNavigationMesh { get; set; }`](#member-1) | Gets or changes whether baked obstruction bypasses agent-radius expansion. |
+
+## Member descriptions
+
+<a id="member-0"></a>
+### `public bool AffectNavigationMesh { get; set; }`
+
+Gets or changes whether scene baking includes this obstacle.
+
+**Value:** False initially.
+
+<a id="member-1"></a>
+### `public bool CarveNavigationMesh { get; set; }`
+
+Gets or changes whether baked obstruction bypasses agent-radius expansion.
+
+**Value:** False initially.

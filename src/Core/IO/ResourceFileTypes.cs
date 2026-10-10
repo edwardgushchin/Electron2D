@@ -31,6 +31,7 @@ public static partial class ResourceFileTypes
         RegisterResourceArray<SkeletonModification>();
         RegisterResource("ArrayMesh", CreateArrayMesh);
         RegisterResource("NavigationPolygon", CreateNavigationPolygon);
+        RegisterResource("NavigationMeshSourceGeometryData", CreateNavigationSourceGeometry);
         RegisterNode("NavigationRegion", CreateNavigationRegion);
         RegisterNode("NavigationLink", CreateNavigationLink);
         RegisterNode("NavigationAgent", CreateNavigationAgent);
@@ -97,6 +98,7 @@ public static partial class ResourceFileTypes
     private static CodeHighlighter CreateCodeHighlighter() => new();
     private static RichTextEffect CreateRichTextEffect() => new();
     private static NavigationPolygon CreateNavigationPolygon() => new();
+    private static NavigationMeshSourceGeometryData CreateNavigationSourceGeometry() => new();
     private static NavigationRegion CreateNavigationRegion() => new();
     private static NavigationLink CreateNavigationLink() => new();
     private static NavigationAgent CreateNavigationAgent() => new();

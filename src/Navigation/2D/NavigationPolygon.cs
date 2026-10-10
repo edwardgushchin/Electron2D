@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>Stores copied planar vertices and authored convex polygons used by navigation regions.</summary>
 /// <remarks>Public arrays are independent copies. Mutations publish complete immutable versions and then raise Changed.
-/// Source outlines, clearance baking and source-geometry parsing require their own executable baking pipeline.</remarks>
-public sealed class NavigationPolygon : Resource
+/// Copied outlines/settings feed synchronous or owner-published background baking through NavigationServer.</remarks>
+public sealed partial class NavigationPolygon : Resource
 {
     private readonly object _gate = new();
     private NavigationPolygonData _data = new([], []);
@@ -82,7 +82,7 @@ public sealed class NavigationPolygon : Resource
         foreach (var polygon in data.Polygons) budget += 4 + (long)polygon.Length * 4;
         if (budget > 64 * 1024 * 1024) throw new InvalidDataException("Navigation geometry exceeds its storage budget.");
         using var stream = new MemoryStream(); using var writer = new BinaryWriter(stream);
-        writer.Write(1); writer.Write(data.Vertices.Length); foreach (var p in data.Vertices) { writer.Write(p.X); writer.Write(p.Y); }
+        writer.Write(2); writer.Write(data.CellSize.HasValue); if (data.CellSize is { } cell) writer.Write(cell); writer.Write(data.Vertices.Length); foreach (var p in data.Vertices) { writer.Write(p.X); writer.Write(p.Y); }
         writer.Write(data.Polygons.Length); foreach (var polygon in data.Polygons) { writer.Write(polygon.Length); foreach (var i in polygon) writer.Write(i); }
         return stream.ToArray();
     }
@@ -93,25 +93,26 @@ public sealed class NavigationPolygon : Resource
         using var stream = new MemoryStream(bytes, writable: false); using var reader = new BinaryReader(stream);
         try
         {
-            if (reader.ReadInt32() != 1) throw new InvalidDataException("Unsupported navigation geometry version.");
+            var version = reader.ReadInt32(); if (version is not (1 or 2)) throw new InvalidDataException("Unsupported navigation geometry version.");
+            float? cell = version == 2 && reader.ReadBoolean() ? reader.ReadSingle() : null; if (cell is { } c && (!float.IsFinite(c) || c <= 0)) throw new InvalidDataException("Invalid baked navigation cell size.");
             var count = reader.ReadInt32(); if (count is < 0 or > 1048576 || (long)count * 8 > stream.Length - stream.Position) throw new InvalidDataException("Invalid navigation vertex count.");
             var vertices = new Vector2[count]; for (var i = 0; i < count; i++) { vertices[i] = new(reader.ReadSingle(), reader.ReadSingle()); if (!vertices[i].IsFinite()) throw new InvalidDataException("Nonfinite navigation vertex."); }
             count = reader.ReadInt32(); if (count is < 0 or > 1048576 || (long)count * 4 > stream.Length - stream.Position) throw new InvalidDataException("Invalid navigation polygon count.");
             var polygons = new int[count][];
             for (var i = 0; i < count; i++) { var length = reader.ReadInt32(); if (length < 3 || length > vertices.Length || (long)length * 4 > stream.Length - stream.Position) throw new InvalidDataException("Invalid navigation polygon length."); polygons[i] = new int[length]; for (var j = 0; j < length; j++) polygons[i][j] = reader.ReadInt32(); try { ValidatePolygon(vertices, polygons[i]); } catch (ArgumentException error) { throw new InvalidDataException("Invalid stored navigation polygon geometry.", error); } }
             if (stream.Position != stream.Length) throw new InvalidDataException("Trailing navigation geometry payload.");
-            lock (_gate) { ThrowIfDisposed(); _data = new(vertices, polygons); }
+            lock (_gate) { ThrowIfDisposed(); _data = new(vertices, polygons, cell); }
             EmitChanged();
         }
         catch (EndOfStreamException error) { throw new InvalidDataException("Truncated navigation geometry.", error); }
     }
     private static readonly PropertyDescriptor[] GeometryProperties = [new PropertyDescriptor<NavigationPolygon, byte[]>("_navigation_geometry", n => n.SaveGeometry(), (n, v) => n.LoadGeometry(v), _ => [], stored: true)];
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GeometryProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GeometryProperties).Concat(BakeProperties);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new NavigationPolygon();
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode subresourceMode, Func<Resource?, Resource?> duplicateSubresource, Func<Resource?, Resource?> forceDuplicateSubresource)
-    { var copy = (NavigationPolygon)target; var snapshot = Snapshot(); lock (copy._gate) copy._data = snapshot; }
+    { var copy = (NavigationPolygon)target; NavigationPolygonData data; Vector2[][] outlines; NavigationBakeSettings settings; lock (_gate) { ThrowIfDisposed(); data = _data; outlines = _outlines; settings = _settings; } lock (copy._gate) { copy._data = data; copy._outlines = outlines; copy._settings = settings; } }
 }
-internal sealed record NavigationPolygonData(Vector2[] Vertices, int[][] Polygons);
+internal sealed record NavigationPolygonData(Vector2[] Vertices, int[][] Polygons, float? CellSize = null);

@@ -505,6 +505,12 @@ def main():
                    "property Vector2 constant_force", "property float constant_torque"):
         assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                            if row.startswith(f"| [`{prefix}")), prefix
+    for name in ("NavigationPolygon", "NavigationMeshSourceGeometryData2D", "NavigationRegion2D", "NavigationObstacle2D"):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert all(" | Implemented | " in row or " | Excluded | " in row for row in rows), name
+    assert "NavigationMeshSourceGeometryData.md" in pages[CLASS_PAGES / "NavigationMeshSourceGeometryData2D.md"]
+    bridge = next(row for row in pages[CLASS_PAGES / "NavigationPolygon.md"].splitlines() if row.startswith("| [`method get_navigation_mesh()"))
+    assert " | Excluded | " in bridge and "NavigationServer3D" in bridge and "No implementation trigger" in bridge
     loader_rows = [row for row in pages[CLASS_PAGES / "ResourceLoader.md"].splitlines()
                    if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(loader_rows) == 26

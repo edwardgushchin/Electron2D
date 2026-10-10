@@ -2,8 +2,8 @@ namespace Electron2D;
 
 /// <summary>Places authored navigation polygons in the same map used by its selected scene World.</summary>
 /// <remarks>Scene properties stage server edits; synchronization publishes query topology. Geometry is borrowed.
-/// Source parsing/baking and clearance retain separate prerequisites.</remarks>
-public sealed class NavigationRegion : Entity
+/// Source parsing and synchronous/background baking update the same borrowed resource and live map.</remarks>
+public sealed partial class NavigationRegion : Entity
 {
     private readonly RID _rid;
     private RID _mapOverride;
@@ -93,7 +93,7 @@ public sealed class NavigationRegion : Entity
     protected override void OnNotification(int what)
     { base.OnNotification(what); if (IsInsideTree && what == NotificationWorldChanged) Publish(); else if (IsInsideTree && what == NotificationTransformChanged) NavigationServer.RegionSetTransform(_rid, GlobalTransform); }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { NavigationServer.Service.ReleaseSceneRegion(_rid); NavigationPolygonChanged = null; _polygon = null; } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { NavigationServer.Service.ReleaseSceneRegion(_rid); NavigationPolygonChanged = null; BakeFinished = null; _polygon = null; } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(RegionProperties);
     private static readonly PropertyDescriptor[] RegionProperties =

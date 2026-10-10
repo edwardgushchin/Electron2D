@@ -132,3 +132,7 @@ Built-in factories now register TileSet, TileSetAtlasSource and TileMapLayer, pl
 ## Threaded preparation
 
 Threaded loading invokes compiled factories and codecs on workers, potentially concurrently for independent files. Registration remains allocating setup; factory/codec implementations must prepare independent thread-safe data and avoid owner-bound scene/native mutation.
+
+## Navigation baking integration
+
+NavigationPolygon outlines/settings/generated geometry and NavigationMeshSourceGeometryData contour/projected payloads now have exact compiled portable schemas/factories. No transient workers, callbacks, parser RIDs or scene ownership is serialized. See [navigation baking](../components/navigation-baking.md).

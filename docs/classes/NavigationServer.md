@@ -759,7 +759,7 @@ Returns a copied path with points removed by iterative Ramer-Douglas-Peucker sim
 
 ## Verification and limits
 
-[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining raster/search equivalence, baking, async and avoidance prerequisites.
+[NavigationTests](../../tests/Electron2D.Tests/NavigationTests.cs) checks typed resource/scene storage and fresh loading, deferred publication and rollback, geometry/cost/layer routes, lifetime and allocation boundaries. The rendered host follows a real World-map corridor on both current hardware backends. [ADR 0097](../decisions/navigation.md#adr-0097) and the [component contract](../components/navigation-maps.md) state remaining broad search equivalence, async map iterations and debug/global activation prerequisites.
 
 ## Agent identities and map membership
 
@@ -1643,3 +1643,88 @@ A world point inside the region, or zero when no eligible surface exists.
 - `region`: A live region RID.
 - `navigationLayers`: Eligible layer mask.
 - `uniformly`: True weights polygons and triangles by area; false chooses both uniformly.
+
+## Source geometry and baking API
+
+[Navigation baking](../components/navigation-baking.md) records the complete consumer and verification.
+
+| Member | Contract |
+| --- | --- |
+| [`public static void BakeFromSourceGeometryData(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Action callback = null)`](#member-0) | Bakes one coherent source snapshot and publishes complete planar geometry on the caller. |
+| [`public static void BakeFromSourceGeometryDataAsync(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Action callback = null, SceneTree publicationTree = null)`](#member-1) | Prepares navigation geometry on a worker and publishes it on its scene or standalone completion owner. |
+| [`public static bool IsBakingNavigationPolygon(NavigationPolygon navigationPolygon)`](#member-2) | Reports pending preparation/publication, pumping ready results when called by their publication owner. |
+| [`public static void ParseSourceGeometryData(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Node rootNode, Action callback = null)`](#member-3) | Clears and collects source geometry in root-local coordinates on the scene owner. |
+| [`public static RID SourceGeometryParserCreate()`](#member-4) | Creates a caller-owned source parser identity. |
+| [`public static void SourceGeometryParserSetCallback(RID parser, Action<NavigationPolygon, NavigationMeshSourceGeometryData, Node> callback)`](#member-5) | Assigns a typed parser callback, or clears it with null. |
+
+## Member descriptions
+
+<a id="member-0"></a>
+### `public static void BakeFromSourceGeometryData(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Action callback = null)`
+
+Bakes one coherent source snapshot and publishes complete planar geometry on the caller.
+
+**Parameter navigationPolygon:** Live target with outlines/settings.
+
+**Parameter sourceGeometryData:** Live copied source contours.
+
+**Parameter callback:** Optional completion callback after successful publication.
+
+**Remarks:** Preparation failures preserve prior geometry. A completion/Changed exception may follow committed data.
+
+**Exception System.InvalidOperationException:** A bake is already active for this target.
+
+<a id="member-1"></a>
+### `public static void BakeFromSourceGeometryDataAsync(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Action callback = null, SceneTree publicationTree = null)`
+
+Prepares navigation geometry on a worker and publishes it on its scene or standalone completion owner.
+
+**Parameter navigationPolygon:** Live target.
+
+**Parameter sourceGeometryData:** Source snapshot retained independently of later edits/disposal.
+
+**Parameter callback:** Owner completion callback.
+
+**Parameter publicationTree:** Explicit owner; defaults to the active engine scene.
+
+**Remarks:** SceneTree.Defer publishes automatically. Standalone callers pump completion through IsBakingNavigationPolygon or Synchronize. Worker failures surface on that owner, and every task is retired.
+
+<a id="member-2"></a>
+### `public static bool IsBakingNavigationPolygon(NavigationPolygon navigationPolygon)`
+
+Reports pending preparation/publication, pumping ready results when called by their publication owner.
+
+**Parameter navigationPolygon:** Target identity.
+
+**Returns:** False when no bake remains.
+
+<a id="member-3"></a>
+### `public static void ParseSourceGeometryData(NavigationPolygon navigationPolygon, NavigationMeshSourceGeometryData sourceGeometryData, Node rootNode, Action callback = null)`
+
+Clears and collects source geometry in root-local coordinates on the scene owner.
+
+**Parameter navigationPolygon:** Live source selection configuration.
+
+**Parameter sourceGeometryData:** Live destination for collected contours.
+
+**Parameter rootNode:** Root coordinate frame and scene/group owner; detached root traversal is also supported.
+
+**Parameter callback:** Optional callback after successful parsing.
+
+**Remarks:** Registration snapshots allow callbacks to update/free parsers. Same-destination recursive parsing rejects. A parser failure can leave partial source data; no target navigation mesh is changed.
+
+<a id="member-4"></a>
+### `public static RID SourceGeometryParserCreate()`
+
+Creates a caller-owned source parser identity.
+
+**Returns:** A RID requiring FreeRID.
+
+<a id="member-5"></a>
+### `public static void SourceGeometryParserSetCallback(RID parser, Action<NavigationPolygon, NavigationMeshSourceGeometryData, Node> callback)`
+
+Assigns a typed parser callback, or clears it with null.
+
+**Parameter parser:** Live parser RID.
+
+**Parameter callback:** Invoked for each selected node after built-in geometry collection. Points added must use the supplied root's local space.

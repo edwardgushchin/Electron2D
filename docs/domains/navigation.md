@@ -4,7 +4,7 @@ Last updated: 2026-10-10
 
 ## Responsibility
 
-Navigation owns typed 2D pathfinding authored map/polygon/region services and future baking slices. Its first two executable components are standalone point and grid searches that games can use without opening a SceneTree, renderer or native host.
+Navigation owns typed 2D pathfinding authored map/polygon/region services and source geometry and baking. Its first two executable components are standalone point and grid searches that games can use without opening a SceneTree, renderer or native host.
 
 ## Component inventory
 
@@ -27,7 +27,7 @@ Navigation owns typed 2D pathfinding authored map/polygon/region services and fu
 - Links are directional for travel and undirected for segment existence. A path pays the destination point's weight on each edge. Disabled points are excluded from path expansion and closest-segment queries unless a point query explicitly includes them.
 - A path callback may inspect graph state, but search re-entry, mutation and disposal are rejected. Concurrent callers coordinate access externally.
 - Grid region and cell geometry are finite and bounded to managed arrays. Jumping intentionally ignores individual cell weights, matching its separate search mode. Both graph types reject search re-entry, mutation and disposal from callbacks.
-- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; baking and debug retain their own exact prerequisites.
+- NavigationServer supplies owned map/region RIDs and immutable authored-polygon iterations. World/scene integration uses the same storage; async map iterations and debug retain their own exact prerequisites.
 
 ## Verification and limits
 
@@ -55,4 +55,8 @@ NavigationLink and owned server links now provide directed/bidirectional off-sur
 
 [Reciprocal avoidance](../components/navigation-maps.md#reciprocal-agent-and-obstacle-avoidance) now connects NavigationAgent controls and typed velocity events, NavigationObstacle moving disc/oriented contour geometry, static server state and the physics lane. Managed/source/oracle/allocation and actual GPU/compatibility games are verified separately. Bake exclusion/carving and complete profiling/debug producers retain operation-specific dependencies.
 
-Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback, baking, async and debug/global activation remain separate obligations.
+Committed [raster topology and surface sampling](../components/navigation-maps.md#geometry-and-routes) now provide cell/scale consumers, directed margin pathways, per-region versions and complete process counters. Quantized ownership follows two-owner grouping; independent pinned-runtime fixtures and real GPU/compatibility actors verify the connected slice. Broad search-tie/fallback, async map iterations and debug/global activation remain separate obligations.
+
+## Source geometry producer
+
+[Navigation baking](../components/navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.

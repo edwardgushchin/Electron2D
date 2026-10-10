@@ -8,6 +8,7 @@ public sealed class NavigationObstacle : Entity
     private readonly RID _rid;
     private RID _mapOverride;
     private bool _avoidanceEnabled = true;
+    private bool _affectNavigationMesh, _carveNavigationMesh;
     private uint _avoidanceLayers = 1;
     private float _radius;
     private Vector2 _velocity;
@@ -17,6 +18,10 @@ public sealed class NavigationObstacle : Entity
     private RID _mapBeforePause;
     /// <summary>Creates an enabled detached obstacle with zero radius and empty contour.</summary>
     public NavigationObstacle() { _rid = NavigationServer.Service.CreateObstacle(this); NotifyTransformChanges = true; }
+    /// <summary>Gets or changes whether scene baking includes this obstacle.</summary><value>False initially.</value>
+    public bool AffectNavigationMesh { get { ThrowIfDisposed(); return _affectNavigationMesh; } set { EnsureMutable(); _affectNavigationMesh = value; } }
+    /// <summary>Gets or changes whether baked obstruction bypasses agent-radius expansion.</summary><value>False initially.</value>
+    public bool CarveNavigationMesh { get { ThrowIfDisposed(); return _carveNavigationMesh; } set { EnsureMutable(); _carveNavigationMesh = value; } }
     /// <summary>Gets or changes participation in avoidance.</summary>
     /// <value>True initially.</value>
     /// <exception cref="ObjectDisposedException">The node is disposed.</exception>
@@ -86,7 +91,9 @@ public sealed class NavigationObstacle : Entity
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ObstacleProperties);
     private static readonly PropertyDescriptor[] ObstacleProperties =
-    [new PropertyDescriptor<NavigationObstacle,bool>(nameof(AvoidanceEnabled),n=>n.AvoidanceEnabled,(n,v)=>n.AvoidanceEnabled=v,_=>true,stored:true),
+    [new PropertyDescriptor<NavigationObstacle, bool>(nameof(AffectNavigationMesh), n => n.AffectNavigationMesh, (n,v) => n.AffectNavigationMesh=v, _=>false, stored:true),
+     new PropertyDescriptor<NavigationObstacle, bool>(nameof(CarveNavigationMesh), n => n.CarveNavigationMesh, (n,v) => n.CarveNavigationMesh=v, _=>false, stored:true),
+     new PropertyDescriptor<NavigationObstacle,bool>(nameof(AvoidanceEnabled),n=>n.AvoidanceEnabled,(n,v)=>n.AvoidanceEnabled=v,_=>true,stored:true),
      new PropertyDescriptor<NavigationObstacle,uint>(nameof(AvoidanceLayers),n=>n.AvoidanceLayers,(n,v)=>n.AvoidanceLayers=v,_=>1u,stored:true),
      new PropertyDescriptor<NavigationObstacle,float>(nameof(Radius),n=>n.Radius,(n,v)=>n.Radius=v,_=>0f,stored:true),
      new PropertyDescriptor<NavigationObstacle,Vector2>(nameof(Velocity),n=>n.Velocity,(n,v)=>n.Velocity=v,_=>Vector2.Zero,stored:true),

@@ -6208,6 +6208,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.NavigationMeshSourceGeometryData",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "NavigationMeshSourceGeometryData",
+    "signature": "public sealed class Electron2D.NavigationMeshSourceGeometryData",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.NavigationObstacle",
     "kind": "type",
     "declaringType": "Electron2D.NavigationObstacle",
@@ -6335,6 +6350,73 @@
     "interfaces": [
       "System.IDisposable"
     ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPolygon.ParsedGeometryType",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "name": "ParsedGeometryType",
+    "signature": "public enum Electron2D.NavigationPolygon.ParsedGeometryType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPolygon.SamplePartitionType",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "name": "SamplePartitionType",
+    "signature": "public enum Electron2D.NavigationPolygon.SamplePartitionType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationPolygon.SourceGeometryMode",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "name": "SourceGeometryMode",
+    "signature": "public enum Electron2D.NavigationPolygon.SourceGeometryMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.NavigationProjectedObstruction",
+    "kind": "type",
+    "declaringType": "Electron2D.NavigationProjectedObstruction",
+    "name": "NavigationProjectedObstruction",
+    "signature": "public sealed class Electron2D.NavigationProjectedObstruction",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
     "parameters": null,
     "returnType": null,
     "value": null
@@ -15965,6 +16047,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.NavigationMeshSourceGeometryData..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": ".ctor",
+    "signature": "public NavigationMeshSourceGeometryData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.NavigationObstacle..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.NavigationObstacle",
@@ -16013,6 +16108,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.NavigationProjectedObstruction..ctor(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Boolean)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.NavigationProjectedObstruction",
+    "name": ".ctor",
+    "signature": "public NavigationProjectedObstruction(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E vertices, System.Boolean carve)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertices",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "carve",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -32645,6 +32764,149 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.Both()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "name": "Both",
+    "signature": "public const Electron2D.NavigationPolygon.ParsedGeometryType Both = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "name": "Max",
+    "signature": "public const Electron2D.NavigationPolygon.ParsedGeometryType Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.MeshInstances()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "name": "MeshInstances",
+    "signature": "public const Electron2D.NavigationPolygon.ParsedGeometryType MeshInstances = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.StaticColliders()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "name": "StaticColliders",
+    "signature": "public const Electron2D.NavigationPolygon.ParsedGeometryType StaticColliders = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.ConvexPartition()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "name": "ConvexPartition",
+    "signature": "public const Electron2D.NavigationPolygon.SamplePartitionType ConvexPartition = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "name": "Max",
+    "signature": "public const Electron2D.NavigationPolygon.SamplePartitionType Max = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.Triangulate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "name": "Triangulate",
+    "signature": "public const Electron2D.NavigationPolygon.SamplePartitionType Triangulate = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.GroupsExplicit()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "name": "GroupsExplicit",
+    "signature": "public const Electron2D.NavigationPolygon.SourceGeometryMode GroupsExplicit = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.GroupsWithChildren()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "name": "GroupsWithChildren",
+    "signature": "public const Electron2D.NavigationPolygon.SourceGeometryMode GroupsWithChildren = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "name": "Max",
+    "signature": "public const Electron2D.NavigationPolygon.SourceGeometryMode Max = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.RootNodeChildren()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "name": "RootNodeChildren",
+    "signature": "public const Electron2D.NavigationPolygon.SourceGeometryMode RootNodeChildren = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.NavigationServer.ProcessInfo.ActiveMaps()",
     "kind": "enumValue",
     "declaringType": "Electron2D.NavigationServer.ProcessInfo",
@@ -41300,6 +41562,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Action\u003CElectron2D.NavigationWaypoint\u003E",
+    "value": null
+  },
+  {
+    "id": "event:Electron2D.NavigationRegion.BakeFinished()",
+    "kind": "event",
+    "declaringType": "Electron2D.NavigationRegion",
+    "name": "BakeFinished",
+    "signature": "public event System.Action BakeFinished",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Action",
     "value": null
   },
   {
@@ -102917,6 +103192,338 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.AddObstructionOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "AddObstructionOutline",
+    "signature": "public System.Void AddObstructionOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E outline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.AddProjectedObstruction(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "AddProjectedObstruction",
+    "signature": "public System.Void AddProjectedObstruction(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E vertices, System.Boolean carve)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertices",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "carve",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.AddTraversableOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "AddTraversableOutline",
+    "signature": "public System.Void AddTraversableOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E outline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.AppendObstructionOutlines(Electron2D.Vector2[][])",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "AppendObstructionOutlines",
+    "signature": "public System.Void AppendObstructionOutlines(Electron2D.Vector2[][] outlines)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outlines",
+        "type": "Electron2D.Vector2[][]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.AppendTraversableOutlines(Electron2D.Vector2[][])",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "AppendTraversableOutlines",
+    "signature": "public System.Void AppendTraversableOutlines(Electron2D.Vector2[][] outlines)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outlines",
+        "type": "Electron2D.Vector2[][]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.ClearProjectedObstructions()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "ClearProjectedObstructions",
+    "signature": "public System.Void ClearProjectedObstructions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.GetBounds()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "GetBounds",
+    "signature": "public Electron2D.Rect2 GetBounds()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.GetObstructionOutlines()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "GetObstructionOutlines",
+    "signature": "public Electron2D.Vector2[][] GetObstructionOutlines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.GetProjectedObstructions()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "GetProjectedObstructions",
+    "signature": "public Electron2D.NavigationProjectedObstruction[] GetProjectedObstructions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationProjectedObstruction[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.GetTraversableOutlines()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "GetTraversableOutlines",
+    "signature": "public Electron2D.Vector2[][] GetTraversableOutlines()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[][]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.HasData()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "HasData",
+    "signature": "public System.Boolean HasData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.Merge(Electron2D.NavigationMeshSourceGeometryData)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "Merge",
+    "signature": "public System.Void Merge(Electron2D.NavigationMeshSourceGeometryData otherGeometry)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "otherGeometry",
+        "type": "Electron2D.NavigationMeshSourceGeometryData",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.SetObstructionOutlines(Electron2D.Vector2[][])",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "SetObstructionOutlines",
+    "signature": "public System.Void SetObstructionOutlines(Electron2D.Vector2[][] outlines)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outlines",
+        "type": "Electron2D.Vector2[][]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.SetProjectedObstructions(System.ReadOnlySpan\u003CElectron2D.NavigationProjectedObstruction\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "SetProjectedObstructions",
+    "signature": "public System.Void SetProjectedObstructions(System.ReadOnlySpan\u003CElectron2D.NavigationProjectedObstruction\u003E obstructions)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "obstructions",
+        "type": "System.ReadOnlySpan\u003CElectron2D.NavigationProjectedObstruction\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationMeshSourceGeometryData.SetTraversableOutlines(Electron2D.Vector2[][])",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationMeshSourceGeometryData",
+    "name": "SetTraversableOutlines",
+    "signature": "public System.Void SetTraversableOutlines(Electron2D.Vector2[][] outlines)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outlines",
+        "type": "Electron2D.Vector2[][]",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationObstacle.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.NavigationObstacle",
@@ -103198,6 +103805,49 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationPolygon.AddOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "AddOutline",
+    "signature": "public System.Void AddOutline(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E outline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.AddOutlineAtIndex(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "AddOutlineAtIndex",
+    "signature": "public System.Void AddOutlineAtIndex(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E outline, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "outline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationPolygon.AddPolygon(System.ReadOnlySpan\u003CSystem.Int32\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -103222,6 +103872,19 @@
     "declaringType": "Electron2D.NavigationPolygon",
     "name": "Clear",
     "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.ClearOutlines()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "ClearOutlines",
+    "signature": "public System.Void ClearOutlines()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -103295,6 +103958,57 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationPolygon.GetOutline(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "GetOutline",
+    "signature": "public Electron2D.Vector2[] GetOutline(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.GetOutlineCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "GetOutlineCount",
+    "signature": "public System.Int32 GetOutlineCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.GetParsedCollisionMaskValue(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "GetParsedCollisionMaskValue",
+    "signature": "public System.Boolean GetParsedCollisionMaskValue(System.Int32 layerNumber)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationPolygon.GetPolygon(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -103353,6 +104067,73 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationPolygon.RemoveOutline(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "RemoveOutline",
+    "signature": "public System.Void RemoveOutline(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.SetOutline(System.Int32,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "SetOutline",
+    "signature": "public System.Void SetOutline(System.Int32 index, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E outline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "outline",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationPolygon.SetParsedCollisionMaskValue(System.Int32,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "SetParsedCollisionMaskValue",
+    "signature": "public System.Void SetParsedCollisionMaskValue(System.Int32 layerNumber, System.Boolean value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerNumber",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationPolygon.SetVertices(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationPolygon",
@@ -103366,6 +104147,38 @@
         "name": "vertices",
         "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
         "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationProjectedObstruction.GetVertices()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationProjectedObstruction",
+    "name": "GetVertices",
+    "signature": "public Electron2D.Vector2[] GetVertices()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationRegion.BakeNavigationPolygon(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationRegion",
+    "name": "BakeNavigationPolygon",
+    "signature": "public System.Void BakeNavigationPolygon(System.Boolean onThread = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "onThread",
+        "type": "System.Boolean",
+        "default": "true"
       }
     ],
     "returnType": "System.Void",
@@ -103472,6 +104285,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationRegion.IsBaking()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationRegion",
+    "name": "IsBaking",
+    "signature": "public System.Boolean IsBaking()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -104264,6 +105090,69 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.BakeFromSourceGeometryData(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "BakeFromSourceGeometryData",
+    "signature": "public static System.Void BakeFromSourceGeometryData(Electron2D.NavigationPolygon navigationPolygon, Electron2D.NavigationMeshSourceGeometryData sourceGeometryData, System.Action callback = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "navigationPolygon",
+        "type": "Electron2D.NavigationPolygon",
+        "default": null
+      },
+      {
+        "name": "sourceGeometryData",
+        "type": "Electron2D.NavigationMeshSourceGeometryData",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.BakeFromSourceGeometryDataAsync(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,System.Action,Electron2D.SceneTree)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "BakeFromSourceGeometryDataAsync",
+    "signature": "public static System.Void BakeFromSourceGeometryDataAsync(Electron2D.NavigationPolygon navigationPolygon, Electron2D.NavigationMeshSourceGeometryData sourceGeometryData, System.Action callback = null, Electron2D.SceneTree publicationTree = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "navigationPolygon",
+        "type": "Electron2D.NavigationPolygon",
+        "default": null
+      },
+      {
+        "name": "sourceGeometryData",
+        "type": "Electron2D.NavigationMeshSourceGeometryData",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": "null"
+      },
+      {
+        "name": "publicationTree",
+        "type": "Electron2D.SceneTree",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.FreeRID(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -104312,6 +105201,25 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.IsBakingNavigationPolygon(Electron2D.NavigationPolygon)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "IsBakingNavigationPolygon",
+    "signature": "public static System.Boolean IsBakingNavigationPolygon(Electron2D.NavigationPolygon navigationPolygon)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "navigationPolygon",
+        "type": "Electron2D.NavigationPolygon",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -105554,6 +106462,40 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.NavigationServer.ParseSourceGeometryData(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,Electron2D.Node,System.Action)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "ParseSourceGeometryData",
+    "signature": "public static System.Void ParseSourceGeometryData(Electron2D.NavigationPolygon navigationPolygon, Electron2D.NavigationMeshSourceGeometryData sourceGeometryData, Electron2D.Node rootNode, System.Action callback = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "navigationPolygon",
+        "type": "Electron2D.NavigationPolygon",
+        "default": null
+      },
+      {
+        "name": "sourceGeometryData",
+        "type": "Electron2D.NavigationMeshSourceGeometryData",
+        "default": null
+      },
+      {
+        "name": "rootNode",
+        "type": "Electron2D.Node",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.NavigationServer.QueryPath(Electron2D.NavigationPathQueryParameters,Electron2D.NavigationPathQueryResult,System.Action)",
     "kind": "method",
     "declaringType": "Electron2D.NavigationServer",
@@ -106167,6 +107109,43 @@
       }
     ],
     "returnType": "Electron2D.Vector2[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.SourceGeometryParserCreate()",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "SourceGeometryParserCreate",
+    "signature": "public static Electron2D.RID SourceGeometryParserCreate()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.NavigationServer.SourceGeometryParserSetCallback(Electron2D.RID,System.Action\u003CElectron2D.NavigationPolygon, Electron2D.NavigationMeshSourceGeometryData, Electron2D.Node\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.NavigationServer",
+    "name": "SourceGeometryParserSetCallback",
+    "signature": "public static System.Void SourceGeometryParserSetCallback(Electron2D.RID parser, System.Action\u003CElectron2D.NavigationPolygon, Electron2D.NavigationMeshSourceGeometryData, Electron2D.Node\u003E callback)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "parser",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CElectron2D.NavigationPolygon, Electron2D.NavigationMeshSourceGeometryData, Electron2D.Node\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -186238,6 +187217,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.NavigationObstacle.AffectNavigationMesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationObstacle",
+    "name": "AffectNavigationMesh",
+    "signature": "public System.Boolean AffectNavigationMesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.NavigationObstacle.AvoidanceEnabled()",
     "kind": "property",
     "declaringType": "Electron2D.NavigationObstacle",
@@ -186261,6 +187253,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationObstacle.CarveNavigationMesh()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationObstacle",
+    "name": "CarveNavigationMesh",
+    "signature": "public System.Boolean CarveNavigationMesh { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -186560,6 +187565,149 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.NavigationPathQueryResult.PathSegmentType[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.AgentRadius()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "AgentRadius",
+    "signature": "public System.Single AgentRadius { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.BakingRect()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "BakingRect",
+    "signature": "public Electron2D.Rect2 BakingRect { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.BakingRectOffset()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "BakingRectOffset",
+    "signature": "public Electron2D.Vector2 BakingRectOffset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.BorderSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "BorderSize",
+    "signature": "public System.Single BorderSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.CellSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "CellSize",
+    "signature": "public System.Single CellSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.ParsedCollisionMask()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "ParsedCollisionMask",
+    "signature": "public System.UInt32 ParsedCollisionMask { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.ParsedGeometry()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "ParsedGeometry",
+    "signature": "public Electron2D.NavigationPolygon.ParsedGeometryType ParsedGeometry { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.ParsedGeometryType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.SamplePartition()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "SamplePartition",
+    "signature": "public Electron2D.NavigationPolygon.SamplePartitionType SamplePartition { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SamplePartitionType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.SourceGeometry()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "SourceGeometry",
+    "signature": "public Electron2D.NavigationPolygon.SourceGeometryMode SourceGeometry { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.NavigationPolygon.SourceGeometryMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationPolygon.SourceGeometryGroupName()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationPolygon",
+    "name": "SourceGeometryGroupName",
+    "signature": "public System.String SourceGeometryGroupName { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.NavigationProjectedObstruction.Carve()",
+    "kind": "property",
+    "declaringType": "Electron2D.NavigationProjectedObstruction",
+    "name": "Carve",
+    "signature": "public System.Boolean Carve { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

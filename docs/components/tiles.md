@@ -63,3 +63,7 @@ The initial native bracket put a collection immediately before measurement and r
 ## Remaining boundaries
 
 Animated atlas frames, padded atlas generation, non-square layouts, terrain/pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion and navigation are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+
+## Navigation baking integration
+
+Navigation source parsing consumes effective/runtime collision polygons with the same cell transpose/reflection and map-local positions as physics. Missing tile navigation-layer producers retain their separate tile dependencies. See [navigation baking](navigation-baking.md).

@@ -220,6 +220,7 @@ public sealed partial class ThemeDB
         ["MultiplayerSynchronizer"] = ["MultiplayerSynchronizer", "Node", "ElectronObject"],
         ["NavigationAgent"] = ["NavigationAgent", "Node", "ElectronObject"],
         ["NavigationLink"] = ["NavigationLink", "Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["NavigationMeshSourceGeometryData"] = ["NavigationMeshSourceGeometryData", "Resource", "ElectronObject"],
         ["NavigationObstacle"] = ["NavigationObstacle", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["NavigationPathQueryParameters"] = ["NavigationPathQueryParameters", "ElectronObject"],
         ["NavigationPathQueryResult"] = ["NavigationPathQueryResult", "ElectronObject"],

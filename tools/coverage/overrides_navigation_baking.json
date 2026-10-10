@@ -1,0 +1,424 @@
+{
+  "mappings": [
+    {
+      "godot": "NavigationPolygon::enum:ParsedGeometryType",
+      "electron2d": "T:Electron2D.NavigationPolygon.ParsedGeometryType",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum:SamplePartitionType",
+      "electron2d": "T:Electron2D.NavigationPolygon.SamplePartitionType",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum:SourceGeometryMode",
+      "electron2d": "T:Electron2D.NavigationPolygon.SourceGeometryMode",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_BOTH",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.Both()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MAX",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.Max()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MESH_INSTANCES",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.MeshInstances()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_STATIC_COLLIDERS",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.ParsedGeometryType.StaticColliders()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_CONVEX_PARTITION",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.ConvexPartition()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_MAX",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.Max()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_TRIANGULATE",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SamplePartitionType.Triangulate()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.GroupsExplicit()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.GroupsWithChildren()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_MAX",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.Max()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+      "electron2d": "enumValue:Electron2D.NavigationPolygon.SourceGeometryMode.RootNodeChildren()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:add_outline(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.AddOutline(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:add_outline_at_index(PackedVector2Array:,int:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.AddOutlineAtIndex(System.ReadOnlySpan<Electron2D.Vector2>,System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:clear_outlines()",
+      "electron2d": "method:Electron2D.NavigationPolygon.ClearOutlines()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:get_outline(int:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.GetOutline(System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:get_outline_count()",
+      "electron2d": "method:Electron2D.NavigationPolygon.GetOutlineCount()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:get_parsed_collision_mask_value(int:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.GetParsedCollisionMaskValue(System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:remove_outline(int:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.RemoveOutline(System.Int32)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:set_outline(int:,PackedVector2Array:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.SetOutline(System.Int32,System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::method:set_parsed_collision_mask_value(int:,bool:)",
+      "electron2d": "method:Electron2D.NavigationPolygon.SetParsedCollisionMaskValue(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:agent_radius",
+      "electron2d": "property:Electron2D.NavigationPolygon.AgentRadius()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:baking_rect",
+      "electron2d": "property:Electron2D.NavigationPolygon.BakingRect()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:baking_rect_offset",
+      "electron2d": "property:Electron2D.NavigationPolygon.BakingRectOffset()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:border_size",
+      "electron2d": "property:Electron2D.NavigationPolygon.BorderSize()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:cell_size",
+      "electron2d": "property:Electron2D.NavigationPolygon.CellSize()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:parsed_collision_mask",
+      "electron2d": "property:Electron2D.NavigationPolygon.ParsedCollisionMask()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:parsed_geometry_type",
+      "electron2d": "property:Electron2D.NavigationPolygon.ParsedGeometry()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:sample_partition_type",
+      "electron2d": "property:Electron2D.NavigationPolygon.SamplePartition()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:source_geometry_group_name",
+      "electron2d": "property:Electron2D.NavigationPolygon.SourceGeometryGroupName()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationPolygon::property:source_geometry_mode",
+      "electron2d": "property:Electron2D.NavigationPolygon.SourceGeometry()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:add_obstruction_outline(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.AddObstructionOutline(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:add_projected_obstruction(PackedVector2Array:,bool:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.AddProjectedObstruction(System.ReadOnlySpan<Electron2D.Vector2>,System.Boolean)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:add_traversable_outline(PackedVector2Array:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.AddTraversableOutline(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:append_obstruction_outlines(PackedVector2Array[]:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.AppendObstructionOutlines(Electron2D.Vector2[][])",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:append_traversable_outlines(PackedVector2Array[]:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.AppendTraversableOutlines(Electron2D.Vector2[][])",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:clear()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.Clear()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:clear_projected_obstructions()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.ClearProjectedObstructions()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:get_bounds()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.GetBounds()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:get_obstruction_outlines()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.GetObstructionOutlines()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:get_projected_obstructions()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.GetProjectedObstructions()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:get_traversable_outlines()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.GetTraversableOutlines()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:has_data()",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.HasData()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:merge(NavigationMeshSourceGeometryData2D:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.Merge(Electron2D.NavigationMeshSourceGeometryData)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:set_obstruction_outlines(PackedVector2Array[]:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.SetObstructionOutlines(Electron2D.Vector2[][])",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:set_projected_obstructions(Array:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.SetProjectedObstructions(System.ReadOnlySpan<Electron2D.NavigationProjectedObstruction>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationMeshSourceGeometryData2D::method:set_traversable_outlines(PackedVector2Array[]:)",
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.SetTraversableOutlines(Electron2D.Vector2[][])",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationRegion2D::method:bake_navigation_polygon(bool:)",
+      "electron2d": "method:Electron2D.NavigationRegion.BakeNavigationPolygon(System.Boolean)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationRegion2D::method:is_baking()",
+      "electron2d": "method:Electron2D.NavigationRegion.IsBaking()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationRegion2D::signal:bake_finished()",
+      "electron2d": "event:Electron2D.NavigationRegion.BakeFinished()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:affect_navigation_mesh",
+      "electron2d": "property:Electron2D.NavigationObstacle.AffectNavigationMesh()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationObstacle2D::property:carve_navigation_mesh",
+      "electron2d": "property:Electron2D.NavigationObstacle.CarveNavigationMesh()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:bake_from_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.BakeFromSourceGeometryData(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,System.Action)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:bake_from_source_geometry_data_async(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.BakeFromSourceGeometryDataAsync(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,System.Action,Electron2D.SceneTree)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:is_baking_navigation_polygon(NavigationPolygon:)",
+      "electron2d": "method:Electron2D.NavigationServer.IsBakingNavigationPolygon(Electron2D.NavigationPolygon)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:parse_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Node:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.ParseSourceGeometryData(Electron2D.NavigationPolygon,Electron2D.NavigationMeshSourceGeometryData,Electron2D.Node,System.Action)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:source_geometry_parser_create()",
+      "electron2d": "method:Electron2D.NavigationServer.SourceGeometryParserCreate()",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": "NavigationServer2D::method:source_geometry_parser_set_callback(RID:,Callable:)",
+      "electron2d": "method:Electron2D.NavigationServer.SourceGeometryParserSetCallback(Electron2D.RID,System.Action<Electron2D.NavigationPolygon, Electron2D.NavigationMeshSourceGeometryData, Electron2D.Node>)",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    }
+  ],
+  "statusGroups": [
+    {
+      "godot": [
+        "class:NavigationPolygon",
+        "NavigationPolygon::enum:ParsedGeometryType",
+        "NavigationPolygon::enum:SamplePartitionType",
+        "NavigationPolygon::enum:SourceGeometryMode",
+        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_BOTH",
+        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MAX",
+        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MESH_INSTANCES",
+        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_STATIC_COLLIDERS",
+        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_CONVEX_PARTITION",
+        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_MAX",
+        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_TRIANGULATE",
+        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_EXPLICIT",
+        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
+        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_MAX",
+        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
+        "NavigationPolygon::method:add_outline(PackedVector2Array:)",
+        "NavigationPolygon::method:add_outline_at_index(PackedVector2Array:,int:)",
+        "NavigationPolygon::method:add_polygon(PackedInt32Array:)",
+        "NavigationPolygon::method:clear()",
+        "NavigationPolygon::method:clear_outlines()",
+        "NavigationPolygon::method:clear_polygons()",
+        "NavigationPolygon::method:get_outline(int:)",
+        "NavigationPolygon::method:get_outline_count()",
+        "NavigationPolygon::method:get_parsed_collision_mask_value(int:)",
+        "NavigationPolygon::method:get_polygon(int:)",
+        "NavigationPolygon::method:get_polygon_count()",
+        "NavigationPolygon::method:get_vertices()",
+        "NavigationPolygon::method:remove_outline(int:)",
+        "NavigationPolygon::method:set_outline(int:,PackedVector2Array:)",
+        "NavigationPolygon::method:set_parsed_collision_mask_value(int:,bool:)",
+        "NavigationPolygon::method:set_vertices(PackedVector2Array:)",
+        "NavigationPolygon::property:agent_radius",
+        "NavigationPolygon::property:baking_rect",
+        "NavigationPolygon::property:baking_rect_offset",
+        "NavigationPolygon::property:border_size",
+        "NavigationPolygon::property:cell_size",
+        "NavigationPolygon::property:parsed_collision_mask",
+        "NavigationPolygon::property:parsed_geometry_type",
+        "NavigationPolygon::property:sample_partition_type",
+        "NavigationPolygon::property:source_geometry_group_name",
+        "NavigationPolygon::property:source_geometry_mode",
+        "class:NavigationMeshSourceGeometryData2D",
+        "NavigationMeshSourceGeometryData2D::method:add_obstruction_outline(PackedVector2Array:)",
+        "NavigationMeshSourceGeometryData2D::method:add_projected_obstruction(PackedVector2Array:,bool:)",
+        "NavigationMeshSourceGeometryData2D::method:add_traversable_outline(PackedVector2Array:)",
+        "NavigationMeshSourceGeometryData2D::method:append_obstruction_outlines(PackedVector2Array[]:)",
+        "NavigationMeshSourceGeometryData2D::method:append_traversable_outlines(PackedVector2Array[]:)",
+        "NavigationMeshSourceGeometryData2D::method:clear()",
+        "NavigationMeshSourceGeometryData2D::method:clear_projected_obstructions()",
+        "NavigationMeshSourceGeometryData2D::method:get_bounds()",
+        "NavigationMeshSourceGeometryData2D::method:get_obstruction_outlines()",
+        "NavigationMeshSourceGeometryData2D::method:get_projected_obstructions()",
+        "NavigationMeshSourceGeometryData2D::method:get_traversable_outlines()",
+        "NavigationMeshSourceGeometryData2D::method:has_data()",
+        "NavigationMeshSourceGeometryData2D::method:merge(NavigationMeshSourceGeometryData2D:)",
+        "NavigationMeshSourceGeometryData2D::method:set_obstruction_outlines(PackedVector2Array[]:)",
+        "NavigationMeshSourceGeometryData2D::method:set_projected_obstructions(Array:)",
+        "NavigationMeshSourceGeometryData2D::method:set_traversable_outlines(PackedVector2Array[]:)",
+        "class:NavigationRegion2D",
+        "NavigationRegion2D::method:bake_navigation_polygon(bool:)",
+        "NavigationRegion2D::method:is_baking()",
+        "NavigationRegion2D::signal:bake_finished()",
+        "class:NavigationObstacle2D",
+        "NavigationObstacle2D::property:affect_navigation_mesh",
+        "NavigationObstacle2D::property:carve_navigation_mesh",
+        "NavigationServer2D::method:bake_from_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
+        "NavigationServer2D::method:bake_from_source_geometry_data_async(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
+        "NavigationServer2D::method:is_baking_navigation_polygon(NavigationPolygon:)",
+        "NavigationServer2D::method:parse_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Node:,Callable:)",
+        "NavigationServer2D::method:source_geometry_parser_create()",
+        "NavigationServer2D::method:source_geometry_parser_set_callback(RID:,Callable:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0013/0021/0090/0097/0104: complete planar source/bake pipeline: copied outlines and typed configuration, compiled portable schemas, NonZero union/difference, clearance and carve, fractional rectangle/border clipping, distinct convex/triangle partitions, root/group scene parsing with mesh/static/tile/obstacle consumers and typed parser RIDs, immutable worker input, owner completion/publication and task retirement. NavigationBakingTests exercises holes and actual routed maps, source families/transforms, masks/groups, state/failure/lifetime/callback boundaries, portable reconstruction and warmed zero-byte status. BakedRoutes authors in a separate process and GPU/compatibility render 30 frames with queued workers, then publish on owner and verify routed pixels at frame 40. Native/foreign/AOT/browser/human acceptance remain separate gates; output ordering is backend-specific under ADR 0097."
+    },
+    {
+      "godot": [
+        "NavigationPolygon::method:get_navigation_mesh()"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004/0097 strict planar product scope: pinned ed1daf0bf001b61586d9930840f2f1394092c079 NavigationPolygon.xml explicitly returns NavigationMesh for NavigationServer3D.region_set_navigation_mesh. This is a cross-3D server/resource bridge; applicable planar vertices/polygons and RegionSetNavigationPolygon execute. No implementation trigger or alias."
+    }
+  ],
+  "extras": [
+    {
+      "electron2d": "T:Electron2D.NavigationProjectedObstruction",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationMeshSourceGeometryData..ctor()",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.NavigationProjectedObstruction..ctor(System.ReadOnlySpan<Electron2D.Vector2>,System.Boolean)",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.CreateDuplicateInstance()",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationMeshSourceGeometryData.GetPropertyDescriptors()",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "method:Electron2D.NavigationProjectedObstruction.GetVertices()",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    },
+    {
+      "electron2d": "property:Electron2D.NavigationProjectedObstruction.Carve()",
+      "reason": "ADR 0097 typed projected dictionary/result and portable Resource lifecycle projection: immutable projected vertices plus Carve, ordinary constructor and opt-in Resource copy/property hooks; no independent capability."
+    }
+  ]
+}

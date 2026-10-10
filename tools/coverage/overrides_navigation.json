@@ -1816,8 +1816,6 @@
     {
       "state": "Partial",
       "godot": [
-        "class:NavigationPolygon",
-        "class:NavigationRegion2D",
         "class:NavigationServer2D"
       ],
       "reason": "ADR 0097 authored regions/maps/links, typed query controls, direct-parent agents and shared managed ORCA agent/obstacle avoidance execute. Remaining exact weighted search/tie/fallback equivalence, source parsing/baking, async work, debug drawing and global activation retain exact operation-specific producer dependencies."
@@ -1825,13 +1823,6 @@
     {
       "state": "Implemented",
       "godot": [
-        "NavigationPolygon::method:add_polygon(PackedInt32Array:)",
-        "NavigationPolygon::method:clear()",
-        "NavigationPolygon::method:clear_polygons()",
-        "NavigationPolygon::method:get_polygon(int:)",
-        "NavigationPolygon::method:get_polygon_count()",
-        "NavigationPolygon::method:get_vertices()",
-        "NavigationPolygon::method:set_vertices(PackedVector2Array:)",
         "NavigationRegion2D::method:get_bounds()",
         "NavigationRegion2D::method:get_navigation_layer_value(int:)",
         "NavigationRegion2D::method:get_navigation_map()",
@@ -1874,66 +1865,11 @@
       "reason": "Authored polygon/resource versions, staged map/region settings and copied identities execute through one retained kernel; NavigationTests verifies defaults, invalid/stale/borrowed RID guards, deferred publication, failed-build rollback, resource edits, World replacement and fresh PackedScene loading (ADRs 0052/0095/0097)."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "NavigationPolygon::enum:ParsedGeometryType",
-        "NavigationPolygon::enum:SamplePartitionType",
-        "NavigationPolygon::enum:SourceGeometryMode",
-        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_BOTH",
-        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MAX",
-        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_MESH_INSTANCES",
-        "NavigationPolygon::enum_value:ParsedGeometryType.PARSED_GEOMETRY_STATIC_COLLIDERS",
-        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_CONVEX_PARTITION",
-        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_MAX",
-        "NavigationPolygon::enum_value:SamplePartitionType.SAMPLE_PARTITION_TRIANGULATE",
-        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_EXPLICIT",
-        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_GROUPS_WITH_CHILDREN",
-        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_MAX",
-        "NavigationPolygon::enum_value:SourceGeometryMode.SOURCE_GEOMETRY_ROOT_NODE_CHILDREN",
-        "NavigationPolygon::method:add_outline(PackedVector2Array:)",
-        "NavigationPolygon::method:add_outline_at_index(PackedVector2Array:,int:)",
-        "NavigationPolygon::method:clear_outlines()",
-        "NavigationPolygon::method:get_outline(int:)",
-        "NavigationPolygon::method:get_outline_count()",
-        "NavigationPolygon::method:get_parsed_collision_mask_value(int:)",
-        "NavigationPolygon::method:remove_outline(int:)",
-        "NavigationPolygon::method:set_outline(int:,PackedVector2Array:)",
-        "NavigationPolygon::method:set_parsed_collision_mask_value(int:,bool:)",
-        "NavigationPolygon::property:agent_radius",
-        "NavigationPolygon::property:baking_rect",
-        "NavigationPolygon::property:baking_rect_offset",
-        "NavigationPolygon::property:border_size",
-        "NavigationPolygon::property:cell_size",
-        "NavigationPolygon::property:parsed_collision_mask",
-        "NavigationPolygon::property:parsed_geometry_type",
-        "NavigationPolygon::property:sample_partition_type",
-        "NavigationPolygon::property:source_geometry_group_name",
-        "NavigationPolygon::property:source_geometry_mode"
-      ],
-      "reason": "ADR 0097 trigger: source outline storage plus scene geometry parsing, convex partition/triangulation and clearance/obstruction bake output consumed by the authored-region kernel. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationPolygon::method:get_navigation_mesh()"
-      ],
-      "reason": "ADR 0097 trigger: typed planar navigation-mesh view/resource contract for authored polygon conversion. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "NavigationPolygon::method:make_polygons_from_outlines()"
       ],
       "reason": "ADR 0004 pinned ed1daf0bf001b61586d9930840f2f1394092c079 deprecated metadata: Use [method NavigationServer2D.parse_source_geometry_data] and [method NavigationServer2D.bake_from_source_geometry_data] instead. No implementation trigger or alias."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationRegion2D::method:bake_navigation_polygon(bool:)",
-        "NavigationRegion2D::method:is_baking()",
-        "NavigationRegion2D::signal:bake_finished()"
-      ],
-      "reason": "ADR 0097 trigger: scene source-geometry collection and real navigation polygon baking, lifecycle and completion notification. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Excluded",
@@ -1963,17 +1899,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "NavigationServer2D::method:bake_from_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
-        "NavigationServer2D::method:parse_source_geometry_data(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Node:,Callable:)",
-        "NavigationServer2D::method:source_geometry_parser_create()",
-        "NavigationServer2D::method:source_geometry_parser_set_callback(RID:,Callable:)"
-      ],
-      "reason": "ADR 0097 trigger: source geometry resources/parsers and real convex/clearance baking consumed by map iterations. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:bake_from_source_geometry_data_async(NavigationPolygon:,NavigationMeshSourceGeometryData2D:,Callable:)",
         "NavigationServer2D::method:map_get_use_async_iterations(RID:)",
         "NavigationServer2D::method:map_set_use_async_iterations(RID:,bool:)",
         "NavigationServer2D::method:region_get_use_async_iterations(RID:)",
@@ -1989,13 +1914,6 @@
         "NavigationServer2D::signal:navigation_debug_changed()"
       ],
       "reason": "ADR 0097 trigger: navigation debug drawing and its real property/signal integration. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "NavigationServer2D::method:is_baking_navigation_polygon(NavigationPolygon:)"
-      ],
-      "reason": "ADR 0097 trigger: operation-specific navigation kernel beyond authored map/region topology: is_baking_navigation_polygon. Authored map/region storage is already executable; compilation alone does not satisfy this operation."
     },
     {
       "state": "Excluded",
@@ -2294,21 +2212,6 @@
       "reason": "ADR 0097 path following plus executable shared ORCA agent avoidance, typed velocity/waypoint delivery, source descriptors and stable RID/map ownership. Own avoidance rows execute; five debug path settings retain the exact canvas/debug-default producer prerequisite. NavigationAgentTests/NavigationAvoidanceTests exercise both hardware consumers, headless and fresh-process state.",
       "godot": [
         "class:NavigationAgent2D"
-      ]
-    },
-    {
-      "state": "Partial",
-      "reason": "ADR 0097 Entity-based borrowed obstacle identity, transformed moving disc/static oriented contour, layers/enabled/velocity and map/pause/World lifecycle execute in the shared ORCA simulation, fresh scene archives and both hardware path consumers. AffectNavigationMesh/CarveNavigationMesh require the source-geometry baking collector and contour carving/postprocessing kernel; no inert bake fields are exposed.",
-      "godot": [
-        "class:NavigationObstacle2D"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "ADR 0097 exact trigger: source-geometry parser must collect this obstacle outline into baking exclusion/carve data, then navigation polygon offset/clearance and simplification must consume the affect/carve distinction. The obstacle avoidance disc/contour producer already executes; these bake switches remain absent until that consumer is implemented.",
-      "godot": [
-        "NavigationObstacle2D::property:affect_navigation_mesh",
-        "NavigationObstacle2D::property:carve_navigation_mesh"
       ]
     },
     {

@@ -16,6 +16,7 @@ public sealed partial class NavigationServer
     {
         lock (Shared._gate)
         {
+            if (Shared._parsers.Remove(rid)) return;
             if (Shared._maps.TryGetValue(rid, out var map)) { if (map.Owner is not null) throw new InvalidOperationException("World maps are resource-owned."); Shared.ReleaseWorldMap(rid); return; }
             if (Shared._links.ContainsKey(rid)) { var link = Shared.Link(rid); if (link.Scene is not null) throw new InvalidOperationException("Scene links are node-owned."); Shared.ReleaseSceneLink(rid); return; }
             if (Shared._agents.ContainsKey(rid)) { var agent = Shared.Agent(rid); if (agent.Scene is not null) throw new InvalidOperationException("Scene agents are node-owned."); Shared.ReleaseSceneAgent(rid); return; }

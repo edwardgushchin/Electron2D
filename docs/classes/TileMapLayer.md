@@ -720,3 +720,7 @@ Gets or sets whether generated bodies use kinematic instead of static motion.
 ## Verification
 
 TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed resources, fresh-process scenes and the real window workflow. [Recorded measurements and remaining gates](../components/tiles.md#verification) keep native, rendering, throughput and platform claims separate. Owning decision: [ADR 0101](../decisions/tiles.md#adr-0101).
+
+## Navigation baking integration
+
+Navigation source parsing consumes effective/runtime collision polygons with the same cell transpose/reflection and map-local positions as physics. Missing tile navigation-layer producers retain their separate tile dependencies. See [navigation baking](../components/navigation-baking.md).

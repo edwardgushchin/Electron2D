@@ -98,3 +98,7 @@ does not establish fresh-process editor authoring acceptance.
 TileSet/TileSetAtlasSource factories and source-owned TileData descriptors now preserve source identities, atlas regions, alternatives and physical layers. TileMapLayer stores authored cells and selected resources; body RIDs are rebuilt after tree entry. Vector2i arrays use a built-in value codec. TileMapLayerTests verifies portable resource graphs and fresh-process executable scenes; see [tile ownership and limits](tiles.md).
 
 [Threaded resource loading](threaded-resource-loading.md) executes the WorkerThreadPool prerequisite under ADR 0013/0104. Preparation does not mutate registered cache objects; owner publication preserves cache modes and graph leases, and private remapping handles stored/PackedScene/shader references. AsyncGallery verifies separately authored scenes with real background dependencies and native rendered output.
+
+## Source geometry producer
+
+[Navigation baking](navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.

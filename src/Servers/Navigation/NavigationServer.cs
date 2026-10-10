@@ -38,6 +38,7 @@ public sealed partial class NavigationServer : ElectronObject
     }
     internal void SynchronizeCore()
     {
+        PumpBakes();
         List<RID>? changed = null; Action<RID>? handlers;
         lock (_gate)
         {
@@ -66,7 +67,7 @@ public sealed partial class NavigationServer : ElectronObject
                 if (!dirty) foreach (var map in _maps.Values) if (map.Dirty) { dirty = true; break; }
                 if (!dirty) { Span<int> counts = stackalloc int[10]; ReadProcessInfo(counts, null); counts.CopyTo(_processInfo); _synchronizing = false; return; }
                 var regionIterations = new Dictionary<RID, NavigationMapIteration>();
-                foreach (var region in _regions.Values) if (region.Dirty) regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region));
+                foreach (var region in _regions.Values) if (region.Dirty) { if (region.Geometry.CellSize is { } cell && _maps.TryGetValue(region.Map, out var map) && !Mathf.IsEqualApprox(cell, map.CellSize)) throw new InvalidOperationException("Generated navigation cell size must match its map."); regionIterations.Add(region.RID, NavigationMapIteration.BuildRegion(region)); }
                 List<(NavigationMapState Map, NavigationMapIteration Iteration)>? pending = null;
                 foreach (var map in _maps.Values)
                     if (map.Dirty) (pending ??= []).Add((map, NavigationMapIteration.Build(map, _regions.Values, regionIterations, _links.Values)));
