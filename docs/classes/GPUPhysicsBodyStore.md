@@ -19,6 +19,7 @@ Last updated: 2026-10-10
 [spatial work](../../src/Servers/Physics/GPUPhysicsBodyStore.Spatial.cs),
 [contacts](../../src/Servers/Physics/GPUPhysicsBodyStore.Contacts.cs),
 [solver](../../src/Servers/Physics/GPUPhysicsBodyStore.Solver.cs),
+[contact colors](../../src/Servers/Physics/GPUPhysicsBodyStore.Colors.cs),
 [joints](../../src/Servers/Physics/GPUPhysicsBodyStore.Joints.cs),
 [collision exceptions](../../src/Servers/Physics/GPUPhysicsBodyStore.Exceptions.cs),
 [one-way episodes](../../src/Servers/Physics/GPUPhysicsBodyStore.OneWay.cs),
@@ -284,6 +285,13 @@ records. It changes no stream semantics or public API. The common world now
 [omits pre-step publication without a consumer](../components/physics-backends.md#conditional-body-publication).
 
 ## Integration submission batching
+
+The [contact scheduler](../components/gpu-contact-colors.md) colors and compacts
+prepared constraints on device, verifies that a color has no shared dynamic body,
+and dispatches independent ranges in sequence. Coupled joint rows follow each sweep.
+Color overflow retains all constraints on the GPU Jacobi path. ContactColorCount,
+ContactColorRounds and ContactColorFallbacks are internal diagnostics. Derived
+schedule scratch is rebuilt after checkpoint restore and has no public identity.
 
 SimulateFields records velocity integration before spatial kernels, or before the
 solver for shape-free worlds. Discrete position integration and connected sleep

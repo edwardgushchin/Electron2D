@@ -15,6 +15,7 @@ void fail(){atomicOr(status.x,1u);}
 void main()
 {
     uint i=gl_GlobalInvocationID.x;if(i>=control.y)return;
+    if((history.w&2u)!=0u)i+=history.z;
     Constraint c=constraints[i];if(c.bodies.x==none)return;
     ContactImpulse p=impulses[i];
     ResidentBody a=bodies[c.bodies.x],b=c.bodies.y==none?worldBody():bodies[c.bodies.y];
@@ -32,7 +33,7 @@ void main()
     float limit=joint?0:c.tangent.x*pn;
     float pt=clamp(p.physical.y-c.parameters.y*vt,-limit,limit);
     uint degree=max(inverseMass(a).x>0?heads[c.bodies.x].y:0u,inverseMass(b).x>0?heads[c.bodies.y].y:0u);
-    // ponytail: degree-damped Jacobi avoids graph coloring; convergence in tall stacks is the measured ceiling.
+    // shortcut: degree-damped Jacobi handles joints and color overflow; improve its convergence for high-degree stacks.
     float weight=1.0/float(max(degree,1u));
     vec2 delta=weight*(vec2(pn,pt)-p.physical.xy);
     vec3 ca=corrections[c.bodies.x].xyz,cb=c.bodies.y==none?vec3(0):corrections[c.bodies.y].xyz;

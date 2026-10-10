@@ -79,8 +79,9 @@ rejection, lifecycle convergence, sleep observations and exact confirmed-event i
 Final pose/velocity tolerance is 0.002 scene units for the applied authoritative
 state, not a claim of equal CPU/GPU trajectories between corrections.
 
-The example also injects a client position/impulse error and checks subsequent
-correction. Two ordinary players, a pin pair, an Area and a transient/recreated crate
+The example also injects a client position/impulse error at a validated incoming
+correction boundary and checks restore/replay. This timing prevents intervening
+physical contacts from erasing the intended test offset before a packet arrives. Two ordinary players, a pin pair, an Area and a transient/recreated crate
 exercise contacts, joints, topology and authority changes. At tick 300 the server
 asserts that the recreated crate is sleeping, then wakes it with an impulse; clients
 must observe both sleep and wake transitions. The latter

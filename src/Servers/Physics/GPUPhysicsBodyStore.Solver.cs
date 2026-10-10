@@ -28,7 +28,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     // Diagnostic control for measuring the same kernels with separate velocity/position fences.
     internal bool SeparateSimulationSubmissions;
     private Settings? _batchedVelocity;
-    internal readonly double[] SolverPassMS = new double[7];
+    internal readonly double[] SolverPassMS = new double[8];
 
     /// <summary>Advances resident force/contact/pose stages and connected sleep with shared submission boundaries, skipping device-confirmed unchanged inactive worlds.</summary>
     internal void Simulate(float delta, Vector2 gravity, int substeps = 4, int? iterations = null,
@@ -196,11 +196,36 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             if (JointCount > 0) JointPass(command, settings, 1);
             if (_limitedJointCount > 0) JointPass(command, settings, 3);
             if (_previousPointCount > 0 || JointCount > 0) { SolverPass(ref command, settings, 3, _highWater); }
+            ContactColorCount = 0;
+            var colorStart = ProfileSolverPasses ? Stopwatch.GetTimestamp() : 0;
+            var colors = ContactPointCount > 0 ? BuildContactColors(ref command) : 0;
+            if (ProfileSolverPasses) SolverPassMS[7] += Stopwatch.GetElapsedTime(colorStart).TotalMilliseconds;
             for (var iteration = 0; settings.Points > 0 && iteration < iterations; iteration++)
             {
-                SolverPass(ref command, settings, 2, (int)settings.Points);
-                if (_limitedJointCount > 0) JointPass(command, settings, 3);
-                SolverPass(ref command, settings, 3, _highWater);
+                if (colors > 0)
+                {
+                    var updateStart = ProfileSolverPasses ? Stopwatch.GetTimestamp() : 0;
+                    for (var color = 0; color < colors; color++) ColoredSolve(command, settings, color);
+                    if (ProfileSolverPasses)
+                    {
+                        Finish(ref command); SolverPassMS[2] += Stopwatch.GetElapsedTime(updateStart).TotalMilliseconds;
+                        command = SDL.AcquireGPUCommandBuffer(Device);
+                        if (command == 0) throw GPUPhysicsDevice.Failure("acquire diagnostic colored solve");
+                    }
+                    // Joint rows retain their coupled impulse caps and gather after the contact sweep.
+                    if (JointCount > 0)
+                    {
+                        SolverPass(ref command, settings, 2, checked(JointRows * _jointHighWater), jointOnly: true);
+                        if (_limitedJointCount > 0) JointPass(command, settings, 3);
+                        SolverPass(ref command, settings, 3, _highWater);
+                    }
+                }
+                else
+                {
+                    SolverPass(ref command, settings, 2, (int)settings.Points);
+                    if (_limitedJointCount > 0) JointPass(command, settings, 3);
+                    SolverPass(ref command, settings, 3, _highWater);
+                }
             }
             if (JointCount > 0) JointPass(command, settings, 2);
             SolverPass(ref command, settings, 4, ContactPointCount);
@@ -255,7 +280,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         UniformBytes += sizeof(Settings); _batchedVelocity = null;
     }
 
-    private void SolverPass(ref nint command, SolverUniforms settings, uint stage, int count)
+    private void SolverPass(ref nint command, SolverUniforms settings, uint stage, int count, bool jointOnly = false)
     {
         if (count == 0) return;
         var start = ProfileSolverPasses ? Stopwatch.GetTimestamp() : 0;
@@ -290,6 +315,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         SDL.BindGPUComputePipeline(compute, pipeline.DangerousGetHandle());
         SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, inputCount);
         settings.Stage = stage; settings.Count = (uint)count;
+        if (jointOnly) settings.Flags |= 2;
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SolverUniforms));
         SDL.DispatchGPUCompute(compute, ((uint)count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute);
         UniformBytes += sizeof(SolverUniforms);

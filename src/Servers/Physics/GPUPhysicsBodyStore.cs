@@ -6,7 +6,7 @@ using Float4 = System.Numerics.Vector4;
 
 namespace Electron2D;
 
-/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, directed collision filtering, contact/joint response, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
+/// <summary>Authoritative device body/geometry storage with sparse edits, integration, broad/narrow phase, directed collision filtering, device-colored contact response and joint solving, connected sleep/wake, continuous collision and explicit reads; no CPU solver world.</summary>
 internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
 {
     [StructLayout(LayoutKind.Sequential)]
@@ -481,6 +481,6 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (_checkpointCopyActive) throw new InvalidOperationException("A checkpoint copy cannot be disposed while executing.");
         while (_checkpoints.Count != 0) _checkpoints[^1].Dispose();
         _portableOneWays = []; _portableOneWayTable = [];
-        _disposed = true; DisposeDebugContacts(); DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
+        _disposed = true; DisposeDebugContacts(); DisposeChanges(); DisposeQueries(); DisposeReports(); DisposeFields(); DisposeJoints(); _ccdPipeline?.Dispose(); DisposeSleep(); DisposeColors(); DisposeSolver(); DisposeContacts(); DisposeSpatial(); DisposeBuffers(); _pipeline.Dispose(); _context.Dispose();
     }
 }

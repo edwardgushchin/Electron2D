@@ -24,12 +24,13 @@ not establish those requirements.
 [Live integration policies](gpu-resident-parameters.md) now apply signed damping
 once at the outer tick boundary, then distribute gravity/constant force integration
 across its scheduled substeps. Omission skips default fields/forces while retaining
-contact/joint response. Each substep integrates physical velocities, computes current contact points, solves
-them and advances poses. Contact threads update normal/Coulomb-friction impulses
-independently. A device-built incident list lets one invocation per dynamic body
-gather signed impulse deltas and apply its inverse mass/inertia without
-floating-point atomics or CPU graph coloring.
-Degree-damped projected Jacobi bounds simultaneous updates. Related numerical
+contact/joint response. Each substep integrates physical velocities, computes current
+contact points, solves them and advances poses. [Device contact colors](gpu-contact-colors.md)
+schedule independent normal/Coulomb-friction rows and apply each color's updates
+before the next color without floating-point atomics or a host contact graph.
+A device-built incident list gathers joint deltas after the contact sweep and
+preserves coupled impulse caps. Degree-damped projected Jacobi remains the
+complete GPU fallback for schedules beyond the bounded color budget. Related numerical
 background on parallel scheduling/convergence is available in
 [the authors' discussion of parallel rigid-body solvers](https://www.richardtonge.com/).
 Current convergence and performance claims come from the checks below.
@@ -99,6 +100,11 @@ masses nor world anchors. Coefficients and hot impulse data now occupy 96 rather
 than 112 bytes per point (14.3% less logical storage; retained capacity rounds up).
 The device-linked incident lists remain complete, including high-degree bodies.
 
+The [colored contact path](gpu-contact-colors.md) adds resident schedule and compact
+color ranges to improve dense-stack convergence. The update/gather measurements
+below describe the earlier Jacobi path; current large-world acceptance also checks
+geometric penetration so throughput cannot hide collapsing particles.
+
 Impulse updates and body gathers have separate small shaders. Update binds four
 read-only inputs and two outputs; gather binds three read-only inputs and three
 outputs. Coefficients are read-only throughout both. History, shape and geometry
@@ -116,7 +122,8 @@ and contacts consume velocities. If there are no shapes, it shares the solver
 submission instead. Solver, report capture, position integration and connected sleep
 also share one submission when no continuous-impact interval is needed. This keeps
 all four substeps and all iterations while reducing the ordinary contact pipeline
-from twenty to twelve submissions. Pending edits, Area reduction, CCD, queries and
+from twenty to twelve submissions before color-schedule checks. Current colored
+solving adds one completion check per substep in the ordinary case. Pending edits, Area reduction, CCD, queries and
 public-world publication contribute their own measured work.
 
 Both body and solver/spatial status records are validated after the shared fence.

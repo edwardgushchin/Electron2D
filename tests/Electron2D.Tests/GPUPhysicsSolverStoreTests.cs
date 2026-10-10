@@ -16,6 +16,7 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyFailure();
         VerifyBatchedStep();
         VerifyBatchedCapacityRetry();
+        VerifyColoredContacts();
         VerifyStack();
         VerifyResidency(64);
         VerifyResidency(256);
@@ -268,6 +269,33 @@ internal static class GPUPhysicsSolverStoreTests
         Console.WriteLine("Resident batched integration survives pair/contact capacity recovery without repeating forces.");
     }
 
+    private static void VerifyColoredContacts()
+    {
+        using var store = new GPUPhysicsBodyStore { CaptureContactReports = true }; using var circle = new CircleShape { Radius = 1 };
+        var bodies = new Body[300]; var states = new GPUPhysicsBodyStore.Snapshot[bodies.Length];
+        var limits = new int[bodies.Length]; Array.Fill(limits, 2); var counts = new int[bodies.Length]; var reports = new GPUPhysicsBodyStore.ContactReport[bodies.Length * 2];
+        for (var i = 0; i < bodies.Length; i++)
+        {
+            bodies[i] = Add(store, new(i * 2, 0), i == 0 ? new(12, 0) : Vector2.Zero);
+            store.AddShape(bodies[i], circle, friction: 0);
+        }
+        var pinA = Add(store, new(1000, 1000)); var pinB = Add(store, new(1000, 1000));
+        store.AddJoint(new(PhysicsServer.JointType.Pin, pinA, pinB, Transform.Identity, Transform.Identity) { MaxForce = 1, MaxBias = 100 });
+        store.SolveConstraints(1f / 60, iterations: 1, margin: 0); store.Read(bodies, states); store.ReadContactReports(bodies, limits, counts, reports);
+        Check(store.ContactColorCount > 1 && store.ContactColorFallbacks == 0, "A coupled contact chain retains its device schedule in a world with capped joints");
+        var momentum = Vector2.Zero; var energy = 0f;
+        for (var i = 0; i < bodies.Length; i++)
+        {
+            var velocity = new Vector2(states[i].Velocity.X, states[i].Velocity.Y); momentum += velocity; energy += .5f * velocity.LengthSquared();
+            var impulse = Vector2.Zero; for (var j = 0; j < counts[i]; j++) impulse += reports[i * 2 + j].Impulse;
+            Near(impulse.X, velocity.X - (i == 0 ? 12 : 0), .002f, "Colored contact reports preserve each body's momentum change");
+            Near(states[i].Position.X, i * 2, .001f, "Standalone colored velocity solving does not advance poses");
+        }
+        Near(momentum.X, 12, .002f, "Every contact color preserves total linear momentum");
+        Check(energy <= 72.002f, "Inelastic colored constraints cannot add kinetic energy");
+        Console.WriteLine($"Resident colored contacts: {store.ContactColorCount} colors/{store.ContactColorRounds} proposal rounds, momentum, energy and frame impulses passed.");
+    }
+
     private static void VerifyStack()
     {
         using var store = new GPUPhysicsBodyStore();
@@ -307,6 +335,7 @@ internal static class GPUPhysicsSolverStoreTests
             store.SolveConstraints(1f / 60, iterations: 1, margin: 0);
             store.Read([body], result);
             Check(store.ContactPointCount == i + 1, "Every support contributes one point, including after device growth.");
+            Check(store.ContactColorCount == 0 && store.ContactColorFallbacks > 0, "High-degree bodies retain complete GPU Jacobi response when the color budget is exhausted");
             Near(result[0].Velocity.Y, 0, 0.002f, "All incident impulses contribute to the locked plank in one damped iteration");
         }
         for (var i = 0; i < count; i++) store.SetShapeFilter(supports[i], 1, uint.MaxValue, true);
@@ -348,7 +377,7 @@ internal static class GPUPhysicsSolverStoreTests
         Check(allocation == 0 && store.ShapeUploadBytes == shapes && store.GeometryUploadBytes == geometry, "Warmed resident response allocates no managed bytes or authored-state traffic.");
         Array.Sort(times);
         if (store.ProfileSolverPasses)
-            Console.WriteLine($"Diagnostic fenced passes (submission overhead included), ms/tick: clear={store.SolverPassMS[0] / samples:F4}, prepare={store.SolverPassMS[1] / samples:F4}, update={store.SolverPassMS[2] / samples:F4}, gather={store.SolverPassMS[3] / samples:F4}, save={store.SolverPassMS[4] / samples:F4}, hash clear={store.SolverPassMS[5] / samples:F4}, hash insert={store.SolverPassMS[6] / samples:F4}.");
+            Console.WriteLine($"Diagnostic fenced passes (submission overhead included), ms/tick: clear={store.SolverPassMS[0] / samples:F4}, prepare={store.SolverPassMS[1] / samples:F4}, update={store.SolverPassMS[2] / samples:F4}, gather={store.SolverPassMS[3] / samples:F4}, save={store.SolverPassMS[4] / samples:F4}, hash clear={store.SolverPassMS[5] / samples:F4}, hash insert={store.SolverPassMS[6] / samples:F4}, coloring={store.SolverPassMS[7] / samples:F4}.");
         Console.WriteLine($"Resident contact response: {count} circles, gravity 980, 4 substeps, 16 iterations, {warmup} warmup/{samples} samples; p50={times[samples / 2]:F4} ms, p95={times[(int)(samples * 0.95)]:F4} ms, p99={times[(int)(samples * 0.99)]:F4} ms, wait={(store.WaitMS - wait) / samples:F4} ms, solver={(store.SolverMS - solver) / samples:F4} ms, solver wait={(store.SolverWaitMS - solverWait) / samples:F4} ms; {allocation} B/tick, upload={(store.UploadBytes - upload) / samples}, readback={(store.ReadbackBytes - download) / samples}, uniforms={(store.UniformBytes - uniforms) / samples} B/tick; {store.Driver}, {store.DeviceName}, .NET {Environment.Version}.");
         var snapshots = new GPUPhysicsBodyStore.Snapshot[count]; store.Read(bodies, snapshots);
         var energy = snapshots.Sum(p => 0.5 * ((double)p.Velocity.X * p.Velocity.X + (double)p.Velocity.Y * p.Velocity.Y) + 0.25 * p.Velocity.Z * p.Velocity.Z - 980.0 * p.Position.Y);

@@ -79,6 +79,9 @@ internal sealed partial class NetworkSession
         if (oldTick < tick || oldTick - tick >= History) oldTick = tick;
         oldTick = Math.Max(oldTick, Math.Min((ulong)_ticks, tick + Lead));
         if (final) oldTick = tick;
+        // Inject at a validated correction boundary so intervening collisions cannot erase the test displacement.
+        if (!_injectedDrift && _started && tick >= 190 && Simulation.Find(10)?.Body is RigidBody body)
+        { body.Position += new Vector2(35, -15); body.ApplyCentralImpulse(new(40, -20)); _injectedDrift = true; }
         var started = Stopwatch.GetTimestamp();
         for (var i = 0; i < Simulation.Actors.Length; i++)
         { _oldPredicted[i] = Simulation.Actors[i]?.Position ?? default; _oldSpecs[i] = Simulation.Actors[i]?.Spec ?? default; }
@@ -127,8 +130,6 @@ internal sealed partial class NetworkSession
     {
         if (Simulation.Tick >= (ulong)_ticks || Simulation.Tick - _confirmedTick >= History - 1) return;
         PreparePredictedInputs(Simulation.Tick + 1, replay: false); MeasureStep(SimulationPhase.Prediction);
-        if (!_injectedDrift && Simulation.Tick >= 190 && Simulation.Find(10)?.Body is RigidBody body)
-        { body.Position += new Vector2(35, -15); body.ApplyCentralImpulse(new(40, -20)); _injectedDrift = true; }
     }
     private void PreparePredictedInputs(ulong tick, bool replay)
     {

@@ -118,9 +118,9 @@ disabled participation, CharacterBody and physical-bone activation/reentry.
 ## Verification and limits
 
 GPU physics is being developed under [ADR 0054](../decisions/physics.md#adr-0054)
-alongside the retained CPU compatibility backend. The internal compute host
-currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists, compact publication and complete host validation using independent packed CPU flags and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, collision-batch constraint coloring, fused body-pose/sleep-eligibility/fast-body finalization, and contact/revolute/wheel preparation and solving; the public world still
-selects CPU. [The implementation status](../components/gpu-physics.md) separates
+alongside the retained CPU backend. The internal compute host
+currently executes resident broad-phase tree construction/refit/traversal, built-in pair filtering with resident shape/joint metadata and contact lookup, contact ID allocation/initialization, adjacency construction/disjoint-contact removal and resident contact-driven island merging/unlinking with parallel ordered contact lists, compact publication and complete host validation using independent packed CPU flags and disconnected-island splitting, integration, resident circle/capsule/segment/polygon geometry and manifolds, material/contact-state updates, collision-batch constraint coloring, fused body-pose/sleep-eligibility/fast-body finalization, and contact/revolute/wheel preparation and solving; this historical stage host remains CPU-owned. Public GPU worlds use the independent
+resident store described below. [The implementation status](../components/gpu-physics.md) separates
 these executing stages from the required full GPU world and startup fallback.
 The independent GPUPhysicsBodyStore now has a [contact response path](../components/gpu-contact-solver.md)
 with persistent history, compact contact Jacobians, separate iterated impulses
@@ -407,3 +407,9 @@ whole-engine performance acceptance.
 shares force/spatial and discrete solver/position/sleep submissions while preserving
 finite-status validation, all substeps, contact reports and CCD interval decisions.
 The diagnostic separated path measures the same kernels and workload.
+
+[Resident contact colors](../components/gpu-contact-colors.md) improve dense-pile
+convergence through a device schedule and compact color ranges. Public CPU/GPU
+headless and native-window workloads now measure penetration and energy alongside
+full-step latency, allocations and actual frame/tick rates. The corrected massive
+world performance target remains open.

@@ -1,6 +1,6 @@
 # API coverage register
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 Body runtime mass/forces and direct views now use engine-valued attachment operations.
 Concrete solver state and contact traversal belong to PhysicsColliderBackend;
@@ -26,6 +26,12 @@ packs predicted results and exact overflow tails across point/ray/shape/motion
 queries. This changes transfer cost, not public signatures or coverage states.
 
 [Physics audit](../components/physics-contract-audit.md) and the [generated physics declaration ledger](physics-status.md) track the CPU and independent GPU objective against the current pin, including inherited API and cross-domain consumers. Existing Implemented rows are not independent GPU acceptance.
+
+[Device contact colors](../components/gpu-contact-colors.md) fix excessive dense-pile
+penetration without reducing body count, substeps or configured solver iterations.
+Public CPU/GPU native-window checks measure geometry, energy, latency and warmed
+managed allocations. No declaration state changes; high-degree fallback convergence,
+massive-world performance and the other linked contract gaps remain open.
 
 The following paragraph records the historical CPU-hosted stage experiment. The independent public backend is described in [backend selection](../components/physics-backends.md).
 
