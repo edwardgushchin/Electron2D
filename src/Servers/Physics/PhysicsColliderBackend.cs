@@ -76,7 +76,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal bool HasMotionMode(PhysicsServer.BodyMode mode) => GPU is { } gpu ? BodyType(gpu.GetMode(GPUHandle)) == BodyType(mode) : b2Body_GetType(BodyID) == BodyType(mode);
     internal void SetMotionMode(PhysicsServer.BodyMode mode)
     {
-        if (GPU is { } gpu) { gpu.SetMode(GPUHandle, mode); _gpuSurfaceLinear = default; _gpuSurfaceAngular = 0; Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu) { gpu.SetMode(GPUHandle, mode); _gpuSurfaceLinear = default; _gpuSurfaceAngular = 0; _gpuParametersPrepared = false; Space!.InvalidateGPUStates(); }
         else b2Body_SetType(BodyID, BodyType(mode));
     }
 

@@ -42,6 +42,7 @@ public partial class RigidBody : PhysicsBody
 
     private float _mass = 1f;
     private float _gravityScale = 1f;
+    internal bool GPUParametersDirty = true;
     private Vector2 _linearVelocity;
     private float _angularVelocity;
     private float _linearDamp;
@@ -82,7 +83,7 @@ public partial class RigidBody : PhysicsBody
     public float GravityScale
     {
         get { ThrowIfDisposed(); return _gravityScale; }
-        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Service.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; if (HasBackend) Backend.SetGravityScale(_customIntegrator ? 0 : value); }
+        set { EnsureMutable(); Finite(value); EnsurePhysicsParticipationChange(); if (Mathf.IsZeroApprox(_gravityScale)) PhysicsServer.Service.BodyRuntime(PhysicsRID).Wake(); _gravityScale = value; GPUParametersDirty = true; if (HasBackend) Backend.SetGravityScale(_customIntegrator ? 0 : value); }
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
@@ -117,7 +118,7 @@ public partial class RigidBody : PhysicsBody
     public float LinearDamp
     {
         get { ThrowIfDisposed(); return _linearDamp; }
-        set { EnsureMutable(); Finite(value); _linearDamp = value; }
+        set { EnsureMutable(); Finite(value); _linearDamp = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets finite signed angular damping per second.</summary>
@@ -126,7 +127,7 @@ public partial class RigidBody : PhysicsBody
     public float AngularDamp
     {
         get { ThrowIfDisposed(); return _angularDamp; }
-        set { EnsureMutable(); Finite(value); _angularDamp = value; }
+        set { EnsureMutable(); Finite(value); _angularDamp = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether linear damping combines with or replaces area and world damping.</summary>
@@ -135,7 +136,7 @@ public partial class RigidBody : PhysicsBody
     public DampMode LinearDampMode
     {
         get { ThrowIfDisposed(); return _linearDampMode; }
-        set { EnsureMutable(); ValidateDampMode(value); _linearDampMode = value; }
+        set { EnsureMutable(); ValidateDampMode(value); _linearDampMode = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether angular damping combines with or replaces area and world damping.</summary>
@@ -144,7 +145,7 @@ public partial class RigidBody : PhysicsBody
     public DampMode AngularDampMode
     {
         get { ThrowIfDisposed(); return _angularDampMode; }
-        set { EnsureMutable(); ValidateDampMode(value); _angularDampMode = value; }
+        set { EnsureMutable(); ValidateDampMode(value); _angularDampMode = value; GPUParametersDirty = true; }
     }
 
     /// <summary>Gets or sets whether gravity and forces are disabled under the selected freeze role.</summary>
@@ -160,7 +161,7 @@ public partial class RigidBody : PhysicsBody
             if (_freeze == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
-            _freeze = value;
+            _freeze = value; GPUParametersDirty = true;
             UpdatePhysicsParticipation();
         }
     }
@@ -170,7 +171,7 @@ public partial class RigidBody : PhysicsBody
     public bool LockRotation
     {
         get { ThrowIfDisposed(); return _lockRotation; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; if (HasBackend) Backend.SetRotationLocked(!_freeze && value); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; GPUParametersDirty = true; if (HasBackend) Backend.SetRotationLocked(!_freeze && value); }
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>

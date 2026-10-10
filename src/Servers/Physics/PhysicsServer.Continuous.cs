@@ -27,6 +27,6 @@ internal sealed partial class PhysicsBodyRuntime
         EnsureMutable();
         if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
         if (ContinuousMode == mode) return;
-        ContinuousMode = mode; Wake();
+        ContinuousMode = mode; GPUParametersDirty = true; Wake();
     }
 }

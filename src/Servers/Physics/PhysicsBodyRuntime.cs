@@ -1,5 +1,6 @@
 namespace Electron2D;
 
+/// <summary>Shares scene/server body state and tracks authored integration edits for the current attachment.</summary>
 internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<CollisionObject>? sceneOwner, PhysicsServerCollider? serverOwner)
 {
     internal RID RID { get; } = rid;
@@ -8,9 +9,13 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal Vector2? CustomCenter;
     private PhysicsMass.Geometry? _massGeometry;
     internal PhysicsMass.Properties MassProperties = new(1, 0, default);
-    internal Vector2 ConstantForce;
-    internal float ConstantTorque;
-    internal bool OmitForces;
+    internal bool GPUParametersDirty = true;
+    private Vector2 _constantForce;
+    private float _constantTorque;
+    private bool _omitForces;
+    internal Vector2 ConstantForce { get => _constantForce; set { GPUParametersDirty |= _constantForce != value; _constantForce = value; } }
+    internal float ConstantTorque { get => _constantTorque; set { GPUParametersDirty |= _constantTorque != value; _constantTorque = value; } }
+    internal bool OmitForces { get => _omitForces; set { GPUParametersDirty |= _omitForces != value; _omitForces = value; } }
     internal const int MaxContactLimit = 4095;
     internal int MaxContacts;
     internal Vector2 Gravity;

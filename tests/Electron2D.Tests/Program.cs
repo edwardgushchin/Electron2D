@@ -192,6 +192,7 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_SCENES") == "
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION_BENCHMARK") == "1") { PhysicsGPUPublicationPerformance.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_MASS") is { } massMode) { PhysicsMassPerformance.Run(massMode == "window"); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_PUBLICATION") == "1") { PhysicsGPUPublicationTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_HOST_PREPARATION") == "1") { PhysicsHostPreparationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_VELOCITY_EDITS_NATIVE") == "1") { PhysicsVelocityEditNativeTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_VELOCITY_EDITS") == "1") { PhysicsVelocityEditTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CONTACT_DEBUG") == "1") { PhysicsContactDebugTests.Run(); return; }
@@ -699,6 +700,7 @@ PhysicsDebugTests.Run(false);
 PhysicsContactDebugTests.Run(false);
 PhysicsVelocityEditTests.Run(false);
 PhysicsGPUPublicationTests.Run(false);
+PhysicsHostPreparationTests.Run(false);
 PhysicsQueryTests.Run();
 PhysicsCanvasTests.Run();
 PhysicsObjectBindingTests.Run();

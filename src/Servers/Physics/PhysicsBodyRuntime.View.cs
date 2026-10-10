@@ -34,7 +34,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal float ViewInverseMass => _viewBackend!.InverseMass;
     internal float ViewInverseInertia => _viewBackend!.InverseInertia;
     internal bool ViewSleeping => !_viewBackend!.IsAwake;
-    internal Transform ViewTransform { get { var pose = _viewBackend!.GetPose(); return new(pose.Rotation, Vector2.One, 0, pose.Position); } }
+    internal Transform ViewTransform => _viewBackend!.GetTransform();
     internal Vector2 GetViewPointVelocity(Vector2 offset) { Finite(offset); return _viewBackend!.GetPointVelocity(offset); }
     internal void SetViewConstantForce(Vector2 force)
     {

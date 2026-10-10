@@ -266,8 +266,7 @@ public partial class CharacterBody : PhysicsBody
 
     internal void CaptureSolverPose()
     {
-        var pose = Backend.GetPose();
-        _solverPose = new Transform(pose.Rotation, Vector2.One, 0, pose.Position);
+        _solverPose = Backend.GetTransform();
         _queryPoseApplied = false;
     }
 

@@ -28,6 +28,12 @@ checkpoints and portable snapshots are exercised with that layout. Its measured
 benefit and retained device capacity are recorded with the dense-world workload;
 this internal storage change closes no additional public declaration gap.
 
+[GPU host preparation](gpu-host-preparation.md) now synchronizes authored integration
+edits before shared pre-step publication and reads current GPU pose bases directly.
+The 32-body live-policy/callback regression reduces submissions from 107 to 11
+without changing delivered velocities. Public CPU/GPU live-edit, transform and
+CCD checks cover this internal optimization; no declaration state changes.
+
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the independent public backend now receives the same CCD policy. Full cross-backend shape-family acceptance remains open.
 
 [Resident body-motion queries](gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. Public GPU body-motion and CharacterBody now route to these kernels; full CharacterBody conformance remains open.

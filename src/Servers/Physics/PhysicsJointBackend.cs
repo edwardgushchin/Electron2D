@@ -21,10 +21,10 @@ internal sealed partial class PhysicsJointBackend
     {
         if (body?.Space?.GPUStore is not null)
         {
-            var sampled = body.GetPose(); var current = new Transform(sampled.Rotation, Vector2.One, 0, sampled.Position);
+            var current = body.GetTransform();
             var pointLocal = current.AffineInverse() * point;
             PhysicsJointRuntime.ValidateExtent(pointLocal.Length());
-            return new Transform(angle - sampled.Rotation, Vector2.One, 0, pointLocal);
+            return new Transform(angle - current.Rotation, Vector2.One, 0, pointLocal);
         }
         var attached = body?.Space is not null;
         var local = attached ? b2Body_GetLocalPoint(body!.BodyID, PhysicsShapeBackend.ToBackend(point)) :

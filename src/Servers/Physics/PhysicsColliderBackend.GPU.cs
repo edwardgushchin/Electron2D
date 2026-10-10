@@ -12,6 +12,7 @@ internal sealed partial class PhysicsColliderBackend
     private GPUPhysicsBodyStore? GPU => Space?.GPUStore;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
     private bool _gpuStateValid, _gpuStateMatchesPublication;
+    private bool _gpuParametersPrepared;
     private long _gpuStateEpoch;
     internal bool GPUStateValid
     {
@@ -50,6 +51,7 @@ internal sealed partial class PhysicsColliderBackend
             configuration.AngularVelocity, GravityScale: configuration.GravityScale, CanSleep: configuration.CanSleep,
             Sleeping: configuration.Sleeping, LockRotation: configuration.LockRotation));
         Space = space; AttachmentVersion = version; GPUStateValid = false; _gpuStateMatchesPublication = false;
+        _gpuParametersPrepared = false;
         _gpuConstantForce = _gpuSurfaceLinear = default; _gpuSurfaceAngular = _gpuConstantTorque = 0;
         space.RegisterGPUCollider(this); ExternalObjectNode()?.AddPhysicsObjectBinding(this);
     }
@@ -78,9 +80,11 @@ internal sealed partial class PhysicsColliderBackend
         if (force == _gpuConstantForce && torque == _gpuConstantTorque) return;
         GPU!.SetConstantForce(GPUHandle, force, torque); _gpuConstantForce = force; _gpuConstantTorque = torque;
     }
-    internal void PrepareGPUParameters(PhysicsBodyRuntime runtime)
+    /// <summary>Synchronizes authored integration edits, rebuilding after attachment, role changes or replay.</summary>
+    internal void PrepareGPUParameters(PhysicsBodyRuntime runtime, bool force = false)
     {
         var rigid = runtime.Owners.Scene as RigidBody;
+        if (!force && _gpuParametersPrepared && !runtime.GPUParametersDirty && rigid?.GPUParametersDirty != true) return;
         var policy = new GPUPhysicsBodyStore.IntegrationPolicy(rigid?.GravityScale ?? runtime.BodyGravityScale,
             rigid?.LinearDamp ?? runtime.BodyLinearDamp, rigid?.AngularDamp ?? runtime.BodyAngularDamp,
             rigid is null ? RotationLocked : !rigid.Freeze && rigid.LockRotation, rigid?.CustomIntegrator ?? runtime.OmitForces,
@@ -88,6 +92,11 @@ internal sealed partial class PhysicsColliderBackend
         if (GPU!.GetIntegrationPolicy(GPUHandle) != policy) { GPU.SetIntegrationPolicy(GPUHandle, policy); Space!.InvalidateGPUStates(); }
         GPU.SetCCDMode(GPUHandle, runtime.ContinuousMode);
         SetGPUConstants(rigid?.ConstantForce ?? runtime.ConstantForce, rigid?.ConstantTorque ?? runtime.ConstantTorque);
+        if (!force)
+        {
+            _gpuParametersPrepared = true; runtime.GPUParametersDirty = false;
+            if (rigid is not null) rigid.GPUParametersDirty = false;
+        }
     }
     internal void PublishGPUFields(PhysicsBodyRuntime runtime)
     {

@@ -136,7 +136,7 @@ public abstract partial class PhysicsBody : CollisionObject
             ? _validatedRotation : current.Rotation;
         if (current.Origin != scenePosition || currentRotation != sceneRotation)
         {
-            var solverTransform = new Transform(sceneRotation, Vector2.One, 0, scenePosition);
+            var solverTransform = Backend.GetTransform();
             GlobalTransform = solverTransform;
             _validatedTransform = solverTransform;
             _validatedRotation = sceneRotation;

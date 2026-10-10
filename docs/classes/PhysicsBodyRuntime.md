@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal sealed partial class PhysicsBodyRuntime`
 
@@ -35,6 +35,7 @@ subclasses and PhysicsDirectBodyState.
 | `ApplyMassProfile`, `SetMassProfile`, `SetAttachedMassProfile`, `MassProperties` | Share profile validation and scene projection; retain mass, inertia and center in scene units. Detached calls reuse PhysicsMass.Geometry; attached compilation belongs to the adapter. |
 | `ApplyBeforeStep`, pending/constant force and torque | Consume eligible pending forces once; preserve configured totals. |
 | `ApplyResolvedFields`, parameter operations | Combine world/Area gravity and damping with scene or server authored body policy through one finite-validated update path. |
+| `GPUParametersDirty`, authored force/field/omission setters | Mark GPU integration edits; clear only after successful attachment synchronization, preserving authored values including signed zero. |
 | `ApplyImpulse`, `AddForce`, velocity/mass access | Preserve dynamic-role, lock, finite-value and detached-state behavior. |
 
 Virtual surface velocity is applied by PhysicsColliderBackend and preserves the
@@ -77,8 +78,9 @@ Queued callback entries also use adapter identity plus attachment version, so
 removal/reentry on the same RID and world cannot consume the prior attachment's
 callback. PhysicsBodyStateTests explicitly replaces both a later scene body and a
 raw server body during an earlier callback, then verifies only their next-frame
-callbacks execute and both older direct views stay invalid. World stepping,
-geometry/query adapters and independent GPU binding remain separate open work.
+callbacks execute and both older direct views stay invalid. Independent GPU worlds
+now use this runtime through the selected attachment adapter; complete conformance
+remains tracked by the [physics audit](../components/physics-contract-audit.md).
 
 
 ## Continuous collision policy
@@ -86,5 +88,8 @@ geometry/query adapters and independent GPU binding remain separate open work.
 The shared public CCDMode now supplies the scene/server setting and resident GPU
 configuration. CPU worlds inspect solved motion before publication and preserve
 remaining tick time and nominal force/joint budgets through impact continuations.
-The runtime stores policy across attachments and roles; independent GPU world
-binding remains open. See [implementation and verification](../components/cpu-continuous-collision.md).
+The runtime stores policy across attachments and roles. Shared policy edits mark
+resident GPU configuration for synchronization before the next pre-step snapshot.
+[Host preparation tests](../components/gpu-host-preparation.md) exercise live CCD,
+force, damping and role edits through explicit public CPU/GPU worlds.
+See [implementation and verification](../components/cpu-continuous-collision.md).

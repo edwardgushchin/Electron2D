@@ -42,6 +42,7 @@ public partial class RigidBody
     }
     internal void RestoreReplay(RigidReplay state)
     {
+        GPUParametersDirty = true;
         _linearVelocity = state._linearVelocity;
         _angularVelocity = state._angularVelocity;
         _canSleep = state._canSleep;

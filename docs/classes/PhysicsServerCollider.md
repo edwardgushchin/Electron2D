@@ -1,8 +1,8 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
-**Declaration:** `internal sealed class PhysicsServerCollider` · **Inherits:** System.Object
+**Declaration:** `internal sealed partial class PhysicsServerCollider` · **Inherits:** System.Object
 
 **Source:** [PhysicsServerCollider.cs](../../src/Servers/Physics/PhysicsServerCollider.cs) · **Component:** [Physics server and queries](../components/physics-queries.md)
 
@@ -14,6 +14,12 @@ velocities and delayed targets retain their existing application policy.
 Live pose, contact velocity, sleep and target-motion access now use the same
 engine-valued adapter as scene bodies; the server collider retains detached
 configuration and pending-target policy.
+
+Attached dynamic/kinematic GetTransform reads the adapter's full physical pose.
+GPU returns its current qualified resident basis without angle reconstruction;
+CPU preserves its published-angle convention. Authored policy invalidation and
+the public CPU/GPU live-edit checks are described in
+[host preparation](../components/gpu-host-preparation.md).
 
 ## Description and runtime flow
 

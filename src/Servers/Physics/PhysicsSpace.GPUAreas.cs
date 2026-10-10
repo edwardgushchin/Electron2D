@@ -20,7 +20,7 @@ internal sealed partial class PhysicsSpace
         {
             var capacity = GPUStore!.ShapeCount;
             if (_gpuAreaHits.Length < capacity) Array.Resize(ref _gpuAreaHits, Math.Max(8, capacity * 2));
-            var pose = backend.GetPose(); var transform = new Transform(pose.Rotation, Vector2.One, 0, pose.Position);
+            var transform = backend.GetTransform();
             Span<ulong> exclude = stackalloc ulong[1] { (ulong)backend.RID.GetID() };
             Span<int> counts = stackalloc int[1];
             foreach (var local in backend.GPUShapes)

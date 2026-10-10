@@ -15,22 +15,28 @@ Last updated: 2026-10-10
 
 One retained component owns the current backend body, world attachment and shape
 ID collection for a scene CollisionObject or a server-created collider. PhysicsBody,
-Area and PhysicsServerCollider share it. The current implementation uses Box2D;
-this consolidates ownership without implementing a second backend or exposing
-vendor handles to applications.
+Area and PhysicsServerCollider share it. It owns either CPU storage or an independent
+resident GPU attachment according to the selected world; vendor handles remain
+internal to the adapter.
 
 The component keeps the stable public collider RID and a weak scene owner. Raw
 server colliders have no scene owner. Logical shape indices come from the owning
 slot registry; compound backend pieces retain that one index. Caller-owned Shape
 resources are borrowed during rebuild and are never disposed here.
 
+[Authored GPU integration edits](../components/gpu-host-preparation.md) synchronize
+before the world's shared pre-step snapshot. Prepared status belongs to one
+attachment and is invalidated by role/lock/gravity changes and replay. Direct
+transform reads reuse the qualified GPU basis while CPU keeps its angle convention.
+
 ## Operations and invariants
 
 | Operation | Contract |
 | --- | --- |
-| `Attach` | Accept scene-unit pose and PhysicsBodyConfiguration; convert units/build the vendor definition internally, create the body and commit space ownership with a fresh AttachmentVersion. Reject a second attachment; a prechecked version increment cannot wrap. |
+| `Attach` | Accept scene-unit pose and PhysicsBodyConfiguration; apply backend unit conventions internally, create the CPU or GPU body and commit space ownership with a fresh AttachmentVersion. Reject a second attachment; a prechecked version increment cannot wrap. |
 | `HasMotionMode`, `SetMotionMode` | Compare/change the existing engine body mode through the backend; motion matching is independent of angular locking. |
 | `GetPose`, `SetPose`, `SetTargetPose` | Transfer engine-unit position/rotation and derive kinematic target motion; cached backend references live only for the current attachment. |
+| `GetTransform` | Read the current GPU basis directly or preserve the CPU published-angle convention; shared by server/direct/scene pose consumers. |
 | `GetSolverMotion`, velocity/sleep accessors | Return raw integrated velocity for scene publication or combined contact velocity for server state, retaining virtual surface semantics. |
 | `SavePose`, `RestorePose` | Keep a private exact backend pose for frozen kinematic query restoration; avoid decoded-angle round trips while idle. |
 | Velocity, gravity, sleep and rotation setters; force/torque application | Convert units in one adapter while the scene/server caller retains validation and role policy. |
@@ -39,7 +45,7 @@ resources are borrowed during rebuild and are never disposed here.
 | `ApplyMassProfile`, COM/inverse getters | Compile current fixtures, retain reusable CPU mass scratch and return neutral scene-unit mass properties. |
 | `ApplyImpulse`, `ApplyFieldMotion`, `ClearTransientForces` | Preflight CPU numeric candidates, apply already-resolved body policy and preserve current force/omission/wake ordering. |
 | `SetSurfaceVelocity`, `WakeTouching`, `GetPointVelocity` | Keep virtual surface motion, support wakeup and center-aware point velocity behind the attachment boundary. |
-| `CaptureViewContacts`, `CaptureViewContact` | Traverse CPU solved/frame contacts and write existing engine contact values; common runtime contains no fixture tags or backend contact records. |
+| `CaptureViewContacts`, `CaptureViewContact` | Project CPU solved/frame contacts or resident GPU reports into existing engine contact values; common runtime contains no fixture tags or backend contact records. |
 | `Detach` | Destroy the body and its fixtures, clear IDs and space, retain list capacity. If the world has failed, skip backend calls and leave final backend cleanup to world disposal. |
 | `RebuildShapes` | Validate all active slot transforms before removing existing fixtures; preserve disabled/disposed-slot indexing and append the current active geometry. |
 | `Shapes`, `BodyID`, `Space` | Internal borrowed backend state; shape IDs can change on rebuild, body IDs on reattachment. Public RID identity is independent. |

@@ -4,6 +4,8 @@ internal sealed partial class PhysicsSpace
 {
     internal GPUPhysicsBodyStore? GPUStore { get; }
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
+    // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
+    internal bool ForceGPUParameterRefresh, DecodeGPUTransforms;
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
     internal long GPUStatePublicationEpoch { get; private set; } = -1;
@@ -82,9 +84,8 @@ internal sealed partial class PhysicsSpace
         new(fields.GravityVector, fields.Gravity, fields.GravityPoint, fields.GravityPointUnitDistance, fields.LinearDamp, fields.AngularDamp,
             fields.GravitySpaceOverride, fields.LinearDampSpaceOverride, fields.AngularDampSpaceOverride, fields.Priority);
 
-    private void PrepareGPUBody(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta, bool captureActivity)
+    private void PrepareGPUMotion(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta, bool captureActivity)
     {
-        runtime.Backend.PrepareGPUParameters(runtime);
         if (captureActivity) runtime.ApplyBeforeStep(body);
         else runtime.ActiveBeforeStep = false;
         if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
@@ -162,10 +163,12 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _serverColliders) body.PrepareBackend();
             foreach (var joint in _joints) joint.PrepareBackend();
             RecordStepPhase(0, ref profileMark);
+            var policiesMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
             var callbacks = false; var pendingForces = false;
             foreach (var body in _bodies)
             {
                 var runtime = body.Runtime;
+                body.Backend.PrepareGPUParameters(runtime, ForceGPUParameterRefresh);
                 callbacks |= RequiresBodySnapshot(runtime, body);
                 pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
             }
@@ -173,9 +176,12 @@ internal sealed partial class PhysicsSpace
                 if (!body.IsArea)
                 {
                     var runtime = body.Runtime;
+                    body.Backend.PrepareGPUParameters(runtime, ForceGPUParameterRefresh);
                     callbacks |= RequiresBodySnapshot(runtime, null);
                     pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
                 }
+            if (ProfilingEnabled) GPUPrepareBodiesMS = System.Diagnostics.Stopwatch.GetElapsedTime(policiesMark).TotalMilliseconds;
+            // Policy edits can wake bodies: finish them before the shared snapshot consumed by force callbacks.
             var captureActivity = callbacks || pendingForces;
             if (captureActivity) PublishGPU();
             uint areaOrder = 0;
@@ -184,9 +190,9 @@ internal sealed partial class PhysicsSpace
                 if (body.IsArea) GPUStore!.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
             RecordStepPhase(1, ref profileMark);
             _callbackBodies.Clear();
-            foreach (var body in _bodies) PrepareGPUBody(body.Runtime, body, delta, captureActivity);
+            foreach (var body in _bodies) PrepareGPUMotion(body.Runtime, body, delta, captureActivity);
             foreach (var body in _serverColliders)
-                if (!body.IsArea) PrepareGPUBody(body.Runtime, null, delta, captureActivity);
+                if (!body.IsArea) PrepareGPUMotion(body.Runtime, null, delta, captureActivity);
             if (callbacks)
             {
                 foreach (var body in _bodies) _callbackBodies.Add(new(body.Runtime, body.Backend, body.Backend.AttachmentVersion, body));
@@ -195,7 +201,7 @@ internal sealed partial class PhysicsSpace
             foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
             SyncGPUExceptions();
             var prepareMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-            if (ProfilingEnabled) GPUPrepareBodiesMS = System.Diagnostics.Stopwatch.GetElapsedTime(profileMark, prepareMark).TotalMilliseconds;
+            if (ProfilingEnabled) GPUPrepareBodiesMS += System.Diagnostics.Stopwatch.GetElapsedTime(profileMark, prepareMark).TotalMilliseconds;
             PrepareGPUReports();
             if (ProfilingEnabled) { GPUPrepareReportsMS = System.Diagnostics.Stopwatch.GetElapsedTime(prepareMark).TotalMilliseconds; prepareMark = System.Diagnostics.Stopwatch.GetTimestamp(); }
             var wakeWait = ProfilingEnabled ? GPUStore!.WaitMS : 0;

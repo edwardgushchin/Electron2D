@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -15,6 +15,12 @@ PhysicalBone inherits this complete body contract. Its simulation request contro
 ## Description
 
 A dynamic 2D scene body backed by the internal fixed-step physics world. A direct CollisionShape child supplies circle, capsule, segment, convex polygon, concave segment collection or rectangle geometry; without a child the body can still move but cannot collide. A child can select a one-way contact side for its fixtures. It uses scene-unit positions and linear velocity, kilograms for mass, radians for angular velocity, and a world gravity default of 980 scene-unit/s² downward unless typed project settings change it. Overlapping [Area](Area.md) fields can change its gravity and damping. Game physics callbacks run before the solver step, so forces and changed velocity apply to that step; stored constant force and torque apply every step until cleared. Solved transforms, velocities and contact snapshots return to the scene before contact, sleep and area callbacks, timers, tweens and interpolation capture.
+
+Authored field, damping, constant-force, omission, freeze and rotation-lock edits
+mark the GPU attachment for preparation before its next shared state snapshot.
+Reentry and replay rebuild that prepared policy. This internal change preserves
+the public timing and values; [host preparation checks](../components/gpu-host-preparation.md)
+exercise live scene/server edits on both selected backends.
 
 ## Example
 

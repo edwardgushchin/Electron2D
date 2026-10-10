@@ -19,6 +19,18 @@ internal sealed partial class PhysicsColliderBackend
         return (ToScene(pose.p), b2Rot_GetAngle(pose.q));
     }
 
+    /// <summary>Reads the current unit-scale pose, preserving the resident GPU basis and the CPU angle convention.</summary>
+    internal Transform GetTransform()
+    {
+        if (GPU is not null && !Space!.DecodeGPUTransforms)
+        {
+            ref readonly var state = ref GPUState;
+            return new(new(state.Pose.Z, state.Pose.W), new(-state.Pose.W, state.Pose.Z), state.Position);
+        }
+        // The CPU adapter retains its published angle convention.
+        var pose = GetPose(); return new(pose.Rotation, Vector2.One, 0, pose.Position);
+    }
+
     internal (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion()
     {
         if (GPU is not null)
@@ -75,12 +87,12 @@ internal sealed partial class PhysicsColliderBackend
     }
     internal void SetRotationLocked(bool locked)
     {
-        if (GPU is { } gpu) { gpu.SetIntegrationPolicy(GPUHandle, gpu.GetIntegrationPolicy(GPUHandle) with { LockRotation = locked }); Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu) { gpu.SetIntegrationPolicy(GPUHandle, gpu.GetIntegrationPolicy(GPUHandle) with { LockRotation = locked }); _gpuParametersPrepared = false; Space!.InvalidateGPUStates(); }
         else b2Body_SetMotionLocks(BodyID, new(false, false, locked));
     }
     internal void SetGravityScale(float scale)
     {
-        if (GPU is { } gpu) { gpu.SetIntegrationPolicy(GPUHandle, gpu.GetIntegrationPolicy(GPUHandle) with { GravityScale = scale }); Space!.InvalidateGPUStates(); }
+        if (GPU is { } gpu) { gpu.SetIntegrationPolicy(GPUHandle, gpu.GetIntegrationPolicy(GPUHandle) with { GravityScale = scale }); _gpuParametersPrepared = false; Space!.InvalidateGPUStates(); }
         else b2Body_SetGravityScale(BodyID, scale);
     }
     internal void ApplyCentralForce(Vector2 force, bool wake)

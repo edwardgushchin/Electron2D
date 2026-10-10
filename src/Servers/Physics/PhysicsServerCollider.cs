@@ -214,8 +214,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         if (Space is null || IsArea || _mode == PhysicsServer.BodyMode.Static)
             return _transform;
-        var pose = _backend.GetPose();
-        return new(pose.Rotation, Vector2.One, 0, pose.Position);
+        return _backend.GetTransform();
     }
 
     internal void AppendMassGeometry(PhysicsMass.Geometry geometry)

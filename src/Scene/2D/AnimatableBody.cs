@@ -67,8 +67,7 @@ public sealed partial class AnimatableBody : StaticBody
     internal void SyncPose()
     {
         if (!_syncToPhysics) { _hasTarget = false; return; }
-        var pose = Backend.GetPose();
-        var solved = new Transform(pose.Rotation, Vector2.One, 0, pose.Position);
+        var solved = Backend.GetTransform();
         _hasTarget = false;
         _lastValidTransform = solved;
         if (GlobalTransform == solved) return;

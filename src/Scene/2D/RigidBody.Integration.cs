@@ -15,7 +15,7 @@ public partial class RigidBody
         set
         {
             EnsureMutable();
-            _customIntegrator = value;
+            _customIntegrator = value; GPUParametersDirty = true;
             if (HasBackend) Backend.SetGravityScale(value ? 0 : _gravityScale);
         }
     }

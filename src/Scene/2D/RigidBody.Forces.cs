@@ -10,7 +10,7 @@ public partial class RigidBody
             (body, value) => body.ConstantTorque = value, _ => 0f, stored: true)
     ];
 
-    internal void SetConstantTotals(Vector2 force, float torque) { _constantForce = force; _constantTorque = torque; }
+    internal void SetConstantTotals(Vector2 force, float torque) { _constantForce = force; _constantTorque = torque; GPUParametersDirty = true; }
 
     private Vector2 _constantForce;
     private float _constantTorque;
@@ -25,7 +25,7 @@ public partial class RigidBody
         {
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
-            _constantForce = value;
+            _constantForce = value; GPUParametersDirty = true;
             if (value != Vector2.Zero) WakeForPersistentForce();
         }
     }
@@ -40,7 +40,7 @@ public partial class RigidBody
         {
             EnsureMutable();
             Finite(value);
-            _constantTorque = value;
+            _constantTorque = value; GPUParametersDirty = true;
             if (value != 0) WakeForPersistentForce();
         }
     }

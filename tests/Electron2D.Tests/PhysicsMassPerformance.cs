@@ -51,6 +51,7 @@ internal static class PhysicsMassPerformance
         private readonly RectangleShape _floor, _side;
         private readonly PhysicsSpace _data;
         private readonly double[] _steps, _waits, _phases = new double[8];
+        private readonly double[] _preparation = new double[4];
         private readonly long[] _up, _down, _submissions;
         private long _owner, _all, _uniformBytes;
         private int _tick, _measured;
@@ -78,6 +79,8 @@ internal static class PhysicsMassPerformance
             try
             {
                 Space = PhysicsServer.SpaceCreate(backend); _data = PhysicsServer.Service.GetSceneSpace(Space);
+                _data.ForceGPUParameterRefresh = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_REFRESH_PARAMETERS") == "1";
+                _data.DecodeGPUTransforms = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_DECODE_TRANSFORMS") == "1";
                 if (_data.GPUStore is { } gpu)
                 {
                     gpu.PackColoredContacts = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_UNPACKED") != "1";
@@ -124,6 +127,8 @@ internal static class PhysicsMassPerformance
             _owner += owner; _all += all;
             _uniformBytes += (gpu?.UniformBytes ?? 0) - uniforms;
             for (var i = 0; i < _phases.Length; i++) _phases[i] += _data.ProfileMS[i];
+            _preparation[0] += _data.GPUPrepareBodiesMS; _preparation[1] += _data.GPUPrepareReportsMS;
+            _preparation[2] += _data.GPUPrepareWakesMS; _preparation[3] += _data.GPUPrepareWakeWaitMS;
         }
         internal void Validate()
         {
@@ -179,6 +184,10 @@ internal static class PhysicsMassPerformance
                 StepMS = Summary(_steps, Samples),
                 WaitMS = Summary(_waits, Samples),
                 PhaseMeanMS = _phases.Select(value => value / Samples).ToArray(),
+                GPUPreparationNames = new[] { "policies/activity/motion/joints", "report selection", "command/wake publication", "included wake wait" },
+                GPUPreparationMeanMS = _preparation.Select(value => value / Samples).ToArray(),
+                ForcedParameterRefresh = _data.ForceGPUParameterRefresh,
+                DecodedGPUTransforms = _data.DecodeGPUTransforms,
                 UniformBytes = _uniformBytes,
                 UploadBytes = _up.Sum(),
                 ReadbackBytes = _down.Sum(),

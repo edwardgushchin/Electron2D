@@ -26,6 +26,7 @@ internal static class PhysicsGPUPublicationPerformance
         var space = PhysicsServer.SpaceCreate(backend); using var shape = new CircleShape { Radius = 4 };
         var fixedBodies = new RID[pairs]; var dynamicBodies = new RID[pairs]; var poses = new Transform[pairs];
         var data = PhysicsServer.Service.GetSceneSpace(space); var gpu = data.GPUStore;
+        data.ForceGPUParameterRefresh = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_REFRESH_PARAMETERS") == "1";
         if (gpu is not null) gpu.SeparateSimulationSubmissions = Environment.GetEnvironmentVariable("ELECTRON2D_GPU_SEPARATE_SUBMISSIONS") == "1";
         try
         {
@@ -75,8 +76,8 @@ internal static class PhysicsGPUPublicationPerformance
             if (gpu is not null) Console.WriteLine($"  Integration submissions: {(gpu.SeparateSimulationSubmissions ? "separate diagnostic control" : "batched with spatial/solver work")}");
             if (backend == PhysicsServer.Backend.GPU && PhysicsSpace.ProfilingEnabled)
             {
-                Console.WriteLine($"  GPU preparation detail means: parameters/motion/joints {preparation[0] / samples:F4}, report selection {preparation[1] / samples:F4}, command/wake publication {preparation[2] / samples:F4} ms (included wake wait {preparation[3] / samples:F4} ms).");
-                var names = new[] { "attachments", "pre-publication/fields", "body/joint preparation/wakes", "resident simulation/debug", "post-publication/reports", "scene/server completion", "contacts/areas/views", "callbacks/events" };
+                Console.WriteLine($"  GPU preparation detail means: policies/activity/motion/joints {preparation[0] / samples:F4}, report selection {preparation[1] / samples:F4}, command/wake publication {preparation[2] / samples:F4} ms (included wake wait {preparation[3] / samples:F4} ms).");
+                var names = new[] { "attachments", "policies/activity/pre-publication/fields", "motion/joint preparation/wakes", "resident simulation/debug", "post-publication/reports", "scene/server completion", "contacts/areas/views", "callbacks/events" };
                 for (var i = 0; i < phases.Length; i++) Console.WriteLine($"  GPU phase {names[i]}: mean {phases[i] / samples:F4} ms.");
             }
         }

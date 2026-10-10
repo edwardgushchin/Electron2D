@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -168,10 +168,16 @@ epoch qualifies attachment caches against selected intermediate reads, so a fina
 state equal to earlier publication never revives an intermediate cached pose.
 
 GPU steps now populate the existing eight optional ProfileMS/ProfileBytes slots:
-attachments; consumers/pre-publication/fields; body/joint preparation/wakes;
+attachments; policies/consumers/pre-publication/fields; motion/joint preparation/wakes;
 simulation/debug; post-publication/reports; scene/server completion;
 contacts/Areas/views; callbacks/events. Mean profiling does not add GPU fences.
 See [public-world measurement and limits](../components/physics-backends.md#conditional-body-publication).
+
+The consumer scan now also synchronizes changed authored body policies before
+publishing pre-step state. This batches their wakes and prevents per-body readbacks
+when callbacks consume pending forces. Diagnostic ForceGPUParameterRefresh and
+DecodeGPUTransforms retain same-build controls; they are internal test settings.
+See [host preparation and callback regression](../components/gpu-host-preparation.md).
 
 ## Portable correction
 

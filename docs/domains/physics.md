@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-10
 
+[GPU host preparation](../components/gpu-host-preparation.md) batches changed body
+policies before shared pre-step snapshots and reuses the current resident rotation
+basis for pose reads. Explicit public CPU/GPU tests cover authored edits, CCD,
+callbacks, replay and reentry; full contract/performance acceptance remains open.
+
 [Per-body CCD](../components/cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; public GPU binding now executes; complete family conformance remains open; built-in boundary and directed-ray response now execute.
 
 [Resident body-motion queries](../components/gpu-resident-motion-queries.md) now execute supplied-pose recovery and sweeps on GPU, with reciprocal masks, one-way/ray policies, explicit exclusions and center-aware hit velocity. CPU full-contour recovery and directed containment now avoid internal polygon seams. The public GPU motion adapter now executes; full CharacterBody conformance remains open.
@@ -33,7 +38,7 @@ Jiggle uses the existing direct-world ray query during Physics execution, with b
 
 Process-wide service operations and events use static access to retained objects under [ADR 0095](../decisions/singleton-services.md#adr-0095). Native availability remains explicit through DisplayServer.IsAvailable and RenderingServer.IsAvailable. Independent project registries use ProjectSettingsRegistry; static ProjectSettings operations address only the runtime registry.
 
-Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree retains distinct viewport-selected worlds and a fallback for viewport-free scenes. Each currently creates an internal Box2D.NET space, stepped once during the fixed physics lane, with dynamic transforms and overlap snapshots published before timers and tweens. The selected managed backend is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012).
+Physics owns the executable 2D rigid-body, collision-shape, surface-material and area-monitoring profiles. A SceneTree retains distinct viewport-selected worlds and a fallback for viewport-free scenes. Each selects a CPU Box2D.NET space or the independent resident GPU backend, stepped once during the fixed physics lane, with dynamic transforms and overlap snapshots published before timers and tweens. CPU is the default and remains available without a GPU. The managed CPU implementation is vendored and internal to `Electron2D.dll` under [ADR 0012](../decisions/product.md#adr-0012); [ADR 0054](../decisions/physics.md#adr-0054) defines explicit backend choice and startup fallback.
 
 ## Component inventory
 
