@@ -6,6 +6,8 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        TickBoundary(backend);
+        PreparationFailure(backend);
         WorldPolicy(backend);
         JointAttachment(backend);
         ColliderAttachment(backend);
@@ -69,6 +71,63 @@ internal static class PhysicsBackendOwnershipTests
         else Reject<ObjectDisposedException>(() => gpuStore!.Read([], []));
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
+    }
+    private static void PreparationFailure(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var shape = new CircleShape { Radius = 2 };
+        var body = new RigidBody { CanSleep = false, GravityScale = 0 };
+        var collision = new CollisionShape { Shape = shape }; body.AddChild(collision); root.AddChild(body);
+        using var tree = new SceneTree(root); tree.PhysicsFrame(1d / 60);
+        var space = PhysicsServer.Service.GetSceneSpace(world.Space); var tick = PhysicsServer.SpaceGetTick(world.Space);
+        collision.Scale = new(2, 1);
+        Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
+        Check(!space.BackendImplementation.ResultsReady && !space.HasBackendFailure && PhysicsServer.SpaceGetTick(world.Space) == tick,
+            "Rejected authoring preparation publishes no solved tick and does not fail the idle implementation");
+        collision.Scale = Vector2.One; tree.PhysicsFrame(1d / 60);
+        Check(PhysicsServer.SpaceGetTick(world.Space) == tick + 1 && PhysicsServer.BodyGetTransform(body.GetRID()).IsFinite(),
+            "The common finally releases solver access after preparation failure");
+        Console.WriteLine($"{backend}: invalid authored geometry, unchanged tick/results and real scene recovery after preparation failure passed.");
+    }
+    private static void TickBoundary(PhysicsServer.Backend backend)
+    {
+        var space = PhysicsServer.SpaceCreate(backend); var body = PhysicsServer.BodyCreate();
+        try
+        {
+            var data = PhysicsServer.Service.GetSceneSpace(space); var owner = data.BackendImplementation;
+            PhysicsServer.BodySetGravityScale(body, 0); PhysicsServer.BodySetCanSleep(body, false);
+            PhysicsServer.BodySetSpace(body, space); PhysicsServer.SpaceSetActive(space, true);
+            var order = 0; var fail = false; var forceCalls = 0; var syncCalls = 0;
+            PhysicsServer.BodySetForceIntegrationCallback(body, view =>
+            {
+                order = order * 10 + 1; forceCalls++;
+                Check(owner.ResultsReady && PhysicsServer.SpaceGetTick(space) == (ulong)forceCalls &&
+                    MathF.Abs(view.Step - 1f / 60) < 1e-7f, "A borrowed integration view sees the solved tick after result synchronization");
+                Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(space, 1d / 60));
+                Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(space));
+                view.LinearVelocity = new(30, 0);
+                if (fail) throw new InvalidOperationException("Expected callback failure");
+            });
+            PhysicsServer.BodySetStateSyncCallback(body, view =>
+            {
+                order = order * 10 + 2; syncCalls++;
+                Check(owner.ResultsReady && view.LinearVelocity.DistanceTo(new(30, 0)) < .001f,
+                    "Synchronization follows integration even when integration throws");
+                _ = PhysicsServer.BodyGetTransform(body);
+            });
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            Check(order == 12 && forceCalls == 1 && syncCalls == 1, "Completed result callbacks retain ordered delivery");
+            order = 0; fail = true;
+            Reject<AggregateException>(() => PhysicsServer.SpaceStep(space, 1d / 60));
+            Check(order == 12 && PhysicsServer.SpaceGetTick(space) == 2 && !data.HasBackendFailure,
+                "User callback failure preserves a completed usable world and attempts later callbacks");
+            PhysicsServer.BodySetForceIntegrationCallback(body, null); PhysicsServer.BodySetStateSyncCallback(body, null);
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            Check(PhysicsServer.SpaceGetTick(space) == 3 && PhysicsServer.BodyGetTransform(body).Origin.X > .5f,
+                "The next real interval proceeds after callback cleanup");
+            Console.WriteLine($"{backend}: selected step phases, solved tick/views, callback order, reentrancy, borrowed release and callback-failure continuation passed.");
+        }
+        finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
     private static void WorldPolicy(PhysicsServer.Backend backend)
     {

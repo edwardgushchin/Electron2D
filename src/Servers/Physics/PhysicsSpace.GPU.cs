@@ -72,7 +72,7 @@ internal sealed partial class PhysicsSpace
             _gpuReportRanges.EnsureCapacity(capacity);
         }
     }
-    private void PublishGPU()
+    internal void PublishGPU()
     {
         FlushGPUWakes();
         PrepareGPUCapacity();
@@ -85,11 +85,11 @@ internal sealed partial class PhysicsSpace
         foreach (var backend in _gpuColliders.Values) backend.CompleteGPUStatePublication();
     }
 
-    private static bool RequiresGPUCompletion(PhysicsServerCollider body, bool callbacks) =>
+    internal static bool RequiresGPUCompletion(PhysicsServerCollider body, bool callbacks) =>
         !body.IsArea && (callbacks || body.Mode == PhysicsServer.BodyMode.Kinematic ||
             body.Runtime.ContactLimit > 0 || body.Runtime.View is { IsDisposed: false });
 
-    private void PublishGPUCompletion(bool callbacks)
+    internal void PublishGPUCompletion(bool callbacks)
     {
         if (callbacks || _serverColliders.Count == 0) { PublishGPU(); return; }
         PrepareGPUCapacity();
@@ -119,11 +119,11 @@ internal sealed partial class PhysicsSpace
 
     internal static GPUPhysicsBodyStore.FieldParameters ReplayFields(PhysicsAreaFields fields) => GPUFields(fields);
 
-    private static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
+    internal static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
         new(fields.GravityVector, fields.Gravity, fields.GravityPoint, fields.GravityPointUnitDistance, fields.LinearDamp, fields.AngularDamp,
             fields.GravitySpaceOverride, fields.LinearDampSpaceOverride, fields.AngularDampSpaceOverride, fields.Priority);
 
-    private void PrepareGPUMotion(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta, bool captureActivity)
+    internal void PrepareGPUMotion(PhysicsBodyRuntime runtime, PhysicsBody? body, double delta, bool captureActivity)
     {
         if (captureActivity) runtime.ApplyBeforeStep(body);
         else runtime.ActiveBeforeStep = false;
@@ -133,7 +133,7 @@ internal sealed partial class PhysicsSpace
         else if (body is null) runtime.Owners.Server!.PrepareMotion(delta);
     }
 
-    private void PrepareGPUReports()
+    internal void PrepareGPUReports()
     {
         _gpuReportBodyCount = 0; var contacts = 0;
         foreach (var body in _bodies) Add(body.Backend, body.Runtime);
@@ -151,7 +151,7 @@ internal sealed partial class PhysicsSpace
         if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, contacts * 2));
         GPUStore!.CaptureContactReports = _gpuReportBodyCount > 0;
     }
-    private void ReadGPUReports()
+    internal void ReadGPUReports()
     {
         _gpuReportRanges.Clear();
         if (_gpuReportBodyCount == 0) return;
@@ -188,109 +188,4 @@ internal sealed partial class PhysicsSpace
         }
     }
 
-    internal void StepGPU(double delta)
-    {
-        _stepping = true; List<Exception>? errors = null; var advanced = false;
-        var intervalEntered = false; var intervalSubmissions = 0L;
-        var profileMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-        if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
-        try
-        {
-            LastStep = (float)delta;
-            foreach (var body in _bodies) body.PrepareBackend();
-            foreach (var area in _areas) area.PrepareBackend();
-            foreach (var body in _serverColliders) body.PrepareBackend();
-            foreach (var joint in _joints) joint.PrepareBackend();
-            RecordStepPhase(0, ref profileMark);
-            var policiesMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-            var callbacks = false; var pendingForces = false;
-            foreach (var body in _bodies)
-            {
-                var runtime = body.Runtime;
-                body.Backend.PrepareGPUParameters(runtime, ForceGPUParameterRefresh);
-                callbacks |= RequiresBodySnapshot(runtime, body);
-                pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
-            }
-            foreach (var body in _serverColliders)
-                if (!body.IsArea)
-                {
-                    var runtime = body.Runtime;
-                    body.Backend.PrepareGPUParameters(runtime, ForceGPUParameterRefresh);
-                    callbacks |= RequiresBodySnapshot(runtime, null);
-                    pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
-                }
-            if (ProfilingEnabled) GPUPrepareBodiesMS = System.Diagnostics.Stopwatch.GetElapsedTime(policiesMark).TotalMilliseconds;
-            // Policy edits can wake bodies: finish them before the shared snapshot consumed by force callbacks.
-            var captureActivity = callbacks || pendingForces;
-            if (captureActivity) PublishGPU();
-            uint areaOrder = 0;
-            foreach (var area in _areas) GPUStore!.SetAreaFields(area.Backend.GPUHandle, GPUFields(area.Fields), areaOrder++);
-            foreach (var body in _serverColliders)
-                if (body.IsArea) GPUStore!.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
-            RecordStepPhase(1, ref profileMark);
-            _callbackBodies.Clear();
-            foreach (var body in _bodies) PrepareGPUMotion(body.Runtime, body, delta, captureActivity);
-            foreach (var body in _serverColliders)
-                if (!body.IsArea) PrepareGPUMotion(body.Runtime, null, delta, captureActivity);
-            if (callbacks)
-            {
-                foreach (var body in _bodies) _callbackBodies.Add(new(body.Runtime, body.Backend, body.Backend.AttachmentVersion, body));
-                foreach (var body in _serverColliders) if (!body.IsArea) _callbackBodies.Add(new(body.Runtime, body.Backend, body.Backend.AttachmentVersion, null));
-            }
-            foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
-            SyncGPUExceptions();
-            var prepareMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-            if (ProfilingEnabled) GPUPrepareBodiesMS += System.Diagnostics.Stopwatch.GetElapsedTime(profileMark, prepareMark).TotalMilliseconds;
-            PrepareGPUReports();
-            if (ProfilingEnabled) { GPUPrepareReportsMS = System.Diagnostics.Stopwatch.GetElapsedTime(prepareMark).TotalMilliseconds; prepareMark = System.Diagnostics.Stopwatch.GetTimestamp(); }
-            var wakeWait = ProfilingEnabled ? GPUStore!.WaitMS : 0;
-            FlushGPUWakes();
-            if (ProfilingEnabled) { GPUPrepareWakesMS = System.Diagnostics.Stopwatch.GetElapsedTime(prepareMark).TotalMilliseconds; GPUPrepareWakeWaitMS = GPUStore!.WaitMS - wakeWait; }
-            RecordStepPhase(2, ref profileMark);
-            intervalSubmissions = GPUStore!.SubmissionCount; intervalEntered = true;
-            GPUStore.SimulateFields((float)delta, GPUFields(DefaultAreaFields));
-            Tick++;
-            CaptureDebugContacts();
-            RecordStepPhase(3, ref profileMark);
-            var statistics = _backend.ReadStatistics();
-            InvalidateGPUStates(wake: false);
-            PublishGPUCompletion(callbacks); ReadGPUReports(); advanced = true;
-            RecordStepPhase(4, ref profileMark);
-            foreach (var body in _serverColliders)
-            {
-                if (RequiresGPUCompletion(body, callbacks)) body.Backend.PublishGPUFields(body.Runtime);
-                body.CompleteMotion();
-            }
-            foreach (var body in _bodies)
-            {
-                try
-                {
-                    body.Backend.PublishGPUFields(body.Runtime);
-                    body.CompleteBackend();
-                    if (body is AnimatableBody animatable) animatable.SyncPose();
-                    else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
-                }
-                catch (Exception error) { (errors ??= []).Add(error); }
-            }
-            RecordStepPhase(5, ref profileMark);
-            CollectBodyContactRange(0, _bodies.Count, 0, this);
-            foreach (var body in _bodies)
-                if (body is RigidBody rigid) { if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid); rigid.QueueContactChanges(_contactEvents); }
-            ScanGPUAreas(); CaptureBodyStates();
-            PhysicsServer.Service.PublishStatistics(this, statistics);
-            RecordStepPhase(6, ref profileMark);
-        }
-        catch (Exception error)
-        {
-            if (intervalEntered && (GPUStore!.HasFailed || GPUStore.SubmissionCount != intervalSubmissions)) _gpuFailure = error;
-            (errors ??= []).Add(error);
-        }
-        finally { _stepping = false; }
-        try { if (advanced) DispatchBodyStates(); else _callbackBodies.Clear(); }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        try { DispatchEvents(); }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        RecordStepPhase(7, ref profileMark);
-        if (errors is not null) throw new AggregateException("GPU physics-world step failed.", errors);
-    }
 }

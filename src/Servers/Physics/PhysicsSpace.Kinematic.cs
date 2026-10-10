@@ -12,7 +12,7 @@ internal sealed partial class PhysicsSpace
     private readonly Dictionary<int, (double X, double Y, double Angular)> _jointImpulseVelocities = [];
     private readonly record struct KinematicStepForce(B2BodyId ID, B2Vec2 Force, float Torque);
 
-    private void StepKinematicPaths(double delta, bool hasKinematicBodies)
+    internal void StepKinematicPaths(double delta, bool hasKinematicBodies)
     {
         _aggregateContactImpulses = false; _frameContactIndices.Clear(); _frameContacts.Clear();
         if (!hasKinematicBodies) { StepBackend((float)delta); return; }

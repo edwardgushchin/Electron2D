@@ -24,6 +24,34 @@ CPU capacity preparation keeps a conservative flag once any dynamic attachment c
 
 [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks typed policy, invalid values, independent worlds, CPU native settings, selected statistics, no GPU CPU-motion storage, live role changes and disposed-owner guards. Common sleep/contact/iteration/statistics, replay and network suites remain the behavioral acceptance boundary.
 
+## Selected step phases
+
+`PhysicsWorldBackend.Step` now enters one common `PhysicsSpace.ExecuteStep` boundary.
+The selected owner executes BeginStep, world/field preparation, body/motion
+preparation, Solve, SyncResults, body completion, contact collection, Area scanning
+and EndStep. CPU owns its native interval/worker/one-way finalization flow; GPU owns
+resident submissions, required state/report publication and the started-interval
+failure marker. Concrete solver helpers remain internal implementation details.
+
+Shared code retains topology preparation, scene contact/sleep queues, captured body
+views, statistics publication and ordered user callback/event dispatch. The owner
+advances the world tick only after actual solve; CPU results become dispatchable
+then, while GPU waits for required publication to finish. EndStep is attempted on
+failed preparation as well as solved intervals, and nested finally releases the
+space step guard before user code. Invalid authored geometry publishes no solved
+tick; a user callback exception preserves a completed usable world and later
+callbacks are still attempted. A started GPU execution failure remains terminal.
+
+Typed internal membership lists avoid boxed interface enumerators in warmed
+owner phases. They are not public mutable collections; existing owner/topology
+rules continue to protect them.
+
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs)
+checks solved tick/view publication, callback order, recursive-step and borrowed
+release rejection, continued simulation after a user callback error, rejected
+geometry and scene recovery on both implementations. Common physics, GPU demand,
+checkpoint, portable and network checks retain their separate acceptance scope.
+
 ## Ownership and verification
 
 The space owner thread controls lifecycle and stepping. [PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs) checks fresh implementations, distinct physical stores, unchanged requested/actual diagnostics, real published motion, independent ticks, warmed full-step allocation, native lifetime, injected worker-cleanup failure and a no-device child process. It also checks all six direct-space operations, access/lifetime/failure guards and 64 warmed hit/miss query cycles at zero owner/all-thread allocation. Existing common physics, checkpoint and network checks remain separate acceptance evidence.

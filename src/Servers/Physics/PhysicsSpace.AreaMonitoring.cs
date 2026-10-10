@@ -9,7 +9,7 @@ internal sealed partial class PhysicsSpace
     private bool _dispatchingServerAreas;
     private readonly record struct ServerAreaEvent(PhysicsAreaRuntime Receiver, ulong Generation, PhysicsShapePairChange Change);
 
-    private void ScanAreaMonitors()
+    internal void ScanAreaMonitors()
     {
         foreach (var area in _areas)
         {

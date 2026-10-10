@@ -28,7 +28,6 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new GPUPhysicsColliderImplementation(collider, Space); }
     internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new GPUPhysicsJointImplementation(Space); }
-    internal override void Step(double delta) => Space.StepGPU(delta);
     public override void Dispose()
     {
         if (_disposed) return;

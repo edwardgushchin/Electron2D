@@ -64,7 +64,6 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         return _jointWorldBody;
     }
     internal override PhysicsJointImplementation CreateJoint() { EnsureAccess(); return new CPUPhysicsJointImplementation(Space, this); }
-    internal override void Step(double delta) => Space.StepCPU(delta);
     internal override void StepNative(float delta, int substeps) { ThrowIfDisposed(); b2World_Step(_worldID, delta, substeps); }
 
     internal override GPUPhysicsWorld EnableGPUIntegration()

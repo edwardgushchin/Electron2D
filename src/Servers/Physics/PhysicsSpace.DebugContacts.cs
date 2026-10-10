@@ -23,7 +23,7 @@ internal sealed partial class PhysicsSpace
     }
 
     private void ResetDebugContacts() { _debugContactCount = 0; DebugContactRevision++; }
-    private void CaptureDebugContacts()
+    internal void CaptureDebugContacts()
     {
         if (_debugContactLimit == 0) return;
         if (GPUStore is not null) { _debugContactCount = GPUStore.ReadDebugContacts(_debugContacts.AsSpan(0, _debugContactLimit)); return; }

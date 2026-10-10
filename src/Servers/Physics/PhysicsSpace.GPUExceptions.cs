@@ -12,7 +12,7 @@ internal sealed partial class PhysicsSpace
         var pair = (first.GPUHandle, second.GPUHandle);
         if (_gpuNextExceptions.Add(pair) && !_gpuExceptions.Contains(pair)) GPUStore!.SetCollisionException(pair.Item1, pair.Item2, true);
     }
-    private void SyncGPUExceptions()
+    internal void SyncGPUExceptions()
     {
         if (GPUStore is null || !_gpuExceptionsDirty) return;
         _gpuNextExceptions.Clear(); PhysicsServer.Service.ObserveGPUExceptions(this);

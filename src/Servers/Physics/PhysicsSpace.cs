@@ -91,8 +91,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
 
     internal B2WorldId WorldID => _backend.WorldID;
-    internal IReadOnlyList<PhysicsBody> Bodies => _bodies;
-    internal IReadOnlyList<Area> Areas => _areas;
+    internal List<PhysicsBody> Bodies => _bodies;
+    internal List<Area> Areas => _areas;
 
     internal string? FindAudioBusOverride(Vector2 position, uint mask)
     {
@@ -110,7 +110,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
         return selected?.AudioBusName;
     }
-    internal IReadOnlyList<PhysicsServerCollider> ServerColliders => _serverColliders;
+    internal List<PhysicsServerCollider> ServerColliders => _serverColliders;
     internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || _continuousFailure is not null || GPUStore?.HasFailed == true;
 
     internal void EnsureReleaseAccess()
@@ -326,80 +326,9 @@ internal sealed partial class PhysicsSpace : IDisposable
         _backend.Step(delta);
     }
 
-    internal void StepCPU(double delta)
-    {
-        _stepping = true;
-        List<Exception>? errors = null;
-        var solverAdvanced = false;
-        var profileMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
-        if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
-        try
-        {
-            foreach (var body in _bodies) body.PrepareBackend();
-            foreach (var area in _areas) area.PrepareBackend();
-            foreach (var collider in _serverColliders) collider.PrepareBackend();
-            foreach (var joint in _joints) joint.PrepareBackend();
-            RecordStepPhase(0, ref profileMark);
-            PrepareAreaFields();
-            RecordStepPhase(1, ref profileMark);
-            var hasKinematicBodies = PrepareBodyStates(delta);
-            _backend.PrepareInterval();
-            var world = b2GetWorldFromId(WorldID);
-            RecordStepPhase(2, ref profileMark);
-            world.contactBiasDuration = (float)delta;
-            var warmStarting = world.enableWarmStarting;
-            try { if (_portableColdStep) world.enableWarmStarting = false; StepKinematicPaths(delta, hasKinematicBodies); _portableColdStep = false; }
-            finally { world.enableWarmStarting = warmStarting; }
-            RecordStepPhase(3, ref profileMark);
-            solverAdvanced = true; Tick++;
-            foreach (var collider in _serverColliders) collider.CompleteMotion();
-            foreach (var body in _bodies)
-            {
-                try
-                {
-                    body.CompleteBackend();
-                    if (body is AnimatableBody animatable) animatable.SyncPose();
-                    else if (body is CharacterBody character) character.CaptureSolverPose();
-                }
-                catch (Exception error) { (errors ??= []).Add(error); }
-            }
-            RecordStepPhase(4, ref profileMark);
-            CaptureBodyMotions();
-            if (world.workerCount == 1 || _bodies.Count < 256)
-                CollectBodyContactRange(0, _bodies.Count, 0, this);
-            else
-            {
-                var end = _bodies.Count * (world.workerCount - 1) / world.workerCount;
-                var contactTask = _backend.Tasks.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), this, this);
-                try { CollectBodyContactRange(end, _bodies.Count, 0, this); }
-                finally { if (contactTask is not null) _backend.Tasks.Finish(contactTask, this); }
-            }
-            foreach (var body in _bodies)
-            {
-                if (body is not RigidBody rigid) continue;
-                if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
-                rigid.QueueContactChanges(_contactEvents);
-            }
-            RecordStepPhase(5, ref profileMark);
-            ScanAreas();
-            ScanAreaMonitors();
-            CaptureBodyStates();
-            PublishStatistics();
-            RecordStepPhase(6, ref profileMark);
-        }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        finally { PruneOneWayPairs(); _stepping = false; }
-        try { if (solverAdvanced) DispatchBodyStates(); else _callbackBodies.Clear(); }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        try { DispatchEvents(); }
-        catch (Exception error) { (errors ??= []).Add(error); }
-        RecordStepPhase(7, ref profileMark);
-        if (errors is not null) throw new AggregateException("Physics-world step failed.", errors);
-    }
+    internal static readonly b2TaskCallback CollectBodyContacts = CollectBodyContactRange;
 
-    private static readonly b2TaskCallback CollectBodyContacts = CollectBodyContactRange;
-
-    private static void CollectBodyContactRange(int start, int end, uint worker, object context)
+    internal static void CollectBodyContactRange(int start, int end, uint worker, object context)
     {
         var space = (PhysicsSpace)context;
         for (var i = start; i < end; i++)
@@ -494,7 +423,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     private static ulong PackShapeID(B2ShapeId shape) =>
         ((ulong)(uint)shape.index1 << 32) | ((ulong)shape.world0 << 16) | shape.generation;
 
-    private void PruneOneWayPairs()
+    internal void PruneOneWayPairs()
     {
         _staleOneWayPairs.Clear();
         foreach (var pair in _oneWayPairs)
@@ -502,7 +431,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var key in _staleOneWayPairs) _oneWayPairs.Remove(key);
     }
 
-    private void ScanAreas()
+    internal void ScanAreas()
     {
         // ponytail: Pairwise shape scans are quadratic; use a broad-phase candidate index if large worlds show a measured cost.
         foreach (var area in _areas)
@@ -542,7 +471,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
     }
 
-    private void PrepareAreaFields()
+    internal void PrepareAreaFields()
     {
         var gravity = DefaultAreaFields.GravityPoint ? Vector2.Zero : DefaultAreaFields.GravityVector * DefaultAreaFields.Gravity;
         if (!gravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");

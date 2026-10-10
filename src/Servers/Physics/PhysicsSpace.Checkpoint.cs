@@ -103,7 +103,7 @@ internal sealed partial class PhysicsSpace
             PhysicsReplayCopy.Buffer<int>(s._frameContactHeads, ref _heads); PhysicsReplayCopy.Buffer<int>(s._frameContactTails, ref _tails);
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports); PhysicsReplayCopy.Map(s._gpuReportRanges, _ranges);
             PhysicsReplayCopy.Buffer<Vector2>(s._debugContacts.AsSpan(0, s._debugContactCount), ref _debug); _debugCount = s._debugContactCount;
-            _coldStep = s._portableColdStep;
+            _coldStep = s.PortableColdStep;
             _tick = s.Tick;
             _defaultGravity = s._defaultGravity;
             _configuration = Settings(s); _step = s._contactStep; _delta = s.LastStep; _statistics = s.PublishedStatistics;
@@ -141,7 +141,7 @@ internal sealed partial class PhysicsSpace
                 PhysicsReplayCopy.List(_contacts, s._frameContacts); PhysicsReplayCopy.Map(_indices, s._frameContactIndices);
                 PhysicsReplayCopy.Buffer<int>(_heads, ref s._frameContactHeads); PhysicsReplayCopy.Buffer<int>(_tails, ref s._frameContactTails);
                 PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports); PhysicsReplayCopy.Map(_ranges, s._gpuReportRanges);
-                s._portableColdStep = _coldStep;
+                s.PortableColdStep = _coldStep;
                 s.Tick = _tick;
                 s._defaultGravity = _defaultGravity;
                 s._aggregateContactImpulses = _aggregate; s._contactStep = _step; s.LastStep = _delta;

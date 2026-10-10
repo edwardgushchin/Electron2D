@@ -570,3 +570,53 @@ is retained separately; these individual runs are evidence of setup cost and
 preserved behavior, not a broad throughput guarantee. Logs/reports are in
 `bin/physics-world-operations/2026-10-10/capacity-before/`, `capacity-after/` and
 `capacity-repeat/`. Sleeping worlds preserve their existing dormant budgets.
+
+## Selected step phases
+
+`PhysicsWorldBackend.Step` now enters one common `PhysicsSpace.ExecuteStep` boundary.
+The selected owner executes BeginStep, world/field preparation, body/motion
+preparation, Solve, SyncResults, body completion, contact collection, Area scanning
+and EndStep. CPU owns its native interval/worker/one-way finalization flow; GPU owns
+resident submissions, required state/report publication and the started-interval
+failure marker. Concrete solver helpers remain internal implementation details.
+
+Shared code retains topology preparation, scene contact/sleep queues, captured body
+views, statistics publication and ordered user callback/event dispatch. The owner
+advances the world tick only after actual solve; CPU results become dispatchable
+then, while GPU waits for required publication to finish. EndStep is attempted on
+failed preparation as well as solved intervals, and nested finally releases the
+space step guard before user code. Invalid authored geometry publishes no solved
+tick; a user callback exception preserves a completed usable world and later
+callbacks are still attempted. A started GPU execution failure remains terminal.
+
+Typed internal membership lists avoid boxed interface enumerators in warmed
+owner phases. They are not public mutable collections; existing owner/topology
+rules continue to protect them.
+
+[PhysicsBackendOwnershipTests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.cs)
+checks solved tick/view publication, callback order, recursive-step and borrowed
+release rejection, continued simulation after a user callback error, rejected
+geometry and scene recovery on both implementations. Common physics, GPU demand,
+checkpoint, portable and network checks retain their separate acceptance scope.
+
+The mass fixture now emits schema 2 with named phase buckets: authoring,
+world-policy-fields, body-motion-callbacks, solver, result-sync, pose-contacts,
+areas-views-statistics and callbacks-events. Historical schema 1 phase values
+remain historical; complete-step and full-frame measurements remain comparable
+only with their recorded source/workload. Public registration and complete
+server/direct-state/custom-geometry extensions remain open under ADR 0103.
+
+The schema 2 step-dispatch worktree repeated the real 1152x800 window at 65536
+awake dynamic circles plus three walls, four substeps, 16 iterations, 240 warmup
+and 64 samples. CPU/GPU full physics p50/p95/p99 is
+254.4662/268.1269/282.0360 and 50.3674/52.9640/54.4598 ms. Actual FPS is
+3.6547/14.9030; complete-frame p50/p95/p99 is 272.6977/286.3639/300.7408 and
+66.6083/69.7458/73.3597 ms. Pose/instance publication p50 is 12.9433/10.5441 ms.
+Physics and rendered samples allocate 0/0 owner/all-thread managed bytes.
+GPU-store frame upload/readback remains 1048816/1049336 bytes per measured tick,
+18 submissions; final maximum penetration is .2703/.2933 against .601, energy is
+within the configured bound and no particle escaped. The GPU PNG was visually
+inspected. Reports/logs/captures are in
+`bin/physics-step-dispatch/2026-10-10/window-65536/`. This is the same host/workload
+profile as the pose-batch record, with actual VSync still Enabled; other devices,
+native allocation and complete registered extensions remain open.

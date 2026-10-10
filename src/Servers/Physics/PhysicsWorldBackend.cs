@@ -25,7 +25,18 @@ internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Ba
     internal virtual void PrepareInterval() => throw new InvalidOperationException("This physics space has no CPU worker scheduler.");
     internal abstract PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider);
     internal abstract PhysicsJointImplementation CreateJoint();
-    internal abstract void Step(double delta);
+    internal void Step(double delta) => Space.ExecuteStep(this, delta);
+    internal abstract void BeginStep(double delta);
+    internal abstract void PrepareWorld(double delta);
+    internal abstract void PrepareBodies(double delta);
+    internal abstract void Solve(double delta);
+    internal abstract void SyncResults();
+    internal abstract bool ResultsReady { get; }
+    internal abstract void CompleteBody(PhysicsServerCollider body);
+    internal abstract void CompleteBody(PhysicsBody body);
+    internal abstract void CollectContacts();
+    internal abstract void ScanAreas();
+    internal abstract void EndStep(Exception? failure);
     internal virtual void StepNative(float delta, int substeps) => throw new InvalidOperationException("This physics space has no CPU solver world.");
     internal virtual GPUPhysicsWorld EnableGPUIntegration() => throw new InvalidOperationException("GPU stage controls require a CPU-hosted world.");
     internal virtual GPUPhysicsWorld EnableGPUSolver() => throw new InvalidOperationException("GPU stage controls require a CPU-hosted world.");

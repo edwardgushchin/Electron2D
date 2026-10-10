@@ -10,6 +10,8 @@ Last updated: 2026-10-10
 
 `ReadBodyTransforms` validates the complete body sequence and retains staging, selected handles, input indices and compact pose scratch. CPU and scene/static projection use the scalar path; GPU raw dynamic projection reads one 16-byte pose per request. Output commits only after successful reads; retained body references are cleared in `finally`. Empty requests still run the common space guards. Source: [PhysicsSpace.BodyTransforms.cs](../../src/Servers/Physics/PhysicsSpace.BodyTransforms.cs).
 
+The [common step boundary](../../src/Servers/Physics/PhysicsSpace.Step.cs) now dispatches owner phases for preparation, solve, result synchronization, body completion, contacts and Areas. Shared callback/event ordering and always-released step guards replace separate CPU/GPU outer-step implementations. The selected owner retains actual numerical work, completion readiness and GPU failure policy.
+
 ## Description and internal flow
 
 One owner-thread world shared by scene bodies/Areas/joints and caller-owned colliders. Authored sleep/contact/iteration/default-joint policy stays here; application, capacity preparation and completed statistics dispatch through the selected owner. It retains one selected [PhysicsWorldBackend](PhysicsWorldBackend.md), which owns the native CPU world/workers or the resident GPU store and full interval dispatch. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.

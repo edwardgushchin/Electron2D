@@ -351,7 +351,7 @@ def reason_for_type(item, lookup):
         ({"CollisionPolygon2D"},
          "polygon collision-shape resource conversion and scene polygon owner integration after the first convex/concave shape slice"),
         ({"PhysicsServer2D", "PhysicsServer2DExtension", "PhysicsServer2DManager"},
-         "complete typed backend registration/factory and world-scoped implementation dispatch, shared RID lifecycle, callbacks, direct state/query result construction and CPU/GPU scene integration (ADRs 0054 and 0103); current facade is static/sealed, step/direct-space queries, fresh body/Area/joint attachments, world policy/capacity and completed statistics dispatch through retained built-in owners; other server operations, native-only scene phases and public extension contexts remain open"),
+         "complete typed backend registration/factory and world-scoped implementation dispatch, shared RID lifecycle, callbacks, direct state/query result construction and CPU/GPU scene integration (ADRs 0054 and 0103); current facade is static/sealed, step/direct-space queries, fresh body/Area/joint attachments, world policy/capacity, completed statistics and full-step phases dispatch through retained built-in owners; other server operations, concrete native scene helpers and public extension contexts remain open"),
         ({"PhysicsDirectBodyState2D", "PhysicsDirectBodyState2DExtension"},
          "complete typed body-state extension hooks and context construction preserving live attachment, owner/callback lifetime, contact identity and inherited operations (ADRs 0054 and 0103); current direct-body state is sealed and its constructor is internal"),
         ({"PhysicsDirectSpaceState2DExtension"},

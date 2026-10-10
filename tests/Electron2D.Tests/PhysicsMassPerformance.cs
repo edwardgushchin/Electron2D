@@ -167,7 +167,7 @@ internal static class PhysicsMassPerformance
         {
             var report = new
             {
-                Schema = 1,
+                Schema = 2,
                 SetupMS,
                 Scene = "dense-circle-pile",
                 Backend = Backend.ToString(),
@@ -188,6 +188,7 @@ internal static class PhysicsMassPerformance
                 Distribution = new[] { "mean", "p50", "p95", "p99", "max" },
                 StepMS = Summary(_steps, Samples),
                 WaitMS = Summary(_waits, Samples),
+                PhaseNames = new[] { "authoring", "world-policy-fields", "body-motion-callbacks", "solver", "result-sync", "pose-contacts", "areas-views-statistics", "callbacks-events" },
                 PhaseMeanMS = _phases.Select(value => value / Samples).ToArray(),
                 GPUPreparationNames = new[] { "policies/activity/motion/joints", "report selection", "command/wake publication", "included wake wait" },
                 GPUPreparationMeanMS = _preparation.Select(value => value / Samples).ToArray(),

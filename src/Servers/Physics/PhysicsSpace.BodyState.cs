@@ -3,12 +3,12 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     internal RID RID { get; set; }
-    internal float LastStep { get; private set; }
+    internal float LastStep { get; set; }
     private bool _dispatchingBodyStates;
     private readonly List<CallbackBody> _callbackBodies = [];
     private readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, PhysicsColliderBackend Backend, long Attachment, PhysicsBody? Scene);
 
-    private bool PrepareBodyStates(double delta)
+    internal bool PrepareBodyStates(double delta)
     {
         LastStep = (float)delta;
         _callbackBodies.Clear();
@@ -57,7 +57,7 @@ internal sealed partial class PhysicsSpace
         return hasKinematicBodies;
     }
 
-    private static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>
+    internal static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>
         runtime.ForceCallback is not null || runtime.SyncCallback is not null ||
         (scene is RigidBody ? scene.GetType() != typeof(RigidBody) : runtime.MaxContacts > 0 || runtime.View is { IsDisposed: false, HasCapturedContacts: true });
 

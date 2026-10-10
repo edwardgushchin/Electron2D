@@ -18,7 +18,7 @@ internal sealed partial class PhysicsSpace
     }
     private readonly record struct BodyMotion(B2Vec2 Center, B2Vec2 Velocity, float Angular, bool Active);
 
-    private void CaptureBodyMotions()
+    internal void CaptureBodyMotions()
     {
         Array.Clear(_bodyMotions);
         var world = b2GetWorldFromId(WorldID);

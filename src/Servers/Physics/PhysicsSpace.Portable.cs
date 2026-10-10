@@ -8,11 +8,11 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     private readonly List<PhysicsSnapshotMap> _snapshotMaps = [];
-    private bool _portableColdStep;
+    internal bool PortableColdStep;
     private readonly Dictionary<ulong, (ulong ID, int Slot, int Piece)> _portableShapeLookup = [];
     private readonly HashSet<(ulong, int, int, ulong, int, int)> _portableOneWayKeys = [];
     private GPUPhysicsBodyStore.PortableOneWay[] _portableGPUOneWays = [];
-    internal IReadOnlyList<PhysicsJointRuntime> SnapshotJoints => _jointRuntimes;
+    internal List<PhysicsJointRuntime> SnapshotJoints => _jointRuntimes;
     internal void RegisterSnapshotMap(PhysicsSnapshotMap map) => _snapshotMaps.Add(map);
     internal void UnregisterSnapshotMap(PhysicsSnapshotMap map) => _snapshotMaps.Remove(map);
     internal PhysicsReplayEntry? FindSnapshotObject(RID rid)
@@ -45,7 +45,7 @@ internal sealed partial class PhysicsSpace
         EnsureCheckpointAccess();
         _frameContacts.Clear(); _frameContactIndices.Clear(); _aggregateContactImpulses = false;
         _gpuReportRanges.Clear(); _oneWayPairs.Clear(); ResetDebugContacts();
-        if (GPUStore is { } gpu) gpu.BeginPortableRestore(); else _portableColdStep = true;
+        if (GPUStore is { } gpu) gpu.BeginPortableRestore(); else PortableColdStep = true;
     }
     internal void FailPortableRestore(Exception error) => _checkpointFailure = error;
     internal void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick, float step)
