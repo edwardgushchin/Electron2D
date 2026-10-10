@@ -43,6 +43,7 @@ public static partial class ResourceFileTypes
         RegisterResource("Script", CreateScript);
         RegisterResource("PhysicsMaterial", CreatePhysicsMaterial);
         RegisterResource("TileSet", CreateTileSet);
+        RegisterResource("TileMapPattern", CreateTileMapPattern);
         RegisterResource("TileSetAtlasSource", CreateTileSetAtlasSource);
         RegisterResourceArray<TileSetSource>();
         RegisterResource("RDShaderSPIRV", CreateRDShaderSPIRV);
@@ -117,6 +118,7 @@ public static partial class ResourceFileTypes
     private static Script CreateScript() => new();
     private static RDShaderSPIRV CreateRDShaderSPIRV() => new();
     private static TileSet CreateTileSet() => new();
+    private static TileMapPattern CreateTileMapPattern() => new();
     private static TileSetAtlasSource CreateTileSetAtlasSource() => new();
     private static PhysicsMaterial CreatePhysicsMaterial() => new();
     private static ColorPalette CreateColorPalette() => new();

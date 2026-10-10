@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Overview
 
-Defines tile grid geometry, terrain definitions, atlas sources and shared physics and navigation layer policies.
+Defines tile grid geometry, terrain definitions, reusable patterns, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -39,6 +39,10 @@ set.SetPhysicsLayerPhysicsMaterial(0, material);
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public int AddPattern(TileMapPattern pattern, int index = -1)`](#pattern-addpattern) | method | Inserts a borrowed live, nonempty, distinct instance at index; every negative index appends. Returns its index. Null/disposed input, empty/duplicate patterns and index beyond count throw typed exceptions before list mutation. Other sets may reference the same instance. Changed and property-list change publish after commitment. |
+| [`public TileMapPattern GetPattern(int index = -1)`](#pattern-getpattern) | method | Returns a borrowed pattern at an explicit zero-based index. The retained default -1 is invalid and throws ArgumentOutOfRangeException; it does not select the last entry. |
+| [`public int GetPatternsCount()`](#pattern-getpatternscount) | method | Returns list count. A pattern may become empty after insertion and still belongs to the list until removal or disposal. |
+| [`public void RemovePattern(int index)`](#pattern-removepattern) | method | Removes the indexed reference, unsubscribes disposal observation and publishes the list schema change. It does not dispose the resource. Missing index throws ArgumentOutOfRangeException. |
 | [`public System.Void AddTerrain(System.Int32 terrainSet, System.Int32 toPosition = -1)`](#terrain-7d0f0f8629f1) | method | Inserts a terrain with a generated name and opaque color, remapping center and peering identities. |
 | [`public System.Void AddTerrainSet(System.Int32 toPosition = -1)`](#terrain-e61ddae54404) | method | Inserts an empty terrain set; a negative insertion position appends. |
 | [`public System.Void ClearTerrains(System.Int32 terrainSet)`](#terrain-400244398cdd) | method | Removes every terrain in a set and clears its atlas assignments. |
@@ -808,3 +812,35 @@ Sets the matching mode and updates available peering directions.
 
 - `terrainSet`: The terrain set index.
 - `mode`: A defined matching mode.
+
+## Pattern Method Descriptions
+
+<a id="pattern-addpattern"></a>
+### AddPattern
+
+`public int AddPattern(TileMapPattern pattern, int index = -1)`
+
+Inserts a borrowed live, nonempty, distinct instance at index; every negative index appends. Returns its index. Null/disposed input, empty/duplicate patterns and index beyond count throw typed exceptions before list mutation. Other sets may reference the same instance. Changed and property-list change publish after commitment.
+
+<a id="pattern-getpattern"></a>
+### GetPattern
+
+`public TileMapPattern GetPattern(int index = -1)`
+
+Returns a borrowed pattern at an explicit zero-based index. The retained default -1 is invalid and throws ArgumentOutOfRangeException; it does not select the last entry.
+
+<a id="pattern-getpatternscount"></a>
+### GetPatternsCount
+
+`public int GetPatternsCount()`
+
+Returns list count. A pattern may become empty after insertion and still belongs to the list until removal or disposal.
+
+<a id="pattern-removepattern"></a>
+### RemovePattern
+
+`public void RemovePattern(int index)`
+
+Removes the indexed reference, unsubscribes disposal observation and publishes the list schema change. It does not dispose the resource. Missing index throws ArgumentOutOfRangeException.
+
+See [reusable patterns](../components/tiles.md#reusable-patterns) for the executable example, ownership, file graphs and verification boundaries.

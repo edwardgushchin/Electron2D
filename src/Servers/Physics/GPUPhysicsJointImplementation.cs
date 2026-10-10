@@ -5,7 +5,7 @@ internal sealed class GPUPhysicsJointImplementation(PhysicsSpace space) : Physic
     private GPUPhysicsBodyStore.JointHandle _gpuJoint;
     private GPUPhysicsBodyStore.JointDefinition _gpuDefinition;
 
-    private GPUPhysicsBodyStore.JointDefinition GPUDefinition(PhysicsJointRuntime settings) => _gpuDefinition with
+    private GPUPhysicsBodyStore.JointDefinition GPUDefinition(in PhysicsJointConfiguration settings) => _gpuDefinition with
     {
         DisableCollision = settings.DisableCollision,
         LimitEnabled = settings.PinLimitEnabled,
@@ -26,7 +26,7 @@ internal sealed class GPUPhysicsJointImplementation(PhysicsSpace space) : Physic
     };
     internal override bool IsAttached => _gpuJoint.Generation != 0;
     internal GPUPhysicsBodyStore.JointHandle Handle => _gpuJoint;
-    internal override void Attach(PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
+    internal override void Attach(PhysicsColliderBackend first, PhysicsColliderBackend? second, in PhysicsJointConfiguration settings)
     {
         if (IsAttached) throw new InvalidOperationException("A joint already has a backend attachment.");
         _gpuDefinition = new(settings.Type, Space.GPUCollider(first).GPUHandle, second is null ? default : Space.GPUCollider(second).GPUHandle, settings.FrameA, settings.FrameB);
@@ -38,7 +38,7 @@ internal sealed class GPUPhysicsJointImplementation(PhysicsSpace space) : Physic
         try { if (IsAttached && !Space.HasBackendFailure) Space.GPUStore!.RemoveJoint(_gpuJoint); }
         finally { _gpuJoint = default; _gpuDefinition = default; }
     }
-    internal override void ApplySolverPolicy(PhysicsJointRuntime settings) => SetGPUJoint(GPUDefinition(settings));
+    internal override void ApplySolverPolicy(in PhysicsJointConfiguration settings) => SetGPUJoint(GPUDefinition(settings));
     internal override void ApplyPortableFrames(Transform first, Transform second) => SetGPUJoint(_gpuDefinition with { FrameA = first, FrameB = second });
     internal override void SetCollideConnected(bool value) => SetGPUJoint(_gpuDefinition with { DisableCollision = !value });
     internal override void SetPinLimits(bool enabled, float lower, float upper) =>

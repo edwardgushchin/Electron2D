@@ -190,10 +190,10 @@ internal sealed class DampedSpringJointTests(PhysicsServer.Backend backend)
         Check(!spring.Runtime.HasBackend, "An unresolved endpoint removes the filter joint and force generation.");
         spring.NodeB = "../Second";
         tree.PhysicsFrame(1d / 60);
-        var id = spring.Runtime.Backend.ID;
+        var id = ((spring.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default);
         spring.Scale = new(2, 1); spring.Length = 6;
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(spring.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || spring.Runtime.Backend.ID.Equals(id)), "Invalid spring geometry retains the previous native connection.");
+        Check(spring.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || ((spring.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default).Equals(id)), "Invalid spring geometry retains the previous native connection.");
         spring.Scale = Vector2.One;
         tree.PhysicsFrame(1d / 60);
         spring.Stiffness = 20; spring.RestLength = 6;

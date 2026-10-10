@@ -10167,6 +10167,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TileMapPattern",
+    "kind": "type",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "TileMapPattern",
+    "signature": "public sealed class Electron2D.TileMapPattern",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TileOffsetAxis",
     "kind": "type",
     "declaringType": "Electron2D.TileOffsetAxis",
@@ -18791,6 +18806,19 @@
     "declaringType": "Electron2D.TileMapLayer",
     "name": ".ctor",
     "signature": "public TileMapLayer()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileMapPattern..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": ".ctor",
+    "signature": "public TileMapPattern()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -152382,6 +152410,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapLayer.GetPattern(Electron2D.Vector2i[])",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "GetPattern",
+    "signature": "public Electron2D.TileMapPattern GetPattern(Electron2D.Vector2i[] coordsArray)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coordsArray",
+        "type": "Electron2D.Vector2i[]",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.TileMapPattern",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileMapLayer.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.TileMapLayer",
@@ -152557,6 +152604,35 @@
       {
         "name": "localPosition",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapLayer.MapPattern(Electron2D.Vector2i,Electron2D.Vector2i,Electron2D.TileMapPattern)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "MapPattern",
+    "signature": "public Electron2D.Vector2i MapPattern(Electron2D.Vector2i positionInTilemap, Electron2D.Vector2i coordsInPattern, Electron2D.TileMapPattern pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "positionInTilemap",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "coordsInPattern",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "pattern",
+        "type": "Electron2D.TileMapPattern",
         "default": null
       }
     ],
@@ -152775,6 +152851,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapLayer.SetPattern(Electron2D.Vector2i,Electron2D.TileMapPattern)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "SetPattern",
+    "signature": "public System.Void SetPattern(Electron2D.Vector2i position, Electron2D.TileMapPattern pattern)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "pattern",
+        "type": "Electron2D.TileMapPattern",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileMapLayer.TileDataRuntimeUpdate(Electron2D.Vector2i,Electron2D.TileData)",
     "kind": "method",
     "declaringType": "Electron2D.TileMapLayer",
@@ -152868,6 +152968,263 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileMapPattern.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetCellAlternativeTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetCellAlternativeTile",
+    "signature": "public System.Int32 GetCellAlternativeTile(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetCellAtlasCoords(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetCellAtlasCoords",
+    "signature": "public Electron2D.Vector2i GetCellAtlasCoords(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetCellSourceID(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetCellSourceID",
+    "signature": "public System.Int32 GetCellSourceID(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetSize",
+    "signature": "public Electron2D.Vector2i GetSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.GetUsedCells()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "GetUsedCells",
+    "signature": "public Electron2D.Vector2i[] GetUsedCells()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2i[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.HasCell(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "HasCell",
+    "signature": "public System.Boolean HasCell(Electron2D.Vector2i coords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.IsEmpty()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "IsEmpty",
+    "signature": "public System.Boolean IsEmpty()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.RemoveCell(Electron2D.Vector2i,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "RemoveCell",
+    "signature": "public System.Void RemoveCell(Electron2D.Vector2i coords, System.Boolean updateSize)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "updateSize",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.SetCell(Electron2D.Vector2i,System.Int32,System.Nullable\u003CElectron2D.Vector2i\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "SetCell",
+    "signature": "public System.Void SetCell(Electron2D.Vector2i coords, System.Int32 sourceID = -1, System.Nullable\u003CElectron2D.Vector2i\u003E atlasCoords = null, System.Int32 alternativeTile = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "coords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "sourceID",
+        "type": "System.Int32",
+        "default": "-1"
+      },
+      {
+        "name": "atlasCoords",
+        "type": "System.Nullable\u003CElectron2D.Vector2i\u003E",
+        "default": "null"
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileMapPattern.SetSize(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileMapPattern",
+    "name": "SetSize",
+    "signature": "public System.Void SetSize(Electron2D.Vector2i size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.AddNavigationLayer(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -152884,6 +153241,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.AddPattern(Electron2D.TileMapPattern,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddPattern",
+    "signature": "public System.Int32 AddPattern(Electron2D.TileMapPattern pattern, System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "pattern",
+        "type": "Electron2D.TileMapPattern",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -153124,6 +153505,38 @@
     "declaringType": "Electron2D.TileSet",
     "name": "GetNextSourceID",
     "signature": "public System.Int32 GetNextSourceID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPattern(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPattern",
+    "signature": "public Electron2D.TileMapPattern GetPattern(System.Int32 index = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.TileMapPattern",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetPatternsCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetPatternsCount",
+    "signature": "public System.Int32 GetPatternsCount()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -153515,6 +153928,25 @@
     "parameters": [
       {
         "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemovePattern(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemovePattern",
+    "signature": "public System.Void RemovePattern(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
         "type": "System.Int32",
         "default": null
       }

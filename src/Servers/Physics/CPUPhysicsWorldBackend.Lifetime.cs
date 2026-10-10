@@ -15,7 +15,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             _continuousForces.Capacity = _continuousJointBudgets.Capacity = 0;
             _kinematicStepForces.Clear(); _jointImpulseVelocities.Clear(); _oneWayPairs.Clear(); _staleOneWayPairs.Clear();
             _frameContacts.Clear(); _frameContactIndices.Clear(); _frameContactHeads = []; _frameContactTails = []; _bodyMotions = [];
-            _reportOnlyPairs.Clear(); _portableShapeLookup.Clear(); _colliders.Clear();
+            _reportOnlyPairs.Clear(); _portableShapeLookup.Clear(); _colliders.Clear(); _jointAttachments.Clear();
         }
     }
 }

@@ -39,6 +39,9 @@ layer.UpdateInternals();
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public TileMapPattern GetPattern(Vector2i[] coordsArray)`](#pattern-getpattern) | method | Returns a new caller-owned pattern capturing every selected coordinate, including empty cells. Duplicates overwrite the same coordinate. Componentwise minimum normalization includes offset-grid parity correction and possible one-cell nonnegative padding. Empty input returns a new zero-size pattern. Missing TileSet, null input or extent overflow throw; failed output construction is disposed. |
+| [`public Vector2i MapPattern(Vector2i positionInTilemap, Vector2i coordsInPattern, TileMapPattern pattern)`](#pattern-mappattern) | method | Returns the destination for a stored coordinate using current TileSet geometry, negative-anchor parity and signed 32-bit checked arithmetic. Missing TileSet, null/disposed pattern, absent pattern coordinate or destination overflow throw before mutation. Warmed scalar mapping allocates no measured owner-thread managed bytes. |
+| [`public void SetPattern(Vector2i position, TileMapPattern pattern)`](#pattern-setpattern) | method | Snapshots borrowed pattern data, maps/validates all destinations/identities, then commits the complete changed stamp and queues existing draw/physics/navigation publication. Explicit empty entries erase destinations; omitted cells/margins preserve them. An unchanged or empty stamp is quiet. Layer Changed runs once after commitment; listener failure leaves complete cells queued. Missing TileSet, invalid/disposed pattern, overflow and forbidden runtime-data callback mutation reject before cells change. Authoring may allocate. |
 | [`public System.Void SetCellsTerrainConnect(Electron2D.Vector2i[] cells, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)`](#terrain-18aa2f5a5e89) | method | Paints a terrain and joins adjacent matching centers, updating surrounding transitions when needed. |
 | [`public System.Void SetCellsTerrainPath(Electron2D.Vector2i[] path, System.Int32 terrainSet, System.Int32 terrain, System.Boolean ignoreEmptyTerrains = true)`](#terrain-8948f8a966cf) | method | Paints a path, constraining successive neighboring cells to connect through the selected terrain. |
 | [`Vector2i GetNeighborCell(Vector2i coords, CellNeighbor neighbor)`](#grid-getneighborcell) | method | Returns a named edge/corner neighbor for the active shape and axis. Undefined or unavailable directions throw ArgumentOutOfRangeException. Widened integer intermediates avoid wraparound; final results outside Vector2i throw OverflowException. |
@@ -831,3 +834,28 @@ The tile set must contain the required terrain combinations. Neighboring transit
 - `terrainSet`: The terrain set index.
 - `terrain`: The terrain index, or -1 for empty terrain.
 - `ignoreEmptyTerrains`: Whether existing empty terrain constraints are ignored.
+
+## Pattern Method Descriptions
+
+<a id="pattern-getpattern"></a>
+### GetPattern
+
+`public TileMapPattern GetPattern(Vector2i[] coordsArray)`
+
+Returns a new caller-owned pattern capturing every selected coordinate, including empty cells. Duplicates overwrite the same coordinate. Componentwise minimum normalization includes offset-grid parity correction and possible one-cell nonnegative padding. Empty input returns a new zero-size pattern. Missing TileSet, null input or extent overflow throw; failed output construction is disposed.
+
+<a id="pattern-mappattern"></a>
+### MapPattern
+
+`public Vector2i MapPattern(Vector2i positionInTilemap, Vector2i coordsInPattern, TileMapPattern pattern)`
+
+Returns the destination for a stored coordinate using current TileSet geometry, negative-anchor parity and signed 32-bit checked arithmetic. Missing TileSet, null/disposed pattern, absent pattern coordinate or destination overflow throw before mutation. Warmed scalar mapping allocates no measured owner-thread managed bytes.
+
+<a id="pattern-setpattern"></a>
+### SetPattern
+
+`public void SetPattern(Vector2i position, TileMapPattern pattern)`
+
+Snapshots borrowed pattern data, maps/validates all destinations/identities, then commits the complete changed stamp and queues existing draw/physics/navigation publication. Explicit empty entries erase destinations; omitted cells/margins preserve them. An unchanged or empty stamp is quiet. Layer Changed runs once after commitment; listener failure leaves complete cells queued. Missing TileSet, invalid/disposed pattern, overflow and forbidden runtime-data callback mutation reject before cells change. Authoring may allocate.
+
+See [reusable patterns](../components/tiles.md#reusable-patterns) for the executable example, ownership, file graphs and verification boundaries.

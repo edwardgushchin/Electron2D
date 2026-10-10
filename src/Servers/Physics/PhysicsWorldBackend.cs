@@ -33,7 +33,7 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
     internal abstract PhysicsSpace.Statistics ReadStatistics();
     internal virtual void PrepareInterval() => throw new InvalidOperationException("This physics space has no CPU worker scheduler.");
     internal abstract PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider);
-    internal abstract PhysicsJointImplementation CreateJoint();
+    internal abstract PhysicsJointImplementation CreateJoint(PhysicsJointBackend joint);
     internal virtual PhysicsDirectSpaceState CreateDirectSpaceState() => new(Space.RID);
     internal virtual PhysicsDirectBodyState CreateDirectBodyState(PhysicsBodyRuntime body) => new(body, Space);
     internal void Step(double delta) => Space.ExecuteStep(this, delta);

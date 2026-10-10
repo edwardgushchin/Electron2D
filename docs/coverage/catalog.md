@@ -874,7 +874,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [TileData](classes/TileData.md) | Object | Partial | 44 |
 | [TileMap](classes/TileMap.md) | Node2D | Blocked | 63 |
 | [TileMapLayer](classes/TileMapLayer.md) | Node2D | Partial | 50 |
-| [TileMapPattern](classes/TileMapPattern.md) | Resource | Blocked | 10 |
+| [TileMapPattern](classes/TileMapPattern.md) | Resource | Implemented | 10 |
 | [TileSet](classes/TileSet.md) | Resource | Partial | 121 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | TileSetSource | Partial | 43 |
 | [TileSetScenesCollectionSource](classes/TileSetScenesCollectionSource.md) | TileSetSource | Blocked | 11 |

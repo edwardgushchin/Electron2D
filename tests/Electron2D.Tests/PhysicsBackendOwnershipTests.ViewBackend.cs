@@ -55,7 +55,8 @@ internal static partial class PhysicsBackendOwnershipTests
             var created = _inner.CreateCollider(collider);
             return new WrappedCollider(collider, Space, created) { ShapeInputs = ShapeHook };
         }
-        internal override PhysicsJointImplementation CreateJoint() => _inner.CreateJoint();
+        internal override PhysicsJointImplementation CreateJoint(PhysicsJointBackend joint) => new WrappedJoint(Space, _inner.CreateJoint(joint));
+        internal CPUPhysicsJointImplementation NativeJoint(PhysicsJointBackend joint) => ((CPUPhysicsWorldBackend)_inner).NativeJoint(joint);
         internal override void BeginStep(double delta) => _inner.BeginStep(delta);
         internal override void PrepareWorld(double delta) => _inner.PrepareWorld(delta);
         internal override void PrepareBodies(double delta) => _inner.PrepareBodies(delta);

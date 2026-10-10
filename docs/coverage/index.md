@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Shared joint inputs and ownership](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
+now pass complete engine-unit configuration values to selected constraints. CPU
+spring scheduling resolves actual native attachments from its owner, including
+wrapped implementations; matching retirement preserves replacement attachments.
+Public named registration and the complete external family remain open.
+
 [Shared collider inputs](../components/physics-backends.md#shared-collider-shape-inputs)
 now project scene/raw body and Area authoring into one selected implementation
 span. Exact resources, transforms, logical disabled indices and one-way policy
@@ -20,9 +26,11 @@ Actual attachments stay in the resident store; selected wrappers retain publicat
 Area/query/joint behavior and local/portable restoration. Identity/priority edits
 reach selected hooks. Public registration and the complete operation family stay open.
 
-[Terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) now connects ordered definitions, all three matching modes, center/peering assignments, weighted alternatives and connect/path edits to retained drawing, selected CPU/GPU collision, navigation and fresh scene files. Twenty-seven formerly Blocked rows are Implemented. All 144 grid/mode configurations match pinned painting fixtures; coherent remapping and typed callback/storage/failure behavior have separate checks. Pattern resources, proxy tables and occlusion/custom/material consumers retain their own prerequisites.
+[Reusable tile patterns](../components/tiles.md#reusable-patterns) now implements all eleven TileMapPattern class/member rows and seven TileSet/TileMapLayer consumers: independent cells, explicit emptiness/margins, ordered borrowed storage and parity-aware capture/map/place. All 48 grid profiles match 144 captures/576 pinned placements. Malformed stored edits, coordinate overflow, listener failure, copies/disposal and fresh-process scene placement have executable checks; both physics backends receive real collision/navigation. GPU/compatibility windows pass four shapes, re-placement and clear pixels/region cleanup with zero owner-thread managed bytes in 24 warmed full forced-redraw frame brackets each. Native/all-thread allocator totals, other targets, throughput, editor and human acceptance remain separate.
 
-[Tile grid geometry](../components/tiles.md#grid-placement-and-neighbors) now supports all four shapes, six coordinate layouts, two offset axes and named neighbors. Thirty-seven formerly Blocked and two Partial rows are Implemented. The same kernel places retained drawing, CPU/GPU collisions, navigation regions and baked contours; all 48 configurations match pinned executable geometry. Fresh scene files, actual GPU/compatibility pixels and zero-allocation scalar/native owner checks verify the exercised Linux profile. Terrain/pattern/proxy/occlusion retain their own prerequisites.
+[Terrain authoring and painting](../components/tiles.md#terrain-authoring-and-painting) now connects ordered definitions, all three matching modes, center/peering assignments, weighted alternatives and connect/path edits to retained drawing, selected CPU/GPU collision, navigation and fresh scene files. Twenty-seven formerly Blocked rows are Implemented. All 144 grid/mode configurations match pinned painting fixtures; coherent remapping and typed callback/storage/failure behavior have separate checks. Proxy tables and occlusion/custom/material consumers retain their own prerequisites.
+
+[Tile grid geometry](../components/tiles.md#grid-placement-and-neighbors) now supports all four shapes, six coordinate layouts, two offset axes and named neighbors. Thirty-seven formerly Blocked and two Partial rows are Implemented. The same kernel places retained drawing, CPU/GPU collisions, navigation regions and baked contours; all 48 configurations match pinned executable geometry. Fresh scene files, actual GPU/compatibility pixels and zero-allocation scalar/native owner checks verify the exercised Linux profile. Proxy/occlusion retain their own prerequisites.
 
 [CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)
 now separates native handles from common scene/server identities and supports

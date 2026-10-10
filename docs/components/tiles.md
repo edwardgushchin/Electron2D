@@ -85,7 +85,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Pattern/proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Proxy painting, scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 
@@ -159,3 +159,22 @@ Terrain definitions, all authored peering values and weights persist through typ
 `TileTerrainTests` compares 144 pinned shape/layout/axis/mode configurations and 1,152 connect/path/clear stages, with ordered unique-pattern selections. It also checks metadata/remapping, quiet/invalid setters, callback/reentry failure, finite weights, weighted distribution, file graphs, CPU/GPU collision/navigation placement and fresh-process re-painting. The reference terrain insertion/move omission and forward insertion-index shifts are corrected; empty/removed assignments reset coherently. Offset-corner paths enumerate actual shared-corner cells instead of asking for unsupported corner neighbor cells. [Pinned fixture production](../../tools/tiles/terrain_reference.gd).
 
 Prepared unchanged updates allocate zero owner-thread managed bytes. Real GPU/compatibility windows on CPU/GPU worlds pass 12 shape/mode panels, connect/path editing, authored-pattern pixel colors and placed collision/navigation. Each combination measures 24 warmed complete owner frame intervals with forced redraw at zero managed bytes. Captures are under ignored bin/terrain-validation/. Other platforms, native/all-thread allocator totals, dense-map authoring throughput and human visual acceptance remain unverified.
+
+## Reusable patterns
+
+TileMapPattern stores independent nonnegative coordinates, source/atlas/alternative identities and an extent. Empty assignments remain stored and erase their destination, while omitted coordinates and size-only margins preserve existing layer cells. Assignment always emits Resource.Changed. RemoveCell(updateSize: true) recomputes extent, false preserves it; SetSize can shrink unused margins but cannot exclude a stored cell. Array exports are independent and unordered. Negative coordinates, invalid identifiers and extent overflow reject before mutation.
+
+```csharp
+using var stamp = layer.GetPattern([new(-3, -3), new(-3, -2), new(-2, -2)]);
+int index = set.AddPattern(stamp);
+Vector2i placed = layer.MapPattern(new(5, 5), stamp.GetUsedCells()[0], stamp);
+layer.SetPattern(new(5, 5), set.GetPattern(index));
+layer.UpdateInternals();
+set.RemovePattern(index);
+```
+
+This snippet requires a live TileMapLayer with the same assigned TileSet. The compiled tests exercise it with rendering, collision and navigation. Capture uses the selected componentwise minimum and may add one-cell nonnegative padding in stacked layouts. Placement follows current set geometry and corrects row/column parity, including negative anchors. It snapshots and validates every destination and identity before committing all changed cells, queues the batch and emits one layer Changed event. Empty/no-op placement is quiet. Listener failure leaves the complete stamp committed and queued. Resource authors coordinate edits with attached scene owners.
+
+TileSet's list borrows distinct nonempty patterns; a negative insertion index appends, but GetPattern's default -1 remains invalid. Insertions/removals update the ordered list. Existing patterns may later become empty. Pattern disposal removes list references; set removal/disposal does not dispose the pattern. Shallow set copies share patterns, deep copies follow ordinary Resource modes; standalone pattern copies always own independent cells. Typed stored arrays validate atomically and preserve full coordinates, explicit emptiness and size margins through local/fresh-process resource and scene files.
+
+TilePatternTests compares all 48 shape/layout/axis profiles in 144 captures and 576 placements against the pinned producer [pattern_reference.gd](../../tools/tiles/pattern_reference.gd). It checks duplicates, negative-anchor parity, explicit emptiness, missing entries, margins, overflow, malformed stored arrays, listener failure, copies/borrowed disposal, real CPU/GPU collision and navigation, root-local baking, disable/clear cleanup and fresh-process loaded scene placement. Scalar and mapping checks measure 1024 warmed owner operations; prepared updates measure 256 unchanged intervals. Native GPU/compatibility windows with CPU/GPU worlds exercise four shape panels, capture/store/re-place and actual pixels/owners/regions; 24 warmed full forced-redraw owner frames are measured separately. All four native combinations pass; scalar/mapping checks, unchanged updates and all four warmed frame brackets measure zero owner-thread managed bytes. Four captures have SHA-256 f8efb91c2ed690b8d5fb36ba0b41dd9b54a93045f410afedf55a172d064a3ae0; one capture was visually inspected. Images/logs remain under ignored bin/pattern-validation/. Other platforms, native/all-thread allocation totals, dense authoring throughput and human acceptance remain unverified.

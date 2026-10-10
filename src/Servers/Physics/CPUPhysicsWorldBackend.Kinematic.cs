@@ -72,10 +72,10 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         if (applyJointForces)
         {
-            foreach (var joint in Space.SnapshotJoints) joint.PrepareSolverStep(delta);
+            foreach (var joint in Space.SnapshotJoints) if (joint.HasBackend) NativeJoint(joint.Backend).PrepareSolverStep(delta, joint.Configuration);
             _jointImpulseVelocities.Clear();
-            foreach (var joint in Space.SnapshotJoints) joint.ValidateSolverStep(this);
-            foreach (var joint in Space.SnapshotJoints) joint.ApplySolverStep();
+            foreach (var joint in Space.SnapshotJoints) if (joint.HasBackend) NativeJoint(joint.Backend).ValidateSolverStep(this);
+            foreach (var joint in Space.SnapshotJoints) if (joint.HasBackend) NativeJoint(joint.Backend).ApplySolverStep();
         }
         _contactStep++;
         try { StepNative(delta, substeps); PruneOneWayPairs(); }

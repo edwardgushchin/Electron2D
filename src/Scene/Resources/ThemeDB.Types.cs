@@ -356,6 +356,7 @@ public sealed partial class ThemeDB
         ["ThemeDB"] = ["ThemeDB", "ElectronObject"],
         ["TileData"] = ["TileData", "ElectronObject"],
         ["TileMapLayer"] = ["TileMapLayer", "Entity", "CanvasItem", "Node", "ElectronObject"],
+        ["TileMapPattern"] = ["TileMapPattern", "Resource", "ElectronObject"],
         ["TileSet"] = ["TileSet", "Resource", "ElectronObject"],
         ["TileSetAtlasSource"] = ["TileSetAtlasSource", "TileSetSource", "Resource", "ElectronObject"],
         ["TileSetSource"] = ["TileSetSource", "Resource", "ElectronObject"],

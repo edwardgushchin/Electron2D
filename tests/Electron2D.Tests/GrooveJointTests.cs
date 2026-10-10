@@ -37,7 +37,7 @@ internal sealed class GrooveJointTests(PhysicsServer.Backend backend)
         Check(MathF.Abs(slider.GlobalPosition.X) < 4 && slider.GlobalPosition.Y is > 45 and < 55,
             "The wheel constraint removes sideways velocity and stops at the far groove endpoint.");
         Check(slider.GlobalRotation > 0.5f, "Sliding does not lock the second body's rotation.");
-        if (backend == PhysicsServer.Backend.CPU) Check(b2WheelJoint_GetUpperLimit(groove.Runtime.Backend.ID) == 0.5f,
+        if (backend == PhysicsServer.Backend.CPU) Check(b2WheelJoint_GetUpperLimit(((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default)) == 0.5f,
             "The finite 50-unit groove maps to a half-meter solver limit.");
 
         var before = GC.GetAllocatedBytesForCurrentThread();
@@ -86,10 +86,10 @@ internal sealed class GrooveJointTests(PhysicsServer.Backend backend)
         using var tree = new SceneTree(root);
         slider.LinearVelocity = new(0, 120);
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
-        var originalID = groove.Runtime.Backend.ID;
+        var originalID = ((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default);
         groove.Length = 20;
-        if (backend == PhysicsServer.Backend.CPU) Check(groove.Runtime.Backend.ID.Equals(originalID) &&
-              MathF.Abs(b2WheelJoint_GetUpperLimit(groove.Runtime.Backend.ID) - 0.2f) < 0.00001f,
+        if (backend == PhysicsServer.Backend.CPU) Check(((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default).Equals(originalID) &&
+              MathF.Abs(b2WheelJoint_GetUpperLimit(((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default)) - 0.2f) < 0.00001f,
             "Live groove length updates the limit without dropping body-local anchors.");
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
         Check(slider.GlobalPosition.Y is > 16 and < 24,
@@ -97,7 +97,7 @@ internal sealed class GrooveJointTests(PhysicsServer.Backend backend)
 
         groove.InitialOffset = 75;
         tree.PhysicsFrame(1d / 60);
-        if (backend == PhysicsServer.Backend.CPU) Check(!groove.Runtime.Backend.ID.Equals(originalID) && !b2Joint_IsValid(originalID),
+        if (backend == PhysicsServer.Backend.CPU) Check(!((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default).Equals(originalID) && !b2Joint_IsValid(originalID),
             "Changing the second-body offset replaces the old native constraint.");
         for (var frame = 0; frame < 40; frame++) tree.PhysicsFrame(1d / 60);
         Check(slider.GlobalPosition.Y < -20,
@@ -110,11 +110,11 @@ internal sealed class GrooveJointTests(PhysicsServer.Backend backend)
             "Nonfinite geometry rejects before mutating stored values.");
         Reject<InvalidOperationException>(() => Task.Run(() => groove.Length = 30).GetAwaiter().GetResult());
         Check(groove.Length == 20, "Off-owner geometry edits leave the constraint unchanged.");
-        var previousID = groove.Runtime.Backend.ID;
+        var previousID = ((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default);
         groove.Scale = new(2, 1);
         groove.InitialOffset = 70;
         Reject<AggregateException>(() => tree.PhysicsFrame(1d / 60));
-        Check(groove.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || groove.Runtime.Backend.ID.Equals(previousID)) && groove.Length == 20,
+        Check(groove.Runtime.HasBackend && (backend != PhysicsServer.Backend.CPU || ((groove.Runtime.Backend.Implementation as CPUPhysicsJointImplementation)?.ID ?? default).Equals(previousID)) && groove.Length == 20,
             "Unrepresentable groove geometry preserves the previous constraint and stored length.");
         groove.Scale = Vector2.One;
         groove.InitialOffset = 75;

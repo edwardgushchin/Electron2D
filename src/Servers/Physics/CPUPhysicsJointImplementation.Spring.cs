@@ -10,7 +10,7 @@ internal sealed partial class CPUPhysicsJointImplementation
     private B2Vec2 _pointB;
     private B2Vec2 _pendingImpulse;
 
-    internal void PrepareSolverStep(float delta, PhysicsJointRuntime settings)
+    internal void PrepareSolverStep(float delta, in PhysicsJointConfiguration settings)
     {
         _pendingImpulse = default;
         if (settings.Type != PhysicsServer.JointType.DampedSpring || !IsAttached || settings.SpringStiffness == 0 && settings.SpringDamping == 0) return;
@@ -33,7 +33,7 @@ internal sealed partial class CPUPhysicsJointImplementation
         var angularA = b2Body_GetAngularVelocity(BodyAID);
         var angularB = b2Body_GetAngularVelocity(BodyBID);
         var speed = ((double)velocityB.X - velocityA.X) * nx + ((double)velocityB.Y - velocityA.Y) * ny + angularB * crossB - angularA * crossA;
-        var rest = (settings.SpringAutomaticRest ? Math.Abs(settings.SpringAutomaticLength) : settings.SpringRestLength) * (double)PhysicsSpace.MetersPerUnit;
+        var rest = settings.EffectiveSpringRestLength * (double)PhysicsSpace.MetersPerUnit;
         var elastic = (rest - distance) * settings.SpringStiffness * delta;
         var decay = Math.Exp(-(double)settings.SpringDamping * delta * inverse);
         var total = elastic * decay - speed * (1 - decay) / inverse;

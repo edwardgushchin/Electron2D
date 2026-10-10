@@ -299,6 +299,8 @@ internal static partial class PhysicsBackendOwnershipTests
             Check(!failed.IsAttached && failed.Implementation is null && PhysicsServer.BodyGetSpace(first) == firstSpace,
                 "Unsupported internal role retires the failed joint attachment without releasing endpoints");
             var source = PhysicsServer.Service.GetSceneSpace(firstSpace);
+            if (source.BackendImplementation is CPUPhysicsWorldBackend cpuOwner)
+                Reject<InvalidOperationException>(() => cpuOwner.NativeJoint(failed));
             foreach (var role in new[] { PhysicsServer.JointType.Pin, PhysicsServer.JointType.Groove, PhysicsServer.JointType.DampedSpring })
             {
                 if (role == PhysicsServer.JointType.Pin) PhysicsServer.JointMakePin(joint, new(25, 25), first, second);

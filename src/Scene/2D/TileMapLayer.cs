@@ -61,11 +61,17 @@ public partial class TileMapLayer : Entity
     public void SetCell(Vector2i coords, int sourceID = -1, Vector2i? atlasCoords = null, int alternativeTile = 0)
     {
         EnsureMutable(); var atlas = atlasCoords ?? new Vector2i(-1, -1);
-        if (sourceID == -1 || atlas == new Vector2i(-1, -1) || alternativeTile == -1) { EraseCell(coords); return; }
+        var validated = ValidateCell(sourceID, atlas, alternativeTile);
+        if (validated is null) { EraseCell(coords); return; }
+        var cell = validated.Value; if (_cells.TryGetValue(coords, out var old) && old == cell) return;
+        _cells[coords] = cell; MarkCell(coords);
+    }
+    private static Cell? ValidateCell(int sourceID, Vector2i atlas, int alternativeTile)
+    {
+        if (sourceID == -1 || atlas == new Vector2i(-1, -1) || alternativeTile == -1) return null;
         if (sourceID < 0 || sourceID >= ushort.MaxValue || atlas.X < 0 || atlas.Y < 0 || atlas.X >= ushort.MaxValue || atlas.Y >= ushort.MaxValue || alternativeTile < 0 || alternativeTile >= ushort.MaxValue)
             throw new ArgumentOutOfRangeException(nameof(sourceID), "Tile identities must fit unsigned 16-bit storage without the invalid sentinel.");
-        var cell = new Cell(sourceID, atlas, alternativeTile); if (_cells.TryGetValue(coords, out var old) && old == cell) return;
-        _cells[coords] = cell; MarkCell(coords);
+        return new Cell(sourceID, atlas, alternativeTile);
     }
     /// <summary>Erases a cell if present.</summary>
     /// <param name="coords">Layer cell coordinates.</param>

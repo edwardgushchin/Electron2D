@@ -1,5 +1,3 @@
-using Box2D.NET;
-
 namespace Electron2D;
 
 /// <summary>Retains the current selected joint attachment while common resource identity stays in its runtime.</summary>
@@ -8,8 +6,6 @@ internal sealed partial class PhysicsJointBackend
     private PhysicsJointImplementation? _implementation;
     internal PhysicsJointImplementation? Implementation => _implementation;
     private PhysicsJointImplementation Attached => _implementation ?? throw new InvalidOperationException("The joint has no solver attachment.");
-    private CPUPhysicsJointImplementation CPU => _implementation as CPUPhysicsJointImplementation ?? throw new InvalidOperationException("The joint has no CPU solver attachment.");
-    internal B2JointId ID => (_implementation as CPUPhysicsJointImplementation)?.ID ?? default;
     internal bool IsAttached => _implementation?.IsAttached == true;
 
     internal static Transform SampleLocalFrame(PhysicsColliderBackend? body, Transform pose, Vector2 point, float angle) =>
@@ -18,8 +14,8 @@ internal sealed partial class PhysicsJointBackend
     internal void Attach(PhysicsSpace space, PhysicsColliderBackend first, PhysicsColliderBackend? second, PhysicsJointRuntime settings)
     {
         if (_implementation is not null) throw new InvalidOperationException("A joint already has a backend attachment.");
-        _implementation = space.BackendImplementation.CreateJoint();
-        try { _implementation.Attach(first, second, settings); }
+        _implementation = space.BackendImplementation.CreateJoint(this);
+        try { _implementation.Attach(first, second, settings.Configuration); }
         catch (Exception error)
         {
             try { Detach(); }
@@ -32,7 +28,7 @@ internal sealed partial class PhysicsJointBackend
         try { _implementation?.Detach(); }
         finally { _implementation = null; }
     }
-    internal void ApplySolverPolicy(PhysicsJointRuntime settings) => Attached.ApplySolverPolicy(settings);
+    internal void ApplySolverPolicy(PhysicsJointRuntime settings) => Attached.ApplySolverPolicy(settings.Configuration);
     internal void ApplyPortableFrames(Transform first, Transform second) => Attached.ApplyPortableFrames(first, second);
     internal void SetCollideConnected(bool value) => Attached.SetCollideConnected(value);
     internal void SetPinLimits(bool enabled, float lower, float upper) => Attached.SetPinLimits(enabled, lower, upper);

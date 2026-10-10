@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -136,3 +136,5 @@ Threaded loading invokes compiled factories and codecs on workers, potentially c
 ## Navigation baking integration
 
 NavigationPolygon outlines/settings/generated geometry and NavigationMeshSourceGeometryData contour/projected payloads now have exact compiled portable schemas/factories. No transient workers, callbacks, parser RIDs or scene ownership is serialized. See [navigation baking](../components/navigation-baking.md).
+
+The built-in TileMapPattern factory and typed pattern-array codec support standalone resources and TileSet pattern lists in portable scene graphs; pattern cell records and extent restore through compiled descriptors. See [reusable patterns](../components/tiles.md#reusable-patterns).
