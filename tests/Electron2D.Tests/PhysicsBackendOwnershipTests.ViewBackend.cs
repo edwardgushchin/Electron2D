@@ -6,7 +6,8 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class ViewBackend : PhysicsWorldBackend
     {
         private readonly PhysicsWorldBackend _inner;
-        internal CPUPhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider) => ((CPUPhysicsWorldBackend)_inner).NativeCollider(collider);
+        internal PhysicsColliderImplementation NativeCollider(PhysicsColliderBackend collider) => Kind == PhysicsServer.Backend.CPU ?
+            ((CPUPhysicsWorldBackend)_inner).NativeCollider(collider) : _inner.GPUStore!.NativeCollider(collider);
         internal Func<PhysicsDirectSpaceState>? SpaceFactory;
         internal Func<PhysicsBodyRuntime, PhysicsDirectBodyState>? BodyFactory;
         internal int SpaceCreations, BodyCreations;
@@ -43,7 +44,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
         {
             var created = _inner.CreateCollider(collider);
-            return Kind == PhysicsServer.Backend.CPU ? new WrappedCollider(collider, Space, created) : created;
+            return new WrappedCollider(collider, Space, created);
         }
         internal override PhysicsJointImplementation CreateJoint() => _inner.CreateJoint();
         internal override void BeginStep(double delta) => _inner.BeginStep(delta);

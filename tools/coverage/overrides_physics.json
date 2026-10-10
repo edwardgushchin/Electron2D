@@ -4914,7 +4914,7 @@
         "class:PhysicsServer2DExtension"
       ],
       "state": "Blocked",
-      "reason": "ADR 0103 requires the complete executing typed implementation family and public registration. Internal space RID registration precedes owner initialization; selected factories now supply validated direct-state/query views to real scene/raw consumers and callbacks, preserving contact snapshots, failure/reentry guards and zero warmed allocation on CPU/GPU/no-device. CPU native collider storage now stays in its owner, with real wrapped collider policy/force/query/Area/CCD and portable state paths; common scene/server identities expose no native CPU handles. Public named factories and the complete operation bridge remain open."
+      "reason": "ADR 0103 requires the complete executing typed implementation family and public registration. Internal space RID registration precedes owner initialization; selected factories now supply validated direct-state/query views to real scene/raw consumers and callbacks, preserving contact snapshots, failure/reentry guards and zero warmed allocation on CPU/GPU/no-device. CPU native collider storage now stays in its owner, with real wrapped collider policy/force/query/Area/CCD and portable state paths; common scene/server identities expose no native CPU handles. GPU attachments now remain in their resident store; wrapped CPU/GPU implementations retain identity/priority hooks, queries/Areas/joints and local/portable restore without facade native aliases. Public named factories and the complete operation bridge remain open."
     }
   ]
 }

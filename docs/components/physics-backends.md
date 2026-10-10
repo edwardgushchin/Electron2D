@@ -35,6 +35,34 @@ ray/shape CCD, queries, retirement/reentry and portable capture/apply. Shared
 physics APIs and warm allocation guards are retained. Public registration and the
 complete external server operation bridge remain open under ADR 0103.
 
+## GPU collider ownership
+
+The resident GPU store retains concrete collider attachments by shared identity.
+The common collider facade has no resident handles, shape lists, snapshot caches
+or concrete GPU casts. The selected world creates an attachment with its actual
+store; publication, queries, Areas, joints, portable capture/apply and checkpoint
+cache restoration resolve that attachment from the store. Matching retirement
+removes the entry even after failed creation or cleanup; a stale detach preserves
+a replacement and store disposal clears retained references.
+
+Object/canvas identity refresh and collision-priority edits now dispatch through
+the selected collider implementation. GPU publishes them to its resident records;
+CPU reads shared identity/priority in queries and contact policy. The ownership
+lookup is a retained host identity table, not a copy of device physical state.
+It introduces no GPU transfer, device wait or additional snapshot publication.
+
+The [wrapped-collider fixture](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.WrappedCollider.cs)
+now delegates real CPU and GPU attachments. It checks scene/raw policy/impulse
+hooks, canvas/object query identity, contacts, Areas, ray/shape CCD, attachment
+retirement, a real two-body pin, local checkpoint and portable restoration.
+CPU/GPU/no-device ownership profiles pass. Both selected implementations retain
+0/0 owner/all-thread managed bytes in 64 warmed scene callback/contact steps and
+512-body full intervals. Exact checkpoint/portable pose restoration uses 0.001
+scene unit to allow float/unit-conversion rounding; the live pin stays within
+0.5 scene unit of its anchor after eight impulse-driven steps, allowing finite
+solver/contact correction while remaining far below its three-unit body radius.
+Public named registration and the complete external operation bridge remain open.
+
 ## Selected direct-state construction
 
 The retained world owner now creates both cached direct-space and direct-body

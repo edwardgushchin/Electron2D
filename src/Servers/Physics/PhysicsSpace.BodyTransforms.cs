@@ -34,7 +34,7 @@ internal sealed partial class PhysicsSpace
                 var runtime = _transformBodies[i]!; var owner = runtime.Owners;
                 if (GPUStore is not null && owner.Server is { Mode: not PhysicsServer.BodyMode.Static })
                 {
-                    _transformHandles[count] = runtime.Backend.GPUHandle; _transformIndices[count++] = i;
+                    _transformHandles[count] = GPUCollider(runtime.Backend).GPUHandle; _transformIndices[count++] = i;
                 }
                 else _transformResults[i] = runtime.GetTransform();
             }
@@ -44,7 +44,7 @@ internal sealed partial class PhysicsSpace
                 for (var i = 0; i < count; i++)
                 {
                     var at = _transformIndices[i]; var runtime = _transformBodies[at]!;
-                    runtime.Backend.AcceptGPUPose(_transformPoses[i]); _transformResults[at] = runtime.GetTransform();
+                    GPUCollider(runtime.Backend).AcceptGPUPose(_transformPoses[i]); _transformResults[at] = runtime.GetTransform();
                 }
             }
             _transformResults.AsSpan(0, bodies.Length).CopyTo(results);

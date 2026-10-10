@@ -132,13 +132,13 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
         {
             var entry = _objects[i].Entry!;
             PhysicsReplayCopy.Require(entry.Backend.Space == space && entry.Backend.AttachmentVersion == _objects[i].Attachment);
-            if (space.GPUStore is not null) _gpuHandles[i] = entry.Backend.GPUHandle;
+            if (space.GPUStore is not null) _gpuHandles[i] = space.GPUCollider(entry.Backend).GPUHandle;
         }
         if (space.GPUStore is { } gpu)
         {
             if (_objects.Count == 0 && !capture) gpu.Step(0, default);
             else gpu.Read(_gpuHandles.AsSpan(0, _objects.Count), _gpuStates);
-            for (var i = 0; i < _objects.Count; i++) _objects[i].Entry!.Backend.AcceptGPUState(_gpuStates[i]);
+            for (var i = 0; i < _objects.Count; i++) space.GPUCollider(_objects[i].Entry!.Backend).AcceptGPUState(_gpuStates[i]);
         }
         _poses.Clear(); _poses.EnsureCapacity(_objects.Count);
         for (var i = 0; i < _objects.Count; i++)

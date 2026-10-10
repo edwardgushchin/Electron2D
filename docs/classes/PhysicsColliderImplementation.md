@@ -6,6 +6,11 @@ Last updated: 2026-10-11
 
 ## Responsibility and flow
 
+RefreshIdentity and SetCollisionPriority receive shared object/canvas and priority
+edits through the selected implementation. GPU publishes resident query/solver
+metadata; CPU reads shared identity and priority directly. Common collider code
+has no concrete CPU/GPU casts or native handle aliases.
+
 PrepareContactPolicy belongs to the selected implementation. CPU refreshes current
 native shape policy; GPU keeps its policy publication in geometry rebuilding.
 The common facade has no CPU ID/shape aliases or concrete CPU cast. The wrapped

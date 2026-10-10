@@ -3,6 +3,7 @@ namespace Electron2D;
 internal sealed partial class PhysicsSpace
 {
     internal GPUPhysicsBodyStore? GPUStore => _backend?.GPUStore;
+    internal GPUPhysicsColliderImplementation GPUCollider(PhysicsColliderBackend collider) => GPUStore!.NativeCollider(collider);
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
     internal bool ForceGPUParameterRefresh, DecodeGPUTransforms;
@@ -38,26 +39,26 @@ internal sealed partial class PhysicsSpace
 
     internal void RegisterGPUCollider(PhysicsColliderBackend backend)
     {
-        _gpuColliders.Add(backend.GPUHandle.Index, backend);
+        _gpuColliders.Add(GPUCollider(backend).GPUHandle.Index, backend);
         _gpuRIDColliders.Add((ulong)backend.RID.GetID(), backend);
         InvalidateGPUExceptions();
-        GPUStore!.SetCollisionPriority(backend.GPUHandle, backend.CollisionPriority);
+        GPUStore!.SetCollisionPriority(GPUCollider(backend).GPUHandle, backend.CollisionPriority);
         PrepareGPUCapacity();
     }
     internal void UnregisterGPUCollider(PhysicsColliderBackend backend)
     {
-        _gpuColliders.Remove(backend.GPUHandle.Index); _gpuRIDColliders.Remove((ulong)backend.RID.GetID());
+        _gpuColliders.Remove(GPUCollider(backend).GPUHandle.Index); _gpuRIDColliders.Remove((ulong)backend.RID.GetID());
         InvalidateGPUExceptions();
-        foreach (var shape in backend.GPUShapes) UnregisterGPUShape(shape.Handle);
+        foreach (var shape in GPUCollider(backend).GPUShapes) UnregisterGPUShape(shape.Handle);
     }
     internal void RegisterGPUShape(PhysicsColliderBackend backend, GPUPhysicsBodyStore.ShapeHandle handle, int slot)
     {
         _gpuShapeOwners.Add((uint)handle.Index, (backend, handle.Generation, slot));
-        if (backend.GPUSensor) _gpuSensorShapeCount++;
+        if (GPUCollider(backend).GPUSensor) _gpuSensorShapeCount++;
     }
     internal void UnregisterGPUShape(GPUPhysicsBodyStore.ShapeHandle handle)
     {
-        if (_gpuShapeOwners.Remove((uint)handle.Index, out var previous) && previous.Owner.GPUSensor) _gpuSensorShapeCount--;
+        if (_gpuShapeOwners.Remove((uint)handle.Index, out var previous) && GPUCollider(previous.Owner).GPUSensor) _gpuSensorShapeCount--;
     }
 
     internal void PrepareGPUCapacity()
@@ -82,10 +83,10 @@ internal sealed partial class PhysicsSpace
         var count = GPUStore!.ReadChanges(_gpuChanges);
         GPUStatePublicationEpoch = GPUStateEpoch;
         foreach (ref readonly var change in _gpuChanges.AsSpan(0, count))
-            if (change.Alive != 0 && _gpuColliders.TryGetValue((int)change.Index, out var backend) && backend.GPUHandle.Generation == change.Generation)
-                backend.AcceptGPUState(change.State, published: true);
+            if (change.Alive != 0 && _gpuColliders.TryGetValue((int)change.Index, out var backend) && GPUCollider(backend).GPUHandle.Generation == change.Generation)
+                GPUCollider(backend).AcceptGPUState(change.State, published: true);
         // A selected intermediate read may differ from unchanged publication history.
-        foreach (var backend in _gpuColliders.Values) backend.CompleteGPUStatePublication();
+        foreach (var backend in _gpuColliders.Values) GPUCollider(backend).CompleteGPUStatePublication();
     }
 
     internal static bool RequiresGPUCompletion(PhysicsServerCollider body, bool callbacks) =>
@@ -106,7 +107,7 @@ internal sealed partial class PhysicsSpace
         GPUStore!.Read(_gpuObservedBodies.AsSpan(0, count), _gpuObservedStates.AsSpan(0, count));
         for (var i = 0; i < count; i++)
         {
-            _gpuObservedBackends[i]!.AcceptGPUState(_gpuObservedStates[i]);
+            GPUCollider(_gpuObservedBackends[i]!).AcceptGPUState(_gpuObservedStates[i]);
             _gpuObservedBackends[i] = null;
         }
         void Observe(PhysicsColliderBackend backend)
@@ -116,7 +117,7 @@ internal sealed partial class PhysicsSpace
                 var capacity = Math.Max(8, count * 2);
                 Array.Resize(ref _gpuObservedBodies, capacity); Array.Resize(ref _gpuObservedStates, capacity); Array.Resize(ref _gpuObservedBackends, capacity);
             }
-            _gpuObservedBackends[count] = backend; _gpuObservedBodies[count++] = backend.GPUHandle;
+            _gpuObservedBackends[count] = backend; _gpuObservedBodies[count++] = GPUCollider(backend).GPUHandle;
         }
     }
 
@@ -148,7 +149,7 @@ internal sealed partial class PhysicsSpace
             var limit = runtime.ContactLimit;
             backend.SetContactReporting(limit > 0);
             if (limit == 0) return;
-            _gpuReportBodies[_gpuReportBodyCount] = backend.GPUHandle;
+            _gpuReportBodies[_gpuReportBodyCount] = GPUCollider(backend).GPUHandle;
             _gpuReportLimits[_gpuReportBodyCount++] = limit; contacts = checked(contacts + limit);
         }
         if (_gpuReports.Length < contacts) Array.Resize(ref _gpuReports, Math.Max(8, contacts * 2));
@@ -178,7 +179,7 @@ internal sealed partial class PhysicsSpace
     }
     internal void CaptureGPUViewContacts(PhysicsColliderBackend backend, PhysicsDirectBodyState view, int limit)
     {
-        if (!_gpuReportRanges.TryGetValue(backend.GPUHandle.Index, out var range)) return;
+        if (!_gpuReportRanges.TryGetValue(GPUCollider(backend).GPUHandle.Index, out var range)) return;
         foreach (ref readonly var contact in _gpuReports.AsSpan(range.Offset, range.Count))
         {
             if (!_gpuShapeOwners.TryGetValue(contact.Shape, out var own) || own.Generation != contact.ShapeGeneration ||

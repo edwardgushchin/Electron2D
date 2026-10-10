@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Owns one concrete collider attachment created by the selected world implementation.</summary>
+/// <summary>Owns one selected collider attachment and its identity, policy and physical operations.</summary>
 internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space)
 {
     protected PhysicsColliderBackend Owner { get; } = owner;
@@ -14,6 +14,8 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract void SetMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetContactReporting(bool enabled);
     internal abstract void PrepareContactPolicy();
+    internal abstract void RefreshIdentity();
+    internal abstract void SetCollisionPriority(float value);
     internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
     internal abstract void RebuildShapes(IReadOnlyList<CollisionObject.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     internal abstract void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);

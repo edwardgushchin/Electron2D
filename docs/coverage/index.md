@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[GPU collider ownership](../components/physics-backends.md#gpu-collider-ownership) removes
+resident handles and concrete GPU casts from the common collider facade.
+Actual attachments stay in the resident store; selected wrappers retain publication,
+Area/query/joint behavior and local/portable restoration. Identity/priority edits
+reach selected hooks. Public registration and the complete operation family stay open.
+
 [Tile grid geometry](../components/tiles.md#grid-placement-and-neighbors) now supports all four shapes, six coordinate layouts, two offset axes and named neighbors. Thirty-seven formerly Blocked and two Partial rows are Implemented. The same kernel places retained drawing, CPU/GPU collisions, navigation regions and baked contours; all 48 configurations match pinned executable geometry. Fresh scene files, actual GPU/compatibility pixels and zero-allocation scalar/native owner checks verify the exercised Linux profile. Terrain/pattern/proxy/occlusion retain their own prerequisites.
 
 [CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)

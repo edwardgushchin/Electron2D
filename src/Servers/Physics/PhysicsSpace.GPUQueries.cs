@@ -64,7 +64,7 @@ internal sealed partial class PhysicsSpace
     {
         var body = _gpuRIDColliders[(ulong)owner.GetID()];
         Span<GPUPhysicsBodyStore.MotionQuery> query = stackalloc GPUPhysicsBodyStore.MotionQuery[1];
-        query[0] = new(body.GPUHandle, from, motion, margin, recoveryAsCollision, collideSeparationRay,
+        query[0] = new(GPUCollider(body).GPUHandle, from, motion, margin, recoveryAsCollision, collideSeparationRay,
             BodyExclusionCount: excludedBodies.Length, ObjectExclusionCount: excludedObjects.Length);
         Span<GPUPhysicsBodyStore.MotionQueryResult> result = stackalloc GPUPhysicsBodyStore.MotionQueryResult[1];
         GPUStore!.TestMotion(query, GPUExclusions(excludedBodies), excludedObjects, result);

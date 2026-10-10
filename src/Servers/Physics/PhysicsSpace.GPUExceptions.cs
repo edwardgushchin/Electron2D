@@ -9,7 +9,7 @@ internal sealed partial class PhysicsSpace
     {
         if (!_gpuRIDColliders.TryGetValue((ulong)from.GetID(), out var first) ||
             !_gpuRIDColliders.TryGetValue((ulong)to.GetID(), out var second)) return;
-        var pair = (first.GPUHandle, second.GPUHandle);
+        var pair = (GPUCollider(first).GPUHandle, GPUCollider(second).GPUHandle);
         if (_gpuNextExceptions.Add(pair) && !_gpuExceptions.Contains(pair)) GPUStore!.SetCollisionException(pair.Item1, pair.Item2, true);
     }
     internal void SyncGPUExceptions()
@@ -18,8 +18,8 @@ internal sealed partial class PhysicsSpace
         _gpuNextExceptions.Clear(); PhysicsServer.Service.ObserveGPUExceptions(this);
         foreach (var pair in _gpuExceptions)
             if (!_gpuNextExceptions.Contains(pair) &&
-                _gpuColliders.TryGetValue(pair.From.Index, out var first) && first.GPUHandle == pair.From &&
-                _gpuColliders.TryGetValue(pair.To.Index, out var second) && second.GPUHandle == pair.To)
+                _gpuColliders.TryGetValue(pair.From.Index, out var first) && GPUCollider(first).GPUHandle == pair.From &&
+                _gpuColliders.TryGetValue(pair.To.Index, out var second) && GPUCollider(second).GPUHandle == pair.To)
                 GPUStore.SetCollisionException(pair.From, pair.To, false);
         (_gpuExceptions, _gpuNextExceptions) = (_gpuNextExceptions, _gpuExceptions); _gpuExceptionsDirty = false;
     }

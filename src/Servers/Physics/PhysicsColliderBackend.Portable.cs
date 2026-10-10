@@ -9,6 +9,5 @@ internal sealed partial class PhysicsColliderBackend
         Attached.ApplyPortableMotion(pose, linear, angular, sleepTime, canSleep, sleeping, surface, surfaceAngular, force, torque, gravity, linearDamp, angularDamp, fieldsInitialized);
     internal void ApplyPortableSleep(float time, bool canSleep, bool sleeping) =>
         Space!.BackendImplementation.ApplyPortableSleep(this, time, canSleep, sleeping);
-    internal GPUPhysicsBodyStore.ShapeHandle PortableGPUShape(int slot) => GPUAttachment.PortableGPUShape(slot);
     internal void ValidatePortablePiece(int slot, int piece) => Attached.ValidatePortablePiece(slot, piece);
 }

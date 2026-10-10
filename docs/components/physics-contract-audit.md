@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[GPU collider ownership](physics-backends.md#gpu-collider-ownership) removes
+resident handles and concrete GPU casts from the common collider facade.
+Actual attachments stay in the resident store; selected wrappers retain publication,
+Area/query/joint behavior and local/portable restoration. Identity/priority edits
+reach selected hooks. Public registration and the complete operation family stay open.
+
 [CPU collider ownership](physics-backends.md#cpu-collider-ownership) removes native
 body/shape aliases and CPU implementation casts from shared scene/server/collider
 types. Actual native storage belongs to the CPU world; wrapped collider operations

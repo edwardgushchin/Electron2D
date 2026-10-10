@@ -1,10 +1,16 @@
 # GPUPhysicsWorldBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [GPUPhysicsWorldBackend.cs](../../src/Servers/Physics/GPUPhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
 ## Description and internal flow
+
+CreateCollider delegates actual attachment retention to its owned resident store.
+The store resolves native handles/publication caches independently of the selected
+collider's concrete type. Selected wrappers execute body operations while GPU
+queries, Areas, joints and replay retain actual storage ownership. See
+[GPU collider ownership](../components/physics-backends.md#gpu-collider-ownership).
 
 Owns one independent resident GPUPhysicsBodyStore, with no native CPU world or CPU workers. Creation applies existing sleep/contact/iteration/default-bias settings. The store keeps physical state and executes the resident pipeline. A failed constructor releases the created store before startup fallback can be considered.
 

@@ -1,12 +1,11 @@
 namespace Electron2D;
 
-/// <summary>Retains shared scene/server identity and delegates attachment operations without exposing native CPU handles.</summary>
+/// <summary>Retains shared scene/server identity and delegates attachment operations without exposing native solver handles or publication caches.</summary>
 internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwner = null)
 {
     private PhysicsColliderImplementation? _implementation;
     internal PhysicsColliderImplementation? Implementation => _implementation;
     private PhysicsColliderImplementation Attached => _implementation ?? throw new InvalidOperationException("The collider has no solver attachment.");
-    private GPUPhysicsColliderImplementation GPUAttachment => _implementation as GPUPhysicsColliderImplementation ?? throw new InvalidOperationException("The collider has no resident GPU attachment.");
     internal RID RID => rid;
     internal int ShapeCount => _implementation?.ShapeCount ?? 0;
     internal WeakReference<CollisionObject>? SceneOwnerReference => _sceneOwner;
@@ -17,7 +16,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal long AttachmentVersion { get; private set; }
     internal float CollisionPriority { get; private set; } = 1;
     private ulong _canvasInstanceID;
-    internal ulong CanvasInstanceID { get => _canvasInstanceID; set { _canvasInstanceID = value; RefreshGPUIdentity(); } }
+    internal ulong CanvasInstanceID { get => _canvasInstanceID; set { _canvasInstanceID = value; _implementation?.RefreshIdentity(); } }
     internal ObjectIdentity ObjectIdentity { get; private set; } = sceneOwner?.BorrowIdentity() ?? default;
 
     internal void AttachObject(ElectronObject? value)
@@ -28,7 +27,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         var identity = value?.BorrowIdentity() ?? default;
         if (identity.ID == ObjectIdentity.ID) return;
         if (Space is not null) ExternalObjectNode()?.RemovePhysicsObjectBinding(this);
-        ObjectIdentity = identity; RefreshGPUIdentity();
+        ObjectIdentity = identity; _implementation?.RefreshIdentity();
         if (Space is not null) ExternalObjectNode()?.AddPhysicsObjectBinding(this);
     }
 
@@ -42,7 +41,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal void SetCollisionPriority(float value)
     {
         Space?.EnsureQueryAccess(); ValidateCollisionPriority(value); CollisionPriority = value;
-        if (_implementation is GPUPhysicsColliderImplementation gpu) gpu.SetCollisionPriority(value);
+        _implementation?.SetCollisionPriority(value);
     }
 
     internal void Attach(PhysicsSpace space, Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)

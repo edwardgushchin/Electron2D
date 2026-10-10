@@ -18,14 +18,14 @@ internal sealed partial class GPUPhysicsWorldBackend
         _callbacks = false; var pendingForces = false;
         foreach (var body in Space.Bodies)
         {
-            var runtime = body.Runtime; body.Backend.PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
+            var runtime = body.Runtime; GPUStore.NativeCollider(body.Backend).PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
             _callbacks |= RequiresBodySnapshot(runtime, body);
             pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
         }
         foreach (var body in Space.ServerColliders)
             if (!body.IsArea)
             {
-                var runtime = body.Runtime; body.Backend.PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
+                var runtime = body.Runtime; GPUStore.NativeCollider(body.Backend).PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
                 _callbacks |= RequiresBodySnapshot(runtime, null);
                 pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
             }
@@ -34,9 +34,9 @@ internal sealed partial class GPUPhysicsWorldBackend
         _captureActivity = _callbacks || pendingForces;
         if (_captureActivity) Space.PublishGPU();
         uint areaOrder = 0;
-        foreach (var area in Space.Areas) GPUStore.SetAreaFields(area.Backend.GPUHandle, GPUFields(area.Fields), areaOrder++);
+        foreach (var area in Space.Areas) GPUStore.SetAreaFields(GPUStore.NativeCollider(area.Backend).GPUHandle, GPUFields(area.Fields), areaOrder++);
         foreach (var body in Space.ServerColliders)
-            if (body.IsArea) GPUStore.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
+            if (body.IsArea) GPUStore.SetAreaFields(GPUStore.NativeCollider(body.Backend).GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
     }
     internal override void PrepareBodies(double delta)
     {
@@ -69,12 +69,12 @@ internal sealed partial class GPUPhysicsWorldBackend
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {
-        if (RequiresGPUCompletion(body, _callbacks)) body.Backend.PublishGPUFields(body.Runtime);
+        if (RequiresGPUCompletion(body, _callbacks)) GPUStore.NativeCollider(body.Backend).PublishGPUFields(body.Runtime);
         body.CompleteMotion();
     }
     internal override void CompleteBody(PhysicsBody body)
     {
-        body.Backend.PublishGPUFields(body.Runtime); body.CompleteBackend();
+        GPUStore.NativeCollider(body.Backend).PublishGPUFields(body.Runtime); body.CompleteBackend();
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
     }

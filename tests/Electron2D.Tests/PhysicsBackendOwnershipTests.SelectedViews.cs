@@ -55,11 +55,8 @@ internal static partial class PhysicsBackendOwnershipTests
         {
             PhysicsServer.BodyAddShape(raw, circle.GetRID()); PhysicsServer.BodySetMass(raw, 2);
             PhysicsServer.BodySetCanSleep(raw, false); PhysicsServer.BodySetMaxContactsReported(raw, 8);
-            if (backend == PhysicsServer.Backend.CPU)
-            {
-                scene.ContinuousCD = CCDMode.CastRay;
-                PhysicsServer.BodySetContinuousCollisionDetectionMode(raw, CCDMode.CastShape);
-            }
+            scene.ContinuousCD = CCDMode.CastRay;
+            PhysicsServer.BodySetContinuousCollisionDetectionMode(raw, CCDMode.CastShape);
             PhysicsServer.BodySetTransform(raw, new(0, new(20, 0))); PhysicsServer.BodySetSpace(raw, world.Space);
             PhysicsServer.BodyAddShape(foreign, circle.GetRID()); PhysicsServer.BodySetSpace(foreign, world.Space);
             var callbacks = 0;
@@ -79,15 +76,23 @@ internal static partial class PhysicsBackendOwnershipTests
             Check(callbacks == 3 && selected.BodyCreations == 2, "Required views are created before solver borrowing exactly once");
             rawView.ApplyCentralImpulse(new(20, 0));
             Check(MathF.Abs(PhysicsServer.BodyGetLinearVelocity(raw).X - 20) < .001f, "Selected body hook changes a real mass-two impulse");
-            if (backend == PhysicsServer.Backend.CPU)
-                Check(PhysicsServer.Service.BodyRuntime(raw).Backend.Implementation is WrappedCollider { ImpulseCalls: > 0, PolicyCalls: > 0 },
-                    "Real wrapped collider executes impulse/contact policy without shared CPU type assumptions");
+            Check(PhysicsServer.Service.BodyRuntime(raw).Backend.Implementation is WrappedCollider { ImpulseCalls: > 0, PolicyCalls: > 0 },
+                "Real wrapped collider executes impulse/contact policy without shared concrete type assumptions");
             rawView.LinearVelocity = new(0, 0);
             for (var i = 0; i < 120; i++) tree.PhysicsFrame(1d / 60);
             Check(sceneView.GetContactCount() > 0 && rawView.GetContactCount() > 0 &&
                 sceneView.GetContactCollider(0) == floor.GetRID() && rawView.GetContactCollider(0) == floor.GetRID(),
                 "Selected extension views receive actual completed scene/raw contact snapshots");
             Check(sensor.GetOverlappingBodies().Contains(scene), "Wrapped Area geometry executes real overlap monitoring");
+            using var associated = new Node();
+            PhysicsServer.BodyAttachObject(raw, associated); PhysicsServer.BodyAttachCanvasInstanceID(raw, 777);
+            PhysicsServer.BodySetCollisionPriority(raw, 2);
+            Check(PhysicsServer.Service.BodyRuntime(raw).Backend.Implementation is WrappedCollider { IdentityCalls: > 1, PriorityCalls: > 0 },
+                "Selected identity and priority hooks receive live edits");
+            using (var identityPoint = new PhysicsPointQueryParameters { Position = rawView.Transform.Origin, CanvasInstanceID = 777 })
+                Check(query.IntersectPoint(identityPoint).Any(hit => hit.ColliderRID == raw && ReferenceEquals(hit.ColliderObject, associated)),
+                    "Wrapped collider publishes real canvas/object identities to selected queries");
+            PhysicsServer.BodyAttachObject(raw, null); PhysicsServer.BodyAttachCanvasInstanceID(raw, 0);
             using var point = new PhysicsPointQueryParameters { Position = scene.GlobalPosition };
             Check(query.IntersectPoint(point).Any(hit => hit.ColliderRID == scene.GetRID()), "Selected space hooks query real scene geometry");
             Task.Run(() => Reject<InvalidOperationException>(() => PhysicsServer.SpaceGetDirectState(world.Space))).GetAwaiter().GetResult();
@@ -121,17 +126,14 @@ internal static partial class PhysicsBackendOwnershipTests
             selected.BodyFactory = validBodyFactory;
             rawView = PhysicsServer.BodyGetDirectState(raw)!;
             var facade = PhysicsServer.Service.BodyRuntime(raw).Backend;
-            var retired = backend == PhysicsServer.Backend.CPU ? selected.NativeCollider(facade) : null;
+            var retired = selected.NativeCollider(facade);
             PhysicsServer.BodySetSpace(raw, default);
-            if (retired is not null) Reject<InvalidOperationException>(() => selected.NativeCollider(facade));
+            Reject<InvalidOperationException>(() => selected.NativeCollider(facade));
             PhysicsServer.BodySetSpace(raw, world.Space);
-            if (retired is not null)
-            {
-                var current = selected.NativeCollider(facade);
-                Check(!ReferenceEquals(retired, current), "Reentry owns a fresh native collider independently of the wrapped implementation");
-                retired.Detach();
-                Check(ReferenceEquals(current, selected.NativeCollider(facade)), "Retiring an old attachment cannot remove the current native ownership entry");
-            }
+            var current = selected.NativeCollider(facade);
+            Check(!ReferenceEquals(retired, current), "Reentry owns a fresh native collider independently of the wrapped implementation");
+            retired.Detach();
+            Check(ReferenceEquals(current, selected.NativeCollider(facade)), "Retiring an old attachment cannot remove the current native ownership entry");
             selected.BodyFactory = _ => rawView;
             Reject<InvalidOperationException>(() => PhysicsServer.BodyGetDirectState(raw));
             Reject<ObjectDisposedException>(() => _ = rawView.LinearVelocity);
@@ -169,12 +171,28 @@ internal static partial class PhysicsBackendOwnershipTests
             for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
             owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(owner == 0 && all == 0, $"Selected view callback/contact dispatch allocated {owner}/{all} bytes");
+            using (var checkpoint = PhysicsServer.SpaceCreateCheckpoint(world.Space))
+            {
+                var before = rawView.Transform;
+                checkpoint.Capture(); rawView.Transform = new(0, new(50, 0)); checkpoint.Restore();
+                Check(rawView.Transform.Origin.DistanceTo(before.Origin) < .001f, "Wrapped native publication cache restores actual checkpoint state");
+            }
+            var joint = PhysicsServer.JointCreate();
+            try
+            {
+                var anchor = rawView.Transform.Origin;
+                PhysicsServer.JointMakePin(joint, anchor, raw, floor.GetRID());
+                rawView.ApplyCentralImpulse(new(2, 0));
+                for (var i = 0; i < 8; i++) tree.PhysicsFrame(1d / 60);
+                Check(rawView.Transform.Origin.DistanceTo(anchor) < .5f, "Wrapped collider handles bind a real two-body pin constraint");
+            }
+            finally { PhysicsServer.FreeRID(joint); }
             using var map = new PhysicsSnapshotMap(world.Space);
             map.Bind(1, 1, scene.GetRID()); map.Bind(2, 1, floor.GetRID()); map.Bind(3, 1, sensor.GetRID());
             map.Bind(4, 1, raw); map.Bind(5, 1, foreign);
             var snapshot = new PhysicsSnapshot(); map.Capture(snapshot); var saved = rawView.Transform;
             rawView.Transform = new(0, new(50, 0)); map.Apply(snapshot);
-            Check(rawView.Transform.Origin.DistanceTo(saved.Origin) < .001f, "Selected ownership restores real portable body state and sleep through wrapped CPU attachments");
+            Check(rawView.Transform.Origin.DistanceTo(saved.Origin) < .001f, "Selected ownership restores real portable body state and sleep through wrapped selected attachments");
             Console.WriteLine($"{backend}: selected scene/raw state/query factories, real hooks/contacts, identity/reentry/failure/borrow guards and 64 warmed steps: {owner}/{all} B.");
         }
         finally { PhysicsServer.FreeRID(raw); PhysicsServer.FreeRID(foreign); }

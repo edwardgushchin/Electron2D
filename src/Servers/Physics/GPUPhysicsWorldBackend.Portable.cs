@@ -3,7 +3,7 @@ namespace Electron2D;
 internal sealed partial class GPUPhysicsWorldBackend
 {
     internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) =>
-        ((GPUPhysicsColliderImplementation)collider.Implementation!).PortableSleepTime;
+        GPUStore.NativeCollider(collider).PortableSleepTime;
     // Resident motion restoration already commits sleep time and flags in its device write.
     internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) { }
     private GPUPhysicsBodyStore.PortableOneWay[] _portableGPUOneWays = [];
@@ -14,8 +14,8 @@ internal sealed partial class GPUPhysicsWorldBackend
         for (var i = 0; i < pairs.Count; i++)
         {
             var pair = pairs[i];
-            _portableGPUOneWays[i] = new(map.Collider(pair.A).Backend.PortableGPUShape(pair.ShapeA), pair.PieceA,
-                map.Collider(pair.B).Backend.PortableGPUShape(pair.ShapeB), pair.PieceB, pair.Allowed);
+            _portableGPUOneWays[i] = new(GPUStore.NativeCollider(map.Collider(pair.A).Backend).PortableGPUShape(pair.ShapeA), pair.PieceA,
+                GPUStore.NativeCollider(map.Collider(pair.B).Backend).PortableGPUShape(pair.ShapeB), pair.PieceB, pair.Allowed);
         }
         GPUStore.CompletePortableRestore(_portableGPUOneWays.AsSpan(0, pairs.Count)); Space.CompleteGPUPortableRestore();
     }

@@ -70,12 +70,12 @@ internal sealed partial class PhysicsSpace
             // The kernel flushes pending device commands without downloading a full body-state mirror.
             if (s.GPUStore is { } store)
             {
-                foreach (var body in s._bodies) body.Backend.PrepareGPUParameters(body.Runtime);
+                foreach (var body in s._bodies) s.GPUCollider(body.Backend).PrepareGPUParameters(body.Runtime);
                 uint areaOrder = 0;
-                foreach (var area in s._areas) store.SetAreaFields(area.Backend.GPUHandle, GPUFields(area.Fields), areaOrder++);
+                foreach (var area in s._areas) store.SetAreaFields(s.GPUCollider(area.Backend).GPUHandle, GPUFields(area.Fields), areaOrder++);
                 foreach (var body in s._serverColliders)
-                    if (body.IsArea) store.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
-                    else body.Backend.PrepareGPUParameters(body.Runtime);
+                    if (body.IsArea) store.SetAreaFields(s.GPUCollider(body.Backend).GPUHandle, GPUFields(body.AreaFields!), areaOrder++);
+                    else s.GPUCollider(body.Backend).PrepareGPUParameters(body.Runtime);
                 foreach (var joint in s._jointRuntimes) joint.ApplySolverPolicy();
                 s.SyncGPUExceptions();
             }

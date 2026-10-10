@@ -24,12 +24,12 @@ internal sealed partial class PhysicsSpace
     {
         EnsureCheckpointAccess(); PrepareForQuery(); foreach (var joint in _joints) joint.PrepareBackend();
         if (GPUStore is not { } gpu) return;
-        foreach (var body in _bodies) body.Backend.PrepareGPUParameters(body.Runtime);
+        foreach (var body in _bodies) GPUCollider(body.Backend).PrepareGPUParameters(body.Runtime);
         uint order = 0;
-        foreach (var area in _areas) gpu.SetAreaFields(area.Backend.GPUHandle, GPUFields(area.Fields), order++);
+        foreach (var area in _areas) gpu.SetAreaFields(GPUCollider(area.Backend).GPUHandle, GPUFields(area.Fields), order++);
         foreach (var body in _serverColliders)
-            if (body.IsArea) gpu.SetAreaFields(body.Backend.GPUHandle, GPUFields(body.AreaFields!), order++);
-            else body.Backend.PrepareGPUParameters(body.Runtime);
+            if (body.IsArea) gpu.SetAreaFields(GPUCollider(body.Backend).GPUHandle, GPUFields(body.AreaFields!), order++);
+            else GPUCollider(body.Backend).PrepareGPUParameters(body.Runtime);
         foreach (var joint in _jointRuntimes) joint.ApplySolverPolicy();
         SyncGPUExceptions(); FlushGPUWakes();
     }
