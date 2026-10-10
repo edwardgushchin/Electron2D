@@ -4,6 +4,8 @@ Last updated: 2026-10-10
 
 **Declaration:** `internal sealed partial class GPUPhysicsColliderImplementation : PhysicsColliderImplementation` · **Source:** [GPUPhysicsColliderImplementation.cs](../../src/Servers/Physics/GPUPhysicsColliderImplementation.cs) · **Component:** [Physics backends](../components/physics-backends.md#runtime-flow-and-ownership)
 
+An explicitly requested compact pose has an independent epoch-qualified cache. It can satisfy scalar pose access without treating velocity, fields or sleep as current. Local replay captures/restores this cache; portable motion application invalidates it. Scene presentation remains owned by the scene transform.
+
 ## Responsibility and flow
 
 Owns one resident body handle, shape handles/query leases, sensor/mask policy, constant/surface metadata and epoch-qualified state/publication/replay caches. Implements all engine-unit collider operations through the independent store. Existing query projection and common frame publication can address its retained identity facade; no CPU body/world cache is created. Detach attempts every shape lease, resident removal and common lookup retirement, then clears handles and aggregates failures.

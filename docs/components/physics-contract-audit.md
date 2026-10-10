@@ -300,15 +300,21 @@ covers either receiver, cap changes, frozen scene events, quiet activity, identi
 restore and warmed allocations. This does not close the server-extension or full
 inherited contract.
 
+## Explicit pose consumer, 2026-10-10
+
+The owned `PhysicsServer.BodyGetTransform(space, bodies, transforms)` overload now provides an executable caller-owned pose batch. It keeps exact scalar scene/raw/static projection, validates the complete sequence before output mutation and preserves shared thread/solver/lifetime/failure guards. Dynamic raw GPU reads gather only 16-byte poses, independently of full motion/field/sleep publication. The CPU/GPU public suite checks compact counters, duplicates beyond resident population, replay/portable cache behavior and zero warmed allocation. The massive window fixture consumes this public API once per fixed tick; broader platform/native allocation and complete extension acceptance remain open.
+
 ## Backend extension audit, 2026-10-10
 
 The pinned census contains two manager members, 140 server-extension members,
 48 direct-body-state members and seven direct-space members, plus their four
 owning types. No owning type/member deprecated metadata excludes these families;
 the old one-way compatibility binding remains separately excluded. Current
-PhysicsServer is a sealed static facade, direct states are sealed, RID allocation
-and query result constructors are internal, Shape has an internal abstract geometry
-member, and attachment/state/motion/joint/query dispatch assumes CPU or GPU. These
+PhysicsServer is a sealed static facade, direct states are sealed and RID allocation
+is internal. Public typed query-result constructors now exist and preserve payload validation.
+Shape still has an internal abstract geometry member. Selected world/collider/joint
+ownership has been extracted, but registered third-party state/motion/query dispatch
+is not implemented. These
 are concrete integration prerequisites, not a reason to exclude extension behavior.
 [ADR 0103](../decisions/physics-extensions.md#adr-0103) resolves the implementation
 object/static-service role boundary and requires complete typed dispatch and

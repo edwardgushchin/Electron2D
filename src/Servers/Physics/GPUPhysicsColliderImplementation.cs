@@ -10,6 +10,16 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
     internal override int ShapeCount => GPUShapes.Count;
     private GPUPhysicsBodyStore GPU => Space.GPUStore!;
     private GPUPhysicsBodyStore.Snapshot _gpuState;
+    private System.Numerics.Vector4 _gpuPose;
+    private bool _gpuPoseValid;
+    private long _gpuPoseEpoch;
+    internal void AcceptGPUPose(in System.Numerics.Vector4 pose)
+    {
+        _gpuPose = pose; _gpuPoseValid = true; _gpuPoseEpoch = Space.GPUStateEpoch;
+    }
+    private System.Numerics.Vector4 CurrentPose => GPUStateValid ? _gpuState.Pose :
+        _gpuPoseValid && _gpuPoseEpoch == Space.GPUStateEpoch ? _gpuPose : GPUState.Pose;
+
     private bool _gpuStateValid, _gpuStateMatchesPublication;
     private bool _gpuParametersPrepared;
     private long _gpuStateEpoch;

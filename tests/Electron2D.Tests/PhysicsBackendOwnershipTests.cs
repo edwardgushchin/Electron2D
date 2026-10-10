@@ -325,6 +325,7 @@ internal static class PhysicsBackendOwnershipTests
     internal static void RunNoDeviceChild()
     {
         Run(PhysicsServer.Backend.CPU);
+        PhysicsBodyTransformTests.Run(PhysicsServer.Backend.CPU);
         Reject<InvalidOperationException>(() => PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU));
         var fallback = PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU, allowCPUFallback: true);
         try

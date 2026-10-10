@@ -126,7 +126,10 @@ ObjectIdentity retains the authored weak instance association independently of t
 The retained adapter now delegates CPU fixtures or resident GPU body/shape handles
 to the concrete attachment created by its selected PhysicsSpace implementation. GPU paths retain RID/object/canvas and logical shape
 identity, mass/policy/force state, sampled direct contacts and attachment versions.
-A 64-byte observable cache serves scene/server getters; shared epoch invalidation
+A 64-byte observable cache serves scene/server getters. Explicit pose batches also
+publish a separate 16-byte pose cache qualified by the world epoch, leaving
+velocity, fields and sleep publication independent. Local replay retains both
+caches; portable motion application invalidates the compact pose. Shared epoch invalidation
 avoids a per-edit scan. Immediate wake publication uses the solved device graph.
 See [shared backend flow and limits](../components/physics-backends.md).
 

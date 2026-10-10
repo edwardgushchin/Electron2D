@@ -64,13 +64,16 @@ internal sealed partial class GPUPhysicsColliderImplementation
             AddGPUShape(slot.Shape.Geometry, slot.LocalTransform, index, sensor, layer, mask, friction, bounce, oneWay);
         }
     }
-    internal override (Vector2 Position, float Rotation) GetPose() => (GPUState.Position, GPUState.Rotation);
+    internal override (Vector2 Position, float Rotation) GetPose()
+    {
+        var pose = CurrentPose; return (new(pose.X, pose.Y), MathF.Atan2(pose.W, pose.Z));
+    }
     internal override Transform GetTransform()
     {
         if (!Space.DecodeGPUTransforms)
         {
-            ref readonly var state = ref GPUState;
-            return new(new(state.Pose.Z, state.Pose.W), new(-state.Pose.W, state.Pose.Z), state.Position);
+            var basis = CurrentPose;
+            return new(new(basis.Z, basis.W), new(-basis.W, basis.Z), new(basis.X, basis.Y));
         }
         var pose = GetPose(); return new(pose.Rotation, Vector2.One, 0, pose.Position);
     }

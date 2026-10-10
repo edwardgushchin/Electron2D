@@ -1483,6 +1483,10 @@
   ],
   "extras": [
     {
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetTransform(Electron2D.RID,System.ReadOnlySpan<Electron2D.RID>,System.Span<Electron2D.Transform>)",
+      "reason": "Caller-owned batch preserves scalar scene/raw pose semantics, common access guards and ordered atomic projection; selected GPU reads only compact poses without full state mirroring (ADR 0054)."
+    },
+    {
       "electron2d": "constructor:Electron2D.DampedSpringJoint..ctor()",
       "reason": "Typed scene spring construction projects the node factory and default geometry/coefficients (ADR 0086)."
     },

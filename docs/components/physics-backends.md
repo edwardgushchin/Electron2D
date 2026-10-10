@@ -34,6 +34,15 @@ replay or hidden backend change follows a failed GPU step.
 
 [Consumer-driven GPU publication](gpu-demand-publication.md) now avoids mandatory raw-body state downloads. Scene/view/contact/kinematic consumers and explicit getters retain current results; callbacks preserve shared ordered publication. The current 4096-body fixture downloads 752 bytes per step rather than a full moving-body stream, while GPU speed advantage remains open.
 
+[Caller-selected pose batches](gpu-demand-publication.md#explicit-pose-batches) preserve the scalar public contract on both implementations. Render consumers can read dynamic raw GPU poses with one compact gather and no full state mirror; scene presentation and static authored poses retain their existing path.
+
+The dense 65536-body real-window fixture now measures full GPU physics p50
+49.1659 ms versus CPU 250.9162 ms and actual FPS 15.0486 versus 3.6823, with
+0/0 warmed physics/frame managed bytes. The 4096 case still favors CPU. These
+[pose-batch measurements](gpu-demand-publication.md#real-window-pose-batch-measurements)
+include publication, actual captures and physical invariant checks; broader
+platform/native allocation and complete extension acceptance remain open.
+
 The separate 65536-body independent-contact fixture now demonstrates full-step GPU p50 18.2922 ms versus CPU 55.1572 ms in an isolated repeat, with 0/0 warmed managed bytes and identical counts/substeps/iterations. [Complete measurements](gpu-demand-publication.md#massive-independent-contacts) include unfavorable smaller-world and tail results; this does not establish general performance or window FPS.
 
 ## Runtime flow and ownership

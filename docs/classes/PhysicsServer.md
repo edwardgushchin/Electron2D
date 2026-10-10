@@ -8,6 +8,7 @@ Public static declarations are in [`PhysicsServer.API.cs`](../../src/Servers/Phy
 and [`PhysicsServer.Sleep.API.cs`](../../src/Servers/Physics/PhysicsServer.Sleep.API.cs).
 Explicit CPU/GPU selection and startup diagnostics are in
 [`PhysicsServer.Backends.cs`](../../src/Servers/Physics/PhysicsServer.Backends.cs).
+The pose batch is in [`PhysicsServer.BodyTransforms.cs`](../../src/Servers/Physics/PhysicsServer.BodyTransforms.cs).
 
 ## Description
 
@@ -65,6 +66,7 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 | `public static RID BodyGetSpace(RID body)` / `AreaGetSpace(RID area)` | Current space RID, or empty while detached. |
 | `public static void BodySetTransform(RID body, Transform transform)` / `AreaSetTransform(RID area, Transform transform)` | Set finite unit-scale, zero-skew pose. |
 | `public static Transform BodyGetTransform(RID body)` | Current scene presentation or raw solver pose. |
+| `public static void BodyGetTransform(RID space, ReadOnlySpan<RID> bodies, Span<Transform> transforms)` | Ordered caller-owned batch of the same poses; validates the complete sequence before writing, preserves duplicates and unused destination elements. |
 | `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Finite scene units per second. |
 | `public static void BodySetContinuousCollisionDetectionMode(RID body, CCDMode mode)` / `CCDMode BodyGetContinuousCollisionDetectionMode(RID body)` | Store/read the same per-body policy as RigidBody.ContinuousCD, including detached/non-dynamic roles; validates live body identity, owner/phase and enum values. |
 | `public static void BodySetMode(RID body, BodyMode mode)` / `BodyMode BodyGetMode(RID body)` | Change/read the solver motion mode. |
@@ -94,6 +96,15 @@ Parameterless creation remains CPU. See [backend lifetime and verified scope](..
 `BodyTestMotion` prepares pending scene and server fixtures, then tests the supplied body's own shapes from a typed global pose. Reciprocal body filters, RID and managed-instance exclusions, one-way surfaces, recovery margin and initial overlap are applied. It returns false on a miss and updates an optional [PhysicsTestMotionResult](PhysicsTestMotionResult.md) with full travel and cleared contact fields. On a hit it reports contact identity, point, normal, depth, velocity, local/collider shape-owner indices and safe/unsafe fractions. It never changes the actual body pose. A detached body or wrong RID rejects; off-owner and in-step calls reject. [PhysicsTestMotionParameters](PhysicsTestMotionParameters.md) names the input. `CollideSeparationRay` enables non-sliding ray sweeps; sliding rays and recovery obey [ADR 0068](../decisions/physics.md#adr-0068).
 
 `BodyAddCollisionException` and `BodyRemoveCollisionException` edit only the owner's RID list. Either body's entry suppresses the pair in fixed-step solver contacts and `BodyTestMotion`, independent of reciprocal collision masks; Area monitoring is unaffected. Duplicates and absent removals do nothing. The owner must be a live scene or server body; an arbitrary excepted RID, including an empty or later freed one, is retained but cannot match a live pair. An attached owner requires its space thread and cannot change exceptions while stepping. A list change marks that owner's fixtures for rebuilding before the next query or step, including when the pair is already touching. Freeing an owner removes its own entries; other bodies can retain its RID as an inert exception until explicitly removed.
+
+<a id="bodygettransform-batch"></a>
+### `BodyGetTransform(RID space, ReadOnlySpan<RID> bodies, Span<Transform> transforms)`
+
+Copies one pose per input body, in input order, with the scalar getter's exact scene presentation, dynamic raw solver and static authored semantics. Repeated RIDs produce repeated values. Every body must be live and attached to the designated space. The destination must have at least the input length; its unused suffix stays unchanged. Empty input still validates the space and its owner/lifetime/solver/failure guards.
+
+All identities, membership and access checks finish before output writes. Results are staged in space-owned scratch and copied only after successful reads, so invalid input or a device error leaves the destination untouched. Scratch grows on demand; fixed-capacity warmed batches allocate no managed memory and create no direct body views. GPU raw dynamic poses require one selected gather and one status fence: 16 bytes per requested pose plus eight status bytes, excluding pending edits/mass preparation. Scene and raw static bodies use their existing presentation/authored values without that read. Velocity, resolved fields and sleep state are not mirrored by this operation. Explicit pose caches expire on world-state edits or completed intervals and participate in local checkpoint restore.
+
+Use this overload when a renderer needs many server-body poses in one interval. Reuse input/output arrays; call after stepping on the owning thread. [PhysicsBodyTransformTests](../../tests/Electron2D.Tests/PhysicsBodyTransformTests.cs) checks the CPU/GPU contract, compact byte counts, guards, duplicate requests larger than the resident population, authored edits, checkpoint restore, portable apply and zero warmed owner/all-thread allocation.
 
 <a id="free"></a>
 ### `FreeRID`
@@ -521,6 +532,7 @@ configuration without allocating a physics world.
 | --- | --- |
 | `public static void BodySetTransform(RID body, Transform transform)` | Finite unit-scale, zero-skew global pose. |
 | `public static Transform BodyGetTransform(RID body)` | Current scene presentation or raw solver pose. |
+| `public static void BodyGetTransform(RID space, ReadOnlySpan<RID> bodies, Span<Transform> transforms)` | Ordered caller-owned batch of the same poses; validates the complete sequence before writing, preserves duplicates and unused destination elements. |
 | `public static void BodySetLinearVelocity(RID body, Vector2 velocity)` | Global scene units/s. |
 | `public static Vector2 BodyGetLinearVelocity(RID body)` | Live total velocity, or detached configuration. |
 | `public static void BodySetAngularVelocity(RID body, float velocity)` | Radians/s. |
