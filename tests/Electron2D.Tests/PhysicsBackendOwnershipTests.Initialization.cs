@@ -121,7 +121,7 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class InitializationQueries : PhysicsDirectSpaceStateExtension
     {
         private readonly PhysicsDirectSpaceState _inner;
-        internal InitializationQueries(RID space) : base(space) => _inner = PhysicsServer.SpaceGetDirectState(space);
+        internal InitializationQueries(RID space, PhysicsDirectSpaceState? inner = null) : base(space) => _inner = inner ?? PhysicsServer.SpaceGetDirectState(space);
         protected override PhysicsRayResult? IntersectRayCore(Vector2 from, Vector2 to, uint mask, bool bodies, bool areas, bool inside)
         {
             using var p = new PhysicsRayQueryParameters { From = from, To = to, CollisionMask = mask, CollideWithBodies = bodies, CollideWithAreas = areas, HitFromInside = inside };

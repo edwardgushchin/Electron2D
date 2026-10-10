@@ -4,13 +4,14 @@ internal sealed partial class PhysicsSpace
 {
     internal void ExecuteStep(PhysicsWorldBackend backend, double delta)
     {
-        _stepping = true;
         List<Exception>? errors = null; Exception? failure = null;
         var profileMark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         if (ProfilingEnabled) _profileAllocated = GC.GetAllocatedBytesForCurrentThread();
         try
         {
             backend.BeginStep(delta);
+            PrepareBodyViews();
+            _stepping = true;
             foreach (var body in _bodies) body.PrepareBackend();
             foreach (var area in _areas) area.PrepareBackend();
             foreach (var body in _serverColliders) body.PrepareBackend();
@@ -40,6 +41,7 @@ internal sealed partial class PhysicsSpace
         catch (Exception error) { failure = error; (errors ??= []).Add(error); }
         finally
         {
+            _stepping = true;
             try { backend.EndStep(failure); }
             catch (Exception error) { (errors ??= []).Add(error); }
             finally { _stepping = false; }

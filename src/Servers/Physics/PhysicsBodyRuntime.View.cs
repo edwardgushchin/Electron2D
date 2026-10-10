@@ -5,6 +5,7 @@ internal sealed partial class PhysicsBodyRuntime
     private PhysicsSpace? _viewSpace;
     private long _viewAttachment;
     private PhysicsColliderBackend? _viewBackend;
+    private bool _creatingView;
 
     internal PhysicsDirectBodyState GetView(PhysicsSpace space)
     {
@@ -12,8 +13,19 @@ internal sealed partial class PhysicsBodyRuntime
         if (backend.Space != space) throw new InvalidOperationException("The body is not attached to this physics world.");
         if (View is null || View.IsDisposed || _viewSpace != space || _viewAttachment != backend.AttachmentVersion)
         {
-            View = new PhysicsDirectBodyState(this, space);
-            _viewSpace = space; _viewBackend = backend; _viewAttachment = backend.AttachmentVersion;
+            if (_creatingView) throw new InvalidOperationException("A body-state factory cannot recursively acquire its own view.");
+            space.BeginExtensionCallback(); BeginExtension(); _creatingView = true;
+            try
+            {
+                var attachment = backend.AttachmentVersion;
+                var view = space.BackendImplementation.CreateDirectBodyState(this);
+                if (view is null) throw new InvalidOperationException("A body-state factory returned no view.");
+                view.EnsureContext(this, space, backend, attachment);
+                view.PrepareContacts(ContactLimit);
+                View = view;
+                _viewSpace = space; _viewBackend = backend; _viewAttachment = attachment;
+            }
+            finally { _creatingView = false; EndExtension(); space.EndExtensionCallback(); }
         }
         return View;
     }

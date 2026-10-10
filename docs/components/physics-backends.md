@@ -11,6 +11,38 @@ gates and confirms a host-specific advantage; 60 Hz, native/foreign acceptance
 and complete registered extensions remain open. Earlier measurements below retain
 their own source/workload scope.
 
+## Selected direct-state construction
+
+The retained world owner now creates both cached direct-space and direct-body
+views. Body factories run after interval initialization and before solver/worker
+borrowing, so their guarded constructors can prepare real geometry and state.
+The same selected view reaches scene integration, server force/sync callbacks,
+explicit acquisition and completed contact snapshots. Space factories execute
+outside the service registry lock; World and body-space access retain that cache.
+Lazy World implementation creation also leaves its runtime lock before invoking
+the factory and rejects concurrent or recursive creation and final-resource release.
+
+Publication validates live context, body identity, immutable attachment generation
+and disposal before replacing a cache. Null, foreign, stale, disposed and recursive
+factory results reject. A rejected borrowed foreign view is not disposed. Factory
+execution borrows world/body lifetime; recursive stepping, own attachment release
+and scene hierarchy changes reject. A pre-solver factory exception publishes no
+solved tick and finalizes the interval. A late callback-view exception preserves
+the completed tick and is aggregated after later body callbacks are attempted.
+
+CPU collider attachments retain their concrete creator rather than recovering it
+by casting the selected world owner. This permits an owning implementation to
+provide views while its concrete solver still owns native sleep/contact policy.
+
+[Selected-view tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedViews.cs)
+use a test-only owner delegating complete real CPU/GPU simulation, with an extension
+that doubles a real impulse and returns real solved contacts. A SceneTree and raw
+bodies exercise queries, callbacks, lifetime/failures and 64 warmed steps at zero
+owner/all-thread managed allocation, also in CPU without a graphics device.
+This implements the internal ownership route; public named registration, the
+complete server implementation bridge, custom algorithms and platform/native
+acceptance remain open under ADR 0103.
+
 ## Public selection
 
 `PhysicsServer.SpaceCreate(PhysicsServer.Backend backend, bool allowCPUFallback = false)`

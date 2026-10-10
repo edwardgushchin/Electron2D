@@ -6,7 +6,8 @@ using static Box2D.NET.B2Types;
 namespace Electron2D;
 
 /// <summary>Owns one CPU collider's native body, fixtures and exact state caches.</summary>
-internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space) : PhysicsColliderImplementation(owner, space)
+internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBackend owner, PhysicsSpace space,
+    CPUPhysicsWorldBackend worldOwner) : PhysicsColliderImplementation(owner, space)
 {
     private readonly List<B2ShapeId> _shapes = [];
     internal B2BodyId BodyID { get; private set; }
@@ -40,7 +41,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         b2Body_SetType(BodyID, BodyType(mode));
         if (BodyType(mode) == B2BodyType.b2_dynamicBody && _body!.enableSleep) PrepareSleepCapacity();
     }
-    private CPUPhysicsWorldBackend WorldOwner => (CPUPhysicsWorldBackend)Space.BackendImplementation;
+    private CPUPhysicsWorldBackend WorldOwner => worldOwner;
     private void PrepareSleepCapacity() => WorldOwner.PrepareSleepCapacity();
     private static B2BodyType BodyType(PhysicsServer.BodyMode mode) => mode switch
     {

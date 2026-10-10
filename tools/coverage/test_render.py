@@ -241,7 +241,7 @@ def main():
     assert len(body_state_rows) == 43
     assert {state: sum(f" | {state} | " in row for row in body_state_rows)
             for state in ("Implemented", "Partial", "Blocked")} == {
-                "Implemented": 41, "Partial": 2, "Blocked": 0}
+                "Implemented": 42, "Partial": 1, "Blocked": 0}
     assert "../../classes/PhysicsDirectBodyState.md" in class_rows["PhysicsDirectBodyState2D"]
     shape_rows = [row for row in pages[CLASS_PAGES / "Shape2D.md"].splitlines()
                   if row.startswith("| [`") and "github.com/godotengine" in row]

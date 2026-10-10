@@ -1,6 +1,6 @@
 # Caller-created body-state extensions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Responsibility and types
 
@@ -24,4 +24,6 @@ PhysicsBodyContact construction validates live same-world body RIDs/logical slot
 
 Release fixtures warm all operations for at least one second in 64-cycle batches after collection, then measure 64 full unchanged cycles at zero owner/all-thread managed bytes. User allocations and structural/cold paths remain outside that interval. CPU, GPU and CPU without display/GPU availability are separate profiles. Native allocation, foreign platforms and new full-step/window performance measurements remain separate gates.
 
-Caller-created views are implemented. Registered backend factories do not yet return these body-state views to scene/server callbacks; class coverage remains Partial. Server backend registration/operation and custom Shape families remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+The internal [selected-owner factory route](physics-backends.md#selected-direct-state-construction) now returns these views to actual scene integration and raw force/sync callbacks, retaining real completed contacts and one cached attachment identity. Factory publication rejects wrong/stale/disposed/null contexts and borrowing prevents recursive creation or release. Exceptions before solving leave the tick unchanged; late factory errors permit later callbacks. CPU/GPU/no-device ownership fixtures measure 64 warmed steps at 0/0 managed bytes.
+
+Caller-created views are implemented. Public registered factories and the complete server operation bridge remain absent; class coverage stays Partial. Custom solver algorithms and platform/native acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).

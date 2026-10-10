@@ -8,6 +8,7 @@ internal static partial class PhysicsBackendOwnershipTests
     {
         Initialization(backend);
         ExtensionBinding(backend);
+        SelectedViews(backend);
         IntegrationOwnership(backend);
         PhysicsAreaBackendTests.Run(backend);
         if (backend == PhysicsServer.Backend.CPU) ContinuousFailure();

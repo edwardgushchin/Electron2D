@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-11
 
+[Selected direct-state construction](../components/physics-backends.md#selected-direct-state-construction)
+now routes cached World/body views and real scene/raw callbacks through the chosen
+internal owner. Factories run before solver/worker borrowing, validate immutable
+context before publication and preserve solved contacts, recovery and later
+callback delivery on failure. CPU/GPU/no-device fixtures retain zero warmed managed
+allocation. Public registered implementations and their full operation bridge stay open.
+
 [Public joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
 selected CPU and independent GPU worlds. GPU motion queries now honor joint vetoes;
