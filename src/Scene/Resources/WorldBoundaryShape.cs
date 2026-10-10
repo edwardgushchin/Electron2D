@@ -49,10 +49,10 @@ public sealed class WorldBoundaryShape : Shape
         return new Rect2(point - tangent, Vector2.Zero).Expand(point + tangent).Expand(point + plane.Normal * 30);
     }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
-        ThrowIfDisposed(); var plane = Normalize(_normal, _distance);
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.WorldBoundary, A = plane.Normal, Radius = plane.Distance };
+        ThrowIfDisposed(); return ShapeGeometry.WorldBoundary(_normal, _distance);
     }
 
     /// <inheritdoc />

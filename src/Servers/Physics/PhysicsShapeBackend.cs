@@ -14,19 +14,20 @@ namespace Electron2D;
 internal static class PhysicsShapeBackend
 {
     // The compiled cache neither owns nor keeps a resource alive. Points remain the authoring source.
-    private static readonly ConditionalWeakTable<ConvexPolygonShape, B2Hull[]> PolygonHulls = new();
+    private static readonly ConditionalWeakTable<Shape, PolygonCache> PolygonHulls = new();
 
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
 
+    private sealed record PolygonCache(ulong Revision, B2Hull[] Hulls);
     internal static void ValidateAndCachePolygon(ConvexPolygonShape shape, ReadOnlySpan<Vector2> points) =>
-        PolygonHulls.AddOrUpdate(shape, BuildHulls(points));
+        PolygonHulls.AddOrUpdate(shape, new(shape.GeometryRevision + 1, BuildHulls(points)));
+    internal static void ValidatePolygonData(ReadOnlySpan<Vector2> points) => _ = BuildHulls(points);
 
     internal static B2Hull[] GetHulls(Shape shape, ReadOnlySpan<Vector2> points)
     {
-        var polygon = (ConvexPolygonShape)shape;
-        if (PolygonHulls.TryGetValue(polygon, out var hulls)) return hulls;
-        hulls = BuildHulls(points);
-        PolygonHulls.AddOrUpdate(polygon, hulls);
+        if (PolygonHulls.TryGetValue(shape, out var cached) && cached.Revision == shape.GeometryRevision) return cached.Hulls;
+        var hulls = BuildHulls(points);
+        PolygonHulls.AddOrUpdate(shape, new(shape.GeometryRevision, hulls));
         return hulls;
     }
 

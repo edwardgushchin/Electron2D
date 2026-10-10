@@ -48,10 +48,11 @@ public sealed class SeparationRayShape : Shape
         return new Rect2(0, 0, 0, _length).Grow(MathF.Sqrt(0.5f) * 4f);
     }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.SeparationRay, B = new(0, _length), SlideOnSlope = _slideOnSlope };
+        return ShapeGeometry.SeparationRay(_length, _slideOnSlope);
     }
 
     /// <inheritdoc />

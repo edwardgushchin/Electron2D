@@ -57,3 +57,7 @@ and ContinuousJointBudget (nominal interval force/torque/motor usage), Kinematic
 and SolverCheckpoint (reusable private history). None escapes as public solver data;
 only the history needed for observation/replay is captured, while per-step scratch
 is rebuilt and released by the owner.
+
+## Procedural resource geometry
+
+Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).

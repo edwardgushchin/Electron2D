@@ -34,7 +34,7 @@ internal static class PhysicsSeparationRay
         B2Manifold contact;
         if (tag is { Compound: { } contour })
         {
-            if (!contour.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(ConvexPolygonShape));
+            if (!contour.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(Shape));
             var local = contour.LocalPose;
             var pose = b2MulTransforms(otherPose, new B2Transform(PhysicsShapeBackend.ToBackend(local.Origin), new B2Rot(MathF.Cos(local.Rotation), MathF.Sin(local.Rotation))));
             var scenePose = new Transform(new(pose.q.c, pose.q.s), new(-pose.q.s, pose.q.c), new(pose.p.X * PhysicsSpace.UnitsPerMeter, pose.p.Y * PhysicsSpace.UnitsPerMeter));

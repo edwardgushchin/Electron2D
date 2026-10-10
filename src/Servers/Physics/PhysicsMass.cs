@@ -25,7 +25,7 @@ internal static class PhysicsMass
             if (shape.IsDisposed) return;
             var first = _all.Count;
             AppendProxies(shape, pose, _all);
-            if (!sensor && shape is not (SeparationRayShape or WorldBoundaryShape))
+            if (!sensor && shape.GetGeometry().Kind is not (PhysicsShapeGeometry.ShapeKind.SeparationRay or PhysicsShapeGeometry.ShapeKind.WorldBoundary))
                 for (var i = first; i < _all.Count; i++) _solid.Add(_all[i]);
         }
         internal Properties Calculate(float mass, float inertia, Vector2? center)
@@ -56,7 +56,7 @@ internal static class PhysicsMass
 
     internal static void AppendGeometry(Shape shape, Transform pose, List<B2ShapeProxy> proxies)
     {
-        if (shape.IsDisposed || shape is SeparationRayShape or WorldBoundaryShape) return;
+        if (shape.IsDisposed || shape.GetGeometry().Kind is PhysicsShapeGeometry.ShapeKind.SeparationRay or PhysicsShapeGeometry.ShapeKind.WorldBoundary) return;
         AppendProxies(shape, pose, proxies);
     }
 

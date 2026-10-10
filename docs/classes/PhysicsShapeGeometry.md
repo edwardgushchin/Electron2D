@@ -1,6 +1,6 @@
 # PhysicsShapeGeometry
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 **Declaration:** `internal readonly ref struct PhysicsShapeGeometry`
 
@@ -17,8 +17,9 @@ backend structs or compiled fixture partitions. It never copies a contour.
 Circle, capsule, segment, rectangle, convex contour, paired concave edges and
 separation ray and infinite world boundary implement the same internal resource operation. Callers consume
 the span synchronously while the resource is live and unchanged. A disposed
-resource rejects access. The internal abstract operation preserves the current
-built-in-only shape implementation boundary; public extension support remains open.
+resource rejects access. The internal view is borrowed from immutable public ShapeGeometry supplied through
+Shape.GetGeometryCore. Caller-defined resources use the same path; new solver-defined
+geometry algorithms and registration remain open.
 
 [PhysicsShapeBackend](PhysicsShapeBackend.md) compiles the view for CPU fixtures,
 mass geometry and world-query proxies. PhysicsShapeCollision also consumes it

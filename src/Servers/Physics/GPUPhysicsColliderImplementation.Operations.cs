@@ -41,6 +41,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
         foreach (var slot in slots)
         {
             if (!slot.Active) continue;
+            _ = slot.Shape.GetGeometryData();
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
@@ -54,7 +55,12 @@ internal sealed partial class GPUPhysicsColliderImplementation
     internal override void RebuildShapes(IReadOnlyList<PhysicsServerCollider.ShapeSlot> slots, uint layer, uint mask,
         bool sensor, float density, float friction, float bounce)
     {
-        foreach (var slot in slots) if (!slot.Disabled) PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
+        foreach (var slot in slots)
+            if (!slot.Disabled)
+            {
+                PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
+                if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
+            }
         GPUSensor = sensor; GPUMask = mask; ClearGPUShapes();
         for (var index = 0; index < slots.Count; index++)
         {

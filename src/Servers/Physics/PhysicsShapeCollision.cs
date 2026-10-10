@@ -1,6 +1,7 @@
 using Box2D.NET;
 using static Box2D.NET.B2Distances;
 using static Box2D.NET.B2MathFunction;
+using Kind = Electron2D.PhysicsShapeGeometry.ShapeKind;
 
 namespace Electron2D;
 
@@ -26,30 +27,31 @@ internal static class PhysicsShapeCollision
         Validate(firstPose, firstMotion);
         Validate(secondPose, secondMotion);
         count = 0;
-        if (first is WorldBoundaryShape || second is WorldBoundaryShape)
+        var firstKind = first.GetGeometry().Kind; var secondKind = second.GetGeometry().Kind;
+        if (firstKind == Kind.WorldBoundary || secondKind == Kind.WorldBoundary)
             return BoundaryContact(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
-        if (first is ConcavePolygonShape && second is ConcavePolygonShape ||
-            first is SeparationRayShape && second is SeparationRayShape) return false;
+        if (firstKind == Kind.ConcavePolygon && secondKind == Kind.ConcavePolygon ||
+            firstKind == Kind.SeparationRay && secondKind == Kind.SeparationRay) return false;
         var buffers = s_buffers ??= new();
         var fullFirst = Prepare(first, buffers.First);
         var fullSecond = Prepare(second, buffers.Second);
-        var firstCount = first is ConvexPolygonShape ? fullFirst.IsEmpty ? 0 : 1 : buffers.First.Count;
-        var secondCount = second is ConvexPolygonShape ? fullSecond.IsEmpty ? 0 : 1 : buffers.Second.Count;
-        var firstRay = first as SeparationRayShape;
-        var secondRay = second as SeparationRayShape;
-        if (first is ConcavePolygonShape || secondRay is not null) firstMotion = Vector2.Zero;
-        if (second is ConcavePolygonShape || firstRay is not null) secondMotion = Vector2.Zero;
+        var firstCount = firstKind == Kind.ConvexPolygon ? fullFirst.IsEmpty ? 0 : 1 : buffers.First.Count;
+        var secondCount = secondKind == Kind.ConvexPolygon ? fullSecond.IsEmpty ? 0 : 1 : buffers.Second.Count;
+        var firstRay = firstKind == Kind.SeparationRay ? first.GetGeometryData() : null;
+        var secondRay = secondKind == Kind.SeparationRay ? second.GetGeometryData() : null;
+        if (firstKind == Kind.ConcavePolygon || secondRay is not null) firstMotion = Vector2.Zero;
+        if (secondKind == Kind.ConcavePolygon || firstRay is not null) secondMotion = Vector2.Zero;
         var hit = false;
         var rayDepth = -1d;
         for (var a = 0; a < firstCount; a++)
         {
-            var proxyA = first is ConvexPolygonShape ? default : buffers.First[a];
+            var proxyA = firstKind == Kind.ConvexPolygon ? default : buffers.First[a];
             var hullA = BuildHull(proxyA, fullFirst, firstPose, firstRay is null ? firstMotion : Vector2.Zero,
                 buffers, ref buffers.FirstHull);
             var radiusA = proxyA.radius;
             for (var b = 0; b < secondCount; b++)
             {
-                var proxyB = second is ConvexPolygonShape ? default : buffers.Second[b];
+                var proxyB = secondKind == Kind.ConvexPolygon ? default : buffers.Second[b];
                 var hullB = BuildHull(proxyB, fullSecond, secondPose, secondRay is null ? secondMotion : Vector2.Zero,
                     buffers, ref buffers.SecondHull);
                 var radiusB = proxyB.radius;
@@ -59,7 +61,7 @@ internal static class PhysicsShapeCollision
                     var rayProxy = rayIsFirst ? WorldProxy(proxyA, firstPose) : WorldProxy(proxyB, secondPose);
                     var otherHull = rayIsFirst ? hullB : hullA;
                     var otherRadius = rayIsFirst ? radiusB : radiusA;
-                    if (!RayContact(rayProxy, (firstRay ?? secondRay)!.SlideOnSlope,
+                    if (!RayContact(rayProxy, (firstRay ?? secondRay)!.GetSeparationRayParameters().SlideOnSlope,
                         otherHull, otherRadius, rayIsFirst ? firstMotion : secondMotion,
                         out var rayPoint, out var otherPoint)) continue;
                     hit = true;
@@ -85,10 +87,12 @@ internal static class PhysicsShapeCollision
         Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
     {
         count = 0;
-        if (first is WorldBoundaryShape && second is WorldBoundaryShape) return false;
-        var flip = second is WorldBoundaryShape; var plane = (WorldBoundaryShape)(flip ? second : first);
+        var firstKind = first.GetGeometry().Kind; var secondKind = second.GetGeometry().Kind;
+        if (firstKind == Kind.WorldBoundary && secondKind == Kind.WorldBoundary) return false;
+        var flip = secondKind == Kind.WorldBoundary; var plane = flip ? second : first;
         var other = flip ? first : second;
-        if (other is SeparationRayShape { Length: 0 }) return false;
+        var otherKind = other.GetGeometry().Kind;
+        if (otherKind == Kind.SeparationRay && other.GetGeometry().B.Y == 0) return false;
         var planePose = flip ? secondPose : firstPose;
         var otherPose = flip ? firstPose : secondPose;
         // The boundary is stationary in resource-pair tests; the finite shape is tested at its requested endpoint.
@@ -98,11 +102,11 @@ internal static class PhysicsShapeCollision
         var normal = WorldBoundaryShape.Normalize(raw, 0).Normal;
         var offset = Dot(normal, planePose * (geometry.A * geometry.Radius));
         var buffers = s_buffers ??= new(); var full = Prepare(other, buffers.First);
-        var pieces = other is ConvexPolygonShape ? full.IsEmpty ? 0 : 1 : buffers.First.Count;
+        var pieces = otherKind == Kind.ConvexPolygon ? full.IsEmpty ? 0 : 1 : buffers.First.Count;
         Span<Vector2> support = stackalloc Vector2[2]; var collided = false;
         for (var i = 0; i < pieces; i++)
         {
-            var proxy = other is ConvexPolygonShape ? default : buffers.First[i];
+            var proxy = otherKind == Kind.ConvexPolygon ? default : buffers.First[i];
             var hull = BuildHull(proxy, full, otherPose, Vector2.Zero, buffers, ref buffers.FirstHull);
             var used = Support(hull, proxy.radius, -normal, support);
             for (var j = 0; j < used; j++)

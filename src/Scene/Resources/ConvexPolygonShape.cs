@@ -58,10 +58,11 @@ public sealed class ConvexPolygonShape : Shape
         return new(min.X, min.Y, max.X - min.X, max.Y - min.Y);
     }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.ConvexPolygon, Points = _points };
+        return ShapeGeometry.ConvexPolygon(_points);
     }
 
     /// <inheritdoc />

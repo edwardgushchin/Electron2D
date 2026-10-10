@@ -110,6 +110,17 @@ interception would leave scene behavior and direct queries outside the extension
   Built-in kernels reject unsupported geometry before mutation; an extension must
   execute the applicable geometry contract without replacing it with a finite
   placeholder. Preserve all current CPU/GPU shape behavior.
+- Caller-defined Shape resources may supply exact supported geometry before registered
+  solvers ship. A protected GetGeometryCore returns immutable ShapeGeometry data for
+  circle, vertical capsule, segment, rectangle, convex contour, paired concave edges,
+  separation ray or infinite boundary. Factories validate and copy authoring data;
+  the runtime caches the result until protected EmitGeometryChanged invalidates it.
+  GetGeometryData and complete typed accessors expose that exact immutable payload
+  without solver handles; retained data survives later resource edits and disposal.
+  Bounds, drawing, CPU/GPU compilation, mass, queries, contacts and replay consume
+  that same representation. This is procedural resource authoring, not approximation
+  of an unsupported geometry algorithm. ShapeGetType reports its actual represented
+  primitive. Registered custom-solver geometry and CustomShapeCreate remain open.
 
 ### Rejected alternatives
 

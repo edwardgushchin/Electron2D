@@ -310,9 +310,9 @@ The pinned census contains two manager members, 140 server-extension members,
 48 direct-body-state members and seven direct-space members, plus their four
 owning types. No owning type/member deprecated metadata excludes these families;
 the old one-way compatibility binding remains separately excluded. Current
-PhysicsServer is a sealed static facade, direct states are sealed and RID allocation
+PhysicsServer is a sealed static facade, direct states support guarded caller-created extensions and RID allocation
 is internal. Public typed query-result constructors now exist and preserve payload validation.
-Shape still has an internal abstract geometry member. Selected world/collider/joint
+Shape now supports caller-defined resources through immutable exact ShapeGeometry and a protected geometry hook. Supported primitive/contour data executes on both backends; CustomShapeCreate and new solver-defined algorithms remain open. Selected world/collider/joint
 ownership, world policy/capacity, completed statistics and selected full-step phases have been extracted, but registered third-party state/motion/query dispatch
 is not implemented. These
 are concrete integration prerequisites, not a reason to exclude extension behavior.

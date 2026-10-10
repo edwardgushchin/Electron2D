@@ -77,6 +77,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         foreach (var slot in slots)
         {
             if (!slot.Active) continue;
+            _ = slot.Shape.GetGeometryData();
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
         }
@@ -92,7 +93,11 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         bool sensor, float density, float friction = 1, float bounce = 0)
     {
         foreach (var slot in slots)
-            if (!slot.Disabled) PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
+            if (!slot.Disabled)
+            {
+                PhysicsServerCollider.ValidateTransform(slot.LocalTransform);
+                if (!slot.Shape.Geometry.IsDisposed) _ = slot.Shape.Geometry.GetGeometryData();
+            }
         var definition = BeginShapeUpdate(layer, mask, sensor, density, friction, bounce);
         for (var index = 0; index < slots.Count; index++)
         {
@@ -122,13 +127,14 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
 
     private void AppendShape(Shape shape, Transform transform, int index, OneWayContactData? oneWay, ref B2ShapeDef definition)
     {
+        var geometry = shape.GetGeometry();
         definition.userData = new B2UserData(new PhysicsFixtureTag(Owner.RID, index, oneWay)
         {
             Owner = this.Owner,
             SceneOwner = Owner.SceneOwnerReference,
             Source = new(shape),
-            Compound = shape is ConvexPolygonShape polygon && polygon.GetGeometry().Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES
-                ? new(new(polygon), transform) : null
+            Compound = geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && geometry.Points.Length > B2Constants.B2_MAX_POLYGON_VERTICES
+                ? new(new(shape), transform) : null
         });
         definition.enablePreSolveEvents = !definition.isSensor && (oneWay is not null || PhysicsServer.Service.HasBodyCollisionExceptions(Owner.RID));
         var first = _shapes.Count;

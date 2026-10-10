@@ -8697,6 +8697,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ShapeGeometry",
+    "kind": "type",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "ShapeGeometry",
+    "signature": "public sealed class Electron2D.ShapeGeometry",
+    "visibility": "public",
+    "baseType": "System.Object",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.Shortcut",
     "kind": "type",
     "declaringType": "Electron2D.Shortcut",
@@ -66095,6 +66108,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CapsuleShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.CapsuleShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CapsuleShape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.CapsuleShape",
@@ -66730,6 +66756,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CircleShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.CircleShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {
@@ -70590,6 +70629,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ConcavePolygonShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConcavePolygonShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ConcavePolygonShape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.ConcavePolygonShape",
@@ -73239,6 +73291,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ConvexPolygonShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.ConvexPolygonShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {
@@ -124655,6 +124720,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RectangleShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.RectangleShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RectangleShape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RectangleShape",
@@ -135114,6 +135192,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.SegmentShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.SegmentShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.SegmentShape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.SegmentShape",
@@ -135189,6 +135280,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.SeparationRayShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.SeparationRayShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {
@@ -136002,6 +136106,45 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.Shape.EmitGeometryChanged()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "EmitGeometryChanged",
+    "signature": "protected internal System.Void EmitGeometryChanged()",
+    "visibility": "protected internal",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "GetGeometryCore",
+    "signature": "protected abstract Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shape.GetGeometryData()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shape",
+    "name": "GetGeometryData",
+    "signature": "public Electron2D.ShapeGeometry GetGeometryData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.Shape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.Shape",
@@ -136032,7 +136175,7 @@
     "kind": "method",
     "declaringType": "Electron2D.Shape",
     "name": "GetRect",
-    "signature": "public abstract Electron2D.Rect2 GetRect()",
+    "signature": "public virtual Electron2D.Rect2 GetRect()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -136433,6 +136576,282 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.Capsule(System.Single,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Capsule",
+    "signature": "public static Electron2D.ShapeGeometry Capsule(System.Single radius, System.Single height)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "radius",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "height",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.Circle(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Circle",
+    "signature": "public static Electron2D.ShapeGeometry Circle(System.Single radius)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "radius",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.ConcavePolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "ConcavePolygon",
+    "signature": "public static Electron2D.ShapeGeometry ConcavePolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E segments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "segments",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.ConvexPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "ConvexPolygon",
+    "signature": "public static Electron2D.ShapeGeometry ConvexPolygon(System.ReadOnlySpan\u003CElectron2D.Vector2\u003E points)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "points",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCapsuleDimensions()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCapsuleDimensions",
+    "signature": "public System.ValueTuple\u003CSystem.Single, System.Single\u003E GetCapsuleDimensions()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ValueTuple\u003CSystem.Single, System.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCircleRadius()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCircleRadius",
+    "signature": "public System.Single GetCircleRadius()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetConcavePolygonSegments()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetConcavePolygonSegments",
+    "signature": "public System.ReadOnlySpan\u003CElectron2D.Vector2\u003E GetConcavePolygonSegments()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetConvexPolygonPoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetConvexPolygonPoints",
+    "signature": "public System.ReadOnlySpan\u003CElectron2D.Vector2\u003E GetConvexPolygonPoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetRectangleSize()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetRectangleSize",
+    "signature": "public Electron2D.Vector2 GetRectangleSize()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetSegmentEndpoints()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetSegmentEndpoints",
+    "signature": "public System.ValueTuple\u003CElectron2D.Vector2, Electron2D.Vector2\u003E GetSegmentEndpoints()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ValueTuple\u003CElectron2D.Vector2, Electron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetSeparationRayParameters()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetSeparationRayParameters",
+    "signature": "public System.ValueTuple\u003CSystem.Single, System.Boolean\u003E GetSeparationRayParameters()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ValueTuple\u003CSystem.Single, System.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetWorldBoundaryPlane()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetWorldBoundaryPlane",
+    "signature": "public System.ValueTuple\u003CElectron2D.Vector2, System.Single\u003E GetWorldBoundaryPlane()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ValueTuple\u003CElectron2D.Vector2, System.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.Rectangle(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Rectangle",
+    "signature": "public static Electron2D.ShapeGeometry Rectangle(Electron2D.Vector2 size)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "size",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.Segment(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Segment",
+    "signature": "public static Electron2D.ShapeGeometry Segment(Electron2D.Vector2 a, Electron2D.Vector2 b)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "a",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "b",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.SeparationRay(System.Single,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "SeparationRay",
+    "signature": "public static Electron2D.ShapeGeometry SeparationRay(System.Single length, System.Boolean slideOnSlope = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "length",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "slideOnSlope",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.WorldBoundary(Electron2D.Vector2,System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "WorldBoundary",
+    "signature": "public static Electron2D.ShapeGeometry WorldBoundary(Electron2D.Vector2 normal, System.Single distance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "distance",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {
@@ -166627,6 +167046,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.WorldBoundaryShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.WorldBoundaryShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.WorldBoundaryShape.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.WorldBoundaryShape",
@@ -195539,6 +195971,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeGeometry.Bounds()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Bounds",
+    "signature": "public Electron2D.Rect2 Bounds { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Rect2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ShapeGeometry.Type()",
+    "kind": "property",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Type",
+    "signature": "public Electron2D.PhysicsServer.ShapeType Type { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.ShapeType",
     "value": null
   },
   {

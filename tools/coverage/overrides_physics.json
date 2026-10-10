@@ -2943,6 +2943,126 @@
     {
       "electron2d": "T:Electron2D.PhysicsBodyContact",
       "reason": "ADR 0103: immutable typed contact result combines the complete retained contact getter family; construction validates live same-world body/slot identities, samples weak object association and qualifies the observed attachment generation."
+    },
+    {
+      "electron2d": "T:Electron2D.ShapeGeometry",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.CapsuleShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.CircleShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ConcavePolygonShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ConvexPolygonShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.RectangleShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.SegmentShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.SeparationRayShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.EmitGeometryChanged()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.Capsule(System.Single,System.Single)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.Circle(System.Single)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.ConcavePolygon(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.ConvexPolygon(System.ReadOnlySpan<Electron2D.Vector2>)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.Rectangle(Electron2D.Vector2)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.Segment(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.SeparationRay(System.Single,System.Boolean)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.WorldBoundary(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.WorldBoundaryShape.GetGeometryCore()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.ShapeGeometry.Bounds()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.ShapeGeometry.Type()",
+      "reason": "ADR 0103: exact typed procedural Shape geometry, immutable validated authoring data and revision-qualified compilation execute through a separate public-only CPU/GPU/no-device consumer; inherited bounds/drawing, bodies/Areas, mass, queries, contacts and replay use the same geometry. Registered custom-solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.Shape.GetGeometryData()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCapsuleDimensions()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCircleRadius()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetConcavePolygonSegments()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetConvexPolygonPoints()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetRectangleSize()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetSegmentEndpoints()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetSeparationRayParameters()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetWorldBoundaryPlane()",
+      "reason": "ADR 0103: complete typed immutable procedural geometry access preserves exact factory payloads without solver handles; Shape.GetGeometryData shares the cached resource revision with drawing and physics. Public-only CPU/GPU/no-device checks verify values, type guards and zero warmed allocation. Registered custom solver algorithms remain open."
     }
   ],
   "statusGroups": [

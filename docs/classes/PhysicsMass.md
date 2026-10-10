@@ -1,6 +1,6 @@
 # PhysicsMass
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 **Declaration:** `internal static class PhysicsMass`
 
@@ -43,3 +43,7 @@ against those public CPU getters, exercises custom centers, actual device force,
 contact and joint responses, edit ordering, disposal/revision recovery and warmed
 profile edits. See the [resident mass report](../components/gpu-resident-mass.md)
 for numerical bounds, storage costs and the remaining backend integration boundary.
+
+## Procedural resource geometry
+
+Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).

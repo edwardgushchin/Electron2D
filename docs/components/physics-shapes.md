@@ -125,3 +125,11 @@ registry. See [contact correction](physics-contact-policy.md).
 through the existing retained canvas with finite color, project outlines, typed RIDs
 and ownership/error checks. CPU/GPU physics do not need device state readback for this
 drawing. CollisionShape stores DebugColor and refreshes on geometry revisions/disposal.
+
+## Caller-defined shape resources
+
+Shape.GetGeometryCore now accepts exact immutable [ShapeGeometry](../classes/ShapeGeometry.md). Factories cover all eight current primitive/contour families, copy contour input and preserve infinite boundary semantics. Cached data and CPU contour partitions are qualified by resource geometry revision; a procedural Shape can change primitive kind while retaining its RID. GetRect, Draw, standalone collisions, scene/raw attachments, Area observations, mass, direct queries, contact projection, checkpoints and portable schemas consume the same data.
+
+[The separate public consumer](../../tests/ShapeExtension.Consumer/ShapeExtension.Consumer.csproj) exercises this path on CPU/GPU/no-device, including 64 warmed measured full step/query/checkpoint/snapshot cycles with zero managed allocations. Its draw profile checks live geometry edits using actual window pixel readback under both renderers. Native allocator, foreign-platform and full workload/FPS acceptance remain separate. This capability supplies exact supported geometry; it does not approximate or register unsupported collision algorithms.
+
+Standalone special-pair rules, full-contour resource contacts, CPU compound metadata, directed-ray query policy and mass exclusions now dispatch on represented geometry kind. They do not require a concrete resource class. CPU/GPU rebuilds demand every live candidate's immutable data before retiring old fixtures; throwing or null construction hooks fail preparation before the solver tick and permit a later retry.

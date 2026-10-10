@@ -1,6 +1,6 @@
 # PhysicsShapeBackend
 
-Last updated: 2026-10-08
+Last updated: 2026-10-10
 
 **Declaration:** `internal static class PhysicsShapeBackend`
 
@@ -25,8 +25,9 @@ backend hull arrays themselves. Public APIs and geometry units are unchanged.
 | `ToBackend` | Convert scene-unit vectors at backend call sites without coupling the Shape base class to vendor vectors. |
 
 Only convex resources need retained compiled pieces. A ConditionalWeakTable maps
-resource identity to those arrays without keeping resources alive. Successful
-Points assignment replaces them; invalid input leaves both authored and compiled
+any Shape resource identity plus geometry revision to those arrays without keeping resources alive. Successful
+Points assignment precompiles its next revision; other procedural contour changes
+recompile on first demand. No concrete ConvexPolygonShape cast is required. Invalid input leaves both authored and compiled
 geometry intact. A duplicated resource owns copied authoring points and compiles
 independently on first use. Compiled data is not serialized and contains no owner
 reference. Local rectangle/polygon fixture rotations use ordinary sine/cosine, matching

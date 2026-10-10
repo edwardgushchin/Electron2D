@@ -231,7 +231,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         var compound = own.SeparationRay is not null ? target.Compound : target.SeparationRay is not null ? own.Compound : null;
         if (compound is not null)
         {
-            if (!compound.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(ConvexPolygonShape));
+            if (!compound.Source.TryGetTarget(out var source)) throw new ObjectDisposedException(nameof(Shape));
             var pose = (own.SeparationRay is not null ? ScenePose(otherPose, default) : ScenePose(from, recovery)) * compound.LocalPose;
             var transform = new B2Transform(PhysicsShapeBackend.ToBackend(pose.Origin), new B2Rot(pose.X.X, pose.X.Y));
             var hulls = PhysicsShapeBackend.GetHulls(source, compound.Points); var best = default(B2Manifold);

@@ -49,9 +49,40 @@ public abstract partial class Shape : Resource
 
     /// <summary>Gets the local bounding rectangle of the shape.</summary>
     /// <returns>The local-axis bounds, including drawing padding for a separation ray; a shape need not be centered on its origin.</returns>
-    public abstract Rect2 GetRect();
+    public virtual Rect2 GetRect() => GeometryData.Bounds;
 
-    internal abstract PhysicsShapeGeometry GetGeometry();
+    /// <summary>Supplies immutable exact collision geometry for this resource.</summary>
+    /// <returns>Validated geometry in local scene units; it is retained until EmitGeometryChanged.</returns>
+    /// <remarks>This hook must not mutate or dispose the resource or recursively request its geometry.
+    /// It runs on first geometry demand after an edit. The runtime uses the same data for physics,
+    /// bounds and diagnostic drawing. Unsupported collision algorithms require a solver implementation.</remarks>
+    protected abstract ShapeGeometry GetGeometryCore();
+
+    /// <summary>Gets immutable exact geometry for the current authored resource revision.</summary>
+    /// <returns>The cached geometry data; retained data remains valid independently of later edits or resource disposal.</returns>
+    /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The geometry hook recurses or returns null.</exception>
+    public ShapeGeometry GetGeometryData() => GeometryData;
+
+    private ShapeGeometry? _geometryData;
+    private bool _readingGeometry;
+    private readonly object _geometryGate = new();
+    private ShapeGeometry GeometryData
+    {
+        get
+        {
+            lock (_geometryGate)
+            {
+                ThrowIfDisposed();
+                if (_geometryData is not null) return _geometryData;
+                if (_readingGeometry) throw new InvalidOperationException("Shape geometry construction cannot recurse.");
+                _readingGeometry = true;
+                try { return _geometryData = GetGeometryCore() ?? throw new InvalidOperationException("A shape must supply geometry."); }
+                finally { _readingGeometry = false; }
+            }
+        }
+    }
+    internal PhysicsShapeGeometry GetGeometry() => GeometryData.Borrow();
 
     internal ulong GeometryRevision => _revision;
 
@@ -84,14 +115,26 @@ public abstract partial class Shape : Resource
     /// <exception cref="InvalidOperationException">The server RID owns this geometry; release that RID instead.</exception>
     protected override void ValidateDisposal()
     {
+        lock (_geometryGate)
+            if (_readingGeometry) throw new InvalidOperationException("A shape cannot be disposed during its geometry construction hook.");
         lock (_queryRIDGate)
             if (_serverOwned && _serverReleaseThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("This geometry is borrowed from a server shape RID.");
         base.ValidateDisposal();
     }
 
-    internal void EmitGeometryChanged()
+    /// <summary>Invalidates compiled geometry and notifies all borrowers after an authored geometry edit.</summary>
+    /// <remarks>Call after committing valid data. The shape RID remains stable; the next query or step rebuilds affected attachments.</remarks>
+    /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
+    /// <exception cref="InvalidOperationException">The geometry construction hook is active.</exception>
+    protected internal void EmitGeometryChanged()
     {
-        _revision++;
+        lock (_geometryGate)
+        {
+            ThrowIfDisposed();
+            if (_readingGeometry) throw new InvalidOperationException("Geometry cannot change during its construction hook.");
+            _geometryData = null;
+            _revision++;
+        }
         Interlocked.Increment(ref _geometryEpoch);
         RID rid;
         lock (_queryRIDGate) rid = _queryRID;
@@ -147,10 +190,11 @@ public sealed class CircleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_radius, -_radius, 2 * _radius, 2 * _radius); }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Circle, Radius = _radius };
+        return ShapeGeometry.Circle(_radius);
     }
 
     /// <inheritdoc />
@@ -244,11 +288,11 @@ public sealed class CapsuleShape : Shape
         return new(-_radius, -_height * 0.5f, 2 * _radius, _height);
     }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        var half = (_height - 2 * _radius) * 0.5f;
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Capsule, A = new(0, -half), B = new(0, half), Radius = _radius };
+        return ShapeGeometry.Capsule(_radius, _height);
     }
 
     /// <inheritdoc />
@@ -323,10 +367,11 @@ public sealed class SegmentShape : Shape
             MathF.Abs(_b.X - _a.X), MathF.Abs(_b.Y - _a.Y));
     }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Segment, A = _a, B = _b };
+        return ShapeGeometry.Segment(_a, _b);
     }
 
     /// <inheritdoc />
@@ -382,10 +427,11 @@ public sealed class RectangleShape : Shape
     /// <inheritdoc />
     public override Rect2 GetRect() { ThrowIfDisposed(); return new(-_size.X / 2, -_size.Y / 2, _size.X, _size.Y); }
 
-    internal override PhysicsShapeGeometry GetGeometry()
+    /// <inheritdoc />
+    protected override ShapeGeometry GetGeometryCore()
     {
         ThrowIfDisposed();
-        return new() { Kind = PhysicsShapeGeometry.ShapeKind.Rectangle, A = -_size * 0.5f, B = _size * 0.5f };
+        return ShapeGeometry.Rectangle(_size);
     }
 
     /// <inheritdoc />

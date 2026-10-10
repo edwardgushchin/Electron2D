@@ -1,6 +1,6 @@
 # PhysicsFixtureTag
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal sealed record PhysicsFixtureTag`
 
@@ -21,3 +21,7 @@ The Source weak reference identifies the authored Shape for solver-policy update
 
 
 Owner borrows the shared collider adapter for current object association. Query/contact publication samples ObjectIdentity before callbacks; SceneOwner remains physical scene convenience. See [object associations](../components/physics-object-bindings.md).
+
+## Procedural resource geometry
+
+Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).

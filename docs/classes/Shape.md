@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -14,14 +14,7 @@ The reusable 2D collision-geometry role. The caller owns a Shape resource; a [Co
 
 ## Example
 
-Internally, all built-in shapes supply a borrowed [PhysicsShapeGeometry](PhysicsShapeGeometry.md)
-view in scene units. Resources hold authored values; [PhysicsShapeBackend](PhysicsShapeBackend.md)
-owns current CPU fixture/query compilation and the weak compiled polygon cache.
-Standalone collisions consume the same source geometry without copying contours.
-GPUPhysicsBodyStore borrows that view for persistent device geometry and broad-phase
-bounds/pairs/contacts; revisions and disposal invalidate its shared geometry records.
-This extraction preserves the public resource contract and does not add a second
-custom-shape registration. The public world adapter independently selects CPU or GPU.
+Every shape supplies immutable [ShapeGeometry](ShapeGeometry.md) through protected GetGeometryCore. The runtime retains it until EmitGeometryChanged and lends one [PhysicsShapeGeometry](PhysicsShapeGeometry.md) view to physics and drawing. Applications can derive Shape using exact supported geometry and Resource copying hooks. The default GetRect returns that data's bounds; built-in overrides retain their existing behavior. Registered algorithms beyond these geometry families remain open under ADR 0103.
 
 This complete resource-only snippet requires no SceneTree, body or space:
 
@@ -39,7 +32,7 @@ Vector2[] pairs = circle.CollideAndGetContacts(Transform.Identity, box, boxPose)
 | --- | --- |
 | `protected Shape()` | Base construction through a concrete derived shape. |
 | `public void Draw(RID canvasItem, Color color)` | Append current local geometry to a live rendering canvas item. |
-| `public abstract Rect2 GetRect()` | Returns the local bounding rectangle in scene units. |
+| `public virtual Rect2 GetRect()` | Returns the local bounding rectangle in scene units. |
 | `public bool Collide(Transform localTransform, Shape withShape, Transform shapeTransform)` | Tests two posed resources. |
 | `public Vector2[] CollideAndGetContacts(Transform localTransform, Shape withShape, Transform shapeTransform)` | Up to sixteen caller/other boundary pairs. |
 | `public bool CollideWithMotion(Transform localTransform, Vector2 localMotion, Shape withShape, Transform shapeTransform, Vector2 shapeMotion)` | Tests independently swept regions. |
@@ -133,3 +126,13 @@ copies inherited policy; each built-in geometry hook calls it and publishes its
 geometry revision. Duplicate, in-place copy and .e2dres persistence preserve policy
 for all eight built-in shape families. [Contact correction](../components/physics-contact-policy.md)
 documents world settings, backend behavior and PhysicsContactPolicyTests.
+
+## Procedural geometry
+
+`protected abstract ShapeGeometry GetGeometryCore()` returns validated immutable data. It is called once on first demand after construction or a geometry edit. Recursive geometry demand, geometry invalidation and shape disposal inside this hook reject; a failed hook leaves the cache empty for a later retry.
+
+`protected internal void EmitGeometryChanged()` invalidates that cache, increments the resource geometry revision and notifies every borrower while retaining the RID. Commit valid authored state before calling it. ShapeGeometry contour factories copy input; reusing immutable data across resource duplicates is safe.
+
+[The public-only consumer](../../tests/ShapeExtension.Consumer/ProceduralShape.cs) derives Shape without engine or solver internals. It exercises scene/raw bodies and Areas, a full 12-vertex contour, automatic mass/inertia, solved contacts, queries, representation changes, independent resource copying, retirement, private checkpoints and portable snapshots. Its draw profile verifies actual window pixels with both renderers. These checks do not implement registered custom solver algorithms.
+
+`public ShapeGeometry GetGeometryData()` returns the current cached immutable representation. Retained data survives later resource edits and disposal; requesting it from an already disposed resource rejects. The complete typed data accessors expose exact primitive parameters without solver handles.

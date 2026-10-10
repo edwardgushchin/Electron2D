@@ -1,6 +1,6 @@
 # CircleShape
 
-Last updated: 2026-10-05
+Last updated: 2026-10-10
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -71,3 +71,7 @@ Inherited [Shape.CustomSolverBias](Shape.md#customsolverbias) is stored and copi
 alongside geometry. CopyCustomStateTo calls the Shape base and publishes the changed
 geometry revision, including in-place copying into a resource with existing borrowers.
 PhysicsContactPolicyTests checks duplication, in-place copy and .e2dres round trips.
+
+## Geometry implementation
+
+`protected override ShapeGeometry GetGeometryCore()` supplies immutable exact data for this resource's current geometry. The inherited Shape cache retains it until an authored edit calls EmitGeometryChanged. Bounds, diagnostics and both physical backends consume this same representation; see [procedural geometry](Shape.md#procedural-geometry).

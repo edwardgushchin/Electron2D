@@ -6,10 +6,10 @@ internal readonly record struct SeparationRayData(B2Vec2 From, B2Vec2 To, bool S
 internal sealed record PhysicsFixtureTag(RID ColliderRID, int ShapeIndex, OneWayContactData? OneWay,
     SeparationRayData? SeparationRay = null)
 {
-    internal sealed record CompoundContour(WeakReference<ConvexPolygonShape> Source, Transform LocalPose)
+    internal sealed record CompoundContour(WeakReference<Shape> Source, Transform LocalPose)
     {
         internal ReadOnlySpan<Vector2> Points => Source.TryGetTarget(out var shape) && !shape.IsDisposed
-            ? shape.GetGeometry().Points : throw new ObjectDisposedException(nameof(ConvexPolygonShape));
+            ? shape.GetGeometry().Points : throw new ObjectDisposedException(nameof(Shape));
     }
     internal CompoundContour? Compound { get; init; }
     internal int CompoundPiece { get; init; }

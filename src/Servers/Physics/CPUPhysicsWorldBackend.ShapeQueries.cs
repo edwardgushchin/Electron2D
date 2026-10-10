@@ -181,11 +181,12 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         var space = Space;
         var shape = parameters.Shape ?? PhysicsServer.Service.GetShapeGeometry(parameters.ShapeRID);
-        _queryRaySlide = (shape as SeparationRayShape)?.SlideOnSlope;
+        var geometry = shape.GetGeometry();
+        _queryRaySlide = geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay ? geometry.SlideOnSlope : null;
         _queryProxies.Clear();
         PhysicsShapeBackend.AppendQueryProxies(shape, _queryProxies);
-        if (shape is SeparationRayShape { Length: 0 }) _queryProxies.Clear();
-        _queryCompoundConvex = shape is ConvexPolygonShape && _queryProxies.Count > 1;
+        if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.SeparationRay && geometry.B.Y == 0) _queryProxies.Clear();
+        _queryCompoundConvex = geometry.Kind == PhysicsShapeGeometry.ShapeKind.ConvexPolygon && _queryProxies.Count > 1;
         var transform = parameters.Transform;
         var backendTransform = new B2Transform(PhysicsShapeBackend.ToBackend(transform.Origin), b2MakeRot(transform.Rotation));
         var margin = parameters.Margin * PhysicsSpace.MetersPerUnit;

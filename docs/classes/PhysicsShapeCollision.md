@@ -1,6 +1,6 @@
 # PhysicsShapeCollision
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Declaration:** `internal static class PhysicsShapeCollision`
 
@@ -24,3 +24,7 @@ FullMotionContact now clips the incident edge against a selected full-contour fa
 and emits up to two actual boundary points, deepest first. This preserves face
 contributions in weighted body-motion recovery while keeping single-point fallback,
 caller-owned results and reused hull buffers. See [collision priority](../components/physics-contact-policy.md#collision-priority).
+
+## Procedural resource geometry
+
+Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).

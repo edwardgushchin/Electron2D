@@ -1,6 +1,6 @@
 # SeparationRayShape
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 **Inherits:** [Shape](Shape.md), [Resource](Resource.md)
 
@@ -89,3 +89,7 @@ The common public CCD group (`ELECTRON2D_TEST_GPU_CCD_CONTRACT=1`) also verifies
 stationary separated rays and bounded CCD/scene resting positions on both backends.
 The speculative search margin admits candidates without extending the authored ray
 length or adding penetration. See the [conformance record](../components/cpu-continuous-collision.md#public-cpugpu-conformance-2026-10-10).
+
+## Geometry implementation
+
+`protected override ShapeGeometry GetGeometryCore()` supplies immutable exact data for this resource's current geometry. The inherited Shape cache retains it until an authored edit calls EmitGeometryChanged. Bounds, diagnostics and both physical backends consume this same representation; see [procedural geometry](Shape.md#procedural-geometry).

@@ -478,3 +478,5 @@ now removes direct CPU-only force/field calls from common PhysicsBodyRuntime and
 PhysicsColliderBackend. Both implementations execute real scene/raw default-force
 preparation; CPU field integration remains concrete and GPU stays resident. This is
 an internal extension prerequisite, not public backend registration.
+
+[Procedural Shape resources](../components/physics-shapes.md#caller-defined-shape-resources) now supply immutable exact geometry through a protected typed hook. All current primitive/contour families share drawing, bounds, CPU/GPU attachments and replay data. Third-party solver registration and algorithms outside those families remain open.
