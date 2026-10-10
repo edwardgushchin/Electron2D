@@ -51,4 +51,3 @@ Existing CPU bodies, characters, areas, shapes, queries, joints, physical bones 
 - Ship Box2D.NET as a managed package or expose its types publicly: ADRs 0004 and 0012 require one Electron2D-owned managed surface.
 - Add public PhysicsServer or RID placeholders around the first scene bodies: their resource-identity and direct-space contracts need a complete separate vertical slice.
 - Replace the CPU compatibility backend with a GPU-only solver: unsupported devices and headless CPU execution must remain supported.
-
