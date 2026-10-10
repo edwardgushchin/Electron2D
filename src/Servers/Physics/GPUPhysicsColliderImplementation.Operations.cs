@@ -106,7 +106,12 @@ internal sealed partial class GPUPhysicsColliderImplementation
     }
     internal override void SetAwake(bool awake)
     {
-        if (!awake) Space.FlushGPUWakes();
+        if (!awake)
+        {
+            if (GPU.GetMode(GPUHandle) >= PhysicsServer.BodyMode.Rigid)
+                PrepareGPUParameters(PhysicsServer.Service.BodyRuntime(Owner.RID));
+            Space.FlushGPUWakes();
+        }
         GPU.SetSleeping(GPUHandle, !awake);
         if (awake) Space.InvalidateGPUStates(); else GPUStateValid = false;
     }

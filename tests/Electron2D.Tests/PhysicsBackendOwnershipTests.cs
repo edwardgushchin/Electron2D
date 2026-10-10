@@ -6,6 +6,7 @@ internal static class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        IntegrationOwnership(backend);
         PhysicsAreaBackendTests.Run(backend);
         if (backend == PhysicsServer.Backend.CPU) ContinuousFailure();
         TickBoundary(backend);
@@ -75,6 +76,69 @@ internal static class PhysicsBackendOwnershipTests
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
     }
+    private static void IntegrationOwnership(PhysicsServer.Backend backend)
+    {
+        using var world = new World(backend); using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = 3 };
+        var scene = new RigidBody { CanSleep = false, CollisionMask = 0, GravityScale = 0, Mass = 2, Inertia = 4 };
+        scene.AddChild(new CollisionShape { Shape = circle }); root.AddChild(scene);
+        using var tree = new SceneTree(root); var raw = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.AreaSetGravity(world.Space, 0); PhysicsServer.AreaSetLinearDamp(world.Space, 0); PhysicsServer.AreaSetAngularDamp(world.Space, 0);
+            PhysicsServer.BodyAddShape(raw, circle.GetRID()); PhysicsServer.BodySetCanSleep(raw, false); PhysicsServer.BodySetCollisionMask(raw, 0);
+            PhysicsServer.BodySetMass(raw, 2); PhysicsServer.BodySetInertia(raw, 4); PhysicsServer.BodySetGravityScale(raw, 0);
+            PhysicsServer.BodySetTransform(raw, new(0, new(20, 0))); PhysicsServer.BodySetSpace(raw, world.Space);
+            foreach (var body in new[] { scene.GetRID(), raw })
+            {
+                PhysicsServer.BodySetConstantForce(body, new(20, 0)); PhysicsServer.BodySetConstantTorque(body, 8);
+                PhysicsServer.BodyApplyCentralForce(body, new(80, 0)); PhysicsServer.BodyApplyTorque(body, 32);
+            }
+            tree.PhysicsFrame(.1); Motion(5, 1);
+            tree.PhysicsFrame(.1); Motion(6, 1.2f);
+            foreach (var body in new[] { scene.GetRID(), raw })
+            {
+                PhysicsServer.BodySetOmitForceIntegration(body, true);
+                PhysicsServer.BodyApplyCentralForce(body, new(200, 0)); PhysicsServer.BodyApplyTorque(body, 80);
+            }
+            tree.PhysicsFrame(.1); Motion(6, 1.2f);
+            foreach (var body in new[] { scene.GetRID(), raw })
+            {
+                PhysicsServer.BodySetOmitForceIntegration(body, false);
+                PhysicsServer.BodySetConstantForce(body, Vector2.Zero); PhysicsServer.BodySetConstantTorque(body, 0);
+                PhysicsServer.BodySetLinearVelocity(body, Vector2.Zero); PhysicsServer.BodySetAngularVelocity(body, 0);
+                PhysicsServer.BodySetCanSleep(body, true); PhysicsServer.BodySetSleeping(body, true);
+            }
+            tree.PhysicsFrame(.1); Motion(0, 0);
+            Check(PhysicsServer.BodyGetSleeping(scene.GetRID()) && PhysicsServer.BodyGetSleeping(raw), "Idle preparation preserves sleeping receivers");
+            foreach (var body in new[] { scene.GetRID(), raw }) PhysicsServer.BodyApplyCentralForce(body, new(100, 0));
+            tree.PhysicsFrame(.1); Motion(5, 0);
+            foreach (var body in new[] { scene.GetRID(), raw }) PhysicsServer.BodySetCanSleep(body, false);
+            Collect();
+            for (var i = 0; i < 64; i++) Cycle();
+            var all = GC.GetTotalAllocatedBytes(true); var bytes = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) Cycle();
+            bytes = GC.GetAllocatedBytesForCurrentThread() - bytes; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(bytes == 0 && all == 0, $"Selected integration cycles allocate {bytes}/{all} owner/all-thread bytes");
+            Console.WriteLine($"{backend}: scene/raw pending and constant force/torque, omission, sleep/wake and 64 warm owner integration cycles: {bytes}/{all} B passed.");
+            void Cycle()
+            {
+                PhysicsServer.BodyApplyCentralForce(scene.GetRID(), new(1, 0)); PhysicsServer.BodyApplyCentralForce(raw, new(1, 0));
+                tree.PhysicsFrame(1d / 60);
+                _ = PhysicsServer.BodyGetLinearVelocity(scene.GetRID()); _ = PhysicsServer.BodyGetLinearVelocity(raw);
+            }
+            void Motion(float linear, float angular)
+            {
+                foreach (var body in new[] { scene.GetRID(), raw })
+                {
+                    Check(PhysicsServer.BodyGetLinearVelocity(body).DistanceTo(new(linear, 0)) < .002f, "Selected scene/raw linear force budget");
+                    Check(MathF.Abs(PhysicsServer.BodyGetAngularVelocity(body) - angular) < .002f, "Selected scene/raw torque budget");
+                }
+            }
+        }
+        finally { PhysicsServer.FreeRID(raw); }
+    }
+
     private static void ContinuousFailure()
     {
         var rid = PhysicsServer.SpaceCreate(PhysicsServer.Backend.CPU); var body = PhysicsServer.BodyCreate();

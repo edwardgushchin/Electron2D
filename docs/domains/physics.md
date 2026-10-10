@@ -472,3 +472,9 @@ Report-only pair/activity counters rewind with contacts before another solver st
 [The ownership contract](../components/physics-backends.md#native-simulation-and-replay-ownership)
 records replay, diagnostics, failure and allocation checks; registered public backend
 factories and custom geometry remain open.
+
+[Selected body integration preparation](../components/physics-backends.md#selected-body-integration-preparation)
+now removes direct CPU-only force/field calls from common PhysicsBodyRuntime and
+PhysicsColliderBackend. Both implementations execute real scene/raw default-force
+preparation; CPU field integration remains concrete and GPU stays resident. This is
+an internal extension prerequisite, not public backend registration.

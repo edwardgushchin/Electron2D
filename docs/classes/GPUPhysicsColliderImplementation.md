@@ -23,3 +23,12 @@ A failed attachment attempts cleanup and leaves the common facade detached. Reti
 Only internal CPU/GPU implementations are currently constructed. Public backend registration, server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103); this type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
 
 World-point platform velocity now dispatches through the current selected attachment. Common lookup uses the shared scene/raw RID registry and checks current world ownership, including transfer/detach/free. CPU keeps direct world-point native conversion; GPU keeps resident center-aware surface motion. See [motion ownership and checks](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
+
+## Selected integration preparation
+
+[Integration preparation](../../src/Servers/Physics/GPUPhysicsColliderImplementation.Integration.cs) consumes eligible pending force/torque through resident sparse edits and skips them under omission. Constants, fields and damping remain device integration policies; no additional host simulation path is introduced. [Contract and verification](../components/physics-backends.md#selected-body-integration-preparation).
+
+Explicit sleep first synchronizes pending authored integration/constant policies
+and flushes their older wake work, then writes the sleep command. A later authored
+change can still wake the receiver; an older deferred policy update cannot override
+the explicit sleep. The shared scene/raw ownership fixture exercises this order.

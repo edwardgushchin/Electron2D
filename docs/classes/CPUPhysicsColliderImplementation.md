@@ -23,3 +23,7 @@ Only internal CPU/GPU implementations are currently constructed. Public backend 
 CPU dynamic attachment creation, sleep enabling and live mode changes now notify the owning CPU world before sleeping capacity can be needed. The conservative world flag persists across replay and retired attachments, avoiding repeated no-sleep population scans without reducing dormant capacity.
 
 World-point platform velocity now dispatches through the current selected attachment. Common lookup uses the shared scene/raw RID registry and checks current world ownership, including transfer/detach/free. CPU keeps direct world-point native conversion; GPU keeps resident center-aware surface motion. See [motion ownership and checks](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
+
+## Selected integration preparation
+
+[Integration preparation](../../src/Servers/Physics/CPUPhysicsColliderImplementation.Integration.cs) owns pending/constant force and torque budgets, omission clearing and native gravity setup. ApplyResolvedFields combines scene/raw policy, validates all fields and candidate motion before mutation, and publishes totals to PhysicsBodyRuntime. Native transient/field helpers are private. [Contract and verification](../components/physics-backends.md#selected-body-integration-preparation).

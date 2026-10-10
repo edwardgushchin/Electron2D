@@ -19,3 +19,7 @@ A failed attachment attempts cleanup and leaves the common facade detached. Reti
 ## Limits and decisions
 
 Only internal CPU/GPU implementations are currently constructed. Public backend registration, server/direct-state extension contexts and custom geometry remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103); this type is not a public plugin API. Native allocator, foreign-platform and real-window FPS acceptance remain separate gates.
+
+## Selected integration preparation
+
+PrepareDefaultForces consumes eligible pending forces through the selected collider after common role/activity guards. CPU owns native omission/gravity and persistent-force preparation; GPU publishes eligible pending forces while resident policy handles constants/fields. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).

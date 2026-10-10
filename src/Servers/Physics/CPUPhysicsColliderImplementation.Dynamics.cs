@@ -24,7 +24,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
         return new(data.mass, data.rotationalInertia / PhysicsMass.InertiaScale, ToScene(data.center));
     }
     internal override void WakeTouching() { b2Body_WakeTouching(BodyID); }
-    internal void ClearTransientForces() { var sim = Simulation(BodyID); sim.force = default; sim.torque = 0; }
+    private void ClearTransientForces() { var sim = Simulation(BodyID); sim.force = default; sim.torque = 0; }
     internal override Vector2 GetPointVelocity(Vector2 offset)
     {
         var point = b2Body_GetPosition(BodyID) + PhysicsShapeBackend.ToBackend(offset);
@@ -47,7 +47,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
         b2Body_ApplyLinearImpulseToCenter(BodyID, nativeImpulse, true);
         if (!RotationLocked) b2Body_ApplyAngularImpulse(BodyID, moment * PhysicsMass.InertiaScale, true);
     }
-    internal void ApplyFieldMotion(bool changed, bool omitted, float linearFactor, float angularFactor, Vector2 acceleration)
+    private void ApplyFieldMotion(bool changed, bool omitted, float linearFactor, float angularFactor, Vector2 acceleration)
     {
         var active = IsDynamic && !omitted && (changed || IsAwake);
         var linear = default(B2Vec2); var angular = 0f; var force = default(B2Vec2);

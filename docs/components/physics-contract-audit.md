@@ -337,3 +337,21 @@ Report-only pair/activity counters rewind with contacts before another solver st
 [The ownership contract](physics-backends.md#native-simulation-and-replay-ownership)
 records replay, diagnostics, failure and allocation checks; registered public backend
 factories and custom geometry remain open.
+
+[Selected body integration preparation](physics-backends.md#selected-body-integration-preparation)
+now removes direct CPU-only force/field calls from common PhysicsBodyRuntime and
+PhysicsColliderBackend. Both implementations execute real scene/raw default-force
+preparation; CPU field integration remains concrete and GPU stays resident. This is
+an internal extension prerequisite, not public backend registration.
+
+The registration audit also identifies two remaining concrete binding boundaries.
+PhysicsSpace constructs its implementation before PhysicsServer registers the live
+space RID, so a user Init hook cannot yet construct a live direct-space extension
+at that point. PhysicsDirectBodyState's protected-context constructor currently
+prepares through BodyGetDirectStateCore, which supplies the cached built-in view;
+using the same getter as a factory callback would recurse. Existing direct-state
+constructors enforce ordinary off-solver access, while built-in callback/contact
+views are prepared during the common interval. Registered factories therefore need
+engine-assigned initialization and qualified factory-view construction phases, plus
+the full selected operation bridge. These are implementation requirements rather
+than missing user permission; current caller-created views do not prove this path.

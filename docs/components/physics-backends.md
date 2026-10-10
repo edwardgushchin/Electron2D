@@ -693,3 +693,33 @@ contacts, local checkpoints, portable snapshots and network checks cover the
 connected operations. Counts, IDs and allocation are exact; physical tolerances
 remain those of each named fixture. Native allocation, foreign targets, broader
 performance and complete public registration/custom geometry remain open.
+
+## Selected body integration preparation
+
+PhysicsBodyRuntime.ApplyBeforeStep retains common participation/contact-reporting
+gates and captures pre-step activity, then dispatches default-force preparation to
+the current PhysicsColliderImplementation. CPU owns omitted-force clearing, native
+gravity policy and pending/constant force/torque application. GPU owns eligible
+pending-force publication and consumption; persistent constants, omission, gravity
+and damping remain in its resident integration policy and kernels. This preserves
+the existing timing, lock and sleep rules without a CPU cast in common integration.
+Before an explicit GPU sleep command, pending authored integration/constant edits
+are synchronized and their wake work flushed. This preserves call order: an earlier
+policy edit cannot silently wake a body after a later explicit sleep assignment.
+
+CPU field resolution and its finite preflight now belong to
+CPUPhysicsColliderImplementation.Integration: current Area/default fields combine
+with scene/raw gravity scale and damping modes, validate the complete result before
+applying motion, then update the common observed totals. CPU-only transient-force
+and field-motion helpers are private implementation operations. No equivalent
+inert GPU field hook is exported; GPU keeps its actual resident reducer.
+
+PhysicsBackendOwnershipTests.IntegrationOwnership drives one scene and one raw
+body through pending plus persistent force/torque, next-tick persistence, omission,
+sleep and force wakeup on both selected implementations. It checks actual velocities
+within .002 scene units/radians per second, pending budgets once, and 64 warmed
+force/step/read cycles at zero owner/all-thread managed allocation. The existing
+Area fixture checks combined/replace fields, independent channels and disabled/
+transferred geometry. CPU also runs without a graphics device. Public registration,
+factory-provided views, custom geometry, native allocation and foreign-platform
+acceptance remain open.

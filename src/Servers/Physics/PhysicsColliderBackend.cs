@@ -86,6 +86,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         finally { _implementation = null; Space = null; }
         if (bindingError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
     }
+    internal void PrepareDefaultForces(PhysicsBodyRuntime runtime, PhysicsBody? scene) => Attached.PrepareDefaultForces(runtime, scene);
     internal bool HasMotionMode(PhysicsServer.BodyMode mode) => Attached.HasMotionMode(mode);
     internal void SetMotionMode(PhysicsServer.BodyMode mode) => Attached.SetMotionMode(mode);
     internal void SetContactReporting(bool enabled) => Attached.SetContactReporting(enabled);

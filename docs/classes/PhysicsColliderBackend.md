@@ -165,3 +165,7 @@ contacts, while explicit assignments retain their wake and ordering semantics.
 See [resident kinematics](../components/gpu-resident-kinematic.md#idle-platform-wake-policy).
 
 World-point platform velocity now dispatches through the current selected attachment. Common lookup uses the shared scene/raw RID registry and checks current world ownership, including transfer/detach/free. CPU keeps direct world-point native conversion; GPU keeps resident center-aware surface motion. See [motion ownership and checks](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
+
+## Selected integration preparation
+
+PrepareDefaultForces dispatches to the current immutable attachment. Common CPU-only ClearTransientForces and ApplyFieldMotion entry points have been removed; their concrete implementation stays private to CPU. Authored and observed shared state retains its existing guards. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).

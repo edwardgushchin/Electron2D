@@ -82,28 +82,6 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         backend.SetContactReporting(ContactLimit > 0);
         ActiveBeforeStep = !backend.HasMotionMode(PhysicsServer.BodyMode.Static) && backend.IsAwake;
         if (backend.HasMotionMode(PhysicsServer.BodyMode.Static) || backend.IsDynamic && !ActiveBeforeStep) return;
-        var rigid = scene as RigidBody;
-        if (Space?.GPUStore is not null)
-        {
-            if (!(rigid?.CustomIntegrator ?? OmitForces))
-            {
-                if (PendingForce != Vector2.Zero) backend.ApplyCentralForce(PendingForce, false);
-                if (PendingTorque != 0 && !RotationLocked) backend.ApplyTorque(PendingTorque, false);
-            }
-            PendingForce = default; PendingTorque = 0; return;
-        }
-        if (rigid?.CustomIntegrator ?? OmitForces)
-        {
-            backend.SetGravityScale(0); backend.ClearTransientForces();
-            PendingForce = default; PendingTorque = 0;
-            return;
-        }
-        if (PendingForce != Vector2.Zero) backend.ApplyCentralForce(PendingForce, false);
-        if (PendingTorque != 0 && !RotationLocked) backend.ApplyTorque(PendingTorque, false);
-        PendingForce = default; PendingTorque = 0;
-        if (rigid is not null) { rigid.ApplyConstantForces(); return; }
-        backend.SetGravityScale(BodyGravityScale);
-        if (ConstantForce != Vector2.Zero) backend.ApplyCentralForce(ConstantForce, false);
-        if (ConstantTorque != 0) backend.ApplyTorque(ConstantTorque, false);
+        backend.PrepareDefaultForces(this, scene);
     }
 }

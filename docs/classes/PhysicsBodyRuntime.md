@@ -35,8 +35,8 @@ subclasses and PhysicsDirectBodyState.
 | `EnsureMutable`, `GetView`, `InvalidateView`, `ValidateView` | Enforce world phase/current attachment identity; replace a disposed view and invalidate all older attachments. |
 | `View*`, `CaptureViewContacts` | Forward live state/contact capture through the validated attachment adapter; retain no concrete solver references. |
 | `ApplyMassProfile`, `SetMassProfile`, `SetAttachedMassProfile`, `MassProperties` | Share profile validation and scene projection; retain mass, inertia and center in scene units. Detached calls reuse PhysicsMass.Geometry; attached compilation belongs to the adapter. |
-| `ApplyBeforeStep`, pending/constant force and torque | Consume eligible pending forces once; preserve configured totals. |
-| `ApplyResolvedFields`, parameter operations | Combine world/Area gravity and damping with scene or server authored body policy through one finite-validated update path. |
+| `ApplyBeforeStep`, pending/constant force and torque | Preserve common activity/reporting gates, then dispatch actual force preparation to the selected collider. |
+| Parameter operations and observed gravity/damping | Retain shared authoring and published totals; concrete CPU/GPU implementations apply field integration. |
 | `GPUParametersDirty`, authored force/field/omission setters | Mark GPU integration edits; clear only after successful attachment synchronization, preserving authored values including signed zero. |
 | `ApplyImpulse`, `AddForce`, velocity/mass access | Preserve dynamic-role, lock, finite-value and detached-state behavior. |
 
@@ -99,3 +99,7 @@ See [implementation and verification](../components/cpu-continuous-collision.md)
 [Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
 
 [Caller-created body-state extensions](../components/physics-body-extensions.md) now execute the complete typed state/force/space/contact family. Body context is qualified by current attachment generation; nested hooks borrow body/world lifetime and preserve ordinary live mutation. Contact projection uses immutable engine-validated PhysicsBodyContact values. Registered server factories and factory-returned scene/server callback integration remain open under ADR 0103.
+
+## Selected integration preparation
+
+ApplyBeforeStep now owns only common contact-reporting, role/activity gates and observed pre-step activity before dispatching PrepareDefaultForces to the selected attachment. CPU field resolution has moved to its collider implementation; authored policy and observed gravity/damping totals remain shared. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).
