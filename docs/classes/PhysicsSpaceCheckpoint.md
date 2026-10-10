@@ -1,6 +1,6 @@
 # PhysicsSpace.Checkpoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed class PhysicsSpace.Checkpoint : IDisposable`
 
@@ -28,3 +28,7 @@ world tick for that API.
 ## Native simulation and replay ownership
 
 Private solver capture/validate/restore/dispose now uses one PhysicsBackendCheckpoint supplied by the immutable selected owner. CPU history includes native state, one-way episodes, solved motion, frame contacts and report-only pair/activity statistics; GPU history stays device-local. Shared scene/raw authoring and published observer data retain their existing validation and ordering. [Implementation ownership](../components/physics-backends.md#native-simulation-and-replay-ownership).
+
+## Selected checkpoint ownership
+
+PrepareCheckpoint and the selected history operation family borrow library lifetime. GPU reports/epochs/collider caches stay in its concrete checkpoint; common authoring uses neutral field values. Failed capture is replaceable, validation rejection preserves state, begun restore failure is terminal, and cleanup failure still retires the point. See [the executing contract](../components/physics-backends.md#selected-checkpoint-ownership).

@@ -38,7 +38,8 @@ public sealed class PhysicsCheckpoint : IDisposable
     public void Restore() => _state.Restore();
 
     /// <summary>Releases retained storage without disposing the source world or its objects.</summary>
-    /// <remarks>Repeated disposal, including after source-world disposal, does nothing.</remarks>
-    /// <exception cref="InvalidOperationException">A live point is first disposed off its owner thread.</exception>
+    /// <remarks>Repeated disposal, including after source-world disposal, does nothing. A selected solver operation
+    /// borrows this point and prevents its release until that operation returns. Cleanup failure still retires the point.</remarks>
+    /// <exception cref="InvalidOperationException">A live point is first disposed off its owner thread or during its borrowed solver operation.</exception>
     public void Dispose() => _state.Dispose();
 }

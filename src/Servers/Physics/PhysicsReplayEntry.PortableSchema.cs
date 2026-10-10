@@ -80,7 +80,7 @@ internal sealed partial class PhysicsReplayEntry
         Array.Sort(_portableExceptions, 0, _exceptions.Count); schema.Add(_exceptions.Count);
         for (var i = 0; i < _exceptions.Count; i++) schema.Add(_portableExceptions[i]);
     }
-    internal static void AddFields(ref PhysicsSnapshotSchema schema, GPUPhysicsBodyStore.FieldParameters fields)
+    internal static void AddFields(ref PhysicsSnapshotSchema schema, PhysicsAreaFieldConfiguration fields)
     {
         schema.Add(fields.GravityVector); schema.Add(fields.Gravity); schema.Add(fields.GravityPoint); schema.Add(fields.PointUnitDistance);
         schema.Add(fields.LinearDamp); schema.Add(fields.AngularDamp); schema.Add((int)fields.GravityMode);

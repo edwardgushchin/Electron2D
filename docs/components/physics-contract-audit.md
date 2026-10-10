@@ -2,6 +2,11 @@
 
 Last updated: 2026-10-11
 
+[Selected checkpoint ownership](physics-backends.md#selected-checkpoint-ownership)
+now keeps GPU publication reports, epochs and collider caches with resident solver
+history. Common replay uses engine field values and guarded selected preparation,
+capture, validation, restore and release. Public registration remains open.
+
 [Shared joint inputs and ownership](physics-backends.md#shared-joint-inputs-and-native-ownership)
 now pass complete engine-unit configuration values to selected constraints. CPU
 spring scheduling resolves actual native attachments from its owner, including

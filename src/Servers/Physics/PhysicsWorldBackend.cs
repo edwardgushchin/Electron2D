@@ -10,6 +10,7 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
     internal PhysicsServer.Backend Requested { get; } = requested;
     internal string? FallbackReason { get; } = fallbackReason;
     internal abstract bool HasFailure { get; }
+    internal abstract void PrepareCheckpoint();
     internal abstract PhysicsBackendCheckpoint CreateCheckpoint();
     internal abstract void BeginPortableRestore();
     internal abstract void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick);

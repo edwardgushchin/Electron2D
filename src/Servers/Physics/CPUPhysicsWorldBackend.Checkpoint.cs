@@ -2,6 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
+    internal override void PrepareCheckpoint() => EnsureAccess();
     internal override PhysicsBackendCheckpoint CreateCheckpoint() => new SolverCheckpoint(this);
     private sealed class SolverCheckpoint : PhysicsBackendCheckpoint
     {

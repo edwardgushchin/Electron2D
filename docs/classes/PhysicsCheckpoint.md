@@ -1,6 +1,6 @@
 # PhysicsCheckpoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `public sealed class PhysicsCheckpoint : IDisposable`
 
@@ -29,3 +29,7 @@ separate networking responsibility. See the component for complete capture,
 restoration, error, lifetime and allocation boundaries.
 
 Capture and restore also reject while a caller-created direct-space extension hook borrows this world. Query nesting may inspect live state, but cannot replace its completed checkpoint basis during the invocation. [The external consumer](../../tests/PhysicsSpaceExtension.Consumer/Program.cs) verifies this guard for scene-owned and caller-owned CPU/GPU worlds.
+
+## Selected checkpoint ownership
+
+PrepareCheckpoint and the selected history operation family borrow library lifetime. GPU reports/epochs/collider caches stay in its concrete checkpoint; common authoring uses neutral field values. Failed capture is replaceable, validation rejection preserves state, begun restore failure is terminal, and cleanup failure still retires the point. See [the executing contract](../components/physics-backends.md#selected-checkpoint-ownership).

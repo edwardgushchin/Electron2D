@@ -1,0 +1,54 @@
+namespace Electron2D;
+
+internal sealed partial class PhysicsSpace
+{
+    /// <summary>Retains resident solver history and implementation-local publication caches for one GPU world.</summary>
+    internal sealed class GPUCheckpoint : PhysicsBackendCheckpoint
+    {
+        private readonly PhysicsSpace _space;
+        private readonly GPUPhysicsBodyStore _store;
+        private readonly GPUPhysicsBodyStore.Checkpoint _kernel;
+        private readonly Dictionary<PhysicsColliderBackend, GPUPhysicsColliderImplementation.ReplayState> _colliders = [];
+        private GPUPhysicsBodyStore.ContactReport[] _reports = [];
+        private readonly Dictionary<int, (int Offset, int Count)> _ranges = [];
+        private long _epoch, _publication;
+        private bool _wake, _disposed;
+
+        internal GPUCheckpoint(PhysicsSpace space, GPUPhysicsBodyStore store)
+        {
+            _space = space; _store = store; _kernel = store.CreateCheckpoint();
+            try { CaptureObservers(); }
+            catch { _kernel.Dispose(); throw; }
+        }
+        internal override long DeviceCapacityBytes => _kernel.DeviceCapacityBytes;
+        internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
+        private void CaptureObservers()
+        {
+            var s = _space;
+            PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports);
+            PhysicsReplayCopy.Map(s._gpuReportRanges, _ranges);
+            _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
+            _colliders.Clear(); _colliders.EnsureCapacity(s._bodies.Count + s._areas.Count + s._serverColliders.Count);
+            foreach (var body in s._bodies) CaptureCollider(body.Backend);
+            foreach (var area in s._areas) CaptureCollider(area.Backend);
+            foreach (var body in s._serverColliders) CaptureCollider(body.Backend);
+        }
+        private void CaptureCollider(PhysicsColliderBackend collider) => _colliders.Add(collider, _store.NativeCollider(collider).CaptureReplay());
+        private void RequireAlive() { if (_disposed) throw new ObjectDisposedException(nameof(GPUCheckpoint)); }
+        internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
+        internal override void Restore()
+        {
+            ValidateRestore(); _kernel.Restore(); var s = _space;
+            PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports);
+            PhysicsReplayCopy.Map(_ranges, s._gpuReportRanges);
+            s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s._gpuWakePending = _wake;
+            foreach (var pair in _colliders) _store.NativeCollider(pair.Key).RestoreReplay(pair.Value);
+        }
+        public override void Dispose()
+        {
+            if (_disposed) return;
+            try { _kernel.Dispose(); }
+            finally { _disposed = true; _colliders.Clear(); _ranges.Clear(); _reports = []; }
+        }
+    }
+}
