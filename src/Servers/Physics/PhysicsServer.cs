@@ -76,13 +76,31 @@ public sealed partial class PhysicsServer : ElectronObject
         }
     }
 
-    internal RID RegisterSceneSpace(PhysicsSpace space)
+    internal PhysicsSpace CreateRegisteredSpace(Backend backend, bool allowCPUFallback, bool owned,
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, Action<PhysicsSpace>? initialize = null)
     {
-        space.SetActive(true);
+        ThrowIfDisposed();
+        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
         var rid = RID.Allocate();
-        space.RID = rid;
-        lock (_registryGate) _sceneSpaces.Add(rid, space);
-        return rid;
+        var space = new PhysicsSpace(rid);
+        lock (_registryGate)
+        {
+            _sceneSpaces.Add(rid, space);
+            if (owned) _ownedSpaces.Add(rid);
+        }
+        try
+        {
+            space.InitializeBackend(backend, allowCPUFallback, factory, initialize);
+            if (!owned) space.SetActive(true);
+            return space;
+        }
+        catch (Exception error)
+        {
+            try { space.Dispose(); }
+            catch (Exception cleanup) { throw new AggregateException("Physics-space initialization and cleanup failed.", error, cleanup); }
+            finally { UnregisterSceneSpace(rid); }
+            throw;
+        }
     }
 
     internal void UnregisterSceneSpace(RID rid)
@@ -91,6 +109,7 @@ public sealed partial class PhysicsServer : ElectronObject
         {
             _sceneSpaces.Remove(rid);
             _directStates.Remove(rid);
+            _ownedSpaces.Remove(rid);
         }
     }
 

@@ -6,6 +6,7 @@ namespace Electron2D;
 internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Backend requested, string? fallbackReason = null) : IDisposable
 {
     protected PhysicsSpace Space { get; } = space;
+    internal bool OwnsSpace(PhysicsSpace space) => ReferenceEquals(Space, space);
     internal PhysicsServer.Backend Requested { get; } = requested;
     internal string? FallbackReason { get; } = fallbackReason;
     internal abstract bool HasFailure { get; }

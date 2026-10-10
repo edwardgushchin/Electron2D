@@ -24,9 +24,11 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly List<ContactEvent> _contactEvents = [];
     private readonly List<RigidBody> _sleepEvents = [];
-    private readonly PhysicsWorldBackend _backend;
+    private PhysicsWorldBackend _backend = null!;
+    private bool _initializing = true;
+    private bool _backendCreationStarted;
     private Exception? _gpuFailure;
-    internal PhysicsWorldBackend BackendImplementation => _backend;
+    internal PhysicsWorldBackend BackendImplementation => _backend ?? throw new InvalidOperationException("The physics implementation is still being created.");
     internal GPUPhysicsWorld EnableGPUIntegration() { EnsureQueryAccess(); return _backend.EnableGPUIntegration(); }
     internal GPUPhysicsWorld EnableGPUSolver() { EnsureQueryAccess(); return _backend.EnableGPUSolver(); }
     private Vector2 _defaultGravity;
@@ -41,13 +43,13 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal readonly record struct OverlapEvent(Area Area, PhysicsShapePairChange Change);
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
 
-    internal PhysicsServer.Backend RequestedBackend => _backend.Requested;
-    internal PhysicsServer.Backend ActualBackend => _backend.Kind;
-    internal string? BackendFallbackReason => _backend.FallbackReason;
+    internal PhysicsServer.Backend RequestedBackend => BackendImplementation.Requested;
+    internal PhysicsServer.Backend ActualBackend => BackendImplementation.Kind;
+    internal string? BackendFallbackReason => BackendImplementation.FallbackReason;
 
-    internal PhysicsSpace(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false)
+    internal PhysicsSpace(RID rid)
     {
-        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        RID = rid;
         var settings = ProjectSettings.Service;
         SleepSettings = PhysicsSleepSettings.FromProject(); SleepSettings.Validate();
         ContactSettings = PhysicsContactSettings.FromProject(); ContactSettings.Validate();
@@ -62,7 +64,23 @@ internal sealed partial class PhysicsSpace : IDisposable
         };
         _defaultGravity = DefaultAreaFields.ComputeGravity(Transform.Identity, Vector2.Zero);
         if (!_defaultGravity.IsFinite()) throw new InvalidOperationException("Default physics gravity exceeds the finite simulation range.");
-        _backend = PhysicsWorldBackend.Create(this, backend, allowCPUFallback);
+    }
+
+    internal void InitializeBackend(PhysicsServer.Backend backend, bool allowCPUFallback,
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory, Action<PhysicsSpace>? initialize)
+    {
+        EnsureReleaseAccess();
+        if (_backendCreationStarted) throw new InvalidOperationException("A physics implementation can be initialized only once.");
+        _backendCreationStarted = true;
+        try
+        {
+            var created = factory is null ? PhysicsWorldBackend.Create(this, backend, allowCPUFallback) : factory(this);
+            if (created is null || !created.OwnsSpace(this)) throw new InvalidOperationException("A factory must return an implementation owned by this physics space.");
+            _backend = created;
+            created.EnsureAccess();
+            initialize?.Invoke(this);
+        }
+        finally { _initializing = false; }
     }
 
     internal Vector2 DefaultGravity => _defaultGravity;
@@ -75,10 +93,11 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void SetActive(bool active)
     {
         EnsureQueryAccess();
+        EnsureInitializationComplete();
         Volatile.Write(ref _isActive, active);
     }
 
-    internal B2WorldId WorldID => _backend.WorldID;
+    internal B2WorldId WorldID => BackendImplementation.WorldID;
     internal List<PhysicsBody> Bodies => _bodies;
     internal List<Area> Areas => _areas;
     internal List<RigidBody> ContactBodies => _contactBodies;
@@ -94,7 +113,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal List<PhysicsServerCollider> ServerColliders => _serverColliders;
-    internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || _backend.HasFailure;
+    internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || (_backend?.HasFailure ?? false);
 
     internal void EnsureReleaseAccess()
     {
@@ -108,7 +127,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         EnsureReleaseAccess();
         if (_checkpointFailure is not null) throw new InvalidOperationException("Physics checkpoint restore failed; dispose this world before creating a replacement.", _checkpointFailure);
-        _backend.EnsureAccess();
+        BackendImplementation.EnsureAccess();
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);
     }
 
@@ -124,8 +143,15 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureWorldRelease()
     {
         EnsureReleaseAccess();
+        EnsureInitializationComplete();
         if (DispatchingCallbacks) throw new InvalidOperationException("World binding cannot change while physics callbacks are being dispatched.");
     }
+
+    private void EnsureInitializationComplete()
+    {
+        if (_initializing) throw new InvalidOperationException("The physics implementation is still initializing.");
+    }
+    internal void EnsureAttachmentAccess() { EnsureQueryAccess(); EnsureInitializationComplete(); }
 
     internal void PrepareForQuery()
     {
@@ -173,6 +199,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Add(PhysicsBody body)
     {
+        EnsureAttachmentAccess();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot enter a world while it is stepping.");
         PhysicsServer.Service.EnsureJointBodyMembershipChange(body.PhysicsRID);
@@ -209,7 +236,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Add(Joint joint)
     {
-        EnsureQueryAccess();
+        EnsureAttachmentAccess();
         _joints.EnsureCapacity(_joints.Count + 1);
         joint.AttachBackend(this);
         _joints.Add(joint);
@@ -228,6 +255,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Add(Area area)
     {
+        EnsureAttachmentAccess();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Physics areas cannot enter a world while it is stepping.");
         _areas.EnsureCapacity(_areas.Count + 1);
@@ -239,6 +267,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Add(PhysicsServerCollider collider, RID spaceRID)
     {
+        EnsureAttachmentAccess();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Server colliders cannot enter while stepping.");
         if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID);
@@ -299,6 +328,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Step(double delta)
     {
+        EnsureInitializationComplete();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         EnsureQueryAccess();
         if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
@@ -352,7 +382,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _portableOneWayKeys.Clear();
         if (GPUStore is not null) Release(ReleaseGPUState);
         _disposed = true;
-        Release(_backend.Dispose);
+        if (_backend is not null) Release(_backend.Dispose);
         if (errors is not null) throw new AggregateException("Physics-world cleanup failed.", errors);
 
         void Release(Action action)

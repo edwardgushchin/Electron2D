@@ -1,6 +1,6 @@
 # PhysicsWorldBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal abstract class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
@@ -93,3 +93,9 @@ AreaContainsPoint dispatches spatial audio containment to the selected owner; Sc
 ## Native simulation and replay ownership
 
 CreateCheckpoint dispatches implementation-local history through PhysicsBackendCheckpoint. BeginPortableRestore, CompletePortableRestore and CapturePortableOneWays dispatch private reconstruction/mapping through the same selected owner; ReadDebugContacts projects scene-unit points. HasFailure reports terminal implementation state. All operations execute for CPU/GPU; they are internal prerequisites of public registration. [Contract and checks](../components/physics-backends.md#native-simulation-and-replay-ownership).
+
+## Registered initialization
+
+Explicit and lazy scene worlds now use PhysicsServer.CreateRegisteredSpace. It allocates and registers an immutable space RID before invoking the selected implementation factory outside the registry lock. Metadata/settings exist first; ordinary query access rejects until an implementation is retained. The initialization phase can then construct guarded direct-space extensions and query the real selected world. Activation, stepping, attachment changes, recursive initialization and release reject until it completes. Explicit spaces publish inactive; scene spaces become active after successful initialization.
+
+Failure retires owned/direct-state/space registrations and releases any implementation retained by that space. A foreign implementation is rejected without disposing its original world. Initialization and cleanup errors are aggregated after cleanup attempts. [Ownership tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) exercise live RID lookup, registry-lock independence, all six query hooks, transfer rejection, real motion after publication and CPU/GPU native retirement. This is the internal construction transaction; public registered factories and their complete operation bridge remain open.

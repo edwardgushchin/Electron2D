@@ -4908,6 +4908,13 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103: complete guarded caller-created body-state/force/contact family executes with exact base inheritance and generation-qualified context. Binding prepares selected geometry/state without acquiring or reopening the built-in view cache. Registered backend factories do not yet supply these views to scene/server callbacks; that integration remains open."
+    },
+    {
+      "godot": [
+        "class:PhysicsServer2DExtension"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0103 requires the complete executing typed implementation family and registered scene/server dispatch. Internal space RID registration now precedes selected-owner construction and guarded initialization with native/registry rollback; CPU/GPU/no-device queries and ownership checks execute. Public registered factories, qualified callback-view integration and the complete operation bridge remain open."
     }
   ]
 }

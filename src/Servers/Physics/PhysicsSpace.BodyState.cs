@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
-    internal RID RID { get; set; }
+    internal RID RID { get; }
     internal float LastStep { get; set; }
     private bool _dispatchingBodyStates;
     private readonly List<CallbackBody> _callbackBodies = [];

@@ -723,3 +723,7 @@ Area fixture checks combined/replace fields, independent channels and disabled/
 transferred geometry. CPU also runs without a graphics device. Public registration,
 factory-provided views, custom geometry, native allocation and foreign-platform
 acceptance remain open.
+
+## Space construction transaction
+
+Space RID registration now precedes selected-owner construction for both explicit and lazy scene worlds. A retained owner can initialize against a live context and execute guarded query extensions before publication, while step/activation/attachment/release remain blocked. Failure cleans registry and native ownership; a rejected foreign owner stays alive in its original world. Constructor recursion cannot create a second implementation on the same context. [Initialization ownership checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) cover these phases on CPU/GPU/no-device. Public registration remains open under ADR 0103.

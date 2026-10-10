@@ -39,9 +39,8 @@ internal sealed class WorldRuntime
                 EnsureAlive();
                 if (ExistingSpace is null)
                 {
-                    var space = new PhysicsSpace(RequestedBackend, _allowCPUFallback);
-                    try { _spaceRID = PhysicsServer.Service.RegisterSceneSpace(space); ExistingSpace = space; }
-                    catch { space.Dispose(); throw; }
+                    var space = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false);
+                    _spaceRID = space.RID; ExistingSpace = space;
                 }
                 PhysicsServer.Service.GetSceneSpace(_spaceRID); return _spaceRID;
             }

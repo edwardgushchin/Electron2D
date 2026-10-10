@@ -480,3 +480,5 @@ preparation; CPU field integration remains concrete and GPU stays resident. This
 an internal extension prerequisite, not public backend registration.
 
 [Procedural Shape resources](../components/physics-shapes.md#caller-defined-shape-resources) now supply immutable exact geometry through a protected typed hook. All current primitive/contour families share drawing, bounds, CPU/GPU attachments and replay data. Third-party solver registration and algorithms outside those families remain open.
+
+[Space initialization](../components/physics-backends.md#space-construction-transaction) registers immutable world identity before implementation construction. The same transaction publishes explicit/inactive and scene/active spaces, guards initialization reentrancy and rolls back failed native/registry state. Public third-party factory operation integration remains open.

@@ -40,16 +40,7 @@ public sealed partial class PhysicsServer
 
     internal RID SpaceCreateCore(Backend backend = Backend.CPU, bool allowCPUFallback = false)
     {
-        ThrowIfDisposed();
-        var space = new PhysicsSpace(backend, allowCPUFallback);
-        var rid = RID.Allocate();
-        space.RID = rid;
-        lock (_registryGate)
-        {
-            _sceneSpaces.Add(rid, space);
-            _ownedSpaces.Add(rid);
-        }
-        return rid;
+        return CreateRegisteredSpace(backend, allowCPUFallback, owned: true).RID;
     }
 
     internal void SpaceStepCore(RID space, double delta)
@@ -406,7 +397,7 @@ public sealed partial class PhysicsServer
         var collider = GetCollider(owner, isArea);
         if (collider.SpaceRID == spaceRID) return;
         PhysicsSpace? next = spaceRID.IsValid() ? GetSceneSpace(spaceRID) : null;
-        next?.EnsureQueryAccess();
+        next?.EnsureAttachmentAccess();
         var oldRID = collider.SpaceRID;
         PhysicsSpace? old = oldRID.IsValid() ? GetSceneSpace(oldRID) : null;
         old?.EnsureQueryAccess();

@@ -344,18 +344,22 @@ PhysicsColliderBackend. Both implementations execute real scene/raw default-forc
 preparation; CPU field integration remains concrete and GPU stays resident. This is
 an internal extension prerequisite, not public backend registration.
 
-The registration audit still identifies a concrete live-space initialization boundary.
-PhysicsSpace constructs its implementation before PhysicsServer registers the live
-space RID, so a user Init hook cannot yet construct a live direct-space extension
-at that point. Body-context preparation is now independent of cached view acquisition:
-the protected constructor prepares geometry/state and samples attachment identity
-without calling BodyGetDirectStateCore or reopening its cache. Scene/raw CPU/GPU
-and no-device binding tests observe this before the consumer's explicit getter;
-owner/solver/failure and generation guards remain enforced.
+The live-space initialization boundary now has one internal construction transaction.
+The server registers an immutable space RID before invoking the selected owner factory
+outside the registry lock. The retained implementation is assigned before its initialization
+callback can construct/query a guarded direct-space extension. Stepping, activation,
+attachment changes, recursive initialization and release reject until completion. Failure
+retires registry/view/ownership entries and releases retained native state; rejecting a
+foreign implementation leaves its original world alive. CPU/GPU/no-device ownership
+fixtures exercise these phases and all six real query hooks. This closes an internal
+initialization prerequisite; public registered factories still do not execute.
+Body-context preparation is independent of cached view acquisition: the protected
+constructor prepares geometry/state and samples attachment identity without calling
+BodyGetDirectStateCore or reopening its cache.
 Existing direct-state constructors enforce ordinary off-solver access, while built-in
 callback/contact views are prepared during the common interval. Registered factories
-still need engine-assigned initialization and qualified factory-view construction
-phases, plus the full selected operation bridge. Independent body binding closes
+still need public factory integration, qualified callback-view construction phases
+and the full selected operation bridge. Independent body binding closes
 that cache-bootstrap prerequisite, not registered callback delivery. These are
 implementation requirements rather than missing user permission; current
 caller-created views do not prove the registered path.

@@ -1,6 +1,6 @@
 # PhysicsServer
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** ElectronObject · **Source:** [PhysicsServer.cs](../../src/Servers/Physics/PhysicsServer.cs), [PhysicsServer.Resources.cs](../../src/Servers/Physics/PhysicsServer.Resources.cs), [PhysicsServer.Mass.cs](../../src/Servers/Physics/PhysicsServer.Mass.cs)
 
@@ -831,3 +831,9 @@ Uses the same mutation, wake, lifetime and failure rules. Body motion tests comp
 BodySetMaxContactsReported synchronizes live reporting eligibility for both scene
 and caller-owned bodies. A positive cap immediately exposes a kinematic receiver
 as active; contact membership still refreshes on the next completed step.
+
+## Registered initialization
+
+Explicit and lazy scene worlds now use PhysicsServer.CreateRegisteredSpace. It allocates and registers an immutable space RID before invoking the selected implementation factory outside the registry lock. Metadata/settings exist first; ordinary query access rejects until an implementation is retained. The initialization phase can then construct guarded direct-space extensions and query the real selected world. Activation, stepping, attachment changes, recursive initialization and release reject until it completes. Explicit spaces publish inactive; scene spaces become active after successful initialization.
+
+Failure retires owned/direct-state/space registrations and releases any implementation retained by that space. A foreign implementation is rejected without disposing its original world. Initialization and cleanup errors are aggregated after cleanup attempts. [Ownership tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) exercise live RID lookup, registry-lock independence, all six query hooks, transfer rejection, real motion after publication and CPU/GPU native retirement. This is the internal construction transaction; public registered factories and their complete operation bridge remain open.

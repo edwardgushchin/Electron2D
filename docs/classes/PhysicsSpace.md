@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -18,7 +18,7 @@ One owner-thread world shared by scene bodies/Areas/joints and caller-owned coll
 
 | State/operation | Contract |
 | --- | --- |
-| `PhysicsSpace(Backend backend = CPU, bool allowCPUFallback = false)` | Selected CPU world or resident GPU store with sampled defaults; initially inactive. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
+| `PhysicsSpace(RID rid)`, `InitializeBackend(...)` | Registered immutable identity and sampled settings precede selected-owner construction; initialization completes before activation. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
 | `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
@@ -228,3 +228,9 @@ Concrete scene/raw Area overlap scans and audio containment now dispatch through
 ## Native simulation and replay ownership
 
 Native discrete/CCD/kinematic scheduling, one-way episodes, contact impulse/motion histories and report-only geometry/statistics now belong to CPUPhysicsWorldBackend. Common Checkpoint uses one selected PhysicsBackendCheckpoint for private solver history and retains shared authoring/observer/pose metadata. Portable one-way capture/restore and diagnostic point reads reach the selected owner. CallbackBodies and ContactBodies are internal typed subjects, not public mutable collections. [Contract and checks](../components/physics-backends.md#native-simulation-and-replay-ownership).
+
+## Registered initialization
+
+Explicit and lazy scene worlds now use PhysicsServer.CreateRegisteredSpace. It allocates and registers an immutable space RID before invoking the selected implementation factory outside the registry lock. Metadata/settings exist first; ordinary query access rejects until an implementation is retained. The initialization phase can then construct guarded direct-space extensions and query the real selected world. Activation, stepping, attachment changes, recursive initialization and release reject until it completes. Explicit spaces publish inactive; scene spaces become active after successful initialization.
+
+Failure retires owned/direct-state/space registrations and releases any implementation retained by that space. A foreign implementation is rejected without disposing its original world. Initialization and cleanup errors are aggregated after cleanup attempts. [Ownership tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) exercise live RID lookup, registry-lock independence, all six query hooks, transfer rejection, real motion after publication and CPU/GPU native retirement. This is the internal construction transaction; public registered factories and their complete operation bridge remain open.

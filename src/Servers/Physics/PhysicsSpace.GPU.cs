@@ -2,7 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
-    internal GPUPhysicsBodyStore? GPUStore => _backend.GPUStore;
+    internal GPUPhysicsBodyStore? GPUStore => _backend?.GPUStore;
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
     internal bool ForceGPUParameterRefresh, DecodeGPUTransforms;
