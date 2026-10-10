@@ -1,8 +1,4 @@
 using Box2D.NET;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2MathFunction;
-using static Box2D.NET.B2Shapes;
-using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
@@ -10,8 +6,6 @@ internal sealed partial class PhysicsSpace : IDisposable
 {
     internal const float MetersPerUnit = 0.01f;
     internal const float UnitsPerMeter = 100f;
-    private const ulong RoughMaterial = 1;
-    private const ulong AbsorbentMaterial = 2;
 
     private readonly List<PhysicsBody> _bodies = [];
     private int _serverAreaCount;
@@ -30,8 +24,6 @@ internal sealed partial class PhysicsSpace : IDisposable
     private readonly List<OverlapEvent> _overlapEvents = [];
     private readonly List<ContactEvent> _contactEvents = [];
     private readonly List<RigidBody> _sleepEvents = [];
-    private readonly Dictionary<(ulong, ulong), OneWayPair> _oneWayPairs = [];
-    private readonly List<(ulong, ulong)> _staleOneWayPairs = [];
     private readonly PhysicsWorldBackend _backend;
     private Exception? _gpuFailure;
     internal PhysicsWorldBackend BackendImplementation => _backend;
@@ -44,12 +36,10 @@ internal sealed partial class PhysicsSpace : IDisposable
     private bool _dispatching;
     private bool _dispatchingContacts;
     private bool _disposed;
-    private long _contactStep;
     internal ulong Tick { get; private set; }
 
     internal readonly record struct OverlapEvent(Area Area, PhysicsShapePairChange Change);
     internal readonly record struct ContactEvent(RigidBody Receiver, PhysicsShapePairChange Change);
-    private readonly record struct OneWayPair(bool Allowed, long SeenStep);
 
     internal PhysicsServer.Backend RequestedBackend => _backend.Requested;
     internal PhysicsServer.Backend ActualBackend => _backend.Kind;
@@ -91,6 +81,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal B2WorldId WorldID => _backend.WorldID;
     internal List<PhysicsBody> Bodies => _bodies;
     internal List<Area> Areas => _areas;
+    internal List<RigidBody> ContactBodies => _contactBodies;
 
     internal string? FindAudioBusOverride(Vector2 position, uint mask)
     {
@@ -103,7 +94,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         return selected?.AudioBusName;
     }
     internal List<PhysicsServerCollider> ServerColliders => _serverColliders;
-    internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || _continuousFailure is not null || GPUStore?.HasFailed == true;
+    internal bool HasBackendFailure => _checkpointFailure is not null || _gpuFailure is not null || _backend.HasFailure;
 
     internal void EnsureReleaseAccess()
     {
@@ -118,7 +109,6 @@ internal sealed partial class PhysicsSpace : IDisposable
         EnsureReleaseAccess();
         if (_checkpointFailure is not null) throw new InvalidOperationException("Physics checkpoint restore failed; dispose this world before creating a replacement.", _checkpointFailure);
         _backend.EnsureAccess();
-        if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (_gpuFailure is not null) throw new InvalidOperationException("The GPU physics world failed; dispose it before creating a replacement.", _gpuFailure);
     }
 
@@ -324,8 +314,6 @@ internal sealed partial class PhysicsSpace : IDisposable
         _backend.Step(delta);
     }
 
-    internal static readonly b2TaskCallback CollectBodyContacts = CollectBodyContactRange;
-
     internal static void CollectBodyContactRange(int start, int end, uint worker, object context)
     {
         var space = (PhysicsSpace)context;
@@ -344,11 +332,6 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var checkpoint in _checkpoints.ToArray()) Release(checkpoint.Dispose);
         _checkpoints.Clear();
         _debugContacts = []; _debugContactLimit = _debugContactCount = 0;
-        if (_continuousTree is { } tree) Release(() => Box2D.NET.B2DynamicTrees.b2DynamicTree_Destroy(tree));
-        _continuousTree = null; _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousProxies.Clear(); _continuousBoundaries.Clear();
-        _continuousForces.Clear(); _continuousJointBudgets.Clear();
-        _continuousBodies.Capacity = _continuousShapes.Capacity = _continuousProxies.Capacity = _continuousBoundaries.Capacity = 0;
-        _continuousForces.Capacity = _continuousJointBudgets.Capacity = 0; _continuousFinalize = null;
         foreach (var joint in _joints.ToArray()) Release(joint.DetachBackend);
         _joints.Clear();
         foreach (var runtime in _jointRuntimes.ToArray()) Release(runtime.DetachSpace);
@@ -365,8 +348,8 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var collider in _serverColliders)
             if (!collider.IsArea) Release(() => PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID));
         _bodies.Clear(); _contactBodies.Clear(); _areas.Clear(); _serverColliders.Clear();
-        _overlapEvents.Clear(); _serverAreaEvents.Clear(); _contactEvents.Clear(); _sleepEvents.Clear(); _oneWayPairs.Clear();
-        _portableShapeLookup.Clear(); _portableOneWayKeys.Clear(); _portableGPUOneWays = []; _staleOneWayPairs.Clear();
+        _overlapEvents.Clear(); _serverAreaEvents.Clear(); _contactEvents.Clear(); _sleepEvents.Clear();
+        _portableOneWayKeys.Clear();
         if (GPUStore is not null) Release(ReleaseGPUState);
         _disposed = true;
         Release(_backend.Dispose);
@@ -377,56 +360,6 @@ internal sealed partial class PhysicsSpace : IDisposable
             try { action(); }
             catch (Exception error) { _checkpointFailure ??= error; (errors ??= []).Add(error); }
         }
-    }
-
-    internal static bool PreSolveContact(B2ShapeId first, B2ShapeId second, B2Vec2 point,
-        B2Vec2 normal, object context) => ((PhysicsSpace)context).AllowBodyContact(first, second, normal);
-
-    private bool AllowBodyContact(B2ShapeId first, B2ShapeId second, B2Vec2 normal)
-    {
-        var firstTag = b2Shape_GetUserData(first).GetRef<PhysicsFixtureTag>();
-        var secondTag = b2Shape_GetUserData(second).GetRef<PhysicsFixtureTag>();
-        if (firstTag is not null && secondTag is not null &&
-            PhysicsServer.Service.BodiesExcepted(firstTag.ColliderRID, secondTag.ColliderRID)) return false;
-        var firstData = firstTag?.OneWay;
-        var secondData = secondTag?.OneWay;
-        if (firstData is null && secondData is null) return true;
-
-        lock (_oneWayPairs)
-        {
-            var firstKey = OneWayShapeKey(first, firstTag);
-            var secondKey = OneWayShapeKey(second, secondTag);
-            var key = firstKey < secondKey ? (firstKey, secondKey) : (secondKey, firstKey);
-            if (_oneWayPairs.TryGetValue(key, out var previous))
-            {
-                _oneWayPairs[key] = previous with { SeenStep = _contactStep };
-                return previous.Allowed;
-            }
-
-            var allowed = (firstData is null || FacesContact(first, firstData, normal, firstSurface: true)) &&
-                (secondData is null || FacesContact(second, secondData, normal, firstSurface: false));
-            _oneWayPairs.Add(key, new(allowed, _contactStep));
-            return allowed;
-        }
-    }
-
-    private static bool FacesContact(B2ShapeId shape, OneWayContactData data, B2Vec2 normal, bool firstSurface)
-    {
-        var local = data.LocalDirection;
-        var direction = b2RotateVector(b2Body_GetRotation(b2Shape_GetBody(shape)), new(local.X, local.Y));
-        var facing = normal.X * direction.X + normal.Y * direction.Y;
-        return firstSurface ? facing < -1e-6f : facing > 1e-6f;
-    }
-
-    private static ulong PackShapeID(B2ShapeId shape) =>
-        ((ulong)(uint)shape.index1 << 32) | ((ulong)shape.world0 << 16) | shape.generation;
-
-    internal void PruneOneWayPairs()
-    {
-        _staleOneWayPairs.Clear();
-        foreach (var pair in _oneWayPairs)
-            if (pair.Value.SeenStep != _contactStep) _staleOneWayPairs.Add(pair.Key);
-        foreach (var key in _staleOneWayPairs) _oneWayPairs.Remove(key);
     }
 
     private void DispatchEvents()
@@ -496,24 +429,4 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (errors is not null) throw new AggregateException("Physics-area overlap callbacks failed.", errors);
     }
 
-    internal static void SetMaterial(ref B2ShapeDef definition, PhysicsMaterial? material)
-    {
-        SetMaterial(ref definition, material?.ComputedFriction ?? 1f, material?.ComputedBounce ?? 0f);
-    }
-
-    internal static void SetMaterial(ref B2ShapeDef definition, float friction, float bounce)
-    {
-        definition.material.friction = MathF.Abs(friction);
-        definition.material.restitution = MathF.Abs(bounce);
-        definition.material.userMaterialId = (friction < 0 ? RoughMaterial : 0) |
-            (bounce < 0 ? AbsorbentMaterial : 0);
-    }
-
-    internal static float CombineFriction(float a, ulong aFlags, float b, ulong bFlags) =>
-        MathF.Abs(MathF.Min((aFlags & RoughMaterial) != 0 ? -a : a,
-            (bFlags & RoughMaterial) != 0 ? -b : b));
-
-    internal static float CombineBounce(float a, ulong aFlags, float b, ulong bFlags) =>
-        Math.Clamp(((aFlags & AbsorbentMaterial) != 0 ? -a : a) +
-            ((bFlags & AbsorbentMaterial) != 0 ? -b : b), 0f, 1f);
 }

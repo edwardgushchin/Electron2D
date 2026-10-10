@@ -29,24 +29,18 @@ internal sealed partial class PhysicsSpace
     {
         private PhysicsSpace? _space;
         private PhysicsSpace Space => _space ?? throw new ObjectDisposedException(nameof(Checkpoint));
-        private CPUPhysicsCheckpoint? _cpu;
-        private GPUPhysicsBodyStore.Checkpoint? _gpu;
+        private PhysicsBackendCheckpoint? _solver;
         private bool _valid;
         private readonly List<PhysicsReplayEntry> _entries = [];
         private readonly List<PhysicsReplayEntry> _poses = [];
         private readonly List<(PhysicsJointRuntime Joint, PhysicsJointRuntime.ReplayConfiguration Configuration)> _joints = [];
         private readonly List<Joint> _sceneJoints = [];
-        private readonly Dictionary<(ulong, ulong), OneWayPair> _oneWay = [];
-        private BodyMotion[] _motions = [];
-        private readonly List<FrameContact> _contacts = [];
-        private readonly Dictionary<(int, int, ushort), int> _indices = [];
-        private int[] _heads = [], _tails = [];
         private GPUPhysicsBodyStore.ContactReport[] _reports = [];
         private readonly Dictionary<int, (int Offset, int Count)> _ranges = [];
         private Vector2[] _debug = [];
         private int _debugCount;
-        private bool _aggregate, _wake, _coldStep;
-        private long _step, _epoch, _publication;
+        private bool _wake, _coldStep;
+        private long _epoch, _publication;
         private ulong _tick;
         private float _delta;
         private Vector2 _defaultGravity;
@@ -66,7 +60,7 @@ internal sealed partial class PhysicsSpace
                 return _tick;
             }
         }
-        internal long DeviceCapacityBytes { get { Space.EnsureCheckpointAccess(); return _gpu?.DeviceCapacityBytes ?? 0; } }
+        internal long DeviceCapacityBytes { get { Space.EnsureCheckpointAccess(); return _solver?.DeviceCapacityBytes ?? 0; } }
 
         internal void Capture()
         {
@@ -84,9 +78,8 @@ internal sealed partial class PhysicsSpace
                     else body.Backend.PrepareGPUParameters(body.Runtime);
                 foreach (var joint in s._jointRuntimes) joint.ApplySolverPolicy();
                 s.SyncGPUExceptions();
-                if (_gpu is null) _gpu = store.CreateCheckpoint(); else _gpu.Capture();
             }
-            else { if (_cpu is null) _cpu = new(s.WorldID); else _cpu.Capture(); }
+            if (_solver is null) _solver = s._backend.CreateCheckpoint(); else _solver.Capture();
             var index = 0;
             foreach (var body in s._bodies) CaptureEntry(body.Backend, body, null, ref index);
             foreach (var area in s._areas) CaptureEntry(area.Backend, area, null, ref index);
@@ -97,17 +90,13 @@ internal sealed partial class PhysicsSpace
             _joints.Clear(); _joints.EnsureCapacity(s._jointRuntimes.Count);
             foreach (var joint in s._jointRuntimes) _joints.Add((joint, joint.CaptureReplay()));
             PhysicsReplayCopy.List(s._joints, _sceneJoints);
-            PhysicsReplayCopy.Map(s._oneWayPairs, _oneWay);
-            PhysicsReplayCopy.Buffer<BodyMotion>(s._bodyMotions, ref _motions);
-            PhysicsReplayCopy.List(s._frameContacts, _contacts); PhysicsReplayCopy.Map(s._frameContactIndices, _indices);
-            PhysicsReplayCopy.Buffer<int>(s._frameContactHeads, ref _heads); PhysicsReplayCopy.Buffer<int>(s._frameContactTails, ref _tails);
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(s._gpuReports, ref _reports); PhysicsReplayCopy.Map(s._gpuReportRanges, _ranges);
             PhysicsReplayCopy.Buffer<Vector2>(s._debugContacts.AsSpan(0, s._debugContactCount), ref _debug); _debugCount = s._debugContactCount;
             _coldStep = s.PortableColdStep;
             _tick = s.Tick;
             _defaultGravity = s._defaultGravity;
-            _configuration = Settings(s); _step = s._contactStep; _delta = s.LastStep; _statistics = s.PublishedStatistics;
-            _aggregate = s._aggregateContactImpulses; _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
+            _configuration = Settings(s); _delta = s.LastStep; _statistics = s.PublishedStatistics;
+            _epoch = s.GPUStateEpoch; _publication = s.GPUStatePublicationEpoch; _wake = s._gpuWakePending;
             _valid = true;
         }
         private void CaptureEntry(PhysicsColliderBackend backend, CollisionObject? scene, PhysicsServerCollider? server, ref int index)
@@ -132,19 +121,15 @@ internal sealed partial class PhysicsSpace
                 PhysicsReplayCopy.Require(_joints[i].Joint == s._jointRuntimes[i] && _joints[i].Configuration == s._jointRuntimes[i].CaptureReplay());
             for (var i = 0; i < _sceneJoints.Count; i++)
                 PhysicsReplayCopy.Require(_sceneJoints[i] == s._joints[i] && !_sceneJoints[i].HasPendingReplayConfiguration);
-            _cpu?.ValidateRestore(); _gpu?.ValidateRestore();
+            _solver!.ValidateRestore();
             try
             {
-                _cpu?.Restore(); _gpu?.Restore();
-                PhysicsReplayCopy.Map(_oneWay, s._oneWayPairs);
-                PhysicsReplayCopy.Buffer<BodyMotion>(_motions, ref s._bodyMotions);
-                PhysicsReplayCopy.List(_contacts, s._frameContacts); PhysicsReplayCopy.Map(_indices, s._frameContactIndices);
-                PhysicsReplayCopy.Buffer<int>(_heads, ref s._frameContactHeads); PhysicsReplayCopy.Buffer<int>(_tails, ref s._frameContactTails);
+                _solver!.Restore();
                 PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports); PhysicsReplayCopy.Map(_ranges, s._gpuReportRanges);
                 s.PortableColdStep = _coldStep;
                 s.Tick = _tick;
                 s._defaultGravity = _defaultGravity;
-                s._aggregateContactImpulses = _aggregate; s._contactStep = _step; s.LastStep = _delta;
+                s.LastStep = _delta;
                 s.GPUStateEpoch = _epoch; s.GPUStatePublicationEpoch = _publication; s._gpuWakePending = _wake;
                 foreach (var entry in _entries) entry.Restore();
                 foreach (var entry in _poses) entry.RestorePose();
@@ -159,9 +144,9 @@ internal sealed partial class PhysicsSpace
         {
             if (_space is not { } s) return;
             if (Environment.CurrentManagedThreadId != s._ownerThreadID) throw new InvalidOperationException("A physics checkpoint requires the space owner thread.");
-            _cpu?.Dispose(); _gpu?.Dispose(); s._checkpoints.Remove(this); _space = null; _valid = false;
-            _entries.Clear(); _poses.Clear(); _joints.Clear(); _sceneJoints.Clear(); _oneWay.Clear(); _contacts.Clear(); _indices.Clear(); _ranges.Clear();
-            _motions = []; _heads = []; _tails = []; _reports = []; _debug = [];
+            _solver?.Dispose(); s._checkpoints.Remove(this); _space = null; _valid = false;
+            _entries.Clear(); _poses.Clear(); _joints.Clear(); _sceneJoints.Clear(); _ranges.Clear();
+            _reports = []; _debug = [];
         }
     }
 }

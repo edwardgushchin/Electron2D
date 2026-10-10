@@ -23,6 +23,7 @@ internal sealed partial class PhysicsSpace
     private readonly Dictionary<ulong, PhysicsColliderBackend> _gpuRIDColliders = [];
     private readonly Dictionary<uint, (PhysicsColliderBackend Owner, uint Generation, int Slot)> _gpuShapeOwners = [];
     private int _gpuSensorShapeCount;
+    internal bool TryGetGPUShapeOwner(uint index, out (PhysicsColliderBackend Owner, uint Generation, int Slot) owner) => _gpuShapeOwners.TryGetValue(index, out owner);
     internal int GPUSensorShapeCount => _gpuSensorShapeCount;
     internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];

@@ -40,8 +40,8 @@ internal sealed unsafe partial class GPUPhysicsWorld
 
     private static (uint Friction, uint Bounce) MaterialModes(B2World world)
     {
-        var frictionMode = world.frictionCallback == b2DefaultFrictionCallback ? 1u : world.frictionCallback == PhysicsSpace.CombineFriction ? 2u : 0u;
-        var bounceMode = world.restitutionCallback == b2DefaultRestitutionCallback ? 1u : world.restitutionCallback == PhysicsSpace.CombineBounce ? 2u : 0u;
+        var frictionMode = world.frictionCallback == b2DefaultFrictionCallback ? 1u : world.frictionCallback == CPUPhysicsWorldBackend.CombineFriction ? 2u : 0u;
+        var bounceMode = world.restitutionCallback == b2DefaultRestitutionCallback ? 1u : world.restitutionCallback == CPUPhysicsWorldBackend.CombineBounce ? 2u : 0u;
         return (frictionMode, bounceMode);
     }
 

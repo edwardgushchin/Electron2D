@@ -7,6 +7,7 @@ internal static class PhysicsBackendOwnershipTests
     internal static void Run(PhysicsServer.Backend backend)
     {
         PhysicsAreaBackendTests.Run(backend);
+        if (backend == PhysicsServer.Backend.CPU) ContinuousFailure();
         TickBoundary(backend);
         PreparationFailure(backend);
         WorldPolicy(backend);
@@ -74,6 +75,32 @@ internal static class PhysicsBackendOwnershipTests
         implementation.Dispose();
         if (backend == PhysicsServer.Backend.CPU) CleanupFailure();
     }
+    private static void ContinuousFailure()
+    {
+        var rid = PhysicsServer.SpaceCreate(PhysicsServer.Backend.CPU); var body = PhysicsServer.BodyCreate();
+        using var shape = new CircleShape { Radius = 2 };
+        var space = PhysicsServer.Service.GetSceneSpace(rid); var owner = space.BackendImplementation; var native = space.WorldID;
+        try
+        {
+            PhysicsServer.AreaSetGravity(rid, 0); PhysicsServer.AreaSetLinearDamp(rid, 0); PhysicsServer.AreaSetAngularDamp(rid, 0);
+            PhysicsServer.BodyAddShape(body, shape.GetRID()); PhysicsServer.BodySetCanSleep(body, false);
+            PhysicsServer.BodySetContinuousCollisionDetectionMode(body, CCDMode.CastShape);
+            PhysicsServer.BodySetLinearVelocity(body, new(10, 0)); PhysicsServer.BodySetSpace(body, rid); PhysicsServer.SpaceSetActive(rid, true);
+            PhysicsServer.SpaceStep(rid, 1d / 60);
+            b2GetWorldFromId(native).integrateBodyStage = static (_, _) => throw new InvalidOperationException("Expected native CPU integration failure");
+            Reject<AggregateException>(() => PhysicsServer.SpaceStep(rid, 1d / 60));
+            Check(owner.HasFailure && space.HasBackendFailure && !b2GetWorldFromId(native).locked,
+                "An entered failing CPU continuous interval belongs to its owner and releases native solver locking");
+            Reject<InvalidOperationException>(owner.EnsureAccess);
+            Reject<InvalidOperationException>(() => PhysicsServer.SpaceStep(rid, 1d / 60));
+            Reject<InvalidOperationException>(() => PhysicsServer.BodyGetDirectState(body));
+            PhysicsServer.FreeRID(body); body = default; PhysicsServer.FreeRID(rid); rid = default;
+            Check(!b2World_IsValid(native), "A terminal CPU interval still releases its native world and owned sweep scratch");
+            Console.WriteLine("CPU: injected native continuous interval failure, terminal access guards and native resource release passed.");
+        }
+        finally { if (body.IsValid()) PhysicsServer.FreeRID(body); if (rid.IsValid()) PhysicsServer.FreeRID(rid); }
+    }
+
     private static void PreparationFailure(PhysicsServer.Backend backend)
     {
         using var world = new World(backend); using var root = new SubViewport { World = world };
@@ -175,8 +202,8 @@ internal static class PhysicsBackendOwnershipTests
             }
             if (backend == PhysicsServer.Backend.GPU)
             {
-                var motions = (Array)typeof(PhysicsSpace).GetField("_bodyMotions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!.GetValue(space)!;
-                Check(motions.Length == 0, "GPU capacity preparation does not allocate a CPU motion mirror");
+                var motions = typeof(PhysicsSpace).GetField("_bodyMotions", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                Check(motions is null, "GPU capacity preparation does not allocate a CPU motion mirror");
             }
             Console.WriteLine($"{backend}: world policy/validation, isolated settings, selected solver statistics and capacity ownership passed.");
             PhysicsServer.FreeRID(body); body = default; PhysicsServer.FreeRID(first); first = default;

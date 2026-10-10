@@ -6,7 +6,8 @@ internal sealed partial class PhysicsSpace
     internal float LastStep { get; set; }
     private bool _dispatchingBodyStates;
     private readonly List<CallbackBody> _callbackBodies = [];
-    private readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, PhysicsColliderBackend Backend, long Attachment, PhysicsBody? Scene);
+    internal List<CallbackBody> CallbackBodies => _callbackBodies;
+    internal readonly record struct CallbackBody(PhysicsBodyRuntime Runtime, PhysicsColliderBackend Backend, long Attachment, PhysicsBody? Scene);
 
     internal static bool RequiresBodySnapshot(PhysicsBodyRuntime runtime, PhysicsBody? scene) =>
         runtime.ForceCallback is not null || runtime.SyncCallback is not null ||

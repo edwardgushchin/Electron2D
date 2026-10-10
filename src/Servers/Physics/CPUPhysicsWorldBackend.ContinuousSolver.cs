@@ -7,7 +7,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class CPUPhysicsWorldBackend
 {
     private struct ContinuousForce
     {
@@ -34,8 +34,8 @@ internal sealed partial class PhysicsSpace
         _continuousFinalize ??= FinalizeContinuousMotion;
         world.finalizeBodyStates = _continuousFinalize;
         _continuousForces.Clear();
-        foreach (var body in _bodies) SaveContinuousForce(body.Backend);
-        foreach (var body in _serverColliders) if (!body.IsArea) SaveContinuousForce(body.Backend);
+        foreach (var body in Space.Bodies) SaveContinuousForce(body.Backend);
+        foreach (var body in Space.ServerColliders) if (!body.IsArea) SaveContinuousForce(body.Backend);
         var nominal = delta / 4;
         try
         {
@@ -73,7 +73,7 @@ internal sealed partial class PhysicsSpace
         catch (Exception failure)
         {
             _continuousFailure = failure;
-            _backend.Tasks.Drain(); world.locked = false;
+            Tasks.Drain(); world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();
             throw;
@@ -81,7 +81,7 @@ internal sealed partial class PhysicsSpace
         finally
         {
             world.finalizeBodyStates = finalizer; world.enableWarmStarting = warm;
-            if (!HasBackendFailure)
+            if (!Space.HasBackendFailure)
             {
                 RestoreContinuousJointBudgets(world);
                 foreach (var force in _continuousForces) CPUPhysicsColliderImplementation.Simulation(force.ID).gravityScale = force.Gravity;

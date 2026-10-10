@@ -330,3 +330,10 @@ cover CPU/GPU fields, masks, logical notifications, audio and attachment lifetim
 at zero warmed managed allocation. This closes an internal registration prerequisite;
 the manager/server-extension census remains open until real registered implementations
 execute the complete contract.
+
+Native CPU scheduling/contact/CCD histories, selected private checkpoints and
+portable one-way mapping now execute through their immutable world implementations.
+Report-only pair/activity counters rewind with contacts before another solver step.
+[The ownership contract](physics-backends.md#native-simulation-and-replay-ownership)
+records replay, diagnostics, failure and allocation checks; registered public backend
+factories and custom geometry remain open.

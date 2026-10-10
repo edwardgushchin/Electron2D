@@ -232,7 +232,7 @@ The body runtime now owns one-step pending force/torque and routes scene/direct-
 
 ## Frozen kinematic motion
 
-[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Contact impulse views aggregate every native interval of the outer frame through the shared CPU/GPU accumulator. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and the stationary-surface channel.
+[RigidBody.FreezeMode](../classes/RigidBody.md#freezemode) selects Static/default teleports or manually driven Kinematic targets while Freeze remains true. The latter ignores gravity/forces, exposes zero physical inverse values and restores configured dynamic mass/locks on unfreeze. Exact native history and unchanged-target guards avoid decoded-angle idle drift; synchronized AnimatableBody uses the same idle rule. The internal [kinematic integration path](../../src/Servers/Physics/CPUPhysicsWorldBackend.Kinematic.cs) subdivides native calls by travel and collider extents, replays captured force/torque for full outer duration and retains one callback/event cycle. Cost grows with travel and small geometry; native TOI is the measured-performance upgrade path. Contact impulse views aggregate every native interval of the outer frame through each backend-owned accumulator and the common contact projection. [RigidFreezeModeTests](../../tests/Electron2D.Tests/RigidFreezeModeTests.cs) checks physical path contacts and 64 warmed active subdivisions with zero managed allocation on Linux/.NET 10. Native allocation, broad-world performance, other platforms and owner visual acceptance remain unverified. [ADR 0075](../decisions/physics.md#adr-0075) owns this policy and the stationary-surface channel.
 
 ## Complete typed body parameters
 
@@ -465,3 +465,10 @@ space code keeps memberships, default profiles and generation-qualified observer
 publication. [Area ownership checks](../components/physics-backends.md#area-implementation-ownership)
 exercise real fields, notifications, masks, audio and lifetime on both implementations;
 public registration, custom geometry and the remaining implementation hooks stay open.
+
+Native CPU scheduling/contact/CCD histories, selected private checkpoints and
+portable one-way mapping now execute through their immutable world implementations.
+Report-only pair/activity counters rewind with contacts before another solver step.
+[The ownership contract](../components/physics-backends.md#native-simulation-and-replay-ownership)
+records replay, diagnostics, failure and allocation checks; registered public backend
+factories and custom geometry remain open.

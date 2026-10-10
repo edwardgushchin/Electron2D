@@ -4,6 +4,7 @@ namespace Electron2D;
 internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
 {
     private bool _disposed;
+    internal override bool HasFailure => GPUStore.HasFailed;
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.GPU;
     internal override GPUPhysicsBodyStore GPUStore { get; }
     internal GPUPhysicsWorldBackend(PhysicsSpace space) : base(space, PhysicsServer.Backend.GPU)
@@ -33,10 +34,12 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         EnsureAccess(); return Space.GPUTestMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
     }
+    internal override int ReadDebugContacts(Span<Vector2> output) => GPUStore.ReadDebugContacts(output);
     public override void Dispose()
     {
         if (_disposed) return;
         _disposed = true;
+        _portableGPUOneWays = [];
         _gpuAreaHits = []; _areaPointHits = []; _gpuAreaQuery[0] = default;
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear();
         GPUStore.Dispose();

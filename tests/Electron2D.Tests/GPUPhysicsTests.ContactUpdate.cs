@@ -122,8 +122,8 @@ internal static partial class GPUPhysicsTests
                     foreach (var hooks in new[] { false, true })
                     {
                         world.enableSpeculative = speculative;
-                        world.frictionCallback = mode == 0 ? b2DefaultFrictionCallback : mode == 1 ? PhysicsSpace.CombineFriction : friction;
-                        world.restitutionCallback = mode == 0 ? b2DefaultRestitutionCallback : mode == 1 ? PhysicsSpace.CombineBounce : bounce;
+                        world.frictionCallback = mode == 0 ? b2DefaultFrictionCallback : mode == 1 ? CPUPhysicsWorldBackend.CombineFriction : friction;
+                        world.restitutionCallback = mode == 0 ? b2DefaultRestitutionCallback : mode == 1 ? CPUPhysicsWorldBackend.CombineBounce : bounce;
                         world.preSolveFcn = hooks ? preSolve : null!;
                         CompareBatch();
                     }
@@ -140,7 +140,7 @@ internal static partial class GPUPhysicsTests
                 b2Body_EnableHitEvents(b2Shape_GetBody(shapes[12]), tick % 2 == 0);
                 CompareBatch();
             }
-            world.frictionCallback = PhysicsSpace.CombineFriction; world.restitutionCallback = PhysicsSpace.CombineBounce;
+            world.frictionCallback = CPUPhysicsWorldBackend.CombineFriction; world.restitutionCallback = CPUPhysicsWorldBackend.CombineBounce;
             for (var i = 0; i < 32; i++) Edit(i);
             var before = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < 64; i++) Edit(i);

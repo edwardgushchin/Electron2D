@@ -48,7 +48,7 @@ internal sealed partial class CPUPhysicsJointImplementation
         _pendingImpulse = impulse;
     }
 
-    internal void ValidateSolverStep(PhysicsSpace space)
+    internal void ValidateSolverStep(CPUPhysicsWorldBackend space)
     {
         if (_pendingImpulse.X == 0 && _pendingImpulse.Y == 0) return;
         space.ValidateJointImpulse(BodyAID, new(-_pendingImpulse.X, -_pendingImpulse.Y), _pointA);

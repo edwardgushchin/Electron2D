@@ -4,7 +4,7 @@ Last updated: 2026-10-10
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
-**Source:** [PhysicsSpace.cs](../../src/Servers/Physics/PhysicsSpace.cs), [PhysicsSpace.BodyState.cs](../../src/Servers/Physics/PhysicsSpace.BodyState.cs), [PhysicsSpace.Kinematic.cs](../../src/Servers/Physics/PhysicsSpace.Kinematic.cs) · **Component:** [Physics server and queries](../components/physics-queries.md)
+**Source:** [PhysicsSpace.cs](../../src/Servers/Physics/PhysicsSpace.cs), [PhysicsSpace.BodyState.cs](../../src/Servers/Physics/PhysicsSpace.BodyState.cs), [PhysicsSpace.Step.cs](../../src/Servers/Physics/PhysicsSpace.Step.cs) · **Component:** [Physics server and queries](../components/physics-queries.md)
 
 [GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
 
@@ -61,7 +61,7 @@ after the completed interval. Scene and server state tests exercise this on CPU/
 
 ## Contact impulse publication
 
-[PhysicsSpace.ContactImpulses.cs](../../src/Servers/Physics/PhysicsSpace.ContactImpulses.cs)
+[CPUPhysicsWorldBackend.ContactImpulses.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.ContactImpulses.cs)
 keeps a reusable feature map only for frames subdivided into multiple native calls.
 Reported fixture pairs are canonicalized, including swapped feature bytes and
 impulse direction; per-solve epochs prevent double counting both reporters. The
@@ -197,12 +197,12 @@ also preserve that pending policy. See [portable snapshots](../components/physic
 
 ## Report-only contacts
 
-The [report-only partial](../../src/Servers/Physics/PhysicsSpace.ReportOnly.cs)
+The [report-only partial](../../src/Servers/Physics/CPUPhysicsWorldBackend.ReportOnly.cs)
 queries CPU static/kinematic trees after each internal interval only for receivers
 with a positive contact cap. Kinematic subdivision also covers report-only
 receivers without dynamic participants; earlier observations remain in the outer
 frame snapshot while bounded diagnostics retain the latest interval.
-Its private `ReportOnlyQuery` struct borrows this space, the receiver's current
+The CPU owner's private `ReportOnlyQuery` struct borrows that implementation, the receiver's current
 `B2BodyId`, and one live `B2Shape` for the synchronous tree callback. It owns no
 resources and never escapes the owner-thread capture interval. The callback
 validates pair masks, body/joint vetoes and contact policy, then projects an
@@ -211,7 +211,7 @@ contributes once to statistics and bounded diagnostics without joining native
 constraint or sleep islands. Infinite boundaries also query their explicit proxy
 list.
 
-Partial internal use: `new ReportOnlyQuery { Space = this, Receiver = backend.BodyID, Shape = shape }`
+Partial internal use inside the CPU owner: `new ReportOnlyQuery { Space = this, Receiver = backend.BodyID, Shape = shape }`
 borrows already prepared attachments; callers must not retain it across a step.
 `PhysicsReportOnlyTests` exercises both receiver orders, masks/exceptions/joints,
 quiet lifecycle, geometry, snapshots and allocation limits through public API.
@@ -224,3 +224,7 @@ Caller-created direct-space extension hooks borrow a query context. The space re
 ## Area implementation ownership
 
 Concrete scene/raw Area overlap scans and audio containment now dispatch through PhysicsWorldBackend. CPU owns priority/field scratch and pre-step body preparation; GPU owns resident sensor/audio scratch. CommitAreaScan and QueueMonitorChanges retain shared logical histories and ordered user callbacks. DefaultGravity retains the sampled/current CPU subtraction baseline across checkpoint and portable restore. [Contract and verification](../components/physics-backends.md#area-implementation-ownership) covers masks, fields, disabled slots, transfer/reentry/free and zero warmed managed allocation.
+
+## Native simulation and replay ownership
+
+Native discrete/CCD/kinematic scheduling, one-way episodes, contact impulse/motion histories and report-only geometry/statistics now belong to CPUPhysicsWorldBackend. Common Checkpoint uses one selected PhysicsBackendCheckpoint for private solver history and retains shared authoring/observer/pose metadata. Portable one-way capture/restore and diagnostic point reads reach the selected owner. CallbackBodies and ContactBodies are internal typed subjects, not public mutable collections. [Contract and checks](../components/physics-backends.md#native-simulation-and-replay-ownership).

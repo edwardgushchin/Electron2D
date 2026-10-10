@@ -6,7 +6,7 @@ internal sealed partial class PhysicsJointBackend
     {
         if (_implementation is not null) CPU.PrepareSolverStep(delta, settings);
     }
-    internal void ValidateSolverStep(PhysicsSpace space)
+    internal void ValidateSolverStep(CPUPhysicsWorldBackend space)
     {
         if (_implementation is not null) CPU.ValidateSolverStep(space);
     }

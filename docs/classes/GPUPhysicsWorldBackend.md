@@ -43,3 +43,7 @@ Startup fallback is handled only by the internal creation factory. A started GPU
 ## Area implementation ownership
 
 [The Area partial](../../src/Servers/Physics/GPUPhysicsWorldBackend.Areas.cs) owns resident scene/raw overlap scans and sensor/audio result scratch. AreaContainsPoint uses current sensor capacity, canvas/mask filtering and logical RID projection. Scans commit generation-qualified observations to shared PhysicsSpace; Dispose clears retained geometry/result buffers before store release. Device field reduction is unchanged. [Contract and checks](../components/physics-backends.md#area-implementation-ownership) cover both selected backends and warmed allocation.
+
+## Native simulation and replay ownership
+
+SolverCheckpoint wraps the resident device checkpoint behind the selected PhysicsBackendCheckpoint contract. Portable one-way staging now belongs to this owner; current shared shape ownership/generation qualifies every record. ReadDebugContacts supplies capped scene-unit points. The resident solve equations and state ownership remain unchanged. [Contract and verification](../components/physics-backends.md#native-simulation-and-replay-ownership) describes replay/portable boundaries.

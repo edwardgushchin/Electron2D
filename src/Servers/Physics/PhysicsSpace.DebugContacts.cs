@@ -1,6 +1,3 @@
-using Box2D.NET;
-using static Box2D.NET.B2Worlds;
-
 namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
@@ -26,27 +23,11 @@ internal sealed partial class PhysicsSpace
     internal void CaptureDebugContacts()
     {
         if (_debugContactLimit == 0) return;
-        if (GPUStore is not null) { _debugContactCount = GPUStore.ReadDebugContacts(_debugContacts.AsSpan(0, _debugContactLimit)); return; }
-        var world = b2GetWorldFromId(WorldID);
-        foreach (var color in world.constraintGraph.colors)
-            foreach (var contact in color.contactSims.data.AsSpan(0, color.contactSims.count))
-            {
-                for (var i = 0; i < contact.manifold.pointCount; i++)
-                {
-                    ref readonly var point = ref contact.manifold.points[i];
-                    if (point.separation >= 0) continue;
-                    var half = point.separation * .5f * contact.manifold.normal;
-                    AddDebugContact(point.point - half);
-                    if (_debugContactCount == _debugContactLimit) return;
-                    AddDebugContact(point.point + half);
-                    if (_debugContactCount == _debugContactLimit) return;
-                }
-            }
+        _debugContactCount = _backend.ReadDebugContacts(_debugContacts.AsSpan(0, _debugContactLimit));
     }
-    private void AddDebugContact(B2Vec2 point)
+    internal void AddDebugContact(Vector2 value)
     {
         if (_debugContactCount == _debugContactLimit) return;
-        var value = new Vector2(point.X * UnitsPerMeter, point.Y * UnitsPerMeter);
         if (!value.IsFinite()) throw new InvalidOperationException("Physics contact diagnostics contain a nonfinite point.");
         _debugContacts[_debugContactCount++] = value;
     }

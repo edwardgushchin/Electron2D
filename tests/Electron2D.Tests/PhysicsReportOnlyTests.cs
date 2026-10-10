@@ -48,9 +48,43 @@ internal static class PhysicsReportOnlyTests
                         PhysicsServer.BodyAddShape(body, shape.GetRID());
                     }
                 }
-        Lifecycle(backend); Geometry(backend); Sweep(backend); Scene(backend); DynamicSleep(backend, true); DynamicSleep(backend, false); Measure(backend);
+        Replay(backend); Lifecycle(backend); Geometry(backend); Sweep(backend); Scene(backend); DynamicSleep(backend, true); DynamicSleep(backend, false); Measure(backend);
         Console.WriteLine($"Report-only body role/receiver, lifecycle and scene checks passed on {backend}.");
     }
+    private static void Replay(PhysicsServer.Backend backend)
+    {
+        using var shape = new CircleShape { Radius = 10 };
+        var space = PhysicsServer.SpaceCreate(backend); var a = PhysicsServer.BodyCreate(); var b = PhysicsServer.BodyCreate();
+        try
+        {
+            PhysicsServer.SpaceSetActive(space, true);
+            PhysicsServer.BodySetMode(a, Mode.Kinematic); PhysicsServer.BodySetMode(b, Mode.Static);
+            PhysicsServer.BodyAddShape(a, shape.GetRID()); PhysicsServer.BodyAddShape(b, shape.GetRID());
+            PhysicsServer.BodySetTransform(b, new(0, new(18, 0))); PhysicsServer.BodySetMaxContactsReported(a, 1);
+            PhysicsServer.BodySetSpace(a, space); PhysicsServer.BodySetSpace(b, space);
+            PhysicsServer.SpaceStep(space, 1d / 60);
+            var owner = PhysicsServer.Service.GetSceneSpace(space).BackendImplementation;
+            var expected = owner.ReadStatistics();
+            using var point = PhysicsServer.SpaceCreateCheckpoint(space);
+            PhysicsServer.BodySetTransform(b, new(0, new(200, 0))); PhysicsServer.SpaceStep(space, 1d / 60);
+            Check(owner.ReadStatistics().Pairs == 0, "The real separated interval retires report-only pair statistics");
+            point.Restore();
+            Check(owner.ReadStatistics() == expected, "Selected replay restores report-only pair and activity statistics before another solver interval");
+            var view = PhysicsServer.BodyGetDirectState(a)!;
+            Check(view.GetContactCount() == 1 && view.GetContactCollider(0) == b && view.GetContactImpulse(0) == Vector2.Zero,
+                "Replay immediately restores report-only contact identity and zero impulse");
+            for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); }
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, true, true);
+            for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); _ = view.GetContactCount(); }
+            var all = GC.GetTotalAllocatedBytes(true); var bytes = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < 64; i++) { point.Capture(); point.Restore(); _ = view.GetContactCount(); }
+            bytes = GC.GetAllocatedBytesForCurrentThread() - bytes; all = GC.GetTotalAllocatedBytes(true) - all;
+            Check(bytes == 0 && all == 0, $"Report-only checkpoint/contact cycles allocate {bytes}/{all} owner/all-thread bytes");
+            Console.WriteLine($"{backend}: selected report-only replay, immediate statistics/contact identity and 64 warm capture/restore/read cycles: {bytes}/{all} B passed.");
+        }
+        finally { PhysicsServer.FreeRID(a); PhysicsServer.FreeRID(b); PhysicsServer.FreeRID(space); }
+    }
+
     private static void Geometry(PhysicsServer.Backend backend)
     {
         using var circle = new CircleShape { Radius = 10 }; using var ray = new SeparationRayShape { Length = 20 }; using var plane = new WorldBoundaryShape();

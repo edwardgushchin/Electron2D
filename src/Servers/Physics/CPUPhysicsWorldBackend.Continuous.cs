@@ -10,7 +10,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class CPUPhysicsWorldBackend
 {
     private struct ContinuousBody
     {
@@ -31,8 +31,8 @@ internal sealed partial class PhysicsSpace
 
     private bool HasContinuousBodies()
     {
-        foreach (var body in _bodies) if (body.Runtime.ContinuousMode != CCDMode.Disabled && body.Backend.IsDynamic) return true;
-        foreach (var body in _serverColliders) if (!body.IsArea && body.Runtime.ContinuousMode != CCDMode.Disabled && body.Backend.IsDynamic) return true;
+        foreach (var body in Space.Bodies) if (body.Runtime.ContinuousMode != CCDMode.Disabled && body.Backend.IsDynamic) return true;
+        foreach (var body in Space.ServerColliders) if (!body.IsArea && body.Runtime.ContinuousMode != CCDMode.Disabled && body.Backend.IsDynamic) return true;
         return false;
     }
 
@@ -81,8 +81,8 @@ internal sealed partial class PhysicsSpace
         _continuousTree ??= b2DynamicTree_Create();
         _continuousBodies.Clear(); _continuousShapes.Clear(); _continuousBoundaries.Clear(); _continuousFraction = 1; _continuousNearStep = delta;
         var world = b2GetWorldFromId(WorldID);
-        foreach (var body in _bodies) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
-        foreach (var body in _serverColliders) if (!body.IsArea) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
+        foreach (var body in Space.Bodies) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
+        foreach (var body in Space.ServerColliders) if (!body.IsArea) AddContinuousBody(body.Backend, body.Runtime.ContinuousMode, context);
         var bodies = CollectionsMarshal.AsSpan(_continuousBodies);
         for (var index = 0; index < bodies.Length; index++)
         {
@@ -126,7 +126,7 @@ internal sealed partial class PhysicsSpace
         return MathF.Min(delta * _continuousFraction, _continuousNearStep);
     }
 
-    private struct ContinuousQuery { internal PhysicsSpace Space; internal int Shape; }
+    private struct ContinuousQuery { internal CPUPhysicsWorldBackend Space; internal int Shape; }
     private static bool QueryContinuousPair(int proxy, ulong data, ref ContinuousQuery query)
     {
         if ((int)data == query.Shape) return true;

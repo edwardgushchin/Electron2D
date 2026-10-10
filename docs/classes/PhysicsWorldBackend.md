@@ -89,3 +89,7 @@ PhysicsSpace retains membership, authoring, observer state and event/callback or
 ## Area implementation ownership
 
 AreaContainsPoint dispatches spatial audio containment to the selected owner; ScanAreas now owns concrete scene/raw geometry scans as well as phase selection. Common PhysicsSpace commits logical observer history and queues callbacks. [The ownership contract and shared CPU/GPU checks](../components/physics-backends.md#area-implementation-ownership) describe fields, masks, logical slots, scratch lifetime and zero warmed allocation.
+
+## Native simulation and replay ownership
+
+CreateCheckpoint dispatches implementation-local history through PhysicsBackendCheckpoint. BeginPortableRestore, CompletePortableRestore and CapturePortableOneWays dispatch private reconstruction/mapping through the same selected owner; ReadDebugContacts projects scene-unit points. HasFailure reports terminal implementation state. All operations execute for CPU/GPU; they are internal prerequisites of public registration. [Contract and checks](../components/physics-backends.md#native-simulation-and-replay-ownership).

@@ -11,6 +11,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     private readonly PhysicsTaskScheduler _tasks;
     private GPUPhysicsWorld? _stageGPU;
     private bool _disposed;
+    internal override bool HasFailure => _continuousFailure is not null;
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.CPU;
     internal override B2WorldId WorldID { get { ThrowIfDisposed(); return _worldID; } }
     internal override PhysicsTaskScheduler Tasks => _tasks;
@@ -25,7 +26,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
             definition.gravity = PhysicsShapeBackend.ToBackend(space.DefaultGravity);
             definition.restitutionThreshold = 0;
             definition.enableContinuous = false;
-            definition.frictionCallback = PhysicsSpace.CombineFriction; definition.restitutionCallback = PhysicsSpace.CombineBounce;
+            definition.frictionCallback = CPUPhysicsWorldBackend.CombineFriction; definition.restitutionCallback = CPUPhysicsWorldBackend.CombineBounce;
             definition.workerCount = _tasks.WorkerCount;
             definition.enqueueTask = _tasks.Enqueue; definition.finishTask = _tasks.Finish;
             _worldID = b2CreateWorld(definition);
@@ -37,7 +38,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
             world.contactBias = space.ContactSettings.Bias;
             world.contactAllowedPenetration = space.ContactSettings.AllowedPenetration * PhysicsSpace.MetersPerUnit;
             _tasks.Bind(world); world.workerCount = 1;
-            b2World_SetPreSolveCallback(_worldID, PhysicsSpace.PreSolveContact, space);
+            b2World_SetPreSolveCallback(_worldID, PreSolveContact, this);
         }
         catch (Exception error)
         {
@@ -49,6 +50,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
     internal override void EnsureAccess()
     {
         ThrowIfDisposed();
+        if (_continuousFailure is not null) throw new InvalidOperationException("The continuous physics step failed; dispose this world before creating a replacement.", _continuousFailure);
         if (b2GetWorldFromId(_worldID).locked) throw new InvalidOperationException("Physics state is owned by the solver.");
     }
     internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider) { EnsureAccess(); return new CPUPhysicsColliderImplementation(collider, Space); }
@@ -91,6 +93,7 @@ internal sealed partial class CPUPhysicsWorldBackend : PhysicsWorldBackend
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear(); _shapeCandidates.Clear(); _queryProxies.Clear(); _motionCandidates.Clear();
         List<Exception>? errors = null;
         try { _tasks.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+        try { ReleaseSolverScratch(); } catch (Exception error) { (errors ??= []).Add(error); }
         if (b2World_IsValid(_worldID))
         {
             var world = b2GetWorldFromId(_worldID);

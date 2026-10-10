@@ -15,7 +15,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             var island = world.islands.data[sim.islandId];
             if (island.contactCount > 0 || island.jointCount > 0) islands++;
         }
-        var pairs = checked(B2IdPools.b2GetIdCount(world.contactIdPool) + Space.ReportOnlyStatistics.Pairs);
+        var pairs = checked(B2IdPools.b2GetIdCount(world.contactIdPool) + _reportOnlyPairs.Count);
         foreach (var sensor in world.sensors.data.AsSpan(0, world.sensors.count))
         {
             var shape = world.shapes.data[sensor.shapeId];
@@ -24,7 +24,7 @@ internal sealed partial class CPUPhysicsWorldBackend
                 B2DynamicTrees.b2DynamicTree_Query(tree, shape.fatAABB, ulong.MaxValue, CountSensorCandidate, ref context);
             pairs = checked(pairs + context.Count);
         }
-        return new(checked(awake.bodySims.count + Space.ReportOnlyStatistics.Active), pairs, islands);
+        return new(checked(awake.bodySims.count + _reportOnlyActive), pairs, islands);
     }
 
     private struct SensorStatisticsQuery { internal B2World World; internal B2Shape Sensor; internal int Count; }

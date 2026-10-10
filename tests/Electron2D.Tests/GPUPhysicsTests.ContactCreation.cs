@@ -55,8 +55,8 @@ internal static partial class GPUPhysicsTests
             }
             else if (count % 2 == 0)
             {
-                definition.frictionCallback = PhysicsSpace.CombineFriction;
-                definition.restitutionCallback = PhysicsSpace.CombineBounce;
+                definition.frictionCallback = CPUPhysicsWorldBackend.CombineFriction;
+                definition.restitutionCallback = CPUPhysicsWorldBackend.CombineBounce;
             }
             var id = b2CreateWorld(definition); callbackWorld = b2GetWorldFromId(id);
             for (var i = 0; i < count; i++)

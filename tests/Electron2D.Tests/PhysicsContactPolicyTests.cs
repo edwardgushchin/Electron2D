@@ -159,7 +159,7 @@ internal static class PhysicsContactPolicyTests
             // CCD clips a prepared correction velocity at impact, then resolves the remainder. One nominal-substep
             // linearization contributes at most .004 u here; it must not reapply a whole tick's .8 fraction per hit.
             Near(r.Read().Y, .44f, .004f, "CCD continuation retains the nominal contact correction budget");
-            Check(r.Store is { } gpu ? gpu.CCDIntervalCount > 0 : PhysicsServer.Service.GetSceneSpace(r.Space).ContinuousQueryCount > 0, "CCD control actually executes.");
+            Check(r.Store is { } gpu ? gpu.CCDIntervalCount > 0 : ((CPUPhysicsWorldBackend)PhysicsServer.Service.GetSceneSpace(r.Space).BackendImplementation).ContinuousQueryCount > 0, "CCD control actually executes.");
             r.Set(new(.8f, 1.2f)); r.Reset(); r.Step(); var within = r.Read(); Near(within.Y, 1, .002f, "Penetration within slack has no positional correction"); Check(within.Contacts > 0, "Slack does not filter contacts.");
             r.Set(new(.8f, .3f)); var velocity = new Vector2(30, 80); r.Reset(1, velocity); r.Step(); var impact = r.Read();
             Near(impact.Impulse, (impact.Velocity - velocity) * 2, .03f, "Friction and normal reports preserve full momentum with correction enabled");

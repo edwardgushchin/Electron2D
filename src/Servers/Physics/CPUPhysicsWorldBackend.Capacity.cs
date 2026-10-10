@@ -41,7 +41,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         _preparedBodyCapacity = Math.Max(_preparedBodyCapacity, capacity);
         _preparedSleepCapacity = Math.Max(_preparedSleepCapacity, sleepCapacity);
         capacity = _preparedBodyCapacity; sleepCapacity = _preparedSleepCapacity;
-        Space.ReserveBodyMotionCapacity(capacity);
+        ReserveBodyMotionCapacity(capacity);
         // Dormant island storage follows bodies that can sleep; active stress particles need no dormant copies.
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSets, sleepCapacity + 3);
         Box2D.NET.B2Arrays.b2Array_Reserve(ref world.solverSetIdPool.freeArray, sleepCapacity + 3);

@@ -23,7 +23,7 @@ impulses from a protected body. Directed rays validate the full authored ray man
 
 ## Solved motion and remaining time
 
-[PhysicsSpace.ContinuousSolver.cs](../../src/Servers/Physics/PhysicsSpace.ContinuousSolver.cs)
+[CPUPhysicsWorldBackend.ContinuousSolver.cs](../../src/Servers/Physics/CPUPhysicsWorldBackend.ContinuousSolver.cs)
 uses the existing owner-thread finalization hook after constraint solving and
 before worker pose publication. Trajectories therefore include motor/spring/contact
 impulses and position correction, not just velocity before the solve. Four nominal

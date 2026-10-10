@@ -24,3 +24,7 @@ hierarchy, lifecycle and networking boundaries.
 The game-facing owner is [PhysicsCheckpoint](PhysicsCheckpoint.md), created by
 `PhysicsServer.SpaceCreateCheckpoint`; this internal point also retains the captured
 world tick for that API.
+
+## Native simulation and replay ownership
+
+Private solver capture/validate/restore/dispose now uses one PhysicsBackendCheckpoint supplied by the immutable selected owner. CPU history includes native state, one-way episodes, solved motion, frame contacts and report-only pair/activity statistics; GPU history stays device-local. Shared scene/raw authoring and published observer data retain their existing validation and ordering. [Implementation ownership](../components/physics-backends.md#native-simulation-and-replay-ownership).

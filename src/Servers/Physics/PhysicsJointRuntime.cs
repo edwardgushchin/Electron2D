@@ -231,7 +231,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal void SetSpringDamping(float value) { Coefficient(value); SpringDamping = value; }
 
     internal void PrepareSolverStep(float delta) => Backend.PrepareSolverStep(delta, this);
-    internal void ValidateSolverStep(PhysicsSpace space) => Backend.ValidateSolverStep(space);
+    internal void ValidateSolverStep(CPUPhysicsWorldBackend space) => Backend.ValidateSolverStep(space);
     internal void ApplySolverStep() => Backend.ApplySolverStep();
 
     private static (PhysicsSpace? Space, PhysicsColliderBackend? Backend, Transform Pose) Snapshot(RID body)

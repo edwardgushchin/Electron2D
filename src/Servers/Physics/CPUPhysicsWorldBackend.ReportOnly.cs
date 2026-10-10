@@ -7,18 +7,18 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class CPUPhysicsWorldBackend
 {
     private readonly B2ContactSim _reportOnlyContact = new();
     private readonly HashSet<(int A, int B)> _reportOnlyPairs = [];
     private int _reportOnlyActive;
-    private struct ReportOnlyQuery { internal PhysicsSpace Space; internal B2BodyId Receiver; internal B2Shape Shape; }
+    private struct ReportOnlyQuery { internal CPUPhysicsWorldBackend Space; internal B2BodyId Receiver; internal B2Shape Shape; }
 
     private void CaptureReportOnlyContacts()
     {
         _reportOnlyPairs.Clear(); _reportOnlyActive = 0;
-        foreach (var body in _bodies) Capture(body.Backend, body.Runtime.ContactLimit);
-        foreach (var body in _serverColliders) if (!body.IsArea) Capture(body.Backend, body.Runtime.ContactLimit);
+        foreach (var body in Space.Bodies) Capture(body.Backend, body.Runtime.ContactLimit);
+        foreach (var body in Space.ServerColliders) if (!body.IsArea) Capture(body.Backend, body.Runtime.ContactLimit);
         void Capture(PhysicsColliderBackend backend, int limit)
         {
             if (limit == 0 || backend.IsDynamic) return;
@@ -58,10 +58,10 @@ internal sealed partial class PhysicsSpace
         for (var i = 0; i < manifold.pointCount; i++)
         {
             ref readonly var point = ref manifold.points[i]; if (point.separation > 0) continue;
-            if (space.CaptureFramePoint(world, query.Receiver, sim, point) && point.separation < 0 && space._debugContactLimit > 0)
+            if (space.CaptureFramePoint(world, query.Receiver, sim, point) && point.separation < 0 && space.Space.DebugContactLimit > 0)
             {
                 var half = point.separation * .5f * manifold.normal;
-                space.AddDebugContact(point.point - half); space.AddDebugContact(point.point + half);
+                space.Space.AddDebugContact(ToScene(point.point - half)); space.Space.AddDebugContact(ToScene(point.point + half));
             }
             space._reportOnlyPairs.Add(a.id < b.id ? (a.id, b.id) : (b.id, a.id));
         }

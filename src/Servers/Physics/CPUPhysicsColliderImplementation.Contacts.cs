@@ -8,7 +8,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
 {
     internal override void CaptureViewContacts(PhysicsDirectBodyState view, int limit)
     {
-        if (limit == 0 || Space!.CaptureFrameContacts(Owner, view, BodyID, limit)) return;
+        if (limit == 0 || WorldOwner.CaptureFrameContacts(Owner, view, BodyID, limit)) return;
         var world = _world!;
         for (var key = _body!.headContactKey; key != B2Constants.B2_NULL_INDEX;)
         {
@@ -26,7 +26,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
             {
                 ref readonly var point = ref manifold.points[i];
                 CaptureViewContact(view, manifold.normal, point.point, point.separation, -point.separation,
-                    Space.SolvedContactImpulse(simulation, point), collider, edge == 0, ownTag, otherTag, limit);
+                    WorldOwner.SolvedContactImpulse(simulation, point), collider, edge == 0, ownTag, otherTag, limit);
             }
         }
     }
@@ -43,7 +43,7 @@ internal sealed partial class CPUPhysicsColliderImplementation
         view.StoreContact(slot, new(other.ColliderRID, other.ObjectIdentity.ID,
             own.ShapeIndex, other.ShapeIndex, ToScene(local), ToScene(remote),
             new(first ? -normal.X : normal.X, first ? -normal.Y : normal.Y),
-            ToScene(Space!.SolvedPointVelocity(BodyID, local)), ToScene(Space.SolvedPointVelocity(collider, remote)),
+            ToScene(WorldOwner.SolvedPointVelocity(BodyID, local)), ToScene(WorldOwner.SolvedPointVelocity(collider, remote)),
             ToScene(first ? -impulse : impulse), depth, other.SceneOwner, other.ObjectIdentity));
     }
 }

@@ -8,6 +8,12 @@ internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Ba
     protected PhysicsSpace Space { get; } = space;
     internal PhysicsServer.Backend Requested { get; } = requested;
     internal string? FallbackReason { get; } = fallbackReason;
+    internal abstract bool HasFailure { get; }
+    internal abstract PhysicsBackendCheckpoint CreateCheckpoint();
+    internal abstract void BeginPortableRestore();
+    internal abstract void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick);
+    internal abstract void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination);
+    internal abstract int ReadDebugContacts(Span<Vector2> output);
     internal abstract PhysicsServer.Backend Kind { get; }
     internal virtual GPUPhysicsBodyStore? GPUStore => null;
     internal virtual B2WorldId WorldID => throw new InvalidOperationException("This physics space has no CPU solver world.");

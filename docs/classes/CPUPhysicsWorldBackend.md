@@ -43,3 +43,17 @@ Native IDs and worker callbacks stay internal. Common body/shape/joint adapters 
 ## Area implementation ownership
 
 [The Area partial](../../src/Servers/Physics/CPUPhysicsWorldBackend.Areas.cs) owns retained stable priority scratch, exact native overlaps, scene/raw observer scans and indexed audio containment. [Body preparation](../../src/Servers/Physics/CPUPhysicsWorldBackend.BodyState.cs) resolves fields and damping before motion and solver integration. Native boundary/directed-ray overlap rules are preserved; Dispose clears field references. Shared event histories remain in PhysicsSpace. [Contract and checks](../components/physics-backends.md#area-implementation-ownership) cover both selected backends and no-device CPU.
+
+## Native simulation and replay ownership
+
+Native interval scheduling, CCD sweep/force/joint scratch, one-way episodes, material callbacks, contact impulses/point motion, report-only geometry/statistics and portable native mapping now belong to this owner. SolverCheckpoint combines CPUPhysicsCheckpoint with those required replay caches; report-only counters rewind immediately. Worker drain precedes sweep scratch release. [Contract and verification](../components/physics-backends.md#native-simulation-and-replay-ownership) describes the executed scope and remaining registration gates.
+
+Private solver storage comprises ContinuousBody/ContinuousShape/ContinuousQuery
+(sweeps, current shape ownership, bounds and synchronous candidates), ContinuousForce
+and ContinuousJointBudget (nominal interval force/torque/motor usage), KinematicStepForce
+(replayed native interval forces), BodyMotion (solved center/point velocity), FrameContact
+(canonical logical encounter lists and outer-tick geometry/impulse totals), OneWayPair
+(side episode and native contact-step age), ReportOnlyQuery (zero-impulse tree traversal)
+and SolverCheckpoint (reusable private history). None escapes as public solver data;
+only the history needed for observation/replay is captured, while per-step scratch
+is rebuilt and released by the owner.

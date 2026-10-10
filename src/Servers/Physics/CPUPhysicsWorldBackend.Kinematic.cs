@@ -6,7 +6,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class CPUPhysicsWorldBackend
 {
     private readonly List<KinematicStepForce> _kinematicStepForces = [];
     private readonly Dictionary<int, (double X, double Y, double Angular)> _jointImpulseVelocities = [];
@@ -18,15 +18,15 @@ internal sealed partial class PhysicsSpace
         if (!hasKinematicBodies) { StepBackend((float)delta); return; }
         var minimumExtent = B2_HUGE;
         var kinematicExtent = B2_HUGE; var reportOnly = false;
-        foreach (var body in _bodies)
+        foreach (var body in Space.Bodies)
             if (body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
-        foreach (var body in _serverColliders)
+        foreach (var body in Space.ServerColliders)
             if (!body.IsArea && body.BackendShapes.Count > 0) MeasureExtent(body.Backend, body.Runtime.ContactLimit);
         if (reportOnly) minimumExtent = MathF.Min(minimumExtent, kinematicExtent);
         if (minimumExtent == B2_HUGE) { StepBackend((float)delta); return; }
         var travel = 0d;
-        foreach (var body in _bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
-        foreach (var body in _serverColliders)
+        foreach (var body in Space.Bodies) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
+        foreach (var body in Space.ServerColliders)
             if (!body.IsArea) MeasureTravel(body.BackendID, body.BackendShapes.Count, delta, ref minimumExtent, ref travel);
         // ponytail: Solver calls scale with travel and the smallest collider; use native kinematic TOI if profiling shows a cost.
         var interval = Math.Max(0.5 * minimumExtent, B2_LINEAR_SLOP);
@@ -37,8 +37,8 @@ internal sealed partial class PhysicsSpace
         if (steps == 1) { StepBackend((float)delta); return; }
         BeginFrameContacts();
         _kinematicStepForces.Clear();
-        foreach (var body in _bodies) Capture(body.BackendID);
-        foreach (var body in _serverColliders) if (!body.IsArea) Capture(body.BackendID);
+        foreach (var body in Space.Bodies) Capture(body.BackendID);
+        foreach (var body in Space.ServerColliders) if (!body.IsArea) Capture(body.BackendID);
         var subDelta = (float)(delta / steps);
         for (var step = 0; step < steps; step++)
         {
@@ -72,25 +72,25 @@ internal sealed partial class PhysicsSpace
     {
         if (applyJointForces)
         {
-            foreach (var joint in _jointRuntimes) joint.PrepareSolverStep(delta);
+            foreach (var joint in Space.SnapshotJoints) joint.PrepareSolverStep(delta);
             _jointImpulseVelocities.Clear();
-            foreach (var joint in _jointRuntimes) joint.ValidateSolverStep(this);
-            foreach (var joint in _jointRuntimes) joint.ApplySolverStep();
+            foreach (var joint in Space.SnapshotJoints) joint.ValidateSolverStep(this);
+            foreach (var joint in Space.SnapshotJoints) joint.ApplySolverStep();
         }
         _contactStep++;
-        try { _backend.StepNative(delta, substeps); PruneOneWayPairs(); }
-        catch (Exception failure) when (_backend.StageGPU is not null)
+        try { StepNative(delta, substeps); PruneOneWayPairs(); }
+        catch (Exception failure) when (StageGPU is not null)
         {
             // A partially committed GPU interval cannot be replayed through the compatibility solver.
-            _gpuFailure = failure;
-            _backend.Tasks.Drain();
+            Space.FailGPUStep(failure);
+            Tasks.Drain();
             var world = b2GetWorldFromId(WorldID);
             world.locked = false;
             foreach (var arena in world.arena.AsSpan()) arena.Abort();
             world.reusableStepContext.Reset();
             throw;
         }
-        _debugContactCount = 0; CaptureDebugContacts();
+        Space.CaptureDebugContacts();
         CaptureReportOnlyContacts();
     }
 

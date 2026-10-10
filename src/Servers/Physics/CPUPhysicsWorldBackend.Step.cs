@@ -5,6 +5,7 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
+    private static readonly b2TaskCallback CollectBodyContacts = PhysicsSpace.CollectBodyContactRange;
     private bool _hasKinematicBodies, _resultsReady;
     internal override bool ResultsReady => _resultsReady;
     internal override void BeginStep(double delta) { _resultsReady = false; EnsureAccess(); }
@@ -14,7 +15,7 @@ internal sealed partial class CPUPhysicsWorldBackend
     {
         var world = b2GetWorldFromId(WorldID); world.contactBiasDuration = (float)delta;
         var warmStarting = world.enableWarmStarting;
-        try { if (Space.PortableColdStep) world.enableWarmStarting = false; Space.StepKinematicPaths(delta, _hasKinematicBodies); Space.PortableColdStep = false; }
+        try { if (Space.PortableColdStep) world.enableWarmStarting = false; StepKinematicPaths(delta, _hasKinematicBodies); Space.PortableColdStep = false; }
         finally { world.enableWarmStarting = warmStarting; }
         _resultsReady = true; Space.AdvanceStepTick();
     }
@@ -28,15 +29,15 @@ internal sealed partial class CPUPhysicsWorldBackend
     }
     internal override void CollectContacts()
     {
-        Space.CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID); var count = Space.Bodies.Count;
+        CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID); var count = Space.Bodies.Count;
         if (world.workerCount == 1 || count < 256) PhysicsSpace.CollectBodyContactRange(0, count, 0, Space);
         else
         {
             var end = count * (world.workerCount - 1) / world.workerCount;
-            var task = _tasks.Enqueue(PhysicsSpace.CollectBodyContacts, end, end / (world.workerCount - 1), Space, Space);
+            var task = _tasks.Enqueue(CollectBodyContacts, end, end / (world.workerCount - 1), Space, Space);
             try { PhysicsSpace.CollectBodyContactRange(end, count, 0, Space); }
             finally { if (task is not null) _tasks.Finish(task, Space); }
         }
     }
-    internal override void EndStep(Exception? failure) => Space.PruneOneWayPairs();
+    internal override void EndStep(Exception? failure) => PruneOneWayPairs();
 }

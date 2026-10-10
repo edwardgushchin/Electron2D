@@ -121,3 +121,9 @@ Local ignored evidence: `bin/physics-report-only-validation/2026-10-10/`,
 including `report-cpu.log`, `report-gpu.log`, `contact-debug.log`,
 `gpu-world-before-tangency.log`, separate network JSON files and the measured
 assembly digests.
+
+CPU native report-only geometry, pair/activity counters and sweep scratch now
+belong to CPUPhysicsWorldBackend. Its selected checkpoint restores these counters
+with contact data immediately after rewind. PhysicsReportOnlyTests.Replay runs the
+same separated/rewound scene on CPU/GPU and measures 64 warmed capture/restore/read
+cycles at zero owner/all-thread bytes. Shared public caps, IDs and events are unchanged.

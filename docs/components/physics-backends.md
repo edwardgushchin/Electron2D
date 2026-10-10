@@ -653,3 +653,43 @@ counts, damping totals and allocation are exact. After 64 warm cycles, 64 full
 steps plus two audio queries and a field read allocate 0 owner/all-thread bytes.
 CPU also runs in the existing no-device ownership child. Native allocation,
 foreign execution and new full-step/FPS performance measurements remain unverified.
+
+## Native simulation and replay ownership
+
+CPUPhysicsWorldBackend now owns native discrete/kinematic/CCD interval scheduling,
+sweep-tree and force/joint budgets, one-way episodes, solved point-motion snapshots,
+full outer-tick contact impulses and report-only geometry/statistics. Attached CPU
+colliders read that owner's history; native pre-solve callbacks carry the same
+implementation context. Material encoding/mixing and diagnostic CPU-stage callback
+identity follow the owner. Shared space code retains scene membership, requested
+selection, authoring, logical contact caps, user callbacks and event ordering.
+
+Local replay dispatches through PhysicsBackendCheckpoint: CPU owns the native
+checkpoint plus contact/motion/one-way/report-only histories; GPU wraps its device
+checkpoint. Common replay still owns scene/raw authoring, poses, logical observer
+histories and currently published GPU reports. Capture/validate/restore/dispose
+run through the selected implementation, without a new public API or CPU mirror
+for GPU history. CPU report-only pair/activity counters now rewind immediately;
+previously they retained values from a later solved interval until another step.
+
+Portable one-way capture and reconstruction also dispatch to the owner. CPU owns
+native-to-network shape lookup and episode rebuilding; GPU owns reusable device
+records and validates the shared membership index/generation. Common code keeps
+network IDs, pair validation, tick metadata and silent observer correction.
+Debug point enumeration uses the selected owner and scene-unit spans; the common
+buffer remains capped and is captured with public checkpoints.
+
+Continuous failure belongs to the CPU owner and remains terminal. PhysicsBackendOwnershipTests injects a native integration-stage exception after a real warm interval and verifies terminal access plus native world release; the maximum-duration probe alone did not produce a failure. Release drains
+workers before destroying sweep scratch, clears history references and still
+attempts diagnostic/device/native cleanup after an earlier cleanup error. GPU
+started-interval failure retains its existing terminal policy without CPU replay.
+
+[PhysicsReportOnlyTests](../../tests/Electron2D.Tests/PhysicsReportOnlyTests.cs)
+now checks immediate selected statistics, contacts/identity and zero impulses
+after a real separated interval and rewind on both backends. After warmup, 64
+capture/restore/contact-read cycles allocate zero owner/all-thread bytes. Existing
+CCD, force/joint budgets, frame impulses, directional/one-way geometry, parallel
+contacts, local checkpoints, portable snapshots and network checks cover the
+connected operations. Counts, IDs and allocation are exact; physical tolerances
+remain those of each named fixture. Native allocation, foreign targets, broader
+performance and complete public registration/custom geometry remain open.

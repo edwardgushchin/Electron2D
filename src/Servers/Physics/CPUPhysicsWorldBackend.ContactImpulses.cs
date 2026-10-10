@@ -9,7 +9,7 @@ using static Box2D.NET.B2Worlds;
 
 namespace Electron2D;
 
-internal sealed partial class PhysicsSpace
+internal sealed partial class CPUPhysicsWorldBackend
 {
     private BodyMotion[] _bodyMotions = [];
     internal void ReserveBodyMotionCapacity(int capacity)
@@ -65,13 +65,13 @@ internal sealed partial class PhysicsSpace
 
     private void BeginFrameContacts()
     {
-        foreach (var body in _contactBodies)
+        foreach (var body in Space.ContactBodies)
             if (body.MaxContactsReported > 0) { _aggregateContactImpulses = true; break; }
         if (!_aggregateContactImpulses)
-            foreach (var body in _callbackBodies)
+            foreach (var body in Space.CallbackBodies)
                 if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) { _aggregateContactImpulses = true; break; }
         if (!_aggregateContactImpulses) return;
-        var count = Math.Max(_backend.PreparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
+        var count = Math.Max(PreparedBodyCapacity, b2GetWorldFromId(WorldID).bodies.count);
         if (_frameContactHeads.Length < count)
         {
             Array.Resize(ref _frameContactHeads, count); Array.Resize(ref _frameContactTails, count);
@@ -83,9 +83,9 @@ internal sealed partial class PhysicsSpace
     {
         if (!_aggregateContactImpulses) return;
         var world = b2GetWorldFromId(WorldID);
-        foreach (var body in _contactBodies)
+        foreach (var body in Space.ContactBodies)
             if (body.MaxContactsReported > 0) Capture(body.BackendID);
-        foreach (var body in _callbackBodies)
+        foreach (var body in Space.CallbackBodies)
             if (body.Scene is not RigidBody && body.Runtime.ContactLimit > 0) Capture(body.Backend.BodyID);
 
         void Capture(B2BodyId id)

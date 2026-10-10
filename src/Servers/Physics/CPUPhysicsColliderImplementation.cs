@@ -40,7 +40,8 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         b2Body_SetType(BodyID, BodyType(mode));
         if (BodyType(mode) == B2BodyType.b2_dynamicBody && _body!.enableSleep) PrepareSleepCapacity();
     }
-    private void PrepareSleepCapacity() => ((CPUPhysicsWorldBackend)Space.BackendImplementation).PrepareSleepCapacity();
+    private CPUPhysicsWorldBackend WorldOwner => (CPUPhysicsWorldBackend)Space.BackendImplementation;
+    private void PrepareSleepCapacity() => WorldOwner.PrepareSleepCapacity();
     private static B2BodyType BodyType(PhysicsServer.BodyMode mode) => mode switch
     {
         PhysicsServer.BodyMode.Static => B2BodyType.b2_staticBody,
@@ -115,7 +116,7 @@ internal sealed partial class CPUPhysicsColliderImplementation(PhysicsColliderBa
         definition.filter.maskBits = mask;
         definition.isSensor = sensor;
         definition.density = density;
-        if (!sensor) PhysicsSpace.SetMaterial(ref definition, friction, bounce);
+        if (!sensor) CPUPhysicsWorldBackend.SetMaterial(ref definition, friction, bounce);
         return definition;
     }
 
