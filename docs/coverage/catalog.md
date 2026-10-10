@@ -615,7 +615,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsDirectBodyState3D](classes/PhysicsDirectBodyState3D.md) | Object | Excluded | 44 |
 | [PhysicsDirectBodyState3DExtension](classes/PhysicsDirectBodyState3DExtension.md) | PhysicsDirectBodyState3D | Excluded | 50 |
 | [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | Object | Partial | 6 |
-| [PhysicsDirectSpaceState2DExtension](classes/PhysicsDirectSpaceState2DExtension.md) | PhysicsDirectSpaceState2D | Blocked | 7 |
+| [PhysicsDirectSpaceState2DExtension](classes/PhysicsDirectSpaceState2DExtension.md) | PhysicsDirectSpaceState2D | Partial | 7 |
 | [PhysicsDirectSpaceState3D](classes/PhysicsDirectSpaceState3D.md) | Object | Excluded | 6 |
 | [PhysicsDirectSpaceState3DExtension](classes/PhysicsDirectSpaceState3DExtension.md) | PhysicsDirectSpaceState3D | Excluded | 8 |
 | [PhysicsMaterial](classes/PhysicsMaterial.md) | Resource | Implemented | 4 |

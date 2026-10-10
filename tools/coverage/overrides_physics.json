@@ -1479,6 +1479,41 @@
       "godot": "PhysicsServer2D::method:body_get_collision_mask(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionMask(Electron2D.RID)",
       "reason": "Unsigned 32-bit bits retain the complete reference mask; shared static service access under ADRs 0095/0102."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_cast_motion(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,float*:,float*:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.CastMotionCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_collide_shape(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,void*:,int:,int32_t*:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.CollideShapeCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean,System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_intersect_point(Vector2:,int:,int:,bool:,bool:,PhysicsServer2DExtensionShapeResult*:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectPointCore(Electron2D.Vector2,System.UInt64,System.UInt32,System.Boolean,System.Boolean,System.Span<Electron2D.PhysicsPointResult>)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_intersect_ray(Vector2:,Vector2:,int:,bool:,bool:,bool:,PhysicsServer2DExtensionRayResult*:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectRayCore(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_intersect_shape(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,PhysicsServer2DExtensionShapeResult*:,int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectShapeCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean,System.Span<Electron2D.PhysicsShapeResult>)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:_rest_info(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,PhysicsServer2DExtensionShapeRestInfo*:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.GetRestInfoCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectSpaceState2DExtension::method:is_body_excluded_from_query(RID:)",
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.IsBodyExcludedFromQuery(Electron2D.RID)",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
     }
   ],
   "extras": [
@@ -2592,6 +2627,18 @@
     {
       "electron2d": "method:Electron2D.PhysicsTestMotionResult.SetMotion(Electron2D.Vector2)",
       "reason": "Typed result filling projects native query/motion output construction under ADRs 0004, 0063 and 0103. Shared RID/shape/owner/solver/failure validation samples object identity; finite geometry is supplied by the implementation. Separate public CPU/GPU consumer executes construction and zero warmed managed allocation; registration/direct-state extensions remain Blocked."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsDirectSpaceStateExtension..ctor(Electron2D.RID)",
+      "reason": "ADR 0103: protected engine-assigned space binding and inherited disposal keep borrowed query context, pooled scratch, owner/failure/lifetime guards and reject release while a hook executes."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.Dispose(System.Boolean)",
+      "reason": "ADR 0103: protected engine-assigned space binding and inherited disposal keep borrowed query context, pooled scratch, owner/failure/lifetime guards and reject release while a hook executes."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.ValidateDisposal()",
+      "reason": "ADR 0103: protected engine-assigned space binding and inherited disposal keep borrowed query context, pooled scratch, owner/failure/lifetime guards and reject release while a hook executes."
     }
   ],
   "statusGroups": [
@@ -4356,6 +4403,26 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0102: all 32 authored bits share scene/server/tile body access, detached/disabled lifetime and guarded mutation. Existing fixtures update without geometry replacement. CPU/GPU public tests verify one-sided impulse/correction, motion/CCD, contact/sensor transitions, unchanged-assignment neighbor wake, callback failure and zero warmed allocations (PhysicsFilterTests, TileMapLayerTests). PhysicsReportOnlyTests now exercises nonresponsive kinematic/static and kinematic/kinematic reporting, caps, receiver and lifecycle rules on CPU/GPU; two static bodies remain ineligible."
+    },
+    {
+      "godot": [
+        "PhysicsDirectSpaceState2DExtension::method:_cast_motion(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,float*:,float*:)",
+        "PhysicsDirectSpaceState2DExtension::method:_collide_shape(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,void*:,int:,int32_t*:)",
+        "PhysicsDirectSpaceState2DExtension::method:_intersect_point(Vector2:,int:,int:,bool:,bool:,PhysicsServer2DExtensionShapeResult*:,int:)",
+        "PhysicsDirectSpaceState2DExtension::method:_intersect_ray(Vector2:,Vector2:,int:,bool:,bool:,bool:,PhysicsServer2DExtensionRayResult*:)",
+        "PhysicsDirectSpaceState2DExtension::method:_intersect_shape(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,PhysicsServer2DExtensionShapeResult*:,int:)",
+        "PhysicsDirectSpaceState2DExtension::method:_rest_info(RID:,Transform2D:,Vector2:,float:,int:,bool:,bool:,PhysicsServer2DExtensionShapeRestInfo*:)",
+        "PhysicsDirectSpaceState2DExtension::method:is_body_excluded_from_query(RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": [
+        "class:PhysicsDirectSpaceState2DExtension"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: caller-created view implements complete guarded six-query/exclusion family and inherits all base array/span APIs. Registered backend factories do not yet supply this view to scene/server consumers; that integration remains open."
     }
   ]
 }

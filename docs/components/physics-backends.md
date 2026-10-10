@@ -620,3 +620,5 @@ inspected. Reports/logs/captures are in
 `bin/physics-step-dispatch/2026-10-10/window-65536/`. This is the same host/workload
 profile as the pose-batch record, with actual VSync still Enabled; other devices,
 native allocation and complete registered extensions remain open.
+
+[Caller-created direct-space extensions](../components/physics-space-extensions.md) now execute all six typed query hooks through inherited public array/span/scalar operations. The library owns bound-space guards, nested exclusions, scratch lifetime and validated result publication. A separate public-only consumer computes real scene/raw/Area circle queries on CPU/GPU and checks lifecycle, failures and warmed allocation. Registered-backend factories, direct-body extensions and custom geometry remain open under ADR 0103.

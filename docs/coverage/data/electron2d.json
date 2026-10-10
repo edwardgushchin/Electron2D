@@ -6920,9 +6920,24 @@
     "kind": "type",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
     "name": "PhysicsDirectSpaceState",
-    "signature": "public sealed class Electron2D.PhysicsDirectSpaceState",
+    "signature": "public class Electron2D.PhysicsDirectSpaceState",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsDirectSpaceStateExtension",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "PhysicsDirectSpaceStateExtension",
+    "signature": "public abstract class Electron2D.PhysicsDirectSpaceStateExtension",
+    "visibility": "public",
+    "baseType": "Electron2D.PhysicsDirectSpaceState",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -16270,6 +16285,25 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsDirectSpaceStateExtension..ctor(Electron2D.RID)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": ".ctor",
+    "signature": "protected PhysicsDirectSpaceStateExtension(Electron2D.RID space)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -111443,6 +111477,351 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.CastMotionCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "CastMotionCore",
+    "signature": "protected abstract System.ValueTuple\u003CSystem.Single, System.Single\u003E CastMotionCore(Electron2D.RID shape, Electron2D.Transform transform, Electron2D.Vector2 motion, System.Single margin, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Single, System.Single\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.CollideShapeCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean,System.Span\u003CElectron2D.Vector2\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "CollideShapeCore",
+    "signature": "protected abstract System.Int32 CollideShapeCore(Electron2D.RID shape, Electron2D.Transform transform, Electron2D.Vector2 motion, System.Single margin, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas, System.Span\u003CElectron2D.Vector2\u003E results)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.GetRestInfoCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "GetRestInfoCore",
+    "signature": "protected abstract System.Nullable\u003CElectron2D.PhysicsRestInfo\u003E GetRestInfoCore(Electron2D.RID shape, Electron2D.Transform transform, Electron2D.Vector2 motion, System.Single margin, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.PhysicsRestInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectPointCore(Electron2D.Vector2,System.UInt64,System.UInt32,System.Boolean,System.Boolean,System.Span\u003CElectron2D.PhysicsPointResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "IntersectPointCore",
+    "signature": "protected abstract System.Int32 IntersectPointCore(Electron2D.Vector2 position, System.UInt64 canvasInstanceID, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas, System.Span\u003CElectron2D.PhysicsPointResult\u003E results)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "canvasInstanceID",
+        "type": "System.UInt64",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.PhysicsPointResult\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectRayCore(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,System.Boolean,System.Boolean,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "IntersectRayCore",
+    "signature": "protected abstract System.Nullable\u003CElectron2D.PhysicsRayResult\u003E IntersectRayCore(Electron2D.Vector2 from, Electron2D.Vector2 to, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas, System.Boolean hitFromInside)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "from",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "to",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "hitFromInside",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Nullable\u003CElectron2D.PhysicsRayResult\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.IntersectShapeCore(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.UInt32,System.Boolean,System.Boolean,System.Span\u003CElectron2D.PhysicsShapeResult\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "IntersectShapeCore",
+    "signature": "protected abstract System.Int32 IntersectShapeCore(Electron2D.RID shape, Electron2D.Transform transform, Electron2D.Vector2 motion, System.Single margin, System.UInt32 collisionMask, System.Boolean collideWithBodies, System.Boolean collideWithAreas, System.Span\u003CElectron2D.PhysicsShapeResult\u003E results)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "transform",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "margin",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "collisionMask",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "collideWithBodies",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "collideWithAreas",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "results",
+        "type": "System.Span\u003CElectron2D.PhysicsShapeResult\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.IsBodyExcludedFromQuery(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "IsBodyExcludedFromQuery",
+    "signature": "public System.Boolean IsBodyExcludedFromQuery(Electron2D.RID body)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectSpaceStateExtension.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectSpaceStateExtension",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
     "value": null
   },
   {

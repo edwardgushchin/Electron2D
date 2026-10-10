@@ -124,6 +124,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
 
     internal PhysicsServerShape GetShape(int index) => Slot(index).Shape;
     internal Transform GetShapeTransform(int index) => Slot(index).LocalTransform;
+    internal bool IsShapeDisabled(int index) => Slot(index).Disabled;
 
     internal void SetShape(int index, PhysicsServerShape shape) => ReplaceSlot(index, Slot(index) with { Shape = shape });
     internal void SetShapeTransform(int index, Transform transform)

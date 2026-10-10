@@ -216,3 +216,5 @@ borrows already prepared attachments; callers must not retain it across a step.
 `PhysicsReportOnlyTests` exercises both receiver orders, masks/exceptions/joints,
 quiet lifecycle, geometry, snapshots and allocation limits through public API.
 See [the complete contract](../components/physics-report-only.md).
+
+Caller-created direct-space extension hooks borrow a query context. The space rejects recursive active stepping, checkpoint capture/restore, world binding changes and world release until the outer hook/validation completes; nested queries and ordinary live reads remain available. This uses a balanced query-depth guard in finally and preserves the existing observer callback rules. See [direct-space extensions](../components/physics-space-extensions.md).

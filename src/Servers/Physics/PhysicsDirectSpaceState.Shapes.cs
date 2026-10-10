@@ -47,7 +47,7 @@ public readonly struct PhysicsShapeResult
     public int ShapeIndex { get; }
 }
 
-public sealed partial class PhysicsDirectSpaceState
+public partial class PhysicsDirectSpaceState
 {
     /// <summary>Finds collider shape owners intersected by a query shape or its motion.</summary>
     /// <param name="parameters">A live Shape resource or shape RID, pose, margin and filters.</param>
@@ -57,6 +57,13 @@ public sealed partial class PhysicsDirectSpaceState
     public PhysicsShapeResult[] IntersectShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters);
+            PhysicsShapeResult[] extensionOutput = maxResults == 0 ? [] : new PhysicsShapeResult[maxResults];
+            var written = extension.QueryShape(parameters, extensionOutput);
+            return written == extensionOutput.Length ? extensionOutput : extensionOutput[..written];
+        }
         var hits = CollectShapeHits(parameters);
         var count = Math.Min(maxResults, hits.Count);
         if (count == 0) return [];
@@ -76,6 +83,10 @@ public sealed partial class PhysicsDirectSpaceState
     /// <exception cref="ObjectDisposedException">The view or required shape/parameters are disposed.</exception>
     public int IntersectShape(PhysicsShapeQueryParameters parameters, Span<PhysicsShapeResult> results)
     {
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters); return extension.QueryShape(parameters, results);
+        }
         var hits = CollectShapeHits(parameters);
         var count = Math.Min(results.Length, hits.Count);
         for (var i = 0; i < count; i++) results[i] = hits[i];
@@ -88,7 +99,10 @@ public sealed partial class PhysicsDirectSpaceState
     /// <summary>Finds safe and unsafe fractions of a shape's requested global motion.</summary>
     /// <param name="parameters">A live query shape, pose, motion, margin and filters.</param>
     /// <returns>(1, 1) when no new collision occurs; initial overlaps are ignored across every piece of each logical collider shape.</returns>
-    public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters) =>
-        PrepareQuery(parameters).CastMotion(parameters);
+    public (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
+    {
+        var backend = PrepareQuery(parameters);
+        return this is PhysicsDirectSpaceStateExtension extension ? extension.QueryMotion(parameters) : backend.CastMotion(parameters);
+    }
 
 }

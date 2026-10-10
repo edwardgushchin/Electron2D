@@ -103,8 +103,9 @@ public readonly struct PhysicsPointResult
 
 /// <summary>Queries the live solver state of one two-dimensional physics space.</summary>
 /// <remarks>A view becomes unusable when its owning space is freed. Queries require that space's owner thread
-/// and cannot run during its solver step. Every query uses that space's selected implementation and prepared scratch storage.</remarks>
-public sealed partial class PhysicsDirectSpaceState : ElectronObject
+/// and cannot run during its solver step. Built-in views use that space's selected implementation and prepared scratch storage.
+/// Consumer implementations derive from PhysicsDirectSpaceStateExtension; inherited public queries dispatch its guarded typed hooks.</remarks>
+public partial class PhysicsDirectSpaceState : ElectronObject
 {
     private readonly RID _spaceRID;
 
@@ -137,7 +138,9 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
         var motion = to - from;
         if (!motion.IsFinite()) throw new ArgumentOutOfRangeException(nameof(to), "Ray span exceeds the finite range.");
         if (motion == Vector2.Zero || mask == 0 || !collideWithBodies && !collideWithAreas) return null;
-        return space.BackendImplementation.IntersectRay(from, to, mask, excluded, collideWithAreas, collideWithBodies, hitFromInside);
+        return this is PhysicsDirectSpaceStateExtension extension
+            ? extension.QueryRay(from, to, mask, excluded, collideWithAreas, collideWithBodies, hitFromInside)
+            : space.BackendImplementation.IntersectRay(from, to, mask, excluded, collideWithAreas, collideWithBodies, hitFromInside);
     }
 
     /// <summary>Finds filled shapes containing a global point.</summary>
@@ -151,6 +154,13 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     public PhysicsPointResult[] IntersectPoint(PhysicsPointQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters);
+            PhysicsPointResult[] extensionOutput = maxResults == 0 ? [] : new PhysicsPointResult[maxResults];
+            var written = extension.QueryPoint(parameters, extensionOutput);
+            return written == extensionOutput.Length ? extensionOutput : extensionOutput[..written];
+        }
         var hits = CollectPointHits(parameters);
         var count = Math.Min(maxResults, hits.Count);
         if (count == 0) return [];
@@ -169,6 +179,10 @@ public sealed partial class PhysicsDirectSpaceState : ElectronObject
     /// <exception cref="ObjectDisposedException">The view has been disposed.</exception>
     public int IntersectPoint(PhysicsPointQueryParameters parameters, Span<PhysicsPointResult> results)
     {
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters); return extension.QueryPoint(parameters, results);
+        }
         var hits = CollectPointHits(parameters);
         var count = Math.Min(results.Length, hits.Count);
         for (var i = 0; i < count; i++) results[i] = hits[i];

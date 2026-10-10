@@ -27,3 +27,5 @@ A fixed duration remains the caller's responsibility when interpreting ticks as
 network time. Replayed future callbacks happen again; effect confirmation is a
 separate networking responsibility. See the component for complete capture,
 restoration, error, lifetime and allocation boundaries.
+
+Capture and restore also reject while a caller-created direct-space extension hook borrows this world. Query nesting may inspect live state, but cannot replace its completed checkpoint basis during the invocation. [The external consumer](../../tests/PhysicsSpaceExtension.Consumer/Program.cs) verifies this guard for scene-owned and caller-owned CPU/GPU worlds.

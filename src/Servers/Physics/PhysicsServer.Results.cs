@@ -21,4 +21,21 @@ public sealed partial class PhysicsServer
         var backend = owners.Scene?.Backend ?? owners.Server!.Backend;
         return (owners.Scene, backend.ObjectIdentity, backend.Space);
     }
+
+    internal void ValidateQueryResult(RID rid, int slot, PhysicsSpace space, uint mask, bool bodies, bool areas, ulong? canvas, RID[] excluded)
+    {
+        var captured = CaptureResultCollider(rid, slot);
+        var area = captured.Scene is Area;
+        if (captured.Scene is null)
+        {
+            lock (_registryGate) area = _serverColliders[rid].IsArea;
+        }
+        var owners = ShapeOwners(rid, area);
+        var backend = owners.Scene?.Backend ?? owners.Server!.Backend;
+        var layer = owners.Scene is PhysicsBody body ? body.EffectiveCollisionLayer : owners.Scene?.CollisionLayer ?? owners.Server!.CollisionLayer;
+        var active = owners.Scene?.GlobalShapeSlot(slot).Active ?? !owners.Server!.IsShapeDisabled(slot);
+        if (!ReferenceEquals(captured.Space, space) || !active || (area ? !areas : !bodies) ||
+            (layer & mask) == 0 || excluded.AsSpan().Contains(rid) || canvas.HasValue && backend.CanvasInstanceID != canvas.Value)
+            throw new InvalidOperationException("A query hook returned a collider outside its world or filters.");
+    }
 }

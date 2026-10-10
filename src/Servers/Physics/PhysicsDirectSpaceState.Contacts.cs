@@ -64,7 +64,7 @@ public readonly struct PhysicsRestInfo
     public Vector2 LinearVelocity { get; }
 }
 
-public sealed partial class PhysicsDirectSpaceState
+public partial class PhysicsDirectSpaceState
 {
     /// <summary>Returns contact-point pairs between a shape and eligible space colliders.</summary>
     /// <param name="parameters">A live shape, pose, global motion, margin and filters.</param>
@@ -74,6 +74,13 @@ public sealed partial class PhysicsDirectSpaceState
     public Vector2[] CollideShape(PhysicsShapeQueryParameters parameters, int maxResults = 32)
     {
         if (maxResults < 0) throw new ArgumentOutOfRangeException(nameof(maxResults));
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters);
+            Vector2[] output = maxResults == 0 ? [] : new Vector2[checked(maxResults * 2)];
+            var written = extension.QueryContacts(parameters, output);
+            return written * 2 == output.Length ? output : output[..(written * 2)];
+        }
         var contacts = CollectShapeContacts(parameters, maxResults);
         var count = Math.Min(maxResults, contacts.Count);
         if (count == 0) return [];
@@ -93,6 +100,10 @@ public sealed partial class PhysicsDirectSpaceState
     /// <exception cref="ObjectDisposedException">The view or required shape/parameters are disposed.</exception>
     public int CollideShape(PhysicsShapeQueryParameters parameters, Span<Vector2> results)
     {
+        if (this is PhysicsDirectSpaceStateExtension extension)
+        {
+            PrepareQuery(parameters); return extension.QueryContacts(parameters, results);
+        }
         var contacts = CollectShapeContacts(parameters, results.Length / 2);
         var count = Math.Min(results.Length / 2, contacts.Count);
         CopyShapeContacts(contacts, results, count);
@@ -114,7 +125,10 @@ public sealed partial class PhysicsDirectSpaceState
     /// <summary>Returns the deepest contact across the shape's pose and motion, with collider velocity.</summary>
     /// <param name="parameters">A live shape, pose, global motion, margin and filters.</param>
     /// <returns>A typed contact, or null when the shape touches no eligible collider.</returns>
-    public PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters) =>
-        PrepareQuery(parameters).GetRestInfo(parameters);
+    public PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters)
+    {
+        var backend = PrepareQuery(parameters);
+        return this is PhysicsDirectSpaceStateExtension extension ? extension.QueryRest(parameters) : backend.GetRestInfo(parameters);
+    }
 
 }

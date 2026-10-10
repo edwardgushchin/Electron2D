@@ -253,6 +253,7 @@ public sealed partial class ThemeDB
         ["PhysicsBody"] = ["PhysicsBody", "CollisionObject", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["PhysicsDirectBodyState"] = ["PhysicsDirectBodyState", "ElectronObject"],
         ["PhysicsDirectSpaceState"] = ["PhysicsDirectSpaceState", "ElectronObject"],
+        ["PhysicsDirectSpaceStateExtension"] = ["PhysicsDirectSpaceStateExtension", "PhysicsDirectSpaceState", "ElectronObject"],
         ["PhysicsMaterial"] = ["PhysicsMaterial", "Resource", "ElectronObject"],
         ["PhysicsPointQueryParameters"] = ["PhysicsPointQueryParameters", "ElectronObject"],
         ["PhysicsRayQueryParameters"] = ["PhysicsRayQueryParameters", "ElectronObject"],

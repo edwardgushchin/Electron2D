@@ -131,7 +131,10 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
 
     internal void EnsureWorldBindingChange() { EnsureQueryAccess(); EnsureWorldRelease(); }
-    private bool DispatchingCallbacks => _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
+    private int _queryCallbackDepth;
+    internal void BeginQueryCallback() { EnsureQueryAccess(); _queryCallbackDepth++; }
+    internal void EndQueryCallback() => _queryCallbackDepth--;
+    private bool DispatchingCallbacks => _queryCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
     internal void EnsureWorldRelease()
     {
         EnsureReleaseAccess();

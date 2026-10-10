@@ -28,8 +28,7 @@ five-argument direction contract. Counts include lifecycle and query-exclusion
 helpers, not just body simulation.
 
 Current Electron2D has two built-in per-world implementations behind a static
-sealed PhysicsServer facade. PhysicsDirectBodyState and PhysicsDirectSpaceState
-are sealed; validated query-result construction and reusable motion-result filling now execute through a separate public consumer; RID allocation belongs to the engine.
+sealed PhysicsServer facade. PhysicsDirectBodyState remains sealed; PhysicsDirectSpaceState now supports the caller-created PhysicsDirectSpaceStateExtension with guarded six-query dispatch and scoped exclusions. Registered backend factories do not yet supply extension views to scene/server consumers. Validated query-result construction and reusable motion-result filling now execute through a separate public consumer; RID allocation belongs to the engine.
 The internal factory now creates a retained implementation that owns each built-in solver and complete interval dispatch. All six direct-space operations now dispatch through that owner with implementation-owned result/CPU geometry scratch; public guards and array/span projection stay common. The selected owner now creates fresh concrete CPU/GPU collider attachments for scene/server bodies and Areas; state, forces, mass, shape/filter, surface, contact and portable operations dispatch through that attachment. The selected owner also creates fresh concrete CPU/GPU joint attachments; local-frame sampling, live joint settings, solver policy, portable frames and release route to their owning implementations. The shape-free CPU world anchor now belongs to the CPU world owner. World settings, solver/sensor capacity, worker selection and completed statistics now dispatch through the selected owner, including native initialization. One common step boundary now dispatches owner-specific world/body preparation, solve, synchronization, body publication, contacts, Areas and finalization while retaining common event/callback guarantees. Body-motion tests now dispatch engine-unit inputs and RID exclusions through that owner; CPU owns its candidate/recovery/sweep geometry, while GPU uses resident motion queries. Platform point velocity resolves current scene/raw RID membership and dispatches through the selected collider without a world-body scan. Other server operations and concrete native scene helpers remain separate built-in paths, while resident queries retain the existing space driver and geometry leases. A registry returning enum aliases, an unused factory, or facade-only
 interception would leave scene behavior and direct queries outside the extension.
 
@@ -81,6 +80,13 @@ interception would leave scene behavior and direct queries outside the extension
   validate owner thread, lifetime, world failure, solver phase and borrowed callback
   rules before invoking user code. Concrete built-in views keep their current public
   semantics and cached lifetime. Unsealing a type alone is not an extension contract.
+- A caller-created direct-space extension view may bind a live engine-assigned
+  space RID and execute its complete six-query family before registered server
+  implementations ship. Every inherited public query must reach the typed hook,
+  with the same guarded context, result validation and nested exclusion lifetime.
+  The view owns no world and does not replace the world's cached built-in view.
+  This executes the direct-space extension capability; factory-returned scene/server
+  integration and the wider server/body/custom-geometry families remain open.
 - Map raw output pointers to typed spans/values using the existing query/motion
   result family. Provide the complete construction/projection path required by
   backend authors. The library samples object associations and validates physical

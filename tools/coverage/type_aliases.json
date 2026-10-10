@@ -90,7 +90,8 @@
     "NavigationObstacle2D": "NavigationObstacle",
     "WorldBoundaryShape2D": "WorldBoundaryShape",
     "Texture2DArray": "TextureArray",
-    "PlaceholderTexture2DArray": "PlaceholderTextureArray"
+    "PlaceholderTexture2DArray": "PlaceholderTextureArray",
+    "PhysicsDirectSpaceState2DExtension": "PhysicsDirectSpaceStateExtension"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-10
 
-**Inherits:** ElectronObject · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
+**Inherits:** ElectronObject · **Inherited By:** [PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) · **Source:** [PhysicsDirectSpaceState.cs](../../src/Servers/Physics/PhysicsDirectSpaceState.cs)
 
 ## Description
 
@@ -62,3 +62,7 @@ public IntersectPoint overloads. It applies scene eligibility before its own cap
 public query masks, ordering and result limits retain their existing contracts.
 See [Physics picking](../components/physics-picking.md) for CPU/GPU ownership and
 current GPU metadata transfer cost.
+
+## Caller-created extension views
+
+[PhysicsDirectSpaceStateExtension](PhysicsDirectSpaceStateExtension.md) binds a borrowed live space RID and implements all six queries through typed protected hooks. Every inherited public array/span/scalar overload reaches those hooks after common preparation and guards. Hook results are validated before output changes; object associations are sampled from current RID/shape ownership. Nested invocations restore exclusions and use independent retained scratch. The cached server-created view retains its selected built-in solver dispatch; registered-backend integration remains open under ADR 0103.

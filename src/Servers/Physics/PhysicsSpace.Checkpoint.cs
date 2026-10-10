@@ -19,7 +19,7 @@ internal sealed partial class PhysicsSpace
         foreach (var body in _bodies) body.EnsurePhysicsReplayAccess();
         foreach (var area in _areas) area.EnsurePhysicsReplayAccess();
         foreach (var joint in _joints) joint.EnsurePhysicsReplayAccess();
-        if (_dispatching || _dispatchingContacts || _dispatchingBodyStates || _dispatchingServerAreas ||
+        if (DispatchingCallbacks ||
             _overlapEvents.Count != 0 || _contactEvents.Count != 0 || _sleepEvents.Count != 0 || _serverAreaEvents.Count != 0)
             throw new InvalidOperationException("Physics checkpoints require a completed interval with dispatched events.");
     }
