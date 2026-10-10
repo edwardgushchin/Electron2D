@@ -161,7 +161,7 @@ internal static class GPUPhysicsTransientForceTests
         var samples = new double[128]; var upload = s.UploadBytes; var readback = s.ReadbackBytes; var waits = s.WaitMS; var allocation = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < samples.Length; i++) { var start = Stopwatch.GetTimestamp(); Tick(i); samples[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds; }
         allocation = GC.GetAllocatedBytesForCurrentThread() - allocation;
-        Check(allocation == 0 && s.UploadBytes - upload == 128 * (176 + 96) && s.ReadbackBytes - readback == 128 * (96 + 8),
+        Check(allocation == 0 && s.UploadBytes - upload == 128 * (176 + 72) && s.ReadbackBytes - readback == 128 * (72 + 8),
             "Resolved force edits use one 176-byte command, no state readback and zero warmed owner-thread managed bytes.");
         Array.Sort(samples);
         Console.WriteLine($"Resident transient forces: 4096 bodies, 128 warmup/128 samples, 4 substeps/16 iterations; p50={samples[64]:F4}, p95={samples[121]:F4}, p99={samples[126]:F4} ms, wait={(s.WaitMS - waits) / 128:F4} ms; {allocation} managed B, upload={(s.UploadBytes - upload) / 128}, readback={(s.ReadbackBytes - readback) / 128} B/tick; {s.Driver}, {s.DeviceName}.");

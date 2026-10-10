@@ -283,6 +283,15 @@ publication operations for diagnostics, including publications with zero changed
 records. It changes no stream semantics or public API. The common world now
 [omits pre-step publication without a consumer](../components/physics-backends.md#conditional-body-publication).
 
+## Integration submission batching
+
+SimulateFields records velocity integration before spatial kernels, or before the
+solver for shape-free worlds. Discrete position integration and connected sleep
+follow report capture in the solver command buffer. Body and solver/spatial status
+remain separate and are validated at the shared fence. Continuous-impact position
+intervals retain their own submissions. No new host body-state mirror or asynchronous
+public-state lifetime is introduced. See [measured batching](../components/gpu-contact-solver.md#integration-batching-measurements).
+
 ## Local replay checkpoint foundation
 
 `CreateCheckpoint()` returns a source-bound internal

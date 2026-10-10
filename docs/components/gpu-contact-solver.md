@@ -1,6 +1,6 @@
 # Resident GPU contact response
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Executing boundary
 
@@ -14,8 +14,9 @@ measurements; those timings exclude the response workload measured here.
 through scene/server and direct-state adapters. [Resident joints](gpu-resident-joints.md),
 [mass profiles](gpu-resident-mass.md), [body exceptions](gpu-resident-exceptions.md),
 [one-way episodes](gpu-resident-one-way.md), CCD, world settings and completed-frame
-contact reports execute on that path. Full conformance, portable network restore/replay
-and broad performance acceptance remain open; the historical stage timings below do
+contact reports execute on that path. Portable snapshots and the separate-process
+[network example](physics-network-example.md) now exercise restore/replay. Full
+conformance and broad performance acceptance remain open; the historical stage timings below do
 not establish those requirements.
 
 ## Solve and history
@@ -108,17 +109,32 @@ substep/iteration counts and material policy; floating-point expression associat
 and unordered device contact publication can change trajectories within the tested
 physical bounds. Bitwise equivalence is not claimed.
 
-Warm four-substep ticks transfer 128 buffer bytes each way: force status 4, broad
-summary 8, contact summary 8, solver status/match count 8 and pose status 4 per
-substep. Uniform payload depends on tree sorting and iteration count. Every stage
-currently waits before error/count publication: twenty waits per four-substep tick.
+Warm discrete four-substep ticks with contacts and no authoring transfer 160 status
+bytes up and 168 down, including the final active-body/island counters. Velocity
+integration shares its command buffer and fence with spatial work, before bounds
+and contacts consume velocities. If there are no shapes, it shares the solver
+submission instead. Solver, report capture, position integration and connected sleep
+also share one submission when no continuous-impact interval is needed. This keeps
+all four substeps and all iterations while reducing the ordinary contact pipeline
+from twenty to twelve submissions. Pending edits, Area reduction, CCD, queries and
+public-world publication contribute their own measured work.
+
+Both body and solver/spatial status records are validated after the shared fence.
+Errors still make the store unusable; no unvalidated state escapes a successful
+Simulate call. Pair/contact capacity recovery does not repeat force integration.
+The continuous path retains its impact-dependent position submissions. An independent
+SolveConstraints call still leaves poses fixed. The internal
+SeparateSimulationSubmissions diagnostic restores separate integration fences for
+same-revision measurement; it is not a game-facing physics option.
 The opt-in ProfileSolverPasses diagnostic adds a fence after each solver dispatch
 and accumulates seven SolverPassMS counters (clear, prepare, update, gather, save,
 hash clear, hash insert). These measurements include submission/fence overhead and
 perturb batching; they are not device timestamp queries or normal-step timings.
 The flag is false by default and the ordinary submission count is unchanged.
-SolverMS records total solver submission/map/dispatch/wait time; SolverWaitMS isolates
-its fence wait. They exclude broad/narrow and velocity/pose passes. Driver overhead
+SolverMS records total solver submission/map/dispatch/wait time, now including batched
+position/sleep and shape-free velocity work; SolverWaitMS isolates that fence wait.
+Broad/narrow work is separate, with velocity work included in the spatial submission
+when shapes exist. Driver overhead
 and native allocations are not measured as heap totals; owned buffer capacity is
 retained and no managed allocation occurs in the sampled warm windows.
 
@@ -296,3 +312,64 @@ reads. Its CCD regression found unstable amplification after a very short interv
 contact warm-start scaling is now bounded above by one. Additional support/impact
 impulse is computed by the solver. Stable-duration historical measurements above
 are unchanged controls, not new full-backend acceptance.
+
+## Integration batching measurements
+
+On 2026-10-10, Linux x64/.NET SDK 10.0.101, Ryzen 7 5700X and RTX 3090 Ti,
+`PhysicsGPUPublicationPerformance` ran both complete public CPU/GPU paths on the
+same source revision. Each population contains equal numbers of static and dynamic
+circles in independent colliding pairs. Every measured tick resets all dynamic
+poses/velocities, advances 1/60 s with four substeps/sixteen iterations and publishes
+public state. Sleeping is disabled. There are 64 warmup ticks and 64 samples.
+The diagnostic separate-submission control and default batched path use the same
+kernels, object count, data layout and solver settings.
+
+| Bodies | CPU whole p50 / p95 / p99 ms | Separate GPU whole p50 / p95 / p99 ms | Batched GPU whole p50 / p95 / p99 ms |
+| ---: | --- | --- | --- |
+| 8 | 0.0193 / 0.0195 / 0.0256 | 2.1878 / 2.9111 / 3.8311 | 1.9211 / 2.3045 / 3.7073 |
+| 512 | 0.4210 / 0.4559 / 0.4984 | 2.4591 / 3.0521 / 4.2923 | 2.2182 / 2.9003 / 3.7703 |
+| 4,096 | 3.0844 / 3.7855 / 4.5113 | 4.0305 / 5.3065 / 6.1788 | 3.5551 / 5.1105 / 5.5650 |
+| 16,384 | 18.9483 / 34.3577 / 58.2861 | 16.2326 / 35.7688 / 44.0192 | 6.6734 / 7.7761 / 8.1919 |
+
+CPU values are from the batched-run companion CPU measurements. The larger control
+run was substantially more variable; do not attribute its entire timing difference
+to batching. The fixed operation reduction is 23 to 15 submissions per public tick.
+For 8/512/4,096 bodies the GPU whole-path medians fell by about 10–12%; small worlds
+remain much faster on CPU. The 16,384-body independent-pair workload favors GPU,
+but does not establish equivalent performance for a dense pile or real window.
+
+Batched GPU reset / step p50 values are respectively 0.0019 / 1.9192,
+0.0646 / 2.1532, 0.5503 / 3.0034 and 2.0598 / 4.5771 ms. Mean fence waits are
+1.0380, 1.1853, 1.6091 and 1.6936 ms/tick. Useful upload bytes are respectively
+880, 45,232, 360,624 and 1,441,968; status readback is 192 bytes for all populations
+and both submission variants. Each public world performed one changed-body
+publication per tick. All measured CPU/GPU owner/all-thread managed allocations
+were zero. The harness completes background collection before warmup, retaining
+the strict zero-byte assertion and all measured operations. An earlier CPU control
+failed that assertion with 0 owner / 264 all-thread bytes before this setup fix.
+
+For shape-free worlds with one 176-byte edit per tick, batching uses 72 bytes of
+status uploads and 80 bytes of downloads, including the command flush and final
+statistics. Force/parameter/kinematic residency checks assert those exact budgets;
+there is no body-state readback. The previous separate path used 96 / 104 status
+bytes. Pair/contact capacity recovery is tested with 256 bodies and analytic gravity:
+all bodies finish at velocity 98 and height 6.125 within .001 after four .025 s steps,
+without repeating force integration. Separate analytic checks cover free motion,
+sleep, activity publication, eight fewer integration submissions and terminal
+velocity/position errors. Existing solver invariants remain the acceptance boundary.
+
+Commands:
+
+```sh
+ELECTRON2D_TEST_GPU_PUBLICATION_BENCHMARK=1 ELECTRON2D_PUBLICATION_COUNTS=8,512,4096,16384 dotnet run --no-build --project tests/Electron2D.Tests -c Release
+ELECTRON2D_TEST_GPU_PUBLICATION_BENCHMARK=1 ELECTRON2D_PUBLICATION_COUNTS=8,512,4096,16384 ELECTRON2D_GPU_SEPARATE_SUBMISSIONS=1 dotnet run --no-build --project tests/Electron2D.Tests -c Release
+```
+
+The separate-process network scenario also passed after batching with 0 warmed
+owner/all-thread bytes. Its GPU client recorded 3.2592 / 4.2706 / 5.0916 ms step
+p50/p95/p99 and 51.7573 / 83.5906 / 98.3973 ms correction/replay latency, with
+70 corrections and 1,112 replayed ticks. Lifetime totals were 33,071 submissions,
+1,532,264 upload bytes, 5,170,148 readback bytes and 2,575.5336 ms wait. Replay counts
+and packet timing differ between runs; these totals are not an isolated speedup
+comparison. Large replay latency and the full GPU/window performance objective
+remain open.

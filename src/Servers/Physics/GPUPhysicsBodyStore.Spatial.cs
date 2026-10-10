@@ -150,6 +150,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
 
     private int DispatchSpatial(bool retry, bool pairs = true)
     {
+        var batchVelocity = _batchedVelocity.HasValue;
         var command = SDL.AcquireGPUCommandBuffer(Device);
         if (command == 0) throw GPUPhysicsDevice.Failure("acquire resident spatial work");
         var uniformBytes = 0L;
@@ -171,10 +172,12 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             var copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident geometry upload");
             UploadSpatial(copy, _spatialSummary!, 0, 8);
+            if (batchVelocity) UploadSpatial(copy, _status!, 0, 8);
             if (vertexBytes > 0) UploadSpatial(copy, _vertexEditsGPU!, 8, vertexBytes);
             if (geometryBytes > 0) UploadSpatial(copy, _geometryEditsGPU!, 8 + vertexBytes, geometryBytes);
             if (shapeBytes > 0) UploadSpatial(copy, _shapeEditsGPU!, 8 + vertexBytes + geometryBytes, shapeBytes);
             SDL.EndGPUCopyPass(copy);
+            DispatchBatchedVelocity(command);
             if (!retry)
             {
                 uniformBytes += SpatialPass(command, 0, _vertexEditCount);
@@ -197,8 +200,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin resident pair summary");
             SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _spatialSummary!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload!.DangerousGetHandle() });
+            if (batchVelocity) SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _status!.DangerousGetHandle(), Size = 8 }, new() { TransferBuffer = _spatialDownload.DangerousGetHandle(), Offset = 8 });
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command);
             UploadBytes += 8 + vertexBytes + geometryBytes + shapeBytes; UniformBytes += uniformBytes; ReadbackBytes += 8;
+            if (batchVelocity) { UploadBytes += 8; ReadbackBytes += 8; }
             GeometryUploadBytes += vertexBytes + geometryBytes; ShapeUploadBytes += shapeBytes; if (pairs) BroadPhaseSubmissionCount++; else QuerySpatialSubmissionCount++;
             mapped = SDL.MapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map resident pair summary");
@@ -206,6 +211,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             try
             {
                 if (*(uint*)mapped != 0) throw new InvalidOperationException("GPU resident geometry returned invalid bounds or pair state.");
+                if (batchVelocity && ((uint*)mapped)[2] != 0) throw new InvalidOperationException("GPU resident velocity work returned invalid state.");
                 count = ((uint*)mapped)[1];
             }
             finally { SDL.UnmapGPUTransferBuffer(Device, _spatialDownload.DangerousGetHandle()); }

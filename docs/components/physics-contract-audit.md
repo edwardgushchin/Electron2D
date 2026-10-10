@@ -4,7 +4,16 @@ Last updated: 2026-10-10
 
 [Changed body publication](gpu-body-publication.md) now supplies compact device-compared
 state to the shared GPU world, with generation/removal semantics and measured
-traffic/waits. [Public backend selection](physics-backends.md) now executes; full conformance and network snapshots remain open.
+traffic/waits. [Public backend selection](physics-backends.md), portable snapshots and
+the [separate-process network example](physics-network-example.md) now execute;
+full conformance and performance acceptance remain open.
+
+[GPU integration batching](gpu-contact-solver.md#integration-batching-measurements)
+now removes eight integration fences from an ordinary four-substep discrete tick.
+The public independent-pair benchmark records 15 rather than 23 submissions, exact
+status traffic and zero warmed managed allocations. This preserves kernels,
+iterations, reports, sleep and CCD decisions; dense-pile and real-window performance
+targets are still open.
 
 [Per-body CCD](cpu-continuous-collision.md) now exposes shared Disabled/CastRay/CastShape policy through RigidBody and PhysicsServer. CPU checks solved trajectories before publication and retains force budgets and frame impulses across impact intervals; the independent public backend now receives the same CCD policy. Full cross-backend shape-family acceptance remains open.
 

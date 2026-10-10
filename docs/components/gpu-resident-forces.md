@@ -1,6 +1,6 @@
 # Resident GPU transient forces
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Implemented boundary
 
@@ -125,3 +125,8 @@ passed. Coverage remains 11,355 declarations, 8,891 mapped, 2,464 reviewed extra
 zero unmapped; wiki remains 666 public types and 684 files. Logs for this stage use
 `/tmp/electron2d-transient-*.log`. The unrelated WaterPlayground changes committed
 on main during this work are preserved; this slice changes no example code.
+
+Current [integration batching](gpu-contact-solver.md#integration-batching-measurements)
+reduces the shape-free four-substep status budget to 72 upload / 80 readback bytes
+per tick with pending edits. Historical measurements above retain their original
+submission policy and payloads. Current tests keep exact traffic and zero-allocation assertions.

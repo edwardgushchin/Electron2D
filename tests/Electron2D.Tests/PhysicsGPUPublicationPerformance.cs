@@ -26,6 +26,7 @@ internal static class PhysicsGPUPublicationPerformance
         var space = PhysicsServer.SpaceCreate(backend); using var shape = new CircleShape { Radius = 4 };
         var fixedBodies = new RID[pairs]; var dynamicBodies = new RID[pairs]; var poses = new Transform[pairs];
         var data = PhysicsServer.Service.GetSceneSpace(space); var gpu = data.GPUStore;
+        if (gpu is not null) gpu.SeparateSimulationSubmissions = Environment.GetEnvironmentVariable("ELECTRON2D_GPU_SEPARATE_SUBMISSIONS") == "1";
         try
         {
             PhysicsServer.SpaceSetActive(space, true); PhysicsServer.AreaSetGravity(space, 0);
@@ -40,9 +41,11 @@ internal static class PhysicsGPUPublicationPerformance
                 dynamicBodies[i] = PhysicsServer.BodyCreate(); PhysicsServer.BodySetCanSleep(dynamicBodies[i], false);
                 PhysicsServer.BodySetTransform(dynamicBodies[i], poses[i]); PhysicsServer.BodyAddShape(dynamicBodies[i], shape.GetRID()); PhysicsServer.BodySetSpace(dynamicBodies[i], space);
             }
-            for (var i = 0; i < warmup; i++) { Reset(); PhysicsServer.SpaceStep(space, 1d / 60); }
             var phases = new double[8]; var preparation = new double[4];
             var total = new double[samples]; var reset = new double[samples]; var steps = new double[samples];
+            // Complete background collection before the strict all-thread allocation bracket.
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
+            for (var i = 0; i < warmup; i++) { Reset(); PhysicsServer.SpaceStep(space, 1d / 60); }
             var up = gpu?.UploadBytes ?? 0; var down = gpu?.ReadbackBytes ?? 0; var submits = gpu?.SubmissionCount ?? 0; var wait = gpu?.WaitMS ?? 0; var publications = gpu?.ChangePublicationCount ?? 0;
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
             for (var i = 0; i < samples; i++)
@@ -69,6 +72,7 @@ internal static class PhysicsGPUPublicationPerformance
             }
             Array.Sort(total); Array.Sort(reset); Array.Sort(steps);
             Console.WriteLine($"Public publication world {backend}, {count} bodies/{pairs} independent colliding pairs: {warmup} warmup/{samples} samples, all dynamic poses/linear velocities reset + full 1/60 s step, 4 substeps/16 iterations, sleeping disabled; whole p50/p95/p99={total[32]:F4}/{total[60]:F4}/{total[63]:F4} ms, reset/step p50={reset[32]:F4}/{steps[32]:F4}; {owner}/{all} owner/all managed B; GPU up/down={up / samples}/{down / samples} B, submissions/publications={submits / samples}/{publications / samples}, wait={wait / samples:F4} ms/tick.");
+            if (gpu is not null) Console.WriteLine($"  Integration submissions: {(gpu.SeparateSimulationSubmissions ? "separate diagnostic control" : "batched with spatial/solver work")}");
             if (backend == PhysicsServer.Backend.GPU && PhysicsSpace.ProfilingEnabled)
             {
                 Console.WriteLine($"  GPU preparation detail means: parameters/motion/joints {preparation[0] / samples:F4}, report selection {preparation[1] / samples:F4}, command/wake publication {preparation[2] / samples:F4} ms (included wake wait {preparation[3] / samples:F4} ms).");

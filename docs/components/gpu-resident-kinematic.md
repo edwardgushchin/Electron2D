@@ -1,6 +1,6 @@
 # Resident GPU kinematic targets and surface velocity
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Implemented boundary
 
@@ -149,3 +149,8 @@ world/network completion is not inferred from these internal tests.
 | PhysicsResidentCCD.comp.spv | `c5f87ff0c96be01568babea6f85649e53897c4c585b66e90a6f1410a4ac199d5` |
 | PhysicsResidentSolve.comp.spv | `d6f1157c1d6b0f9c9f29451b64d73053f6afd36fdae891de75cdccc2f5c3089b` |
 | PhysicsResidentUpdate.comp.spv | `a21a68efcf9957d57db39debc491bd73b14749cfad1d724ad8b8eb992e0d8f72` |
+
+Current [integration batching](gpu-contact-solver.md#integration-batching-measurements)
+reduces the shape-free four-substep status budget to 72 upload / 80 readback bytes
+per tick with pending edits. Historical measurements above retain their original
+submission policy and payloads. Current tests keep exact traffic and zero-allocation assertions.

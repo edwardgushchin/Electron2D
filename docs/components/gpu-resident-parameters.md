@@ -1,6 +1,6 @@
 # Resident GPU body parameters
 
-Last updated: 2026-10-09
+Last updated: 2026-10-10
 
 ## Implemented boundary
 
@@ -136,3 +136,8 @@ Source-generated shader SHA-256:
 | --- | --- |
 | PhysicsResidentBodies.comp.spv | `e9931c4062f60ebd681387967a848c5faf32b29ff3ea693db5529244a35ece7d` |
 | PhysicsResidentSleep.comp.spv | `3547e4a9aed18e2c9b05ee00afbca440e0dbfe60046e4f57354c8258cf6a195b` |
+
+Current [integration batching](gpu-contact-solver.md#integration-batching-measurements)
+reduces the shape-free four-substep status budget to 72 upload / 80 readback bytes
+per tick with pending edits. Historical measurements above retain their original
+submission policy and payloads. Current tests keep exact traffic and zero-allocation assertions.

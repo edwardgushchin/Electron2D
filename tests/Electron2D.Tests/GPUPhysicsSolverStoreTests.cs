@@ -14,6 +14,8 @@ internal static class GPUPhysicsSolverStoreTests
         VerifyRaysAndHistory();
         VerifyIncidentLists();
         VerifyFailure();
+        VerifyBatchedStep();
+        VerifyBatchedCapacityRetry();
         VerifyStack();
         VerifyResidency(64);
         VerifyResidency(256);
@@ -210,6 +212,60 @@ internal static class GPUPhysicsSolverStoreTests
         Reject<InvalidOperationException>(() => store.Simulate(1f / 60, Vector2.Zero));
         Reject<InvalidOperationException>(() => store.Read([a], new GPUPhysicsBodyStore.Snapshot[1]));
         Console.WriteLine("Resident solver rejects a nonrepresentable impulse and all subsequent state use.");
+    }
+
+    private static void VerifyBatchedStep()
+    {
+        using var store = new GPUPhysicsBodyStore();
+        var body = Add(store, velocity: new(10, 0));
+        var state = new GPUPhysicsBodyStore.Snapshot[1]; Body[] bodies = [body];
+        for (var i = 0; i < 4; i++) store.Simulate(.1f, Vector2.Zero);
+        var before = store.SubmissionCount;
+        store.Simulate(.1f, Vector2.Zero); var batched = store.SubmissionCount - before;
+        store.SeparateSimulationSubmissions = true; before = store.SubmissionCount;
+        store.Simulate(.1f, Vector2.Zero); var separate = store.SubmissionCount - before;
+        store.Read(bodies, state);
+        Near(state[0].Position.X, 6, .001f, "Both submission modes retain all four position intervals");
+        Near(state[0].Velocity.X, 10, .001f, "Batching preserves force-free velocity");
+        Check(separate - batched == 8, "The four substeps save exactly eight velocity/position submissions");
+        Check(store.PublishedActiveBodyCount == 1 && store.ActiveSimulationBodyCount == 1, "Final activity statistics survive batched integration");
+        store.SeparateSimulationSubmissions = false; store.SetVelocity(body, Vector2.Zero, 0); store.SetCanSleep(body, true);
+        store.SetSleepSettings(new(2, .1f, .05f));
+        for (var i = 0; i < 10; i++) store.Simulate(.01f, Vector2.Zero);
+        store.Read(bodies, state);
+        Check(state[0].Sleeping && store.PublishedActiveBodyCount == 0, "Batched sleep publishes its final state and activity");
+        using var failed = new GPUPhysicsBodyStore();
+        var invalid = Add(failed, new(float.MaxValue * .75f, 0), new(float.MaxValue * .75f, 0));
+        Reject<InvalidOperationException>(() => failed.Simulate(1, Vector2.Zero, substeps: 1));
+        Check(failed.HasFailed, "Position-stage errors invalidate the combined submission");
+        Reject<InvalidOperationException>(() => failed.Read([invalid], state));
+        using var failedVelocity = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        var accelerated = Add(failedVelocity, velocity: new(float.MaxValue * .75f, 0)); failedVelocity.AddShape(accelerated, circle);
+        var velocityError = false;
+        try { failedVelocity.Simulate(1, new(float.MaxValue * .75f, 0), substeps: 1); }
+        catch (InvalidOperationException error) { velocityError = error.Message.Contains("velocity work returned invalid state"); }
+        Check(velocityError && failedVelocity.HasFailed, "Spatial batching validates its separate velocity error record");
+        Reject<InvalidOperationException>(() => failedVelocity.Read([accelerated], state));
+        Console.WriteLine($"Resident batched solver/position: {batched} versus {separate} submissions, complete motion/sleep/statistics and terminal position failure passed.");
+    }
+
+    private static void VerifyBatchedCapacityRetry()
+    {
+        using var store = new GPUPhysicsBodyStore(); using var circle = new CircleShape { Radius = 1 };
+        var bodies = new Body[256]; var states = new GPUPhysicsBodyStore.Snapshot[bodies.Length];
+        for (var i = 0; i < bodies.Length; i++)
+        {
+            bodies[i] = Add(store, new(i / 2 * 10 + i % 2 * 1.8f, 0));
+            store.AddShape(bodies[i], circle, friction: 0);
+        }
+        store.Simulate(.1f, new(0, 980), margin: 0); store.Read(bodies, states);
+        Check(store.PairCapacityRetries > 0 && store.ContactCapacityRetries > 0, "The first batched tick exercises pair and contact capacity recovery");
+        foreach (var state in states)
+        {
+            Near(state.Velocity.Y, 98, .001f, "Capacity recovery cannot integrate gravity twice");
+            Near(state.Position.Y, 6.125f, .001f, "Every body retains exactly four semi-implicit intervals through recovery");
+        }
+        Console.WriteLine("Resident batched integration survives pair/contact capacity recovery without repeating forces.");
     }
 
     private static void VerifyStack()

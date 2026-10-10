@@ -402,3 +402,8 @@ authority/prediction example: separate CPU/GPU processes, numbered input, incarn
 and owner validation, lifecycle correction, confirmed events and numerical
 presentation interpolation. Its measured scope does not close rendered-window or
 whole-engine performance acceptance.
+
+[GPU integration batching](../components/gpu-contact-solver.md#integration-batching-measurements)
+shares force/spatial and discrete solver/position/sleep submissions while preserving
+finite-status validation, all substeps, contact reports and CCD interval decisions.
+The diagnostic separated path measures the same kernels and workload.
