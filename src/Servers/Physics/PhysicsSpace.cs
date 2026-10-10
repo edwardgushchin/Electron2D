@@ -131,10 +131,14 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
 
     internal void EnsureWorldBindingChange() { EnsureQueryAccess(); EnsureWorldRelease(); }
-    private int _queryCallbackDepth;
-    internal void BeginQueryCallback() { EnsureQueryAccess(); _queryCallbackDepth++; }
-    internal void EndQueryCallback() => _queryCallbackDepth--;
-    private bool DispatchingCallbacks => _queryCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
+    private int _extensionCallbackDepth;
+    internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
+    internal void EndExtensionCallback() => _extensionCallbackDepth--;
+    internal void EnsureExtensionHierarchyChange()
+    {
+        if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Scene hierarchy cannot change while a physics extension hook is borrowed.");
+    }
+    private bool DispatchingCallbacks => _extensionCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
     internal void EnsureWorldRelease()
     {
         EnsureReleaseAccess();

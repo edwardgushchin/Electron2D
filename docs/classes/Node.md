@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-05
+Last updated: 2026-10-10
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1569,3 +1569,5 @@ front/back children participate in the actual sibling order. Existing owner,
 shared-tree and disposed-object checks remain enforced. Sorted physical pointer
 selection uses this operation; PhysicsPickingTests covers internal siblings and
 ancestor/descendant ordering during warmed allocation checks.
+
+Scene hierarchy insertion/removal/reorder and node disposal reject while a physics extension hook borrows a world in this tree. This preflight runs before child-order or lifecycle mutation, preserving body attachment identity. Ordinary built-in post-solver callbacks retain their existing lifecycle behavior. [Body extension checks](../components/physics-body-extensions.md) exercise these guards.

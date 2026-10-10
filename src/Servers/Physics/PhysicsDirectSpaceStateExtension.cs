@@ -64,12 +64,12 @@ public abstract partial class PhysicsDirectSpaceStateExtension : PhysicsDirectSp
         if (_frames.Count == _depth) _frames.Add(new());
         var frame = _frames[_depth];
         frame.Excluded = excluded; frame.Mask = mask; frame.Bodies = bodies; frame.Areas = areas; frame.Canvas = canvas;
-        _space.BeginQueryCallback(); _depth++; return frame;
+        _space.BeginExtensionCallback(); _depth++; return frame;
     }
     private void End(QueryFrame frame)
     {
         frame.Excluded = []; Array.Clear(frame.Points); Array.Clear(frame.Shapes);
-        _depth--; _space.EndQueryCallback();
+        _depth--; _space.EndExtensionCallback();
     }
     private static void Grow<T>(ref T[] storage, int count)
     {

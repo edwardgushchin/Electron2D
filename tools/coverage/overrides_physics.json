@@ -1514,6 +1514,246 @@
       "godot": "PhysicsDirectSpaceState2DExtension::method:is_body_excluded_from_query(RID:)",
       "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.IsBodyExcludedFromQuery(Electron2D.RID)",
       "reason": "ADR 0103: complete caller-created direct-space query inheritance executes in a separate public-only CPU/GPU consumer; typed values/spans replace output pointers, library guards/identity/filter/count validation and nested exclusions preserve the synchronous contract. Factory-returned registered-backend integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_add_constant_central_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantCentralForceCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_add_constant_force(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantForceCore(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_add_constant_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantTorqueCore(System.Single)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_central_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyCentralForceCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_central_impulse(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyCentralImpulseCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_force(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyForceCore(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_impulse(Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyImpulseCore(Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyTorqueCore(System.Single)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_apply_torque_impulse(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyTorqueImpulseCore(System.Single)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_angular_velocity()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetAngularVelocityCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCenterOfMassCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass_local()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCenterOfMassLocalCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_collision_layer()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCollisionLayerCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_collision_mask()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCollisionMaskCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_constant_force()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetConstantForceCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_constant_torque()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetConstantTorqueCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_id(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_object(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_shape(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_velocity_at_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_count()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCountCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_impulse(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_local_normal(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_local_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_local_shape(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_contact_local_velocity_at_position(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_inverse_inertia()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetInverseInertiaCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_inverse_mass()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetInverseMassCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_linear_velocity()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetLinearVelocityCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_space_state()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetSpaceStateCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_step()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetStepCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_total_angular_damp()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalAngularDampCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_total_gravity()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalGravityCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_total_linear_damp()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalLinearDampCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_transform()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTransformCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_get_velocity_at_local_position(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.GetVelocityAtLocalPositionCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_integrate_forces()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.IntegrateForcesCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_is_sleeping()",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.IsSleepingCore()",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_angular_velocity(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetAngularVelocityCore(System.Single)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_collision_layer(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetCollisionLayerCore(System.UInt32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_collision_mask(int:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetCollisionMaskCore(System.UInt32)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_constant_force(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetConstantForceCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_constant_torque(float:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetConstantTorqueCore(System.Single)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_linear_velocity(Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetLinearVelocityCore(Electron2D.Vector2)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_sleep_state(bool:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetSleepStateCore(System.Boolean)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsDirectBodyState2DExtension::method:_set_transform(Transform2D:)",
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetTransformCore(Electron2D.Transform)",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
     }
   ],
   "extras": [
@@ -2639,6 +2879,70 @@
     {
       "electron2d": "method:Electron2D.PhysicsDirectSpaceStateExtension.ValidateDisposal()",
       "reason": "ADR 0103: protected engine-assigned space binding and inherited disposal keep borrowed query context, pooled scratch, owner/failure/lifetime guards and reject release while a hook executes."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBodyContact..ctor(Electron2D.RID,System.Int32,Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsDirectBodyStateExtension..ctor(Electron2D.RID)",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.ValidateDisposal()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.BodyRID()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderID()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderObject()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderPosition()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderRID()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderShape()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.ColliderVelocity()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.Impulse()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.LocalPosition()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.LocalShape()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.LocalVelocity()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyContact.Normal()",
+      "reason": "ADR 0103: complete typed body-contact construction/projection and generation-qualified direct-body context construction/disposal preserve sampled weak identity, coordinates, units and borrowed lifetime without public backend handles."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBodyContact",
+      "reason": "ADR 0103: immutable typed contact result combines the complete retained contact getter family; construction validates live same-world body/slot identities, samples weak object association and qualifies the observed attachment generation."
     }
   ],
   "statusGroups": [
@@ -4423,6 +4727,67 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103: caller-created view implements complete guarded six-query/exclusion family and inherits all base array/span APIs. Registered backend factories do not yet supply this view to scene/server consumers; that integration remains open."
+    },
+    {
+      "godot": [
+        "PhysicsDirectBodyState2DExtension::method:_add_constant_central_force(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_add_constant_force(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_add_constant_torque(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_central_force(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_central_impulse(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_force(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_impulse(Vector2:,Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_torque(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_apply_torque_impulse(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_angular_velocity()",
+        "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass()",
+        "PhysicsDirectBodyState2DExtension::method:_get_center_of_mass_local()",
+        "PhysicsDirectBodyState2DExtension::method:_get_collision_layer()",
+        "PhysicsDirectBodyState2DExtension::method:_get_collision_mask()",
+        "PhysicsDirectBodyState2DExtension::method:_get_constant_force()",
+        "PhysicsDirectBodyState2DExtension::method:_get_constant_torque()",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_id(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_object(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_position(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_shape(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_collider_velocity_at_position(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_count()",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_impulse(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_local_normal(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_local_position(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_local_shape(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_contact_local_velocity_at_position(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_get_inverse_inertia()",
+        "PhysicsDirectBodyState2DExtension::method:_get_inverse_mass()",
+        "PhysicsDirectBodyState2DExtension::method:_get_linear_velocity()",
+        "PhysicsDirectBodyState2DExtension::method:_get_space_state()",
+        "PhysicsDirectBodyState2DExtension::method:_get_step()",
+        "PhysicsDirectBodyState2DExtension::method:_get_total_angular_damp()",
+        "PhysicsDirectBodyState2DExtension::method:_get_total_gravity()",
+        "PhysicsDirectBodyState2DExtension::method:_get_total_linear_damp()",
+        "PhysicsDirectBodyState2DExtension::method:_get_transform()",
+        "PhysicsDirectBodyState2DExtension::method:_get_velocity_at_local_position(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_integrate_forces()",
+        "PhysicsDirectBodyState2DExtension::method:_is_sleeping()",
+        "PhysicsDirectBodyState2DExtension::method:_set_angular_velocity(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_collision_layer(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_collision_mask(int:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_constant_force(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_constant_torque(float:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_linear_velocity(Vector2:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_sleep_state(bool:)",
+        "PhysicsDirectBodyState2DExtension::method:_set_transform(Transform2D:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": [
+        "class:PhysicsDirectBodyState2DExtension"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: complete guarded caller-created body-state/force/contact family executes with exact base inheritance and generation-qualified context. Registered backend factories do not yet supply these views to scene/server callbacks; that integration remains open."
     }
   ]
 }

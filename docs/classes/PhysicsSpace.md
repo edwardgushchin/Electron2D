@@ -218,3 +218,5 @@ quiet lifecycle, geometry, snapshots and allocation limits through public API.
 See [the complete contract](../components/physics-report-only.md).
 
 Caller-created direct-space extension hooks borrow a query context. The space rejects recursive active stepping, checkpoint capture/restore, world binding changes and world release until the outer hook/validation completes; nested queries and ordinary live reads remain available. This uses a balanced query-depth guard in finally and preserves the existing observer callback rules. See [direct-space extensions](../components/physics-space-extensions.md).
+
+[Caller-created body-state extensions](../components/physics-body-extensions.md) now execute the complete typed state/force/space/contact family. Body context is qualified by current attachment generation; nested hooks borrow body/world lifetime and preserve ordinary live mutation. Contact projection uses immutable engine-validated PhysicsBodyContact values. Registered server factories and factory-returned scene/server callback integration remain open under ADR 0103.

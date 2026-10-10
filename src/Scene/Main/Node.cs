@@ -2605,6 +2605,7 @@ public partial class Node : ElectronObject
 
     private void EnsureChildOrderMutable()
     {
+        Tree?.EnsureExtensionHierarchyChange();
         if (_notificationPropagationDepth != 0)
             throw new InvalidOperationException("Children cannot be changed during notification propagation.");
     }

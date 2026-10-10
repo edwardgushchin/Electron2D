@@ -27,6 +27,22 @@ internal sealed partial class PhysicsBodyRuntime
         }
         catch (ArgumentException) { throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The body was released."); }
     }
+    private int _extensionDepth;
+    internal void BeginExtension() => _extensionDepth++;
+    internal void EndExtension() => _extensionDepth--;
+    internal void EnsureAttachmentRelease()
+    {
+        if (_extensionDepth != 0) throw new InvalidOperationException("A borrowed body extension attachment cannot be released or transferred inside its hook.");
+    }
+    internal void ValidateAttachment(PhysicsSpace space, PhysicsColliderBackend backend, long version)
+    {
+        try
+        {
+            if (Space != space || !ReferenceEquals(Backend, backend) || backend.AttachmentVersion != version)
+                throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The body extension attachment ended.");
+        }
+        catch (ArgumentException) { throw new ObjectDisposedException(nameof(PhysicsDirectBodyState), "The body was released."); }
+    }
     internal float ViewAngularVelocity => _viewBackend!.AngularVelocity;
     internal Vector2 ViewLinearVelocity => _viewBackend!.LinearVelocity;
     internal Vector2 ViewCenterOfMass => _viewBackend!.CenterOfMass;

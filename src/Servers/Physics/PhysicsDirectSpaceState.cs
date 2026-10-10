@@ -110,6 +110,11 @@ public partial class PhysicsDirectSpaceState : ElectronObject
     private readonly RID _spaceRID;
 
     internal PhysicsDirectSpaceState(RID spaceRID) => _spaceRID = spaceRID;
+    internal void EnsureContext(PhysicsSpace space)
+    {
+        ThrowIfDisposed(); space.EnsureQueryAccess();
+        if (_spaceRID != space.RID) throw new InvalidOperationException("The returned direct-space view belongs to another world.");
+    }
 
     /// <summary>Finds the nearest eligible collider along a ray.</summary>
     /// <param name="parameters">Global endpoints, filtering and exclusion options.</param>

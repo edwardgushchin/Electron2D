@@ -994,3 +994,5 @@ for live-toggle behavior and [diagnostics](../components/physics-debug.md) for u
 ## Tile integration
 
 DebugCollisionsHint also invalidates TileMapLayer retained commands; each layer can follow, force or hide its collision overlay. See [the tile component](../components/tiles.md) for behavior and verification.
+
+Scene hierarchy insertion/removal/reorder and node disposal reject while a physics extension hook borrows a world in this tree. This preflight runs before child-order or lifecycle mutation, preserving body attachment identity. Ordinary built-in post-solver callbacks retain their existing lifecycle behavior. [Body extension checks](../components/physics-body-extensions.md) exercise these guards.

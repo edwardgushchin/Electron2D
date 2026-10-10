@@ -6886,6 +6886,19 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.PhysicsBodyContact",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "PhysicsBodyContact",
+    "signature": "public struct Electron2D.PhysicsBodyContact",
+    "visibility": "public",
+    "baseType": "System.ValueType",
+    "interfaces": [],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.PhysicsCheckpoint",
     "kind": "type",
     "declaringType": "Electron2D.PhysicsCheckpoint",
@@ -6905,9 +6918,24 @@
     "kind": "type",
     "declaringType": "Electron2D.PhysicsDirectBodyState",
     "name": "PhysicsDirectBodyState",
-    "signature": "public sealed class Electron2D.PhysicsDirectBodyState",
+    "signature": "public class Electron2D.PhysicsDirectBodyState",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.PhysicsDirectBodyStateExtension",
+    "kind": "type",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "PhysicsDirectBodyStateExtension",
+    "signature": "public abstract class Electron2D.PhysicsDirectBodyStateExtension",
+    "visibility": "public",
+    "baseType": "Electron2D.PhysicsDirectBodyState",
     "interfaces": [
       "System.IDisposable"
     ],
@@ -16303,6 +16331,89 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsBodyContact..ctor(Electron2D.RID,System.Int32,Electron2D.RID,System.Int32,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": ".ctor",
+    "signature": "public PhysicsBodyContact(Electron2D.RID body, System.Int32 localShape, Electron2D.RID collider, System.Int32 colliderShape, Electron2D.Vector2 localPosition, Electron2D.Vector2 colliderPosition, Electron2D.Vector2 normal, Electron2D.Vector2 localVelocity, Electron2D.Vector2 colliderVelocity, Electron2D.Vector2 impulse)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "localShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "collider",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "colliderShape",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "localPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "colliderPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "normal",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "localVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "colliderVelocity",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.PhysicsDirectBodyStateExtension..ctor(Electron2D.RID)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": ".ctor",
+    "signature": "protected PhysicsDirectBodyStateExtension(Electron2D.RID body)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -111355,6 +111466,642 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantCentralForceCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "AddConstantCentralForceCore",
+    "signature": "protected abstract System.Void AddConstantCentralForceCore(Electron2D.Vector2 force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantForceCore(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "AddConstantForceCore",
+    "signature": "protected abstract System.Void AddConstantForceCore(Electron2D.Vector2 force, Electron2D.Vector2 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.AddConstantTorqueCore(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "AddConstantTorqueCore",
+    "signature": "protected abstract System.Void AddConstantTorqueCore(System.Single torque)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyCentralForceCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyCentralForceCore",
+    "signature": "protected abstract System.Void ApplyCentralForceCore(Electron2D.Vector2 force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyCentralImpulseCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyCentralImpulseCore",
+    "signature": "protected abstract System.Void ApplyCentralImpulseCore(Electron2D.Vector2 impulse)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyForceCore(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyForceCore",
+    "signature": "protected abstract System.Void ApplyForceCore(Electron2D.Vector2 force, Electron2D.Vector2 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyImpulseCore(Electron2D.Vector2,Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyImpulseCore",
+    "signature": "protected abstract System.Void ApplyImpulseCore(Electron2D.Vector2 impulse, Electron2D.Vector2 position)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "impulse",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "position",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyTorqueCore(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyTorqueCore",
+    "signature": "protected abstract System.Void ApplyTorqueCore(System.Single torque)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ApplyTorqueImpulseCore(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ApplyTorqueImpulseCore",
+    "signature": "protected abstract System.Void ApplyTorqueImpulseCore(System.Single impulse)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "impulse",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetAngularVelocityCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetAngularVelocityCore",
+    "signature": "protected abstract System.Single GetAngularVelocityCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCenterOfMassCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetCenterOfMassCore",
+    "signature": "protected abstract Electron2D.Vector2 GetCenterOfMassCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCenterOfMassLocalCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetCenterOfMassLocalCore",
+    "signature": "protected abstract Electron2D.Vector2 GetCenterOfMassLocalCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCollisionLayerCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetCollisionLayerCore",
+    "signature": "protected abstract System.UInt32 GetCollisionLayerCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetCollisionMaskCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetCollisionMaskCore",
+    "signature": "protected abstract System.UInt32 GetCollisionMaskCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetConstantForceCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetConstantForceCore",
+    "signature": "protected abstract Electron2D.Vector2 GetConstantForceCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetConstantTorqueCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetConstantTorqueCore",
+    "signature": "protected abstract System.Single GetConstantTorqueCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCore(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetContactCore",
+    "signature": "protected abstract Electron2D.PhysicsBodyContact GetContactCore(System.Int32 contactIndex)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "contactIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PhysicsBodyContact",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetContactCountCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetContactCountCore",
+    "signature": "protected abstract System.Int32 GetContactCountCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetInverseInertiaCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetInverseInertiaCore",
+    "signature": "protected abstract System.Single GetInverseInertiaCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetInverseMassCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetInverseMassCore",
+    "signature": "protected abstract System.Single GetInverseMassCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetLinearVelocityCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetLinearVelocityCore",
+    "signature": "protected abstract Electron2D.Vector2 GetLinearVelocityCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetSpaceStateCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetSpaceStateCore",
+    "signature": "protected abstract Electron2D.PhysicsDirectSpaceState GetSpaceStateCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsDirectSpaceState",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetStepCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetStepCore",
+    "signature": "protected abstract System.Single GetStepCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalAngularDampCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetTotalAngularDampCore",
+    "signature": "protected abstract System.Single GetTotalAngularDampCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalGravityCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetTotalGravityCore",
+    "signature": "protected abstract Electron2D.Vector2 GetTotalGravityCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTotalLinearDampCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetTotalLinearDampCore",
+    "signature": "protected abstract System.Single GetTotalLinearDampCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetTransformCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetTransformCore",
+    "signature": "protected abstract Electron2D.Transform GetTransformCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Transform",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.GetVelocityAtLocalPositionCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "GetVelocityAtLocalPositionCore",
+    "signature": "protected abstract Electron2D.Vector2 GetVelocityAtLocalPositionCore(Electron2D.Vector2 localPosition)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "localPosition",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.IntegrateForcesCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "IntegrateForcesCore",
+    "signature": "protected abstract System.Void IntegrateForcesCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.IsSleepingCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "IsSleepingCore",
+    "signature": "protected abstract System.Boolean IsSleepingCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetAngularVelocityCore(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetAngularVelocityCore",
+    "signature": "protected abstract System.Void SetAngularVelocityCore(System.Single value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetCollisionLayerCore(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetCollisionLayerCore",
+    "signature": "protected abstract System.Void SetCollisionLayerCore(System.UInt32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetCollisionMaskCore(System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetCollisionMaskCore",
+    "signature": "protected abstract System.Void SetCollisionMaskCore(System.UInt32 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetConstantForceCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetConstantForceCore",
+    "signature": "protected abstract System.Void SetConstantForceCore(Electron2D.Vector2 force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "force",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetConstantTorqueCore(System.Single)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetConstantTorqueCore",
+    "signature": "protected abstract System.Void SetConstantTorqueCore(System.Single torque)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "torque",
+        "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetLinearVelocityCore(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetLinearVelocityCore",
+    "signature": "protected abstract System.Void SetLinearVelocityCore(Electron2D.Vector2 value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetSleepStateCore(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetSleepStateCore",
+    "signature": "protected abstract System.Void SetSleepStateCore(System.Boolean value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.SetTransformCore(Electron2D.Transform)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "SetTransformCore",
+    "signature": "protected abstract System.Void SetTransformCore(Electron2D.Transform value)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "value",
+        "type": "Electron2D.Transform",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsDirectBodyStateExtension.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsDirectBodyStateExtension",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsDirectSpaceState.CastMotion(Electron2D.PhysicsShapeQueryParameters)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsDirectSpaceState",
@@ -187204,6 +187951,162 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.BodyRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "BodyRID",
+    "signature": "public Electron2D.RID BodyRID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderID",
+    "signature": "public System.UInt64 ColliderID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt64",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderObject()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderObject",
+    "signature": "public Electron2D.ElectronObject ColliderObject { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ElectronObject",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderPosition",
+    "signature": "public Electron2D.Vector2 ColliderPosition { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderRID",
+    "signature": "public Electron2D.RID ColliderRID { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderShape()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderShape",
+    "signature": "public System.Int32 ColliderShape { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.ColliderVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "ColliderVelocity",
+    "signature": "public Electron2D.Vector2 ColliderVelocity { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.Impulse()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "Impulse",
+    "signature": "public Electron2D.Vector2 Impulse { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.LocalPosition()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "LocalPosition",
+    "signature": "public Electron2D.Vector2 LocalPosition { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.LocalShape()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "LocalShape",
+    "signature": "public System.Int32 LocalShape { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.LocalVelocity()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "LocalVelocity",
+    "signature": "public Electron2D.Vector2 LocalVelocity { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsBodyContact.Normal()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsBodyContact",
+    "name": "Normal",
+    "signature": "public Electron2D.Vector2 Normal { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2",
     "value": null
   },
   {

@@ -21,6 +21,10 @@ public sealed partial class SceneTree
         foreach (var runtime in _physicsWorlds)
             if (releasing) runtime.ExistingSpace?.EnsureReleaseAccess(); else runtime.ExistingSpace?.EnsureQueryAccess();
     }
+    internal void EnsureExtensionHierarchyChange()
+    {
+        foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureExtensionHierarchyChange();
+    }
     internal void EnsureWorldBindingChange() { foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureWorldBindingChange(); }
     internal string ResolveSpatialAudioBus(CanvasItem item, Vector2 position, uint areaMask, string requestedBus)
     { EnsureOwnerThread(); return areaMask == 0 ? requestedBus : item.GetWorld()?.Runtime.ExistingSpace?.FindAudioBusOverride(position, areaMask) ?? requestedBus; }

@@ -2,10 +2,10 @@
 
 Last updated: 2026-10-10
 
-**Inherits:** [ElectronObject](ElectronObject.md)
+**Inherits:** [ElectronObject](ElectronObject.md) · **Inherited By:** [PhysicsDirectBodyStateExtension](PhysicsDirectBodyStateExtension.md)
 
 - **Source:** [PhysicsDirectBodyState.cs](../../src/Servers/Physics/PhysicsDirectBodyState.cs)
-- **Declaration:** `public sealed class PhysicsDirectBodyState : ElectronObject`
+- **Declaration:** `public class PhysicsDirectBodyState : ElectronObject`
 - **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
 [GPU publication for current consumers](../components/gpu-demand-publication.md) now keeps unobserved raw bodies on device. Explicit getters select one current snapshot; scene consumers, live raw views, contact receivers and kinematic completion retain fresh data. Portable preparation batches its explicit state demand. Cached values are qualified by the completed interval epoch; callback ordering and failure/lifetime guards remain unchanged.
@@ -220,3 +220,9 @@ changes. See [typed body state](PhysicsServer.md#body-state).
 GetContactColliderObject<T>(int contactIndex), where T : ElectronObject, returns the live assigned object sampled with that contact. The existing nongeneric method retains physical scene-collider convenience. The sampled instance ID survives target disposal and rebind. See [object associations](../components/physics-object-bindings.md).
 
 [Report-only contacts](../components/physics-report-only.md) now include kinematic/static and kinematic/kinematic pairs on CPU/GPU when either endpoint enables reporting. Impulses and positional response are zero; two static bodies remain ineligible. Caps, captured owners/indices, frozen-body scene events and checkpoint metadata share the existing contact contract.
+
+## Caller-created extension views
+
+[PhysicsDirectBodyStateExtension](PhysicsDirectBodyStateExtension.md) supplies the complete inherited state/force/contact/space family through guarded typed hooks. The constructor qualifies a borrowed scene/raw body by its current attachment generation, independent of cached built-in view disposal. Every operation validates owner, lifetime, failed-world and solver access before user code; finally releases nested hook context. Inputs and output fields are finite/rigid where required, and contact counts retain the authored cap.
+
+Contact getters project one immutable [PhysicsBodyContact](PhysicsBodyContact.md) result with engine-sampled weak identity. Snapshot values/indices/IDs survive later collider release and edits; the observed-body attachment generation must still match the bound view. Scene/caller-owned body/world release, attachment transfer, hierarchy changes, active recursive steps and checkpoint capture/restore reject while a hook is borrowed. Built-in post-solver callbacks retain their existing semantics; factory-returned extension callback views remain open.

@@ -9,6 +9,7 @@ public partial class Node
 
     internal void EnsurePhysicsObjectAccess()
     {
+        Tree?.EnsureExtensionHierarchyChange();
         if (_physicsObjectBindings is null) return;
         foreach (var binding in _physicsObjectBindings) binding.Space?.EnsureReleaseAccess();
     }

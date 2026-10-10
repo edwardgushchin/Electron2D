@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false)
+    internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space, long Attachment) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false)
     {
         ThrowIfDisposed();
         var scene = ResolveSceneObject(collider);
@@ -19,7 +19,7 @@ public sealed partial class PhysicsServer
         var shape = owners.Scene?.GlobalShapeSlot(shapeIndex).Shape ?? owners.Server!.GetShape(shapeIndex).Geometry;
         if (shape.IsDisposed) throw new ObjectDisposedException(nameof(Shape));
         var backend = owners.Scene?.Backend ?? owners.Server!.Backend;
-        return (owners.Scene, backend.ObjectIdentity, backend.Space);
+        return (owners.Scene, backend.ObjectIdentity, backend.Space, backend.AttachmentVersion);
     }
 
     internal void ValidateQueryResult(RID rid, int slot, PhysicsSpace space, uint mask, bool bodies, bool areas, ulong? canvas, RID[] excluded)

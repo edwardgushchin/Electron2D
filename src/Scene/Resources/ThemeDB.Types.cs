@@ -252,6 +252,7 @@ public sealed partial class ThemeDB
         ["PhysicalBone"] = ["PhysicalBone", "RigidBody", "PhysicsBody", "CollisionObject", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["PhysicsBody"] = ["PhysicsBody", "CollisionObject", "Entity", "CanvasItem", "Node", "ElectronObject"],
         ["PhysicsDirectBodyState"] = ["PhysicsDirectBodyState", "ElectronObject"],
+        ["PhysicsDirectBodyStateExtension"] = ["PhysicsDirectBodyStateExtension", "PhysicsDirectBodyState", "ElectronObject"],
         ["PhysicsDirectSpaceState"] = ["PhysicsDirectSpaceState", "ElectronObject"],
         ["PhysicsDirectSpaceStateExtension"] = ["PhysicsDirectSpaceStateExtension", "PhysicsDirectSpaceState", "ElectronObject"],
         ["PhysicsMaterial"] = ["PhysicsMaterial", "Resource", "ElectronObject"],
