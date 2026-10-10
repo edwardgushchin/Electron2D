@@ -2,9 +2,16 @@
 
 Last updated: 2026-10-11
 
-**Declaration:** `internal abstract class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
+**Declaration:** `internal abstract partial class PhysicsWorldBackend : IDisposable` · **Source:** [PhysicsWorldBackend.cs](../../src/Servers/Physics/PhysicsWorldBackend.cs) · **Component:** [Physics backends](../components/physics-backends.md)
 
 ## Description and internal flow
+
+[Lifecycle dispatch](../../src/Servers/Physics/PhysicsWorldBackend.Lifecycle.cs)
+retains local active/synchronizing/flushing state. Initialize executes after RID
+registration; activation commits after ApplyActive succeeds. Selected flush/end-sync
+hooks borrow context, mandatory shared observers survive hook failure and nested
+flushes preserve the enclosing phase. Empty positive active intervals reach the
+same selected pipeline. See [lifecycle checks](../components/physics-backends.md#selected-lifecycle-and-activity).
 
 ReadPortableSleepTime and ApplyPortableSleep dispatch native/resident sleep handling
 through the selected owner. CPU resolves its private collider table; GPU keeps its

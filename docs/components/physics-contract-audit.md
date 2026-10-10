@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Selected lifecycle](physics-backends.md#selected-lifecycle-and-activity)
+now dispatches owner initialization, atomic local activation, query/event flushing
+and end-sync with guarded context. Empty active intervals reach that owner;
+mandatory observers and cleanup survive selected hook errors. Public registration
+and the full external operation family remain open.
+
 [GPU collider ownership](physics-backends.md#gpu-collider-ownership) removes
 resident handles and concrete GPU casts from the common collider facade.
 Actual attachments stay in the resident store; selected wrappers retain publication,

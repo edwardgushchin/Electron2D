@@ -7,6 +7,7 @@ internal static partial class PhysicsBackendOwnershipTests
     internal static void Run(PhysicsServer.Backend backend)
     {
         Initialization(backend);
+        Lifecycle(backend);
         ExtensionBinding(backend);
         SelectedViews(backend);
         IntegrationOwnership(backend);

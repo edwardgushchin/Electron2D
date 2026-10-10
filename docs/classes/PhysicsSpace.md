@@ -14,13 +14,19 @@ The [common step boundary](../../src/Servers/Physics/PhysicsSpace.Step.cs) now d
 
 ## Description and internal flow
 
+Selected initialization/activation/query-flush/end-sync now use the retained
+owner's lifecycle. Active policy commits after owner work; shared observers drain
+even if the selected flush throws. Empty positive active steps reach that same
+owner. Implementation hooks borrow context and nested observer flushing preserves
+its enclosing phase. See [lifecycle](../components/physics-backends.md#selected-lifecycle-and-activity).
+
 One owner-thread world shared by scene bodies/Areas/joints and caller-owned colliders. Authored sleep/contact/iteration/default-joint policy stays here; application, capacity preparation and completed statistics dispatch through the selected owner. It retains one selected [PhysicsWorldBackend](PhysicsWorldBackend.md), which owns the native CPU world/workers or the resident GPU store and full interval dispatch. SceneTree and PhysicsServer host stepping use this same simulation lane; public consumers use [PhysicsServer](PhysicsServer.md#activity) and World. The fixed scene lane owns each interval; its internal [task scheduler](PhysicsTaskScheduler.md) parallelizes backend work only.
 
 | State/operation | Contract |
 | --- | --- |
 | `PhysicsSpace(RID rid)`, `InitializeBackend(...)` | Registered immutable identity and sampled settings precede selected-owner construction; initialization completes before activation. CPU alone owns the retained task scheduler and native policy/capacity/statistics implementation. |
 | `RID`, `WorldID`, body/Area/server-collider/joint lists | Stable server identity and current native generation/membership. |
-| `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy, owner/solver guard; SceneTree sets true on registration. |
+| `bool IsActive { get; }`, `SetActive(bool active)` | Local interval policy is retained by the selected owner and commits after its hook succeeds; owner/solver/recursive guards remain. SceneTree sets true after initialization. |
 | `EnsureQueryAccess()`, `EnsureReleaseAccess()`, `PrepareForQuery()` | Owner/lifetime/solver guard and pending fixture/pose preparation, including inactive worlds. |
 | `EnsureWorldBindingChange()`, `EnsureWorldRelease()` | Binding changes reject a failed GPU world; releasing its last resource still permits cleanup. Both preserve owner/solver guards and reject release/binding changes during every physics callback phase. |
 | `Step(double delta)` | Gate on local/global activity/nonzero delta; reject recursive callback intervals; prepare fields/body states/joints, solve native intervals, capture state and dispatch callbacks/events. |

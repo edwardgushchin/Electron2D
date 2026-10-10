@@ -77,7 +77,9 @@ internal sealed partial class PhysicsSpace : IDisposable
             var created = factory is null ? PhysicsWorldBackend.Create(this, backend, allowCPUFallback) : factory(this);
             if (created is null || !created.OwnsSpace(this)) throw new InvalidOperationException("A factory must return an implementation owned by this physics space.");
             _backend = created;
-            created.EnsureAccess();
+            BeginBackendCallback();
+            try { created.Initialize(); }
+            finally { EndExtensionCallback(); }
             initialize?.Invoke(this);
         }
         finally { _initializing = false; }
@@ -87,14 +89,17 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void SetDefaultGravity(Vector2 gravity) => _defaultGravity = gravity;
     internal void CommitAreaScan(Area area) => area.CommitOverlapScan(_overlapEvents);
 
-    private bool _isActive;
-    internal bool IsActive => Volatile.Read(ref _isActive);
+    internal bool IsActive => _backend?.IsActive == true;
+    private bool _changingActive;
 
     internal void SetActive(bool active)
     {
         EnsureQueryAccess();
         EnsureInitializationComplete();
-        Volatile.Write(ref _isActive, active);
+        if (_changingActive) throw new InvalidOperationException("Physics activation cannot reenter its selected implementation.");
+        _changingActive = true;
+        try { _backend.SetActive(active); }
+        finally { _changingActive = false; }
     }
 
     internal B2WorldId WorldID => BackendImplementation.WorldID;
@@ -135,11 +140,12 @@ internal sealed partial class PhysicsSpace : IDisposable
     private int _extensionCallbackDepth;
     internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
     internal void EndExtensionCallback() => _extensionCallbackDepth--;
+    internal void BeginBackendCallback() { EnsureReleaseAccess(); _extensionCallbackDepth++; }
     internal void EnsureExtensionHierarchyChange()
     {
         if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Scene hierarchy cannot change while a physics extension hook is borrowed.");
     }
-    private bool DispatchingCallbacks => _extensionCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
+    private bool DispatchingCallbacks => _backend?.IsFlushingQueries == true || _extensionCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
     internal void EnsureWorldRelease()
     {
         EnsureReleaseAccess();
@@ -231,7 +237,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var rigid in _contactBodies) rigid.ForgetContact(body.PhysicsRID, _contactEvents);
         foreach (var area in _areas) area.Forget(body, _overlapEvents);
         ForgetAreaMonitors(body.PhysicsRID);
-        DispatchEvents();
+        _backend.FlushQueryEvents();
     }
 
     internal void Add(Joint joint)
@@ -295,7 +301,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         ForgetAreaMonitors(collider.RID);
         collider.DetachBackend();
         if (!HasBackendFailure && !collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
-        DispatchEvents();
+        _backend.FlushQueryEvents();
     }
 
     internal void Remove(Area area)
@@ -307,7 +313,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         area.ClearOverlaps();
         foreach (var other in _areas) other.Forget(area, _overlapEvents);
         ForgetAreaMonitors(area.PhysicsRID);
-        DispatchEvents();
+        _backend.FlushQueryEvents();
     }
 
     internal static bool ProfilingEnabled;
@@ -331,16 +337,10 @@ internal sealed partial class PhysicsSpace : IDisposable
         EnsureInitializationComplete();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         EnsureQueryAccess();
-        if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (_stepping || DispatchingCallbacks) throw new InvalidOperationException("A physics world cannot step recursively.");
+        if (!IsActive || !PhysicsServer.Service.IsActive || delta == 0) return;
         if (Tick == ulong.MaxValue) throw new InvalidOperationException("The physics world tick counter is exhausted.");
         ResetDebugContacts();
-        if (_bodies.Count == 0 && _areas.Count == 0 && _serverColliders.Count == 0)
-        {
-            Tick++; LastStep = (float)delta;
-            PhysicsServer.Service.PublishStatistics(this, default);
-            return;
-        }
         _backend.Step(delta);
     }
 
@@ -392,7 +392,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         }
     }
 
-    private void DispatchEvents()
+    internal void DispatchBackendEvents()
     {
         List<Exception>? errors = null;
         try { DispatchContactEvents(); }

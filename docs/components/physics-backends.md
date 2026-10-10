@@ -95,6 +95,40 @@ This implements the internal ownership route; public named registration, the
 complete server implementation bridge, custom algorithms and platform/native
 acceptance remain open under ADR 0103.
 
+## Selected lifecycle and activity
+
+The retained owner now receives Initialize after its immutable space RID and
+selected implementation are published internally, before activation/attachment.
+Local active state belongs to that owner. ApplyActive runs before commit; unchanged
+writes skip implementation work and a throwing hook preserves the previous policy.
+Initialization, activation, selected query flush and end-sync borrow the world
+context, rejecting recursive steps, own release and scene hierarchy changes.
+Cleanup borrowing uses lifetime/thread guards even for a failed world.
+
+SynchronizeResults brackets actual selected result publication; solved body
+callbacks run before query/event flushing. FlushQueryEvents invokes the selected
+hook, then always drains common contact/sleep/Area queues. Hook and observer errors
+are retained together. Shared callbacks keep their existing mutation rules outside
+the implementation-hook borrow. Nested detach/object-membership flushes restore
+the previous flushing flag. EndSynchronization attempts the selected EndSync after
+all deliveries, passes the first prior interval/publication failure and retires
+its phase state even when finalization throws. Existing Dispose owns native finish.
+
+Empty active positive intervals now execute the same selected step/lifecycle,
+including tick/statistics publication. Inactive/global-suspended and zero-time
+calls retain their skip policy. Borrowed recursive calls reject before that skip
+so a zero-time call cannot evade the hook lifetime guard.
+
+The [lifecycle fixture](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Lifecycle.cs)
+drives a real CPU/GPU delegated owner, raw bodies and a monitoring Area. It checks
+activation rollback, nested removal, body/event ordering, three distinct flush/
+observer/end-sync errors, solved-tick retention, failed initialization cleanup and
+empty-world dispatch. CPU/GPU/no-device lifecycle fixtures retain 0/0 owner/all-thread
+managed bytes over 64 warmed complete intervals after blocking GC fixture
+preparation; this setup is confined to tests. Activity and public GPU checkpoint
+profiles also pass. Named public registration and the complete external server
+family remain open under ADR 0103.
+
 ## Public selection
 
 `PhysicsServer.SpaceCreate(PhysicsServer.Backend backend, bool allowCPUFallback = false)`

@@ -11,6 +11,14 @@ internal static partial class PhysicsBackendOwnershipTests
         internal Func<PhysicsDirectSpaceState>? SpaceFactory;
         internal Func<PhysicsBodyRuntime, PhysicsDirectBodyState>? BodyFactory;
         internal int SpaceCreations, BodyCreations;
+        internal Action? InitializeHook, FlushHook;
+        internal Action<bool>? ActiveHook;
+        internal Action<Exception?>? EndSyncHook;
+        internal int Initializations, Activations, Flushes, EndSynchronizations;
+        internal override void Initialize() { Initializations++; InitializeHook?.Invoke(); _inner.Initialize(); }
+        internal override void ApplyActive(bool active) { Activations++; ActiveHook?.Invoke(active); _inner.SetActive(active); }
+        internal override void FlushQueries() { Flushes++; FlushHook?.Invoke(); base.FlushQueries(); }
+        internal override void EndSync(Exception? failure) { EndSynchronizations++; EndSyncHook?.Invoke(failure); base.EndSync(failure); }
         internal ViewBackend(PhysicsSpace space, PhysicsServer.Backend backend) : base(space, backend) => _inner = PhysicsWorldBackend.Create(space, backend, false);
         internal override PhysicsDirectSpaceState CreateDirectSpaceState() { SpaceCreations++; return SpaceFactory is null ? base.CreateDirectSpaceState() : SpaceFactory(); }
         internal override PhysicsDirectBodyState CreateDirectBodyState(PhysicsBodyRuntime body) { BodyCreations++; return BodyFactory is null ? base.CreateDirectBodyState(body) : BodyFactory(body); }

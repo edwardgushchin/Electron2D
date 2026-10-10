@@ -2,8 +2,8 @@ using Box2D.NET;
 
 namespace Electron2D;
 
-/// <summary>Owns selected solver policy, Area observations, capacity, statistics, complete intervals and direct-space queries.</summary>
-internal abstract class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Backend requested, string? fallbackReason = null) : IDisposable
+/// <summary>Owns selected initialization, activation and publication lifecycle, solver policy, observations, complete intervals and queries.</summary>
+internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsServer.Backend requested, string? fallbackReason = null) : IDisposable
 {
     protected PhysicsSpace Space { get; } = space;
     internal bool OwnsSpace(PhysicsSpace space) => ReferenceEquals(Space, space);
