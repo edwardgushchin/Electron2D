@@ -1,6 +1,6 @@
 # Engine inventory
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 Private native libraries are owned by the Linux/macOS/Windows native packages in ordinary desktop builds; [native delivery](native-packaging.md) records source production and target verification limits. Windows resolution/full-suite checks are connected with execution pending. No public runtime type or managed backend assembly is added; internal floating-point atomics preserve Engine/audio snapshots on 32-bit hosts.
 
@@ -544,7 +544,8 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 | [Resources](domains/resources.md) | [Noise](components/noise.md) | [`CellularReturnType`](classes/CellularReturnType.md) | [`FastNoiseLite.cs`](../src/Core/IO/FastNoiseLite.cs) | Current | Seven cellular return modes |
 | [Resources](domains/resources.md) | [Noise](components/noise.md) | [`DomainWarpType`](classes/DomainWarpType.md) | [`FastNoiseLite.cs`](../src/Core/IO/FastNoiseLite.cs) | Current | Three warp algorithms |
 | [Resources](domains/resources.md) | [Noise](components/noise.md) | [`DomainWarpFractalType`](classes/DomainWarpFractalType.md) | [`FastNoiseLite.cs`](../src/Core/IO/FastNoiseLite.cs) | Current | Three warp fractal modes |
-| [Resources](domains/resources.md) | [Noise](components/noise.md) | [`NoiseTexture`](classes/NoiseTexture.md) | [`NoiseTexture.cs`](../src/Scene/Resources/NoiseTexture.cs) | Current | Generated texture from borrowed noise and gradient, with normals, mipmaps and typed copying; Linux Wayland GPU/compatibility pixels pass |
+| [Resources](domains/resources.md) | [Noise](components/noise.md) | [`NoiseTexture.GenerationWork`](classes/NoiseTexture.GenerationWork.md) | [`NoiseTexture.Generation.cs`](../src/Scene/Resources/NoiseTexture.Generation.cs) | Current | Captured settings, owned built-in snapshots/file lease, task, result and failure |
+| [Resources](domains/resources.md) | [Noise](components/noise.md) | [`NoiseTexture`](classes/NoiseTexture.md) | [`NoiseTexture.cs`](../src/Scene/Resources/NoiseTexture.cs) | Current | Deferred/background generated texture with borrowed sources, complete portable/local graphs and owner publication |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.Format`](classes/Image.Format.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | 47 formats plus sentinel implemented |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.Interpolation`](classes/Image.Interpolation.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Five filters implemented |
 | [Resources](domains/resources.md) | [Images](components/images.md) | [`Image.AlphaMode`](classes/Image.AlphaMode.md) | [`Image.cs`](../src/Core/IO/Image.cs) | Current | Implemented and verified |

@@ -10,6 +10,7 @@ public sealed class WorkerThreadPool : ElectronObject
     private readonly Lazy<WorkerPoolRuntime> _runtime = new(CreateRuntime);
     private WorkerThreadPool() { }
     internal bool HasRuntime => _runtime.IsValueCreated;
+    internal static void WaitForTextureTask(long taskID) => Service.PendingRuntime(taskID).Wait(taskID, false, targetOnly: true);
     internal static void WaitForNavigationTask(long taskID) => Service.PendingRuntime(taskID).Wait(taskID, false, targetOnly: true, allowOlder: true);
     internal static void WaitForLoadTask(long taskID, bool retire = true) => Service.PendingRuntime(taskID).Wait(taskID, false, targetOnly: true, allowOlder: true, retire: retire);
     internal static void WaitForDependencyGroup(long groupID) => Service.PendingRuntime(groupID).Wait(groupID, true, targetOnly: true);

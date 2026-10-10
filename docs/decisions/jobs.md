@@ -39,3 +39,5 @@ Invalid submission arguments are checked before lazy startup. Completion/progres
 ResourceLoader may use internal waits restricted to one dependency group, and may help an older root task after its own load-cycle checks and an active worker-stack check. These do not change the public WorkerThreadPool older/self guard. Dedicated target waits do not execute unrelated callbacks under resource staging scopes.
 
 Navigation iteration teardown and deterministic host synchronization may use a target-only older-job wait for pure captured geometry jobs. Those workers cannot call user callbacks or live scene/server code, so this does not relax public older/self dependency guards.
+
+NoiseTexture uses target-only retirement while keeping the public older/self wait guards. Custom sampler callbacks may execute, so recursive generation/disposal and worker disposal of unfinished generation reject before mutation. Owner teardown waits outside the texture gate; built-in snapshots and file-graph leases survive through completion/retirement.

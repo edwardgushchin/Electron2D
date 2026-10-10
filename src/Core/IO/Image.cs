@@ -769,7 +769,7 @@ public sealed partial class Image : Resource
         return new Color(r, g, b, a);
     }
 
-    private static void WriteColor(byte[] data, int offset, Format format, Color color)
+    internal static void WriteColor(byte[] data, int offset, Format format, Color color)
     {
         switch (format)
         {

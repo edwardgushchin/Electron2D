@@ -1,19 +1,21 @@
 # NoiseTexture
 
-Last updated: 2026-09-23
+Last updated: 2026-10-11
 
 **Inherits:** [Texture](Texture.md) → [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
-- **Source:** [NoiseTexture.cs](../../src/Scene/Resources/NoiseTexture.cs)
+- **Source:** [NoiseTexture.cs](../../src/Scene/Resources/NoiseTexture.cs), [NoiseTexture.Generation.cs](../../src/Scene/Resources/NoiseTexture.Generation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public sealed class NoiseTexture : Texture`
 - **Component:** [Noise](../components/noise.md)
 
 ## Description
 
-`NoiseTexture` turns a borrowed [Noise](Noise.md) resource into a readable two-dimensional texture. Settings and source `Changed` events invalidate a cached pixel snapshot and emit this texture's `Changed` event. The next `GetImage`, pixel metadata query or renderer capture regenerates the image. The texture owns its generated pixels but neither source resource. Without a noise source it has the configured logical size and no readable image.
+`NoiseTexture` turns a borrowed [Noise](Noise.md) into a retained image texture. In an active SceneTree, changes coalesce into deferred owner work: first generation computes there, subsequent images compute on workers and publish Changed on the owner. Reads keep complete preceding images while work waits. Stale results are discarded; errors preserve preceding pixels and can retry after corrected input. Without a running scene loop, image reads generate synchronously for library hosts.
 
-Generation calls the noise source's virtual `GetImage` or `GetSeamlessImage`. It then optionally maps luminance through a borrowed [Gradient](Gradient.md), converts height to a wrapping normal map, and builds mipmaps, in that order. The source image must match the configured dimensions and have no mipmaps. A sampled image and every `GetImage` result have independent ownership. Successful copies follow the [Resource](Resource.md) graph policy; deep copying a custom noise source requires that source to support duplication.
+Generation preserves virtual source image dispatch, then optionally applies a copied Gradient, normal conversion and mipmaps in that order. Built-in FastNoiseLite and Gradient input snapshots belong to jobs; original sources stay borrowed. Custom Noise methods must support background execution and coordinated state. Sources must return the requested dimensions without mipmaps. Image results belong to callers. Removing noise publishes a null readable image while retaining the previous rendering allocation; first drawing uses the standard diagnostic placeholder.
+
+All authored settings have portable descriptors/factories; image/jobs are transient. Local packed scenes preserve aliases and independently local generators. File-owned graphs remain retained through pending work. Recursive generation/disposal and worker disposal of unfinished generation reject before lifetime mutation. Ordinary disposal drains its owned task outside the texture gate. See the [Noise component](../components/noise.md) for complete behavior, numeric corrections, executable authoring and verification boundaries.
 
 ## Example
 

@@ -180,6 +180,7 @@ public sealed partial class Image
         });
 
     /// <summary>Generates a complete lower-resolution mip chain from the base image.</summary>
+    /// <remarks>Without renormalization, byte channels use rounded encoded 2-by-2 averages; odd extents truncate and one-pixel axes repeat their sample.</remarks>
     /// <param name="renormalize">Whether RGB values are decoded as signed normal components and normalized after averaging.</param>
     /// <exception cref="InvalidOperationException">The image is empty or block-compressed.</exception>
     /// <exception cref="ObjectDisposedException">The image is disposing or disposed.</exception>
@@ -810,6 +811,14 @@ public sealed partial class Image
                     var x1 = Math.Min(sourceWidth - 1, x0 + 1);
                     var y0 = Math.Min(sourceHeight - 1, y * 2);
                     var y1 = Math.Min(sourceHeight - 1, y0 + 1);
+                    if (!renormalize && (uint)state.Format <= (uint)Format.Rgba8)
+                    {
+                        var a = sourceOffset + (y0 * sourceWidth + x0) * bytes; var b = sourceOffset + (y0 * sourceWidth + x1) * bytes;
+                        var c = sourceOffset + (y1 * sourceWidth + x0) * bytes; var d = sourceOffset + (y1 * sourceWidth + x1) * bytes;
+                        var destination = destinationOffset + (y * destinationWidth + x) * bytes;
+                        for (var channel = 0; channel < bytes; channel++) data[destination + channel] = (byte)((data[a + channel] + data[b + channel] + data[c + channel] + data[d + channel] + 2) >> 2);
+                        continue;
+                    }
                     var color = Average(
                         ReadColor(data, sourceOffset + (((y0 * sourceWidth) + x0) * bytes), state.Format),
                         ReadColor(data, sourceOffset + (((y0 * sourceWidth) + x1) * bytes), state.Format),

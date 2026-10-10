@@ -34,7 +34,7 @@ public abstract class Noise : Resource
     /// <param name="invert">Whether to invert the resulting byte values.</param>
     /// <param name="normalize">Whether to scale the sampled minimum and maximum to zero and 255.</param>
     /// <returns>A new independent L8 image.</returns>
-    /// <remarks>Without normalization, noise values are mapped from the expected range [-1, 1]. Constant normalized noise maps to zero before inversion.</remarks>
+    /// <remarks>Without normalization, noise values are mapped from the expected range [-1, 1]. Constant normalized noise maps to zero before inversion. Ordinary spans use float quantization; overflowing finite spans widen to preserve their range.</remarks>
     public virtual Image GetImage(int width, int height, bool invert = false, bool normalize = true)
     {
         ThrowIfDisposed();
@@ -53,9 +53,10 @@ public abstract class Noise : Resource
             }
 
         var pixels = new byte[values.Length];
+        var span = maximum - minimum;
         for (var index = 0; index < pixels.Length; index++)
         {
-            var scaled = normalize ? maximum == minimum ? 0d : ((double)values[index] - minimum) / ((double)maximum - minimum) * 255d
+            var scaled = normalize ? maximum == minimum ? 0d : float.IsFinite(span) ? (values[index] - minimum) / span * 255f : ((double)values[index] - minimum) / ((double)maximum - minimum) * 255d
                 : values[index] * 127.5f + 127.5f;
             var value = (byte)Math.Clamp(scaled, 0d, 255d);
             pixels[index] = invert ? (byte)(255 - value) : value;
@@ -70,7 +71,7 @@ public abstract class Noise : Resource
     /// <param name="skirt">The nonnegative fraction of each output dimension added as an overlap.</param>
     /// <param name="normalize">Whether to normalize the larger source image before blending.</param>
     /// <returns>A new independent image in the source format.</returns>
-    /// <remarks>The default algorithm accepts L8 and RGBA8 source images. Derived generators may override it with a native seamless algorithm.</remarks>
+    /// <remarks>The default algorithm accepts L8 and RGBA8 source images. Copied RGBA quadrants keep source alpha; blended seams are opaque. Large overlap strips are clipped to destination bounds. Derived generators may override the algorithm.</remarks>
     public virtual Image GetSeamlessImage(int width, int height, bool invert = false, float skirt = 0.1f, bool normalize = true)
     {
         ThrowIfDisposed();
@@ -78,8 +79,8 @@ public abstract class Noise : Resource
         if (!float.IsFinite(skirt) || skirt < 0f) throw new ArgumentOutOfRangeException(nameof(skirt));
         if (width * (double)skirt >= 16_384 || height * (double)skirt >= 16_384)
             throw new ArgumentOutOfRangeException(nameof(skirt));
-        var skirtWidth = Math.Max(1, checked((int)(width * (double)skirt)));
-        var skirtHeight = Math.Max(1, checked((int)(height * (double)skirt)));
+        var skirtWidth = Math.Max(1, checked((int)(width * skirt)));
+        var skirtHeight = Math.Max(1, checked((int)(height * skirt)));
         var sourceWidth = checked(width + skirtWidth);
         var sourceHeight = checked(height + skirtHeight);
         ValidateSize(sourceWidth, sourceHeight);
@@ -121,7 +122,7 @@ public abstract class Noise : Resource
                 for (var channel = 0; channel < channels; channel++)
                 {
                     var index = (x + y * width) * channels + channel;
-                    result[index] = Blend(result[index], Sample(x, y, channel, sourceWidth, height), alpha);
+                    result[index] = Blend(result[index], Sample(x, y, channel, sourceWidth, height), alpha, channel);
                 }
             }
         }
@@ -135,7 +136,7 @@ public abstract class Noise : Resource
                 for (var channel = 0; channel < channels; channel++)
                 {
                     var index = (x + y * width) * channels + channel;
-                    result[index] = Blend(result[index], Sample(x, y, channel, width, sourceHeight), alpha);
+                    result[index] = Blend(result[index], Sample(x, y, channel, width, sourceHeight), alpha, channel);
                 }
             }
         }
@@ -148,10 +149,10 @@ public abstract class Noise : Resource
                 for (var channel = 0; channel < channels; channel++)
                 {
                     var upper = Blend(Sample(x, y, channel, width, sourceHeight),
-                        Sample(x, y, channel, sourceWidth, sourceHeight), alphaX);
+                        Sample(x, y, channel, sourceWidth, sourceHeight), alphaX, channel);
                     var lower = Blend(Sample(x, y, channel, width, height),
-                        Sample(x, y, channel, sourceWidth, height), alphaX);
-                    result[(x + y * width) * channels + channel] = Blend(lower, upper, alphaY);
+                        Sample(x, y, channel, sourceWidth, height), alphaX, channel);
+                    result[(x + y * width) * channels + channel] = Blend(lower, upper, alphaY, channel);
                 }
             }
 
@@ -167,11 +168,11 @@ public abstract class Noise : Resource
 
     private static int BlendAlpha(int distance, int skirt)
     {
-        var weight = Math.Clamp(distance / (float)skirt * 1.25f - 0.125f, 0f, 1f);
+        var weight = Math.Clamp((distance / (float)skirt - .1f) / (.9f - .1f), 0f, 1f);
         var smooth = weight * weight * (3f - 2f * weight);
         return (int)(255f * (1f - smooth));
     }
 
-    private static byte Blend(byte background, byte foreground, int alpha) =>
-        (byte)(((alpha + 1) * foreground + (256 - alpha) * background) >> 8);
+    private static byte Blend(byte background, byte foreground, int alpha, int channel) =>
+        channel == 3 ? byte.MaxValue : (byte)(((alpha + 1) * foreground + (256 - alpha) * background) >> 8);
 }

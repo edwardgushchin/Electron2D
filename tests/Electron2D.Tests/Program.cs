@@ -154,6 +154,10 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE_HOST") == "1")
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE_CHILD") is { } avoidanceChild) { NavigationAvoidanceTests.RunChild(avoidanceChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AVOIDANCE") == "1") { NavigationAvoidanceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_ARRAYS") == "1") { TextureArrayTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NOISE_GENERATION_NATIVE") == "1") { NoiseGenerationRenderingTests.RunHost(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NOISE_IMAGE_REFERENCE") == "1") { NoiseImageReferenceTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NOISE_CHILD") is { } noiseChild) { NoiseGenerationTests.RunChild(noiseChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_NOISE_GENERATION") == "1") { NoiseGenerationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORKER_POOL") == "1") { WorkerThreadPoolTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_LOADING") == "1") { ThreadedResourceLoaderTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_THREADED_LOADING_NATIVE") == "1") { ThreadedLoadingRenderingTests.RunHost(); return; }
@@ -849,6 +853,7 @@ RenderingCanvasTests.Run();
 NavigationTopologyTests.Run();
 TextureArrayTests.Run();
 WorkerThreadPoolTests.Run();
+NoiseGenerationTests.Run();
 NavigationIterationTests.Run();
 NavigationBakingTests.Run();
 TileNavigationTests.Run();

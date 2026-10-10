@@ -1,11 +1,10 @@
-using System.Buffers.Binary;
-
 namespace Electron2D;
 
 /// <summary>A two-dimensional texture generated from a borrowed noise resource.</summary>
-/// <remarks>Settings and source changes invalidate the image. The next image or renderer read bakes a coherent
-/// snapshot; the texture never disposes its noise or color ramp. Generation may call user-defined Noise methods.</remarks>
-public sealed class NoiseTexture : Texture
+/// <remarks>Scene changes coalesce into deferred generation; following images compute on workers and publish Changed
+/// on the scene owner. Reads retain completed pixels. Without a running scene loop, reads generate synchronously.
+/// Sources are borrowed; custom Noise image methods must support worker execution and coordinated state.</remarks>
+public sealed partial class NoiseTexture : Texture
 {
     [ThreadStatic] private static HashSet<NoiseTexture>? s_baking;
     private readonly object _gate = new();
@@ -14,12 +13,12 @@ public sealed class NoiseTexture : Texture
     private float _seamlessBlendSkirt = 0.1f, _bumpStrength = 8f;
     private Noise? _noise;
     private Gradient? _colorRamp;
-    private TexturePixels? _pixels;
+    private TexturePixels? _pixels, _renderPixels;
     private bool _dirty = true;
     private long _version;
 
     /// <summary>Creates an uninitialized 512-by-512 noise texture without a noise source.</summary>
-    public NoiseTexture() { }
+    public NoiseTexture() { _updateAction = UpdateTexture; _publishAction = PublishCompletion; }
 
     /// <summary>Gets or sets the generated image width in pixels.</summary>
     /// <value>512 by default; valid values are 1 through 16384.</value>
@@ -44,12 +43,12 @@ public sealed class NoiseTexture : Texture
             {
                 ThrowIfDisposed(); if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
                 if (ReferenceEquals(_noise, value)) return;
-                if (_noise is not null) _noise.Changed -= SourceChanged;
+                if (_noise is not null) { _noise.Changed -= SourceChanged; _noise.Disposed -= SourceDisposed; }
                 _noise = value;
-                if (_noise is not null) _noise.Changed += SourceChanged;
+                if (_noise is not null) { _noise.Changed += SourceChanged; _noise.Disposed += SourceDisposed; }
                 Invalidate();
             }
-            EmitChanged();
+            NotifyInvalidation();
         }
     }
 
@@ -64,12 +63,12 @@ public sealed class NoiseTexture : Texture
             {
                 ThrowIfDisposed(); if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
                 if (ReferenceEquals(_colorRamp, value)) return;
-                if (_colorRamp is not null) _colorRamp.Changed -= SourceChanged;
+                if (_colorRamp is not null) { _colorRamp.Changed -= SourceChanged; _colorRamp.Disposed -= SourceDisposed; }
                 _colorRamp = value;
-                if (_colorRamp is not null) _colorRamp.Changed += SourceChanged;
+                if (_colorRamp is not null) { _colorRamp.Changed += SourceChanged; _colorRamp.Disposed += SourceDisposed; }
                 Invalidate();
             }
-            EmitChanged();
+            NotifyInvalidation();
         }
     }
 
@@ -124,7 +123,7 @@ public sealed class NoiseTexture : Texture
                 if (!_asNormalMap) return;
                 Invalidate();
             }
-            EmitChanged();
+            NotifyInvalidation();
         }
     }
 
@@ -138,57 +137,25 @@ public sealed class NoiseTexture : Texture
     /// <value>False, including when a color ramp produces RGBA pixels.</value>
     public override bool HasAlpha { get { ThrowIfDisposed(); return false; } }
     /// <inheritdoc />
-    public override Image? GetImage() => CapturePixels()?.CopyImage();
+    public override Image? GetImage() { RefreshPixels(); lock (_gate) { ThrowIfDisposed(); return _pixels?.CopyImage(); } }
 
-    internal override TexturePixels? CapturePixels()
-    {
-        var baking = s_baking ??= [];
-        if (!baking.Add(this)) throw new InvalidOperationException("Noise texture generation is reentrant.");
-        try { return BakePixels(); }
-        finally { baking.Remove(this); }
-    }
+    internal override TexturePixels? CapturePixels() { RefreshPixels(); lock (_gate) { ThrowIfDisposed(); return _renderPixels; } }
 
-    private TexturePixels? BakePixels()
+    private TexturePixels? GeneratePixels(GenerationWork work)
     {
-        // ponytail: retry a few concurrent source changes; a perpetually changing source must fail rather than spin.
-        for (var attempt = 0; attempt < 8; attempt++)
+        var baking = s_baking ??= []; if (!baking.Add(this)) throw new InvalidOperationException("Noise texture generation is reentrant.");
+        try
         {
-            int width, height; bool mipmaps, normalize, seamless, invert, normal;
-            float skirt, strength; Noise? noise; Gradient? ramp; long version;
-            lock (_gate)
-            {
-                ThrowIfDisposed();
-                if (!_dirty) return _pixels;
-                (width, height, mipmaps, normalize, seamless, invert, normal, skirt, strength, noise, ramp, version) =
-                    (_width, _height, _generateMipmaps, _normalize, _seamless, _invert, _asNormalMap,
-                        _seamlessBlendSkirt, _bumpStrength, _noise, _colorRamp, _version);
-            }
-
-            TexturePixels? pixels = null;
-            if (noise is not null)
-            {
-                using var sampled = (seamless ? noise.GetSeamlessImage(width, height, invert, skirt, normalize)
-                    : noise.GetImage(width, height, invert, normalize))
-                    ?? throw new InvalidOperationException("The noise resource returned no image.");
-                if (sampled.Width != width || sampled.Height != height || sampled.HasMipmaps)
-                    throw new InvalidOperationException("The noise resource returned an incompatible image.");
-                using var mapped = ramp is null ? null : ApplyRamp(sampled, ramp);
-                var image = mapped ?? sampled;
-                if (normal) image.BumpMapToNormalMap(strength);
-                if (mipmaps) image.GenerateMipmaps();
-                pixels = TexturePixels.FromImage(image);
-            }
-
-            lock (_gate)
-            {
-                ThrowIfDisposed();
-                if (version != _version) continue;
-                _pixels = pixels;
-                _dirty = false;
-                return pixels;
-            }
+            var input = work.Input; if (input.Noise is not { } noise) return null;
+            ObjectDisposedException.ThrowIf(noise.IsDisposed, noise);
+            using var sampled = (input.Seamless ? noise.GetSeamlessImage(input.Width, input.Height, input.Invert, input.Skirt, input.Normalize) : noise.GetImage(input.Width, input.Height, input.Invert, input.Normalize)) ?? throw new InvalidOperationException("The noise resource returned no image.");
+            if (sampled.Width != input.Width || sampled.Height != input.Height || sampled.HasMipmaps) throw new InvalidOperationException("The noise resource returned an incompatible image.");
+            using var mapped = input.Ramp is null ? null : ApplyRamp(sampled, input.Ramp); var image = mapped ?? sampled;
+            if (input.Normal) image.BumpMapToNormalMap(input.Strength);
+            if (input.Mipmaps) image.GenerateMipmaps();
+            return TexturePixels.FromImage(image);
         }
-        throw new InvalidOperationException("Noise texture sources changed throughout generation.");
+        finally { baking.Remove(this); }
     }
 
     private static Image ApplyRamp(Image source, Gradient ramp)
@@ -199,10 +166,12 @@ public sealed class NoiseTexture : Texture
             for (var x = 0; x < width; x++)
             {
                 var color = ramp.Sample(source.GetPixel(x, y).Luminance);
-                BinaryPrimitives.WriteUInt32LittleEndian(data.AsSpan((y * width + x) * 4), color.ToABGR32());
+                Image.WriteColor(data, (y * width + x) * 4, Image.Format.Rgba8, color);
             }
         return Image.CreateFromData(width, height, false, Image.Format.Rgba8, data);
     }
+
+    private void SourceDisposed(ElectronObject source) => SourceChanged((Resource)source);
 
     private void SourceChanged(Resource source)
     {
@@ -211,7 +180,7 @@ public sealed class NoiseTexture : Texture
             if (IsDisposed || !ReferenceEquals(source, _noise) && !ReferenceEquals(source, _colorRamp)) return;
             Invalidate();
         }
-        EmitChanged();
+        NotifyInvalidation();
     }
 
     private bool Change<T>(ref T field, T value) where T : IEquatable<T>
@@ -221,7 +190,7 @@ public sealed class NoiseTexture : Texture
             ThrowIfDisposed(); if (field.Equals(value)) return false;
             field = value; Invalidate();
         }
-        EmitChanged();
+        NotifyInvalidation();
         return true;
     }
 
@@ -231,17 +200,17 @@ public sealed class NoiseTexture : Texture
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
     [
-        new PropertyDescriptor<NoiseTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 512),
-        new PropertyDescriptor<NoiseTexture, int>(nameof(Height), t => t.Height, (t, v) => t.Height = v, _ => 512),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(GenerateMipmaps), t => t.GenerateMipmaps, (t, v) => t.GenerateMipmaps = v, _ => true),
-        new PropertyDescriptor<NoiseTexture, Noise?>(nameof(Noise), t => t.Noise, (t, v) => t.Noise = v, _ => null),
-        new PropertyDescriptor<NoiseTexture, Gradient?>(nameof(ColorRamp), t => t.ColorRamp, (t, v) => t.ColorRamp = v, _ => null),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(Seamless), t => t.Seamless, (t, v) => t.Seamless = v, _ => false),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(Invert), t => t.Invert, (t, v) => t.Invert = v, _ => false),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(AsNormalMap), t => t.AsNormalMap, (t, v) => t.AsNormalMap = v, _ => false),
-        new PropertyDescriptor<NoiseTexture, bool>(nameof(Normalize), t => t.Normalize, (t, v) => t.Normalize = v, _ => true),
-        new PropertyDescriptor<NoiseTexture, float>(nameof(SeamlessBlendSkirt), t => t.SeamlessBlendSkirt, (t, v) => t.SeamlessBlendSkirt = v, _ => 0.1f),
-        new PropertyDescriptor<NoiseTexture, float>(nameof(BumpStrength), t => t.BumpStrength, (t, v) => t.BumpStrength = v, _ => 8f),
+        new PropertyDescriptor<NoiseTexture, int>(nameof(Width), t => t.Width, (t, v) => t.Width = v, _ => 512, stored: true),
+        new PropertyDescriptor<NoiseTexture, int>(nameof(Height), t => t.Height, (t, v) => t.Height = v, _ => 512, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>(nameof(GenerateMipmaps), t => t.GenerateMipmaps, (t, v) => t.GenerateMipmaps = v, _ => true, stored: true),
+        new PropertyDescriptor<NoiseTexture, Noise?>(nameof(Noise), t => t.Noise, (t, v) => t.Noise = v, _ => null, stored: true),
+        new PropertyDescriptor<NoiseTexture, Gradient?>(nameof(ColorRamp), t => t.ColorRamp, (t, v) => t.ColorRamp = v, _ => null, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>(nameof(Seamless), t => t.Seamless, (t, v) => t.Seamless = v, _ => false, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>(nameof(Invert), t => t.Invert, (t, v) => t.Invert = v, _ => false, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>(nameof(AsNormalMap), t => t.AsNormalMap, (t, v) => t.AsNormalMap = v, _ => false, stored: true),
+        new PropertyDescriptor<NoiseTexture, bool>(nameof(Normalize), t => t.Normalize, (t, v) => t.Normalize = v, _ => true, stored: true),
+        new PropertyDescriptor<NoiseTexture, float>(nameof(SeamlessBlendSkirt), t => t.SeamlessBlendSkirt, (t, v) => t.SeamlessBlendSkirt = v, _ => 0.1f, stored: true),
+        new PropertyDescriptor<NoiseTexture, float>(nameof(BumpStrength), t => t.BumpStrength, (t, v) => t.BumpStrength = v, _ => 8f, stored: true),
     ]);
 
     /// <inheritdoc />
@@ -264,28 +233,37 @@ public sealed class NoiseTexture : Texture
         var copy = (NoiseTexture)target;
         lock (copy._gate)
         {
-            if (copy._noise is not null) copy._noise.Changed -= copy.SourceChanged;
-            if (copy._colorRamp is not null) copy._colorRamp.Changed -= copy.SourceChanged;
+            if (copy._noise is not null) { copy._noise.Changed -= copy.SourceChanged; copy._noise.Disposed -= copy.SourceDisposed; }
+            if (copy._colorRamp is not null) { copy._colorRamp.Changed -= copy.SourceChanged; copy._colorRamp.Disposed -= copy.SourceDisposed; }
             copy._width = width; copy._height = height; copy._generateMipmaps = mipmaps; copy._normalize = normalize;
             copy._seamless = seamless; copy._invert = invert; copy._asNormalMap = normal;
             copy._seamlessBlendSkirt = skirt; copy._bumpStrength = strength;
-            copy._noise = noise; copy._colorRamp = ramp; copy._pixels = null;
-            if (noise is not null) noise.Changed += copy.SourceChanged;
-            if (ramp is not null) ramp.Changed += copy.SourceChanged;
+            copy._noise = noise; copy._colorRamp = ramp; copy._pixels = copy._renderPixels = null; copy._firstGeneration = true;
+            if (noise is not null) { noise.Changed += copy.SourceChanged; noise.Disposed += copy.SourceDisposed; }
+            if (ramp is not null) { ramp.Changed += copy.SourceChanged; ramp.Disposed += copy.SourceDisposed; }
             copy.Invalidate();
         }
     }
 
     /// <inheritdoc />
+    /// <exception cref="InvalidOperationException">A sampler disposes its generating texture, or a worker callback disposes unfinished generation.</exception>
+    protected override void ValidateDisposal()
+    {
+        if (s_baking?.Contains(this) == true) throw new InvalidOperationException("A sampler cannot dispose its generating texture.");
+        lock (_gate) if (_pending is { } work && !WorkerThreadPool.IsTaskCompleted(work.TaskID) && (WorkerThreadPool.GetCallerTaskID() != -1 || WorkerThreadPool.GetCallerGroupID() != -1)) throw new InvalidOperationException("Pending texture generation must be disposed outside worker callbacks.");
+    }
+
+    /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        if (disposing)
-            lock (_gate)
+        try
+        {
+            if (disposing)
             {
-                if (_noise is not null) _noise.Changed -= SourceChanged;
-                if (_colorRamp is not null) _colorRamp.Changed -= SourceChanged;
-                _noise = null; _colorRamp = null; _pixels = null; Invalidate();
+                try { DrainGeneration(); }
+                finally { lock (_gate) { if (_noise is not null) { _noise.Changed -= SourceChanged; _noise.Disposed -= SourceDisposed; } if (_colorRamp is not null) { _colorRamp.Changed -= SourceChanged; _colorRamp.Disposed -= SourceDisposed; } _noise = null; _colorRamp = null; _pixels = _renderPixels = null; Invalidate(); } }
             }
-        base.Dispose(disposing);
+        }
+        finally { base.Dispose(disposing); }
     }
 }

@@ -68,6 +68,8 @@ public static partial class ResourceFileTypes
         RegisterResource("SystemFont", CreateSystemFontResource);
         RegisterResource("Curve", CreateCurveResource);
         RegisterResource("Gradient", CreateGradientResource);
+        RegisterResource("FastNoiseLite", CreateFastNoiseResource);
+        RegisterResource("NoiseTexture", CreateNoiseTextureResource);
         RegisterResource("CanvasItemMaterial", CreateCanvasItemMaterialResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
@@ -107,6 +109,8 @@ public static partial class ResourceFileTypes
     private static Resource CreateResource() => new();
     private static Curve CreateCurveResource() => new();
     private static Gradient CreateGradientResource() => new();
+    private static FastNoiseLite CreateFastNoiseResource() => new();
+    private static NoiseTexture CreateNoiseTextureResource() => new();
     private static CanvasItemMaterial CreateCanvasItemMaterialResource() => new();
     private static PackedScene CreatePackedScene() => new();
     private static FontVariation CreateFontVariation() => new();

@@ -67,8 +67,8 @@
     {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE", "electron2d": "enumValue:Electron2D.NoiseType.Value()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
     {"godot": "FastNoiseLite::enum_value:NoiseType.TYPE_VALUE_CUBIC", "electron2d": "enumValue:Electron2D.NoiseType.ValueCubic()", "reason": "Namespace-level typed mode maps to the pinned backend with the same numeric identity."},
     {"godot": "FastNoiseLite::property:offset", "electron2d": "property:Electron2D.FastNoiseLite.Offset()", "reason": "The Vector2 XY offset preserves all 1D/2D sampling effects; the Z component is excluded by ADR 0004."},
-    {"electron2d": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)", "godot": "Noise::method:get_image(int:,int:,bool:,bool:,bool:)", "reason": "The 3D-space flag is omitted under the 2D product boundary; two-dimensional sampling, normalization and inversion remain."},
-    {"electron2d": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)", "godot": "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "reason": "The 3D-space flag is omitted under the 2D product boundary; the default two-dimensional overlap blend remains."},
+    {"electron2d": "method:Electron2D.Noise.GetImage(System.Int32,System.Int32,System.Boolean,System.Boolean)", "godot": "Noise::method:get_image(int:,int:,bool:,bool:,bool:)", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
+    {"electron2d": "method:Electron2D.Noise.GetSeamlessImage(System.Int32,System.Int32,System.Boolean,System.Single,System.Boolean)", "godot": "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
     {"electron2d": "T:Electron2D.MouseMode", "godot": "Input::enum:MouseMode", "reason": "C# Enum suffix avoids colliding with Input.MouseMode property; numeric identities match."},
     {"electron2d": "enumValue:Electron2D.MouseMode.Visible()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE", "reason": "Native pointer mode zero."},
     {"electron2d": "enumValue:Electron2D.MouseMode.Hidden()", "godot": "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN", "reason": "Native pointer mode one."},
@@ -1601,20 +1601,6 @@
     },
     {
       "godot": [
-        "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"
-      ],
-      "state": "Partial",
-      "reason": "The 2D path samples a concrete subclass into L8, supports normalization, inversion and finite-value rejection in NoiseTests. The 3D-space option is excluded; exact large-value pixel parity and a concrete built-in sampler remain to verify."
-    },
-    {
-      "godot": [
-        "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)"
-      ],
-      "state": "Partial",
-      "reason": "The 2D overlap/quadrant blend executes for L8 and RGBA8 and is checked in NoiseTests. Pixel-for-pixel parity for arbitrary skirts and derived source formats remains unverified; the 3D-space option is excluded."
-    },
-    {
-      "godot": [
         "Input::enum:MouseMode",
         "Input::enum_value:MouseMode.MOUSE_MODE_VISIBLE",
         "Input::enum_value:MouseMode.MOUSE_MODE_HIDDEN",
@@ -1827,6 +1813,7 @@
       ],
       "state": "Partial",
       "reason": "Current Linux Fontconfig profile enumerates scalable families and resolves style/text/locale requests with exact path/face ownership; unavailable catalogs return empty results. Trigger: owning Windows DirectWrite and Apple CoreText provider slices must connect these same static OS contracts, with actual target discovery/ownership fixtures. Discovery does not depend on a graphics session."
-    }
+    },
+    {"godot": ["Noise::method:get_noise_1d(float:)", "Noise::method:get_noise_2d(float:,float:)", "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "class:Noise", "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Implemented", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."}
   ]
 }

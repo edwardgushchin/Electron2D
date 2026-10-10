@@ -1,6 +1,6 @@
 # Image
 
-Last updated: 2026-10-05
+Last updated: 2026-10-11
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -563,3 +563,5 @@ The implemented surface covers all backend-independent CPU operations in the aud
 See [ADR 0039](../decisions/resources.md#adr-0039).
 
 The native codec checks in `ImageCodecTests` cover six load formats, PNG/JPEG saving, SVG size/color/scale and rejection of DTD or oversized input, PNG grayscale/16-bit/alpha vectors, BMP/TGA orientation and pitch, callback failure, state preservation, parallel independent decoding, disposal, virtual paths, oversized inputs and atomic-write failures on Linux x64. The rendering checks additionally upload decoded PNG pixels and verify GPU readback through both HLSL and GLSL. These checks do not establish AOT or other-platform acceptance.
+
+Non-renormalized mipmap generation for L8/LA8/R8/RG8/RGB8/RGBA8 uses encoded byte averages rounded to nearest. Odd extents truncate when halved; one-pixel axes repeat their sample. The connected noise image fixtures verify complete grayscale/colored/normal mip chains. Floating, packed and renormalized paths keep their existing typed processing profiles.

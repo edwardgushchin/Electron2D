@@ -25,27 +25,27 @@ internal static partial class RenderingRuntimeTests
         var window = new Window { Size = new(64, 32), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         window.AddChild(new Sprite { Texture = texture, Centered = false, Position = new(4, 4), Scale = new(16, 16) });
         window.AddChild(new Sprite { Name = "GeneratedNoiseSprite", Texture = generatedTexture, Centered = false, Position = new(4, 20), Scale = new(16, 8) });
-        var frames = 0;
+        var frames = 0; var staged = false; var publications = 0; var targetPublication = 0; generatedTexture.Changed += _ => publications++;
         window.Ready += _ =>
         {
             var server = RenderingServer.Service!;
             RenderingServer.SetDefaultClearColor(Colors.Black);
             RenderingServer.FramePostDraw += () =>
             {
+                frames++; Check(frames < 90, "Noise pixel completion timeout.");
+                using var source = texture.GetImage(); using var generatedImage = generatedTexture.GetImage();
+                if (source is null || generatedImage is null) return;
                 using var frame = server.Readback();
-                frames++;
-                Pixel(frame, 8, 8, Colors.Red);
-                Pixel(frame, 24, 8, frames == 1 ? Colors.Blue : Colors.Red);
-                using var generatedImage = generatedTexture.GetImage() ?? throw new InvalidOperationException("The built-in generator supplies pixels.");
-                Pixel(frame, 8, 24, generatedImage.GetPixel(0, 0));
-                Pixel(frame, 24, 24, generatedImage.GetPixel(1, 0));
-                if (frames == 1) { noise.Constant = true; generatedNoise.Seed = 42; }
-                else window.Tree!.Quit();
+                Pixel(frame, 8, 8, source.GetPixel(0, 0)); Pixel(frame, 24, 8, source.GetPixel(1, 0));
+                Pixel(frame, 8, 24, generatedImage.GetPixel(0, 0)); Pixel(frame, 24, 24, generatedImage.GetPixel(1, 0));
+                if (!staged) { Pixel(frame, 24, 8, Colors.Blue); staged = true; targetPublication = publications + 1; noise.Constant = true; generatedNoise.Seed = 42; }
+                else if (source.GetPixel(1, 0).R > .99f && publications >= targetPublication) window.Tree!.Quit();
+
             };
         };
         Engine.Run(window);
         Released(window);
-        Check(frames == 2, "Noise source changes update a retained Sprite texture.");
+        Check(frames >= 2 && staged, "Noise source changes update a retained Sprite texture.");
         Console.WriteLine($"Noise texture native pixels passed: {backend}.");
     }
 

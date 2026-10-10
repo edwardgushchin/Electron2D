@@ -294,7 +294,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 
     private unsafe void PrepareTexture(Texture texture)
     {
-        var pixels = texture.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
+        var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
         _textures.TryGetValue(texture, out var previous);
         if (ReferenceEquals(previous.Pixels, pixels)) return;
         var replacement = previous.Handle is null || !ReferenceEquals(previous.Pixels.Allocation, pixels.Allocation);

@@ -376,7 +376,7 @@ internal sealed unsafe class GPUCanvasBackend : CanvasBackend
         }
         if (_usedTextures.Add(texture))
         {
-            var pixels = texture.CapturePixels() ?? throw new InvalidOperationException("A sampled texture has no readable image.");
+            var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
             if (!_textures.TryGetValue(texture, out var gpu) || !ReferenceEquals(gpu.Pixels.Allocation, pixels.Allocation))
             {
                 var replacement = new GPUTexture(_device, pixels);

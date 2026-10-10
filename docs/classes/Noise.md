@@ -1,6 +1,6 @@
 # Noise
 
-Last updated: 2026-09-23
+Last updated: 2026-10-11
 
 **Inherits:** [Resource](Resource.md) → [ElectronObject](ElectronObject.md)
 
@@ -15,6 +15,8 @@ Last updated: 2026-09-23
 `Noise` supplies the shared 1D/2D sampling contract and creates independent grayscale images from a concrete sampler. A derived class supplies `GetNoise1D` and `GetNoise2D`. The vector query forwards to the two-coordinate query. Image generation uses integer pixel coordinates, so a concrete generator controls frequency, seed and any other sampling policy. The base has no mutable generator state or native backend. It inherits managed Resource lifetime and requires a derived type to implement its own duplication hooks if duplication is needed.
 
 Only the two-dimensional branch of the reference class applies to Electron2D. The 3D-space image option, 3D noise samples and volume images are outside the accepted product boundary.
+
+Ordinary image normalization keeps float quantization, widening overflowing finite spans. The seamless L8/RGBA8 path retains quadrant wrapping and packed seam blends; copied RGBA alpha is preserved while seam alpha becomes opaque. Large overlaps are clipped to destination bounds. NoiseTexture may execute custom virtual image methods on workers, so applications coordinate mutable sampler state and avoid scene/render access from those methods. See [Noise image verification](../components/noise.md#verification).
 
 ## Example
 

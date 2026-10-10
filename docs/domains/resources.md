@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -61,7 +61,7 @@ ResourceLoader uses the existing process-wide weak path cache to load ImageTextu
 
 BitMap adds a packed boolean grid with Image alpha import, L8 export, nearest resize, region mutation, circular morphology and marching-squares polygon extraction. Its operations are managed and independent of a physics or rendering backend.
 
-Noise adds an abstract scalar sampling contract and managed grayscale/seamless image generation. NoiseTexture borrows a concrete sampler and optional Gradient, rebakes lazily on settings or source changes, and exposes its image through Texture. Applications can derive a sampler or use the built-in FastNoiseLite resource.
+Noise adds an abstract scalar sampling contract and managed grayscale/seamless image generation. NoiseTexture borrows a concrete sampler and optional Gradient, publishes deferred first and later background images on the scene owner, retains completed pixels during work, and uses synchronous reads for library hosts. FastNoiseLite/NoiseTexture authored settings have compiled portable schemas and independent local scene graphs. Applications can derive a sampler or use the built-in FastNoiseLite resource.
 
 Shader resources add copied binary loading and reflected typed parameter discovery. ShaderMaterial adds borrowed Shader assignment and typed scalar/vector/matrix/array values (including RGB Color and Rect2 aliases, Vector3 float3 values, Vector3i signed/unsigned triples, unsigned vectors with preserved component bits and Transform float2x2 basis values) and borrowed Texture bindings with independent resource copies and migration across shader reload. ImageTexture adds copied pixel snapshots, Update, logical size overrides, mip metadata and independent image readback; Texture is its direct abstract parent. AtlasTexture adds borrowed rectangular views with margins, nested drawing, CPU crop/opacity queries, shared source GPU storage and graph-aware resource duplication.
 
@@ -97,7 +97,7 @@ Concrete Shader/ShaderMaterial resources use the internal rendering reflection a
 
 ## Current limitations
 
-`Image`, `BitMap`, and `FastNoiseLite` are concrete managed assets; `Noise` is their abstract sampling contract. NoiseTexture has managed and Linux Wayland native pixel checks but no other-platform verification. The synchronous loader covers ImageTexture, dynamic FontFile and WAV/MP3/Ogg sources with a weak cache: there is no general loader/saver, complete image-codec family, public format-loader plugin, UID/dependency graph, threaded loading, importer, renderer RID, editor resource-ID map, script resource, automatic file-serialization discovery, resource manager, or asset lease type. BitMap has no physics collision consumer yet. In-memory packed scenes perform automatic per-instance local duplication, association, setup, and root ownership, but there is no disk format or cross-platform asset import/package verification. Exact triggers for codec, compression, texture, and lease work are recorded in ADR 0039 and ResourceLoader coverage.
+`Image`, `BitMap` and `FastNoiseLite` are concrete managed assets; Noise is the abstract sampling contract. ResourceLoader/Saver execute explicit typed resource/scene archives and compiled format extensions, with UID/dependency graphs, cache reconciliation, threaded preparation and owner publication. Loaded roots/instances retain internal file-graph ownership while reused external sources stay borrowed. There is no automatic file-schema discovery or public manual reference counting. NoiseTexture's owner/worker/file/local graph and Linux rendering profile is verified below; foreign execution/import/package, editor tooling and native allocator totals remain separate gates.
 
 ## Decisions
 
@@ -201,3 +201,5 @@ AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typ
 [Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
 
 [Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) provide complete frame reservations/configuration, source-owned transient padded textures and retained timed TileMapLayer drawing. Physics/navigation geometry remains independent of visual frames.
+
+[NoiseGenerationTests](../../tests/Electron2D.Tests/NoiseGenerationTests.cs), the 142 pinned image/kernel cases and [NoiseGenerationRenderingTests](../../tests/Electron2D.Tests/NoiseGenerationRenderingTests.cs) verify deferred/background image production, source snapshots, failures/lifetime, complete portable/local graphs and actual queued old/new pixels. See [Noise](../components/noise.md) for exact measurements and platform limits.

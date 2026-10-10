@@ -9,11 +9,14 @@
     <TieredCompilation Condition="'$(Configuration)' == 'Release'">false</TieredCompilation>
   </PropertyGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TestData/Noise/image-reference.json" LogicalName="TestNoise.image-reference.json" />
+    <EmbeddedResource Include="TestData/Noise/rgba-reference.json" LogicalName="TestNoise.rgba-reference.json" />
     <PackageReference Include="BouncyCastle.Cryptography" Version="2.7.0" PrivateAssets="all" Publish="true" />
     <ProjectReference Include="../../Electron2D.csproj" />
     <Compile Include="../PhysicsBodyExtension.Consumer/ControlledState.cs" Link="Consumers/ControlledState.cs" />
     <Compile Include="../../examples/PhysicsResultConstruction/ResultConstructionChecks.cs" Link="Examples/PhysicsResultConstruction/ResultConstructionChecks.cs" />
     <Compile Include="../../examples/WorkerRoutes/RoutePlanner.cs" Link="Examples/WorkerRoutes/RoutePlanner.cs" />
+    <Compile Include="../../examples/ProceduralNoise/NoiseAssets.cs" Link="Examples/NoiseAssets.cs" /><Compile Include="../../examples/ProceduralNoise/NoiseScene.cs" Link="Examples/NoiseScene.cs" />
     <Compile Include="../../examples/IterationRoutes/IterationAssets.cs;../../examples/IterationRoutes/IterationScene.cs" Link="Examples/IterationRoutes/%(Filename)%(Extension)" />
     <Compile Include="../../examples/AnimatedTiles/AnimatedTileScene.cs;../../examples/AnimatedTiles/AnimatedTileAssets.cs" Link="Examples/AnimatedTiles/%(Filename)%(Extension)" />
     <Compile Include="../../examples/TileRoutes/TileRouteScene.cs;../../examples/TileRoutes/TileRouteAssets.cs" Link="Examples/TileRoutes/%(Filename)%(Extension)" />

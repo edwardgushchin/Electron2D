@@ -36,7 +36,7 @@ internal static class CanvasGeometry
 
     private static void AppendTexture(List<CanvasVertex> output, CanvasCommand command, Transform transform, Color color, bool snapVertices)
     {
-        var texture = command.Texture!; var pixels = texture is ViewportTexture ? null : texture.CapturePixels() ?? throw new InvalidOperationException("The drawn texture has no readable image.");
+        var texture = command.Texture!; var pixels = texture is ViewportTexture ? null : texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
         var dimensions = texture is ViewportTexture ? texture.GetSize() : new Vector2(pixels!.Source.Width, pixels.Source.Height);
         if (dimensions.X <= 0 || dimensions.Y <= 0) return;
         var size = command.B.Abs();

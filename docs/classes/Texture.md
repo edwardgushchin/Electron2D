@@ -1,6 +1,6 @@
 # Texture
 
-Last updated: 2026-10-04
+Last updated: 2026-10-11
 
 - Declaration: `public abstract class Texture : Resource`
 - Source: [Texture.cs](../../src/Scene/Resources/Texture.cs)
@@ -103,7 +103,7 @@ All three methods are virtual. CanvasItem.DrawTexture, DrawTextureRect and DrawT
 
 ### GetImage
 
-The base method checks disposal and returns null. A renderable custom subclass overrides it to return an independent image and emits Changed when pixels change. The renderer copies and disposes this returned image. Returning null fails explicitly when the texture is bound for drawing. Custom implementations must serialize their own data access; the base cache serializes snapshot acquisition and invalidation.
+The base method checks disposal and returns null. A renderable custom subclass overrides it to return an independent image and emits Changed when pixels change. The renderer copies and disposes this returned image. Returning null before readable storage exists uses the renderer's diagnostic placeholder when sampled. Generated textures may retain separate last-valid rendering storage while GetImage is null. Custom implementations must serialize their own data access; the base cache serializes snapshot acquisition and invalidation.
 
 ### IsPixelOpaque
 

@@ -1279,8 +1279,8 @@
     {
       "godot": "NoiseTexture2D::property:resource_local_to_scene",
       "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
-      "state": "Partial",
-      "reason": "The inherited Resource switch and graph-copy hooks exist; managed duplicate tests pass, but scene-local noise texture instantiation has not yet been verified."
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."
     },
     {
       "godot": "Texture2D::method:get_width()",
@@ -3625,8 +3625,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "NoiseTextureTests covers 2D sampling, defaults, source invalidation, gradient mapping, normals, mipmaps, seamless selection, copies, failure recovery and disposal. Generation is lazy with immediate invalidation under ADR 0013 rather than the pinned deferred worker schedule; exact derived-image parity and scene-local instantiation remain to verify. Retained Sprite pixels pass on Linux Wayland compatibility and GPU; other platforms remain unverified.",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate.",
       "godot": [
         "class:NoiseTexture2D",
         "NoiseTexture2D::property:as_normal_map",
@@ -3639,7 +3639,8 @@
         "NoiseTexture2D::property:normalize",
         "NoiseTexture2D::property:seamless",
         "NoiseTexture2D::property:seamless_blend_skirt",
-        "NoiseTexture2D::property:width"
+        "NoiseTexture2D::property:width",
+        "NoiseTexture2D::property:resource_local_to_scene"
       ]
     },
     {
@@ -6060,6 +6061,10 @@
       "electron2d": "method:Electron2D.Material.Dispose(System.Boolean)",
       "reason": "Inherited managed disposal releases stable borrowed material RID registration before Resource teardown; does not dispose borrowed shader/texture dependencies.",
       "adr": "ADRs 0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.NoiseTexture.ValidateDisposal()",
+      "reason": "C# deterministic disposal precondition: reject recursive sampling and worker disposal of unfinished generation before logical lifetime mutation, preserving pool dependency guards under ADRs 0013/0014/0104."
     }
   ]
 }
