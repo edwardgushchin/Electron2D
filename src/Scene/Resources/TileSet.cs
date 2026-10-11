@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Defines tile grid geometry, terrain definitions, reusable patterns, atlas sources and shared physics and navigation layer policies.</summary>
+/// <summary>Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, atlas sources and shared physics and navigation layer policies.</summary>
 /// <remarks>Sources are transferred between sets, while materials are borrowed. Copies duplicate sources
 /// even in shallow mode so copying cannot remove sources from the original set.</remarks>
 public sealed partial class TileSet : Resource
@@ -168,6 +168,7 @@ public sealed partial class TileSet : Resource
     private void ClearContents()
     {
         ClearPatterns();
+        ClearProxies();
         foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear(); NavigationLayers.Clear();
         foreach (var source in _sources.Values) if (source is not null) { source.Changed -= SourceChanged; source.Disposed -= SourceDisposed; source.OwnerSet = null; }
         _sources.Clear();
@@ -193,6 +194,9 @@ public sealed partial class TileSet : Resource
             copy.AddSource(source, pair.Key);
         }
         copy.RestorePatterns(_patterns.Select(p => (TileMapPattern)(deep ? duplicate(p)! : p)).ToArray());
+        foreach (var p in _sourceProxies) copy._sourceProxies.Add(p.Key, p.Value);
+        foreach (var p in _coordsProxies) copy._coordsProxies.Add(p.Key, p.Value);
+        foreach (var p in _alternativeProxies) copy._alternativeProxies.Add(p.Key, p.Value);
     }
     private void RestoreSourceIDs(int[] ids)
     {
@@ -215,6 +219,7 @@ public sealed partial class TileSet : Resource
         foreach (var property in GeometryProperties()) yield return property;
         foreach (var property in TerrainProperties()) yield return property;
         foreach (var property in PatternProperties()) yield return property;
+        foreach (var property in ProxyProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, Vector2i>(nameof(TileSize), n => n.TileSize, (n, v) => n.TileSize = v, _ => new(16, 16), stored: true);
         yield return new PropertyDescriptor<TileSet, int>("PhysicsLayerCount", n => n.GetPhysicsLayersCount(), (n, v) => n.RestoreLayerCount(v), _ => 0, stored: true);
         for (var i = 0; i < PhysicsLayers.Count; i++)

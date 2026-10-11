@@ -1134,6 +1134,81 @@
       "godot": "TileSet::method:remove_pattern(int:)",
       "electron2d": "method:Electron2D.TileSet.RemovePattern(System.Int32)",
       "reason": "ADR 0101: independent typed TileMapPattern cells, explicit empty entries and margins, ordered borrowed TileSet patterns, parity-aware layer capture/mapping/placement, preflight and complete edit publication, resource/scene graphs and real drawing/CPU-GPU collision/navigation consumers. TilePatternTests covers all 48 grid configurations with 144 captures/576 placements, failure boundaries, fresh-process placement and native rendered checks."
+    },
+    {
+      "godot": "TileSet::method:cleanup_invalid_tile_proxies()",
+      "electron2d": "method:Electron2D.TileSet.CleanupInvalidTileProxies()",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:clear_tile_proxies()",
+      "electron2d": "method:Electron2D.TileSet.ClearTileProxies()",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:get_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSet.GetAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:get_coords_level_tile_proxy(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSet.GetCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:get_source_level_tile_proxy(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetSourceLevelTileProxy(System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:has_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSet.HasAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:has_coords_level_tile_proxy(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSet.HasCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:has_source_level_tile_proxy(int:)",
+      "electron2d": "method:Electron2D.TileSet.HasSourceLevelTileProxy(System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:map_tile_proxy(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSet.MapTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:remove_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSet.RemoveAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:remove_coords_level_tile_proxy(int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSet.RemoveCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:remove_source_level_tile_proxy(int:)",
+      "electron2d": "method:Electron2D.TileSet.RemoveSourceLevelTileProxy(System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:set_alternative_level_tile_proxy(int:,Vector2i:,int:,int:,Vector2i:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32,System.Int32,Electron2D.Vector2i,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:set_coords_level_tile_proxy(int:,Vector2i:,int:,Vector2i:)",
+      "electron2d": "method:Electron2D.TileSet.SetCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Vector2i)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
+    },
+    {
+      "godot": "TileSet::method:set_source_level_tile_proxy(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetSourceLevelTileProxy(System.Int32,System.Int32)",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
     }
   ],
   "extras": [
@@ -1476,10 +1551,6 @@
         "TileMapLayer::property:y_sort_origin",
         "TileSet::method:add_custom_data_layer(int:)",
         "TileSet::method:add_occlusion_layer(int:)",
-        "TileSet::method:cleanup_invalid_tile_proxies()",
-        "TileSet::method:clear_tile_proxies()",
-        "TileSet::method:get_alternative_level_tile_proxy(int:,Vector2i:,int:)",
-        "TileSet::method:get_coords_level_tile_proxy(int:,Vector2i:)",
         "TileSet::method:get_custom_data_layer_by_name(String:)",
         "TileSet::method:get_custom_data_layer_name(int:)",
         "TileSet::method:get_custom_data_layer_type(int:)",
@@ -1487,30 +1558,19 @@
         "TileSet::method:get_occlusion_layer_light_mask(int:)",
         "TileSet::method:get_occlusion_layer_sdf_collision(int:)",
         "TileSet::method:get_occlusion_layers_count()",
-        "TileSet::method:get_source_level_tile_proxy(int:)",
-        "TileSet::method:has_alternative_level_tile_proxy(int:,Vector2i:,int:)",
-        "TileSet::method:has_coords_level_tile_proxy(int:,Vector2i:)",
         "TileSet::method:has_custom_data_layer_by_name(String:)",
-        "TileSet::method:has_source_level_tile_proxy(int:)",
-        "TileSet::method:map_tile_proxy(int:,Vector2i:,int:)",
         "TileSet::method:move_custom_data_layer(int:,int:)",
         "TileSet::method:move_occlusion_layer(int:,int:)",
-        "TileSet::method:remove_alternative_level_tile_proxy(int:,Vector2i:,int:)",
-        "TileSet::method:remove_coords_level_tile_proxy(int:,Vector2i:)",
         "TileSet::method:remove_custom_data_layer(int:)",
         "TileSet::method:remove_occlusion_layer(int:)",
-        "TileSet::method:remove_source_level_tile_proxy(int:)",
-        "TileSet::method:set_alternative_level_tile_proxy(int:,Vector2i:,int:,int:,Vector2i:,int:)",
-        "TileSet::method:set_coords_level_tile_proxy(int:,Vector2i:,int:,Vector2i:)",
         "TileSet::method:set_custom_data_layer_name(int:,String:)",
         "TileSet::method:set_custom_data_layer_type(int:,int:Variant.Type)",
         "TileSet::method:set_occlusion_layer_light_mask(int:,int:)",
         "TileSet::method:set_occlusion_layer_sdf_collision(int:,bool:)",
-        "TileSet::method:set_source_level_tile_proxy(int:,int:)",
         "TileSet::property:uv_clipping"
       ],
       "state": "Blocked",
-      "reason": "Trigger: the owning tile capability after ADR 0101 square-atlas physics. proxy painting requires ordered proxy tables and mapping consumers; occlusion/material/Z ordering/custom tile data require their tile-specific consumers and typed storage. No inert public switches are supplied."
+      "reason": "Trigger: the owning tile capability after ADR 0101 square-atlas physics. occlusion/material/Z ordering/custom tile data require their tile-specific consumers and typed storage. No inert public switches are supplied."
     },
     {
       "godot": [
@@ -1668,6 +1728,27 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0101: independent typed TileMapPattern cells, explicit empty entries and margins, ordered borrowed TileSet patterns, parity-aware layer capture/mapping/placement, preflight and complete edit publication, resource/scene graphs and real drawing/CPU-GPU collision/navigation consumers. TilePatternTests covers all 48 grid configurations with 144 captures/576 placements, failure boundaries, fresh-process placement and native rendered checks."
+    },
+    {
+      "godot": [
+        "TileSet::method:cleanup_invalid_tile_proxies()",
+        "TileSet::method:clear_tile_proxies()",
+        "TileSet::method:get_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:get_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:get_source_level_tile_proxy(int:)",
+        "TileSet::method:has_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:has_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:has_source_level_tile_proxy(int:)",
+        "TileSet::method:map_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:remove_alternative_level_tile_proxy(int:,Vector2i:,int:)",
+        "TileSet::method:remove_coords_level_tile_proxy(int:,Vector2i:)",
+        "TileSet::method:remove_source_level_tile_proxy(int:)",
+        "TileSet::method:set_alternative_level_tile_proxy(int:,Vector2i:,int:,int:,Vector2i:,int:)",
+        "TileSet::method:set_coords_level_tile_proxy(int:,Vector2i:,int:,Vector2i:)",
+        "TileSet::method:set_source_level_tile_proxy(int:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0101: independent typed source/coordinate/alternative proxies, valid-original bypass, most-specific single-hop mapping with copied tuple results, obsolete-original cleanup, complete callback-failure commitment and portable independent tables. TileProxyTests compares pinned map/CRUD/cleanup stages and consumes mapped identities through live layers/patterns, CPU/GPU collision/navigation, fresh scene files and native renderer workflows."
     }
   ]
 }

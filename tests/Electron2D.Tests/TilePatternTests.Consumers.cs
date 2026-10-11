@@ -3,7 +3,7 @@ using Electron2D;
 
 internal static partial class TilePatternTests
 {
-    private sealed class Library : IDisposable
+    internal sealed class Library : IDisposable
     {
         internal readonly TileSet Set = new() { TileSize = new(16, 16) };
         internal readonly TileSetAtlasSource Atlas = new() { TextureRegionSize = new(16, 16), UseTexturePadding = false };

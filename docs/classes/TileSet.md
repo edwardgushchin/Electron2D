@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Overview
 
-Defines tile grid geometry, terrain definitions, reusable patterns, atlas sources and shared physics and navigation layer policies.
+Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -39,6 +39,21 @@ set.SetPhysicsLayerPhysicsMaterial(0, material);
 
 | Member | Kind | Summary |
 | --- | --- | --- |
+| [`public void SetSourceLevelTileProxy(int sourceFrom, int sourceTo)`](#proxy-setsourceleveltileproxy) | method | Assigns a source-level replacement for an unresolved tile identity. |
+| [`public int GetSourceLevelTileProxy(int sourceFrom) { ThrowIfDisposed(); return _sourceProxies[sourceFrom]; }`](#proxy-getsourceleveltileproxy) | method | Returns the stored destination source identity. |
+| [`public bool HasSourceLevelTileProxy(int sourceFrom) { ThrowIfDisposed(); return _sourceProxies.ContainsKey(sourceFrom); }`](#proxy-hassourceleveltileproxy) | method | Returns whether a source-level replacement is stored. |
+| [`public void RemoveSourceLevelTileProxy(int sourceFrom)`](#proxy-removesourceleveltileproxy) | method | Removes one stored source replacement and emits Changed. |
+| [`public void SetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int sourceTo, Vector2i coordsTo)`](#proxy-setcoordsleveltileproxy) | method | Assigns a source-and-atlas replacement, retaining the caller's alternative on mapping. |
+| [`public (int SourceID, Vector2i AtlasCoords) GetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`](#proxy-getcoordsleveltileproxy) | method | Returns an independent typed destination source-and-atlas pair. |
+| [`public bool HasCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`](#proxy-hascoordsleveltileproxy) | method | Returns whether a source-and-atlas replacement is stored. |
+| [`public void RemoveCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`](#proxy-removecoordsleveltileproxy) | method | Removes one stored source-and-atlas replacement and emits Changed. |
+| [`public void SetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom, int sourceTo, Vector2i coordsTo, int alternativeTo)`](#proxy-setalternativeleveltileproxy) | method | Assigns a complete source, atlas and alternative replacement. |
+| [`public (int SourceID, Vector2i AtlasCoords, int AlternativeTile) GetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`](#proxy-getalternativeleveltileproxy) | method | Returns an independent typed destination tile identity. |
+| [`public bool HasAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`](#proxy-hasalternativeleveltileproxy) | method | Returns whether a complete identity replacement is stored. |
+| [`public void RemoveAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`](#proxy-removealternativeleveltileproxy) | method | Removes one complete identity replacement and emits Changed. |
+| [`public (int SourceID, Vector2i AtlasCoords, int AlternativeTile) MapTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`](#proxy-maptileproxy) | method | Returns the original valid tile or applies one most-specific replacement to an unresolved identity. |
+| [`public void CleanupInvalidTileProxies()`](#proxy-cleanupinvalidtileproxies) | method | Removes obsolete mappings whose original source, tile or complete alternative now exists. |
+| [`public void ClearTileProxies() { ThrowIfDisposed(); ClearProxies(); EmitChanged(); }`](#proxy-cleartileproxies) | method | Clears all three replacement tables and emits Changed, including when already empty. |
 | [`public int AddPattern(TileMapPattern pattern, int index = -1)`](#pattern-addpattern) | method | Inserts a borrowed live, nonempty, distinct instance at index; every negative index appends. Returns its index. Null/disposed input, empty/duplicate patterns and index beyond count throw typed exceptions before list mutation. Other sets may reference the same instance. Changed and property-list change publish after commitment. |
 | [`public TileMapPattern GetPattern(int index = -1)`](#pattern-getpattern) | method | Returns a borrowed pattern at an explicit zero-based index. The retained default -1 is invalid and throws ArgumentOutOfRangeException; it does not select the last entry. |
 | [`public int GetPatternsCount()`](#pattern-getpatternscount) | method | Returns list count. A pattern may become empty after insertion and still belongs to the list until removal or disposal. |
@@ -844,3 +859,218 @@ Returns list count. A pattern may become empty after insertion and still belongs
 Removes the indexed reference, unsubscribes disposal observation and publishes the list schema change. It does not dispose the resource. Missing index throws ArgumentOutOfRangeException.
 
 See [reusable patterns](../components/tiles.md#reusable-patterns) for the executable example, ownership, file graphs and verification boundaries.
+
+## Tile Proxy Method Descriptions
+
+<a id="proxy-setsourceleveltileproxy"></a>
+### SetSourceLevelTileProxy
+
+`public void SetSourceLevelTileProxy(int sourceFrom, int sourceTo)`
+
+Assigns a source-level replacement for an unresolved tile identity.
+
+`sourceFrom`: Nonnegative original source identity.
+
+`sourceTo`: Nonnegative destination source identity.
+
+Sources need not currently exist. Every assignment emits Changed, including repeated assignments.
+
+Throws `ArgumentOutOfRangeException`: Either source identity is negative.
+
+<a id="proxy-getsourceleveltileproxy"></a>
+### GetSourceLevelTileProxy
+
+`public int GetSourceLevelTileProxy(int sourceFrom) { ThrowIfDisposed(); return _sourceProxies[sourceFrom]; }`
+
+Returns the stored destination source identity.
+
+`sourceFrom`: Original source identity.
+
+Returns: The destination source identity.
+
+Throws `KeyNotFoundException`: No mapping is stored for this source.
+
+<a id="proxy-hassourceleveltileproxy"></a>
+### HasSourceLevelTileProxy
+
+`public bool HasSourceLevelTileProxy(int sourceFrom) { ThrowIfDisposed(); return _sourceProxies.ContainsKey(sourceFrom); }`
+
+Returns whether a source-level replacement is stored.
+
+`sourceFrom`: Original source identity.
+
+Returns: Whether the mapping is stored.
+
+<a id="proxy-removesourceleveltileproxy"></a>
+### RemoveSourceLevelTileProxy
+
+`public void RemoveSourceLevelTileProxy(int sourceFrom)`
+
+Removes one stored source replacement and emits Changed.
+
+`sourceFrom`: Original source identity.
+
+Throws `KeyNotFoundException`: No mapping is stored for this source.
+
+<a id="proxy-setcoordsleveltileproxy"></a>
+### SetCoordsLevelTileProxy
+
+`public void SetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int sourceTo, Vector2i coordsTo)`
+
+Assigns a source-and-atlas replacement, retaining the caller's alternative on mapping.
+
+`sourceFrom`: Nonnegative original source identity.
+
+`coordsFrom`: Nonnegative original atlas coordinates.
+
+`sourceTo`: Nonnegative destination source identity.
+
+`coordsTo`: Nonnegative destination atlas coordinates.
+
+Throws `ArgumentOutOfRangeException`: A source identity or atlas component is negative.
+
+<a id="proxy-getcoordsleveltileproxy"></a>
+### GetCoordsLevelTileProxy
+
+`public (int SourceID, Vector2i AtlasCoords) GetCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`
+
+Returns an independent typed destination source-and-atlas pair.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+Returns: The destination source and atlas coordinates.
+
+Throws `KeyNotFoundException`: No mapping is stored for this pair.
+
+<a id="proxy-hascoordsleveltileproxy"></a>
+### HasCoordsLevelTileProxy
+
+`public bool HasCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`
+
+Returns whether a source-and-atlas replacement is stored.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+Returns: Whether the mapping is stored.
+
+<a id="proxy-removecoordsleveltileproxy"></a>
+### RemoveCoordsLevelTileProxy
+
+`public void RemoveCoordsLevelTileProxy(int sourceFrom, Vector2i coordsFrom)`
+
+Removes one stored source-and-atlas replacement and emits Changed.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+Throws `KeyNotFoundException`: No mapping is stored for this pair.
+
+<a id="proxy-setalternativeleveltileproxy"></a>
+### SetAlternativeLevelTileProxy
+
+`public void SetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom, int sourceTo, Vector2i coordsTo, int alternativeTo)`
+
+Assigns a complete source, atlas and alternative replacement.
+
+`sourceFrom`: Nonnegative original source identity.
+
+`coordsFrom`: Nonnegative original atlas coordinates.
+
+`alternativeFrom`: Original alternative, including transform flags, or minus one.
+
+`sourceTo`: Nonnegative destination source identity.
+
+`coordsTo`: Nonnegative destination atlas coordinates.
+
+`alternativeTo`: Destination alternative, including transform flags, or minus one.
+
+The complete alternative identity is matched and replaced; transform flags are not appended to the destination.
+
+Throws `ArgumentOutOfRangeException`: A source/atlas component is negative or an alternative is below minus one.
+
+<a id="proxy-getalternativeleveltileproxy"></a>
+### GetAlternativeLevelTileProxy
+
+`public (int SourceID, Vector2i AtlasCoords, int AlternativeTile) GetAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`
+
+Returns an independent typed destination tile identity.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+`alternativeFrom`: Complete original alternative identity.
+
+Returns: The complete destination identity.
+
+Throws `KeyNotFoundException`: No mapping is stored for this identity.
+
+<a id="proxy-hasalternativeleveltileproxy"></a>
+### HasAlternativeLevelTileProxy
+
+`public bool HasAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`
+
+Returns whether a complete identity replacement is stored.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+`alternativeFrom`: Complete original alternative identity.
+
+Returns: Whether the mapping is stored.
+
+<a id="proxy-removealternativeleveltileproxy"></a>
+### RemoveAlternativeLevelTileProxy
+
+`public void RemoveAlternativeLevelTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`
+
+Removes one complete identity replacement and emits Changed.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+`alternativeFrom`: Complete original alternative identity.
+
+Throws `KeyNotFoundException`: No mapping is stored for this identity.
+
+<a id="proxy-maptileproxy"></a>
+### MapTileProxy
+
+`public (int SourceID, Vector2i AtlasCoords, int AlternativeTile) MapTileProxy(int sourceFrom, Vector2i coordsFrom, int alternativeFrom)`
+
+Returns the original valid tile or applies one most-specific replacement to an unresolved identity.
+
+`sourceFrom`: Original source identity.
+
+`coordsFrom`: Original atlas coordinates.
+
+`alternativeFrom`: Complete original alternative identity.
+
+Returns: The original or mapped source, atlas and alternative identity as an independent value.
+
+Valid originals bypass all proxies. Otherwise alternative, coordinate and source levels are tried in that order. Mapping does not follow chains or validate the destination; cycles therefore terminate after one lookup. Callers explicitly use the result with a layer or pattern SetCell; existing cells are not rewritten.
+
+<a id="proxy-cleanupinvalidtileproxies"></a>
+### CleanupInvalidTileProxies
+
+`public void CleanupInvalidTileProxies()`
+
+Removes obsolete mappings whose original source, tile or complete alternative now exists.
+
+Each level checks only its own original identity. Missing destinations are retained. All removals commit before one Changed notification; listener failure cannot leave a partial cleanup.
+
+<a id="proxy-cleartileproxies"></a>
+### ClearTileProxies
+
+`public void ClearTileProxies() { ThrowIfDisposed(); ClearProxies(); EmitChanged(); }`
+
+Clears all three replacement tables and emits Changed, including when already empty.
+
+All operations throw ObjectDisposedException on a disposed set. Resource authors coordinate edits with scene consumers. Value tuples are independent copied results; authoring/export may allocate, while warmed lookups do not allocate measured owner-thread managed bytes. See [explicit tile proxies](../components/tiles.md#explicit-tile-proxies) for the compiled workflow, storage/copy policy and verification limits.

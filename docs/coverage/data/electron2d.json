@@ -153354,6 +153354,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.CleanupInvalidTileProxies()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "CleanupInvalidTileProxies",
+    "signature": "public System.Void CleanupInvalidTileProxies()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.ClearTerrains(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153369,6 +153382,19 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.ClearTileProxies()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "ClearTileProxies",
+    "signature": "public System.Void ClearTileProxies()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -153441,6 +153467,59 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetAlternativeLevelTileProxy",
+    "signature": "public System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i, System.Int32\u003E GetAlternativeLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 alternativeFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetCoordsLevelTileProxy",
+    "signature": "public System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i\u003E GetCoordsLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i\u003E",
     "value": null
   },
   {
@@ -153698,6 +153777,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.GetSourceLevelTileProxy(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetSourceLevelTileProxy",
+    "signature": "public System.Int32 GetSourceLevelTileProxy(System.Int32 sourceFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.GetTerrainColor(System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153797,6 +153895,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.HasAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "HasAlternativeLevelTileProxy",
+    "signature": "public System.Boolean HasAlternativeLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 alternativeFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.HasCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "HasCoordsLevelTileProxy",
+    "signature": "public System.Boolean HasCoordsLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.HasSource(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153813,6 +153964,54 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.HasSourceLevelTileProxy(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "HasSourceLevelTileProxy",
+    "signature": "public System.Boolean HasSourceLevelTileProxy(System.Int32 sourceFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.MapTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MapTileProxy",
+    "signature": "public System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i, System.Int32\u003E MapTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 alternativeFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i, System.Int32\u003E",
     "value": null
   },
   {
@@ -153917,6 +154116,59 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.RemoveAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveAlternativeLevelTileProxy",
+    "signature": "public System.Void RemoveAlternativeLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 alternativeFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveCoordsLevelTileProxy",
+    "signature": "public System.Void RemoveCoordsLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.RemoveNavigationLayer(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153993,6 +154245,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.RemoveSourceLevelTileProxy(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveSourceLevelTileProxy",
+    "signature": "public System.Void RemoveSourceLevelTileProxy(System.Int32 sourceFrom)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.RemoveTerrain(System.Int32,System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -154029,6 +154300,84 @@
       {
         "name": "terrainSet",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetAlternativeLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32,System.Int32,Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetAlternativeLevelTileProxy",
+    "signature": "public System.Void SetAlternativeLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 alternativeFrom, System.Int32 sourceTo, Electron2D.Vector2i coordsTo, System.Int32 alternativeTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "sourceTo",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsTo",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTo",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetCoordsLevelTileProxy(System.Int32,Electron2D.Vector2i,System.Int32,Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetCoordsLevelTileProxy",
+    "signature": "public System.Void SetCoordsLevelTileProxy(System.Int32 sourceFrom, Electron2D.Vector2i coordsFrom, System.Int32 sourceTo, Electron2D.Vector2i coordsTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsFrom",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "sourceTo",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "coordsTo",
+        "type": "Electron2D.Vector2i",
         "default": null
       }
     ],
@@ -154201,6 +154550,30 @@
       },
       {
         "name": "newSourceID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetSourceLevelTileProxy(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetSourceLevelTileProxy",
+    "signature": "public System.Void SetSourceLevelTileProxy(System.Int32 sourceFrom, System.Int32 sourceTo)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceFrom",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "sourceTo",
         "type": "System.Int32",
         "default": null
       }
