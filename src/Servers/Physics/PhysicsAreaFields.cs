@@ -13,6 +13,9 @@ internal sealed class PhysicsAreaFields(float gravity, Vector2 gravityVector)
     internal float AngularDamp = 1f;
     internal int Priority;
 
+    internal PhysicsAreaFieldConfiguration Configuration => new(GravityVector, Gravity, GravityPoint, GravityPointUnitDistance,
+        LinearDamp, AngularDamp, GravitySpaceOverride, LinearDampSpaceOverride, AngularDampSpaceOverride, Priority);
+
     internal bool HasOverrides => GravitySpaceOverride != Area.SpaceOverride.Disabled ||
         LinearDampSpaceOverride != Area.SpaceOverride.Disabled || AngularDampSpaceOverride != Area.SpaceOverride.Disabled;
 

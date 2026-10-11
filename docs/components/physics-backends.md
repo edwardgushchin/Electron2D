@@ -828,6 +828,37 @@ steps plus two audio queries and a field read allocate 0 owner/all-thread bytes.
 CPU also runs in the existing no-device ownership child. Native allocation,
 foreign execution and new full-step/FPS performance measurements remain unverified.
 
+## Selected checkpoint ownership
+
+Common PhysicsSpace.Checkpoint now dispatches PrepareCheckpoint before creating
+or recapturing the selected solver history. CPU retains its existing idle/native
+preparation. GPU compiles pending body/Area/joint/exception policy in its owner,
+then captures device history together with already published contact reports,
+report ranges, publication epochs, wake state and exact collider observation caches
+in [PhysicsSpace.GPUCheckpoint](../classes/PhysicsSpaceGPUCheckpoint.md).
+
+Common scene/server replay records contain no GPU state, handles or report types.
+[PhysicsAreaFieldConfiguration](../classes/PhysicsAreaFieldConfiguration.md) retains
+complete authored fields for configuration checks and portable schema hashing.
+Field order, values and the wire format are unchanged. GPU observation copies do
+not request a new body-state readback or introduce a full physical CPU mirror.
+Existing device checkpoint command flushing/copy waits retain their own cost.
+
+Selected preparation, creation/capture, validation, restore, capacity reads and
+release borrow world lifetime. Recursive checkpoint operations, stepping, world
+release and membership transfer reject. A prepare/capture failure invalidates the
+point while leaving the world usable; preflight rejection leaves motion unchanged.
+A begun restore error retains the terminal checkpoint-world failure policy.
+Release retires common storage in finally even when implementation cleanup throws.
+
+[Selected checkpoint checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedCheckpoint.cs)
+delegate actual CPU/GPU history, inject failures, verify borrow guards and real
+motion rewind, then measure 64 warmed capture/restore cycles at zero owner/all-thread
+allocation. Common scene/server contact/Area/force/target/joint/CCD replay and portable
+snapshot suites retain their numerical and platform limits. This is an internal
+executing boundary; public registered factory and complete extension-family
+acceptance under ADR 0103 remain open.
+
 ## Native simulation and replay ownership
 
 CPUPhysicsWorldBackend now owns native discrete/kinematic/CCD interval scheduling,
@@ -841,7 +872,7 @@ selection, authoring, logical contact caps, user callbacks and event ordering.
 Local replay dispatches through PhysicsBackendCheckpoint: CPU owns the native
 checkpoint plus contact/motion/one-way/report-only histories; GPU wraps its device
 checkpoint. Common replay still owns scene/raw authoring, poses, logical observer
-histories and currently published GPU reports. Capture/validate/restore/dispose
+histories; implementation-local GPU reports stay with the selected GPU checkpoint. Capture/validate/restore/dispose
 run through the selected implementation, without a new public API or CPU mirror
 for GPU history. CPU report-only pair/activity counters now rewind immediately;
 previously they retained values from a later solved interval until another step.

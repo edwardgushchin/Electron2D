@@ -157,7 +157,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     {
         if (_initializing) throw new InvalidOperationException("The physics implementation is still initializing.");
     }
-    internal void EnsureAttachmentAccess() { EnsureQueryAccess(); EnsureInitializationComplete(); }
+    internal void EnsureAttachmentAccess() { EnsureQueryAccess(); EnsureInitializationComplete(); EnsureExtensionHierarchyChange(); }
 
     internal void PrepareForQuery()
     {
@@ -222,6 +222,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Remove(PhysicsBody body)
     {
+        EnsureExtensionHierarchyChange();
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics bodies cannot leave a world while it is stepping.");
         EnsureReleaseAccess();
@@ -254,6 +255,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Remove(Joint joint)
     {
+        EnsureExtensionHierarchyChange();
         if (_disposed) return;
         EnsureReleaseAccess();
         if (_joints.Remove(joint)) joint.DetachBackend();
@@ -288,6 +290,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Remove(PhysicsServerCollider collider)
     {
+        EnsureExtensionHierarchyChange();
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Server colliders cannot leave while stepping.");
         if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID, releasing: true);
@@ -306,6 +309,7 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void Remove(Area area)
     {
+        EnsureExtensionHierarchyChange();
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics areas cannot leave a world while it is stepping.");
         if (!_areas.Remove(area)) return;

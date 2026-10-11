@@ -10,6 +10,7 @@ internal static partial class PhysicsBackendOwnershipTests
         Lifecycle(backend);
         ExtensionBinding(backend);
         SelectedViews(backend);
+        SelectedCheckpoint(backend);
         ShapeInputs(backend);
         IntegrationOwnership(backend);
         PhysicsAreaBackendTests.Run(backend);

@@ -4,7 +4,7 @@ public sealed partial class PhysicsSnapshotMap
 {
     private (ulong, ulong) Schema(PhysicsSpace space)
     {
-        var schema = new PhysicsSnapshotSchema(); PhysicsReplayEntry.AddFields(ref schema, PhysicsSpace.ReplayFields(space.DefaultAreaFields));
+        var schema = new PhysicsSnapshotSchema(); PhysicsReplayEntry.AddFields(ref schema, space.DefaultAreaFields.Configuration);
         schema.Add(space.SleepSettings.LinearThreshold); schema.Add(space.SleepSettings.AngularThreshold); schema.Add(space.SleepSettings.TimeToSleep);
         schema.Add(space.ContactSettings.Bias); schema.Add(space.ContactSettings.AllowedPenetration); schema.Add(space.ContactSettings.RecycleRadius); schema.Add(space.ContactSettings.MaxSeparation);
         schema.Add(space.SolverIterations); schema.Add(space.ConstraintDefaultBias); schema.Add(_objects.Count); schema.Add(_joints.Count);

@@ -57,3 +57,7 @@ Startup fallback is handled only by the internal creation factory. A started GPU
 ## Native simulation and replay ownership
 
 SolverCheckpoint wraps the resident device checkpoint behind the selected PhysicsBackendCheckpoint contract. Portable one-way staging now belongs to this owner; current shared shape ownership/generation qualifies every record. ReadDebugContacts supplies capped scene-unit points. The resident solve equations and state ownership remain unchanged. [Contract and verification](../components/physics-backends.md#native-simulation-and-replay-ownership) describes replay/portable boundaries.
+
+## Selected checkpoint ownership
+
+PrepareCheckpoint and the selected history operation family borrow library lifetime. GPU reports/epochs/collider caches stay in its concrete checkpoint; common authoring uses neutral field values. Failed capture is replaceable, validation rejection preserves state, begun restore failure is terminal, and cleanup failure still retires the point. See [the executing contract](../components/physics-backends.md#selected-checkpoint-ownership).

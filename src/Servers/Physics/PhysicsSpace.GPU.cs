@@ -121,8 +121,6 @@ internal sealed partial class PhysicsSpace
         }
     }
 
-    internal static GPUPhysicsBodyStore.FieldParameters ReplayFields(PhysicsAreaFields fields) => GPUFields(fields);
-
     internal static GPUPhysicsBodyStore.FieldParameters GPUFields(PhysicsAreaFields fields) =>
         new(fields.GravityVector, fields.Gravity, fields.GravityPoint, fields.GravityPointUnitDistance, fields.LinearDamp, fields.AngularDamp,
             fields.GravitySpaceOverride, fields.LinearDampSpaceOverride, fields.AngularDampSpaceOverride, fields.Priority);

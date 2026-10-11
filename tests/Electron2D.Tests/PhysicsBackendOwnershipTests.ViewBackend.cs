@@ -15,6 +15,10 @@ internal static partial class PhysicsBackendOwnershipTests
         internal Action? InitializeHook, FlushHook;
         internal Action<bool>? ActiveHook;
         internal Action<Exception?>? EndSyncHook;
+        internal Action? CheckpointPreparationHook;
+        internal int CheckpointPreparations;
+        internal Action? CheckpointCaptureHook, CheckpointValidationHook, CheckpointRestoreHook, CheckpointReleaseHook;
+        internal int CheckpointCaptures, CheckpointValidations, CheckpointRestores, CheckpointReleases;
         internal int Initializations, Activations, Flushes, EndSynchronizations;
         internal override void Initialize() { Initializations++; InitializeHook?.Invoke(); _inner.Initialize(); }
         internal override void ApplyActive(bool active) { Activations++; ActiveHook?.Invoke(active); _inner.SetActive(active); }
@@ -35,7 +39,8 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override PhysicsServer.Backend Kind => _inner.Kind;
         internal override int PreparedBodyCapacity => _inner.PreparedBodyCapacity;
         internal override bool ResultsReady => _inner.ResultsReady;
-        internal override PhysicsBackendCheckpoint CreateCheckpoint() => _inner.CreateCheckpoint();
+        internal override void PrepareCheckpoint() { CheckpointPreparations++; CheckpointPreparationHook?.Invoke(); _inner.PrepareCheckpoint(); }
+        internal override PhysicsBackendCheckpoint CreateCheckpoint() => new WrappedCheckpoint(this, _inner.CreateCheckpoint());
         internal override void BeginPortableRestore() => _inner.BeginPortableRestore();
         internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) => _inner.ReadPortableSleepTime(collider);
         internal override void ApplyPortableSleep(PhysicsColliderBackend collider, float time, bool canSleep, bool sleeping) => _inner.ApplyPortableSleep(collider, time, canSleep, sleeping);

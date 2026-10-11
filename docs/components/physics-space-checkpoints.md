@@ -1,6 +1,6 @@
 # Local physics-world checkpoints
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 The public `PhysicsCheckpoint`, created by `PhysicsServer.SpaceCreateCheckpoint`,
 uses the internal `PhysicsSpace.Checkpoint` to connect [CPU solver history](cpu-checkpoints.md)
@@ -45,7 +45,7 @@ Capture prepares pending shape/pose/joint authoring, then saves the kernel and c
 state without advancing a physics tick. Each point owns its saved data and reuses
 high-water capacities on recapture. CPU data uses explicit typed copies; GPU solver
 history uses device-local copies. Common capture retains already published host
-poses, observer contacts and qualified GPU caches; it does not request a new full
+poses and logical observer contacts. The selected GPU checkpoint retains its published reports and qualified caches; it does not request a new full
 GPU body-state readback. The kernel's command flushing and copy fence are still
 included in checkpoint timing.
 
@@ -130,3 +130,7 @@ The CPU solver and its host gravity cache must rewind together, so the first rep
 step still applies that pending authored value. Before the fix, six replay ticks
 produced Y=6.882285 versus 14.25515 expected; both backends now pass the shared
 pending-world-setting check. No hidden simulation step is used to prepare capture.
+
+## Selected preparation and failure lifetime
+
+[Checkpoint ownership](physics-backends.md#selected-checkpoint-ownership) now dispatches preparation and keeps implementation-local reports/cache epochs with the actual solver history. Common field configuration uses engine values without GPU types. Selected operations borrow world/point lifetime; recursive capture/restore/disposal and membership changes reject. A capture failure is replaceable, preflight rejects before mutation, begun restore failure is terminal, and cleanup failure retires the point in finally. Wrapped CPU/GPU checks exercise these paths and warmed reusable copies; no public registration status is closed.
