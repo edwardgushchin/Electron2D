@@ -98,7 +98,9 @@ public abstract partial class CollisionObject
     /// <param name="disabled">True removes active response/sensing without removing indexed shapes.</param>
     public void ShapeOwnerSetDisabled(uint ownerID, bool disabled)
     {
-        EnsureMutable(); var owner = LookupShapeOwner(ownerID); owner.Disabled = disabled;
+        EnsureMutable(); var owner = LookupShapeOwner(ownerID);
+        if (!disabled) foreach (var slot in owner.Shapes) PhysicsShapeBackend.RequireSupported(this is PhysicsBody body ? body.Space : this is Area area ? area.Space : null, slot.Shape);
+        owner.Disabled = disabled;
         foreach (var slot in owner.Shapes) slot.DisabledOverride = null;
         MarkShapesDirty();
     }
@@ -265,6 +267,7 @@ public abstract partial class CollisionObject
     }
     private void AddOwnerShape(ShapeOwner owner, Shape shape)
     {
+        if (!owner.Disabled) PhysicsShapeBackend.RequireSupported(this is PhysicsBody body ? body.Space : this is Area area ? area.Space : null, shape);
         var slot = new ShapeSlot(owner, shape, _shapeSlots.Count);
         owner.Shapes.Add(slot); _shapeSlots.Add(slot); MarkShapesDirty();
     }

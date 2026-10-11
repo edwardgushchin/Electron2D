@@ -93,6 +93,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         Validate(body); ValidateFieldShape(body.Index, sensor); ArgumentNullException.ThrowIfNull(geometry);
         ObjectDisposedException.ThrowIf(geometry.IsDisposed, geometry);
+        PhysicsShapeBackend.RequireBuiltIn(geometry);
         ValidateMaterial(friction, bounce);
         var pose = localPose ?? Transform.Identity; ValidateShapePose(pose);
         var index = _shapeFree;

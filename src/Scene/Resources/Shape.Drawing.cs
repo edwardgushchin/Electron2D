@@ -26,6 +26,10 @@ public abstract partial class Shape
         var count = 0;
         switch (geometry.Kind)
         {
+            case PhysicsShapeGeometry.ShapeKind.Custom:
+                var lines = GetGeometryData().GetCustomDrawingSegments();
+                if (!lines.IsEmpty) item.DrawMultiline(lines, color);
+                return;
             case PhysicsShapeGeometry.ShapeKind.Circle:
                 for (var i = 0; i < 24; i++) points[count++] = new Vector2(MathF.Cos(i * Mathf.Tau / 24), MathF.Sin(i * Mathf.Tau / 24)) * geometry.Radius;
                 break;

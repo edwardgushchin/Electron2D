@@ -64,6 +64,7 @@ public sealed partial class PhysicsServer
         {
             var slot = scene.GlobalShapeSlot(index);
             if (ReferenceEquals(slot.ServerShape, resource)) return;
+            if (!(slot.DisabledOverride ?? slot.Owner.Disabled)) PhysicsShapeBackend.RequireSupported(scene is PhysicsBody body ? body.Space : ((Area)scene).Space, resource.Geometry);
             slot.ServerShape = resource; scene.MarkShapesDirty();
         }
         else owners.Server!.SetShape(index, resource);

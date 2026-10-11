@@ -52,3 +52,5 @@ queries, live kind changes, duplicate/disposed resources, checkpoint and portabl
 [Drawing checks](../../tests/ShapeExtension.Consumer/DrawChecks.cs) use actual window
 pixels after geometry changes with both rendering methods. Full backend performance,
 native allocations and foreign-platform acceptance are separate gates.
+
+[Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.

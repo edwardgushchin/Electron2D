@@ -53,3 +53,5 @@ World boundaries compile their transformed equation into a distinct native plane
 primitive. Query proxies carry the plane explicitly; finite editing/bookkeeping
 bounds never substitute for the infinite half-plane. WorldBoundaryTests verifies
 far-away queries and scene/server response.
+
+[Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.

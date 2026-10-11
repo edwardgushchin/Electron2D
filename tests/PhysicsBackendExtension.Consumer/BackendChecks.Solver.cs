@@ -31,7 +31,7 @@ public static partial class BackendChecks
             foreach (var b in Bodies.Values)
             {
                 if (!Eligible(b, mask, collideWithBodies, collideWithAreas, excluded) ||
-                    !hitFromInside && from.DistanceTo(b.Position) < b.Radius || !Sweep(from, motion, b.Position, b.Radius, out var f) || f > fraction) continue;
+                    !hitFromInside && Annulus.Contains(from, b.Position, b.Hole, b.Radius) || !Annulus.Sweep(from, motion, b.Position, b.Hole, b.Radius, out var f) || f > fraction) continue;
                 best = b; fraction = f;
             }
             if (best is null) return null;
@@ -42,16 +42,16 @@ public static partial class BackendChecks
             _pointHits.Clear();
             foreach (var b in Bodies.Values)
                 if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
-                    b.Canvas == parameters.CanvasInstanceID && parameters.Position.DistanceTo(b.Position) <= b.Radius) _pointHits.Add(new(b.RID, 0));
+                    b.Canvas == parameters.CanvasInstanceID && Annulus.Contains(parameters.Position, b.Position, b.Hole, b.Radius)) _pointHits.Add(new(b.RID, 0));
             _pointHits.Sort(static (a, b) => a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _pointHits;
         }
-        private static float Radius(RID rid) => PhysicsServer.ShapeGetData(rid) is CircleShape c ? c.Radius : throw new NotSupportedException("Independent query fixture supports circles only.");
+        private static float Radius(RID rid) { using var shape = PhysicsServer.ShapeGetData(rid); return Annulus.Dimensions(shape.GetGeometryData()).Outer; }
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
             _shapeHits.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
             foreach (var b in Bodies.Values)
                 if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
-                    Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out _)) _shapeHits.Add(new(b.RID, 0));
+                    Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, MathF.Max(0, b.Hole - radius), b.Radius + radius, out _)) _shapeHits.Add(new(b.RID, 0));
             _shapeHits.Sort(static (a, b) => a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _shapeHits;
         }
         protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
@@ -59,7 +59,7 @@ public static partial class BackendChecks
             var fraction = 1f; var radius = Radius(parameters.ShapeRID) + parameters.Margin;
             foreach (var b in Bodies.Values)
                 if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
-                    Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out var f)) fraction = MathF.Min(fraction, f);
+                    Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, MathF.Max(0, b.Hole - radius), b.Radius + radius, out var f)) fraction = MathF.Min(fraction, f);
             return (fraction, fraction);
         }
         protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
@@ -69,7 +69,7 @@ public static partial class BackendChecks
             {
                 if (_shapeContacts.Count == limit) break;
                 if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) ||
-                    !Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out var f)) continue;
+                    !Annulus.Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, MathF.Max(0, b.Hole - radius), b.Radius + radius, out var f)) continue;
                 var center = parameters.Transform.Origin + parameters.Motion * f; var normal = (center - b.Position).Normalized();
                 _shapeContacts.Add(new(b.RID, 0, 0, center - normal * radius, b.Position + normal * b.Radius));
             }
@@ -105,7 +105,7 @@ public static partial class BackendChecks
             foreach (var other in Bodies.Values)
                 if (other.RID != body && Eligible(other, local.Mask, true, false, excludedBodies) &&
                     !Exceptions.Contains((body, other.RID)) && !Exceptions.Contains((other.RID, body)) &&
-                    Sweep(from.Origin, motion, other.Position, local.Radius + other.Radius + margin, out var f) && f <= fraction)
+                    Annulus.Sweep(from.Origin, motion, other.Position, MathF.Max(0, other.Hole - local.Radius - margin), local.Radius + other.Radius + margin, out var f) && f <= fraction)
                 { best = other; fraction = f; }
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var normal = (from.Origin + travel - best.Position).Normalized(); var point = best.Position + normal * best.Radius;

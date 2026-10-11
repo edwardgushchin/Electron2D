@@ -3486,6 +3486,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.CustomShape",
+    "kind": "type",
+    "declaringType": "Electron2D.CustomShape",
+    "name": "CustomShape",
+    "signature": "public sealed class Electron2D.CustomShape",
+    "visibility": "public",
+    "baseType": "Electron2D.Shape",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.DTLSServer",
     "kind": "type",
     "declaringType": "Electron2D.DTLSServer",
@@ -9254,6 +9269,22 @@
     "baseType": "Electron2D.Entity",
     "interfaces": [
       "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.ShapeCollisionAlgorithm",
+    "kind": "type",
+    "declaringType": "Electron2D.ShapeCollisionAlgorithm",
+    "name": "ShapeCollisionAlgorithm",
+    "signature": "public delegate Electron2D.ShapeCollisionAlgorithm",
+    "visibility": "public",
+    "baseType": "System.MulticastDelegate",
+    "interfaces": [
+      "System.ICloneable",
+      "System.Runtime.Serialization.ISerializable"
     ],
     "parameters": null,
     "returnType": null,
@@ -15527,6 +15558,25 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.CustomShape..ctor(Electron2D.ShapeGeometry)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.CustomShape",
+    "name": ".ctor",
+    "signature": "public CustomShape(Electron2D.ShapeGeometry geometry)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "geometry",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      }
+    ],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.DTLSServer..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.DTLSServer",
@@ -19478,6 +19528,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ShapeCollisionAlgorithm..ctor(System.Object,System.IntPtr)",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ShapeCollisionAlgorithm",
+    "name": ".ctor",
+    "signature": "public ShapeCollisionAlgorithm(System.Object object, System.IntPtr method)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      },
+      {
+        "name": "method",
+        "type": "System.IntPtr",
+        "default": null
+      }
+    ],
     "returnType": null,
     "value": null
   },
@@ -77537,6 +77611,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CustomShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CustomShape",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CustomShape.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.CustomShape",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CustomShape.GetGeometryCore()",
+    "kind": "method",
+    "declaringType": "Electron2D.CustomShape",
+    "name": "GetGeometryCore",
+    "signature": "protected override Electron2D.ShapeGeometry GetGeometryCore()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.DTLSServer.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.DTLSServer",
@@ -122326,6 +122465,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.CustomShapeCreate(Electron2D.ShapeGeometry)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "CustomShapeCreate",
+    "signature": "public static Electron2D.RID CustomShapeCreate(Electron2D.ShapeGeometry geometry)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "geometry",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.DampedSpringJointGetDamping(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -144452,6 +144610,148 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShapeCollisionAlgorithm.BeginInvoke(Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,System.Span\u003CElectron2D.Vector2\u003E,ref System.Int32,System.AsyncCallback,System.Object)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCollisionAlgorithm",
+    "name": "BeginInvoke",
+    "signature": "public virtual System.IAsyncResult BeginInvoke(Electron2D.ShapeGeometry first, Electron2D.Transform firstPose, Electron2D.Vector2 firstMotion, Electron2D.ShapeGeometry second, Electron2D.Transform secondPose, Electron2D.Vector2 secondMotion, System.Span\u003CElectron2D.Vector2\u003E contacts, out System.Int32 count, System.AsyncCallback callback, System.Object object)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "first",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      },
+      {
+        "name": "firstPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "firstMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "second",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      },
+      {
+        "name": "secondPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "secondMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "contacts",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.AsyncCallback",
+        "default": null
+      },
+      {
+        "name": "object",
+        "type": "System.Object",
+        "default": null
+      }
+    ],
+    "returnType": "System.IAsyncResult",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCollisionAlgorithm.EndInvoke(ref System.Int32,System.IAsyncResult)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCollisionAlgorithm",
+    "name": "EndInvoke",
+    "signature": "public virtual System.Boolean EndInvoke(out System.Int32 count, System.IAsyncResult result)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "count",
+        "type": "ref System.Int32",
+        "default": null
+      },
+      {
+        "name": "result",
+        "type": "System.IAsyncResult",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeCollisionAlgorithm.Invoke(Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,System.Span\u003CElectron2D.Vector2\u003E,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeCollisionAlgorithm",
+    "name": "Invoke",
+    "signature": "public virtual System.Boolean Invoke(Electron2D.ShapeGeometry first, Electron2D.Transform firstPose, Electron2D.Vector2 firstMotion, Electron2D.ShapeGeometry second, Electron2D.Transform secondPose, Electron2D.Vector2 secondMotion, System.Span\u003CElectron2D.Vector2\u003E contacts, out System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "first",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      },
+      {
+        "name": "firstPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "firstMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "second",
+        "type": "Electron2D.ShapeGeometry",
+        "default": null
+      },
+      {
+        "name": "secondPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "secondMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "contacts",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ShapeGeometry.Capsule(System.Single,System.Single)",
     "kind": "method",
     "declaringType": "Electron2D.ShapeGeometry",
@@ -144533,6 +144833,50 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ShapeGeometry.Custom(System.String,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.Rect2,Electron2D.PhysicsMassProperties,System.ReadOnlySpan\u003CElectron2D.Vector2\u003E,Electron2D.ShapeCollisionAlgorithm)",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "Custom",
+    "signature": "public static Electron2D.ShapeGeometry Custom(System.String formatID, System.ReadOnlySpan\u003CSystem.Byte\u003E canonicalData, Electron2D.Rect2 bounds, Electron2D.PhysicsMassProperties massProperties, System.ReadOnlySpan\u003CElectron2D.Vector2\u003E drawingSegments, Electron2D.ShapeCollisionAlgorithm collision)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "formatID",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "canonicalData",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "bounds",
+        "type": "Electron2D.Rect2",
+        "default": null
+      },
+      {
+        "name": "massProperties",
+        "type": "Electron2D.PhysicsMassProperties",
+        "default": null
+      },
+      {
+        "name": "drawingSegments",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "collision",
+        "type": "Electron2D.ShapeCollisionAlgorithm",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ShapeGeometry.GetCapsuleDimensions()",
     "kind": "method",
     "declaringType": "Electron2D.ShapeGeometry",
@@ -144582,6 +144926,58 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCustomData()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCustomData",
+    "signature": "public System.ReadOnlySpan\u003CSystem.Byte\u003E GetCustomData()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCustomDrawingSegments()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCustomDrawingSegments",
+    "signature": "public System.ReadOnlySpan\u003CElectron2D.Vector2\u003E GetCustomDrawingSegments()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.ReadOnlySpan\u003CElectron2D.Vector2\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCustomFormatID()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCustomFormatID",
+    "signature": "public System.String GetCustomFormatID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ShapeGeometry.GetCustomMassProperties()",
+    "kind": "method",
+    "declaringType": "Electron2D.ShapeGeometry",
+    "name": "GetCustomMassProperties",
+    "signature": "public Electron2D.PhysicsMassProperties GetCustomMassProperties()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsMassProperties",
     "value": null
   },
   {
@@ -192944,6 +193340,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.CustomShape.Geometry()",
+    "kind": "property",
+    "declaringType": "Electron2D.CustomShape",
+    "name": "Geometry",
+    "signature": "public Electron2D.ShapeGeometry Geometry { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {

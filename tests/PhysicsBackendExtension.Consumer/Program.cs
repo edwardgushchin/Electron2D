@@ -1,1 +1,2 @@
-BackendChecks.Run();
+if (args.Contains("--draw")) CustomDrawChecks.Run();
+else BackendChecks.Run();

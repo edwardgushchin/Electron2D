@@ -4563,6 +4563,74 @@
     {
       "electron2d": "property:Electron2D.World.RequestedPhysicsBackendName()",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.CustomShape",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.ShapeCollisionAlgorithm",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CustomShape..ctor(Electron2D.ShapeGeometry)",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ShapeCollisionAlgorithm..ctor(System.Object,System.IntPtr)",
+      "reason": "ADR 0103: typed synchronous C# collision delegate and compiler-generated delegate ABI; standalone custom pair dispatch validates count/finite values, reversed ownership and nested lifetime. Framework BeginInvoke/EndInvoke are compiler artifacts, not supported asynchronous physics operations."
+    },
+    {
+      "electron2d": "method:Electron2D.CustomShape.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.CustomShape.CreateDuplicateInstance()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.CustomShape.GetGeometryCore()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCollisionAlgorithm.BeginInvoke(Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32,System.AsyncCallback,System.Object)",
+      "reason": "ADR 0103: typed synchronous C# collision delegate and compiler-generated delegate ABI; standalone custom pair dispatch validates count/finite values, reversed ownership and nested lifetime. Framework BeginInvoke/EndInvoke are compiler artifacts, not supported asynchronous physics operations."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCollisionAlgorithm.EndInvoke(ref System.Int32,System.IAsyncResult)",
+      "reason": "ADR 0103: typed synchronous C# collision delegate and compiler-generated delegate ABI; standalone custom pair dispatch validates count/finite values, reversed ownership and nested lifetime. Framework BeginInvoke/EndInvoke are compiler artifacts, not supported asynchronous physics operations."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeCollisionAlgorithm.Invoke(Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,Electron2D.ShapeGeometry,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103: typed synchronous C# collision delegate and compiler-generated delegate ABI; standalone custom pair dispatch validates count/finite values, reversed ownership and nested lifetime. Framework BeginInvoke/EndInvoke are compiler artifacts, not supported asynchronous physics operations."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.Custom(System.String,System.ReadOnlySpan<System.Byte>,Electron2D.Rect2,Electron2D.PhysicsMassProperties,System.ReadOnlySpan<Electron2D.Vector2>,Electron2D.ShapeCollisionAlgorithm)",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCustomData()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCustomDrawingSegments()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCustomFormatID()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.ShapeGeometry.GetCustomMassProperties()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.CustomShape.Geometry()",
+      "reason": "ADR 0103: initialized custom resource creation uses copied canonical format data, exact mass/bounds, diagnostic segments and typed standalone collision algorithm. A public-only annulus consumer executes scene/raw/query/contact/Area/mutation/private/portable paths and CPU/GPU rejection before mutation; arbitrary file codecs and full extension acceptance remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.CustomShapeCreate(Electron2D.ShapeGeometry)",
+      "reason": "ADR 0103: typed initialized construction of the existing Custom geometry identity and shape-data/owned-RID capability. The pinned extension header/XML exposes only eight built-in factories, with no custom_shape_create hook; this managed helper is a reviewed construction projection, not an invented reference row. External analytic custom geometry and lifecycle execute; generic file codecs and full extension acceptance remain open."
     }
   ],
   "statusGroups": [
@@ -5965,7 +6033,7 @@
         "PhysicsServer2D::enum_value:ShapeType.SHAPE_CUSTOM"
       ],
       "state": "Implemented",
-      "reason": "Analytic infinite half-plane resource, typed creation/data/lifetime, logical ShapeType identities, response/sensing/sleep, queries and translating/rotating CCD execute through explicitly selected public CPU and independent GPU worlds (ADR 0054, WorldBoundaryTests, ELECTRON2D_TEST_GPU_CCD_CONTRACT). Shared GPU query matrices also execute. Custom preserves only its enum identity; extension geometry remains open."
+      "reason": "Analytic infinite half-plane resource, typed creation/data/lifetime, logical ShapeType identities, response/sensing/sleep, queries and translating/rotating CCD execute through explicitly selected public CPU and independent GPU worlds (ADR 0054, WorldBoundaryTests, ELECTRON2D_TEST_GPU_CCD_CONTRACT). Shared GPU query matrices also execute. Custom now carries real immutable format data, with an independently executing external solver; built-ins reject unsupported data before mutation under ADR 0103."
     },
     {
       "godot": [
