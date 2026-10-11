@@ -47,7 +47,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private sealed class Entry
     {
         internal Kind Kind;
-        internal RenderHandle? Handle, Upload, Download;
+        internal RenderHandle? Handle, Upload, Download, TextureScratch;
+        internal bool ScratchColorTarget;
         internal byte[] Data = [];
         internal uint Size;
         internal StorageBufferUsage Usage;
@@ -323,7 +324,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         IdleList(); var entry = Get(rid); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { Submit(); CompleteSubmission(); }
-        _entries.Remove(rid); entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose();
+        _entries.Remove(rid); entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
@@ -335,7 +336,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
-            foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); }
+            foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
             _entries.Clear(); CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);

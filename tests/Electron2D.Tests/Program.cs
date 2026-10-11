@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_BACKEND") is { } areaBackend) { PhysicsAreaBackendTests.Run(areaBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }

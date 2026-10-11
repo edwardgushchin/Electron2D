@@ -74,6 +74,8 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Boolean TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureUsageBits usageFlags)` | Reports whether the selected format supports the requested two-dimensional texture usage. |
 | `public System.Boolean TextureIsValid(Electron2D.RID texture)` | Reports whether an identity is a live texture of this device. |
 | `public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)` | Updates one complete layer including every mip level. |
+| `public System.Void TextureClear(Electron2D.RID texture, Electron2D.Color color, System.UInt32 baseMipmap, System.UInt32 mipmapCount, System.UInt32 baseLayer, System.UInt32 layerCount)` | Records a color clear of complete selected image layers and mip levels. |
+| `public System.Void TextureCopy(Electron2D.RID fromTexture, Electron2D.RID toTexture, Electron2D.Vector3 fromPosition, Electron2D.Vector3 toPosition, Electron2D.Vector3 size, System.UInt32 sourceMipmap, System.UInt32 destinationMipmap, System.UInt32 sourceLayer, System.UInt32 destinationLayer)` | Records a raw rectangular image copy on the GPU timeline. |
 
 ## Member descriptions
 
@@ -540,3 +542,84 @@ Updates one complete layer including every mip level.
 `data`: Exact tightly packed layer mip-chain bytes.
 
 Image data uses exact tightly packed mip chains per layer with hidden native offsets. The array and Memory asynchronous overloads share buffer readback completion, FIFO, cancellation and reentrancy rules. See [image profile and remaining dependencies](../components/local-compute.md#device-images-and-samplers).
+
+## Regional image transfer members
+
+<a id="member-52ac7894a778"></a>
+### TextureClear(Electron2D.RID, Electron2D.Color, System.UInt32, System.UInt32, System.UInt32, System.UInt32)
+
+```csharp
+public System.Void TextureClear(Electron2D.RID texture, Electron2D.Color color, System.UInt32 baseMipmap, System.UInt32 mipmapCount, System.UInt32 baseLayer, System.UInt32 layerCount)
+```
+
+Records a color clear of complete selected image layers and mip levels.
+
+Unselected subresources retain their contents. A retained private color target supports transfer-only destinations without changing their public usage. It is reused after preparation. Encoded block formats and unverified integer-clear backends fail explicitly. Narrow signed lanes must be representable; unsigned lanes narrow by discarding higher bits. The clear stays on the GPU timeline and neither submits nor delivers callbacks.
+
+`texture`: Live destination with CanCopyTo usage.
+
+`color`: Clear components; integer formats use their raw 32-bit lane bits on Vulkan.
+
+`baseMipmap`: First zero-based mip level.
+
+`mipmapCount`: Positive number of mip levels to clear.
+
+`baseLayer`: First zero-based image layer.
+
+`layerCount`: Positive number of layers to clear.
+
+Throws `System.ArgumentOutOfRangeException`: The selected range is empty/out of bounds, or a signed clear lane exceeds its component width.
+
+Throws `System.InvalidOperationException`: The copy destination role or owner/list state is invalid, or native recording fails.
+
+Throws `System.NotSupportedException`: The format/backend has no executable color-clear path.
+
+<a id="member-8be0893e02f9"></a>
+### TextureCopy(Electron2D.RID, Electron2D.RID, Electron2D.Vector3, Electron2D.Vector3, Electron2D.Vector3, System.UInt32, System.UInt32, System.UInt32, System.UInt32)
+
+```csharp
+public System.Void TextureCopy(Electron2D.RID fromTexture, Electron2D.RID toTexture, Electron2D.Vector3 fromPosition, Electron2D.Vector3 toPosition, Electron2D.Vector3 size, System.UInt32 sourceMipmap, System.UInt32 destinationMipmap, System.UInt32 sourceLayer, System.UInt32 destinationLayer)
+```
+
+Records a raw rectangular image copy on the GPU timeline.
+
+Coordinates are truncated to integral texels after bounds validation. Matching encoded texel/block footprints may be reinterpreted on Vulkan; other backends currently require the same format. Compressed offsets must begin on blocks and partial blocks must reach both image edges. Same-subresource rectangles must not overlap. A prepared native scratch image preserves disjoint self copies. This operation neither submits nor invokes readback callbacks.
+
+`fromTexture`: Live source with CanCopyFrom usage.
+
+`toTexture`: Live destination with CanCopyTo usage.
+
+`fromPosition`: Source texel coordinates; Z must be zero.
+
+`toPosition`: Destination texel coordinates; Z must be zero.
+
+`size`: Positive texel extent with Z equal to one.
+
+`sourceMipmap`: Zero-based source mip level.
+
+`destinationMipmap`: Zero-based destination mip level.
+
+`sourceLayer`: Zero-based source image layer.
+
+`destinationLayer`: Zero-based destination image layer.
+
+Throws `System.ArgumentException`: The texture, region, format footprint or overlap is invalid.
+
+Throws `System.ArgumentOutOfRangeException`: A coordinate, mip level or layer is out of range.
+
+Throws `System.InvalidOperationException`: A required usage is absent, the device state is invalid or native recording fails.
+
+Throws `System.NotSupportedException`: This backend cannot reinterpret the selected formats.
+
+The following snippet requires live source/destination image RIDs with the documented transfer roles. The complete native public-API consumer is [RenderingDeviceTextureTransferTests](../../tests/Electron2D.Tests/RenderingDeviceTextureTransferTests.cs).
+
+```csharp
+device.TextureClear(destination, new Color(0, 0, 0, 1), 0, 1, 0, 1);
+device.TextureCopy(source, destination, new Vector3(0, 0, 0),
+    new Vector3(4, 4, 0), new Vector3(8, 8, 1), 0, 0, 0, 0);
+device.TextureGetDataAsync(destination, 0, bytes => Consume(bytes));
+device.Submit();
+device.Sync();
+```
+
+Recorded copies and clears obey queued snapshot ordering and retain private native scratch storage until completion/free. Vulkan native results include normalized quantization ties, linear-to-sRGB conversion and raw integer clear lanes. Exact byte preservation, malformed ranges, roles/lifetimes, self copies, compressed edges and prepared zero owner-thread managed allocation are checked. Other native drivers, encoded-block clears, native allocator measurements and canvas/device sharing retain explicit verification limits/dependencies. See [regional profile](../components/local-compute.md#image-region-copies-and-clears).

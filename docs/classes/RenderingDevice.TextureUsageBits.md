@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-Bit flags describing allocation, sampling, storage and transfer roles. Sampling and Storage are checked against the native format. CPURead or CanCopyFrom permits readback; CanUpdate permits a complete layer update. Regional copy/clear remain follow-up implementation. Attachment/atomic/subpass roles are rejected by the current local compute profile.
+Bit flags describing allocation, sampling, storage and transfer roles. Sampling and Storage are checked against the native format. CPURead or CanCopyFrom permits readback; CanUpdate permits a complete layer update. TextureCopy and TextureClear execute on selected color subresources. Attachment/atomic/subpass roles are rejected by the current local compute profile.
 
 ## Example
 
@@ -22,7 +22,7 @@ var selection = RenderingDevice.TextureUsageBits.CPURead;
 | --- | --- |
 | `public const Electron2D.RenderingDevice.TextureUsageBits CPURead = 32` | Allows explicit synchronous or queued CPU readback. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits CanCopyFrom = 128` | Allows use as a copy source or CPU readback source. |
-| `public const Electron2D.RenderingDevice.TextureUsageBits CanCopyTo = 256` | Allows use as a copy destination; regional copies require copy integration. |
+| `public const Electron2D.RenderingDevice.TextureUsageBits CanCopyTo = 256` | Allows image region copies and selected mip/layer clears as a destination. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits CanUpdate = 64` | Allows replacement of one complete layer mip chain. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits ColorAttachment = 2` | Requires a color attachment; local graphics integration is not implemented. |
 | `public const Electron2D.RenderingDevice.TextureUsageBits DepthResolveAttachment = 4096` | Requires depth resolve attachment integration. |
@@ -59,7 +59,7 @@ Allows use as a copy source or CPU readback source.
 public const Electron2D.RenderingDevice.TextureUsageBits CanCopyTo = 256
 ```
 
-Allows use as a copy destination; regional copies require copy integration.
+Allows image region copies and selected mip/layer clears as a destination.
 
 <a id="member-6981f07b351a"></a>
 ### CanUpdate

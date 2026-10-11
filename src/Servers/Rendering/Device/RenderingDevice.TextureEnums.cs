@@ -478,7 +478,7 @@ public sealed unsafe partial class RenderingDevice
     {
         /// <summary>Allows use as a copy source or CPU readback source.</summary>
         CanCopyFrom = 128,
-        /// <summary>Allows use as a copy destination; regional copies require copy integration.</summary>
+        /// <summary>Allows image region copies and selected mip/layer clears as a destination.</summary>
         CanCopyTo = 256,
         /// <summary>Allows replacement of one complete layer mip chain.</summary>
         CanUpdate = 64,

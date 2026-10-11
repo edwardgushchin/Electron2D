@@ -2171,6 +2171,18 @@
       "electron2d": "method:Electron2D.RenderingDevice.SamplerCreate(Electron2D.RDSamplerState)",
       "state": "Partial",
       "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Native view/attachment and extended sampler modes remain precise dependencies; unsupported requests fail explicitly."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_clear(RID:,Color:,int:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureClear(Electron2D.RID,Electron2D.Color,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
+      "state": "Partial",
+      "reason": "ADR 0028: native owner-thread local color-image transfers, validated mip/layer regions and roles, GPU command ordering, retained scratch lifetime, queued snapshots and prepared zero managed allocation. RenderingDeviceTextureTransferTests executes real Linux/Vulkan output. Selected renderable mip/layer clears execute for transfer-only destinations, including normalized/HDR/sRGB and raw integer lanes; narrow signed lanes validate representability. Encoded-block/unrenderable color clear and unverified integer conversion on other native drivers require a verified clear adapter; no silent no-op or CPU substitute."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_copy(RID:,RID:,Vector3:,Vector3:,Vector3:,int:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureCopy(Electron2D.RID,Electron2D.RID,Electron2D.Vector3,Electron2D.Vector3,Electron2D.Vector3,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
+      "state": "Partial",
+      "reason": "ADR 0028: native owner-thread local color-image transfers, validated mip/layer regions and roles, GPU command ordering, retained scratch lifetime, queued snapshots and prepared zero managed allocation. RenderingDeviceTextureTransferTests executes real Linux/Vulkan output. Raw matching texel/block footprints copy without resampling, compressed edges and disjoint self copies execute. Depth/shared native views remain allocation prerequisites; reinterpretation on other native drivers needs the verified compatible-view adapter."
     }
   ],
   "extras": [
@@ -2473,14 +2485,6 @@
         "RenderingDevice::enum_value:TextureType.TEXTURE_TYPE_CUBE_ARRAY"
       ],
       "reason": "ADRs 0004/0028: one-dimensional, volume and cube image roles are outside the strictly two-dimensional image API."
-    },
-    {
-      "state": "Unimplemented",
-      "godot": [
-        "RenderingDevice::method:texture_clear(RID:,Color:,int:,int:,int:,int:)",
-        "RenderingDevice::method:texture_copy(RID:,RID:,Vector3:,Vector3:,Vector3:,int:,int:,int:,int:)"
-      ],
-      "reason": "ADR 0028: local color texture allocation/transfers now execute. Region validation, typed 2D copy/clear and native copy/render-clear recording are actionable next slices, not dependency-blocked metadata."
     },
     {
       "state": "Blocked",
