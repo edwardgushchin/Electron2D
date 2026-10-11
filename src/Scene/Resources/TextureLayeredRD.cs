@@ -37,7 +37,7 @@ public abstract class TextureLayeredRD : TextureLayered
     public override bool HasMipmaps() => DeviceInfo?.Mips > 1;
     /// <summary>Copies every mip of one readable array layer into a caller-owned image.</summary>
     /// <param name="layerIndex">Zero-based layer; invalid layers reject even for unbound resources.</param>
-    /// <returns>An independent image, or null when the selected device image is not CPU readable.</returns>
+    /// <returns>An independent image, or null when the selected device image is not CPU readable. Integer lanes convert to raw-valued float32 RGBA with float32 precision.</returns>
     public override Image? GetLayerData(int layerIndex)
     {
         var info = DeviceInfo; if ((uint)layerIndex >= (info?.Layers ?? 0)) throw new ArgumentOutOfRangeException(nameof(layerIndex));

@@ -22,7 +22,7 @@ public sealed unsafe partial class RenderingDevice
             if (binding.ImageFormat != 0 && StorageImageFormat(binding.ImageFormat) != texture.Format) throw new ArgumentException("Storage image format does not match the shader declaration.", nameof(ids));
         }
     }
-    private static int PixelType(DataFormat format) => format switch
+    internal static int PixelType(DataFormat format) => format switch
     {
         DataFormat.R8UINT => 2,
         DataFormat.R8G8UINT => 2,

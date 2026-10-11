@@ -10,13 +10,15 @@ internal sealed unsafe partial class GPUCanvasBackend
     private Func<Texture, Vector2i>? _lightMaskSize;
     private byte[] BatchCode(CanvasBatch batch)
     {
-        if (batch.MaskShader) return BuiltInShaders.Clip;
+        if (batch.MaskShader) { if (ShaderTexture.ResourcePixelType(batch.Texture) != 0) throw new NotSupportedException("Integer canvas masks need scalar-aware alpha composition."); return BuiltInShaders.Clip; }
         if (batch.Lighting is not null)
         {
+            if (ShaderTexture.ResourcePixelType(batch.Texture) != 0) throw new NotSupportedException("Integer light receivers need scalar-aware lighting texture composition.");
             if (batch.Material is not null) throw new NotSupportedException("Programmable canvas materials require an explicit lighting shader interface before receiving scene lights.");
             return BuiltInShaders.Lighting;
         }
-        return batch.ShaderCode ?? _defaultFragment;
+        if (batch.ShaderCode is { } code) return code;
+        return ShaderTexture.ResourcePixelType(batch.Texture) switch { 1 => BuiltInShaders.SignedFragment, 2 => BuiltInShaders.UnsignedFragment, _ => _defaultFragment };
     }
 
     private static CanvasTexture? Channels(Texture? texture) => (texture is AtlasTexture atlas ? atlas.RenderingTexture : texture) as CanvasTexture;
@@ -25,8 +27,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         var channels = Channels(batch.Texture);
         _ = CanvasBinding(batch);
         _ = CanvasBinding(batch with { Texture = null });
-        if (channels?.NormalTexture is { } normal) _ = PrepareTexture(normal);
-        if (channels?.SpecularTexture is { } specular) _ = PrepareTexture(specular);
+        if (channels?.NormalTexture is { } normal) { if (ShaderTexture.ResourcePixelType(normal) != 0) throw new NotSupportedException("Integer normal channels require typed lighting composition."); _ = PrepareTexture(normal); }
+        if (channels?.SpecularTexture is { } specular) { if (ShaderTexture.ResourcePixelType(specular) != 0) throw new NotSupportedException("Integer specular channels require typed lighting composition."); _ = PrepareTexture(specular); }
     }
 
     private void PrepareLightingAtlas(CanvasLightingFrame frame)

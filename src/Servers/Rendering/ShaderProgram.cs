@@ -27,7 +27,7 @@ internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<s
     }
 }
 
-internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false)
+internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = false, int PixelType = 0)
 {
     internal bool IsCanvasTexture => Name == "TEXTURE";
     internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
@@ -37,11 +37,27 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
     {
         if (IsArray != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(IsArray ? "layered" : "ordinary")} images.");
     }
+    internal bool SameType(ShaderTexture other) => IsArray == other.IsArray && PixelType == other.PixelType;
+    internal static Resource? Source(Resource? texture)
+    {
+        if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
+        if (texture is LayeredTextureProxy layered) texture = RenderingTextureRegistry.ResolveLayeredProxySource(layered.ProxyTarget);
+        if (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
+        if (texture is CanvasTexture channels) texture = Source(channels.DiffuseTexture);
+        return texture;
+    }
+    internal static int ResourcePixelType(Resource? texture) => Source(texture) switch
+    {
+        TextureRD { DeviceInfo: { } info } => RenderingDevice.PixelType(info.Format),
+        TextureLayeredRD { DeviceInfo: { } info } => RenderingDevice.PixelType(info.Format),
+        _ => 0
+    };
     internal void Validate(Resource? texture)
     {
         if (texture is null) return;
         if (texture.IsDisposed) throw new ObjectDisposedException(nameof(texture));
         if (IsArray ? texture is not TextureLayered : texture is not Texture) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled image shape.");
+        if (ResourcePixelType(texture) != PixelType) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled scalar type.");
     }
     internal PropertyDescriptor Describe(string propertyName) => IsArray
         ? new PropertyDescriptor<ShaderMaterial, TextureLayered?>(propertyName, m => m.GetShaderLayeredParameter(Name), (m, t) => m.SetShaderLayeredParameter(Name, t), _ => null, stored: true)

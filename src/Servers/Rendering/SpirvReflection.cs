@@ -138,7 +138,7 @@ internal static unsafe partial class SpirvReflection
         Check(GetResources(resources, 7, out var combinedPointer, out var combinedCount));
         Check(GetResources(resources, 10, out var imagePointer, out var imageCount));
         Check(GetResources(resources, 11, out var samplerPointer, out var samplerCount));
-        if (combinedCount != 0 && (imageCount != 0 || samplerCount != 0) || imageCount != samplerCount)
+        if (combinedCount != 0 && (imageCount != 0 || samplerCount != 0) || samplerCount > imageCount)
             throw new NotSupportedException("Use combined sampled images or separate images paired one-to-one with samplers.");
         var textureCount = combinedCount + imageCount;
         if (textureCount > 16 || !fragment && textureCount != 0)
@@ -166,13 +166,14 @@ internal static unsafe partial class SpirvReflection
             var imageType = GetType(compiler, resource.BaseTypeId);
             var sampleType = GetType(compiler, GetSampledType(imageType));
             if (GetImageDimension(imageType) != 1 || ImageIsDepth(imageType) != 0 ||
-                ImageIsMultisampled(imageType) != 0 || ImageIsStorage(imageType) != 0 || GetBaseType(sampleType) != 13 || GetBitWidth(sampleType) != 32)
-                throw new NotSupportedException($"Texture '{name}' requires a non-depth 2D or image-array float-sampled image.");
+                ImageIsMultisampled(imageType) != 0 || ImageIsStorage(imageType) != 0 || GetBaseType(sampleType) is not (7 or 8 or 13) || GetBitWidth(sampleType) != 32)
+                throw new NotSupportedException($"Texture '{name}' requires a non-depth 2D or image-array float, signed or unsigned scalar image.");
             var array = ImageIsArray(imageType) != 0;
             if (array && name is "TEXTURE" or "SCREEN_TEXTURE" or "SDF_TEXTURE") throw new NotSupportedException("Renderer-owned samplers require ordinary 2D images.");
-            textures[slot] = new(name, (int)slot, array);
+            if (name is "SCREEN_TEXTURE" or "SDF_TEXTURE" && GetBaseType(sampleType) != 13) throw new NotSupportedException("Renderer-owned screen and distance images require float sampling.");
+            textures[slot] = new(name, (int)slot, array, GetBaseType(sampleType) switch { 7 => 1, 8 => 2, _ => 0 });
         }
-        var samplerSlots = new bool[(int)samplerCount];
+        var samplerSlots = new bool[(int)textureCount];
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)samplerPointer, (int)samplerCount))
         {
             var slot = TextureBinding(resource);
@@ -181,10 +182,11 @@ internal static unsafe partial class SpirvReflection
         }
         if (imageCount != 0)
         {
+            Check(BuildDummySampler(compiler, out var dummy));
             Check(BuildCombinedSamplers(compiler));
             Check(GetCombinedSamplers(compiler, out var pairs, out var pairCount));
             foreach (var pair in new ReadOnlySpan<CombinedSampler>((void*)pairs, (int)pairCount))
-                if (GetDecoration(compiler, pair.Image, Binding) != GetDecoration(compiler, pair.Sampler, Binding))
+                if (pair.Sampler != dummy && GetDecoration(compiler, pair.Image, Binding) != GetDecoration(compiler, pair.Sampler, Binding))
                     throw new NotSupportedException("An image must be sampled with a sampler at the same binding.");
         }
         if (booleans.Count != 0) throw new ArgumentException("Shader type metadata names an absent or inactive uniform.", nameof(code));
@@ -214,6 +216,8 @@ internal static unsafe partial class SpirvReflection
     private static partial int GetActiveVariables(nint compiler, out nint active);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_create_shader_resources_for_active_variables"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int CreateResources(nint compiler, out nint resources, nint active);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_build_dummy_sampler_for_combined_images"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial int BuildDummySampler(nint compiler, out uint id);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_build_combined_image_samplers"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial int BuildCombinedSamplers(nint compiler);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_get_combined_image_samplers"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

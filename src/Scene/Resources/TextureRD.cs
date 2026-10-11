@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>A canvas texture borrowing a sampled image from the active rendering device.</summary>
 /// <remarks>The device image remains caller-owned. Drawing samples native GPU storage directly; GetImage
-/// performs explicit readback. Device identities are transient and are not saved in resource archives.</remarks>
+/// performs explicit readback. Integer sampling requires nearest filtering; snapshots convert raw integer lanes to float32 RGBA with float32 precision. Device identities are transient and are not saved in resource archives.</remarks>
 public sealed class TextureRD : Texture
 {
     private RenderingDevice? _device;
@@ -42,7 +42,7 @@ public sealed class TextureRD : Texture
     /// <inheritdoc />
     public override int MipmapCount => (int)(DeviceInfo?.Mips ?? 1) - 1;
     /// <summary>Returns an independent encoded image snapshot, or null for an unbound/unreadable source.</summary>
-    /// <returns>A caller-owned image containing all readable mip levels.</returns>
+    /// <returns>A caller-owned image containing all readable mip levels; integer sources use raw component values in float32 RGBA.</returns>
     /// <remarks>This cold readback synchronizes pending device work. Formats without a direct Image representation
     /// convert on the GPU into floating-point RGBA; ordinary canvas drawing performs no CPU pixel copy.</remarks>
     public override Image? GetImage() => DeviceInfo is null ? null : _device!.CanvasImage(_texture, 0);

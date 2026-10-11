@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-Concrete independent device image-array consumer. TextureRDRID and all metadata/readback behavior are inherited from TextureLayeredRD; the constructor creates an unbound array. Integer canvas sampling needs the matching material descriptor interface.
+Concrete independent device image-array consumer. TextureRDRID and all metadata/readback behavior are inherited from TextureLayeredRD; the constructor creates an unbound array. Integer canvas sampling validates matching scalar descriptors; light/mask composition still needs its typed shader adapter.
 
 The binding borrows device pixels; disposing the resource or freeing a server wrapper never frees the source image. Freeing the device image empties live metadata; renderer shutdown expires the device. Canvas drawing samples native storage directly with no CPU frame bridge. Snapshots require CPURead or CanCopyFrom, synchronize device work and copy every mip. Representable formats retain encoded data; other sampled color formats convert on GPU to floating RGBA. Resource archives reconstruct an unbound object; duplication borrows the same image. Mutating bindings and disposing live bindings obey device owner/submission guards.
 
@@ -51,3 +51,5 @@ protected override Electron2D.Resource CreateDuplicateInstance()
 
 Uses the inherited [TextureLayeredRD](TextureLayeredRD.md) contract with the device image behavior described above.
 
+
+Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the remaining scalar-aware composition dependencies.

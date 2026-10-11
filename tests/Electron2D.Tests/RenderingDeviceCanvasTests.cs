@@ -146,7 +146,7 @@ internal static class RenderingDeviceCanvasTests
         format.ArrayLayers = 1; format.TextureType = RenderingDevice.TextureType.Texture;
         format.Format = RenderingDevice.DataFormat.R8G8B8A8SRGB; var srgb = device.TextureCreate(format, view); using var srgbTexture = new TextureRD { TextureRDRID = srgb }; Check(RenderingServer.TextureGetRDTexture(srgbTexture.GetRID(), true) == srgb, "Existing sRGB storage needs no alternate view."); device.FreeRID(srgb);
         Reject<NotSupportedException>(() => RenderingServer.TextureGetRDTexture(texture.GetRID(), true));
-        format.Format = RenderingDevice.DataFormat.R8G8B8A8UINT; var integer = device.TextureCreate(format, view); Reject<NotSupportedException>(() => texture.TextureRDRID = integer); device.FreeRID(integer);
+        format.Format = RenderingDevice.DataFormat.R8G8B8A8UINT; var integer = device.TextureCreate(format, view); using (var integerResource = new TextureRD { TextureRDRID = integer }) Check(integerResource.PixelFormat == Image.Format.Rgbaf, "Integer device sources expose raw-value image snapshots."); device.FreeRID(integer);
         format.Format = RenderingDevice.DataFormat.R8G8B8A8UNORM; format.UsageBits = RenderingDevice.TextureUsageBits.Sampling; var unreadable = device.TextureCreate(format, view); using var unreadableTexture = new TextureRD { TextureRDRID = unreadable }; Check(unreadableTexture.GetImage() is null, "No readable role returns no snapshot."); device.FreeRID(unreadable);
     }
     private static void Pixel(Image image, int x, Color expected) { var actual = image.GetPixel(x, 12); Check(Math.Abs(actual.R - expected.R) < .03 && Math.Abs(actual.G - expected.G) < .03 && Math.Abs(actual.B - expected.B) < .03, $"Canvas pixel {x}: {actual} != {expected}."); }

@@ -16,7 +16,6 @@ public sealed unsafe partial class RenderingDevice
         IdleList(); var info = Get(rid, Kind.Texture).Texture!;
         if ((info.Type == TextureType.TextureArray) != array || array && info.Layers < 2) throw new ArgumentException("The canvas image sampling role does not match.", nameof(rid));
         if ((info.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("The image has no sampling role.", nameof(rid));
-        if (PixelType(info.Format) != 0) throw new NotSupportedException("Integer canvas sampling needs a matching shader interface.");
         return info;
     }
     internal nint CanvasHandle(RID rid, nint device)
@@ -36,9 +35,39 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); var entry = Get(rid, Kind.Texture); Layer(entry, layer); var info = entry.Texture!;
         if ((info.Usage & (TextureUsageBits.CPURead | TextureUsageBits.CanCopyFrom)) == 0) return null;
+        if (PixelType(info.Format) != 0) return IntegerCanvasImage(rid, layer, info);
         var format = CanvasImageFormat(info.Format);
         if (format is null) return ConvertedCanvasImage(entry, layer);
         return Image.CreateFromData((int)info.Width, (int)info.Height, info.Mips > 1, format.Value, TextureGetData(rid, layer));
+    }
+    private Image IntegerCanvasImage(RID rid, uint layer, TextureInfo info)
+    {
+        var source = TextureGetData(rid, layer); var native = NativeFormat(info.Format);
+        var pixelBytes = SDL.GPUTextureFormatTexelBlockSize(native);
+        var componentBytes = info.Format switch
+        {
+            DataFormat.R8UINT or DataFormat.R8SINT or DataFormat.R8G8UINT or DataFormat.R8G8SINT or DataFormat.R8G8B8A8UINT or DataFormat.R8G8B8A8SINT => 1,
+            DataFormat.R16UINT or DataFormat.R16SINT or DataFormat.R16G16UINT or DataFormat.R16G16SINT or DataFormat.R16G16B16A16UINT or DataFormat.R16G16B16A16SINT => 2,
+            _ => 4
+        };
+        var components = (int)pixelBytes / componentBytes;
+        var pixels = source.Length / (int)pixelBytes;
+        var output = new float[checked(pixels * 4)]; var signed = PixelType(info.Format) == 1;
+        for (var i = 0; i < pixels; i++)
+        {
+            output[i * 4 + 3] = 1;
+            for (var c = 0; c < components; c++)
+            {
+                var offset = (i * components + c) * componentBytes;
+                output[i * 4 + c] = componentBytes switch
+                {
+                    1 => signed ? unchecked((sbyte)source[offset]) : source[offset],
+                    2 => signed ? System.Buffers.Binary.BinaryPrimitives.ReadInt16LittleEndian(source.AsSpan(offset)) : System.Buffers.Binary.BinaryPrimitives.ReadUInt16LittleEndian(source.AsSpan(offset)),
+                    _ => signed ? System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(source.AsSpan(offset)) : System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(source.AsSpan(offset))
+                };
+            }
+        }
+        return Image.CreateFromData((int)info.Width, (int)info.Height, info.Mips > 1, Image.Format.Rgbaf, System.Runtime.InteropServices.MemoryMarshal.AsBytes(output.AsSpan()).ToArray());
     }
     private Image ConvertedCanvasImage(Entry source, uint layer)
     {
