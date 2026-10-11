@@ -108,7 +108,7 @@ public sealed partial class TileSet : Resource
         var data = source is TileSetAtlasSource atlas ? atlas.TerrainData().ToArray() : [];
         var custom = data.Select(d => convertCustom ? d.PrepareCustomSchema(this) : d.CustomValues).ToArray();
         previous?.DetachSourceInstance(source);
-        source.ResizePhysicsLayers(PhysicsLayers.Count); source.ResizeNavigationLayers(NavigationLayers.Count); source.OwnerSet = this;
+        source.ResizePhysicsLayers(PhysicsLayers.Count); source.ResizeNavigationLayers(NavigationLayers.Count); source.ResizeOcclusionLayers(OcclusionLayers.Count); source.OwnerSet = this;
         _sources[id] = source; source.Changed += SourceChanged; source.Disposed += SourceDisposed;
         for (var i = 0; i < data.Length; i++) data[i].CustomValues = custom[i];
         foreach (var item in data) item.TerrainSchemaChanged(false);
@@ -187,7 +187,7 @@ public sealed partial class TileSet : Resource
         ClearPatterns();
         ClearProxies();
         CustomLayers.Clear(); _customNames.Clear();
-        foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear(); NavigationLayers.Clear();
+        foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear(); NavigationLayers.Clear(); OcclusionLayers.Clear();
         foreach (var source in _sources.Values) if (source is not null) { source.Changed -= SourceChanged; source.Disposed -= SourceDisposed; source.OwnerSet = null; }
         _sources.Clear();
     }
@@ -198,7 +198,7 @@ public sealed partial class TileSet : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._uvClipping = _uvClipping; copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
+        var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._uvClipping = _uvClipping; copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers); copy.OcclusionLayers.AddRange(OcclusionLayers);
         copy.CustomLayers = CustomLayers.Select(l => l.Copy()).ToList(); copy._customNames = CustomNames(copy.CustomLayers);
         foreach (var layer in PhysicsLayers)
         {
@@ -252,6 +252,7 @@ public sealed partial class TileSet : Resource
             yield return new PropertyDescriptor<TileSet, PhysicsMaterial?>(prefix + "Material", n => n.GetPhysicsLayerPhysicsMaterial(id), (n, v) => n.SetPhysicsLayerPhysicsMaterial(id, v), _ => null, stored: true);
         }
         foreach (var property in NavigationProperties()) yield return property;
+        foreach (var property in OcclusionProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, int[]>("SourceIDs", n => n._sources.Keys.ToArray(), (n, v) => n.RestoreSourceIDs(v), _ => [], stored: true);
         foreach (var sourceID in _sources.Keys)
         {

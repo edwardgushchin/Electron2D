@@ -145,3 +145,7 @@ Sampling uses linear filtering, clamp addressing and base-level LOD. Changes nee
 - `T:System.ArgumentException`: The parameter is not a layered sampler.
 - `T:System.InvalidOperationException`: No shader is assigned.
 - `T:System.ObjectDisposedException`: The material, shader or array is disposed.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

@@ -156,10 +156,10 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [CameraTexture](classes/CameraTexture.md) | Texture2D | Blocked | 4 |
 | [CanvasGroup](classes/CanvasGroup.md) | Node2D | Implemented | 3 |
 | [CanvasItem](classes/CanvasItem.md) | Node | Partial | 114 |
-| [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Partial | 16 |
+| [CanvasItemMaterial](classes/CanvasItemMaterial.md) | Material | Implemented | 16 |
 | [CanvasLayer](classes/CanvasLayer.md) | Node | Partial | 14 |
 | [CanvasModulate](classes/CanvasModulate.md) | Node2D | Blocked | 1 |
-| [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Blocked | 8 |
+| [CanvasTexture](classes/CanvasTexture.md) | Texture2D | Implemented | 8 |
 | [CapsuleMesh](classes/CapsuleMesh.md) | PrimitiveMesh | Excluded | 4 |
 | [CapsuleShape2D](classes/CapsuleShape2D.md) | Shape2D | Implemented | 3 |
 | [CapsuleShape3D](classes/CapsuleShape3D.md) | Shape3D | Excluded | 3 |
@@ -221,7 +221,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Decal](classes/Decal.md) | VisualInstance3D | Excluded | 23 |
 | [Dictionary](classes/Dictionary.md) | — | Excluded | 40 |
 | [DirAccess](classes/DirAccess.md) | RefCounted | Partial | 40 |
-| [DirectionalLight2D](classes/DirectionalLight2D.md) | Light2D | Blocked | 2 |
+| [DirectionalLight2D](classes/DirectionalLight2D.md) | Light2D | Implemented | 2 |
 | [DirectionalLight3D](classes/DirectionalLight3D.md) | Light3D | Excluded | 17 |
 | [DisplayServer](classes/DisplayServer.md) | Object | Implemented | 552 |
 | [DrawableTexture2D](classes/DrawableTexture2D.md) | Texture2D | Blocked | 13 |
@@ -422,9 +422,9 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Label](classes/Label.md) | Control | Implemented | 42 |
 | [Label3D](classes/Label3D.md) | GeometryInstance3D | Excluded | 49 |
 | [LabelSettings](classes/LabelSettings.md) | Resource | Implemented | 33 |
-| [Light2D](classes/Light2D.md) | Node2D | Blocked | 25 |
+| [Light2D](classes/Light2D.md) | Node2D | Partial | 25 |
 | [Light3D](classes/Light3D.md) | VisualInstance3D | Excluded | 57 |
-| [LightOccluder2D](classes/LightOccluder2D.md) | Node2D | Blocked | 3 |
+| [LightOccluder2D](classes/LightOccluder2D.md) | Node2D | Implemented | 3 |
 | [LightmapGI](classes/LightmapGI.md) | VisualInstance3D | Excluded | 51 |
 | [LightmapGIData](classes/LightmapGIData.md) | Resource | Excluded | 13 |
 | [LightmapProbe](classes/LightmapProbe.md) | Node3D | Excluded | 0 |
@@ -503,7 +503,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Object](classes/Object.md) | — | Partial | 73 |
 | [Occluder3D](classes/Occluder3D.md) | Resource | Excluded | 2 |
 | [OccluderInstance3D](classes/OccluderInstance3D.md) | VisualInstance3D | Excluded | 5 |
-| [OccluderPolygon2D](classes/OccluderPolygon2D.md) | Resource | Blocked | 7 |
+| [OccluderPolygon2D](classes/OccluderPolygon2D.md) | Resource | Implemented | 7 |
 | [OfflineMultiplayerPeer](classes/OfflineMultiplayerPeer.md) | MultiplayerPeer | Implemented | 0 |
 | [OggPacketSequence](classes/OggPacketSequence.md) | Resource | Implemented | 4 |
 | [OggPacketSequencePlayback](classes/OggPacketSequencePlayback.md) | RefCounted | Implemented | 0 |
@@ -648,7 +648,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaceholderTextureLayered](classes/PlaceholderTextureLayered.md) | TextureLayered | Implemented | 2 |
 | [Plane](classes/Plane.md) | — | Excluded | 31 |
 | [PlaneMesh](classes/PlaneMesh.md) | PrimitiveMesh | Excluded | 9 |
-| [PointLight2D](classes/PointLight2D.md) | Light2D | Blocked | 4 |
+| [PointLight2D](classes/PointLight2D.md) | Light2D | Implemented | 4 |
 | [PointMesh](classes/PointMesh.md) | PrimitiveMesh | Excluded | 0 |
 | [Polygon2D](classes/Polygon2D.md) | Node2D | Partial | 23 |
 | [PolygonOccluder3D](classes/PolygonOccluder3D.md) | Occluder3D | Excluded | 1 |

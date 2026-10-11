@@ -95,7 +95,12 @@
     "PhysicsDirectBodyState2DExtension": "PhysicsDirectBodyStateExtension",
     "NavigationMeshSourceGeometryData2D": "NavigationMeshSourceGeometryData",
     "PhysicsServer2DManager": "PhysicsServerManager",
-    "PhysicsServer2DExtension": "PhysicsServerExtension"
+    "PhysicsServer2DExtension": "PhysicsServerExtension",
+    "Light2D": "Light",
+    "PointLight2D": "PointLight",
+    "DirectionalLight2D": "DirectionalLight",
+    "LightOccluder2D": "LightOccluder",
+    "OccluderPolygon2D": "OccluderPolygon"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

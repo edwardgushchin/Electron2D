@@ -8,7 +8,7 @@ namespace Electron2D;
 public sealed class AtlasTexture : Texture
 {
     // ponytail: one graph lock serializes atlas traversal/mutation; use immutable graph snapshots if contention matters.
-    private static readonly object GraphGate = new();
+    private static object GraphGate => TextureGraphGate;
     private Texture? _atlas;
     private Rect2 _region;
     private Rect2 _roundedRegion;
@@ -39,6 +39,7 @@ public sealed class AtlasTexture : Texture
             lock (GraphGate)
             {
                 ThrowIfDisposed();
+                if (value?.ReferencesTexture(this, 0) == true) throw new ArgumentException("Texture views cannot form cycles.", nameof(value));
                 for (var next = value; next is not null; next = (next as AtlasTexture)?._atlas)
                 {
                     if (ReferenceEquals(next, this)) throw new ArgumentException("Atlas textures cannot form cycles.", nameof(value));
@@ -52,6 +53,8 @@ public sealed class AtlasTexture : Texture
             EmitChanged();
         }
     }
+
+    internal override bool ReferencesTexture(Texture target, int depth) => base.ReferencesTexture(target, depth) || _atlas?.ReferencesTexture(target, depth + 1) == true;
 
     /// <summary>Gets or sets the source rectangle in pixels.</summary>
     /// <value>An empty rectangle by default. Each zero size axis uses the source's full logical dimension.</value>

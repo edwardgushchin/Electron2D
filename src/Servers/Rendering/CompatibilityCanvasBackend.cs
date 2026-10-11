@@ -119,10 +119,12 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
         return new(width, height);
     }
 
-    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances)
+    internal override void Draw(CanvasRenderTarget output, ReadOnlySpan<CanvasVertex> vertices, ReadOnlySpan<CanvasBatch> batches, Color clear, bool clearEnabled, bool present, double time, ReadOnlySpan<CanvasInstance> instances, CanvasLightingFrame lighting)
     {
         foreach (var batch in batches)
-            if (batch.ShaderCode is not null)
+            if (batch.Lighting is not null)
+                throw new NotSupportedException("Canvas lighting requires the GPU renderer.");
+            else if (batch.ShaderCode is not null)
                 throw new NotSupportedException("The compatibility renderer does not execute shader materials.");
         if (Driver == "software")
             foreach (var batch in batches)
@@ -147,6 +149,7 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
                     throw new NotSupportedException("The compatibility renderer cannot sample texture mipmaps or use anisotropic filtering.");
                 if (batch.Repeat == TextureRepeat.Mirror)
                     throw new NotSupportedException("The compatibility renderer cannot use mirrored texture repeat.");
+                texture = CanvasSample(texture);
                 if (texture is not ViewportTexture && _usedTextures.Add(texture)) PrepareTexture(texture);
                 var dimensions = texture.GetSize();
                 if (batch.Repeat == TextureRepeat.Enabled && (((int)dimensions.X & ((int)dimensions.X - 1)) != 0 || ((int)dimensions.Y & ((int)dimensions.Y - 1)) != 0) &&
@@ -259,8 +262,19 @@ internal sealed class CompatibilityCanvasBackend : CanvasBackend
 
     internal override void BeginFrame() => _usedTextures.Clear();
     internal override void EndFrame() { foreach (var pair in _textures) if (!_usedTextures.Contains(pair.Key) && (!pair.Key.RetainRendererCache || pair.Key.IsDisposed)) { pair.Value.Handle.Dispose(); _textures.Remove(pair.Key); } }
+    private static Texture CanvasSample(Texture texture)
+    {
+        for (var depth = 0; depth <= 1024; depth++)
+        {
+            if (texture is AtlasTexture atlas) { texture = atlas.RenderingTexture ?? RenderingTextureRegistry.WhiteTexture; continue; }
+            if (texture is CanvasTexture canvas) { texture = canvas.DiffuseTexture ?? RenderingTextureRegistry.WhiteTexture; continue; }
+            return texture;
+        }
+        throw new InvalidOperationException("Texture view depth exceeds 1024.");
+    }
     private nint TextureHandle(Texture texture)
     {
+        texture = CanvasSample(texture);
         if (texture is ViewportTexture view) { var viewport = view.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved."); return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle(); }
         return _textures[texture].Handle.DangerousGetHandle();
     }

@@ -1,6 +1,6 @@
 # Shader materials
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 [Image-array resources](texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -275,3 +275,5 @@ The native program RID host passed on Linux Wayland GPU for both HLSL and GLSL f
 The two GPU captures at state phase two were visually inspected and are byte-identical: SHA-256 `df8742ab7b78f83be64f605ed6fdfe2edd47f6e609561349280acd455b8718c7`. They show the half-red inherited material, restored red default sampler and republished white source material. Captures remain local ignored verification artifacts.
 
 Internal compute creation validates reflected native binding budgets before entering the native pipeline factory: eight readonly/write buffers and textures per class, sixteen samplers and four uniforms. Resident CCD testing exposed the need for this guard; the negative nine-read-buffer probe rejects before device creation. See [GPU continuous collision](gpu-resident-ccd.md).
+
+[Canvas lights and occlusion](canvas-lights.md) now integrate scene and retained sources, normal/specular channels, open/closed contours, tile policies and programmable signed-distance-field sampling. See that component for actual renderer limits and verification boundaries.

@@ -2,7 +2,7 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null)
+internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null)
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal readonly byte[] Code = code;
@@ -11,6 +11,8 @@ internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<s
     internal readonly ShaderTexture[] Textures = textures ?? [];
     internal readonly ShaderUniform? TimeUniform = timeUniform;
     internal readonly ShaderUniform? ScreenPixelSizeUniform = screenPixelSizeUniform;
+    internal readonly ShaderUniform? SDFCoordsUniform = sdfCoordsUniform;
+    internal readonly bool UsesSDFTexture = (textures ?? []).Any(t => t.IsSDFTexture);
     internal readonly bool UsesScreenTexture = (textures ?? []).Any(t => t.IsScreenTexture);
     internal readonly IReadOnlyList<PropertyDescriptor> Descriptors = Array.AsReadOnly(uniforms.Values.Select(u => u.Describe(u.Name))
         .Concat((textures ?? []).Where(t => !t.IsEngineTexture).Select(t => t.Describe(t.Name))).ToArray());
@@ -29,7 +31,8 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
 {
     internal bool IsCanvasTexture => Name == "TEXTURE";
     internal bool IsScreenTexture => Name == "SCREEN_TEXTURE";
-    internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture;
+    internal bool IsSDFTexture => Name == "SDF_TEXTURE";
+    internal bool IsEngineTexture => IsCanvasTexture || IsScreenTexture || IsSDFTexture;
     internal void RequireShape(bool array)
     {
         if (IsArray != array) throw new ArgumentException($"Texture parameter '{Name}' requires {(IsArray ? "layered" : "ordinary")} images.");

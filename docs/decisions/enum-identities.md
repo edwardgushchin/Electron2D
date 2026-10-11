@@ -3,7 +3,7 @@
 <a id="adr-0051"></a>
 ## ADR 0051: Public enum identities and declaring owners
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
 ### Status
 
@@ -28,6 +28,8 @@ The following other selected names remain exact public type identities. Listed t
 - `FileAccess.CompressionMode` → `FileCompressionMode`; `FileAccess.ModeFlags` → `FileAccessModeFlags`; `FileAccess.UnixPermissionFlags` → `UnixPermissionFlags`; `Node.ProcessMode` → `ProcessMode`; `PackedScene.GenEditState` → `PackedSceneEditState`; `Resource.DeepDuplicateMode` → `DeepDuplicateMode`; `SceneTree.GroupCallFlags` → `GroupCallFlags`.
 - `Gradient.InterpolationMode` → `InterpolationMode`; `GradientTexture2D.Fill` → `FillEnum`; `GradientTexture2D.Repeat` → `Repeat`; `Camera2D.AnchorMode` → `AnchorMode`; `Line2D.LineCapMode` → `LineCapMode`; `Line2D.LineJointMode` → `LineJointMode`; `Line2D.LineTextureMode` → `LineTextureMode`.
 - `FastNoiseLite.NoiseType` → `NoiseType`; `FastNoiseLite.FractalType` → `FractalType`; `FastNoiseLite.CellularDistanceFunction` → `CellularDistanceFunction`; `FastNoiseLite.CellularReturnType` → `CellularReturnType`; `FastNoiseLite.DomainWarpType` → `DomainWarpType`; `FastNoiseLite.DomainWarpFractalType` → `DomainWarpFractalType`.
+
+Canvas light blend/filter/cull contracts share `LightBlendMode`, `LightShadowFilter` and `OccluderCullMode` between scene resources and RenderingServer. `LightMode` belongs to fixed material shading and remains distinct from point/directional `CanvasLightMode`. Viewport/server distance-field presets share `CanvasSDFOversize` and `CanvasSDFScale`; `CanvasTextureChannel` selects the three texture roles. Max bounds remain nonselectable. These identities execute in the first native light/occlusion consumer rather than storing inert choices.
 
 GraphEdit keeps the applicable `GridPattern` and `PanningScheme` properties. Its distinct owner-specific enum domains are `GraphEdit.GridPatternMode` (Lines/Dots) and `GraphEdit.PanningSchemeMode` (ScrollZooms/ScrollPans); the Mode suffix avoids C# member/type name collisions without moving or merging these unrelated domains.
 

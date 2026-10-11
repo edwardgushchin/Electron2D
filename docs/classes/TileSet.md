@@ -1213,3 +1213,7 @@ See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-
 **value:** False by default; true prevents neighboring atlas texels from bleeding during filtered sampling.
 
 Sources now include TileSetScenesCollectionSource. Ownership transfer/copy/storage preserves scene source identity and shared template graphs without stealing source instances; scene descendants use their own physics/navigation resources.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

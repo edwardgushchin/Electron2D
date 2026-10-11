@@ -71,3 +71,7 @@ Positive vertical frame count with the same 1..1024 bounds, notification and dis
 False clamps normalized phase to [0,1]; true applies positive fractional wrapping, including negative offsets. Actual writes notify after commitment; equal values are silent. Disposed resource access throws ObjectDisposedException for all four settings. Material mutation remains serialized resource work without scene thread affinity.
 
 The five stored properties participate together in exact independent duplication and registered .e2dres/.e2dscene graphs. [CPUParticles](CPUParticles.md) consumes them on the existing GPU/compatibility canvas; its tests cover real UVs, paused live settings, fresh process and prepared rendering. LightMode remains dependent on actual light passes.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

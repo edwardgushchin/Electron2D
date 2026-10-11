@@ -152,3 +152,7 @@ CanvasItem.DrawPolygon and DrawColoredPolygon capture the immediate Region as no
 `public override RID GetRID()`
 
 Forwards the current source's RID under the atlas graph gate, recursively for nested views. An empty atlas returns empty. The identity describes the full underlying texture; region/margin/filter clipping apply when drawing the AtlasTexture object. RID overloads draw the resolved source rather than the view. Source assignment changes the forwarded identity; view disposal does not release that identity. This view and source disposal guards apply. [RenderingTextureRIDTests](../../tests/Electron2D.Tests/RenderingTextureRIDTests.cs) checks nested/empty/source-change/view-disposal behavior and backing image/format queries.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

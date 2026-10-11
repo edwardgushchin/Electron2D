@@ -312,11 +312,11 @@ public abstract partial class CanvasItem
     internal Material? CanvasMaterial => (ServerState?.UseParentMaterial ?? _useParentMaterial) ? RenderParent?.CanvasMaterial : ServerState is { MaterialAssigned: true } state ? RenderingProgramRegistry<Material>.ResolveOrNull(state.Material) : _material;
     internal Color InheritedModulate => GetParentItem() is not { } parent ? _modulate : parent.InheritedModulate * _modulate;
 
-    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null)
+    internal void AppendCanvas(List<CanvasVertex> vertices, List<CanvasBatch> batches, Transform transform, double time = 0, Rect2i? clip = null, Vector2i? outputSize = null, Viewport? renderViewport = null, bool illumination = false)
     {
         var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands;
         if (commands is null) return;
-        var color = RenderInheritedModulate * RenderSelfModulate * (RenderCanvas()?.Modulate ?? Colors.White);
+        var color = RenderInheritedModulate * RenderSelfModulate * (illumination ? Colors.White : RenderCanvas()?.Modulate ?? Colors.White);
         var viewport = renderViewport ?? ServerState?.Owner?.CurrentCanvasViewport ?? CanvasViewport;
         var filter = RenderFilter;
         if (filter == TextureFilter.ParentNode) filter = viewport?.TextureFilterInTree ?? TextureFilter.Linear;

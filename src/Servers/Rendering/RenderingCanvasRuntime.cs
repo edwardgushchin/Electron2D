@@ -55,7 +55,7 @@ internal sealed class RenderingCanvasItemState
     internal Color? Modulate, SelfModulate;
     internal bool? Visible, Behind, ZRelative, YSort, Clip, UseParentMaterial;
     internal int? Z, DrawIndex;
-    internal uint? VisibilityLayer;
+    internal uint? VisibilityLayer, LightMask;
     internal TextureFilter? Filter;
     internal TextureRepeat? Repeat;
     internal Rect2? CustomRect;

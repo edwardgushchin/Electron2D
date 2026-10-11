@@ -56,6 +56,7 @@ public abstract partial class CanvasItem
     {
         get { var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands; if (commands is not null) foreach (var command in commands) if (command.ClipIgnore == true) return true; return false; }
     }
+    internal uint RenderLightMask => ServerState?.TileOwner is { } tiles ? tiles.RenderLightMask : ServerState?.LightMask ?? _lightMask;
     internal uint RenderVisibilityLayer => ServerState?.TileOwner is { } tiles ? tiles.RenderVisibilityLayer : ServerState?.VisibilityLayer ?? _visibilityLayer;
     internal void RecordServerClipIgnore(bool ignore) => (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, ClipIgnore: ignore));
     internal void RecordServerStroke(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)

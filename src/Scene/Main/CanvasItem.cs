@@ -229,6 +229,7 @@ public abstract partial class CanvasItem : Node
         new PropertyDescriptor<CanvasItem, bool>(nameof(ShowBehindParent), node => node.ShowBehindParent, (node, value) => node.ShowBehindParent = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(YSortEnabled), node => node.YSortEnabled, (node, value) => node.YSortEnabled = value, _ => false, stored: true),
         new PropertyDescriptor<CanvasItem, bool>(nameof(Visible), node => node.Visible, (node, value) => node.Visible = value, _ => true, stored: true),
+        new PropertyDescriptor<CanvasItem, uint>(nameof(LightMask), node => node.LightMask, (node, value) => node.LightMask = value, _ => 1u, stored: true),
         new PropertyDescriptor<CanvasItem, uint>(nameof(VisibilityLayer), node => node.VisibilityLayer, (node, value) => node.VisibilityLayer = value, _ => 1u, stored: true),
         new PropertyDescriptor<CanvasItem, int>(
             nameof(ZIndex),
@@ -268,6 +269,11 @@ public abstract partial class CanvasItem : Node
 
     private bool _visible = true;
     private uint _visibilityLayer = 1;
+    private uint _lightMask = 1;
+
+    /// <summary>Gets or sets point-light receiving membership independently of visibility.</summary>
+    /// <value>One initially; zero rejects point lights. Directional lights ignore this mask.</value>
+    public uint LightMask { get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _lightMask; } set { EnsureMutable(); _lightMask = value; if (ServerState is { } state) state.LightMask = null; } }
 
     /// <summary>Gets or sets the rendering visibility bits tested against the viewport's canvas cull mask.</summary>
     /// <value>One initially; all 32 bits are available. Zero excludes this item's canvas subtree from rendering.</value>

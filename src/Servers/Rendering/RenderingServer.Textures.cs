@@ -138,12 +138,12 @@ public sealed partial class RenderingServer
 
     internal void FreeRIDCore(RID rid)
     {
-        EnsureTextureChange(); if (ReleaseProgramRID(rid) || ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
+        EnsureTextureChange(); if (ReleaseLightingRID(rid) || ReleaseProgramRID(rid) || ReleaseCanvasRID(rid)) return; if (RenderingSkeletonRegistry.Contains(rid)) { RenderingSkeletonRegistry.Owned(rid, this).EnsureWritable(); _ownedSkeletonRIDs.Remove(rid); RenderingSkeletonRegistry.Remove(rid); return; }
         if (RenderingMultiMeshRegistry.Contains(rid)) { var resource = RenderingMultiMeshRegistry.Owned(rid, this); _ownedMultiMeshRIDs.Remove(rid); RenderingMultiMeshRegistry.Remove(rid); resource.Dispose(); return; }
         if (RenderingMeshRegistry.Contains(rid)) { var mesh = RenderingMeshRegistry.Owned(rid, this); _ownedMeshRIDs.Remove(rid); RenderingMeshRegistry.Remove(rid); mesh.Dispose(); return; }
         var texture = RenderingTextureRegistry.OwnedResource(rid, this);
         _ownedTextureRIDs.Remove(rid); RenderingTextureRegistry.Remove(rid);
-        if (texture is ServerTexture ordinary) ordinary.Released = true; else ((TextureLayered)texture).ServerReleased = true;
+        if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
         texture.Dispose();
     }
 
@@ -161,7 +161,7 @@ public sealed partial class RenderingServer
             var rid = _ownedTextureRIDs[^1]; _ownedTextureRIDs.RemoveAt(_ownedTextureRIDs.Count - 1);
             var texture = RenderingTextureRegistry.OwnedResource(rid, this);
             RenderingTextureRegistry.Remove(rid);
-            if (texture is ServerTexture ordinary) ordinary.Released = true; else ((TextureLayered)texture).ServerReleased = true;
+            if (texture is ServerTexture ordinary) ordinary.Released = true; else if (texture is TextureLayered layered) layered.ServerReleased = true;
             try { texture.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
         }
         if (errors is not null) throw new AggregateException("Texture cleanup failed.", errors);
