@@ -99,23 +99,23 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         if (force == _gpuConstantForce && torque == _gpuConstantTorque) return;
         GPU!.SetConstantForce(GPUHandle, force, torque); _gpuConstantForce = force; _gpuConstantTorque = torque;
     }
-    /// <summary>Synchronizes authored integration edits, rebuilding after attachment, role changes or replay.</summary>
-    internal void PrepareGPUParameters(PhysicsBodyRuntime runtime, bool force = false)
+    /// <summary>Reports whether cold or changed integration input needs numerical-owner preparation.</summary>
+    internal bool NeedsIntegrationPreparation(bool dirty, bool force) => force || !_gpuParametersPrepared || dirty;
+    /// <summary>Consumes value-only integration policy, rebuilding after attachment, role changes or replay.</summary>
+    /// <returns>True when ordinary successful preparation permits the binding layer to retire its dirty flags.</returns>
+    internal bool PrepareGPUParameters(in PhysicsBodyIntegrationConfiguration configuration, bool dirty, bool force = false)
     {
-        var rigid = runtime.Owners.Scene as RigidBody;
-        if (!force && _gpuParametersPrepared && !runtime.GPUParametersDirty && rigid?.GPUParametersDirty != true) return;
-        var policy = new GPUPhysicsBodyStore.IntegrationPolicy(rigid?.GravityScale ?? runtime.BodyGravityScale,
-            rigid?.LinearDamp ?? runtime.BodyLinearDamp, rigid?.AngularDamp ?? runtime.BodyAngularDamp,
-            rigid is null ? RotationLocked : !rigid.Freeze && rigid.LockRotation, rigid?.CustomIntegrator ?? runtime.OmitForces,
-            rigid?.LinearDampMode ?? runtime.BodyLinearDampMode, rigid?.AngularDampMode ?? runtime.BodyAngularDampMode);
+        if (!force && _gpuParametersPrepared && !dirty) return false;
+        var policy = new GPUPhysicsBodyStore.IntegrationPolicy(configuration.GravityScale, configuration.LinearDamp, configuration.AngularDamp,
+            configuration.LockRotation, configuration.OmitForces, configuration.LinearDampMode, configuration.AngularDampMode);
         if (GPU!.GetIntegrationPolicy(GPUHandle) != policy) { GPU.SetIntegrationPolicy(GPUHandle, policy); Space!.InvalidateGPUStates(); }
-        GPU.SetCCDMode(GPUHandle, runtime.ContinuousMode);
-        SetGPUConstants(rigid?.ConstantForce ?? runtime.ConstantForce, rigid?.ConstantTorque ?? runtime.ConstantTorque);
+        GPU.SetCCDMode(GPUHandle, configuration.CCDMode);
+        SetGPUConstants(configuration.ConstantForce, configuration.ConstantTorque);
         if (!force)
         {
-            _gpuParametersPrepared = true; runtime.GPUParametersDirty = false;
-            if (rigid is not null) rigid.GPUParametersDirty = false;
+            _gpuParametersPrepared = true;
         }
+        return !force;
     }
     internal override void InvalidateCollisionExceptions() => Space.BackendImplementation.InvalidateCollisionExceptions(Owner);
     internal override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)

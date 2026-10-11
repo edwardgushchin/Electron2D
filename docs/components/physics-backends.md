@@ -943,7 +943,7 @@ PhysicsBodyRuntime.ApplyBeforeStep retains common participation/contact-reportin
 gates and captures pre-step activity, then dispatches default-force preparation to
 the current PhysicsColliderImplementation. CPU owns omitted-force clearing, native
 gravity policy and pending/constant force/torque application. GPU owns eligible
-pending-force publication and consumption; persistent constants, omission, gravity
+pending-force publication; common code owns successful command consumption; persistent constants, omission, gravity
 and damping remain in its resident integration policy and kernels. This preserves
 the existing timing, lock and sleep rules without a CPU cast in common integration.
 Before an explicit GPU sleep command, pending authored integration/constant edits
@@ -984,3 +984,11 @@ The internal [PhysicsBackendRegistry](../classes/PhysicsBackendRegistry.md) now 
 ## Selected contact publication
 
 [Factory contact hooks](physics-body-extensions.md#selected-contact-publication) now determine real scene monitor contacts and raw callback snapshots. CPU workers only capture native input; the owner projects complete validated immutable output. Cached contact getters preserve that output through later association/geometry edits, and user projection failures isolate the receiver without replaying or poisoning a completed GPU step. The full public registered server/algorithm family remains open.
+
+## Value-only body integration inputs
+
+Selected default-force preparation now receives [PhysicsBodyForceConfiguration](../classes/PhysicsBodyForceConfiguration.md), containing pending/persistent forces, gravity, omission/rotation and role eligibility. The numerical owner receives no PhysicsBodyRuntime or scene object through that operation. Common code samples actual scene/raw intent, then consumes pending commands after successful preparation. An implementation rejected before applying its input leaves the queue and tick unchanged; this does not make arbitrary partially executed backend mutations transactional. CPU applies transient/persistent values and omission policy; GPU applies eligible transient values while resident kernels retain persistent/field integration. GPU may skip empty command preparation when no observer/activity demand requires it.
+
+[PhysicsBodyIntegrationConfiguration](../classes/PhysicsBodyIntegrationConfiguration.md) similarly carries complete authored gravity/damping/modes/lock/omission/constants/CCD into CPU field calculation and GPU parameter preparation. CPU returns complete validated fields for binding-layer assignment; GPU returns whether successful ordinary preparation can retire dirty flags. Step, checkpoint and explicit sleep use the same GPU binding logic. Unchanged warm policy is not reconstructed or uploaded; forced diagnostic refresh retains its earlier cache semantics. Numeric private methods no longer receive scene/runtime owners for these three paths. The redundant RigidBody.ApplyConstantForces helper is removed.
+
+[Selected force-input tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.ForceInputs.cs) prove real doubled transient response on scene/raw bodies, exact sampled values, persistent/once-only/omitted/locked behavior, frozen reporting eligibility, stable sleeping, rejection before application, transfer and zero owner/all-thread managed bytes over 64 warmup/64 measured full frames. Sleeping is tested after deferred freeze-role geometry settles; geometry changes retain their separate wake behavior. No public manager/server-extension/custom algorithm acceptance is claimed.

@@ -9,7 +9,7 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract int ShapeCount { get; }
     internal abstract void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration);
     internal abstract void Detach();
-    internal abstract void PrepareDefaultForces(PhysicsBodyRuntime runtime, PhysicsBody? scene);
+    internal abstract void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration);
     internal abstract bool HasMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetContactReporting(bool enabled);

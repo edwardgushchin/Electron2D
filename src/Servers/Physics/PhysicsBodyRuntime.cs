@@ -76,12 +76,27 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal void SetAttachedMassProfile(float mass, float inertia, Vector2? center) =>
         MassProperties = Backend.ApplyMassProfile(mass, inertia, center);
 
+    internal PhysicsBodyIntegrationConfiguration CaptureIntegrationConfiguration()
+    {
+        var rigid = Owners.Scene as RigidBody;
+        return new(rigid?.GravityScale ?? BodyGravityScale, rigid?.LinearDamp ?? BodyLinearDamp,
+            rigid?.AngularDamp ?? BodyAngularDamp, rigid?.LinearDampMode ?? BodyLinearDampMode,
+            rigid?.AngularDampMode ?? BodyAngularDampMode, rigid is null ? Backend.RotationLocked : !rigid.Freeze && rigid.LockRotation,
+            rigid?.CustomIntegrator ?? OmitForces, rigid?.ConstantForce ?? ConstantForce, rigid?.ConstantTorque ?? ConstantTorque, ContinuousMode);
+    }
+
     internal void ApplyBeforeStep(PhysicsBody? scene)
     {
         var backend = Backend;
         backend.SetContactReporting(ContactLimit > 0);
         ActiveBeforeStep = !backend.HasMotionMode(PhysicsServer.BodyMode.Static) && backend.IsAwake;
         if (backend.HasMotionMode(PhysicsServer.BodyMode.Static) || backend.IsDynamic && !ActiveBeforeStep) return;
-        backend.PrepareDefaultForces(this, scene);
+        var rigid = scene as RigidBody;
+        var configuration = new PhysicsBodyForceConfiguration(PendingForce, PendingTorque,
+            rigid?.ConstantForce ?? ConstantForce, rigid?.ConstantTorque ?? ConstantTorque,
+            rigid?.GravityScale ?? BodyGravityScale, rigid?.CustomIntegrator ?? OmitForces, backend.RotationLocked,
+            rigid is null || !rigid.Freeze && !rigid.PhysicsMadeStatic && backend.IsAwake, rigid is null);
+        backend.PrepareDefaultForces(configuration);
+        PendingForce = default; PendingTorque = 0;
     }
 }

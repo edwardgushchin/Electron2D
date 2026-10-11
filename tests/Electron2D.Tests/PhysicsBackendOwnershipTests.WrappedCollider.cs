@@ -21,7 +21,14 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override Transform PortablePose => inner.PortablePose;
         internal override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration) => inner.Attach(position, rotation, configuration);
         internal override void Detach() => inner.Detach();
-        internal override void PrepareDefaultForces(PhysicsBodyRuntime runtime, PhysicsBody? scene) => inner.PrepareDefaultForces(runtime, scene);
+        internal PhysicsBodyForceConfiguration ForceInput;
+        internal int ForcePreparations;
+        internal Func<PhysicsBodyForceConfiguration, PhysicsBodyForceConfiguration>? ForceHook;
+        internal override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
+        {
+            ForcePreparations++; ForceInput = configuration;
+            inner.PrepareDefaultForces(ForceHook is null ? configuration : ForceHook(configuration));
+        }
         internal override bool HasMotionMode(PhysicsServer.BodyMode mode) => inner.HasMotionMode(mode);
         internal override void SetMotionMode(PhysicsServer.BodyMode mode) => inner.SetMotionMode(mode);
         internal override void SetContactReporting(bool enabled) => inner.SetContactReporting(enabled);

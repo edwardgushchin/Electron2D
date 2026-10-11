@@ -437,3 +437,7 @@ Factory-provided body contact hooks now execute on the owner after native worker
 ## Scene pipeline and late native buffer growth, 2026-10-11
 
 PhysicsPipelinePerformance now compares explicit CPU/GPU World selection through the same complete RigidBody/monitor/interpolation PhysicsFrame workload and checks public scene/direct-state identities, finite motion, active population, contact data, energy and penetration. The former CPU-only native-state/profile probe could not establish this path. Private resident storage/transfer growth now retains one managed wrapper and device reference while preserving native allocation/copy/fence behavior. A 64-body late-contact control allocated 1344 managed bytes before the fix and zero afterward. These measurements do not close public backend registration, native allocator accounting, other platforms or final real-window acceptance.
+
+## Integration input ownership prerequisite, 2026-10-11
+
+Default-force, CPU resolved-field and GPU parameter preparation now consume immutable engine-unit values instead of mutable PhysicsBodyRuntime/scene inputs. Queue/dirty-flag ownership stays common; numeric fields return complete values. Step, private checkpoint and explicit GPU sleep share the binding route. Selected scene/raw force tests exercise transformed actual response, omitted/frozen/sleep/rotation behavior, pre-application failure and reattachment with zero warmed managed allocation. This removes concrete integration input coupling, without closing public manager/server-extension or custom algorithms.

@@ -18,14 +18,14 @@ internal sealed partial class GPUPhysicsWorldBackend
         _callbacks = false; var pendingForces = false;
         foreach (var body in Space.Bodies)
         {
-            var runtime = body.Runtime; GPUStore.NativeCollider(body.Backend).PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
+            var runtime = body.Runtime; SynchronizeIntegrationInputs(GPUStore.NativeCollider(body.Backend), runtime, Space.ForceGPUParameterRefresh);
             _callbacks |= RequiresBodySnapshot(runtime, body);
             pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
         }
         foreach (var body in Space.ServerColliders)
             if (!body.IsArea)
             {
-                var runtime = body.Runtime; GPUStore.NativeCollider(body.Backend).PrepareGPUParameters(runtime, Space.ForceGPUParameterRefresh);
+                var runtime = body.Runtime; SynchronizeIntegrationInputs(GPUStore.NativeCollider(body.Backend), runtime, Space.ForceGPUParameterRefresh);
                 _callbacks |= RequiresBodySnapshot(runtime, null);
                 pendingForces |= runtime.PendingForce != Vector2.Zero || runtime.PendingTorque != 0;
             }
@@ -82,5 +82,17 @@ internal sealed partial class GPUPhysicsWorldBackend
     internal override void EndStep(Exception? failure)
     {
         if (failure is not null && _intervalEntered && (GPUStore.HasFailed || GPUStore.SubmissionCount != _intervalSubmissions)) Space.FailGPUStep(failure);
+    }
+
+    internal static void SynchronizeIntegrationInputs(GPUPhysicsColliderImplementation collider, PhysicsBodyRuntime runtime, bool force = false)
+    {
+        var rigid = runtime.Owners.Scene as RigidBody;
+        var dirty = runtime.GPUParametersDirty || rigid?.GPUParametersDirty == true;
+        if (!collider.NeedsIntegrationPreparation(dirty, force)) return;
+        if (collider.PrepareGPUParameters(runtime.CaptureIntegrationConfiguration(), dirty, force))
+        {
+            runtime.GPUParametersDirty = false;
+            if (rigid is not null) rigid.GPUParametersDirty = false;
+        }
     }
 }
