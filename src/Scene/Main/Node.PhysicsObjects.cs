@@ -10,8 +10,29 @@ public partial class Node
     internal void EnsurePhysicsObjectAccess()
     {
         Tree?.EnsureExtensionHierarchyChange();
-        if (_physicsObjectBindings is null) return;
-        foreach (var binding in _physicsObjectBindings) binding.Space?.EnsureReleaseAccess();
+        if (this is CollisionObject collider)
+        {
+            collider.EnsureGeometryAuthoringAccess();
+            if (collider.Backend.Space is { } space) { space.EnsureReleaseAccess(); space.EnsureExtensionHierarchyChange(); }
+        }
+        if (_physicsObjectBindings is not null)
+            foreach (var binding in _physicsObjectBindings)
+            { binding.Space?.EnsureReleaseAccess(); binding.Space?.EnsureExtensionHierarchyChange(); }
+        foreach (var child in _children) child.EnsurePhysicsObjectAccess();
+    }
+
+    private void EnsurePhysicsAuthoringAccess()
+    {
+        for (var ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent) Check(ancestor);
+        Descendants(this);
+        static void Check(Node node)
+        {
+            if (node is not CollisionObject collider) return;
+            collider.EnsureGeometryAuthoringAccess();
+            collider.Backend.Space?.EnsureImplementationWriteAccess();
+        }
+        static void Descendants(Node node)
+        { Check(node); foreach (var child in node._children) Descendants(child); }
     }
 
     private void NotifyPhysicsObjectBindings(bool entering)

@@ -12,6 +12,8 @@ Last updated: 2026-10-11
 
 The [common step boundary](../../src/Servers/Physics/PhysicsSpace.Step.cs) now dispatches owner phases for preparation, solve, result synchronization, body completion, contacts and Areas. Shared callback/event ordering and always-released step guards replace separate CPU/GPU outer-step implementations. The selected owner retains actual numerical work, completion readiness and GPU failure policy.
 
+Scene and raw colliders use the same public space-assignment transition. Actual scene attachments can differ from their render-world descriptor; direct changes retain this space's existing driver. Partial additions are removed before a failed transfer restores its old attachment. See [common space bindings](../components/physics-registered-adapter.md#common-space-bindings).
+
 ## Description and internal flow
 
 Selected initialization/activation/query-flush/end-sync now use the retained

@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -9,6 +9,8 @@ Last updated: 2026-10-10
 - **Source:** [Node.cs](../../src/Scene/Main/Node.cs), [Node.Replacement.cs](../../src/Scene/Main/Node.Replacement.cs), [Node.PhysicsInterpolation.cs](../../src/Scene/Main/Node.PhysicsInterpolation.cs)
 - **Namespace:** `Electron2D`
 - **Declaration:** `public partial class Node : ElectronObject`
+
+Authoring guards inspect affected scene colliders and their actual physical attachments, including detached descendants and colliders imported into caller-owned spaces. Numerical hooks cannot mutate their node/subtree authoring; hierarchy, entry and disposal reject borrowed physical contexts before structural changes. Engine pose publication retains its ordinary step phase. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) verifies these paths.
 
 ## Description
 

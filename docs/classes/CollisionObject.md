@@ -1,12 +1,14 @@
 # CollisionObject
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [PhysicsBody](PhysicsBody.md), [Area](Area.md)
 
 - **Source:** [CollisionObject.cs](../../src/Scene/2D/CollisionObject.cs), [CollisionDisableMode.cs](../../src/Scene/2D/CollisionDisableMode.cs), [CollisionObject.ShapeOwners.cs](../../src/Scene/2D/CollisionObject.ShapeOwners.cs)
 - **Declaration:** `public abstract class CollisionObject : Entity`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
+
+Actual physical space participation can be assigned through PhysicsServer for both Body and Area roles. Transfer preflight borrows scene geometry and rejects authoring/lifetime changes before mutation; numerical authoring and hierarchy guards include detached or imported attachments. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) records the lifecycle and verified boundary.
 
 ## Description
 

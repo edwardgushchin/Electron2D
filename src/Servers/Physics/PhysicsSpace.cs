@@ -160,6 +160,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EndImplementationCallback() { _implementationCallbackDepth--; EndExtensionCallback(); }
     internal void EnsureImplementationWriteAccess()
     {
+        if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics authoring requires the space owner thread.");
         if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Physics authoring cannot change while a numerical physics implementation hook is borrowed.");
     }
     internal void EnsureImplementationRelease()
@@ -320,14 +321,14 @@ internal sealed partial class PhysicsSpace : IDisposable
         PrepareMonitoringCapacity();
     }
 
-    internal void Add(PhysicsServerCollider collider, RID spaceRID)
+    internal void Add(PhysicsServerCollider collider)
     {
         EnsureAttachmentAccess();
         if (_disposed) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (_stepping) throw new InvalidOperationException("Server colliders cannot enter while stepping.");
         if (!collider.IsArea) PhysicsServer.Service.EnsureJointBodyMembershipChange(collider.RID);
         _serverColliders.EnsureCapacity(_serverColliders.Count + 1);
-        collider.AttachBackend(this, spaceRID);
+        collider.AttachBackend(this);
         _serverColliders.Add(collider);
         if (collider.IsArea) _serverAreaCount++;
         PrepareSolverCapacity();

@@ -2224,6 +2224,26 @@
       "godot": "PhysicsServer2DExtension::method:_space_is_active(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.SpaceIsActive(Electron2D.RID)",
       "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_space(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetSpace(Electron2D.RID)",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Registered arbitrary numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_space(RID:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetSpace(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Registered arbitrary numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_space(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetSpace(Electron2D.RID)",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Registered arbitrary numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_space(RID:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaSetSpace(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Registered arbitrary numerical response and complete extension acceptance remain open."
     }
   ],
   "extras": [
@@ -5607,10 +5627,6 @@
         "PhysicsServer2D::method:segment_shape_create()",
         "PhysicsServer2D::method:convex_polygon_shape_create()",
         "PhysicsServer2D::method:concave_polygon_shape_create()",
-        "PhysicsServer2D::method:body_set_space(RID:,RID:)",
-        "PhysicsServer2D::method:area_set_space(RID:,RID:)",
-        "PhysicsServer2D::method:body_get_space(RID:)",
-        "PhysicsServer2D::method:area_get_space(RID:)",
         "PhysicsServer2D::method:area_set_collision_layer(RID:,int:)",
         "PhysicsServer2D::method:body_get_shape_count(RID:)",
         "PhysicsServer2D::method:area_get_shape_count(RID:)",
@@ -6925,6 +6941,26 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_get_space(RID:)",
+        "PhysicsServer2D::method:body_set_space(RID:,RID:)",
+        "PhysicsServer2D::method:area_get_space(RID:)",
+        "PhysicsServer2D::method:area_set_space(RID:,RID:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_space(RID:)",
+        "PhysicsServer2DExtension::method:_body_set_space(RID:,RID:)",
+        "PhysicsServer2DExtension::method:_area_get_space(RID:)",
+        "PhysicsServer2DExtension::method:_area_set_space(RID:,RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Registered arbitrary numerical response and complete extension acceptance remain open."
     }
   ]
 }

@@ -28,11 +28,11 @@ public sealed partial class SceneTree
     internal void EnsureWorldBindingChange() { foreach (var runtime in _physicsWorlds) runtime.ExistingSpace?.EnsureWorldBindingChange(); }
     internal string ResolveSpatialAudioBus(CanvasItem item, Vector2 position, uint areaMask, string requestedBus)
     { EnsureOwnerThread(); return areaMask == 0 ? requestedBus : item.GetWorld()?.Runtime.ExistingSpace?.FindAudioBusOverride(position, areaMask) ?? requestedBus; }
-    internal void RegisterPhysicsBody(PhysicsBody body) { EnsureOwnerThread(); PhysicsSpaceFor(body).Add(body); }
+    internal void RegisterPhysicsBody(PhysicsBody body) { EnsureOwnerThread(); PhysicsServer.BodySetSpace(body.PhysicsRID, PhysicsSpaceFor(body).RID); }
     internal void UnregisterPhysicsBody(PhysicsBody body) { EnsureOwnerThread(); body.Space?.Remove(body); }
     internal void RegisterPhysicsJoint(Joint joint) { EnsureOwnerThread(); PhysicsSpaceFor(joint).Add(joint); }
     internal void UnregisterPhysicsJoint(Joint joint) { EnsureOwnerThread(); joint.AttachmentSpace?.Remove(joint); }
-    internal void RegisterPhysicsArea(Area area) { EnsureOwnerThread(); PhysicsSpaceFor(area).Add(area); }
+    internal void RegisterPhysicsArea(Area area) { EnsureOwnerThread(); PhysicsServer.AreaSetSpace(area.PhysicsRID, PhysicsSpaceFor(area).RID); }
     internal void UnregisterPhysicsArea(Area area) { EnsureOwnerThread(); area.Space?.Remove(area); }
     internal void RebindViewportWorld(Viewport viewport)
     {
@@ -44,8 +44,8 @@ public sealed partial class SceneTree
             if (item.IsDisposed || !ReferenceEquals(item.Tree, this)) continue;
             try
             {
-                if (item is PhysicsBody body && body.Space is { } old && !ReferenceEquals(old, PhysicsSpaceFor(body))) { try { UnregisterPhysicsBody(body); } finally { if (body.Space is null && !body.IsDisposed && ReferenceEquals(body.Tree, this) && !body.PhysicsRemoved) RegisterPhysicsBody(body); } }
-                else if (item is Area area && area.Space is { } oldArea && !ReferenceEquals(oldArea, PhysicsSpaceFor(area))) { try { UnregisterPhysicsArea(area); } finally { if (area.Space is null && !area.IsDisposed && ReferenceEquals(area.Tree, this) && !area.PhysicsRemoved) RegisterPhysicsArea(area); } }
+                if (item is PhysicsBody body && !body.PhysicsRemoved && !ReferenceEquals(body.Space, PhysicsSpaceFor(body))) { try { UnregisterPhysicsBody(body); } finally { if (body.Space is null && !body.IsDisposed && ReferenceEquals(body.Tree, this)) RegisterPhysicsBody(body); } }
+                else if (item is Area area && !area.PhysicsRemoved && !ReferenceEquals(area.Space, PhysicsSpaceFor(area))) { try { UnregisterPhysicsArea(area); } finally { if (area.Space is null && !area.IsDisposed && ReferenceEquals(area.Tree, this)) RegisterPhysicsArea(area); } }
             }
             catch (Exception e) { CollectException(ref errors, e); if (!_worldRebindPending.Contains(item)) _worldRebindPending.Add(item); }
         }

@@ -302,6 +302,7 @@ public sealed partial class Area : CollisionObject
     protected override void OnEnterTree()
     {
         base.OnEnterTree();
+        if (!PhysicsRemoved) Tree?.RegisterPhysicsArea(this);
         UpdatePhysicsParticipation();
     }
 

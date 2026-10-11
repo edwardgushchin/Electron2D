@@ -21,6 +21,8 @@ CPU preserves its published-angle convention. Authored policy invalidation and
 the public CPU/GPU live-edit checks are described in
 [host preparation](../components/gpu-host-preparation.md).
 
+SpaceRID is projected from the actual backend attachment rather than retained separately. Scene and raw space operations now use the same guarded transition; partial target attachments are retired before restoration. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) covers failure and lifetime behavior.
+
 ## Description and runtime flow
 
 The shared collider carries authored identity, slots and selected operations;
@@ -78,4 +80,4 @@ The query-result boundary also reads each raw logical slot's disabled state with
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
 
 
-Raw collider release/transfer preflight checks the live backend world reference, including the interval before SpaceRID commits during Attach. A borrowed implementation hook cannot retire or retarget that partial attachment; [identity tests](../components/physics-registered-adapter.md#initial-collider-metadata) verify body and Area cleanup and retry.
+Raw collider release/transfer preflight checks the live backend world reference, including the interval before Attach completes. A borrowed implementation hook cannot retire or retarget that partial attachment; [identity tests](../components/physics-registered-adapter.md#initial-collider-metadata) verify body and Area cleanup and retry.

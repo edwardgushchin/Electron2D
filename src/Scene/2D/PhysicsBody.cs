@@ -289,6 +289,7 @@ public abstract partial class PhysicsBody : CollisionObject
     protected override void OnEnterTree()
     {
         base.OnEnterTree();
+        if (!PhysicsRemoved) Tree?.RegisterPhysicsBody(this);
         UpdatePhysicsParticipation();
     }
 

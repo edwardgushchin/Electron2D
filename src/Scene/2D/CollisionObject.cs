@@ -136,7 +136,29 @@ public abstract partial class CollisionObject : Entity
             UpdatePhysicsParticipation();
     }
 
-    internal void EnsurePhysicsParticipationChange() => Tree?.EnsurePhysicsParticipationChange();
+    internal void EnsurePhysicsParticipationChange()
+    {
+        EnsureGeometryAuthoringAccess();
+        Tree?.EnsurePhysicsParticipationChange();
+        Backend.Space?.EnsureQueryAccess();
+        Backend.Space?.EnsureImplementationWriteAccess();
+    }
+
+    private bool _validatingSpaceGeometry;
+    internal void EnsureGeometryAuthoringAccess()
+    {
+        if (_validatingSpaceGeometry) throw new InvalidOperationException("Scene collider authoring cannot change while its space-transfer geometry is borrowed.");
+    }
+    internal void ValidateSpaceGeometry(PhysicsSpace space)
+    {
+        EnsureGeometryAuthoringAccess(); _validatingSpaceGeometry = true;
+        try
+        {
+            foreach (var slot in ShapeSlots)
+                if (!(slot.DisabledOverride ?? slot.Owner.Disabled)) PhysicsShapeBackend.RequireSupported(space, slot.Shape);
+        }
+        finally { _validatingSpaceGeometry = false; }
+    }
 
     internal abstract void UpdatePhysicsParticipation();
 

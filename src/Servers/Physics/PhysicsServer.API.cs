@@ -1001,23 +1001,43 @@ public sealed partial class PhysicsServer
     public static void AreaRemoveShape(RID area, int index) => Service.AreaRemoveShapeCore(area, index);
 
     /// <summary>Moves a body into a live space, or detaches it with an empty RID.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="space">A live space RID, or default to detach.</param>
+    /// <remarks>Changes actual physics membership without changing a scene node's hierarchy or World descriptor.
+    /// Scene entry and viewport world replacement reclaim the scene-selected binding. World step ownership is unchanged.
+    /// Unsupported geometry rejects before detachment. Failed target attachment is retired before restoring the old space;
+    /// failures during restoration or cleanup are aggregated. Read BodyGetSpace after a lifecycle callback failure.</remarks>
+    /// <exception cref="ArgumentException">A RID has the wrong resource kind or is not live.</exception>
+    /// <exception cref="InvalidOperationException">An owner thread, solver, extension-borrow or geometry-lifetime guard rejects the change.</exception>
+    /// <exception cref="AggregateException">Attachment cleanup or restoration fails in addition to the original error.</exception>
     public static void BodySetSpace(RID body, RID space) => Service.BodySetSpaceCore(body, space);
 
     /// <summary>Moves an Area into a live space, or detaches it with an empty RID.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="space">A live space RID, or default to detach.</param>
+    /// <remarks>Changes physics membership without changing scene hierarchy or the World descriptor. Scene entry and
+    /// viewport world replacement reclaim the scene-selected binding. Unsupported geometry rejects before detachment.
+    /// A failed target attachment is retired before restoring the previous space; cleanup and restoration errors aggregate.
+    /// Read AreaGetSpace after a lifecycle callback failure. World step ownership is unchanged.</remarks>
+    /// <exception cref="ArgumentException">A RID has the wrong resource kind or is not live.</exception>
+    /// <exception cref="InvalidOperationException">An owner thread, solver, extension-borrow or geometry-lifetime guard rejects the change.</exception>
+    /// <exception cref="AggregateException">Attachment cleanup or restoration fails in addition to the original error.</exception>
     public static void AreaSetSpace(RID area, RID space) => Service.AreaSetSpaceCore(area, space);
 
     /// <summary>Gets the current body space, or an empty RID while detached.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <returns>The current space identity or default.</returns>
+    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor.</remarks>
+    /// <exception cref="ArgumentException">The RID has the wrong resource kind or is not live.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning scene or physics thread, solver or failed-world guard.</exception>
     public static RID BodyGetSpace(RID body) => Service.BodyGetSpaceCore(body);
 
     /// <summary>Gets the current Area space, or an empty RID while detached.</summary>
-    /// <param name="area">A live server Area RID.</param>
+    /// <param name="area">A live scene or server Area RID.</param>
     /// <returns>The current space identity or default.</returns>
+    /// <remarks>Reports the actual attachment, independently of a scene node's World descriptor.</remarks>
+    /// <exception cref="ArgumentException">The RID has the wrong resource kind or is not live.</exception>
+    /// <exception cref="InvalidOperationException">Access violates the owning scene or physics thread, solver or failed-world guard.</exception>
     public static RID AreaGetSpace(RID area) => Service.AreaGetSpaceCore(area);
 
     /// <summary>Changes a body's translation and rotation in scene units.</summary>

@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
+operations on scene and raw RIDs, including explicit target simulation, scene
+reclaim, partial-attachment restoration, source preflight and lifetime guards.
+The public-only CPU/GPU/registered consumer retains zero warmed frame allocation.
+Registered numerical response and final physical/network/performance acceptance remain open.
+
 [World policy borrowing](../components/physics-registered-adapter.md#borrowed-world-policies)
 guards all nine typed space parameters and local activation before common
 authoring or nested selected dispatch. Ordinary post-solver edits remain available;

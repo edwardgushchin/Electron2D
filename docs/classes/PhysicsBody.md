@@ -8,6 +8,8 @@ Last updated: 2026-10-11
 - **Declaration:** `public abstract class PhysicsBody : CollisionObject`
 - **Component:** [Scene physics bodies](../components/physics-bodies.md)
 
+PhysicsServer BodyGetSpace/BodySetSpace share the actual attachment across static, animatable, character, rigid and physical-bone roles. Direct space assignment retains the node's World descriptor and hierarchy; scene entry or viewport world replacement reclaims scene control. Caller-owned spaces may simulate these nodes through SpaceStep. Retained direct-state views expire on detach/transfer. See [common space bindings](../components/physics-registered-adapter.md#common-space-bindings).
+
 ## Physical skeletal integration
 
 PhysicalBone overrides internal effective filters for inactive followers: prepared fixtures and motion-layer lookup use zero, while public CollisionLayer/CollisionMask retain configured values. Other body classes retain their ordinary filters.

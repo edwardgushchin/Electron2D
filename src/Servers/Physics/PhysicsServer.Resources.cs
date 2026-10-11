@@ -178,15 +178,13 @@ public sealed partial class PhysicsServer
 
     internal RID BodyGetSpaceCore(RID body)
     {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.SpaceRID;
+        var owners = ShapeOwners(body, isArea: false);
+        return (owners.Scene?.Backend.Space ?? owners.Server?.Space)?.RID ?? default;
     }
     internal RID AreaGetSpaceCore(RID area)
     {
-        var collider = GetCollider(area, isArea: true);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.SpaceRID;
+        var owners = ShapeOwners(area, isArea: true);
+        return (owners.Scene?.Backend.Space ?? owners.Server?.Space)?.RID ?? default;
     }
 
     internal void AreaSetTransformCore(RID area, Transform transform)
@@ -403,18 +401,51 @@ public sealed partial class PhysicsServer
 
     private void SetSpace(RID owner, RID spaceRID, bool isArea)
     {
-        var collider = GetCollider(owner, isArea);
-        collider.EnsureGeometryLifetimeAccess();
-        if (collider.SpaceRID == spaceRID) return;
+        var owners = ShapeOwners(owner, isArea, writing: true);
+        var old = owners.Scene?.Backend.Space ?? owners.Server?.Space;
+        old?.EnsureExtensionHierarchyChange();
+        if ((old?.RID ?? default) == spaceRID) return;
         PhysicsSpace? next = spaceRID.IsValid() ? GetSceneSpace(spaceRID) : null;
         next?.EnsureAttachmentAccess();
-        if (next is not null) collider.ValidateGeometry(next);
-        var oldRID = collider.SpaceRID;
-        PhysicsSpace? old = oldRID.IsValid() ? GetSceneSpace(oldRID) : null;
+        if (next is not null)
+        {
+            if (owners.Server is { } server) server.ValidateGeometry(next);
+            else owners.Scene!.ValidateSpaceGeometry(next);
+        }
         old?.EnsureQueryAccess();
-        old?.Remove(collider);
-        try { next?.Add(collider, spaceRID); }
-        catch { old?.Add(collider, oldRID); throw; }
+        Remove(old);
+        try { Add(next); }
+        catch (Exception error)
+        {
+            List<Exception> errors = [error];
+            try { RemoveCurrent(next); } catch (Exception cleanup) { errors.Add(cleanup); }
+            try { Add(old); }
+            catch (Exception rollback)
+            {
+                errors.Add(rollback);
+                try { RemoveCurrent(old); } catch (Exception cleanup) { errors.Add(cleanup); }
+            }
+            if (errors.Count == 1) throw;
+            throw new AggregateException("Physics space attachment or restoration failed.", errors);
+        }
+        void Add(PhysicsSpace? space)
+        {
+            if (space is null) return;
+            if (owners.Scene is PhysicsBody body) space.Add(body);
+            else if (owners.Scene is Area area) space.Add(area);
+            else space.Add(owners.Server!);
+        }
+        void Remove(PhysicsSpace? space)
+        {
+            if (space is null) return;
+            if (owners.Scene is PhysicsBody body) space.Remove(body);
+            else if (owners.Scene is Area area) space.Remove(area);
+            else space.Remove(owners.Server!);
+        }
+        void RemoveCurrent(PhysicsSpace? space)
+        {
+            if (space is not null && ReferenceEquals(owners.Scene?.Backend.Space ?? owners.Server?.Space, space)) Remove(space);
+        }
     }
 
     private static void EnsureColliderSpaceAccessible(PhysicsServerCollider collider, bool writing = false)

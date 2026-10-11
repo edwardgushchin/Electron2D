@@ -1675,6 +1675,7 @@ public partial class Node : ElectronObject
     {
         base.ValidateMutation();
         EnsureNotSceneCapture();
+        EnsurePhysicsAuthoringAccess();
     }
 
     /// <inheritdoc />
@@ -2336,7 +2337,8 @@ public partial class Node : ElectronObject
 
     /// <summary>Validates that this node may be mutated at the current lifecycle point.</summary>
     /// <remarks>Derived node property setters should call this before changing state that can be stored in a packed scene.
-    /// Existing disposal/capture/thread guards run before the virtual ValidateMutation hook.</remarks>
+    /// Existing disposal/capture/thread guards run before the virtual ValidateMutation hook. The inherited hook also
+    /// guards affected scene colliders against owner-thread and numerical-borrow violations, including detached attachments.</remarks>
     /// <exception cref="InvalidOperationException">Scene capture is active or an attached node is accessed off the tree owner thread.</exception>
     /// <exception cref="ObjectDisposedException">Disposal has started.</exception>
     protected void EnsureMutable()
@@ -2443,6 +2445,7 @@ public partial class Node : ElectronObject
         EnsureMutable();
         ArgumentNullException.ThrowIfNull(child);
         child.EnsureNotSceneCapture();
+        child.EnsurePhysicsObjectAccess();
         if (child is Window { Visible: true } && Tree is not null && !EnumerateAncestorsForEmbedding())
             throw new NotSupportedException("Visible child windows require an embedding viewport.");
         Tree?.EnsureOwnerThread();
@@ -2605,6 +2608,7 @@ public partial class Node : ElectronObject
 
     private void EnsureChildOrderMutable()
     {
+        EnsurePhysicsObjectAccess();
         Tree?.EnsureExtensionHierarchyChange();
         if (_notificationPropagationDepth != 0)
             throw new InvalidOperationException("Children cannot be changed during notification propagation.");

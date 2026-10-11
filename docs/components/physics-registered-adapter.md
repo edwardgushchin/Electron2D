@@ -200,3 +200,32 @@ The independent public-only consumer checks all five pairs, non-preparing reads,
 Common scene/raw callback registration, omission and contact caps are executable typed operations. Initial/live numerical calls cannot change callbacks, omission, caps or scene monitoring; inherited scene setters reject before mutation. Ordinary game callbacks retain writes. Force callbacks precede the RigidBody hook and sync observer; exceptions retain committed edits and do not skip the observer. Clearing delegates stops invocation. Generic userdata adapts once at registration.
 
 The independent public-only `--integration` consumer also runs with `--cpu` and `--gpu`. It verifies omitted pending/persistent forces, impulse and actual collision response, capped contact identities and clearing caps, callback order/failure and zero owner/all-thread allocation across 64 full measured frames. Isolated force/impulse response uses a tolerance of 0.001 scene velocity units; identity/count/order checks are exact. Six extension rows remain Partial until full numerical-extension acceptance.
+
+## Common space bindings
+
+Body/AreaGetSpace and Body/AreaSetSpace now share scene/raw identity, current
+attachment and selected lifecycle dispatch. All five scene body roles and Area
+can be attached while detached from a tree, transferred between worlds, detached
+explicitly and simulated in caller-owned spaces. The render-world descriptor and
+hierarchy retain their values; scene entry and viewport world replacement reclaim
+the scene-selected binding. Neither assignment nor importing a node creates a
+new world driver. Owned-space release detaches nodes and expires cached body views.
+
+Source geometry preflight rejects authoring/disposal/reparenting before mutation.
+Node authoring and hierarchy guards inspect actual attachments even outside the
+SceneTree world list. Engine pose publication remains permitted during the ordinary
+step phase; a trial that applied the release-phase guard there was rejected.
+
+Initial or later target-addition failure retires any partial attachment before
+restoring the source. Restoration failure attempts retirement and preserves all
+errors in an AggregateException. Departure callbacks can report a committed
+detachment; callers inspect the actual space getter after such an error.
+
+The separate public-only SceneSpaceChecks executes queries and motion on CPU,
+GPU and the registered implementation, including all body roles, Area/raw
+siblings, view invalidation, scene reentry/world changes, owned-space free,
+wrong-kind/owner guards and 64 warmed measured full frames at 0/0 owner/all-thread
+managed bytes. Registered checks inject initial and post-attachment capacity
+failures, double restoration failure, detached/imported numerical mutation and
+procedural source-preflight reentry before a real transfer to CPU. Native allocator,
+other platforms, rendered/FPS and complete numerical-extension acceptance remain open.

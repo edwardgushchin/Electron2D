@@ -20,6 +20,7 @@ public static partial class BackendChecks
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal Action? WorldPolicyHook;
+        internal Action? CapacityHook;
         internal int WorldPolicyCalls;
         internal PhysicsAreaFieldConfiguration Fields;
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
@@ -37,7 +38,7 @@ public static partial class BackendChecks
         protected override void SetSolverIterations(int value) => WorldPolicy();
         protected override void SetConstraintDefaultBias(float value) => WorldPolicy();
         private void WorldPolicy() { WorldPolicyCalls++; WorldPolicyHook?.Invoke(); }
-        protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) { }
+        protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) => CapacityHook?.Invoke();
         protected override void PrepareMonitoringCapacity(int bodies, int shapes) { }
         protected override PhysicsBackendStatistics ReadStatistics()
         {
