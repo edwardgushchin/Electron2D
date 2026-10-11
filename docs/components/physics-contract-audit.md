@@ -465,3 +465,6 @@ CPU-then-GPU window sequence fails with severe escape/speed. This stability/life
 case is open and prevents final rendered-family acceptance. It must be diagnosed
 without reducing population or relaxing physical tolerances. These findings do not
 close complete extension operations or final CPU/GPU performance acceptance.
+
+
+[GPU scratch initialization](gpu-contact-colors.md#scratch-initialization-and-preparation-order) now exercises a 16,384-body NaN-initialized packed first step. Private color/packing resources are prepared before recording solver work. This does not close the sporadic uninstrumented window failure or final performance acceptance.

@@ -663,3 +663,6 @@ checks CPU/public and internal GPU behavior; [measurements](../components/physic
 do not certify public GPU selection or large-world speedup.
 
 The [image-array slice](../components/texture-arrays.md) adds typed TextureLayered/ImageTextureLayered/TextureArray resources, metadata placeholders, the shared array-only enum and three server endpoints. HLSL/GLSL pixels, all layer/mip readbacks, HDR/compatible updates, owned/proxy replacement, typed storage/default/override/reload/duplication and warmed allocation checks execute. Compressed/integer formats activate five exact Partial dependencies; cube values remain Excluded and RD/compressed import integration remains Blocked. Twenty-six rows become Implemented, with zero unmapped declarations.
+
+
+[GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) adds a dense first-use regression and moves private contact-color/packing preparation ahead of recorded solver work. This changes no public declaration accounting; the sporadic rendered failure and full backend/performance acceptance remain open.

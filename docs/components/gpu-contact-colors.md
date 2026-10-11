@@ -1,6 +1,6 @@
 # Resident contact scheduling and dense-world verification
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Failure that motivated the change
 
@@ -237,3 +237,61 @@ change to body count or configured iterations. It costs additional device work;
 the 65,536-body 60 Hz/window performance target remains open. CPU and GPU selection
 remain independent of rendering. Foreign-platform, native-allocation and complete
 physics-contract acceptance are not inferred from these Linux checks.
+
+
+## Scratch initialization and preparation order
+
+The contact schedule, packing pipelines and their capacity buffers are prepared
+before acquiring the solver command buffer. Recording the interval performs no
+lazy pipeline creation or scratch growth in these paths. This keeps resource
+initialization outside already-recorded constraint work and leaves the solve,
+packing, color counts, iterations and fallback equations unchanged.
+
+`PhysicsMassPerformance.VerifyDirtyBufferInitialization` fills every newly
+created resident storage buffer with NaN words before first use, then advances
+16,384 overlapping circles through the packed contact/body path. It checks the
+complete population, finite motion, bounded displacement and a real conflict-free
+schedule. The displacement gate is one particle radius (4 scene units), above
+the configured 200-unit/second correction integrated for 1/60 second plus gravity
+displacement; it detects corrupted first-step state without requiring a solver
+bit pattern. The internal allocation callback is restored after the check; ordinary
+runs do not initialize scratch through this callback. The mass fixture exposes
+`ELECTRON2D_MASS_POISON_BUFFERS=1` for the same diagnostic in the full public/window
+path. Its additional setup transfers/fences are diagnostic overhead and cannot be
+attributed to ordinary physics throughput.
+
+The diagnostic failed on the previous lazy preparation path at its first dense
+interval; a 64-body control and the unpacked 16,384-body control passed. Temporary
+stage masks and raw buffer dumps localized untouched NaN constraint coefficients
+and were removed. The ordering change resolves that injected-initialization case;
+the earlier sporadic uninstrumented CPU-then-GPU window failure still requires
+independent causal evidence. Passing repetitions alone do not close that gate.
+
+
+Verification on 2026-10-11 used Linux/.NET 10 Release and Vulkan/RTX 3090 Ti.
+`ELECTRON2D_TEST_GPU_RESIDENT_SOLVER=1` fails at tick zero with the old resource
+preparation order and the new public-pile regression; it passes after the change,
+including the existing 65,536-body solver checks. Final raw-pile runs retain four
+substeps, 16 iterations, no sleep, 240 warmup and 240 measured ticks at 60 Hz.
+Both backends use the same final runtime/test assemblies; hashes, run exits,
+latency distributions, traffic and waits are in
+`bin/physics-window-stability/2026-10-11/final-commands.json` and
+`final-summary.json` in that directory.
+
+| Final window path | Mean full step ms | Mean frame ms | Actual FPS | Max penetration |
+| --- | ---: | ---: | ---: | ---: |
+| Ordinary CPU | 56.0812 | 61.4893 | 16.2630 | .227389 |
+| Ordinary GPU | 14.8915 | 19.7636 | 50.5978 | .241057 |
+| NaN-buffer CPU | 55.9632 | 61.4376 | 16.2767 | .227389 |
+| NaN-buffer GPU | 14.7892 | 19.5128 | 51.2483 | .242476 |
+
+The ordinary and injected window processes each run CPU then GPU with actual
+240-frame captures. Zero escape and all physical gates pass, with zero owner and
+all-thread managed bytes in both physics and frame samples. GPU frame demand
+uploads 62,972,160 bytes and reads 63,096,960 bytes across 240 samples, including
+explicit transform demand; it waits 2,018.79 ms in total in the ordinary run.
+The separate NaN-buffer GPU headless run also passes (15.2150 ms mean full step,
+.245142 max penetration). Inspected captures show the complete contained pile.
+These results establish this workload's measured advantage on this device, not
+sustained 60 Hz, a general scene-pipeline gain or the cause of the earlier sporadic
+uninstrumented failure. Native allocation and other platforms remain unverified.

@@ -133,6 +133,11 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             Grow(ref _solverHistoryGPU, ref _solverHistoryCapacity, Math.Max(1, Math.Max(ContactPointCount, _previousPointCount)), 96, true);
             var previousTableCapacity = _solverHistoryTableCapacity;
             Grow(ref _solverHistoryTableGPU, ref _solverHistoryTableCapacity, checked(2 * Math.Max(1, Math.Max(ContactPointCount, _previousPointCount))), 4, false);
+            if (ContactPointCount > 0)
+            {
+                PrepareContactColors();
+                if (PackColoredContacts) PreparePackedSolver();
+            }
             PrepareContactReports();
             // Never amplify cached impact impulses after a very short CCD interval; cancellation would lose momentum in float velocities.
             DispatchSolver(new()

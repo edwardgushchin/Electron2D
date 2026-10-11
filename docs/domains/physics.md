@@ -558,3 +558,6 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 [Portable continuation validation](../components/physics-snapshots.md) now guards registered episode counts and identity/shape/piece data before encoding. The external consumer checks failed-capture preservation, reordered local RID creation, actual pass-through/contact response and zero warmed capture/restore allocation. Complete extension-operation and final platform/performance acceptance remain open.
 
 [GPU body publication](../components/gpu-body-publication.md) uses one bounded download when the previous stream was dense and exact-prefix transfers when sparse. Current complete caches may serve read-only callbacks; callback edits and invalid caches retain fresh publication. Full CPU/GPU advantage and rendered-window acceptance remain open.
+
+
+[GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) now prepares contact-color and packing resources before recording solver work. A 16,384-body NaN-buffer regression exercises first-use packed state; the earlier intermittent uninstrumented window failure and final performance acceptance remain open.

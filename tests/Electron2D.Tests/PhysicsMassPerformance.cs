@@ -20,6 +20,9 @@ internal static class PhysicsMassPerformance
             _ => throw new ArgumentException("Choose cpu, gpu or both.")
         };
         var profile = PhysicsSpace.ProfilingEnabled;
+        var bufferCreated = GPUPhysicsBodyStore.BufferCreatedForTesting;
+        if (Environment.GetEnvironmentVariable("ELECTRON2D_MASS_POISON_BUFFERS") == "1")
+            GPUPhysicsBodyStore.BufferCreatedForTesting = GPUPhysicsBufferPoison.Fill;
         PhysicsSpace.ProfilingEnabled = true;
         try
         {
@@ -32,8 +35,33 @@ internal static class PhysicsMassPerformance
                 pile.Report(rendered);
             }
         }
-        finally { PhysicsSpace.ProfilingEnabled = profile; }
+        finally { PhysicsSpace.ProfilingEnabled = profile; GPUPhysicsBodyStore.BufferCreatedForTesting = bufferCreated; }
     }
+    internal static void VerifyDirtyBufferInitialization()
+    {
+        var previous = GPUPhysicsBodyStore.BufferCreatedForTesting;
+        GPUPhysicsBodyStore.BufferCreatedForTesting = GPUPhysicsBufferPoison.Fill;
+        try
+        {
+            using var pile = new Pile(PhysicsServer.Backend.GPU, 16384, 32, 32);
+            pile.Step();
+            var gpu = PhysicsServer.Service.GetSceneSpace(pile.Space).GPUStore!;
+            Check(gpu.ContactColorCount > 1 && gpu.ContactColorFallbacks == 0, "Dirty scratch retains a real conflict-free contact schedule");
+            PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
+            const int columns = 157;
+            for (var i = 0; i < pile.Count; i++)
+            {
+                var expected = new Vector2(4 + i % columns * 8 + i / columns % 2 * 4, 4 + i / columns * 7);
+                var velocity = PhysicsServer.BodyGetLinearVelocity(pile.Bodies[i]);
+                var angular = PhysicsServer.BodyGetAngularVelocity(pile.Bodies[i]);
+                Check(pile.Transforms[i].IsFinite() && pile.Transforms[i].Origin.DistanceTo(expected) < Pile.Radius &&
+                    velocity.IsFinite() && float.IsFinite(angular), "Every raw pile body is initialized before packed constraints consume it");
+            }
+        }
+        finally { GPUPhysicsBodyStore.BufferCreatedForTesting = previous; }
+        Console.WriteLine("Resident solver: 16,384-body public first step passes with NaN-filled new buffers and packed contacts/bodies.");
+    }
+
     private static int Read(string name, int fallback, int min, int max)
     {
         var value = int.Parse(Environment.GetEnvironmentVariable(name) ?? fallback.ToString());
@@ -120,7 +148,7 @@ internal static class PhysicsMassPerformance
             var upload = gpu?.UploadBytes ?? 0; var download = gpu?.ReadbackBytes ?? 0; var submissions = gpu?.SubmissionCount ?? 0; var wait = gpu?.WaitMS ?? 0;
             var uniforms = gpu?.UniformBytes ?? 0;
             var owner = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true); var start = Stopwatch.GetTimestamp();
-            PhysicsServer.SpaceStep(Space, Delta);
+            try { PhysicsServer.SpaceStep(Space, Delta); } catch (Exception error) { throw new InvalidOperationException($"Mass pile failed at tick {_tick}.", error); }
             var elapsed = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
             owner = GC.GetAllocatedBytesForCurrentThread() - owner; all = GC.GetTotalAllocatedBytes(true) - all;
             Check(PhysicsServer.SpaceGetTick(Space) == (ulong)++_tick, "One complete physical interval per requested tick");
