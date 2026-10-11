@@ -21,8 +21,13 @@ internal static class PhysicsMassPerformance
         };
         var profile = PhysicsSpace.ProfilingEnabled;
         var bufferCreated = GPUPhysicsBodyStore.BufferCreatedForTesting;
-        if (Environment.GetEnvironmentVariable("ELECTRON2D_MASS_POISON_BUFFERS") == "1")
-            GPUPhysicsBodyStore.BufferCreatedForTesting = GPUPhysicsBufferPoison.Fill;
+        GPUPhysicsBodyStore.BufferCreatedForTesting = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_POISON_BUFFERS") switch
+        {
+            null or "0" => bufferCreated,
+            "1" => GPUPhysicsBufferPoison.Fill,
+            "finite" => GPUPhysicsBufferPoison.FillFinite,
+            _ => throw new ArgumentException("Choose 0, 1 (NaN) or finite for buffer initialization.")
+        };
         PhysicsSpace.ProfilingEnabled = true;
         try
         {
@@ -40,26 +45,30 @@ internal static class PhysicsMassPerformance
     internal static void VerifyDirtyBufferInitialization()
     {
         var previous = GPUPhysicsBodyStore.BufferCreatedForTesting;
-        GPUPhysicsBodyStore.BufferCreatedForTesting = GPUPhysicsBufferPoison.Fill;
         try
         {
-            using var pile = new Pile(PhysicsServer.Backend.GPU, 16384, 32, 32);
-            pile.Step();
-            var gpu = PhysicsServer.Service.GetSceneSpace(pile.Space).GPUStore!;
-            Check(gpu.ContactColorCount > 1 && gpu.ContactColorFallbacks == 0, "Dirty scratch retains a real conflict-free contact schedule");
-            PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
-            const int columns = 157;
-            for (var i = 0; i < pile.Count; i++)
+            Action<nint, nint, uint>[] patterns = [GPUPhysicsBufferPoison.Fill, GPUPhysicsBufferPoison.FillFinite];
+            foreach (var fill in patterns)
             {
-                var expected = new Vector2(4 + i % columns * 8 + i / columns % 2 * 4, 4 + i / columns * 7);
-                var velocity = PhysicsServer.BodyGetLinearVelocity(pile.Bodies[i]);
-                var angular = PhysicsServer.BodyGetAngularVelocity(pile.Bodies[i]);
-                Check(pile.Transforms[i].IsFinite() && pile.Transforms[i].Origin.DistanceTo(expected) < Pile.Radius &&
-                    velocity.IsFinite() && float.IsFinite(angular), "Every raw pile body is initialized before packed constraints consume it");
+                GPUPhysicsBodyStore.BufferCreatedForTesting = fill;
+                using var pile = new Pile(PhysicsServer.Backend.GPU, 16384, 32, 32);
+                pile.Step();
+                var gpu = PhysicsServer.Service.GetSceneSpace(pile.Space).GPUStore!;
+                Check(gpu.ContactColorCount > 1 && gpu.ContactColorFallbacks == 0, "Dirty scratch retains a real conflict-free contact schedule");
+                PhysicsServer.BodyGetTransform(pile.Space, pile.Bodies, pile.Transforms);
+                const int columns = 157;
+                for (var i = 0; i < pile.Count; i++)
+                {
+                    var expected = new Vector2(4 + i % columns * 8 + i / columns % 2 * 4, 4 + i / columns * 7);
+                    var velocity = PhysicsServer.BodyGetLinearVelocity(pile.Bodies[i]);
+                    var angular = PhysicsServer.BodyGetAngularVelocity(pile.Bodies[i]);
+                    Check(pile.Transforms[i].IsFinite() && pile.Transforms[i].Origin.DistanceTo(expected) < Pile.Radius &&
+                        velocity.IsFinite() && float.IsFinite(angular), "Every raw pile body is initialized before packed constraints consume it");
+                }
             }
         }
         finally { GPUPhysicsBodyStore.BufferCreatedForTesting = previous; }
-        Console.WriteLine("Resident solver: 16,384-body public first step passes with NaN-filled new buffers and packed contacts/bodies.");
+        Console.WriteLine("Resident solver: 16,384-body public first step passes with NaN/finite-filled new buffers and packed contacts/bodies.");
     }
 
     private static int Read(string name, int fallback, int min, int max)
@@ -209,6 +218,7 @@ internal static class PhysicsMassPerformance
                 Substeps = 4,
                 SolverIterations = 16,
                 Sleeping = false,
+                BufferInitialization = Environment.GetEnvironmentVariable("ELECTRON2D_MASS_POISON_BUFFERS") ?? "driver",
                 Gravity = 980,
                 Radius,
                 AllowedPenetration = PhysicsServer.SpaceGetContactMaxAllowedPenetration(Space),
@@ -251,6 +261,7 @@ internal static class PhysicsMassPerformance
                 FrameWaitMS,
                 VisualBufferBytes = (long)PublishCount * Count * 12 * sizeof(float),
                 VSync,
+                RequestedVSync = rendered ? "Disabled" : null,
                 CapturePath,
                 Driver = _data.GPUStore?.Driver,
                 Device = _data.GPUStore?.DeviceName,

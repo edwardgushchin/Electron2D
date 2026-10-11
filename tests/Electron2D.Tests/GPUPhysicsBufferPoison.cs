@@ -2,7 +2,9 @@ using SDL3;
 
 internal static unsafe class GPUPhysicsBufferPoison
 {
-    internal static void Fill(nint device, nint buffer, uint size)
+    internal static void Fill(nint device, nint buffer, uint size) => Fill(device, buffer, size, 0x7fc00001);
+    internal static void FillFinite(nint device, nint buffer, uint size) => Fill(device, buffer, size, 0x3f800000);
+    private static void Fill(nint device, nint buffer, uint size, uint pattern)
     {
         var transfer = SDL.CreateGPUTransferBuffer(device, new SDL.GPUTransferBufferCreateInfo
         { Size = size, Usage = SDL.GPUTransferBufferUsage.Upload });
@@ -12,8 +14,8 @@ internal static unsafe class GPUPhysicsBufferPoison
         {
             var mapped = SDL.MapGPUTransferBuffer(device, transfer, false);
             if (mapped == 0) throw new InvalidOperationException(SDL.GetError());
-            // Every float word is NaN; untouched counters/indices are invalid as well.
-            try { new Span<uint>((void*)mapped, checked((int)size / sizeof(uint))).Fill(0x7fc00001); }
+            // Finite stale values can evade checks that reject only NaN or infinity.
+            try { new Span<uint>((void*)mapped, checked((int)size / sizeof(uint))).Fill(pattern); }
             finally { SDL.UnmapGPUTransferBuffer(device, transfer); }
             command = SDL.AcquireGPUCommandBuffer(device);
             if (command == 0) throw new InvalidOperationException(SDL.GetError());

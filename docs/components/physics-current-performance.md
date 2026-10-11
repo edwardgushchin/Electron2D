@@ -2,7 +2,24 @@
 
 Last updated: 2026-10-11
 
-## Revision and workload
+## Window checks at 567be307
+
+The 16,384-body public server workload ran CPU then GPU in one process on source revision `567be307b407af89c65240e801b8c631526e7c21`, with 240 warmup and 240 measured ticks, fixed 1/60-second steps, four substeps, sixteen iterations and sleeping disabled. Both paths use the same 1152 x 800 GPU renderer and draw the entire population. MaxFPS is zero; Disabled presentation was requested and the actual mode was Enabled. The one-tick-per-frame catch-up policy is unchanged. All values below are measured desktop trials rather than cross-device acceptance.
+
+| Backend | Full step mean / p50 / p95 / p99, ms | Frame mean / p50 / p95 / p99, ms | Actual FPS and ticks/s | Physics/frame owner and all-thread bytes |
+| --- | --- | --- | ---: | --- |
+| CPU | 57.0265 / 56.0603 / 63.1626 / 72.0673 | 63.1183 / 62.0856 / 69.4368 / 78.7018 | 15.8432 | 0 / 0 |
+| GPU | 14.9283 / 14.8014 / 16.3052 / 16.7271 | 19.8826 / 19.6790 / 21.7174 / 22.3513 | 50.2952 | 0 / 0 |
+
+GPU median complete physics is 3.79 times faster and measured window throughput 3.17 times higher in this workload. Neither path sustains the requested 60 physics ticks/s. This is a server-body instance-rendering workload; it must not be generalized to the monitored scene path. A separate 4096-body complete scene trial on the same source gave CPU/GPU medians 19.1687/18.8702 ms; that small difference is not a repeatable scene advantage.
+
+The GPU physics interval uploaded/read 55,680/183,504 bytes over 240 ticks; explicit window pose demand raised total physics-store traffic to 62,972,160/63,099,984 bytes. The summed wait was 2,005.74 ms. The renderer's instance buffer carried 188,743,680 bytes separately. Publishing every visible body's pose is required by this host renderer; none of these figures is network payload. CPU/GPU maximum penetration was .227389/.224485 against .601 scene units, escape was zero and final energy .951503/.947617 of initial energy. Captures were inspected and show the complete contained pile.
+
+Additional CPU-then-GPU sequences with newly allocated GPU buffers filled with NaN and finite float-one words both passed the same physical and memory gates. GPU penetration was .223490/.263825 and escape zero. The final fixture also reports `BufferInitialization` and `RequestedVSync`; its finite-pattern confirmation uses 64 measured ticks after the same 240 warmup and again passes, with CPU/GPU 16.6907/50.7532 FPS and .227389/.264062 penetration. The resident first-step regression now runs separate 16,384-body NaN and finite-pattern worlds. Diagnostic filling occurs during setup, outside warmed measurements.
+
+Evidence is under `bin/physics-mass/2026-10-11/567be307-window-16384`, `567be307-window-poison-16384`, `finite-window-16384` and `finite-final-window-16384`; the scene trial is under `bin/physics-scene-pipeline/2026-10-11/567be307-4096`. These passes do not explain the earlier sporadic uninstrumented window escape, establish native allocation totals, cover other platforms or close full numerical-extension and final network/window acceptance.
+
+## Earlier 65,536-body revision and workload
 
 The existing [mass fixture](../../tests/Electron2D.Tests/PhysicsMassPerformance.cs)
 ran the complete public CPU and independent GPU paths on local main at
@@ -11,7 +28,7 @@ each process. Both headless and native-window runs use the same compiled assembl
 HEAD, tracked runtime/test source and assembly digests were checked before and after
 the measurements. Runtime/test source matched that commit; only this task's
 documentation was dirty. Fresh runtime/test builds reported that same commit in
-their informational versions. This report changes documentation only.
+their informational versions. That earlier report changed documentation only; the newer initialization checks above also extend the test fixture.
 
 | Input | Value |
 | --- | --- |

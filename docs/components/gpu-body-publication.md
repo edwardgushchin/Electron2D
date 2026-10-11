@@ -136,7 +136,7 @@ and physical gates/zero managed physics allocations pass. The isolated GPU
 headless run also passes. This is a different explicit raw workload, not an
 improvement attributed to changed-body publication.
 
-The initial same-process CPU-then-GPU window run fails the GPU physical gate with
+An earlier same-process CPU-then-GPU window run failed the GPU physical gate with
 escape 19,785.7109 and speed 5,681.7632 scene units/second. The fresh GPU-only run
 passes with zero escape; the cause and repeatability of the failure remain open.
 Do not accept the rendered performance family as complete from the isolated pass.
@@ -152,3 +152,5 @@ first-use NaN-buffer failure/fix regression. Final ordinary and NaN-buffer windo
 runs also pass at 16,384 bodies. The injected preparation defect is resolved; a
 causal connection to the earlier uninstrumented escape has not been established,
 so its acceptance limitation remains open.
+
+[Current window checks](physics-current-performance.md#window-checks-at-567be307) add passing ordinary, NaN and finite-nonzero CPU-then-GPU sequences on 16,384 bodies with unchanged physical gates. The finite pattern is now included in the resident first-step regression. These passes strengthen initialization coverage without establishing the cause of the earlier uninstrumented escape.

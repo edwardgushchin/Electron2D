@@ -255,7 +255,8 @@ initialization outside already-recorded constraint work and leaves the solve,
 packing, color counts, iterations and fallback equations unchanged.
 
 `PhysicsMassPerformance.VerifyDirtyBufferInitialization` fills every newly
-created resident storage buffer with NaN words before first use, then advances
+created resident storage buffer with NaN words and, in a separate world, finite
+nonzero words before first use, then advances
 16,384 overlapping circles through the packed contact/body path. It checks the
 complete population, finite motion, bounded displacement and a real conflict-free
 schedule. The displacement gate is one particle radius (4 scene units), above
@@ -263,8 +264,10 @@ the configured 200-unit/second correction integrated for 1/60 second plus gravit
 displacement; it detects corrupted first-step state without requiring a solver
 bit pattern. The internal allocation callback is restored after the check; ordinary
 runs do not initialize scratch through this callback. The mass fixture exposes
-`ELECTRON2D_MASS_POISON_BUFFERS=1` for the same diagnostic in the full public/window
-path. Its additional setup transfers/fences are diagnostic overhead and cannot be
+`ELECTRON2D_MASS_POISON_BUFFERS=1` (NaN) or `finite` (float-one words) for the
+same diagnostic in the full public/window path. Unknown values reject before
+world creation. Reports identify the initialization pattern and requested versus
+actual presentation policy. Its additional setup transfers/fences are diagnostic overhead and cannot be
 attributed to ordinary physics throughput.
 
 The diagnostic failed on the previous lazy preparation path at its first dense

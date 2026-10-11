@@ -460,8 +460,8 @@ separate cache invalidation retain fresh reads. Three 1,536-body repetitions sav
 one submission but do not show a reliable full-step improvement; GPU remains slower
 than CPU on this monitored scene. All physical/managed-allocation gates pass.
 
-The 16,384-body CPU window and fresh GPU-only/headless controls pass, but the first
-CPU-then-GPU window sequence fails with severe escape/speed. This stability/lifecycle
+The earlier 16,384-body CPU window and fresh GPU-only/headless controls passed,
+while an initial CPU-then-GPU window sequence failed with severe escape/speed. This stability/lifecycle
 case is open and prevents final rendered-family acceptance. It must be diagnosed
 without reducing population or relaxing physical tolerances. These findings do not
 close complete extension operations or final CPU/GPU performance acceptance.
@@ -489,3 +489,5 @@ Registered [collider metadata](physics-registered-adapter.md#initial-collider-me
 [Integration/contact policy](physics-registered-adapter.md#integration-and-contact-publication-policy) now verifies omission, callbacks, contact caps and scene numerical guards with one public-only consumer on CPU/GPU/independent implementations. Six extension rows are Partial; full numerical and final performance acceptance stay open.
 
 The pinned contact-depth-threshold pair has no deprecated XML metadata, but its [built-in server implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp#L931) validates the body, ignores the assigned threshold and returns zero. This is not evidence of a working filter. The two extension rows remain open pending an explicit applicable typed decision; no inert public switch was added.
+
+[Window checks at 567be307](physics-current-performance.md#window-checks-at-567be307) pass ordinary, NaN-filled and finite-nonzero buffer sequences with real rendered captures, 16,384 active bodies and zero warm physics/frame managed bytes. The resident first-step check now covers both dirty patterns. Sustained 60 Hz, native allocations, full scene-window/network performance and the earlier uninstrumented failure cause remain open.

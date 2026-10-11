@@ -99,3 +99,7 @@ The candidate GPU medians were 2.6–5.0 percent below the control in these tria
 Resident solver checks also passed the 16,384-body dirty-scratch initialization, momentum/energy/material/ray/joint checks, changing 64/257-support fallback graph and 4096/65,536-body contact workloads. This does not establish GPU advantage over CPU: the full monitored scene still costs more on GPU, and a rendered-window comparison was not run for this change. The wider numerical-extension/network/platform acceptance remains open.
 
 Ignored evidence is in `bin/physics-scene-pipeline/2026-10-11/adaptive-color-rounds`: `control`, `paired`, `repeat`, source diff/hash and solver logs. A prior trial overlapping rendering integration is diagnostic only and is excluded from this comparison.
+
+## 4096-body check at 567be307
+
+With 1600 warmup and 256 measured complete frames, CPU/GPU p50 was 19.1687/18.8702 ms, p95 22.0300/21.2113 ms and p99 25.2851/22.2909 ms. Both returned zero and retained 0/0 owner/all-thread bytes; penetration/escape were .274915/.207642 and .234089/.132935 against the unchanged .601 limit. This roughly 1.6 percent median difference from one desktop pair does not establish a repeatable advantage. Evidence is `bin/physics-scene-pipeline/2026-10-11/567be307-4096`. The separate [16,384 server-body window checks](physics-current-performance.md#window-checks-at-567be307) retain their distinct workload and measurement scope.
