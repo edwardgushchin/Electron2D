@@ -1,6 +1,9 @@
 namespace Electron2D;
 
 /// <summary>Defines the complete selected implementation boundary using logical identities and engine-unit values.</summary>
+/// <remarks>Numerical hooks borrow their selected world. Body authoring through the server facade or direct-body
+/// views rejects before mutation during those hooks. Guarded reads remain available. Caller-created body-state
+/// extensions may forward an ordinary requested state write to their inner view outside a numerical hook.</remarks>
 public abstract class PhysicsServerBackend : ElectronObject
 {
     private int _claimed;

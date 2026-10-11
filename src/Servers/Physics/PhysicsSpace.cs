@@ -147,12 +147,19 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void EnsureWorldBindingChange() { EnsureQueryAccess(); EnsureWorldRelease(); }
     private int _extensionCallbackDepth;
+    private int _implementationCallbackDepth;
     internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
     internal void BeginImplementationCallback(bool cleanup = false)
     {
         if (_disposed && !cleanup) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics implementations require the space owner thread.");
         _extensionCallbackDepth++;
+        _implementationCallbackDepth++;
+    }
+    internal void EndImplementationCallback() { _implementationCallbackDepth--; EndExtensionCallback(); }
+    internal void EnsureImplementationWriteAccess()
+    {
+        if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Body authoring cannot change while a numerical physics implementation hook is borrowed.");
     }
     internal void EnsureImplementationRelease()
     {

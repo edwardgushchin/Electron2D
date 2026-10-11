@@ -1,7 +1,9 @@
 namespace Electron2D;
 
 /// <summary>A live owner-thread view of one attached physics body and its last solved contacts.</summary>
-/// <remarks>The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
+/// <remarks>Writes reject before mutation while a selected numerical implementation hook is borrowed.
+/// Ordinary post-solver callbacks and caller-created body-state extension forwarding retain their guarded write access.
+/// The selected world owner creates cached views; caller-created consumer implementations derive from PhysicsDirectBodyStateExtension. It owns no body or world. Detachment, replacement or
 /// disposal invalidates access; a later attachment receives a new view. Access is permitted outside
 /// solver execution, including post-solver integration callbacks. Backend storage and contact traversal stay inside the attachment adapter;
 /// this view retains only its attachment identity and public contact values. Contact positions, normals and velocities
@@ -67,10 +69,11 @@ public class PhysicsDirectBodyState : ElectronObject
         if (_callbackDepth != 0) throw new InvalidOperationException("A borrowed body view cannot be disposed inside its callback.");
         base.ValidateDisposal();
     }
-    internal void Access()
+    internal void Access(bool writing = false)
     {
         ThrowIfDisposed();
         _space.EnsureQueryAccess();
+        if (writing) _space.EnsureImplementationWriteAccess();
         if (_callerCreated) _runtime.ValidateAttachment(_space, _boundBackend, _boundAttachment);
         else _runtime.ValidateView(this, _space);
     }
@@ -95,7 +98,7 @@ public class PhysicsDirectBodyState : ElectronObject
     public float AngularVelocity
     {
         get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadAngularVelocity() : _runtime.ViewAngularVelocity; }
-        set { Access(); Finite(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteAngularVelocity(value); return; } _runtime.SetAngularVelocity(value); }
+        set { Access(writing: true); Finite(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteAngularVelocity(value); return; } _runtime.SetAngularVelocity(value); }
     }
 
     /// <summary>Gets or sets global-axis velocity in scene units per second; assignment wakes a dynamic body.</summary>
@@ -105,7 +108,7 @@ public class PhysicsDirectBodyState : ElectronObject
     public Vector2 LinearVelocity
     {
         get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadLinearVelocity() : _runtime.ViewLinearVelocity; }
-        set { Access(); Finite(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteLinearVelocity(value); return; } _runtime.SetLinearVelocity(value); }
+        set { Access(writing: true); Finite(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteLinearVelocity(value); return; } _runtime.SetLinearVelocity(value); }
     }
 
     /// <summary>Gets center-of-mass offset from the body origin along global axes, in scene units.</summary>
@@ -127,7 +130,7 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <summary>Gets or sets whether the body is asleep; setting false wakes it.</summary>
     /// <value>Whether the body is asleep; setting false wakes it.</value>
     /// <remarks>Explicit sleep clears dynamic velocity. Static and kinematic roles ignore sleep assignments.</remarks>
-    public bool Sleeping { get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadSleeping() : _runtime.ViewSleeping; } set { Access(); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteSleeping(value); return; } _runtime.SetSleeping(value); } }
+    public bool Sleeping { get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadSleeping() : _runtime.ViewSleeping; } set { Access(writing: true); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteSleeping(value); return; } _runtime.SetSleeping(value); } }
 
     /// <summary>Gets the last nonzero physics step in seconds; zero before the first step.</summary>
     /// <value>The last nonzero physics step in seconds; zero before the first step.</value>
@@ -147,17 +150,17 @@ public class PhysicsDirectBodyState : ElectronObject
 
     /// <summary>Gets or sets the 32 body collision-category bits.</summary>
     /// <value>The 32 body collision-category bits.</value>
-    public uint CollisionLayer { get { Access(); if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadCollisionLayer(); var owner = _runtime.Owners; return owner.Scene?.CollisionLayer ?? owner.Server!.CollisionLayer; } set { Access(); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteCollisionLayer(value); return; } var owner = _runtime.Owners; if (owner.Scene is { } scene) scene.CollisionLayer = value; else owner.Server!.SetFilter(value, owner.Server.CollisionMask); } }
+    public uint CollisionLayer { get { Access(); if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadCollisionLayer(); var owner = _runtime.Owners; return owner.Scene?.CollisionLayer ?? owner.Server!.CollisionLayer; } set { Access(writing: true); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteCollisionLayer(value); return; } var owner = _runtime.Owners; if (owner.Scene is { } scene) scene.CollisionLayer = value; else owner.Server!.SetFilter(value, owner.Server.CollisionMask); } }
 
     /// <summary>Gets or sets the 32 accepted body collision-category bits.</summary>
     /// <value>The 32 accepted body collision-category bits.</value>
-    public uint CollisionMask { get { Access(); if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadCollisionMask(); var owner = _runtime.Owners; return owner.Scene?.CollisionMask ?? owner.Server!.CollisionMask; } set { Access(); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteCollisionMask(value); return; } var owner = _runtime.Owners; if (owner.Scene is { } scene) scene.CollisionMask = value; else owner.Server!.SetFilter(owner.Server.CollisionLayer, value); } }
+    public uint CollisionMask { get { Access(); if (this is PhysicsDirectBodyStateExtension extension) return extension.ReadCollisionMask(); var owner = _runtime.Owners; return owner.Scene?.CollisionMask ?? owner.Server!.CollisionMask; } set { Access(writing: true); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteCollisionMask(value); return; } var owner = _runtime.Owners; if (owner.Scene is { } scene) scene.CollisionMask = value; else owner.Server!.SetFilter(owner.Server.CollisionLayer, value); } }
 
     /// <summary>Gets or sets finite global body pose; assignment requires unit scale and zero skew.</summary>
     /// <value>Finite global body pose; assignment requires unit scale and zero skew.</value>
     /// <remarks>Raw kinematic transforms after their first pose queue a target for the next nonzero active step.
     /// Scene bodies retain their own transform presentation policy.</remarks>
-    public Transform Transform { get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadTransform() : _runtime.ViewTransform; } set { Access(); ValidateTransform(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteTransform(value); return; } _runtime.SetTransform(value); } }
+    public Transform Transform { get { Access(); return this is PhysicsDirectBodyStateExtension extension ? extension.ReadTransform() : _runtime.ViewTransform; } set { Access(writing: true); ValidateTransform(value); if (this is PhysicsDirectBodyStateExtension extension) { extension.WriteTransform(value); return; } _runtime.SetTransform(value); } }
 
     /// <summary>Gets the persistent global force in scene units times kilograms per squared second.</summary>
     /// <returns>Gets the persistent global force in scene units times kilograms per squared second.</returns>
@@ -261,46 +264,46 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <param name="force">Finite force in scene units times kilograms per squared second.</param>
     public void SetConstantForce(Vector2 force)
     {
-        Access(); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeSetConstantForce(force); return; }
+        Access(writing: true); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeSetConstantForce(force); return; }
         _runtime.SetViewConstantForce(force);
     }
     /// <summary>Sets persistent torque, replacing the previous value.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
     public void SetConstantTorque(float torque)
     {
-        Access(); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeSetConstantTorque(torque); return; }
+        Access(writing: true); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeSetConstantTorque(torque); return; }
         _runtime.SetViewConstantTorque(torque);
     }
     /// <summary>Adds a persistent central force without adding torque.</summary>
     /// <param name="force">Finite force in scene units times kilograms per squared second, zero by default.</param>
-    public void AddConstantCentralForce(Vector2 force = default) { Access(); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) extension.InvokeAddConstantCentralForce(force); else SetConstantForce(GetConstantForce() + force); }
+    public void AddConstantCentralForce(Vector2 force = default) { Access(writing: true); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) extension.InvokeAddConstantCentralForce(force); else SetConstantForce(GetConstantForce() + force); }
     /// <summary>Adds persistent rotational force.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
-    public void AddConstantTorque(float torque) { Access(); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) extension.InvokeAddConstantTorque(torque); else SetConstantTorque(GetConstantTorque() + torque); }
+    public void AddConstantTorque(float torque) { Access(writing: true); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) extension.InvokeAddConstantTorque(torque); else SetConstantTorque(GetConstantTorque() + torque); }
     /// <summary>Adds a persistent positioned force and its moment.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <param name="position">Finite global-axis offset from the body origin, zero by default.</param>
     public void AddConstantForce(Vector2 force, Vector2 position = default)
     {
-        Access(); Finite(force); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeAddConstantForce(force, position); return; }
+        Access(writing: true); Finite(force); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeAddConstantForce(force, position); return; }
         PhysicsServer.BodyAddConstantForce(_runtime.RID, force, position);
     }
     /// <summary>Applies a force accumulator for the next solver step without adding torque.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second, zero by default.</param>
     public void ApplyCentralForce(Vector2 force = default)
     {
-        Access(); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyCentralForce(force); return; }
+        Access(writing: true); Finite(force); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyCentralForce(force); return; }
         PhysicsServer.BodyApplyCentralForce(_runtime.RID, force);
     }
     /// <summary>Applies an instantaneous central impulse.</summary>
     /// <param name="impulse">Finite global impulse in scene units times kilograms per second.</param>
-    public void ApplyCentralImpulse(Vector2 impulse) { Access(); Finite(impulse); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyCentralImpulse(impulse); return; } PhysicsServer.BodyApplyCentralImpulse(_runtime.RID, impulse); }
+    public void ApplyCentralImpulse(Vector2 impulse) { Access(writing: true); Finite(impulse); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyCentralImpulse(impulse); return; } PhysicsServer.BodyApplyCentralImpulse(_runtime.RID, impulse); }
     /// <summary>Applies a positioned force accumulator for the next solver step.</summary>
     /// <param name="force">Finite global force in scene units times kilograms per squared second.</param>
     /// <param name="position">Finite global-axis offset from the body origin, zero by default.</param>
     public void ApplyForce(Vector2 force, Vector2 position = default)
     {
-        Access(); Finite(force); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyForce(force, position); return; }
+        Access(writing: true); Finite(force); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyForce(force, position); return; }
         PhysicsServer.BodyApplyForce(_runtime.RID, force, position);
     }
     /// <summary>Applies an instantaneous positioned impulse.</summary>
@@ -309,17 +312,17 @@ public class PhysicsDirectBodyState : ElectronObject
     /// <exception cref="ArgumentOutOfRangeException">An input or resulting velocity is nonfinite.</exception>
     public void ApplyImpulse(Vector2 impulse, Vector2 position = default)
     {
-        Access(); Finite(impulse); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyImpulse(impulse, position); return; }
+        Access(writing: true); Finite(impulse); Finite(position); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyImpulse(impulse, position); return; }
         PhysicsServer.BodyApplyImpulse(_runtime.RID, impulse, position);
     }
     /// <summary>Applies torque accumulated for the next solver step.</summary>
     /// <param name="torque">Finite torque in kilograms times squared scene units per squared second.</param>
-    public void ApplyTorque(float torque) { Access(); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyTorque(torque); return; } PhysicsServer.BodyApplyTorque(_runtime.RID, torque); }
+    public void ApplyTorque(float torque) { Access(writing: true); Finite(torque); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyTorque(torque); return; } PhysicsServer.BodyApplyTorque(_runtime.RID, torque); }
     /// <summary>Applies an instantaneous torque impulse.</summary>
     /// <param name="impulse">Finite angular impulse in kilograms times squared scene units per second.</param>
     public void ApplyTorqueImpulse(float impulse)
     {
-        Access(); Finite(impulse); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyTorqueImpulse(impulse); return; }
+        Access(writing: true); Finite(impulse); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeApplyTorqueImpulse(impulse); return; }
         PhysicsServer.BodyApplyTorqueImpulse(_runtime.RID, impulse);
     }
     /// <summary>Applies one tick of resolved gravity followed by linear and angular damping to velocity.</summary>
@@ -327,7 +330,7 @@ public class PhysicsDirectBodyState : ElectronObject
     /// This operation is useful with custom integration; it wakes a dynamic body and preserves solver contact response.</remarks>
     public void IntegrateForces()
     {
-        Access(); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeIntegrateForces(); return; }
+        Access(writing: true); if (this is PhysicsDirectBodyStateExtension extension) { extension.InvokeIntegrateForces(); return; }
         var linear = (LinearVelocity + TotalGravity * Step) * MathF.Max(0, 1 - Step * TotalLinearDamp);
         var angular = AngularVelocity * MathF.Max(0, 1 - Step * TotalAngularDamp);
         Finite(linear); Finite(angular);

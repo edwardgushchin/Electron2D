@@ -96,3 +96,10 @@ initial hooks, owner/borrow guards and 64 warmup/128 edited query cycles with ze
 owner/all-thread managed bytes. Native allocation and foreign platforms are unverified.
 
 Body/Area shape slots, filters and shared server-shape data/lifetime cannot change from a borrowed hook, including partial initial attachment. Rejection precedes common authoring mutation; guarded logical reads remain available. See [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring).
+
+Body force, mass, integration, motion, sleep, CCD and callback authoring now
+reject before mutation during selected numerical hooks, including initial
+attachment. Direct-body setters/forces use the same qualified numerical guard.
+Guarded authored reads, ordinary post-solver callbacks and caller-created
+body-state forwarding remain available; hierarchy/resource-lifetime guards still
+cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).

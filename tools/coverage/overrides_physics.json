@@ -363,7 +363,7 @@
     {
       "godot": "PhysicsServer2D::method:body_set_force_integration_callback(RID:,Callable:,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback(Electron2D.RID,System.Action<Electron2D.PhysicsDirectBodyState>)",
-      "reason": "Typed action plus generic userdata adapter replaces callable/Variant boundary without boxing data during invocation."
+      "reason": "Typed action plus generic userdata adapter replaces callable/Variant boundary without boxing data during invocation. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "CharacterBody2D::method:get_floor_normal()",
@@ -598,7 +598,7 @@
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed selector branch of the complete transform/velocity/sleep state family (ADR 0070)."
+      "reason": "Typed selector branch of the complete transform/velocity/sleep state family (ADR 0070). Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
@@ -643,102 +643,102 @@
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetMass(Electron2D.RID)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetInertia(Electron2D.RID)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCenterOfMass(Electron2D.RID)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetMass(Electron2D.RID,System.Single)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetInertia(Electron2D.RID,System.Single)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCenterOfMass(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps."
+      "reason": "Typed mass, inertia or local center branch of the native parameter contract; shared scene/server profile executes under ADR 0073. Remaining physical material, gravity and damping parameters retain explicit gaps. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_reset_mass_properties(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyResetMassProperties(Electron2D.RID)",
-      "reason": "Restores automatic center and inertia without changing configured mass; scene RigidBody descriptors share the committed profile under ADR 0073."
+      "reason": "Restores automatic center and inertia without changing configured mass; scene RigidBody descriptors share the committed profile under ADR 0073. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_central_force(RID:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralForce(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_force(RID:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_torque(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorque(Electron2D.RID,System.Single)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_central_impulse(RID:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralImpulse(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_impulse(RID:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyImpulse(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_apply_torque_impulse(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorqueImpulse(Electron2D.RID,System.Single)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_add_constant_central_force(RID:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantCentralForce(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_add_constant_force(RID:,Vector2:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_add_constant_torque(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantTorque(Electron2D.RID,System.Single)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_constant_force(RID:,Vector2:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantForce(Electron2D.RID,Electron2D.Vector2)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_constant_force(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantForce(Electron2D.RID)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_constant_torque(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantTorque(Electron2D.RID,System.Single)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_constant_torque(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantTorque(Electron2D.RID)",
-      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074."
+      "reason": "Typed shared body force/impulse operation for scene/server RIDs with detached state, current profile units and owner/phase validation under ADR 0074. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
@@ -753,27 +753,27 @@
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetGravityScale(Electron2D.RID)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDamp(Electron2D.RID)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDamp(Electron2D.RID)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDampMode(Electron2D.RID)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDampMode(Electron2D.RID)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
@@ -788,27 +788,27 @@
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetGravityScale(Electron2D.RID,System.Single)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearDamp(Electron2D.RID,System.Single)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDamp(Electron2D.RID,System.Single)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_param(RID:,int:PhysicsServer2D.BodyParameter,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularDampMode(Electron2D.RID,Electron2D.RigidBody.DampMode)",
-      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections."
+      "reason": "Typed parameter branch executes signed material or body field policy under ADR 0076; all ten native parameter capabilities now have typed getter/setter projections. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:area_set_monitor_callback(RID:,Callable:)",
@@ -1103,37 +1103,37 @@
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularVelocity(Electron2D.RID,System.Single)",
-      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetSleeping(Electron2D.RID,System.Boolean)",
-      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCanSleep(Electron2D.RID,System.Boolean)",
-      "reason": "Typed body state setter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state setter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearVelocity(Electron2D.RID)",
-      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularVelocity(Electron2D.RID)",
-      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetSleeping(Electron2D.RID)",
-      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:body_get_state(RID:,int:PhysicsServer2D.BodyState)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCanSleep(Electron2D.RID)",
-      "reason": "Typed body state getter; scene/server state is shared under ADR 0070."
+      "reason": "Typed body state getter; scene/server state is shared under ADR 0070. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "godot": "PhysicsServer2D::method:joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
@@ -2032,7 +2032,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback`1(Electron2D.RID,Action<Electron2D.PhysicsDirectBodyState, T>,T)",
-      "reason": "Strongly typed generic userdata overload of the existing native force callback; replaces the Variant userdata parameter without dynamic dispatch or invocation-time boxing.",
+      "reason": "Strongly typed generic userdata overload of the existing native force callback; replaces the Variant userdata parameter without dynamic dispatch or invocation-time boxing. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open.",
       "adr": "ADRs 0001, 0003, 0070"
     },
     {
@@ -3499,11 +3499,11 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyImpulse(Electron2D.Vector2,System.Single)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyMassProfile(System.Single,System.Single,System.Nullable<Electron2D.Vector2>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyPortableMotion(Electron2D.Transform,Electron2D.Vector2,System.Single,System.Single,System.Boolean,System.Boolean,Electron2D.Vector2,System.Single,Electron2D.Vector2,System.Single,Electron2D.Vector2,System.Single,System.Single,System.Boolean)",
@@ -3559,11 +3559,11 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.PrepareDefaultForces(ref Electron2D.PhysicsBodyForceConfiguration)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.PrepareIntegration(ref Electron2D.PhysicsBodyIntegrationConfiguration,System.Double)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.ReadContacts(System.Span<Electron2D.PhysicsBodyContact>)",
@@ -3587,7 +3587,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAngularVelocity(System.Single)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaFields(ref Electron2D.PhysicsAreaFieldConfiguration)",
@@ -3599,11 +3599,11 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAwake(System.Boolean)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetCanSleep(System.Boolean)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetContactReporting(System.Boolean)",
@@ -3615,7 +3615,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetLinearVelocity(Electron2D.Vector2)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetMotionMode(Electron2D.PhysicsServer.BodyMode)",

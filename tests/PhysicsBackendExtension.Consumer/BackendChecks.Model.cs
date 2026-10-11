@@ -15,6 +15,7 @@ public static partial class BackendChecks
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook;
         internal Action<RID>? ShapeHook, FilterHook;
+        internal Action<RID>? BodyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal PhysicsAreaFieldConfiguration Fields;
@@ -215,7 +216,7 @@ public static partial class BackendChecks
         protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
         protected override void SavePose() => _saved = GetTransform();
         protected override void RestorePose() => SetPose(_saved.Origin, _saved.Rotation);
-        protected override void SetLinearVelocity(Vector2 velocity) => Velocity = velocity;
+        protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }
         protected override void SetAngularVelocity(float velocity) => Angular = velocity;
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
         protected override void SetAwake(bool awake) { Awake = awake; if (!awake) ClearVelocity(); }

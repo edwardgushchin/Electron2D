@@ -19,12 +19,10 @@ internal sealed partial class PhysicsBodyRuntime
     internal bool RotationLocked => Space is not null ? Backend.RotationLocked :
         Owners.Scene is RigidBody rigid ? rigid.LockRotation : Owners.Server?.Mode == PhysicsServer.BodyMode.RigidLinear;
 
-    internal void PrepareForceAccess(bool prepareGeometry)
+    internal void PrepareForceAccess(bool prepareGeometry, bool writing = true)
     {
         var owners = Owners;
-        owners.Scene?.Tree?.EnsureOwnerThread();
-        owners.Scene?.EnsurePhysicsParticipationChange();
-        EnsureMutable();
+        EnsureAccess(writing);
         if (!prepareGeometry) return;
         if (Space is not null)
         {

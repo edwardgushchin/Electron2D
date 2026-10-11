@@ -3,9 +3,9 @@ namespace Electron2D;
 public sealed partial class PhysicsServer
 {
     internal void BodySetFrictionCore(RID body, float friction) => ParameterRuntime(body).SetMaterialParameter(friction, true);
-    internal float BodyGetFrictionCore(RID body) => ParameterRuntime(body).GetFriction();
+    internal float BodyGetFrictionCore(RID body) => ParameterRuntime(body, writing: false).GetFriction();
     internal void BodySetBounceCore(RID body, float bounce) => ParameterRuntime(body).SetMaterialParameter(bounce, false);
-    internal float BodyGetBounceCore(RID body) => ParameterRuntime(body).GetBounce();
+    internal float BodyGetBounceCore(RID body) => ParameterRuntime(body, writing: false).GetBounce();
     internal void BodySetGravityScaleCore(RID body, float scale)
     {
         PhysicsBodyRuntime.Finite(scale); var runtime = ParameterRuntime(body);
@@ -18,7 +18,7 @@ public sealed partial class PhysicsServer
     }
     internal float BodyGetGravityScaleCore(RID body)
     {
-        var runtime = ParameterRuntime(body); return runtime.Owners.Scene is RigidBody rigid ? rigid.GravityScale : runtime.BodyGravityScale;
+        var runtime = ParameterRuntime(body, writing: false); return runtime.Owners.Scene is RigidBody rigid ? rigid.GravityScale : runtime.BodyGravityScale;
     }
     internal void BodySetLinearDampCore(RID body, float damp)
     {
@@ -27,7 +27,7 @@ public sealed partial class PhysicsServer
     }
     internal float BodyGetLinearDampCore(RID body)
     {
-        var runtime = ParameterRuntime(body); return runtime.Owners.Scene is RigidBody rigid ? rigid.LinearDamp : runtime.BodyLinearDamp;
+        var runtime = ParameterRuntime(body, writing: false); return runtime.Owners.Scene is RigidBody rigid ? rigid.LinearDamp : runtime.BodyLinearDamp;
     }
     internal void BodySetAngularDampCore(RID body, float damp)
     {
@@ -36,7 +36,7 @@ public sealed partial class PhysicsServer
     }
     internal float BodyGetAngularDampCore(RID body)
     {
-        var runtime = ParameterRuntime(body); return runtime.Owners.Scene is RigidBody rigid ? rigid.AngularDamp : runtime.BodyAngularDamp;
+        var runtime = ParameterRuntime(body, writing: false); return runtime.Owners.Scene is RigidBody rigid ? rigid.AngularDamp : runtime.BodyAngularDamp;
     }
     internal void BodySetLinearDampModeCore(RID body, RigidBody.DampMode mode)
     {
@@ -45,7 +45,7 @@ public sealed partial class PhysicsServer
     }
     internal RigidBody.DampMode BodyGetLinearDampModeCore(RID body)
     {
-        var runtime = ParameterRuntime(body); return runtime.Owners.Scene is RigidBody rigid ? rigid.LinearDampMode : runtime.BodyLinearDampMode;
+        var runtime = ParameterRuntime(body, writing: false); return runtime.Owners.Scene is RigidBody rigid ? rigid.LinearDampMode : runtime.BodyLinearDampMode;
     }
     internal void BodySetAngularDampModeCore(RID body, RigidBody.DampMode mode)
     {
@@ -54,7 +54,7 @@ public sealed partial class PhysicsServer
     }
     internal RigidBody.DampMode BodyGetAngularDampModeCore(RID body)
     {
-        var runtime = ParameterRuntime(body); return runtime.Owners.Scene is RigidBody rigid ? rigid.AngularDampMode : runtime.BodyAngularDampMode;
+        var runtime = ParameterRuntime(body, writing: false); return runtime.Owners.Scene is RigidBody rigid ? rigid.AngularDampMode : runtime.BodyAngularDampMode;
     }
 
     private static void ValidateBodyDampMode(RigidBody.DampMode mode)

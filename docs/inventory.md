@@ -1193,3 +1193,5 @@ Selected body contact publication belongs to existing [PhysicsDirectBodyState/Ex
 GPU body publication scheduling and its existing store/space roles are described in [changed publication](components/gpu-body-publication.md); adaptive transfer and valid-cache reuse add no public types or CPU solver mirror.
 
 Registered body/Area shape and filter operations retain shared authoring and dispatch attached numerical hooks; initial/live borrowed writes reject before mutation. See [borrowed shape authoring](components/physics-registered-adapter.md#borrowed-shape-authoring). This adds no production declarations.
+
+[Borrowed body authoring](components/physics-registered-adapter.md#borrowed-body-authoring) now guards scene/raw force, mass, state, integration and callback writes during numerical hooks, including direct-body views. Authored reads, ordinary callbacks and body-state forwarding retain access. The independent consumer exercises real impulses and zero warmed edited full-frame allocation; complete numerical/extension acceptance remains open.

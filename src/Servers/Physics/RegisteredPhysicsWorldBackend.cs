@@ -19,7 +19,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         ArgumentNullException.ThrowIfNull(implementation); implementation.Claim(space.RID); _implementation = implementation;
     }
     private void Enter() { if (_implementation.IsDisposed) throw new ObjectDisposedException(nameof(PhysicsServerBackend)); if (_disposed) throw new ObjectDisposedException(nameof(RegisteredPhysicsWorldBackend)); Space.BeginImplementationCallback(_retiring); }
-    private void Exit() => Space.EndExtensionCallback();
+    private void Exit() => Space.EndImplementationCallback();
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.Extension;
     internal override bool HasFailure
     {

@@ -26,3 +26,9 @@ bytes on the owner and across all process threads. Numerical priority response i
 an arbitrary solver is outside this bounded fixture.
 
 Shape mutation checks reject nested body/Area slot/filter edits and shared server-shape data/release during initial identity and live geometry/filter hooks. They compare scene/raw borrowing, owner access, delivered transform/one-way values and real query membership after ordinary edits. After 64 warmups, 128 layer-edit/point-query cycles require zero owner/all-thread managed bytes. The bounded fixture does not certify arbitrary transform or one-way numerical response.
+
+Body authoring checks reject nested force/mass/state/integration/callback changes
+from initial and live numerical hooks for scene/raw bodies and direct views.
+Ordinary impulses and callbacks still execute. After 64 warmups, 64 edited full
+frames require zero owner/all-thread managed bytes. The separate body-state
+consumer checks ordinary requested writes forwarded through its inner state.

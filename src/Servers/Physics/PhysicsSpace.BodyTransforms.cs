@@ -24,7 +24,7 @@ internal sealed partial class PhysicsSpace
             }
             for (var i = 0; i < bodies.Length; i++)
             {
-                var runtime = PhysicsServer.Service.BodyRuntime(bodies[i]); runtime.PrepareForceAccess(false);
+                var runtime = PhysicsServer.Service.BodyRuntime(bodies[i]); runtime.PrepareForceAccess(false, writing: false);
                 if (!ReferenceEquals(runtime.Space, this)) throw new ArgumentException("Every requested body must belong to the selected space.", nameof(bodies));
                 _transformBodies[i] = runtime;
             }

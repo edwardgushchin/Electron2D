@@ -89,3 +89,24 @@ warmups, 128 layer-edit/point-query cycles require zero owner/all-thread managed
 bytes. The old runtime failed the initial BodyClearShapes rejection before the
 shared guard. The 27 corresponding extension shape/filter setter/getter rows
 remain Partial; generic geometry and complete solver acceptance remain open.
+
+## Borrowed body authoring
+
+Body force/impulse, persistent force/torque, mass/center/inertia, material and
+integration parameters, pose/velocities, sleep, CCD, contact capacity and callback
+writes reject from a selected numerical hook before authoring changes. The raw
+mode setter is guarded too. Direct-body setters and force/integration operations
+cannot bypass this boundary. World numerical borrowing has a separate depth from
+caller-created direct-state extension borrowing, so legitimate state-view
+forwarding keeps working. Read paths and transform batches do not request writer
+access. Existing owner, solve/failure and attachment checks remain in place.
+
+The public-only BodyMutationChecks reproduces initial raw mutation and the direct
+view sleep bypass, then verifies rejection on both scene/raw bodies, retained
+authoring, real impulses, ordinary integration/sync callbacks and 64 full warmed
+edited frames at zero owner/all-thread managed bytes. Exact impulse deltas use
+0.001 velocity tolerance; the test accounts for the world's damping before the
+impulse. A blanket all-extension write guard failed the separately rebuilt
+PhysicsBodyExtension.Consumer forwarding test and was replaced by the numerical
+scope guard. Generic solver response and the complete extension contract remain
+open; these checks do not certify all parameter or mode semantics.

@@ -314,3 +314,10 @@ Internal selected factories now provide these views to scene/server integration 
 ## Factory contact publication
 
 A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.
+
+Body force, mass, integration, motion, sleep, CCD and callback authoring now
+reject before mutation during selected numerical hooks, including initial
+attachment. Direct-body setters/forces use the same qualified numerical guard.
+Guarded authored reads, ordinary post-solver callbacks and caller-created
+body-state forwarding remain available; hierarchy/resource-lifetime guards still
+cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).

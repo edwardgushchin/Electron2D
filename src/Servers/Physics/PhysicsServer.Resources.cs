@@ -201,7 +201,7 @@ public sealed partial class PhysicsServer
         if (mode is not (BodyMode.Static or BodyMode.Kinematic or BodyMode.Rigid or BodyMode.RigidLinear))
             throw new ArgumentOutOfRangeException(nameof(mode));
         var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
+        EnsureColliderSpaceAccessible(collider, writing: true);
         collider.SetMode(mode);
     }
 
