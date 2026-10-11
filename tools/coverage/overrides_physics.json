@@ -5516,8 +5516,6 @@
         "PhysicsServer2D::method:area_set_space(RID:,RID:)",
         "PhysicsServer2D::method:body_get_space(RID:)",
         "PhysicsServer2D::method:area_get_space(RID:)",
-        "PhysicsServer2D::method:body_set_mode(RID:,int:PhysicsServer2D.BodyMode)",
-        "PhysicsServer2D::method:body_get_mode(RID:)",
         "PhysicsServer2D::method:area_set_collision_layer(RID:,int:)",
         "PhysicsServer2D::method:body_get_shape_count(RID:)",
         "PhysicsServer2D::method:area_get_shape_count(RID:)",
@@ -6794,6 +6792,14 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103: body/Area associations are projected through one attachment-scoped RefreshIdentity hook, supplied after Attach before shape preparation and on live edits. Typed borrowed object associations and exact UInt64 canvas IDs remain engine-owned; getters project retained facade metadata. PhysicsBackendExtension.Consumer verifies detached authoring, scene canvas membership, world transfer, weak sampled identities, cleanup after failed initial hooks, owner/borrow guards and warmed zero-allocation edits/point queries. Complete extension-operation and numerical acceptance remain open. Collision-priority numerical response remains the implementation author's responsibility and is not certified by metadata delivery."
+    },
+    {
+      "godot": [
+        "PhysicsServer2D::method:body_set_mode(RID:,int:PhysicsServer2D.BodyMode)",
+        "PhysicsServer2D::method:body_get_mode(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0063/0075/0103: raw body mode operations execute, but BodySetMode/BodyGetMode still reject scene-owned RIDs. Initial/live scene rotation-lock authoring now supplies exact RigidLinear modes to the selected implementation, and freeze/disable restore that role. Trigger: implement the complete scene/raw server mode family with fixed scene roles, state publication and replay; a getter-only mapping is insufficient."
     }
   ]
 }

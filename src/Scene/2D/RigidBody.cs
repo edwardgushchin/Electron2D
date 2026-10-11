@@ -150,7 +150,7 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether gravity and forces are disabled under the selected freeze role.</summary>
     /// <remarks>The configured freeze flag is independent of the inherited disable policy.
-    /// Attached changes during solver ownership reject before changing this flag.</remarks>
+    /// Attached changes during solver ownership or a numerical implementation hook reject before changing this flag.</remarks>
     /// <value>False by default.</value>
     public bool Freeze
     {
@@ -158,6 +158,7 @@ public partial class RigidBody : PhysicsBody
         set
         {
             EnsureMutable();
+            Space?.EnsureImplementationWriteAccess();
             if (_freeze == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
@@ -168,10 +169,22 @@ public partial class RigidBody : PhysicsBody
 
     /// <summary>Gets or sets whether the solver prevents rotation.</summary>
     /// <value>False by default.</value>
+    /// <remarks>An unfrozen body selects RigidLinear when true and Rigid when false.
+    /// Freeze and the inherited disable policy temporarily override that motion role.</remarks>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     public bool LockRotation
     {
         get { ThrowIfDisposed(); return _lockRotation; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); _lockRotation = value; GPUParametersDirty = true; if (HasBackend) Backend.SetRotationLocked(!_freeze && value); }
+        set
+        {
+            EnsureMutable(); EnsurePhysicsParticipationChange();
+            Space?.EnsureImplementationWriteAccess();
+            if (_lockRotation == value) return;
+            _lockRotation = value; GPUParametersDirty = true;
+            if (!HasBackend) return;
+            if (!_freeze && !PhysicsMadeStatic) Backend.SetMotionMode(RequestedBodyMode);
+            Backend.SetRotationLocked(!_freeze && value);
+        }
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
@@ -242,7 +255,8 @@ public partial class RigidBody : PhysicsBody
     internal override bool MovesWithSimulation => !_freeze || FrozenKinematic;
     internal override Vector2 EffectiveGravity => Runtime.Gravity;
 
-    internal override PhysicsServer.BodyMode RequestedBodyMode => !_freeze ? PhysicsServer.BodyMode.Rigid :
+    internal override PhysicsServer.BodyMode RequestedBodyMode => !_freeze ?
+        (_lockRotation ? PhysicsServer.BodyMode.RigidLinear : PhysicsServer.BodyMode.Rigid) :
         _freezeMode == RigidFreezeMode.Kinematic ? PhysicsServer.BodyMode.Kinematic : PhysicsServer.BodyMode.Static;
 
     internal override PhysicsBodyConfiguration CreateBodyConfiguration()

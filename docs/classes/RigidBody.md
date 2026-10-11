@@ -103,7 +103,7 @@ The body damping values are finite and may be negative, which increases speed. T
 <a id="sleepfreeze"></a>
 ### `CanSleep`, `Sleeping`, `Freeze` and `LockRotation`
 
-CanSleep changes backend sleep eligibility. Sleeping reads the live solver state when attached and requests sleep/awake on assignment. Freeze changes the backend body to static mode without dropping its scene node or stored velocity; unfreezing recreates dynamic movement and refreshes fixtures. LockRotation changes Box2D angular motion locks. Scene entry/re-entry applies the current detached settings.
+CanSleep changes backend sleep eligibility. Sleeping reads the live solver state when attached and requests sleep/awake on assignment. Freeze selects the configured static or kinematic role without dropping the scene node or stored lock; unfreezing restores the dynamic role and refreshes fixtures. LockRotation selects RigidLinear when true and Rigid when false for an unfrozen body, alongside the angular constraint. Initial attachment and live changes deliver that exact mode to the selected implementation. The inherited MakeStatic disable policy temporarily selects Static and restores the configured role on enable. Scene entry/re-entry applies the current detached settings.
 
 <a id="forces"></a>
 ### `ApplyCentralForce` and `ApplyCentralImpulse`

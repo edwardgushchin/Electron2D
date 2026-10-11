@@ -157,3 +157,11 @@ getters clear superseded overrides and mark later shape preparation dirty even
 when an earlier resource subscriber prevented the scene callback. This performs
 no numerical hook. The public-only consumer injects failures for both channels;
 the general material regression remains part of acceptance.
+
+## Exact scene motion roles
+
+An unfrozen RigidBody with LockRotation supplies RigidLinear to the selected collider implementation at initial attachment and on live lock edits. Unlock supplies Rigid. The angular constraint travels with that exact mode; classification as dynamic still includes both values. Freeze overrides it with Static or Kinematic, and MakeStatic temporarily selects Static while retaining the configured lock for re-enable. Scene/raw locked bodies therefore supply the same numerical role.
+
+The public-only MotionRoles consumer checks initial/live delivery, retained linear velocity, both freeze roles, lock edits during freeze and disable, restoration, owner/numerical guards, simulated pose publication, checkpoint restoration and 64 warmed full frames with zero owner/all-thread managed bytes. Built-in CPU/GPU motion suites retain their physical response and storage gates.
+
+BodySetMode and BodyGetMode still accept only raw server bodies. Their coverage is Partial rather than claiming a complete scene/server family. Fixed scene roles, direct server-mode authoring, pose/velocity publication and replay need one complete integration; supplying only a getter does not close this gap. Full numerical extension and performance acceptance remain open.

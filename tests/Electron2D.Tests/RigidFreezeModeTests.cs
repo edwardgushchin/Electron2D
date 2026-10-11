@@ -22,6 +22,8 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
         var body = new RigidBody { Mass = 2, Inertia = 100, LockRotation = true, CanSleep = false };
         Add(body, circle); root.AddChild(body); using var tree = new SceneTree(root);
         var server = PhysicsServer.Service; var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
+        Check(body.RequestedBodyMode == PhysicsServer.BodyMode.RigidLinear,
+            "Configured rotation lock selects the complete RigidLinear role.");
         Check(body.FreezeMode == RigidFreezeMode.Static && (int)RigidFreezeMode.Kinematic == 1, "Freeze enum values and default.");
         body.FreezeMode = RigidFreezeMode.Kinematic;
         Check(!body.Freeze && body.Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid) && Near(state.InverseMass, 0.5f),
@@ -45,6 +47,7 @@ internal sealed class RigidFreezeModeTests(PhysicsServer.Backend backend)
         Check(Near(state.InverseMass, 0.5f) && state.InverseInertia == 0 && body.FreezeMode == RigidFreezeMode.Kinematic,
             "Unfreezing restores dynamic mass and configured rotation lock while retaining the mode.");
         body.LockRotation = false; Check(Near(1 / state.InverseInertia, 100), "Unlock restores explicit inertia.");
+        Check(body.RequestedBodyMode == PhysicsServer.BodyMode.Rigid, "Unlock restores the complete Rigid role.");
     }
 
     private void VerifyDynamicContact()

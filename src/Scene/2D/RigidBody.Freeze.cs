@@ -20,7 +20,7 @@ public partial class RigidBody
     /// <remarks>Kinematic derives velocity from manual global pose changes over the next nonzero fixed step.
     /// Gravity and force response remain disabled; inherited MakeStatic can temporarily override this role.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The assigned enum value is undefined.</exception>
-    /// <exception cref="InvalidOperationException">Attached mutation is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
     /// <exception cref="ObjectDisposedException">The body is disposed.</exception>
     public RigidFreezeMode FreezeMode
     {
@@ -28,6 +28,7 @@ public partial class RigidBody
         set
         {
             EnsureMutable();
+            Space?.EnsureImplementationWriteAccess();
             if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value));
             if (_freezeMode == value) return;
             EnsurePhysicsParticipationChange();

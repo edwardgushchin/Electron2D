@@ -45,3 +45,5 @@ initial scene/raw attachment and live numerical callbacks without preparation.
 Automatic circle inertia still observes geometry edits; automatic preparation
 rejects numerical borrowing before invoking hooks. After 64 warmups, 128 paired
 scene/raw read cycles require zero owner/all-thread managed bytes.
+
+Motion role checks verify exact initial/live RigidLinear delivery, retained velocity, both freeze roles, disable precedence and restoration, owner/numerical guards, published motion, checkpoint restoration and zero allocations across 64 warmed full frames.

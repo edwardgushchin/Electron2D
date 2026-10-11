@@ -332,7 +332,10 @@ def main():
     assert len(server_rows) == 215
     assert {state: sum(f" | {state} | " in row for row in server_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked", "Excluded")} == {
-                "Implemented": 154, "Partial": 6, "Unimplemented": 1, "Blocked": 0, "Excluded": 54}
+                "Implemented": 152, "Partial": 8, "Unimplemented": 1, "Blocked": 0, "Excluded": 54}
+    for name in ("body_set_mode", "body_get_mode"):
+        row = next(row for row in server_rows if f"method {name}(" in row)
+        assert " | Partial | " in row and "scene-owned RIDs" in row
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)
                for name in ("body_get_collision_layer", "body_get_collision_mask", "body_set_collision_layer", "body_set_collision_mask"))
     assert all(" | Implemented | " in next(row for row in server_rows if f"method {name}(" in row)

@@ -42,3 +42,5 @@ bone storage test also loads the saved scene in a separate process. Existing war
 allocation and numerical-response checks retain their original bounds.
 
 This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.
+
+Initial/live scene LockRotation now supplies the exact RigidLinear role, matching raw locked body configuration. Freeze and MakeStatic override the role until restored. See [role verification](../components/physics-registered-adapter.md#exact-scene-motion-roles).
