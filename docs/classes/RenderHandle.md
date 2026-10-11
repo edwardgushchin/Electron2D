@@ -1,6 +1,6 @@
 # RenderHandle
 
-Last updated: 2026-09-22
+Last updated: 2026-10-11
 
 - Declaration: `internal sealed class RenderHandle : SafeHandleZeroOrMinusOneIsInvalid`
 - Source: [CanvasBackend.cs](../../src/Servers/Rendering/CanvasBackend.cs)
@@ -24,6 +24,7 @@ using var surface = new RenderHandle(nativeSurface, SDL3.SDL.DestroySurface);
 | Declaration | Contract |
 | --- | --- |
 | `internal RenderHandle(nint value, Action<nint> release, SafeHandle? owner = null)` | [Construction](#construction) |
+| `internal void ReplaceNative(nint value)` | [Private buffer replacement](#private-buffer-replacement) |
 | `protected override bool ReleaseHandle()` | [Release](#release) |
 
 ## Member descriptions
@@ -40,6 +41,12 @@ Rejects zero through CanvasBackend.Failure. Retains the optional parent using Da
 
 Calls the release callback, then releases the parent reference in finally. SafeHandle supplies idempotent Dispose semantics and prevents premature native parent destruction. Returns true on normal release.
 
+### Private buffer replacement
+
+`internal void ReplaceNative(nint value)`
+
+Exclusively owned physics capacity buffers may adopt a newly created native buffer through the existing wrapper. The original release delegate and one retained parent reference survive growth. The new resource becomes owned before retiring the old one; an old-release exception still leaves the new resource available for ordinary cleanup. A closed wrapper retires the incoming resource and throws. Zero rejects without changing ownership. Callers serialize this operation on the owner and never use it for published resources or borrowed native identities. SDL still allocates the native buffer; this removes managed wrapper/delegate allocations rather than the native resource or its copy/wait costs.
+
 ## Verification and limits
 
-Native renderer tests exercise constructor failures, shutdown and repeated startup through resource owners. SafeHandle reference accounting is relied upon; finalizer timing is not a public guarantee.
+Native renderer tests exercise constructor failures, shutdown and repeated startup through resource owners. [Replacement tests](../../tests/Electron2D.Tests/RenderHandleReplacementTests.cs) cover retained-parent release, idempotent disposal, closed incoming cleanup, old-release failure and 64 warmed replacements at zero owner/all-thread managed bytes. The [scene pipeline fixture](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) exercises actual late GPU capacity growth after warmup. Finalizer timing is not a public guarantee.

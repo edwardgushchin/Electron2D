@@ -191,3 +191,5 @@ only the completed separate-process reports are used. Artifacts are in
 same evidence directory.
 
 Scalar GPU pose-only getters now use the existing sixteen-byte gather plus eight-byte dispatch status when neither full state nor a current pose is cached. Repeated requests reuse the current epoch; complete state is still read for velocity/fields/sleep or explicit portable demand. [Selected pair tests](physics-shape-pairs.md) measure the one-body request and retain replay/publication checks.
+
+[Complete monitored scene measurements](physics-scene-performance.md) now expose scene/contact publication traffic on CPU/GPU and a fixed late native-buffer growth allocation. The shared fixture uses public state for invariants, retains eight reported points and full interpolation, and does not claim final ordinary-scene GPU advantage.

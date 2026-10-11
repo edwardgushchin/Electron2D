@@ -3,22 +3,49 @@ using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
 using Electron2D;
-using static Box2D.NET.B2Bodies;
-using static Box2D.NET.B2Worlds;
+using static PhysicsDebugTests;
 
 internal static class PhysicsPipelinePerformance
 {
     internal static void Run()
     {
-        const int warmup = 1600, sampleCount = 1024;
+        var count = Read("COUNT", 1536, 64, 65536);
+        var warmup = Read("WARMUP", 1600, 64, 4096);
+        var samples = Read("SAMPLES", 1024, 64, 2048);
+        var choice = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND") ?? "both";
+        var backends = choice switch
+        {
+            "cpu" => new[] { PhysicsServer.Backend.CPU },
+            "gpu" => new[] { PhysicsServer.Backend.GPU },
+            "both" => new[] { PhysicsServer.Backend.CPU, PhysicsServer.Backend.GPU },
+            _ => throw new ArgumentException("Choose cpu, gpu or both.")
+        };
+        var previous = PhysicsSpace.ProfilingEnabled;
+        PhysicsSpace.ProfilingEnabled = true;
+        try { foreach (var backend in backends) Measure(backend, count, warmup, samples); }
+        finally { PhysicsSpace.ProfilingEnabled = previous; }
+    }
+
+    private static int Read(string suffix, int fallback, int min, int max)
+    {
+        var value = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_" + suffix) ?? fallback.ToString());
+        if (value < min || value > max) throw new ArgumentOutOfRangeException(suffix);
+        return value;
+    }
+
+    private static void Measure(PhysicsServer.Backend backend, int count, int warmup, int samples)
+    {
         const double delta = 1d / 144;
-        var count = int.Parse(Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_COUNT") ?? "1536");
-        using var circle = new CircleShape { Radius = 6 };
+        const float radius = 6, mass = .2f;
+        var bottom = Math.Max(638, 216 + ((count + 49) / 50) * 12.5f + 28);
+        using var world = new World(backend);
+        using var root = new SubViewport { World = world };
+        using var circle = new CircleShape { Radius = radius };
         using var surface = new PhysicsMaterial { Friction = .25f, Bounce = .35f };
-        using var root = new Node();
         var walls = new List<RectangleShape>();
         foreach (var (x, y, width, height) in new (float, float, float, float)[]
-            { (576, 638, 1080, 18), (38, 420, 18, 432), (1114, 420, 18, 432), (576, 190, 1080, 12) })
+            { (576, bottom, 1080, 18), (38, (bottom + 190) / 2, 18, bottom - 178),
+                (1114, (bottom + 190) / 2, 18, bottom - 178), (576, 190, 1080, 12) })
         {
             var wall = new RectangleShape { Size = new(width, height) };
             walls.Add(wall);
@@ -30,15 +57,19 @@ internal static class PhysicsPipelinePerformance
         ulong eventHash = 14695981039346656037;
         Action<Node> contact = other => { entered++; eventHash = (eventHash ^ 1) * 1099511628211; eventHash = (eventHash ^ other.InstanceID) * 1099511628211; };
         Action<Node> departure = other => { exited++; eventHash = (eventHash ^ 2) * 1099511628211; eventHash = (eventHash ^ other.InstanceID) * 1099511628211; };
+        double initialEnergy = 0;
         for (var i = 0; i < count; i++)
         {
+            var position = new Vector2(65 + i % 50 * 20, 216 + i / 50 * 12.5f);
+            var velocity = new Vector2((i % 7 - 3) * 3, 0);
+            initialEnergy += mass * (980d * (bottom - 9 - radius - position.Y) + .5 * velocity.LengthSquared());
             var body = new RigidBody
             {
                 Name = "Ball" + i,
-                Position = new(65 + i % 50 * 20, 216 + i / 50 * 12.5f),
-                LinearVelocity = new((i % 7 - 3) * 3, 0),
+                Position = position,
+                LinearVelocity = velocity,
                 CanSleep = false,
-                Mass = .2f,
+                Mass = mass,
                 LinearDamp = .05f,
                 AngularDamp = .1f,
                 ContactMonitor = true,
@@ -51,74 +82,142 @@ internal static class PhysicsPipelinePerformance
         using var tree = new SceneTree(root) { PhysicsInterpolation = true };
         try
         {
+            PhysicsServer.AreaSetGravity(world.Space, 980);
+            PhysicsServer.AreaSetLinearDamp(world.Space, 0); PhysicsServer.AreaSetAngularDamp(world.Space, 0);
+            PhysicsServer.SpaceSetSolverIterations(world.Space, 16);
+            Check(world.PhysicsBackend == backend && world.RequestedPhysicsBackend == backend, "Full scene pipeline uses the explicit requested backend");
+            var data = PhysicsServer.Service.GetSceneSpace(world.Space); var gpu = data.GPUStore;
+            var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8];
             for (var i = 0; i < warmup; i++) tree.PhysicsFrame(delta);
-            var world = bodies[0].Space!.WorldID;
-            var times = new double[sampleCount];
-            double backend = 0;
-            var total = GC.GetTotalAllocatedBytes(true);
-            var allocated = GC.GetAllocatedBytesForCurrentThread();
-            for (var i = 0; i < sampleCount; i++)
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
+            var upload = gpu?.UploadBytes ?? 0; var readback = gpu?.ReadbackBytes ?? 0;
+            var submissions = gpu?.SubmissionCount ?? 0; var uniform = gpu?.UniformBytes ?? 0;
+            var tick = PhysicsServer.SpaceGetTick(world.Space);
+            var total = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
+            for (var i = 0; i < samples; i++)
             {
-                var start = Stopwatch.GetTimestamp();
+                var wait = gpu?.WaitMS ?? 0; var start = Stopwatch.GetTimestamp();
                 tree.PhysicsFrame(delta);
                 times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
-                backend += b2World_GetProfile(world).step;
+                waits[i] = (gpu?.WaitMS ?? 0) - wait;
+                for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += data.ProfileMS[phase]; phaseBytes[phase] += data.ProfileBytes[phase]; }
             }
-            allocated = GC.GetAllocatedBytesForCurrentThread() - allocated;
-            total = GC.GetTotalAllocatedBytes(true) - total;
-            var states = new float[count * 7];
-            var reportedContacts = 0;
+            allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; total = GC.GetTotalAllocatedBytes(true) - total;
+            upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
+            submissions = (gpu?.SubmissionCount ?? 0) - submissions; uniform = (gpu?.UniformBytes ?? 0) - uniform;
+            Check(PhysicsServer.SpaceGetTick(world.Space) == tick + (ulong)samples, "Each complete scene frame advances exactly one fixed physical tick");
+            Check(PhysicsServer.GetProcessInfo(PhysicsServer.ProcessInfo.ActiveObjects) == count, "Every requested rigid body remains awake and simulated");
+            var states = new float[count * 7]; var positions = new Vector2[count];
+            var grid = new Dictionary<(int X, int Y), List<int>>();
+            var reportedContacts = 0; double maxEscape = 0, maxPenetration = 0, maxSpeed = 0, energy = 0;
+            double maxBasisDifference = 0;
             var contactValues = new List<float>(count * 8 * 16);
-            for (var i = 0; i < count; i++)
+            for (var index = 0; index < bodies.Length; index++)
             {
-                var id = ((CPUPhysicsColliderImplementation)bodies[i].Backend.Implementation!).BodyID;
-                var t = b2Body_GetTransform(id); var v = b2Body_GetLinearVelocity(id);
-                states[i * 7] = t.p.X; states[i * 7 + 1] = t.p.Y;
-                states[i * 7 + 2] = t.q.c; states[i * 7 + 3] = t.q.s;
-                states[i * 7 + 4] = v.X; states[i * 7 + 5] = v.Y; states[i * 7 + 6] = b2Body_GetAngularVelocity(id);
-                reportedContacts += bodies[i].GetContactCount();
-            }
-            foreach (var body in bodies)
-            {
+                var body = bodies[index]; var pose = body.GlobalTransform;
+                var velocity = body.LinearVelocity; var angular = body.AngularVelocity;
+                Check(pose.IsFinite() && velocity.IsFinite() && float.IsFinite(angular) && !body.Sleeping, "Full published scene state remains finite and awake");
                 var state = PhysicsServer.BodyGetDirectState(body.GetRID())!;
-                contactValues.Add(state.GetContactCount());
-                for (var i = 0; i < state.GetContactCount(); i++)
+                var directPose = state.Transform;
+                var basisDifference = Math.Max((pose.X - directPose.X).Length(), (pose.Y - directPose.Y).Length());
+                maxBasisDifference = Math.Max(maxBasisDifference, basisDifference);
+                Check(pose.Origin == directPose.Origin && basisDifference <= 1e-6 && velocity == state.LinearVelocity && angular == state.AngularVelocity,
+                    "Scene and direct-state publication agree; unit basis allows float angle reconstruction roundoff <=1e-6");
+                states[index * 7] = pose.Origin.X; states[index * 7 + 1] = pose.Origin.Y;
+                states[index * 7 + 2] = pose.X.X; states[index * 7 + 3] = pose.X.Y;
+                states[index * 7 + 4] = velocity.X; states[index * 7 + 5] = velocity.Y; states[index * 7 + 6] = angular;
+                maxSpeed = Math.Max(maxSpeed, velocity.Length());
+                maxEscape = Math.Max(maxEscape, Math.Max(Math.Max(47 + radius - pose.Origin.X, pose.Origin.X - (1105 - radius)),
+                    Math.Max(196 + radius - pose.Origin.Y, pose.Origin.Y - (bottom - 9 - radius))));
+                energy += mass * (.5 * velocity.LengthSquared() + .25 * radius * radius * angular * angular +
+                    980 * Math.Max(0, bottom - 9 - radius - pose.Origin.Y));
+                var cell = ((int)MathF.Floor(pose.Origin.X / (2 * radius)), (int)MathF.Floor(pose.Origin.Y / (2 * radius)));
+                for (var y = -1; y <= 1; y++) for (var x = -1; x <= 1; x++)
+                        if (grid.TryGetValue((cell.Item1 + x, cell.Item2 + y), out var neighbours))
+                            foreach (var other in neighbours) maxPenetration = Math.Max(maxPenetration, 2 * radius - pose.Origin.DistanceTo(positions[other]));
+                if (!grid.TryGetValue(cell, out var bucket)) grid.Add(cell, bucket = []);
+                positions[index] = pose.Origin; bucket.Add(index);
+                var contacts = state.GetContactCount(); reportedContacts += contacts;
+                Check(contacts == body.GetContactCount() && contacts <= 8, "Real monitor and direct-state contacts agree within the unchanged cap");
+                contactValues.Add(contacts);
+                for (var i = 0; i < contacts; i++)
                 {
-                    contactValues.Add(state.GetContactCollider(i).GetHashCode());
+                    Check(state.GetContactCollider(i).IsValid() && state.GetContactColliderObject(i) is PhysicsBody,
+                        "Completed contacts preserve actual scene collider identity");
                     contactValues.Add(state.GetContactLocalShape(i)); contactValues.Add(state.GetContactColliderShape(i));
                     Append(state.GetContactLocalPosition(i)); Append(state.GetContactColliderPosition(i));
                     Append(state.GetContactLocalNormal(i)); Append(state.GetContactLocalVelocityAtPosition(i));
                     Append(state.GetContactColliderVelocityAtPosition(i)); Append(state.GetContactImpulse(i));
                 }
             }
-            var contactSHA256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(contactValues))));
-            void Append(Vector2 value) { contactValues.Add(value.X); contactValues.Add(value.Y); }
-            if (allocated != 0 || total != 0 || states.Any(v => !float.IsFinite(v)))
-                throw new Exception($"Physics pipeline allocation/finite-state check failed: {allocated}/{total} bytes.");
-            Console.WriteLine(JsonSerializer.Serialize(new
+            var penetrationLimit = 2 * PhysicsServer.SpaceGetContactMaxAllowedPenetration(world.Space) + .001f;
+            var physicalValid = maxEscape <= penetrationLimit && maxPenetration <= penetrationLimit && maxSpeed < 1000 &&
+                double.IsFinite(energy) && energy < initialEnergy * 1.02 && entered > 0 && reportedContacts > 0;
+            var valid = physicalValid && allocated == 0 && total == 0;
+            var report = JsonSerializer.Serialize(new
             {
+                schema = 2,
+                backend = backend.ToString(),
                 bodies = count,
+                walls = 4,
                 hz = 144,
                 substeps = 4,
+                solverIterations = 16,
                 contactMonitor = true,
                 maxContacts = 8,
                 interpolation = true,
+                sleeping = false,
+                rendered = false,
                 warmup,
-                samples = sampleCount,
+                samples,
                 meanMS = times.Average(),
-                p95MS = times.Order().ElementAt((int)(sampleCount * .95)),
-                p99MS = times.Order().ElementAt((int)(sampleCount * .99)),
-                backendMS = backend / sampleCount,
+                step = Distribution(times),
+                wait = Distribution(waits),
+                phaseMeanMS = phases.Select(value => value / samples).ToArray(),
+                uploadBytesPerTick = (double)upload / samples,
+                readbackBytesPerTick = (double)readback / samples,
+                uniformBytesPerTick = (double)uniform / samples,
+                submissionsPerTick = (double)submissions / samples,
                 ownerBytes = allocated,
                 allThreadsBytes = total,
+                phaseOwnerBytes = phaseBytes,
+                outsideStepOwnerBytes = allocated - phaseBytes.Sum(),
                 entered,
                 exited,
                 eventHash,
                 reportedContacts,
-                contactSHA256,
+                maxEscape,
+                maxPenetration,
+                penetrationLimit,
+                maxSpeed,
+                maxBasisDifference,
+                energy,
+                initialEnergy,
+                physicalValid,
+                valid,
+                contactSHA256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(CollectionsMarshal.AsSpan(contactValues)))),
                 stateSHA256 = Convert.ToHexString(SHA256.HashData(MemoryMarshal.AsBytes(states.AsSpan())))
-            }));
+            });
+            Console.WriteLine(report);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_OUTPUT") is { } output)
+            {
+                Directory.CreateDirectory(output); File.WriteAllText(System.IO.Path.Combine(output, backend + ".json"), report + Environment.NewLine);
+            }
+            Check(valid, $"Scene pipeline gates: managed {allocated}/{total} B, escape/penetration {maxEscape}/{maxPenetration} <= {penetrationLimit}, speed {maxSpeed}, energy {energy}/{initialEnergy}");
+            void Append(Vector2 value) { Check(value.IsFinite(), "Reported contact values are finite"); contactValues.Add(value.X); contactValues.Add(value.Y); }
         }
         finally { tree.Dispose(); foreach (var wall in walls) wall.Dispose(); }
+    }
+
+    private static object Distribution(double[] values)
+    {
+        Array.Sort(values);
+        return new
+        {
+            p50 = values[values.Length / 2],
+            p95 = values[Math.Min(values.Length - 1, (int)(values.Length * .95))],
+            p99 = values[Math.Min(values.Length - 1, (int)(values.Length * .99))],
+            max = values[^1]
+        };
     }
 }
