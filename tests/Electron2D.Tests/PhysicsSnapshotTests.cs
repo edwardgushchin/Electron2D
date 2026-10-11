@@ -224,7 +224,7 @@ internal static class PhysicsSnapshotTests
         var snapshot = new PhysicsSnapshot(); r.Map.Capture(snapshot); var bytes = new byte[snapshot.GetEncodedSize()]; snapshot.WriteTo(bytes);
         // Finite fields can still overflow when the device composes solver and surface velocity.
         BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(116), float.MaxValue);
-        BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(296), float.MaxValue);
+        BinaryPrimitives.WriteSingleLittleEndian(bytes.AsSpan(344), float.MaxValue);
         var bad = new PhysicsSnapshot(); bad.ReadFrom(bytes);
         Reject<InvalidOperationException>(() => r.Map.Apply(bad));
         Check(PhysicsServer.Service.GetSceneSpace(r.World.Space).HasBackendFailure, "An apply execution failure poisons the world");
@@ -238,7 +238,9 @@ internal static class PhysicsSnapshotTests
         for (var length = 0; length < bytes.Length; length++) { var truncated = bytes.AsSpan(0, length).ToArray(); Reject<InvalidDataException>(() => decoded.ReadFrom(truncated)); }
         Check(decoded.Tick == tick, "Malformed input preserves prior snapshot");
         var bad = (byte[])bytes.Clone(); BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 99); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
-        BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 1); BinaryPrimitives.WriteSingleLittleEndian(bad.AsSpan(24), float.NaN); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
+        BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), 1); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
+        BinaryPrimitives.WriteUInt32LittleEndian(bad.AsSpan(4), BinaryPrimitives.ReadUInt32LittleEndian(bytes.AsSpan(4)));
+        BinaryPrimitives.WriteSingleLittleEndian(bad.AsSpan(24), float.NaN); Reject<InvalidDataException>(() => decoded.ReadFrom(bad));
         var foreign = (byte[])bytes.Clone(); BinaryPrimitives.WriteUInt64LittleEndian(foreign.AsSpan(48), 2); decoded.ReadFrom(foreign);
         Reject<InvalidDataException>(() => a.Map.Apply(decoded)); decoded.ReadFrom(bytes);
         var tiny = new PhysicsSnapshot(48); Reject<InvalidDataException>(() => tiny.ReadFrom(bytes)); Reject<InvalidOperationException>(() => a.Map.Capture(tiny));

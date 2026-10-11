@@ -22,8 +22,8 @@ public abstract partial class PhysicsBody : CollisionObject
     internal PhysicsSpace? Space => Backend.Space;
     internal bool HasBackend => Space is not null;
     internal virtual bool CollisionResponseEnabled => true;
-    internal uint EffectiveCollisionLayer => CollisionResponseEnabled ? CollisionLayer : 0;
-    internal uint EffectiveCollisionMask => CollisionResponseEnabled ? CollisionMask : 0;
+    internal uint EffectiveCollisionLayer => HasServerMode || CollisionResponseEnabled ? CollisionLayer : 0;
+    internal uint EffectiveCollisionMask => HasServerMode || CollisionResponseEnabled ? CollisionMask : 0;
 
     internal ElectronObject? GetShapeNode(int index) => GetShapeOwnerObject(index);
 
@@ -56,7 +56,7 @@ public abstract partial class PhysicsBody : CollisionObject
         if (Space is not null) throw new InvalidOperationException("A body already belongs to a physics world.");
         var transform = GlobalTransform;
         ValidatePhysicsTransform(transform);
-        var configuration = CreateBodyConfiguration();
+        var configuration = ServerConfiguration(CreateBodyConfiguration());
         if (PhysicsMadeStatic)
             configuration = configuration with { Mode = PhysicsServer.BodyMode.Static, LinearVelocity = default, AngularVelocity = 0 };
         _lastPosition = transform.Origin;
@@ -66,6 +66,7 @@ public abstract partial class PhysicsBody : CollisionObject
         try
         {
             RebuildShapes(); Runtime.RestoreSceneState();
+            if (HasServerMode) ApplyServerMotion();
             if (configuration.Sleeping && configuration.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) Backend.SetAwake(false);
             if (PhysicsMadeStatic) OnMadeStatic();
         }
@@ -78,6 +79,7 @@ public abstract partial class PhysicsBody : CollisionObject
         if (Space is null) return;
         if (!Space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
             rigid.OnBackendAdvanced();
+        if (!Space.HasBackendFailure) CaptureServerMotion();
         Backend.Detach();
         _appliedShapeRevisions.Clear();
         _shapesDirty = true;
@@ -111,7 +113,8 @@ public abstract partial class PhysicsBody : CollisionObject
         var rotation = _validatedRotation;
         if (position != _lastPosition || rotation != _lastRotation)
         {
-            ApplySceneTransform(position, rotation);
+            if (HasServerMode) ApplyServerTransform(transform);
+            else ApplySceneTransform(position, rotation);
             _lastPosition = position;
             _lastRotation = rotation;
         }
@@ -131,7 +134,7 @@ public abstract partial class PhysicsBody : CollisionObject
 
     internal void CompleteBackend()
     {
-        if (Space is null || !MovesWithSimulation || PhysicsMadeStatic) return;
+        if (Space is null || !HasServerMode && !MovesWithSimulation || PhysicsMadeStatic) return;
         var (scenePosition, sceneRotation) = Backend.GetPose();
         _lastPosition = scenePosition;
         _lastRotation = sceneRotation;
@@ -148,6 +151,7 @@ public abstract partial class PhysicsBody : CollisionObject
         }
         // Pose notifications may write velocity; sample motion after those callbacks.
         OnBackendAdvanced();
+        CompleteServerMotion();
     }
 
     internal abstract PhysicsServer.BodyMode RequestedBodyMode { get; }
@@ -163,11 +167,16 @@ public abstract partial class PhysicsBody : CollisionObject
             return;
         }
         if (!HasBackend) { Tree?.RegisterPhysicsBody(this); return; }
-        var mode = PhysicsMadeStatic ? PhysicsServer.BodyMode.Static : RequestedBodyMode;
+        var mode = EffectiveBodyMode;
         if (Backend.HasMotionMode(mode)) return;
         if (PhysicsMadeStatic) OnMadeStatic();
         Backend.SetMotionMode(mode);
-        OnBodyTypeChanged();
+        if (HasServerMode)
+        {
+            Backend.SetRotationLocked(mode == PhysicsServer.BodyMode.RigidLinear);
+            ApplyServerMotion();
+        }
+        else OnBodyTypeChanged();
         Runtime.RestoreSceneState();
         MarkShapesDirty();
     }
@@ -319,7 +328,8 @@ public abstract partial class PhysicsBody : CollisionObject
     {
         var runtime = PhysicsServer.Service.BodyRuntime(PhysicsRID);
         Backend.RebuildShapes(ShapeSlots, EffectiveCollisionLayer, EffectiveCollisionMask, false,
-            MovesWithSimulation ? 1f : 0f, runtime.GetFriction(), runtime.GetBounce());
+            (HasServerMode ? EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear : MovesWithSimulation) ? 1f : 0f,
+            runtime.GetFriction(), runtime.GetBounce());
 
         OnShapesRebuilt();
         _appliedShapeRevisions.Clear();

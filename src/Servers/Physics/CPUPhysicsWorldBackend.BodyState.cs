@@ -15,7 +15,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         foreach (var body in Space.Bodies)
         {
             var runtime = body.Runtime;
-            if (body is RigidBody or CharacterBody)
+            if (body is RigidBody or CharacterBody || body.HasServerMode)
             {
                 if (!uniform) ResolveAreaFields(body.CollisionLayer, NativeCollider(body.Backend).Shapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
                 ApplyBodyFields(runtime, gravity, linearDamp, angularDamp, delta);
@@ -23,10 +23,11 @@ internal sealed partial class CPUPhysicsWorldBackend
             }
             runtime.ApplyBeforeStep(body);
             captureCallbacks |= PhysicsSpace.RequiresBodySnapshot(runtime, body);
-            if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+            if (body.HasServerMode) body.PrepareServerMotion(delta);
+            else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
             else if (body is CharacterBody character) character.PrepareMotion(delta);
             else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
-            hasKinematicBodies |= body.RequestedBodyMode == PhysicsServer.BodyMode.Kinematic && !body.PhysicsMadeStatic;
+            hasKinematicBodies |= body.EffectiveBodyMode == PhysicsServer.BodyMode.Kinematic;
         }
         foreach (var body in Space.ServerColliders)
         {

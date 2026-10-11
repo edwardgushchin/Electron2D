@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A rigid physics body that follows or simulates one scene bone under a skeleton.</summary>
 /// <remarks>Only Skeleton and PhysicalBone parent chains supply rig ownership. The physical body and scene
 /// Bone remain separate nodes; SkeletonModificationPhysicalBones transfers solved poses into the rig.
-/// Child joints and collision shapes are authored by the caller; no joint or shape is generated.</remarks>
+/// Child joints and collision shapes are authored by the caller; no joint or shape is generated.
+/// Attached binding and role edits reject while a numerical physics implementation hook is borrowed.</remarks>
 public class PhysicalBone : RigidBody
 {
     private int _boneIndex = -1;
@@ -19,22 +20,22 @@ public class PhysicalBone : RigidBody
     public int BoneIndex
     {
         get { ReadPhysical(); return ResolveBone() is { } bone ? bone.GetIndexInSkeleton() : _bonePath.Length > 0 ? -1 : _boneIndex; }
-        set { EnsureMutable(); EnsurePhysicsParticipationChange(); if (value < -1) throw new ArgumentOutOfRangeException(nameof(value)); var rig = ResolveRig(); var bone = value >= 0 && rig is { IsInsideTree: true } ? rig.GetBone(value) : null; var path = bone is null ? string.Empty : GetPathTo(bone); _boneIndex = value; _bonePath = path; InvalidateBinding(); Reconcile(); NotifyPropertyListChanged(); }
+        set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); if (value < -1) throw new ArgumentOutOfRangeException(nameof(value)); var rig = ResolveRig(); var bone = value >= 0 && rig is { IsInsideTree: true } ? rig.GetBone(value) : null; var path = bone is null ? string.Empty : GetPathTo(bone); _boneIndex = value; _bonePath = path; InvalidateBinding(); Reconcile(); NotifyPropertyListChanged(); }
     }
     /// <summary>Gets or sets the Bone path relative to this physical body.</summary><value>Empty initially; an authored path takes precedence over the numeric index.</value>
     public string BoneNodePath
-    { get { ReadPhysical(); return _bonePath; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); SkeletonIKBinding.Path(value); _bonePath = value; InvalidateBinding(); Reconcile(); NotifyPropertyListChanged(); } }
+    { get { ReadPhysical(); return _bonePath; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); SkeletonIKBinding.Path(value); _bonePath = value; InvalidateBinding(); Reconcile(); NotifyPropertyListChanged(); } }
     /// <summary>Gets or requests rigid simulation; disabled bodies follow their bone without collision response.</summary><value>False initially. Detached or missing bindings retain the request but cannot simulate.</value>
     public bool SimulatePhysics
-    { get { ReadPhysical(); return _simulate; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); if (_simulate == value) return; _simulate = value; Reconcile(); } }
+    { get { ReadPhysical(); return _simulate; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); if (_simulate == value) return; _simulate = value; Reconcile(); } }
     /// <summary>Gets or sets whether each physics callback aligns even an active simulator to its bone.</summary><value>False initially; switching this reseeds the active body from the current bone.</value>
     /// <remarks>Inherited forces/contacts may move it during the solver interval. Physical pose transfer skips this follower.</remarks>
     public bool FollowBoneWhenSimulating
-    { get { ReadPhysical(); return _follow; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); if (_follow == value) return; _follow = value; if (_active) PositionAtBone(); } }
+    { get { ReadPhysical(); return _follow; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); if (_follow == value) return; _follow = value; if (_active) PositionAtBone(); } }
     /// <summary>Gets or sets automatic configuration of the first authored child Joint.</summary><value>True initially.</value>
     /// <remarks>For a PhysicalBone parent, assigns NodeA/NodeB and aligns the joint origin. With a Skeleton parent, existing endpoints remain authored. No joint is created.</remarks>
     public bool AutoConfigureJoint
-    { get { ReadPhysical(); return _auto; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); _auto = value; _jointRevision = ulong.MaxValue; ConfigureJoint(); } }
+    { get { ReadPhysical(); return _auto; } set { EnsureMutable(); EnsurePhysicsParticipationChange(); Space?.EnsureImplementationWriteAccess(); _auto = value; _jointRevision = ulong.MaxValue; ConfigureJoint(); } }
     private void ReadPhysical() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
     private void InvalidateBinding() { _bone = null; _pathRevision = ulong.MaxValue; _jointRevision = ulong.MaxValue; UpdateConfigurationWarnings(); }
     private Skeleton? ResolveRig()
@@ -77,9 +78,9 @@ public class PhysicalBone : RigidBody
             if (_active != active)
             {
                 EnsurePhysicsParticipationChange(); if (bone is not null) PositionAtBone();
-                _active = active; UpdatePhysicsParticipation(); MarkShapesDirty(); _jointRevision = ulong.MaxValue;
+                RestoreSceneMode(); _active = active; UpdatePhysicsParticipation(); MarkShapesDirty(); _jointRevision = ulong.MaxValue;
             }
-            if (!_active || _follow) PositionAtBone();
+            if (!HasServerMode && (!_active || _follow)) PositionAtBone();
             ConfigureJoint();
         }
         finally { _reconciling = false; }

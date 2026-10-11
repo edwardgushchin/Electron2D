@@ -33,6 +33,7 @@ public partial class RigidBody
             if (_freezeMode == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
+            RestoreSceneMode();
             _freezeMode = value;
             UpdatePhysicsParticipation();
         }

@@ -84,6 +84,8 @@ internal sealed partial class PhysicsReplayEntry
         var surfaceAngular = _surface?._constantAngularVelocity ?? _bodyRuntime?.SurfaceAngular ?? 0;
         if (Server is { IsArea: false } && _configuration.Mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
         { surface = _server.Linear; surfaceAngular = _server.Angular; }
+        if (_body is { Settings.ServerMode: not null } directBody && _configuration.Mode is PhysicsServer.BodyMode.Static or PhysicsServer.BodyMode.Kinematic)
+        { surface = directBody.ServerLinear; surfaceAngular = directBody.ServerAngular; }
         Backend.ApplyPortableMotion(_portableSolverPose, _portableLinear, _portableAngular, _portableSleepTime, _portableCanSleep, _portableSleeping,
             surface, surfaceAngular, _rigid?._constantForce ?? _bodyRuntime?.ConstantForce ?? default, _rigid?._constantTorque ?? _bodyRuntime?.ConstantTorque ?? 0,
             _bodyRuntime?.Gravity ?? default, _bodyRuntime?.LinearDamp ?? 0, _bodyRuntime?.AngularDamp ?? 0, _bodyRuntime?.FieldsInitialized ?? false);

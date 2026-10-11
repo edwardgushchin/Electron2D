@@ -69,3 +69,5 @@ and character platform carry on CPU/GPU.
 [Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
 now run AnimatableBodyTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
+
+[Direct server modes](../components/physics-registered-adapter.md#common-server-mode-family) retain a separate runtime role. Animatable target staging follows that direct profile while it is active; physical-bone binding/role writes reject numerical borrowing before authoring changes. Scene role edits restore configured control.

@@ -7,6 +7,7 @@ internal sealed partial class PhysicsReplayEntry
     {
         var config = _configuration;
         schema.Add(PortableKind); schema.Add(config.Layer); schema.Add(config.Mask); schema.Add(config.Priority); schema.Add((int)config.Mode);
+        if (_body is { } modeBody) schema.Add(modeBody.Settings.ServerMode is { } mode ? (int)mode : -1);
         schema.Add(config.MadeStatic); schema.Add(config.TopLevel); schema.Add(config.Monitorable); schema.Add(Scene?.IsInsideTree ?? false);
         schema.Add(config.BonePath); schema.Add(config.BoneSimulate); schema.Add(config.BoneActive); schema.Add(config.BoneFollow); schema.Add(config.BoneAuto);
         AddFields(ref schema, config.Fields);

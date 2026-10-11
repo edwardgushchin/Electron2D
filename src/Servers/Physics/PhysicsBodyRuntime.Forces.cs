@@ -11,12 +11,13 @@ internal sealed partial class PhysicsBodyRuntime
         {
             if (Space is not null) return Backend.IsDynamic;
             var owners = Owners;
-            return owners.Scene?.RequestedBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ||
+            return owners.Scene?.EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear ||
                 owners.Server?.Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         }
     }
 
     internal bool RotationLocked => Space is not null ? Backend.RotationLocked :
+        Owners.Scene is { HasServerMode: true } direct ? direct.EffectiveBodyMode == PhysicsServer.BodyMode.RigidLinear :
         Owners.Scene is RigidBody rigid ? rigid.LockRotation : Owners.Server?.Mode == PhysicsServer.BodyMode.RigidLinear;
 
     internal void PrepareForceAccess(bool prepareGeometry, bool writing = true)
@@ -61,12 +62,13 @@ internal sealed partial class PhysicsBodyRuntime
 
     internal Vector2 GetLinearVelocity()
     {
+        if (Owners.Scene is { HasServerMode: true } direct) return direct.ServerLinearVelocity;
         if (Space is not null) return Backend.LinearVelocity;
         var owners = Owners;
         return owners.Scene switch { RigidBody rigid => rigid.LinearVelocity, StaticBody surface => surface.ConstantLinearVelocity, not null => _surfaceLinear, _ => owners.Server!.GetLinearVelocity() };
     }
 
-    internal float GetAngularVelocity() => Space is not null ? Backend.AngularVelocity :
+    internal float GetAngularVelocity() => Owners.Scene is { HasServerMode: true } direct ? direct.ServerAngularVelocity : Space is not null ? Backend.AngularVelocity :
         Owners.Scene switch { RigidBody rigid => rigid.AngularVelocity, StaticBody surface => surface.ConstantAngularVelocity, not null => _surfaceAngular, _ => Owners.Server!.GetAngularVelocity() };
 
     internal void ApplyImpulse(Vector2 impulse, float moment)
@@ -82,7 +84,8 @@ internal sealed partial class PhysicsBodyRuntime
         else
         {
             var owners = Owners;
-            if (owners.Scene is RigidBody rigid) { rigid.LinearVelocity = velocity; rigid.AngularVelocity = angular; }
+            if (owners.Scene is { HasServerMode: true } direct) { direct.SetServerLinearVelocity(velocity); direct.SetServerAngularVelocity(angular); }
+            else if (owners.Scene is RigidBody rigid) { rigid.LinearVelocity = velocity; rigid.AngularVelocity = angular; }
             else { owners.Server!.SetLinearVelocity(velocity); owners.Server.SetAngularVelocity(angular); }
             Wake();
         }

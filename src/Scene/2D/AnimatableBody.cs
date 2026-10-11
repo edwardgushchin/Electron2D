@@ -2,7 +2,8 @@ namespace Electron2D;
 
 /// <summary>A manually moved kinematic body whose motion influences dynamic contacts.</summary>
 /// <remarks>With <see cref="SyncToPhysics"/> enabled, a new transform is presented after the next nonzero
-/// fixed step. The body borrows child collision shapes and its inherited surface material.</remarks>
+/// fixed step. A direct PhysicsServer mode profile owns motion until scene role control returns.
+/// The body borrows child collision shapes and its inherited surface material.</remarks>
 public sealed partial class AnimatableBody : StaticBody
 {
     private static readonly PropertyDescriptor[] AnimatableProperties =
@@ -107,7 +108,7 @@ public sealed partial class AnimatableBody : StaticBody
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
-        if (what == NotificationLocalTransformChanged && _syncToPhysics && IsInsideTree)
+        if (what == NotificationLocalTransformChanged && _syncToPhysics && IsInsideTree && !HasServerMode)
         {
             if (_applyingPhysicsPose) return;
             var target = GlobalTransform;

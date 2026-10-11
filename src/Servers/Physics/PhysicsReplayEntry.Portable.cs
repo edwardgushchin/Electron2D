@@ -32,6 +32,8 @@ internal sealed partial class PhysicsReplayEntry
             writer.Pose(bodyState._validatedTransform);
             writer.F32(bodyState._validatedRotation);
             writer.Pose(bodyState._preparedTransform);
+            writer.Vector(bodyState.ServerLinear); writer.F32(bodyState.ServerAngular); writer.Bool(bodyState.ServerSleeping);
+            writer.Bool(bodyState.HasServerTarget); writer.Bool(bodyState.FirstServerTarget); writer.Pose(bodyState.ServerTarget);
         }
         if (_rigid is { } rigidState)
         {
@@ -122,6 +124,8 @@ internal sealed partial class PhysicsReplayEntry
             bodyState._validatedTransform = reader.Pose();
             bodyState._validatedRotation = reader.F32();
             bodyState._preparedTransform = reader.Pose();
+            bodyState.ServerLinear = reader.Vector(); bodyState.ServerAngular = reader.F32(); bodyState.ServerSleeping = reader.Bool();
+            bodyState.HasServerTarget = reader.Bool(); bodyState.FirstServerTarget = reader.Bool(); bodyState.ServerTarget = reader.Pose();
         }
         if (_rigid is { } rigidState)
         {

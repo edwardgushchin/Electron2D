@@ -28,7 +28,8 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         foreach (var body in Space.Bodies)
         {
             PrepareIntegration(body.Runtime, delta); body.Runtime.ApplyBeforeStep(body);
-            if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+            if (body.HasServerMode) body.PrepareServerMotion(delta);
+            else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
             else if (body is CharacterBody character) character.PrepareMotion(delta);
             else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
         }

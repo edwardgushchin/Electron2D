@@ -16,7 +16,8 @@ internal sealed partial class PhysicsBodyRuntime
     {
         PhysicsServerCollider.ValidateTransform(transform);
         var owner = Owners;
-        if (owner.Scene is { } scene) { scene.GlobalTransform = transform; scene.PrepareBackend(); }
+        if (owner.Scene is { HasServerMode: true } direct) { direct.SetServerTransform(transform); direct.PrepareBackend(); }
+        else if (owner.Scene is { } scene) { scene.GlobalTransform = transform; scene.PrepareBackend(); }
         else owner.Server!.SetTransform(transform);
         if (Space is not null && Backend.HasMotionMode(PhysicsServer.BodyMode.Static)) Backend.WakeTouching();
         Wake();
@@ -26,7 +27,8 @@ internal sealed partial class PhysicsBodyRuntime
     {
         Finite(velocity);
         var owner = Owners;
-        if (owner.Scene is RigidBody rigid) rigid.LinearVelocity = velocity;
+        if (owner.Scene is { HasServerMode: true } direct) direct.SetServerLinearVelocity(velocity);
+        else if (owner.Scene is RigidBody rigid) rigid.LinearVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
         {
             if (Space is not null) Backend.SetLinearVelocity(default);
@@ -49,7 +51,8 @@ internal sealed partial class PhysicsBodyRuntime
     {
         Finite(velocity);
         var owner = Owners;
-        if (owner.Scene is RigidBody rigid) rigid.AngularVelocity = velocity;
+        if (owner.Scene is { HasServerMode: true } direct) direct.SetServerAngularVelocity(velocity);
+        else if (owner.Scene is RigidBody rigid) rigid.AngularVelocity = velocity;
         else if (owner.Scene is StaticBody surface)
         {
             if (Space is not null) Backend.SetAngularVelocity(0);
@@ -86,14 +89,15 @@ internal sealed partial class PhysicsBodyRuntime
     {
         if (Space is not null) return !Backend.IsAwake;
         var owner = Owners;
-        return owner.Scene is RigidBody rigid ? rigid.Sleeping : owner.Server?.GetSleeping() ?? owner.Scene is StaticBody and not AnimatableBody;
+        return owner.Scene is { HasServerMode: true } direct ? direct.ServerSleeping : owner.Scene is RigidBody rigid ? rigid.Sleeping : owner.Server?.GetSleeping() ?? owner.Scene is StaticBody and not AnimatableBody;
     }
 
     internal void SetSleeping(bool sleeping)
     {
         if (!Dynamic) return;
         var owner = Owners;
-        if (owner.Scene is RigidBody rigid) rigid.Sleeping = sleeping;
+        if (owner.Scene is { HasServerMode: true } direct) direct.SetServerSleeping(sleeping);
+        else if (owner.Scene is RigidBody rigid) rigid.Sleeping = sleeping;
         else owner.Server!.SetSleeping(sleeping);
     }
 

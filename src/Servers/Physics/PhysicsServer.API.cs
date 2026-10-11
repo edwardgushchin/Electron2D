@@ -1086,14 +1086,18 @@ public sealed partial class PhysicsServer
     public static void BodySetAxisVelocity(RID body, Vector2 axisVelocity) => Service.BodySetAxisVelocityCore(body, axisVelocity);
 
     /// <summary>Changes a body among static, kinematic and dynamic modes.</summary>
-    /// <param name="body">A live server body RID.</param>
+    /// <param name="body">A live scene or server body RID.</param>
     /// <param name="mode">One of the four declared body modes.</param>
     /// <exception cref="ArgumentOutOfRangeException">The mode is undefined.</exception>
+    /// <exception cref="InvalidOperationException">Attached mutation is off-owner, during solver ownership or a numerical implementation hook.</exception>
+    /// <remarks>A scene assignment retains a direct runtime mode without changing its concrete type, Freeze or LockRotation descriptors.
+    /// Later scene role edits restore scene control; MakeStatic temporarily overrides the retained mode.
+    /// Direct assignments survive reentry and participate in checkpoints and portable state; scene packing uses its configured descriptors.</remarks>
     public static void BodySetMode(RID body, BodyMode mode) => Service.BodySetModeCore(body, mode);
 
     /// <summary>Gets the body's current motion mode.</summary>
-    /// <param name="body">A live server body RID.</param>
-    /// <returns>The current mode.</returns>
+    /// <param name="body">A live scene or server body RID.</param>
+    /// <returns>The current effective mode, including a temporary MakeStatic role.</returns>
     public static BodyMode BodyGetMode(RID body) => Service.BodyGetModeCore(body);
 
     /// <summary>Sets a body's 32 collision-layer bits without replacing its geometry.</summary>

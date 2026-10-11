@@ -87,29 +87,33 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets linear velocity in scene units per second.</summary>
-    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.</remarks>
+    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.
+    /// An active direct PhysicsServer mode profile shares immediate scene/server velocity state and rejects numerical-hook writes.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">A component is nonfinite.</exception>
     public Vector2 LinearVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _linearVelocity; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerLinearVelocity : _linearVelocity; }
         set
         {
             EnsureMutable();
             if (!value.IsFinite()) throw new ArgumentOutOfRangeException(nameof(value));
+            Space?.EnsureImplementationWriteAccess();
             _linearVelocity = value;
-            if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetLinearVelocity(value);
+            if (HasServerMode) SetServerLinearVelocity(value);
+            else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetLinearVelocity(value);
         }
     }
 
     /// <summary>Gets or sets angular velocity in radians per second.</summary>
-    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.</remarks>
+    /// <remarks>MakeStatic disable entry clears prior velocity; later assignments are stored until the configured dynamic role returns.
+    /// An active direct PhysicsServer mode profile shares immediate scene/server velocity state and rejects numerical-hook writes.</remarks>
     /// <value>Zero by default.</value>
     /// <exception cref="ArgumentOutOfRangeException">The assigned value is nonfinite.</exception>
     public float AngularVelocity
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _angularVelocity; }
-        set { EnsureMutable(); Finite(value); _angularVelocity = value; if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAngularVelocity(value); }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerAngularVelocity : _angularVelocity; }
+        set { EnsureMutable(); Finite(value); Space?.EnsureImplementationWriteAccess(); _angularVelocity = value; if (HasServerMode) SetServerAngularVelocity(value); else if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAngularVelocity(value); }
     }
 
     /// <summary>Gets or sets finite signed linear damping per second.</summary>
@@ -162,6 +166,7 @@ public partial class RigidBody : PhysicsBody
             if (_freeze == value) return;
             EnsurePhysicsParticipationChange();
             if (HasBackend) PrepareBackend();
+            RestoreSceneMode();
             _freeze = value; GPUParametersDirty = true;
             UpdatePhysicsParticipation();
         }
@@ -180,6 +185,7 @@ public partial class RigidBody : PhysicsBody
             EnsureMutable(); EnsurePhysicsParticipationChange();
             Space?.EnsureImplementationWriteAccess();
             if (_lockRotation == value) return;
+            RestoreSceneMode();
             _lockRotation = value; GPUParametersDirty = true;
             if (!HasBackend) return;
             if (!_freeze && !PhysicsMadeStatic) Backend.SetMotionMode(RequestedBodyMode);
@@ -202,11 +208,12 @@ public partial class RigidBody : PhysicsBody
     /// <value>False by default.</value>
     public bool Sleeping
     {
-        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasBackend ? !Backend.IsAwake : _sleeping; }
+        get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return HasServerMode ? ServerSleeping : HasBackend ? !Backend.IsAwake : _sleeping; }
         set
         {
-            EnsureMutable(); _sleeping = value; _sleepChangePending = false;
-            if (HasBackend) Backend.SetAwake(!value);
+            EnsureMutable(); Space?.EnsureImplementationWriteAccess(); _sleeping = value; _sleepChangePending = false;
+            if (HasServerMode) SetServerSleeping(value);
+            else if (HasBackend) Backend.SetAwake(!value);
             if (value && !_freeze && !PhysicsMadeStatic) { _linearVelocity = Vector2.Zero; _angularVelocity = 0; }
         }
     }
@@ -273,7 +280,7 @@ public partial class RigidBody : PhysicsBody
 
     internal override void OnBackendAdvanced()
     {
-        if (FrozenKinematic) ResetFrozenSolverPose();
+        if (FrozenKinematic && !HasServerMode) ResetFrozenSolverPose();
         var motion = Backend.GetSolverMotion();
         _linearVelocity = motion.LinearVelocity;
         _angularVelocity = motion.AngularVelocity;

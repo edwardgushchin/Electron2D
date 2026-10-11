@@ -89,7 +89,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         var rigid = Owners.Scene as RigidBody;
         return new(rigid?.GravityScale ?? BodyGravityScale, rigid?.LinearDamp ?? BodyLinearDamp,
             rigid?.AngularDamp ?? BodyAngularDamp, rigid?.LinearDampMode ?? BodyLinearDampMode,
-            rigid?.AngularDampMode ?? BodyAngularDampMode, rigid is null ? Backend.RotationLocked : !rigid.Freeze && rigid.LockRotation,
+            rigid?.AngularDampMode ?? BodyAngularDampMode, rigid is null || rigid.HasServerMode ? Backend.RotationLocked : !rigid.Freeze && rigid.LockRotation,
             rigid?.CustomIntegrator ?? OmitForces, rigid?.ConstantForce ?? ConstantForce, rigid?.ConstantTorque ?? ConstantTorque, ContinuousMode);
     }
 
@@ -103,7 +103,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
         var configuration = new PhysicsBodyForceConfiguration(PendingForce, PendingTorque,
             rigid?.ConstantForce ?? ConstantForce, rigid?.ConstantTorque ?? ConstantTorque,
             rigid?.GravityScale ?? BodyGravityScale, rigid?.CustomIntegrator ?? OmitForces, backend.RotationLocked,
-            rigid is null || !rigid.Freeze && !rigid.PhysicsMadeStatic && backend.IsAwake, rigid is null);
+            rigid is null || (rigid.HasServerMode || !rigid.Freeze) && !rigid.PhysicsMadeStatic && backend.IsAwake, rigid is null);
         backend.PrepareDefaultForces(configuration);
         PendingForce = default; PendingTorque = 0;
     }

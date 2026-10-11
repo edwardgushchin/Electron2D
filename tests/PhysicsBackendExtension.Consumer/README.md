@@ -47,3 +47,5 @@ rejects numerical borrowing before invoking hooks. After 64 warmups, 128 paired
 scene/raw read cycles require zero owner/all-thread managed bytes.
 
 Motion role checks verify exact initial/live RigidLinear delivery, retained velocity, both freeze roles, disable precedence and restoration, owner/numerical guards, published motion, checkpoint restoration and zero allocations across 64 warmed full frames.
+
+`--server-modes` runs the common scene/server mode checks independently. Add `--cpu` or `--gpu` to use a built-in implementation. Checks cover all five scene siblings, four modes, state/forces, reentry, checkpoints, portable state and zero warmed full-frame allocations.

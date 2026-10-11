@@ -13,6 +13,7 @@ public static partial class BackendChecks
         IdentityChecks();
         CustomChecks();
         PortableEpisodeChecks();
+        ServerModeChecks();
         SelectionChecks();
         DebugFailureChecks();
         var calls = 0;

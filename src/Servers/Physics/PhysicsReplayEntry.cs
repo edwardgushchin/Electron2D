@@ -52,7 +52,7 @@ internal sealed partial class PhysicsReplayEntry
         var fields = area?.Fields ?? Server?.AreaFields;
         var material = body?.MaterialOverride;
         return new(Scene?.CollisionLayer ?? Server!.CollisionLayer, Scene?.CollisionMask ?? Server!.CollisionMask,
-            Backend.ObjectIdentity.ID, Backend.CanvasInstanceID, Backend.CollisionPriority, body?.RequestedBodyMode ?? Server?.Mode ?? PhysicsServer.BodyMode.Static,
+            Backend.ObjectIdentity.ID, Backend.CanvasInstanceID, Backend.CollisionPriority, body?.EffectiveBodyMode ?? Server?.Mode ?? PhysicsServer.BodyMode.Static,
             Scene?.PhysicsMadeStatic ?? false, Scene?.TopLevel ?? false, material, material?.Revision ?? 0, area?.Monitorable ?? Server?.Monitorable ?? false,
             fields is null ? default : fields.Configuration, _areaRuntime?.BodyCallback, _areaRuntime?.AreaCallback, _areaRuntime?.Generation ?? 0,
             bone?.BoneNodePath, bone?.SimulatePhysics ?? false, bone?.IsSimulatingPhysics() ?? false, bone?.FollowBoneWhenSimulating ?? false, bone?.AutoConfigureJoint ?? false);

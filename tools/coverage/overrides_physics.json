@@ -6798,8 +6798,8 @@
         "PhysicsServer2D::method:body_set_mode(RID:,int:PhysicsServer2D.BodyMode)",
         "PhysicsServer2D::method:body_get_mode(RID:)"
       ],
-      "state": "Partial",
-      "reason": "ADR 0063/0075/0103: raw body mode operations execute, but BodySetMode/BodyGetMode still reject scene-owned RIDs. Initial/live scene rotation-lock authoring now supplies exact RigidLinear modes to the selected implementation, and freeze/disable restore that role. Trigger: implement the complete scene/raw server mode family with fixed scene roles, state publication and replay; a getter-only mapping is insufficient."
+      "state": "Implemented",
+      "reason": "ADR 0063/0075/0103: all four modes execute for scene/raw body RIDs through the selected implementation. Independent public-only and CPU/GPU consumers verify all five scene siblings, initial/live mode authoring, kilogram mass, impulses, velocities, static surfaces, kinematic targets, sleep, owner/numerical guards, reentry, checkpoints, portable state and zero warmed full frames. Direct scene modes retain an independent runtime profile; configured scene role edits restore scene control and MakeStatic temporarily overrides it. Complete numerical-extension and final platform/performance acceptance remain separate gates."
     }
   ]
 }

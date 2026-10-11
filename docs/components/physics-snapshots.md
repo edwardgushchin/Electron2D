@@ -86,7 +86,7 @@ checkpoints retain the full backend-private history for subsequent replay.
 
 ## Encoding, budget and cost
 
-Version 1 is explicit little-endian data with bounded counts, finite scalars, strict
+Version 2 is explicit little-endian data with bounded counts, finite scalars, strict
 booleans and exact-length validation. Unknown versions, truncated/trailing data and
 over-budget packets reject before replacing a snapshot's previous complete payload.
 `maxBytes` is immutable, from 48 bytes through 64 MiB; the default is 64 MiB. It bounds
@@ -146,3 +146,5 @@ budget publication frequency and history rather than assuming free per-frame syn
 The map validates bindings and sends a borrowed collider span to the selected world. GPU handles/state batch scratch belongs to that owner; common map/entry state uses engine fields and identities. Preparation and batch reads borrow context, so failure permits recapture without membership loss. The exact bound GPU object set is still read explicitly for authoritative state; ordinary unobserved steps retain demand-driven publication. Field/schema/wire values are unchanged. See [ownership and verification](physics-backends.md#selected-observation-and-collision-policy).
 
 One-way continuation validates during capture and apply. Self/unbound identities, disabled or unavailable logical slots, invalid pieces and duplicate unordered pairs reject before packet publication or world mutation. A failed capture preserves any previous complete encoding. Registered providers receive a span bounded by the current declared count, even when retained capacity is larger; the external consumer verifies errors, alternate local IDs and numerical continuation.
+
+Version 2 carries retained scene server-mode linear/angular/sleep and kinematic-target state (48 additional bytes per scene body). Its schema includes direct mode presence/value. Version 1 packets reject before replacing any stored payload; endpoints must use the same supported format version.

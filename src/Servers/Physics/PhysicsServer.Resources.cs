@@ -200,16 +200,16 @@ public sealed partial class PhysicsServer
     {
         if (mode is not (BodyMode.Static or BodyMode.Kinematic or BodyMode.Rigid or BodyMode.RigidLinear))
             throw new ArgumentOutOfRangeException(nameof(mode));
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider, writing: true);
-        collider.SetMode(mode);
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(true);
+        var owners = runtime.Owners;
+        if (owners.Scene is { } scene) scene.SetServerMode(mode); else owners.Server!.SetMode(mode);
     }
 
     internal BodyMode BodyGetModeCore(RID body)
     {
-        var collider = GetCollider(body, isArea: false);
-        EnsureColliderSpaceAccessible(collider);
-        return collider.Mode;
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess();
+        var owners = runtime.Owners;
+        return owners.Scene?.EffectiveBodyMode ?? owners.Server!.Mode;
     }
 
     internal void BodySetCollisionLayerCore(RID body, uint layer)

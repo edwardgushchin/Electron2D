@@ -101,3 +101,5 @@ change simulation, collision layers or ordinary direct-space queries.
 [Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.
 
 Selected motion geometry and logical identities pass [shared output validation](../components/physics-backends.md#selected-motion-result-publication) before MoveAndCollide applies travel or TestMove replaces a supplied snapshot. Invalid implementation output leaves the scene pose and supplied result unchanged. Motion hooks borrow attachment/world lifetime and reject same-space recursive motion.
+
+[Common server modes](../components/physics-registered-adapter.md#common-server-mode-family) now project all four modes through scene and raw RIDs, with independent scene descriptors, effective state/force response, pose publication, reentry and replay. CPU/GPU/registered checks share the public consumer; complete solver and final performance acceptance remain open.

@@ -62,8 +62,8 @@ public static partial class BackendChecks
         for (var i = 0; i < 8; i++) tree.PhysicsFrame(1d / 60);
         Check(scene.Position.X > .3f && scene.Rotation == 0,
             "Locked dynamic role remains simulated and published through ordinary scene motion");
-        for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
         Collect(); _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
+        for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
         var own = GC.GetAllocatedBytesForCurrentThread(); var all = GC.GetTotalAllocatedBytes(true);
         for (var i = 0; i < 64; i++) tree.PhysicsFrame(1d / 60);
         own = GC.GetAllocatedBytesForCurrentThread() - own; all = GC.GetTotalAllocatedBytes(true) - all;

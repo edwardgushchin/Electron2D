@@ -138,7 +138,8 @@ internal sealed partial class PhysicsSpace
     {
         if (captureActivity) runtime.ApplyBeforeStep(body);
         else runtime.ActiveBeforeStep = false;
-        if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
+        if (body is { HasServerMode: true }) body.PrepareServerMotion(delta);
+        else if (body is AnimatableBody animatable) animatable.PrepareMotion(delta);
         else if (body is CharacterBody character) character.PrepareMotion(delta);
         else if (body is RigidBody rigid) rigid.PrepareFrozenMotion(delta);
         else if (body is null) runtime.Owners.Server!.PrepareMotion(delta);
