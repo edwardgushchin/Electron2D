@@ -311,14 +311,16 @@ public sealed partial class PhysicsServer
     /// <param name="body">The live scene or server body that owns the exception entry.</param>
     /// <param name="exceptedBody">Any RID value; an unresolvable target remains inert.</param>
     /// <exception cref="ArgumentException">The owner RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">The attached body is off-owner or its world is stepping.</exception>
+    /// <remarks>Every valid call requests dynamic-body wakeup, including duplicate or absent entries. Numerical implementation hooks cannot change this authoring.</remarks>
+    /// <exception cref="InvalidOperationException">The owner is off-thread, its world is stepping or failed, or a numerical implementation is borrowed.</exception>
     public static void BodyAddCollisionException(RID body, RID exceptedBody) => Service.BodyAddCollisionExceptionCore(body, exceptedBody);
 
     /// <summary>Removes one body-owned collision exception entry.</summary>
     /// <param name="body">The live scene or server body that owns the entry.</param>
-    /// <param name="exceptedBody">The RID to remove; an absent entry is a no-op.</param>
+    /// <param name="exceptedBody">The RID to remove; an absent entry leaves the list unchanged but still requests wakeup.</param>
     /// <exception cref="ArgumentException">The owner RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">The attached body is off-owner or its world is stepping.</exception>
+    /// <remarks>Every valid call requests dynamic-body wakeup, including duplicate or absent entries. Numerical implementation hooks cannot change this authoring.</remarks>
+    /// <exception cref="InvalidOperationException">The owner is off-thread, its world is stepping or failed, or a numerical implementation is borrowed.</exception>
     public static void BodyRemoveCollisionException(RID body, RID exceptedBody) => Service.BodyRemoveCollisionExceptionCore(body, exceptedBody);
 
     /// <summary>Applies a force for the next eligible fixed step without adding torque.</summary>

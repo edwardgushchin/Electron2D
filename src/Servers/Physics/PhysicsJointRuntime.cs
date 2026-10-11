@@ -160,6 +160,9 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     internal void SetDisableCollision(bool value)
     {
+        Space?.EnsureImplementationWriteAccess();
+        if (BodyA.IsValid()) PhysicsServer.Service.BodyRuntime(BodyA).EnsureAccess(writing: true);
+        if (BodyB.IsValid()) PhysicsServer.Service.BodyRuntime(BodyB).EnsureAccess(writing: true);
         if (DisableCollision == value) return;
         if (HasBackend && DisableCollision && BodyB.IsValid())
             PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: false);
@@ -167,8 +170,6 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
         if (HasBackend) Backend.SetCollideConnected(!value);
         if (HasBackend && value && BodyB.IsValid())
             PhysicsServer.Service.JointCollisionContribution(BodyA, BodyB, add: true);
-        if (BodyA.IsValid()) MarkBodyDirty(BodyA);
-        if (BodyB.IsValid()) MarkBodyDirty(BodyB);
     }
 
     internal void SetBias(float value) { ValidateBias(value); if (Bias == value) return; Bias = value; ApplySolverPolicy(); }
@@ -248,15 +249,6 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
             return owners.Scene?.Space ?? owners.Server?.Space;
         }
         catch (ArgumentException) { return null; }
-    }
-    private static void MarkBodyDirty(RID rid)
-    {
-        try
-        {
-            var owners = PhysicsServer.Service.ResolveBodyOwners(rid);
-            if (owners.Scene is { } scene) scene.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
-        }
-        catch (ArgumentException) { }
     }
     private static void ValidatePose(Transform pose)
     {

@@ -1,4 +1,6 @@
-if (args.Contains("--forces")) BackendChecks.RunForces(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+if (args.Contains("--exceptions")) BackendChecks.RunExceptions(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
+    args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
+else if (args.Contains("--forces")) BackendChecks.RunForces(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);
 else if (args.Contains("--spaces")) BackendChecks.RunSpaces(args.Contains("--gpu") ? Electron2D.PhysicsServer.Backend.GPU :
     args.Contains("--cpu") ? Electron2D.PhysicsServer.Backend.CPU : null);

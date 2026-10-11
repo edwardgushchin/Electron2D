@@ -9,6 +9,7 @@ public static partial class BackendChecks
         internal readonly HashSet<(RID From, RID To)> Exceptions = [];
         protected override void SetCollisionExceptions(ReadOnlySpan<(RID From, RID To)> pairs) { Exceptions.Clear(); foreach (var p in pairs) Exceptions.Add(p); }
         internal RID Space => SpaceRID;
+        internal RID[] ReadExceptions(RID body) => GetCollisionExceptions(body);
         internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal;
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads, StatePreparations;
         internal bool BadDebugCount, BadDebugPoint;

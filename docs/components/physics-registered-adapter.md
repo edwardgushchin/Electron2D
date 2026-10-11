@@ -267,3 +267,44 @@ included. GPU CCD validation uses the three explicit valid modes rather than
 reconstructing enum metadata after collection; an isolated old validation probe
 reproduced the 248-byte allocation found in that first frame. These fourteen
 extension rows remain Partial pending complete numerical-extension acceptance.
+
+## Collision-exception authoring and response
+
+Body add/remove owns one insertion-ordered explicit RID list; every valid call
+requests dynamic wakeup, including duplicate additions and absent removals.
+Either endpoint's entry suppresses solid response and body motion. Ordinary
+space queries and Area sensing remain independent. Active collision-disabled
+joints contribute separately to both endpoints; snapshots deduplicate explicit
+entries before joint targets. Clearing one source preserves the other sources.
+Empty list buffers remain attached to their live owner and retire with that body.
+Terminal-world cleanup removes common contributions without requesting device
+state or wake work from the failed implementation.
+CPU refreshes fixture and cached-contact pre-solve flags without rebuilding
+geometry. GPU keeps its resident exception edges and selected wake policy.
+
+Numerical hooks cannot alter these lists through scene/server body methods or
+joint collision-policy setters, including equal-value writes. The protected
+`PhysicsServerBackend.GetCollisionExceptions(RID)` exposes retained authored
+input in a bound owner-thread world, including detached/inert entries. It rejects
+foreign attached owners, wrong/stale IDs, unbound/retired implementations and
+ordinary reads after world failure. Reads during its own solve hook copy common
+input without querying numerical state. Returned arrays intentionally allocate;
+steady numerical work uses the supplied pair spans or retained solver storage.
+
+The public-only [exception fixture](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.Exceptions.cs)
+(`--exceptions`, with optional `--cpu` or `--gpu`) verifies all five scene body
+siblings and raw owners, initial/live borrowed-write rejection, actual
+circle response/contact identity, immediate forward/reverse motion filtering,
+Area sensing and live/duplicate/absent wakeup. It also verifies pin/groove/spring
+and scene-joint contribution union/clear and guarded collision-policy changes.
+[Scoped input reads](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ExceptionReads.cs)
+cover ordered snapshots, caller-owned copies, solve-time reads, detached state,
+foreign/off-thread/wrong/stale owners and failure/retirement. The resolved circle
+stop interval is 23 to 25.1 scene units around the ideal 24, covering the configured
+penetration/skin allowance; normal velocity is below 0.01 units/s. IDs, ordering,
+source retention and wake state compare exactly. Body and joint edit fixtures each
+run 64 warmed/64 measured cycles with two complete PhysicsFrame calls per cycle
+and collection between brackets: 128 measured frames at 0/0 owner/all-thread B
+on CPU/GPU/registered paths. Five extension rows remain Partial pending complete
+numerical-extension acceptance. Snapshot-getter allocations are outside that
+physical-frame bracket by their documented caller-owned contract.

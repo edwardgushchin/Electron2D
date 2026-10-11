@@ -115,3 +115,5 @@ zero warmed allocation and real pixels for CPU/GPU physics and both renderers.
 `PhysicsServerJointTests` also verifies that waking an existing pin/contact component
 uses prepared storage without managed allocation and preserves its anchor response
 on CPU and GPU. See [joint storage](../components/physics-joints.md).
+
+Collision-policy setters reject numerical hooks before changing values or endpoint contributions, including unchanged assignments. They retain prepared geometry and reuse contribution storage; [exception conformance](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) covers all three raw roles and a scene joint.

@@ -1,6 +1,6 @@
 # PhysicsServerBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `public abstract class PhysicsServerBackend : ElectronObject` · **Source:** [PhysicsServerBackend.cs](../../src/Servers/Physics/PhysicsServerBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -83,3 +83,5 @@ attachment. Direct-body setters/forces use the same qualified numerical guard.
 Guarded authored reads, ordinary post-solver callbacks and caller-created
 body-state forwarding remain available; hierarchy/resource-lifetime guards still
 cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
+
+Protected `RID[] GetCollisionExceptions(RID body)` copies guarded common authoring: ordered explicit entries followed by deduplicated active-joint targets, including inert values. It is readable in the owning numerical hook without observing solver state; snapshots belong to the caller and allocate. See [collision-exception response](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) for full lifetime and verification limits.

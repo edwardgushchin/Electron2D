@@ -111,7 +111,8 @@ public abstract class Joint : Entity
 
     /// <summary>Gets or sets whether the connected bodies omit mutual contacts.</summary>
     /// <value>True by default. A change updates contact policy without resampling the local anchors.</value>
-    /// <remarks>Changing this value refreshes endpoint fixtures and the pair contribution used by body motion tests.
+    /// <remarks>Changing this value refreshes contact policy and the pair contribution used by body motion tests.
+    /// Numerical implementation hooks reject writes before changing this policy.
     /// Other joints and explicit body exceptions can independently retain suppression.</remarks>
     /// <exception cref="InvalidOperationException">An attached write is off the owner thread or occurs during a solver step.</exception>
     public bool DisableCollision
