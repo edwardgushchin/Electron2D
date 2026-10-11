@@ -2,6 +2,8 @@
 
 Last updated: 2026-10-11
 
+[Selected motion-result publication](../components/physics-backends.md#selected-motion-result-publication) now validates geometry, logical identities and filters before scene movement or caller result replacement. Engine-sampled weak object identity and borrowed lifetime cover raw/scene/CharacterBody motion; failures release the query without committing a tick. Public registration remains open.
+
 [Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)
 now routes resolved fields, collision-exception invalidation/synchronization and
 portable preparation/batch observation through the actual selected owner. Common

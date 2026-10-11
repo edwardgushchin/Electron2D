@@ -72,6 +72,8 @@ checkpoint, portable and network checks retain their separate acceptance scope.
 
 ## Body motion and platform lookup
 
+Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration remains open under ADR 0103.
+
 TestBodyMotion accepts engine-unit pose/motion, physical RID and typed exclusions,
 then dispatches to the selected world owner. Common server/space code no longer
 passes native fixture lists or selects a solver. CPU owns candidate collection,

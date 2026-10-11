@@ -767,6 +767,11 @@ public sealed partial class PhysicsServer
     /// <param name="parameters">Global starting pose, motion, margin and exclusions.</param>
     /// <param name="result">Optional caller-owned result updated after a successful test.</param>
     /// <returns>Whether motion or requested recovery reached a body contact.</returns>
+    /// <remarks>The selected implementation's completed geometry, fractions, logical body/shape identities and exclusions
+    /// are validated before replacement. Collider object identity is sampled by the engine; invalid output preserves the prior result.
+    /// Motion implementation callbacks borrow their world and cannot release/transfer its attachments or recursively test its motion.</remarks>
+    /// <exception cref="InvalidOperationException">The body is detached, world access is invalid, motion is recursive,
+    /// or the selected implementation returns invalid output.</exception>
     public static bool BodyTestMotion(RID body, PhysicsTestMotionParameters parameters,
         PhysicsTestMotionResult? result = null) => Service.BodyTestMotionCore(body, parameters, result);
 

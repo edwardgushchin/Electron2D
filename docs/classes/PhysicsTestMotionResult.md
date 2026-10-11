@@ -1,6 +1,6 @@
 # PhysicsTestMotionResult
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
@@ -52,6 +52,9 @@ Sets finite global `travel` in scene units, clears collision identity, indices, 
 `GetCollider` resolves the sampled weak object association. `GetColliderID` and `GetColliderRID` retain their sampled values after disposal; unassigned bodies have ID zero. Shape indices refer to direct owners, not compound backend fixtures. The point and normal are global, depth and travel use scene units, and velocity uses scene units per second. On a completed miss, fractions are `(1, 1)`, collider identity and contact values clear, and remainder is zero. A newly constructed result yields zero/default values until the first test. Disposed result access rejects.
 
 ## Verification and limits
+
+Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration remains open under ADR 0103.
+
 
 [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server-only and scene identities, shape indices, point/normal, fractions, travel/remainder, exclusions and no-hit reset. Virtual tile collision objects remain [Partial](../coverage/classes/PhysicsTestMotionResult2D.md). Native allocation, other platforms and owner acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 

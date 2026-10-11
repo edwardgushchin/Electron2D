@@ -1,6 +1,6 @@
 # PhysicsBody
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject · **Inherited By:** [RigidBody](RigidBody.md), [StaticBody](StaticBody.md), [CharacterBody](CharacterBody.md)
 
@@ -99,3 +99,5 @@ Its typed stored descriptor exposes the same false revert default. This does not
 change simulation, collision layers or ordinary direct-space queries.
 
 [Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.
+
+Selected motion geometry and logical identities pass [shared output validation](../components/physics-backends.md#selected-motion-result-publication) before MoveAndCollide applies travel or TestMove replaces a supplied snapshot. Invalid implementation output leaves the scene pose and supplied result unchanged. Motion hooks borrow attachment/world lifetime and reject same-space recursive motion.

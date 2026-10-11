@@ -16,6 +16,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal float ImpulseScale = 1;
         internal PairQueryHook? PairHook;
         internal int ShapePairQueries, BodyPairQueries;
+        internal Func<RID, MotionResultData, MotionResultData>? MotionHook;
         internal Action? InitializeHook, FlushHook;
         internal Action<bool>? ActiveHook;
         internal Action<Exception?>? EndSyncHook;
@@ -103,7 +104,11 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters) => _inner.CastMotion(parameters);
         internal override List<ShapeContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters, int limit) => _inner.CollectShapeContacts(parameters, limit);
         internal override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters) => _inner.GetRestInfo(parameters);
-        internal override MotionResultData TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false) => _inner.TestBodyMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
+        internal override MotionResultData TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
+        {
+            var data = _inner.TestBodyMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay);
+            return MotionHook is null ? data : MotionHook(body, data);
+        }
         public override void Dispose() => _inner.Dispose();
     }
 }

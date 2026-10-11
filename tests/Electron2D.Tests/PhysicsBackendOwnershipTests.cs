@@ -26,6 +26,7 @@ internal static partial class PhysicsBackendOwnershipTests
         ColliderAttachment(backend);
         QueryOwnership(backend);
         MotionOwnership(backend);
+        MotionPublication(backend);
         CallbackBorrow(backend);
         var first = PhysicsServer.SpaceCreate(backend); var second = PhysicsServer.SpaceCreate(backend);
         var left = PhysicsServer.Service.GetSceneSpace(first); var right = PhysicsServer.Service.GetSceneSpace(second);
