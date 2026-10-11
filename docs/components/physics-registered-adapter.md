@@ -31,3 +31,41 @@ Status and capacity hooks also borrow the owner context; recursive world inspect
 [Custom geometry](physics-custom-geometry.md) now executes with an external annulus/circle implementation: canonical data, exact mass, standalone/selected queries, body contacts, Area observations, server mutation and private/portable replay. Generic custom format file codecs/editor authoring, unexercised extension operations, native/foreign acceptance and final performance remain open.
 
 Portable one-way capture is now bounded by the current declared count, independently of retained array capacity. Shared validation rejects self/unbound/disabled/invalid-piece/duplicate episodes before encoding. The public-only consumer restores a rejected episode into a separately created explicit world with different local RIDs and verifies pass-through at 60 units/second versus a real impulse to 30 for the accepted state. Repeated restore reinstates the decision; 64 warmed capture/apply cycles allocate zero managed bytes.
+
+
+## Initial collider metadata
+
+The adapter publishes retained object/canvas IDs and collision priority immediately
+after successful numerical Attach and before logical shapes are prepared. Earlier
+code sent only live edits, so a registered solver's first query could miss a canvas
+association authored while detached. Reattachment to another selected world now
+receives current values through the same hooks. Body and Area identity share this
+protocol; scene CanvasLayer entry/exit retains its ordinary live updates.
+
+`BackendChecks.IdentityChecks` in the public-only consumer detects the prior bug
+before any physics tick. It exercises body/Area detached/live/clear assignment,
+weak sampled object identity, exact 64-bit point membership, two-world transfer,
+scene body/Area hooks, failed initial identity/priority hooks with retry, owner and
+borrow guards, and zero owner/all-thread managed allocation over 128 edited queries
+after 64 warmup iterations. Allocation counters are initialized before warmup;
+the first uninitialized-counter measurement reported 0/1,008 owner/all-thread
+bytes, while initialized counters followed by warmup produced 0/0 with the same
+queries. Zero-byte assertions remain exact. Queries use the external circle model,
+not a built-in solver delegate.
+
+Coverage pairs all ten reference object/canvas/priority operations with their typed
+attachment/facade projections under ADR 0103. These rows remain Partial: identity
+publication is verified, while complete extension-operation acceptance and general
+third-party numerical priority response remain open. No runtime declaration or
+public singleton instance accessor is added. Native allocator, other platforms,
+final performance and the separately recorded sporadic GPU window failure remain
+unverified here.
+
+
+The initial-hook reentry check also exposed missing guards: an identity hook could
+recursively assign canvas metadata, and a not-yet-committed raw attachment had a
+world reference before its public SpaceRID was assigned. Shared collider metadata
+writes now reject a borrowed extension scope before assignment; raw lifetime
+preflight uses the live world reference to reject release/transfer during that
+scope. Both body and Area initial hooks exercise these paths. Typed immutable
+result construction and supported nested query scratch keep their existing paths.

@@ -15,7 +15,17 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         internal override float InverseMass { get { world.Enter(); try { return NonnegativeResult(implementation.InverseMass); } finally { world.Exit(); } } }
         internal override float InverseInertia { get { world.Enter(); try { return NonnegativeResult(implementation.InverseInertia); } finally { world.Exit(); } } }
         internal override Transform PortablePose { get { world.Enter(); try { return TransformResult(implementation.PortablePose); } finally { world.Exit(); } } }
-        internal override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration) { world.Enter(); try { implementation.Attach(position, rotation, configuration); } finally { world.Exit(); } }
+        internal override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
+        {
+            world.Enter();
+            try
+            {
+                implementation.Attach(position, rotation, configuration);
+                implementation.RefreshIdentity(Owner.ObjectIdentity.ID, Owner.CanvasInstanceID);
+                implementation.SetCollisionPriority(Owner.CollisionPriority);
+            }
+            finally { world.Exit(); }
+        }
         internal override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration) { world.Enter(); try { implementation.PrepareDefaultForces(configuration); } finally { world.Exit(); } }
         internal override bool HasMotionMode(PhysicsServer.BodyMode mode) { world.Enter(); try { return implementation.HasMotionMode(mode); } finally { world.Exit(); } }
         internal override void SetMotionMode(PhysicsServer.BodyMode mode) { world.Enter(); try { implementation.SetMotionMode(mode); } finally { world.Exit(); } }

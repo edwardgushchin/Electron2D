@@ -468,3 +468,6 @@ close complete extension operations or final CPU/GPU performance acceptance.
 
 
 [GPU scratch initialization](gpu-contact-colors.md#scratch-initialization-and-preparation-order) now exercises a 16,384-body NaN-initialized packed first step. Private color/packing resources are prepared before recording solver work. This does not close the sporadic uninstrumented window failure or final performance acceptance.
+
+
+Registered [collider metadata](physics-registered-adapter.md#initial-collider-metadata) now reaches Attach-time object/canvas/priority hooks as well as live edits. Public body/Area queries, weak identities, transfers and initial-hook failures execute in a separate consumer. Ten extension rows now have explicit Partial projections; numerical priority and full operation acceptance remain open.

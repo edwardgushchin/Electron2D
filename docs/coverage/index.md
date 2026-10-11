@@ -666,3 +666,6 @@ The [image-array slice](../components/texture-arrays.md) adds typed TextureLayer
 
 
 [GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) adds a dense first-use regression and moves private contact-color/packing preparation ahead of recorded solver work. This changes no public declaration accounting; the sporadic rendered failure and full backend/performance acceptance remain open.
+
+
+Registered [collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now has explicit typed projections for all ten object/canvas/priority operations. Attach-time publication, live edits, two-world transfers, weak results, failed hooks and zero warmed edited queries execute. These rows remain Partial; numerical priority and complete extension-operation acceptance remain open.

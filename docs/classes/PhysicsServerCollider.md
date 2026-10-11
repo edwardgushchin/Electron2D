@@ -76,3 +76,6 @@ in bulk. Queries and further simulation remain rejected. See the
 The query-result boundary also reads each raw logical slot's disabled state without exposing native fixtures. Direct-space extension results must identify a current active slot in the queried world and satisfy its sampled filters. See [typed extension validation](../components/physics-space-extensions.md).
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
+
+
+Raw collider release/transfer preflight checks the live backend world reference, including the interval before SpaceRID commits during Attach. A borrowed implementation hook cannot retire or retarget that partial attachment; [identity tests](../components/physics-registered-adapter.md#initial-collider-metadata) verify body and Area cleanup and retry.

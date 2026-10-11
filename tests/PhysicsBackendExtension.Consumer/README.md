@@ -15,3 +15,12 @@ Initialization/Finish/disposal failure injection retains all three errors after 
 Custom geometry checks use a canonical little-endian analytic annulus, exact unit-density mass and an empty hole. Use --draw for actual GPU/compatibility diagnostic pixels, and ELECTRON2D_CUSTOM_GPU=1 to include built-in GPU rejection. The custom boundary is not an approximation to a built-in primitive. Custom file codecs/editor registration and generic production solver acceptance remain open.
 
 Portable episode checks validate bounded output after growth/shrink, invalid identities/shapes/pieces and duplicate reversal, preservation of a previous packet, different local creation order, real pass-through/contact impulse after restore and 64 allocation-free capture/apply cycles. The episode fixture uses explicit retained decisions, not a generic one-way detection algorithm.
+
+
+Identity checks publish object/canvas associations and collision priority authored
+before attachment, including real point-query membership, scene canvas entry,
+fresh-world transfer, weak sampled targets, failure cleanup/retry and owner/borrow
+guards. After initialized allocation counters and 64 warmups, 128 repeated
+body/Area canvas edits, priority writes and point queries allocate zero managed
+bytes on the owner and across all process threads. Numerical priority response in
+an arbitrary solver is outside this bounded fixture.

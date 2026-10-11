@@ -25,3 +25,11 @@ Portable one-way records translate between local logical RIDs and engine-owned n
 [PhysicsRegisteredBackendTests](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) uses an independent bounded circle/spring numerical model, never a built-in solver wrapper. It exercises real scene/raw motion and force response, callbacks, queries, Area events, contact publication/failure, joint policy and private/portable restore. Warmed full frames reuse managed storage. This public-only consumer verifies registration and the exercised numerical paths. Arbitrary custom geometry and unexercised operation acceptance remain open. Native allocation and foreign/device/visual/performance acceptance are separate.
 
 Portable one-way capture supplies only the current declared output span. Both capture and apply validate different bound colliders, enabled logical shapes, piece identities and unique unordered pairs before publication. Rejected capture leaves the prior complete packet available; the public-only consumer verifies growth/shrink errors, alternate local identities and real pass-through/contact continuation.
+
+
+[Attachment metadata](PhysicsBackendCollider.md#attachment-metadata) is published
+through the same borrowed Collider attachment after numerical Attach and before
+shape preparation. Retained object/canvas IDs and priority survive detached
+authoring and transfer. Initial hook failure uses existing attachment retirement;
+live metadata edits retain the same typed hooks. Common getters and sampled result
+identities remain authoritative.

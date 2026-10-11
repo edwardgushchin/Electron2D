@@ -270,3 +270,6 @@ A factory-returned cached body extension now projects its contact count/values o
 Portable continuation validation is shared by capture and apply. Shape availability, nonnegative indices, distinct colliders and unordered uniqueness precede selected piece validation. Capture reports malformed implementation continuation as InvalidOperationException; incoming malformed continuation reports InvalidDataException before mutation.
 
 GPU publication reuses a complete snapshot only when its publication epoch matches and every live collider cache is still valid. A cache invalidated independently by sleep edits must still publish. Internal diagnostic controls force repeated publication/count-first transfer for equivalent-work measurements.
+
+
+The existing borrowed-extension hierarchy guard also rejects object/canvas/priority binding changes and raw collider release/transfer, including partial initial attachments. This prevents recursive metadata publication before authoring changes; qualified immutable result construction retains its current access scope.

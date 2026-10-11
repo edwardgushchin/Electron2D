@@ -27,8 +27,8 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 | `protected internal abstract void SetAreaMonitoring(bool monitoring, bool monitorable)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void InvalidateCollisionExceptions()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void RefreshIdentity(ulong objectID, ulong canvasID)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
-| `protected internal abstract void SetCollisionPriority(float value)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
+| `protected internal abstract void RefreshIdentity(ulong objectID, ulong canvasID)` | After Attach and before shape preparation, receives retained object/canvas IDs; later edits publish again. Zero clears; UInt64 IDs are exact. |
+| `protected internal abstract void SetCollisionPriority(float value)` | Receives retained finite positive priority after initial identity and on later edits. Initial default is 1. |
 | `protected internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
 | `protected internal abstract (Vector2 Position, float Rotation) GetPose()` | Selected implementation operation; engine units, owner-thread borrowing and validated result publication apply. |
@@ -70,3 +70,27 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 ## Verification and limits
 
 [Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The test solver implements a bounded circle/spring model; it is a separate public-only test consumer, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+
+## Attachment metadata
+
+The registered adapter calls `Attach`, `RefreshIdentity` and `SetCollisionPriority`
+in that order before exposing shape queries. Values authored while detached reach
+the first attachment; transfer creates a fresh attachment and republishes the same
+retained values. Hooks borrow the world context. Object/canvas/priority bindings
+cannot change, and the live collider cannot be retired or transferred from within
+those hooks. A failed initial hook retires the fresh attachment; detached
+authoring remains available for retry.
+
+Object IDs and canvas IDs are engine-owned metadata. Object associations are weak;
+existing result snapshots retain sampled IDs when a target is replaced or disposed.
+The implementation receives numeric identities, never ownership of the target.
+Facade getters project the retained metadata. Numerical use of collision priority
+belongs to the implementation; the bounded external fixture verifies its delivery,
+not a general third-party solver's collision-priority response.
+
+The public-only `BackendChecks.IdentityChecks` consumer exercises detached/live
+body and Area assignment, two-world transfer, clear/disposed objects, exact 64-bit
+canvas filtering through actual point queries, scene CanvasLayer membership, failed
+initial hooks, owner/borrow guards and 64 warmup/128 edited query cycles with zero
+owner/all-thread managed bytes. Native allocation and foreign platforms are unverified.

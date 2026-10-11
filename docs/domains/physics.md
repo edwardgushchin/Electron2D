@@ -561,3 +561,6 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 
 
 [GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) now prepares contact-color and packing resources before recording solver work. A 16,384-body NaN-buffer regression exercises first-use packed state; the earlier intermittent uninstrumented window failure and final performance acceptance remain open.
+
+
+Registered [initial collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now publishes detached object/canvas IDs and priority before shape preparation. The public-only consumer verifies first queries, body/Area transfers, scene canvas membership, initial-hook cleanup and zero warmed edited-query allocation. Full extension-operation acceptance remains open.

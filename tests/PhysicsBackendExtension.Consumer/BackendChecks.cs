@@ -5,6 +5,7 @@ public static partial class BackendChecks
     public static void Run()
     {
         Solver? solver = null;
+        IdentityChecks();
         CustomChecks();
         PortableEpisodeChecks();
         SelectionChecks();

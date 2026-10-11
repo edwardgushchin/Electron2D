@@ -44,11 +44,17 @@ public abstract class PhysicsBackendCollider
     /// <summary>Supplies the selected implementation operation: read resolved fields.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current);
-    /// <summary>Supplies the selected implementation operation: refresh identity.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes the owning collider's object and canvas associations.</summary>
+    /// <remarks>Called after Attach and before shape preparation, including values authored while detached.
+    /// Later association changes call this hook again. Zero clears either association; IDs retain all 64 bits.
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// <param name="objectID">The retained weak object association's instance ID, or zero.</param>
+    /// <param name="canvasID">The exact point-query canvas association, or zero for the default canvas.</param>
     protected internal abstract void RefreshIdentity(ulong objectID, ulong canvasID);
-    /// <summary>Supplies the selected implementation operation: set collision priority.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes the owning collider's finite positive collision priority.</summary>
+    /// <remarks>Called after initial identity publication, including detached authoring, and on later priority changes.
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// <param name="value">The retained finite positive priority, initially 1 unless authored otherwise.</param>
     protected internal abstract void SetCollisionPriority(float value);
     /// <summary>Supplies the selected implementation operation: update filter.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

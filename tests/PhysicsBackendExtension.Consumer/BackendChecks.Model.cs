@@ -13,6 +13,8 @@ public static partial class BackendChecks
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads;
         internal bool BadDebugCount, BadDebugPoint;
         internal RID ContactFailure;
+        internal Action<RID>? IdentityHook;
+        internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal PhysicsAreaFieldConfiguration Fields;
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
@@ -139,7 +141,8 @@ public static partial class BackendChecks
         internal bool IsArea => area;
         internal bool Monitoring, Monitorable = true;
         internal uint Layer, Mask;
-        internal ulong Canvas;
+        internal ulong Canvas, ObjectID;
+        internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
         internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
@@ -186,8 +189,10 @@ public static partial class BackendChecks
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
         protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { }
         protected override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => _fields;
-        protected override void RefreshIdentity(ulong objectID, ulong canvasID) => Canvas = canvasID;
-        protected override void SetCollisionPriority(float value) { }
+        protected override void RefreshIdentity(ulong objectID, ulong canvasID)
+        { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }
+        protected override void SetCollisionPriority(float value)
+        { solver.PriorityHook?.Invoke(); Priority = value; }
         protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { Layer = layer; Mask = mask; }
         protected override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {
