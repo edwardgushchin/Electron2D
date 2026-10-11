@@ -283,7 +283,11 @@ public sealed partial class PhysicsServer
         }
         else if (collider is not null)
         {
-            if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).EnsureReleaseAccess();
+            if (collider.SpaceRID.IsValid())
+            {
+                var owner = GetSceneSpace(collider.SpaceRID);
+                owner.EnsureReleaseAccess(); owner.EnsureExtensionHierarchyChange();
+            }
             if (!collider.IsArea) EnsureJointBodyMembershipChange(rid, releasing: true);
             try { if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider); }
             finally

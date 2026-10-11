@@ -634,3 +634,5 @@ Actual custom values are independent of configured types. Runtime copies own sep
 **ArgumentOutOfRangeException:** The layer index is absent.
 
 **KeyNotFoundException:** The non-nil stored type does not match T.
+
+Typed null resources retain exact and assignable base-resource read projections; scalar nil entries continue to return default(T). TileCustomDataTests checks both null projections alongside graph duplication.

@@ -64,6 +64,10 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
     internal abstract (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters);
     internal abstract List<ShapeContactPair> CollectShapeContacts(PhysicsShapeQueryParameters parameters, int limit);
     internal abstract PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters);
+    internal abstract bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second,
+        Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count);
+    internal abstract bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion,
+        Span<Vector2> contacts, out int count);
     internal abstract MotionResultData TestBodyMotion(RID body, Transform from, Vector2 motion, float margin,
         bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false);
     internal readonly record struct ShapeContactPair(RID RID, int ShapeIndex, int Piece, Vector2 QueryPoint, Vector2 ColliderPoint);

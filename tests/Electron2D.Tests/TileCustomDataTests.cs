@@ -83,6 +83,8 @@ internal static partial class TileCustomDataTests
         Check(ReferenceEquals(shallowData.GetCustomData<int[]>("Array"), values) && !ReferenceEquals(deepData.GetCustomData<int[]>("Array"), values), "Array sharing/deep copies follow graph policy");
         set.AddCustomDataLayer(); set.SetCustomDataLayerName(1, "Material"); set.SetCustomDataLayerType<Resource>(1); using var material = new PhysicsMaterial { Friction = .5f }; data.SetCustomData<Resource>("Material", material);
         using var resourceDeep = (TileSet)set.Duplicate(true); var copy = ((TileSetAtlasSource)resourceDeep.GetSource(0)).GetTileData(default, 0).GetCustomData<Resource>("Material"); Check(copy is PhysicsMaterial && copy != material, "Nested resources participate in deep duplication");
+        set.SetCustomDataLayerType<PhysicsMaterial>(1); data.SetCustomData<PhysicsMaterial?>("Material", null);
+        Check(data.GetCustomData<PhysicsMaterial?>("Material") is null && data.GetCustomData<Resource?>("Material") is null, "Null typed resources retain exact and base-resource projections");
         var runtime = library.Atlas.GetTileData(default, 0).Copy();
         try { runtime.SetCustomData("Array", new[] { 5, 6 }); Check(data.GetCustomData<int[]>("Array")[0] == 1, "Runtime value replacement does not replace authored value"); }
         finally { runtime.Release(); }

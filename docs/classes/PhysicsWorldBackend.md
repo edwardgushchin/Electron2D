@@ -131,3 +131,9 @@ Resolved fields and exception invalidation dispatch through the selected collide
 | `void SynchronizeCollisionExceptions()` | Complete selected query/interval policy synchronization; GPU copies authoring RID pairs before implementation calls outside the registry lock. |
 | `void PreparePortableCapture()` | Prepare current authoring and required device wakes without advancing time. |
 | `void ReadPortableBodies(ReadOnlySpan<PhysicsColliderBackend> colliders, bool capture)` | Validate/read the exact bound object set through this owner; reuse implementation-local scratch and preserve the existing empty-apply flush. The input span is borrowed synchronously. |
+
+## Selected shape-pair operations
+
+The internal resource/resource and body-slot/resource bridge now executes through the retained implementation with complete logical indices, composed global poses and validated nested caller-span results. Detached bodies use the same exact resource kernel without a solver; borrowed collider release is preflighted before registry cleanup. GPU scalar pose demand gathers sixteen pose bytes plus eight status bytes instead of complete motion/field/sleep state when no current cache exists. [The pair contract and checks](../components/physics-shape-pairs.md) distinguish this internal prerequisite from the pending complete public server-extension family.
+
+The internal selected signatures are `bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)` and `bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)`. Implementations return global-axis alternating point pairs and a pair count; empty spans perform hit-only work. Shared PhysicsSpace validates membership/input/context and stages/validates output before publication.

@@ -31,6 +31,7 @@ public sealed partial class TileData
     }
     /// <summary>Reads the indexed layer using its actual stored type.</summary>
     /// <typeparam name="T">The exact value type, or an assignable resource type.</typeparam><param name="layerID">Zero-based layer index.</param><returns>The stored value, or default(T) for nil.</returns>
+    /// <remarks>Null resources preserve their typed identity and can be read through assignable resource base types.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The layer index is absent.</exception>
     /// <exception cref="KeyNotFoundException">The non-nil stored type does not match T.</exception>
     public T GetCustomDataByLayerID<T>(int layerID)
@@ -38,7 +39,11 @@ public sealed partial class TileData
         CustomLayer(layerID); var value = CustomValues[layerID];
         if (value is null) return default!;
         if (value is TileCustomDataValue<T> typed) return typed.Value;
-        if (typeof(Resource).IsAssignableFrom(typeof(T)) && value.ResourceValue is T resource) return resource;
+        if (typeof(Resource).IsAssignableFrom(typeof(T)))
+        {
+            if (value.ResourceValue is T resource) return resource;
+            if (value.ResourceValue is null && typeof(T).IsAssignableFrom(value.Schema.Type)) return default!;
+        }
         throw new KeyNotFoundException("The custom tile value has a different stored type.");
     }
     private TileSet CustomSet() => TerrainSource?.OwnerSet ?? throw new InvalidOperationException("Named custom data requires an attached tile set.");

@@ -18,7 +18,17 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
         _gpuPose = pose; _gpuPoseValid = true; _gpuPoseEpoch = Space.GPUStateEpoch;
     }
     private System.Numerics.Vector4 CurrentPose => GPUStateValid ? _gpuState.Pose :
-        _gpuPoseValid && _gpuPoseEpoch == Space.GPUStateEpoch ? _gpuPose : GPUState.Pose;
+        _gpuPoseValid && _gpuPoseEpoch == Space.GPUStateEpoch ? _gpuPose : ReadPose();
+
+    private System.Numerics.Vector4 ReadPose()
+    {
+        Space.FlushGPUWakes();
+        Span<System.Numerics.Vector4> poses = stackalloc System.Numerics.Vector4[1];
+        Span<GPUPhysicsBodyStore.BodyHandle> handles = stackalloc GPUPhysicsBodyStore.BodyHandle[1] { GPUHandle };
+        GPU.ReadPoses(handles, poses);
+        var pose = poses[0];
+        AcceptGPUPose(pose); return pose;
+    }
 
     private bool _gpuStateValid, _gpuStateMatchesPublication;
     private bool _gpuParametersPrepared;
