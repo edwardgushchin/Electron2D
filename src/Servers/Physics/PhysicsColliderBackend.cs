@@ -3,6 +3,9 @@ namespace Electron2D;
 /// <summary>Retains shared scene/server identity and delegates attachment operations without exposing native solver handles or publication caches.</summary>
 internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? sceneOwner = null)
 {
+    private static int _attachmentCount;
+    internal static int AttachmentCount => Volatile.Read(ref _attachmentCount);
+    internal static bool HasAnyAttachments => AttachmentCount != 0;
     private PhysicsColliderImplementation? _implementation;
     internal PhysicsColliderImplementation? Implementation => _implementation;
     private PhysicsColliderImplementation Attached => _implementation ?? throw new InvalidOperationException("The collider has no solver attachment.");
@@ -55,6 +58,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
         if (ObjectIdentity.Target is Node node) { node.Tree?.EnsureOwnerThread(); node.EnsurePhysicsObjectAccess(); }
         var version = checked(AttachmentVersion + 1);
         _implementation = space.BackendImplementation.CreateCollider(this);
+        Interlocked.Increment(ref _attachmentCount);
         Space = space;
         try
         {
@@ -82,7 +86,11 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
             if (bindingError is not null) throw new AggregateException("Collider binding and solver cleanup failed.", bindingError, cleanup);
             throw;
         }
-        finally { _implementation = null; Space = null; }
+        finally
+        {
+            _implementation = null;
+            if (Space is not null) { Space = null; Interlocked.Decrement(ref _attachmentCount); }
+        }
         if (bindingError is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(bindingError).Throw();
     }
     internal void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration) => Attached.PrepareDefaultForces(configuration);

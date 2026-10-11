@@ -8,6 +8,10 @@ reclaim, partial-attachment restoration, source preflight and lifetime guards.
 The public-only CPU/GPU/registered consumer retains zero warmed frame allocation.
 Registered numerical response and final physical/network/performance acceptance remain open.
 
+[Empty hierarchy guard scans](../components/physics-scene-performance.md#empty-hierarchy-guard-scans)
+now skip when both process-wide attachment and scene geometry-borrow presence are
+absent; live attachments and first source preflight retain the complete guards.
+
 [World policy borrowing](../components/physics-registered-adapter.md#borrowed-world-policies)
 guards all nine typed space parameters and local activation before common
 authoring or nested selected dispatch. Ordinary post-solver edits remain available;

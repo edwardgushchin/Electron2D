@@ -1573,3 +1573,11 @@ selection uses this operation; PhysicsPickingTests covers internal siblings and
 ancestor/descendant ordering during warmed allocation checks.
 
 Scene hierarchy insertion/removal/reorder and node disposal reject while a physics extension hook borrows a world in this tree. This preflight runs before child-order or lifecycle mutation, preserving body attachment identity. Ordinary built-in post-solver callbacks retain their existing lifecycle behavior. [Body extension checks](../components/physics-body-extensions.md) exercise these guards.
+
+Hierarchy and physics authoring scans skip only when the process has no scene/raw
+collider attachment and no scene geometry preflight borrow. Tree extension guards
+still execute first. Any attachment or preflight retains the full actual-space,
+ancestor/descendant and external-object binding checks, including detached nodes.
+This conservative check avoids repeated empty scans during bulk construction and
+final disposal; it does not index individual subtrees. See the [lifecycle
+measurement](../components/physics-scene-performance.md#empty-hierarchy-guard-scans).

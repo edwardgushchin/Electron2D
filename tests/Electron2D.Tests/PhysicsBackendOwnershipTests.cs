@@ -6,6 +6,7 @@ internal static partial class PhysicsBackendOwnershipTests
 {
     internal static void Run(PhysicsServer.Backend backend)
     {
+        GuardPresence(backend);
         Initialization(backend);
         NamedFactories(backend);
         ShapePairs(backend);

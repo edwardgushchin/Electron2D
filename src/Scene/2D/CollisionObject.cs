@@ -145,6 +145,8 @@ public abstract partial class CollisionObject : Entity
     }
 
     private bool _validatingSpaceGeometry;
+    private static int _spaceGeometryBorrows;
+    internal static bool HasSpaceGeometryBorrows => Volatile.Read(ref _spaceGeometryBorrows) != 0;
     internal void EnsureGeometryAuthoringAccess()
     {
         if (_validatingSpaceGeometry) throw new InvalidOperationException("Scene collider authoring cannot change while its space-transfer geometry is borrowed.");
@@ -152,12 +154,13 @@ public abstract partial class CollisionObject : Entity
     internal void ValidateSpaceGeometry(PhysicsSpace space)
     {
         EnsureGeometryAuthoringAccess(); _validatingSpaceGeometry = true;
+        Interlocked.Increment(ref _spaceGeometryBorrows);
         try
         {
             foreach (var slot in ShapeSlots)
                 if (!(slot.DisabledOverride ?? slot.Owner.Disabled)) PhysicsShapeBackend.RequireSupported(space, slot.Shape);
         }
-        finally { _validatingSpaceGeometry = false; }
+        finally { _validatingSpaceGeometry = false; Interlocked.Decrement(ref _spaceGeometryBorrows); }
     }
 
     internal abstract void UpdatePhysicsParticipation();
