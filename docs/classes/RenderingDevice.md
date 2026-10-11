@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -39,12 +39,15 @@ byte[] result = device.BufferGetData(buffer);
 | --- | --- |
 | `public System.Void BufferGetData(Electron2D.RID buffer, System.Span<System.Byte> destination, System.UInt32 offsetBytes = 0)` | Synchronizes and copies a buffer range into caller-provided storage. |
 | `public System.Byte[] BufferGetData(Electron2D.RID buffer, System.UInt32 offsetBytes = 0, System.UInt32 sizeBytes = 0)` | Synchronizes and copies a buffer range into an independent array. |
+| `public System.Void BufferCopy(Electron2D.RID sourceBuffer, Electron2D.RID destinationBuffer, System.UInt32 sourceOffset, System.UInt32 destinationOffset, System.UInt32 sizeBytes)` | Copies disjoint validated byte ranges; storage copies stay on the GPU timeline. |
+| `public System.Void BufferClear(Electron2D.RID buffer, System.UInt32 offset, System.UInt32 sizeBytes)` | Zeros a range with a size divisible by four. |
 | `public System.Void BufferUpdate(Electron2D.RID buffer, System.UInt32 offset, System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data)` | Updates a validated byte range of a buffer. |
 | `public System.Void ComputeListAddBarrier(System.Int64 computeList)` | Establishes a full dependency after prior dispatches in this list. |
 | `public System.Int64 ComputeListBegin()` | Begins an owner-thread compute list. |
 | `public System.Void ComputeListBindComputePipeline(System.Int64 computeList, Electron2D.RID computePipeline)` | Selects a compute pipeline for subsequent dispatches. |
 | `public System.Void ComputeListBindUniformSet(System.Int64 computeList, Electron2D.RID uniformSet, System.UInt32 setIndex)` | Binds a resource set for subsequent dispatches. |
 | `public System.Void ComputeListDispatch(System.Int64 computeList, System.UInt32 xGroups, System.UInt32 yGroups, System.UInt32 zGroups)` | Records a compute dispatch with barriers against previous dispatches. |
+| `public System.Void ComputeListDispatchIndirect(System.Int64 computeList, Electron2D.RID buffer, System.UInt32 offset)` | Reads X/Y/Z group counts from a storage buffer created for indirect dispatch. |
 | `public System.Void ComputeListEnd()` | Ends the active list without submitting it. |
 | `public Electron2D.RID ComputePipelineCreate(Electron2D.RID shader)` | Creates an executable pipeline borrowing a live compute shader. |
 | `public System.Boolean ComputePipelineIsValid(Electron2D.RID pipeline)` | Reports whether a pipeline and its shader remain alive. |
@@ -52,7 +55,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
 | `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader from compiled bytecode. |
-| `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)` | Creates a zero-initialized read/write storage buffer. |
+| `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
 | `public System.Void Sync()` | Waits for the submitted work and releases its fence. |
 | `public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)` | Creates a constant uniform buffer. |
@@ -265,7 +268,7 @@ A shader identity owned by this device.
 ### StorageBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)
 
 ```csharp
-public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)
+public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)
 ```
 
 Creates a zero-initialized read/write storage buffer.
@@ -349,3 +352,9 @@ protected override System.Void ValidateDisposal()
 ## Verification and limits
 
 [RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous transfer APIs and additional platforms are not established by this slice.
+
+## Buffer transfer and indirect dispatch descriptions
+
+`BufferCopy` takes source/destination RID identities, byte offsets and a byte size. All storage/uniform combinations execute; storage-to-uniform synchronizes, uniform-to-storage snapshots the host bytes, and storage-to-storage needs no CPU readback. Same-buffer overlapping ranges throw `ArgumentException`. Unaligned byte copies are supported. `BufferClear` takes a byte offset and a four-byte-divisible size; other sizes throw `ArgumentOutOfRangeException`. Both reject active compute lists, wrong/freed/foreign identities and ranges outside either buffer, including invalid empty operations.
+
+`StorageBufferCreate` accepts [StorageBufferUsage](RenderingDevice.StorageBufferUsage.md); zero is the ordinary read/write role, and DispatchIndirect also permits command reads. Unknown flag bits reject before resource creation. `ComputeListDispatchIndirect` takes an active list, an indirect-capable storage buffer and an aligned byte offset. Twelve bytes must fit. The three uint counts remain on the GPU; the producer must stay within device limits. Zero groups skip execution. Pipeline and set validation is shared with direct dispatch; each closes its native compute pass to order subsequent consumers. [RenderingDeviceTests.Transfers](../../tests/Electron2D.Tests/RenderingDeviceTests.Transfers.cs) verifies the complete chain and edge cases on the native GPU backend.

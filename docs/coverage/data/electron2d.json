@@ -8511,6 +8511,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.StorageBufferUsage",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.StorageBufferUsage",
+    "name": "StorageBufferUsage",
+    "signature": "public enum Electron2D.RenderingDevice.StorageBufferUsage",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.UniformType",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.UniformType",
@@ -36021,6 +36039,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.ShaderStage",
     "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.StorageBufferUsage.DispatchIndirect()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.StorageBufferUsage",
+    "name": "DispatchIndirect",
+    "signature": "public const Electron2D.RenderingDevice.StorageBufferUsage DispatchIndirect = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.StorageBufferUsage",
+    "value": "1"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.UniformType.Image()",
@@ -131970,6 +132001,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.BufferClear(Electron2D.RID,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "BufferClear",
+    "signature": "public System.Void BufferClear(Electron2D.RID buffer, System.UInt32 offset, System.UInt32 sizeBytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.BufferCopy(Electron2D.RID,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "BufferCopy",
+    "signature": "public System.Void BufferCopy(Electron2D.RID sourceBuffer, Electron2D.RID destinationBuffer, System.UInt32 sourceOffset, System.UInt32 destinationOffset, System.UInt32 sizeBytes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sourceBuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "destinationBuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "sourceOffset",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "destinationOffset",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.BufferGetData(Electron2D.RID,System.Span\u003CSystem.Byte\u003E,System.UInt32)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -132181,6 +132280,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.ComputeListDispatchIndirect(System.Int64,Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ComputeListDispatchIndirect",
+    "signature": "public System.Void ComputeListDispatchIndirect(System.Int64 computeList, Electron2D.RID buffer, System.UInt32 offset)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "computeList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.ComputeListEnd()",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -132307,11 +132435,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.StorageBufferCreate(System.UInt32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
+    "id": "method:Electron2D.RenderingDevice.StorageBufferCreate(System.UInt32,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.RenderingDevice.StorageBufferUsage)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "StorageBufferCreate",
-    "signature": "public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan\u003CSystem.Byte\u003E data = default)",
+    "signature": "public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan\u003CSystem.Byte\u003E data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -132325,6 +132453,11 @@
         "name": "data",
         "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
         "default": "default"
+      },
+      {
+        "name": "usage",
+        "type": "Electron2D.RenderingDevice.StorageBufferUsage",
+        "default": "0"
       }
     ],
     "returnType": "Electron2D.RID",

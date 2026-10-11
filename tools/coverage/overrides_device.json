@@ -236,9 +236,9 @@
     },
     {
       "godot": "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
-      "electron2d": "method:Electron2D.RenderingDevice.StorageBufferCreate(System.UInt32,System.ReadOnlySpan<System.Byte>)",
+      "electron2d": "method:Electron2D.RenderingDevice.StorageBufferCreate(System.UInt32,System.ReadOnlySpan<System.Byte>,Electron2D.RenderingDevice.StorageBufferUsage)",
       "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "reason": "ADR 0028: read/write storage and DispatchIndirect usage execute, with zero initialization and copied prefix uploads. BufferCreationBits device-address support remains unavailable: native buffer device addresses and their shader interface require a backend capability; no inert creation flags are exposed."
     },
     {
       "godot": "RenderingDevice::method:submit()",
@@ -299,6 +299,36 @@
       "electron2d": "property:Electron2D.RDUniform.UniformType()",
       "state": "Implemented",
       "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_copy(RID:,RID:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferCopy(Electron2D.RID,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_clear(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferClear(Electron2D.RID,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ComputeListDispatchIndirect(System.Int64,Electron2D.RID,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:StorageBufferUsage",
+      "electron2d": "T:Electron2D.RenderingDevice.StorageBufferUsage",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StorageBufferUsage.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StorageBufferUsage.DispatchIndirect()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
     }
   ],
   "extras": [
@@ -398,7 +428,6 @@
         "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
         "RenderingDevice::method:compute_pipeline_create(RID:,RDPipelineSpecializationConstant[]:)",
         "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
-        "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
         "RenderingDevice::method:uniform_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)",
         "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)"
       ]
@@ -443,6 +472,31 @@
         "RDShaderSPIRV::property:compile_error_compute",
         "RDUniform::property:binding",
         "RDUniform::property:uniform_type"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified.",
+      "godot": [
+        "RenderingDevice::method:buffer_copy(RID:,RID:,int:,int:,int:)",
+        "RenderingDevice::method:buffer_clear(RID:,int:,int:)",
+        "RenderingDevice::method:compute_list_dispatch_indirect(int:,RID:,int:)",
+        "RenderingDevice::enum:StorageBufferUsage",
+        "RenderingDevice::enum_value:StorageBufferUsage.STORAGE_BUFFER_USAGE_DISPATCH_INDIRECT"
+      ]
+    },
+    {
+      "state": "Partial",
+      "reason": "ADR 0028: read/write storage and DispatchIndirect usage execute, with zero initialization and copied prefix uploads. BufferCreationBits device-address support remains unavailable: native buffer device addresses and their shader interface require a backend capability; no inert creation flags are exposed.",
+      "godot": [
+        "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "ADR 0028: local devices have explicit Submit/Sync ownership without frame-driven owner-thread callback delivery. Requires an executable readback completion/lifetime contract and a completion pump integrated with the owning host, including callback failure and disposal, before exposing typed callbacks; a synchronous callback is not an async implementation.",
+      "godot": [
+        "RenderingDevice::method:buffer_get_data_async(RID:,Callable:,int:,int:)"
       ]
     }
   ]

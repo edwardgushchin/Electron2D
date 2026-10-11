@@ -1,7 +1,7 @@
 using System.Runtime.InteropServices;
 using Electron2D;
 
-internal static class RenderingDeviceTests
+internal static partial class RenderingDeviceTests
 {
     internal static void Run()
     {
@@ -54,6 +54,8 @@ internal static class RenderingDeviceTests
             var allocated = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 32; i++) IdentityPass();
             Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Prepared device dispatch and span readback allocate no owner-thread managed memory.");
+            Transfers(device, buffer, shader);
+            Indirect(device, pipeline, dataSet, parameters, buffer, uniformBuffer);
             Reject<ArgumentOutOfRangeException>(() => device.BufferGetData(buffer, uint.MaxValue));
             Reject<ArgumentException>(() => device.UniformSetCreate([dataBinding, dataBinding], shader, 3));
             Reject<InvalidOperationException>(() => Task.Run(() => device.GetDeviceName()).GetAwaiter().GetResult());

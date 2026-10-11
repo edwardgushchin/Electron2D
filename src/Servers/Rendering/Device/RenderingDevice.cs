@@ -50,6 +50,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal RenderHandle? Handle, Upload, Download;
         internal byte[] Data = [];
         internal uint Size;
+        internal StorageBufferUsage Usage;
         internal RID Shader;
         internal string Name = "";
         internal uint Set;
@@ -82,14 +83,17 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <summary>Creates a zero-initialized read/write storage buffer.</summary>
     /// <param name="sizeBytes">Positive byte capacity, divisible by four.</param>
     /// <param name="data">Optional initial prefix; remaining bytes are zero.</param>
+    /// <param name="usage">Optional indirect-dispatch role.</param>
     /// <returns>A device-owned buffer identity.</returns>
-    public RID StorageBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default)
+    /// <exception cref="ArgumentOutOfRangeException">The size, data length or usage flags are invalid.</exception>
+    public RID StorageBufferCreate(uint sizeBytes, ReadOnlySpan<byte> data = default, StorageBufferUsage usage = 0)
     {
         IdleList(); if (sizeBytes == 0 || sizeBytes % 4 != 0 || sizeBytes > int.MaxValue || data.Length > sizeBytes) throw new ArgumentOutOfRangeException(nameof(sizeBytes));
-        var entry = new Entry { Kind = Kind.Storage, Size = sizeBytes };
+        if ((usage & ~StorageBufferUsage.DispatchIndirect) != 0) throw new ArgumentOutOfRangeException(nameof(usage));
+        var entry = new Entry { Kind = Kind.Storage, Size = sizeBytes, Usage = usage };
         try
         {
-            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = sizeBytes, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
+            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = sizeBytes, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | (usage.HasFlag(StorageBufferUsage.DispatchIndirect) ? SDL.GPUBufferUsageFlags.Indirect : 0) }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
             entry.Upload = Transfer(sizeBytes, SDL.GPUTransferBufferUsage.Upload);
             var initial = new byte[sizeBytes]; data.CopyTo(initial); Upload(entry, 0, initial);
             return Add(entry);
@@ -244,6 +248,10 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         List(computeList);
         if (xGroups is 0 or > 65535 || yGroups is 0 or > 65535 || zGroups is 0 or > 65535) throw new ArgumentOutOfRangeException(nameof(xGroups));
+        Dispatch(xGroups, yGroups, zGroups);
+    }
+    private void Dispatch(uint xGroups, uint yGroups, uint zGroups, Entry? indirect = null, uint offset = 0)
+    {
         if (_pipeline is null) throw new InvalidOperationException("Bind a compute pipeline first.");
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
         foreach (var descriptor in _pipeline.Layout)
@@ -256,7 +264,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var pass = SDL.BeginGPUComputePass(_command, 0, 0, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
-        SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups); SDL.EndGPUComputePass(pass);
+        if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
+        else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
+        SDL.EndGPUComputePass(pass);
     }
     /// <summary>Establishes a full dependency after prior dispatches in this list.</summary>
     /// <param name="computeList">The active list.</param>
