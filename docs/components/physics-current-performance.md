@@ -179,4 +179,4 @@ above rather than used to certify current-source performance. Generated evidence
 is excluded from the engine commit; this page retains the measured contract,
 values, provenance and limits.
 
-The [complete scene measurements](physics-scene-performance.md) now cover a separate CPU/GPU RigidBody/monitor/interpolation workload with zero warmed managed bytes. Its 1536-body GPU cost is higher and its 4096-body medians are close; the raw-body/window advantage above does not establish a scene-wide performance claim.
+The [complete scene measurements](physics-scene-performance.md) cover a separate CPU/GPU RigidBody/monitor/interpolation workload with zero warmed managed bytes. The earlier 1536-body headless GPU cost is higher and the original 4096-body medians are close. The [native monitored-scene window](physics-scene-performance.md#full-monitored-scene-in-a-native-window) now measures the complete scene, pose publication, idle processing and actual rendering separately; its fixed host and reported presentation/VSync settings qualify that evidence. The raw-body/window advantage above must not be generalized to this scene workload.

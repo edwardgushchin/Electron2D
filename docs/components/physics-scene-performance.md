@@ -4,7 +4,7 @@ Last updated: 2026-10-11
 
 ## Workload and provenance
 
-[PhysicsPipelinePerformance](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) now measures the same complete public scene path on explicit CPU and GPU World instances. Every dynamic object is a RigidBody with a CollisionShape, ContactMonitor, an eight-point contact cap, real entry/exit handlers and SceneTree physics interpolation. PhysicsFrame advances exactly one 1/144-second tick; both implementations retain four substeps and sixteen iterations. Sleeping is disabled. There is no rendered window in this fixture, so these are physics-frame costs rather than FPS.
+[PhysicsPipelinePerformance](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) now measures the same complete public scene path on explicit CPU and GPU World instances. Every dynamic object is a RigidBody with a CollisionShape, ContactMonitor, an eight-point contact cap, real entry/exit handlers and SceneTree physics interpolation. PhysicsFrame advances exactly one 1/144-second tick; both implementations retain four substeps and sixteen iterations. Sleeping is disabled. The trials in this section use the default headless mode, so these are physics-frame costs rather than FPS; the native-window mode below is separate.
 
 Both paired trials use deterministic circles of radius 6 and mass .2, friction .25, bounce .35, gravity 980, body linear/angular damping .05/.1 and zero world damping. Initial positions have fifty columns, horizontal/vertical spacing 20/12.5 and fixed initial horizontal velocities. Four static walls enclose the complete population; the floor/side heights scale with the authored rows rather than omitting bodies. Each implementation warms for 1600 ticks. The 1536-body trial measures 1024 ticks and the 4096-body trial measures 256. CPU then GPU run sequentially in each process. Profiling is enabled for both; it is included in measured costs.
 
@@ -96,7 +96,7 @@ GPU mean frame times were 10.6297 ms for the control and 10.0991/10.3902 ms for 
 
 The candidate GPU medians were 2.6–5.0 percent below the control in these trials. More frequent completion checks can add a status fence for a growing graph; the measured submission count records that cost. Both candidates retained zero fallbacks in this workload, all physical/publication gates and 0/0 warm managed bytes. Their maximum pair penetration was .154352/.131744 and wall escape .125427/.105042 scene units against the unchanged .601 limit. No cross-backend trajectory equality was required.
 
-Resident solver checks also passed the 16,384-body dirty-scratch initialization, momentum/energy/material/ray/joint checks, changing 64/257-support fallback graph and 4096/65,536-body contact workloads. This does not establish GPU advantage over CPU: the full monitored scene still costs more on GPU, and a rendered-window comparison was not run for this change. The wider numerical-extension/network/platform acceptance remains open.
+Resident solver checks also passed the 16,384-body dirty-scratch initialization, momentum/energy/material/ray/joint checks, changing 64/257-support fallback graph and 4096/65,536-body contact workloads. This does not establish GPU advantage over CPU: the 1536-body monitored scene in those trials costs more on GPU, and a rendered-window comparison was not run for that change. The wider numerical-extension/network/platform acceptance remains open.
 
 Ignored evidence is in `bin/physics-scene-pipeline/2026-10-11/adaptive-color-rounds`: `control`, `paired`, `repeat`, source diff/hash and solver logs. A prior trial overlapping rendering integration is diagnostic only and is excluded from this comparison.
 
@@ -163,3 +163,99 @@ The unchanged 4096-body protocol also ran with 1600 warmup and 256 measured fram
 | GPU | 27.3332 | 19.8834 / 68.1241 / 73.7828 / 74.4669 |
 
 CPU and GPU tails increased in this run; their cause is unproven. This run establishes contract/allocation regression coverage for the guard change, not an improvement in solver or frame latency. The earlier d70110a6 comparisons retain their own executable identities. Raw reports and separate lifecycle timing are under bin/physics-scene-pipeline/2026-10-11/guard-candidate-4096. Real rendered-window FPS, network performance, native allocator accounting, other platforms and complete goal acceptance were not established by this slice.
+
+## Full monitored scene in a native window
+
+The existing fixture also accepts ELECTRON2D_PHYSICS_PERFORMANCE_WINDOW=1.
+It authors the same requested RigidBody/CollisionShape population, four walls,
+materials, eight-contact monitors, handlers and scene interpolation history.
+The requested physics backend remains independent of the explicitly selected GPU
+renderer. Window and lifecycle-only modes cannot be combined.
+
+The fixed-frame test host invokes exactly one complete SceneTree.PhysicsFrame at
+1/144 second, publishes every current scene pose into an explicit current/previous
+MultiMesh buffer pair, invokes ProcessFrame and submits through the native Window
+renderer. It pumps native events and checks early closure. This uses the retained
+native open/pump/render/close path; it does not exercise Engine.Run's real-time
+catch-up scheduler. Simulation time advances by one fixed tick per presented frame
+even when wall time is slower. The presentation interpolation fraction is recorded;
+the fixed host currently uses zero, selecting the previous completed pose.
+
+Schema 3 separates complete PhysicsFrame timing/managed bytes from whole measured
+window-loop timing/managed bytes. The frame bracket includes native event pumping,
+physics, CPU scene-pose publication, idle processing, rendering/presentation and
+allocation/profiling probes. scenePosePublication measures the full current/previous
+buffer publication; render measures the native renderer call after idle processing.
+Their sum need not equal the complete frame cost. Physics transfer/wait counters
+retain their original scope and exclude graphics transfers. Native allocation and
+isolated graphics transfer/wait accounting remain unmeasured.
+
+Capture and final physical/publication validation occur after measurement. Capture
+checks an instance for every body, each current record against the corresponding
+physical pose, exact 1152-by-800 image dimensions and actual particle pixels.
+The PNG and physical JSON are saved for each backend. VSync records both requested
+and reported modes: the 64-body Linux/Wayland smoke requested Disabled but the
+renderer reported Enabled. Its roughly 145 FPS is consequently not an uncapped
+throughput claim. Both smoke implementations passed physical gates and zero warm
+physics/window owner/all-thread managed bytes.
+
+The lifecycle cleanup field retains its tree/body/resource/world scope; native
+window/renderer closing follows through the display owner's disposal and is not
+included in that field. The final capture is an additional explicit GPU image
+readback outside the sampled physics and frame brackets.
+
+### Native window results at 9d4fbc56
+
+These measurements precede later renderer integration into main; the retained fingerprints identify their actual executable revision. Both pairs used 1600 warmup ticks and 256 measured frames with the full protocol above. The CPU and GPU phases ran sequentially in each process and returned zero. C# source and runtime/test binaries stayed unchanged throughout both pairs; no assembly rebuild occurred between implementations. These are shared-desktop single pairs, not isolated repeated statistical experiments. The host is Linux/Wayland x64, AMD Ryzen 7 5700X, NVIDIA GeForce RTX 3090 Ti, driver 615.71.09 and .NET 10.0.101. Requested VSync was Disabled and the reported mode was Enabled in every case.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| C# source | `0dae5b17d9a81503f1ea00d2ce018cb8d5dfa3c420fbe09d85ac7704dcb653d2` |
+| Electron2D.Tests.dll | `492ac51351c868d615912d058000321e823d83d016640b31d7021a90cfa3e71a` |
+| Electron2D.dll | `e537c2c758254366e739dae38405ade459114c0ef3ff3fd46b3f22d7091a34ff` |
+
+| Bodies | Backend | Physics mean, ms | Physics p50 / p95 / p99 / max, ms | Whole window-loop FPS |
+| --- | --- | ---: | --- | ---: |
+| 4096 | CPU | 21.1888 | 20.9972 / 23.0557 / 23.6570 / 24.1162 | 30.5369 |
+| 4096 | GPU | 22.9258 | 22.6867 / 26.0698 / 27.6144 / 28.9203 | 29.2994 |
+| 16384 | CPU | 102.7040 | 101.9317 / 109.5691 / 115.5848 / 122.0989 | 5.9766 |
+| 16384 | GPU | 82.8894 | 76.8210 / 101.3891 / 105.3836 / 114.2046 | 6.9794 |
+
+| Bodies | Backend | Full frame p50 / p95 / p99 / max, ms | Pose publication p50, ms | Native render p50 / p95, ms |
+| --- | --- | --- | ---: | --- |
+| 4096 | CPU | 32.4149 / 35.5415 / 36.1951 / 37.2560 | 0.1960 | 11.0129 / 12.5058 |
+| 4096 | GPU | 33.7265 / 37.4940 / 39.9930 / 42.0875 | 0.1387 | 10.6899 / 12.3055 |
+| 16384 | CPU | 166.1431 / 175.6557 / 196.6900 / 226.7950 | 0.9372 | 62.4581 / 66.6599 |
+| 16384 | GPU | 138.5962 / 163.0043 / 167.2275 / 174.4873 | 0.6355 | 59.0048 / 62.0318 |
+
+All four cases passed physical/publication, full-instance and real image checks; physics and complete window-loop owner/all-thread managed bytes were 0/0. At 4096 bodies GPU physics p50 was 8.0 percent higher and window FPS 4.1 percent lower than CPU. At 16,384 GPU physics p50 was 24.6 percent lower and window FPS 16.8 percent higher. The mass advantage is measured under this fixed host and presentation policy; it does not certify real-time catch-up performance, every scene or the full objective. Native rendering around 59–62 ms remains a substantial separate cost at 16,384. Its internal causes have not been isolated.
+
+| Bodies | GPU upload / readback B per tick | Uniform B / submissions per tick | Summed physics wait p50 / p95 / p99 / max, ms |
+| --- | --- | --- | --- |
+| 4096 | 65880 / 2966724.3125 | 62414.2500 / 21.113281 | 10.1147 / 12.6731 / 13.2576 / 15.7378 |
+| 16384 | 262488 / 11863227.8750 | 64456.1250 / 21.054688 | 24.8422 / 50.7493 / 54.8919 / 61.7190 |
+
+Physics-store traffic/submission totals span the complete loop and include demanded observation from publication/render consumers. The wait distribution samples the complete PhysicsFrame bracket only; any additional store waits during drawing remain inside frame/render time without a separate wait distribution. Final validation/capture traffic and waits are excluded. Native graphics bytes and separate graphics waits are not included. All four cases retain penetration/escape below .601, finite speed below 1000 and energy below 1.02 times initial energy. At 16,384 CPU penetration/escape was .291941/.299999 and GPU .276851/.176327. Raw reports preserve phase means, timing distributions, contact counts and state/contact hashes.
+
+| Raw report under bin/physics-scene-window/2026-10-11 | SHA-256 |
+| --- | --- |
+| `paired-4096/CPU.json` | `f29f1f411475735634a28bac9f2f366801fe646036f386297b030a63dc024092` |
+| `paired-4096/GPU.json` | `71c49496806e805f92840487f227d0a3abee8a93b8cb297e645cba76f79275ba` |
+| `paired-16384/CPU.json` | `a47527111265885688695dc1f0a442274043b37bb56be5dba99653cd88778a6b` |
+| `paired-16384/GPU.json` | `9c18e00f62702bc9dc5a01679c3719083ae5ba599bd40a0f90ccf843c55e983c` |
+
+Reproduce after the source-native test build:
+
+```bash
+ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1 ELECTRON2D_PHYSICS_PERFORMANCE_WINDOW=1 ELECTRON2D_PHYSICS_PERFORMANCE_COUNT=16384 ELECTRON2D_PHYSICS_PERFORMANCE_WARMUP=1600 ELECTRON2D_PHYSICS_PERFORMANCE_SAMPLES=256 ELECTRON2D_PHYSICS_PERFORMANCE_BACKEND=both ELECTRON2D_PHYSICS_PERFORMANCE_OUTPUT=bin/physics-scene-window/reproduce-16384 dotnet tests/Electron2D.Tests/bin/Release/net10.0/linux-x64/Electron2D.Tests.dll
+```
+
+Use count 4096 for the smaller paired workload. The ignored directories contain provenance.json with exact command/environment, start/end times, exit status and source/binary fingerprints, CPU/GPU physical/lifecycle reports and CPU/GPU-window.png. The source fingerprint hashes sorted C# paths under src and tests/Electron2D.Tests, excluding bin/obj, as path, NUL, contents, NUL.
+
+After main advanced to 7d72122e077a5c86e2ff129fb85132f04830d995, a fresh source-native
+build and the 64-body window pair passed again with valid physical/image/instance
+checks and 0/0 physics and window-loop managed bytes. Its runtime/test SHA-256 are
+93ed104c97284d89f2535a13ce35df134e151bdca7ae8184d258b421a9c0339d /
+4b70511c0a171d4750f4166a13f9753a2088cf0e671d718bfe72f94e26dbebee.
+Evidence is under bin/physics-scene-window/2026-10-11/integrated-smoke-64. This
+functional regression does not refresh the large-scene performance numbers above.

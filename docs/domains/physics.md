@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
+now use the same complete scene fixture with separate physics/frame costs, actual
+image and instance validation, reported VSync and zero warmed managed-byte checks.
+The fixed-frame host is separate from real-time catch-up scheduling; numerical,
+network and final performance acceptance retain their stated limits.
+
 [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space
 operations on scene and raw RIDs, including explicit target simulation, scene
 reclaim, partial-attachment restoration, source preflight and lifetime guards.

@@ -5,7 +5,7 @@ using System.Text.Json;
 using Electron2D;
 using static PhysicsDebugTests;
 
-internal static class PhysicsPipelinePerformance
+internal static partial class PhysicsPipelinePerformance
 {
     internal static void Run()
     {
@@ -37,11 +37,14 @@ internal static class PhysicsPipelinePerformance
     {
         var setupStart = Stopwatch.GetTimestamp();
         var lifecycleOnly = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_LIFECYCLE_ONLY") == "1";
+        var rendered = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_WINDOW") == "1";
+        if (rendered && lifecycleOnly) throw new ArgumentException("Window measurements require the full simulation path.");
         const double delta = 1d / 144;
         const float radius = 6, mass = .2f;
         var bottom = Math.Max(638, 216 + ((count + 49) / 50) * 12.5f + 28);
         using var world = new World(backend);
-        using var root = new SubViewport { World = world };
+        using var display = rendered ? new SceneDisplay(world, count, bottom) : null;
+        using var root = (Viewport?)display?.Window ?? new SubViewport { World = world };
         using var circle = new CircleShape { Radius = radius };
         using var surface = new PhysicsMaterial { Friction = .25f, Bounce = .35f };
         var walls = new List<RectangleShape>();
@@ -95,20 +98,35 @@ internal static class PhysicsPipelinePerformance
             data.ForceGPUStatePublication = publicationControl;
             if (gpu is not null) gpu.ForceCountFirstChangeReadback = publicationControl;
             var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8];
-            for (var i = 0; i < warmup; i++) tree.PhysicsFrame(delta);
+            var frameTimes = new double[samples]; var publishTimes = new double[samples]; var renderTimes = new double[samples];
+            for (var i = 0; i < warmup; i++) { display?.Pump(tree); tree.PhysicsFrame(delta); display?.Draw(tree, bodies, delta); }
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
             var upload = gpu?.UploadBytes ?? 0; var readback = gpu?.ReadbackBytes ?? 0;
             var submissions = gpu?.SubmissionCount ?? 0; var uniform = gpu?.UniformBytes ?? 0;
             var tick = PhysicsServer.SpaceGetTick(world.Space);
             var total = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
+            long physicsOwnerBytes = 0, physicsAllThreadsBytes = 0;
+            var frameStart = Stopwatch.GetTimestamp();
             for (var i = 0; i < samples; i++)
             {
+                var frame = Stopwatch.GetTimestamp();
+                display?.Pump(tree);
+                var physicalOwner = GC.GetAllocatedBytesForCurrentThread(); var physicalAll = GC.GetTotalAllocatedBytes(true);
                 var wait = gpu?.WaitMS ?? 0; var start = Stopwatch.GetTimestamp();
                 tree.PhysicsFrame(delta);
                 times[i] = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+                physicsOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - physicalOwner;
+                physicsAllThreadsBytes += GC.GetTotalAllocatedBytes(true) - physicalAll;
                 waits[i] = (gpu?.WaitMS ?? 0) - wait;
                 for (var phase = 0; phase < phases.Length; phase++) { phases[phase] += data.ProfileMS[phase]; phaseBytes[phase] += data.ProfileBytes[phase]; }
+                if (display is not null)
+                {
+                    display.Draw(tree, bodies, delta);
+                    publishTimes[i] = display.PublishMS; renderTimes[i] = display.RenderMS;
+                    frameTimes[i] = Stopwatch.GetElapsedTime(frame).TotalMilliseconds;
+                }
             }
+            var frameSeconds = Stopwatch.GetElapsedTime(frameStart).TotalSeconds;
             allocated = GC.GetAllocatedBytesForCurrentThread() - allocated; total = GC.GetTotalAllocatedBytes(true) - total;
             upload = (gpu?.UploadBytes ?? 0) - upload; readback = (gpu?.ReadbackBytes ?? 0) - readback;
             submissions = (gpu?.SubmissionCount ?? 0) - submissions; uniform = (gpu?.UniformBytes ?? 0) - uniform;
@@ -161,9 +179,10 @@ internal static class PhysicsPipelinePerformance
             var physicalValid = maxEscape <= penetrationLimit && maxPenetration <= penetrationLimit && maxSpeed < 1000 &&
                 double.IsFinite(energy) && energy < initialEnergy * 1.02 && entered > 0 && reportedContacts > 0;
             var valid = physicalValid && allocated == 0 && total == 0;
+            var capture = display?.Capture(bodies);
             var report = JsonSerializer.Serialize(new
             {
-                schema = 2,
+                schema = 3,
                 backend = backend.ToString(),
                 bodies = count,
                 walls = 4,
@@ -174,7 +193,9 @@ internal static class PhysicsPipelinePerformance
                 maxContacts = 8,
                 interpolation = true,
                 sleeping = false,
-                rendered = false,
+                rendered,
+                windowHost = display is null ? null : "fixed-scene-frame",
+                presentationInterpolationFraction = display is null ? (double?)null : Engine.PhysicsInterpolationFraction,
                 publicationControl,
                 warmup,
                 samples,
@@ -191,6 +212,16 @@ internal static class PhysicsPipelinePerformance
                 contactColorFallbacks = gpu?.ContactColorFallbacks,
                 ownerBytes = allocated,
                 allThreadsBytes = total,
+                physicsOwnerBytes,
+                physicsAllThreadsBytes,
+                frameSeconds = display is null ? (double?)null : frameSeconds,
+                windowFPS = display is null ? (double?)null : samples / frameSeconds,
+                frame = display is null ? null : Distribution(frameTimes),
+                scenePosePublication = display is null ? null : Distribution(publishTimes),
+                render = display is null ? null : Distribution(renderTimes),
+                requestedVSync = display is null ? null : "Disabled",
+                vsync = display?.VSync,
+                capture,
                 phaseOwnerBytes = phaseBytes,
                 outsideStepOwnerBytes = allocated - phaseBytes.Sum(),
                 entered,
