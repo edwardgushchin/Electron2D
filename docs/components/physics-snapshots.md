@@ -144,3 +144,5 @@ budget publication frequency and history rather than assuming free per-frame syn
 ## Selected preparation and observation
 
 The map validates bindings and sends a borrowed collider span to the selected world. GPU handles/state batch scratch belongs to that owner; common map/entry state uses engine fields and identities. Preparation and batch reads borrow context, so failure permits recapture without membership loss. The exact bound GPU object set is still read explicitly for authoritative state; ordinary unobserved steps retain demand-driven publication. Field/schema/wire values are unchanged. See [ownership and verification](physics-backends.md#selected-observation-and-collision-policy).
+
+One-way continuation validates during capture and apply. Self/unbound identities, disabled or unavailable logical slots, invalid pieces and duplicate unordered pairs reject before packet publication or world mutation. A failed capture preserves any previous complete encoding. Registered providers receive a span bounded by the current declared count, even when retained capacity is larger; the external consumer verifies errors, alternate local IDs and numerical continuation.

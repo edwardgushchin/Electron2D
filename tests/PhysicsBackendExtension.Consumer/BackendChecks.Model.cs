@@ -52,7 +52,7 @@ public static partial class BackendChecks
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    if (a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out _)) continue;
+                    if (!AllowsContact(a.RID, b.RID) || a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out _)) continue;
                     var inverse = a.InvMass + b.InvMass;
                     a.Position -= normal * depth * (a.InvMass / inverse);
                     b.Position += normal * depth * (b.InvMass / inverse);
@@ -107,9 +107,24 @@ public static partial class BackendChecks
         protected override void ApplyPortableSleep(RID collider, float time, bool canSleep, bool sleeping)
         { var b = Bodies[collider]; b.SleepTime = time; b.Awake = !sleeping; b.CanSleep = canSleep; }
         protected override void BeginPortableRestore() { }
-        protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick) { }
-        protected override int GetPortableOneWayCount() => 0;
-        protected override int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination) => 0;
+        private bool AllowsContact(RID a, RID b)
+        {
+            foreach (var pair in OneWays)
+                if (pair.A == a && pair.B == b || pair.A == b && pair.B == a) return pair.Allowed;
+            return true;
+        }
+        internal readonly List<PhysicsBackendOneWay> OneWays = [];
+        internal int OneWayCapacity = -1, OneWayReturn = -1, OneWaySpanLength;
+        protected override void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick)
+        { OneWays.Clear(); OneWays.EnsureCapacity(pairs.Length); foreach (var pair in pairs) OneWays.Add(pair); }
+
+        protected override int GetPortableOneWayCount() => OneWayCapacity < 0 ? OneWays.Count : OneWayCapacity;
+        protected override int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination)
+        {
+            OneWaySpanLength = destination.Length;
+            for (var i = 0; i < Math.Min(destination.Length, OneWays.Count); i++) destination[i] = OneWays[i];
+            return OneWayReturn < 0 ? OneWays.Count : OneWayReturn;
+        }
     }
     private sealed partial class Body(Solver solver, RID rid, bool area)
     {

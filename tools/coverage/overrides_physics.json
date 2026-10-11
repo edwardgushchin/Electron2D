@@ -3110,7 +3110,7 @@
     },
     {
       "electron2d": "T:Electron2D.PhysicsBackendOneWay",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
     {
       "electron2d": "T:Electron2D.PhysicsBackendOverlap",
@@ -3790,7 +3790,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CapturePortableOneWays(System.Span<Electron2D.PhysicsBackendOneWay>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CastMotion(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
@@ -3822,7 +3822,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CompletePortableRestore(System.ReadOnlySpan<Electron2D.PhysicsBackendOneWay>,System.UInt64)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CreateCheckpoint()",
@@ -3866,7 +3866,7 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.GetPortableOneWayCount()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+      "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.GetRestInfo(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",

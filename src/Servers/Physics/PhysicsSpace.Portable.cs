@@ -44,6 +44,8 @@ internal sealed partial class PhysicsSpace
     internal void CapturePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> destination)
     {
         destination.Clear(); _backend.CapturePortableOneWays(map, destination);
+        try { ValidatePortableOneWays(map, destination); }
+        catch (InvalidDataException error) { throw new InvalidOperationException("A selected implementation returned invalid one-way continuation.", error); }
     }
     internal void ValidatePortableOneWays(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs)
     {
@@ -51,10 +53,17 @@ internal sealed partial class PhysicsSpace
         foreach (var pair in pairs)
         {
             var first = map.Collider(pair.A).Backend; var second = map.Collider(pair.B).Backend;
-            PhysicsSnapshotReader.Require(first != second);
+            PhysicsSnapshotReader.Require(first != second && pair.ShapeA >= 0 && pair.ShapeB >= 0 && pair.PieceA >= 0 && pair.PieceB >= 0);
             var key = pair.A < pair.B ? (pair.A, pair.ShapeA, pair.PieceA, pair.B, pair.ShapeB, pair.PieceB) : (pair.B, pair.ShapeB, pair.PieceB, pair.A, pair.ShapeA, pair.PieceA);
             PhysicsSnapshotReader.Require(_portableOneWayKeys.Add(key));
-            first.ValidatePortablePiece(pair.ShapeA, pair.PieceA); second.ValidatePortablePiece(pair.ShapeB, pair.PieceB);
+            try
+            {
+                PhysicsSnapshotReader.Require(PhysicsServer.Service.IsColliderShapeEnabled(first.RID, pair.ShapeA) &&
+                    PhysicsServer.Service.IsColliderShapeEnabled(second.RID, pair.ShapeB));
+                first.ValidatePortablePiece(pair.ShapeA, pair.PieceA); second.ValidatePortablePiece(pair.ShapeB, pair.PieceB);
+            }
+            catch (Exception error) when (error is ArgumentException or ObjectDisposedException)
+            { throw new InvalidDataException("Snapshot references an unavailable collision shape or piece.", error); }
         }
     }
 }

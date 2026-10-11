@@ -76,9 +76,12 @@ public abstract class PhysicsServerBackend : ElectronObject
     protected internal abstract void CompletePortableRestore(ReadOnlySpan<PhysicsBackendOneWay> pairs, ulong tick);
     /// <summary>Supplies the selected implementation operation: get portable one way count.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <returns>The current nonnegative maximum number of episodes supplied by the next capture call.</returns>
     protected internal abstract int GetPortableOneWayCount();
     /// <summary>Supplies the selected implementation operation: capture portable one ways.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <param name="destination">Borrowed storage bounded by the current declared count; retained storage beyond this span is unavailable.</param>
+    /// <returns>The number written, at most the supplied length. Each pair requires different bound colliders and enabled valid shape/piece identities; duplicate reversed pairs reject.</returns>
     protected internal abstract int CapturePortableOneWays(Span<PhysicsBackendOneWay> destination);
     /// <summary>Supplies the selected implementation operation: read portable sleep time.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

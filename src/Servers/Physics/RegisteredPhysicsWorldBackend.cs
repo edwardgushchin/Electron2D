@@ -186,8 +186,8 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
             var capacity = _implementation.GetPortableOneWayCount();
             if (capacity < 0) throw new InvalidOperationException("One-way capture returned a negative count.");
             if (_oneWays.Length < capacity) Array.Resize(ref _oneWays, capacity);
-            var count = _implementation.CapturePortableOneWays(_oneWays);
-            if ((uint)count > (uint)_oneWays.Length) throw new InvalidOperationException("One-way capture exceeded its supplied capacity.");
+            var count = _implementation.CapturePortableOneWays(_oneWays.AsSpan(0, capacity));
+            if ((uint)count > (uint)capacity) throw new InvalidOperationException("One-way capture exceeded its supplied capacity.");
             for (var i = 0; i < count; i++)
             {
                 var p = _oneWays[i]; destination.Add(new(map.NetworkID(p.A), p.ShapeA, p.PieceA, map.NetworkID(p.B), p.ShapeB, p.PieceB, p.Allowed));

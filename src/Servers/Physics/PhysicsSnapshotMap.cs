@@ -68,7 +68,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     /// <param name="snapshot">Caller-owned destination storage.</param>
     /// <remarks>GPU capture batches the complete bound object set explicitly; ordinary unobserved steps do not require that transfer.</remarks>
     /// <exception cref="ArgumentNullException">The destination is null.</exception>
-    /// <exception cref="InvalidOperationException">The world/bindings are incomplete or busy, access is off-owner, or the budget is insufficient.</exception>
+    /// <exception cref="InvalidOperationException">The world/bindings are incomplete or busy, access is off-owner, the budget is insufficient, or implementation continuation is invalid.</exception>
     /// <exception cref="ObjectDisposedException">The map/world is disposed.</exception>
     public void Capture(PhysicsSnapshot snapshot)
     {

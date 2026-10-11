@@ -422,6 +422,8 @@ caller-created views do not prove the registered path.
 
 ## Internal named factory prerequisite, 2026-10-11
 
+This section records the internal prerequisite before public registration shipped. Current public registration, custom geometry and portable continuation are described below; the earlier absence statements are historical.
+
 The pinned manager's two methods and server extension's 140 methods have no deprecated owner/member exclusion. [Named selection](physics-backends.md#named-implementation-selection) now executes internal registration, strict default priorities, immutable lazy selections and real fresh scene/explicit owner construction. Selected wrappers alter real body impulse response and supply actual views on CPU/GPU/no-device. Public manager/backend/extension types, named public entry points, complete operation dispatch and a public-only third-party solver consumer remain absent; all 144 class/member census rows stay Blocked. No custom algorithm or final performance acceptance follows from these internal checks.
 
 ## Shape/body pair operation prerequisite, 2026-10-11
@@ -441,3 +443,9 @@ PhysicsPipelinePerformance now compares explicit CPU/GPU World selection through
 ## Integration input ownership prerequisite, 2026-10-11
 
 Default-force, CPU resolved-field and GPU parameter preparation now consume immutable engine-unit values instead of mutable PhysicsBodyRuntime/scene inputs. Queue/dirty-flag ownership stays common; numeric fields return complete values. Step, private checkpoint and explicit GPU sleep share the binding route. Selected scene/raw force tests exercise transformed actual response, omitted/frozen/sleep/rotation behavior, pre-application failure and reattachment with zero warmed managed allocation. This removes concrete integration input coupling, without closing public manager/server-extension or custom algorithms.
+
+## Registered portable continuation, 2026-10-11
+
+Public manager registration and the scoped backend/extension family now execute with the separate public-only consumer; custom annulus geometry also executes. The earlier internal prerequisites do not describe the current public boundary. Manager registration/default rows are Implemented; the extension owner remains Partial and its operation-specific rows retain open acceptance where the named behavior is absent or unverified.
+
+Portable one-way output now uses the current declared count rather than retained buffer length. Shared capture/apply validation checks different bound colliders, enabled logical slots, valid nonnegative pieces and unique unordered pairs before encoding or mutation. The external consumer rejects malformed output without losing a previous packet, restores network identities into a different local creation order and checks numerical pass-through versus an accepted impulse. Generic one-way detection, complete operation-family acceptance, separate-process extension networking, foreign platforms and final GPU/window performance remain open.

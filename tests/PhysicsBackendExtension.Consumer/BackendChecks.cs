@@ -6,6 +6,7 @@ public static partial class BackendChecks
     {
         Solver? solver = null;
         CustomChecks();
+        PortableEpisodeChecks();
         SelectionChecks();
         DebugFailureChecks();
         var calls = 0;

@@ -8,8 +8,8 @@ Last updated: 2026-10-11
 
 Local RID and shape/piece identities plus allowed state of a portable one-way episode. The adapter converts network IDs at the wire boundary; no local RID enters the encoding.
 
-The record owns values and no native handles, scene storage or transferable world lifetime. It is internal input/output for the selected implementation contract. Claims about public extension API are tracked separately under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+The record owns values and no native handles, scene storage or transferable world lifetime. It is public typed input/output for the scoped selected implementation contract under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 ## Verification and limits
 
-The [independent probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) covers its exercised adapter paths; custom geometry, external consumers and full portable episode support remain acceptance work.
+The [public-only consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.Portable.cs) verifies current-span capacity, distinct bound/valid enabled shape-piece identities, duplicate rejection, previous-packet preservation, alternate local RIDs and actual pass-through/contact continuation. Sixty-four warmed capture/apply cycles allocate zero managed bytes. Generic solver, separate-process extension networking and foreign-platform acceptance remain open.
