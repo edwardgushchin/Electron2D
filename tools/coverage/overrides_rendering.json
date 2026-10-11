@@ -2613,11 +2613,6 @@
       "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
     },
     {
-      "godot": "RenderingServer::method:texture_replace(RID:,RID:)",
-      "electron2d": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
-    },
-    {
       "godot": "RenderingServer::method:free_rid(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.FreeRID(Electron2D.RID)",
       "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. "
@@ -2640,12 +2635,12 @@
     {
       "godot": "RenderingServer::method:texture_proxy_create(RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "RenderingServer::method:texture_proxy_update(RID:,RID:)",
       "electron2d": "method:Electron2D.RenderingServer.TextureProxyUpdate(Electron2D.RID,Electron2D.RID)",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": "FlowContainer::theme_item:h_separation",
@@ -4388,6 +4383,24 @@
       "godot": "Viewport::property:sdf_scale",
       "electron2d": "property:Electron2D.Viewport.SDFScale()",
       "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:texture_rd_create(RID:,int:RenderingServer.TextureLayeredType)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureRDCreate(Electron2D.RID,Electron2D.TextureLayered.LayeredType)",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureGetRDTexture(Electron2D.RID,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADR 0028: resolves live ordinary/layered device resources and nested proxies to their borrowed renderer-device RID, including already-sRGB storage; freed sources return empty. Distinct sRGB reinterpretation requires native format-view ownership. Renderer-managed CPU upload/viewport export requires cache invalidation, borrowed native allocation lifetime and mutable device-role integration; those sources currently have no device identity."
+    },
+    {
+      "godot": "RenderingServer::method:texture_replace(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
+      "state": "Partial",
+      "reason": "ADRs 0028/0095: same-role ordinary/array device-wrapper replacement preserves destination resource/RID, copies borrowed image identity/path/display metadata, redirects aliases and consumes only replacement wrapper. Existing CPU-image replacement remains executable. Mixed CPU-backed/device wrapper storage replacement requires the native export/cache lifetime adapter and rejects atomically until then. Native direct/atlas/proxy and layered HLSL/GLSL tests exercise current roles. RenderingTextureRIDTests and TextureArrayRenderingTests retain CPU-backed update/replacement coverage; RenderingDeviceCanvasTests exercises the borrowed device roles."
     }
   ],
   "statusGroups": [
@@ -5537,17 +5550,10 @@
     },
     {
       "godot": [
-        "RenderingServer::method:texture_replace(RID:,RID:)"
-      ],
-      "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Destination identity/retained references survive transfer of owned 2D pixels/size/path and source consumption. Proxy replacement operands reject, source consumption redirects existing aliases and destination aliases observe new pixels. Layered/drawable resource transfer enters those resource families\u2019 first complete lifecycle slices."
-    },
-    {
-      "godot": [
         "RenderingServer::method:free_rid(RID:)"
       ],
       "state": "Partial",
-      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family\u2019s first actual server-resource slice."
+      "reason": "Actual owned 2D texture RID create/copy/update/replace/free feeds existing retained Texture drawing on GPU/compatibility under ADR 0028. Owner-thread, copied snapshots, stale/wrong-kind/borrowed ownership, size/path, placeholder, callback failure cleanup and 64 active plus 64 retained warmed zero-managed-allocation frames are verified by RenderingTextureRIDTests on Linux Wayland and dummy/software; other platforms/native allocations remain unverified. Owned texture lifetime executes; resource-owned identities reject caller free. Material/shader/canvas/drawable RID registration and cleanup enter each family’s first actual server-resource slice."
     },
     {
       "godot": [
@@ -5555,7 +5561,7 @@
         "RenderingServer::method:texture_proxy_update(RID:,RID:)"
       ],
       "state": "Partial",
-      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family\u2019s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
+      "reason": "Executable owned logical proxy creation and retargeting for current 2D texture RIDs under ADR 0028; borrowed/owned targets, nested creation, non-proxy update guard, source disposal/free, null orphan image, reconnect, replacement redirection and shared root storage execute. RenderingTextureProxyTests verifies 256-level iterative chains, rollback, Linux GPU/compatibility/dummy pixels, 64 active plus 64 retained zero-managed-allocation frames and stable native source handles. Layered/external/device/drawable source aliasing enters each storage family’s first actual native sampling/lifetime slice. Pinned XML deprecation prose claims no-op, but rendering_server.cpp binds these actual methods and rendering_server_default.h dispatches to executable texture-storage proxy initialization/update; no inert stub is substituted."
     },
     {
       "godot": [
@@ -5564,14 +5570,6 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: safe borrowed external texture identity/import ownership and sRGB view contract for GPU and compatibility drivers, including invalidation/cleanup/capability checks; enters the first native texture interop slice under ADR 0028 without exposing owned SDL types/handles."
-    },
-    {
-      "godot": [
-        "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",
-        "RenderingServer::method:texture_rd_create(RID:,int:RenderingServer.TextureLayeredType)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: backend-neutral typed device-texture borrowing/import and sRGB/layer view integration with actual lifetime and shader/canvas sampling; enters the first TextureRD/device-resource slice under ADR 0028. Current logical texture RID is not a native device texture RID."
     },
     {
       "godot": [

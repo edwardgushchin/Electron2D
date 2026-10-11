@@ -31,6 +31,16 @@ When the scene tree enables physics interpolation, the renderer composes previou
 
 Control descendant clipping adds a framebuffer scissor to each affected batch after order and transforms are resolved. Parent drawing stays outside that clip; top-level and neutral canvas boundaries break its inheritance. The same batch contract runs on GPU and compatibility. See [Control clipping](../components/canvas-rendering.md#control-descendant-clipping).
 
+## Retained device image bridge
+
+GetRenderingDevice returns the active GPU renderer's retained device, or null when unavailable. Record owner-thread compute/image operations and end lists before canvas rendering; renderer submission and queued-read completion are automatic. TextureRDCreate returns an owned ordinary/array canvas RID borrowing a sampled global-device image. Free only the wrapper through RenderingServer.FreeRID. TextureGetRDTexture resolves nested ordinary/layered aliases into their borrowed source RID; already-sRGB storage is returned directly. A distinct sRGB view needs native view ownership. Renderer-managed uploaded textures and viewport targets currently have no exported device identity; their native cache/lifetime/mutation integration remains a dependency. See [the executed device bridge](../components/local-compute.md#device-images-in-canvas).
+
+| Declaration | Contract |
+| --- | --- |
+| `public static RenderingDevice? GetRenderingDevice()` | Retained global device for the active GPU session; never caller-owned. |
+| `public static RID TextureRDCreate(RID deviceTexture, TextureLayered.LayeredType layerType = TextureLayered.LayeredType.Array)` | Owns an ordinary or independent-array canvas wrapper, inferred from image allocation. |
+| `public static RID TextureGetRDTexture(RID texture, bool SRGB = false)` | Borrowed global image of a canvas resource/alias; returns empty for no device source. |
+
 ## Example
 
 Inside a node's OnReady callback during Engine.Run:

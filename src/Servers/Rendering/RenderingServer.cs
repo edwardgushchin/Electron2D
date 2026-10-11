@@ -41,6 +41,7 @@ public sealed partial class RenderingServer : ElectronObject
     private bool _closing;
     private bool _rendering;
     private bool _submittingTextures;
+    private RenderingDevice? _renderingDevice;
     private Color _clearColor;
     private static RenderingServer? _instance;
 
@@ -181,11 +182,13 @@ public sealed partial class RenderingServer : ElectronObject
             if (_activeFrames.Count != 0) { UseFrame(_activeFrames[0]); _nodes.Clear(); CaptureCanvasScene(tree.Root); foreach (var node in _nodes) if (!node.IsDisposed && ReferenceEquals(node.Tree, tree) && node.RenderVisible && node.RenderCanvas() is not null && node.ServerState is not { Owned: true }) node.PrepareCanvas(); }
             _activeFrames.Clear(); CaptureViewports(tree.Root);
             foreach (var viewport in _canvasFrames.Keys) if (viewport.IsDisposed || !ReferenceEquals(viewport.Tree, tree)) { _backend.ReleaseTarget(viewport); viewport.RenderingOwner = null; _canvasFrames.Remove(viewport); }
+            _renderingDevice?.FlushRendererCommands();
             _backend.BeginFrame();
             if (_window.Visible && _canvasFrames.TryGetValue(_window, out var root)) { root.Wanted = true; SubmitFrame(root, tree); }
             for (var i = 0; i < _activeFrames.Count; i++) { var frame = _activeFrames[i]; if (frame.Viewport is SubViewport sub && sub.RenderTargetUpdateMode is ViewportUpdateMode.Always or ViewportUpdateMode.Once) { frame.Wanted = true; SubmitFrame(frame, tree); } }
             _backend.EndFrame();
             foreach (var frame in _activeFrames) if (frame.Drawn) { UseFrame(frame); DispatchScreenVisibility(tree); }
+            _renderingDevice?.CompleteRendererReadbacks();
             FramePostDrawCore?.Invoke();
         }
         finally
@@ -496,6 +499,7 @@ public sealed partial class RenderingServer : ElectronObject
                 ReleaseOwnedPrograms();
                 try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }
+                try { _renderingDevice?.Dispose(); _renderingDevice = null; } catch (Exception error) { (errors ??= []).Add(error); }
                 try { _backend.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
             }
             finally

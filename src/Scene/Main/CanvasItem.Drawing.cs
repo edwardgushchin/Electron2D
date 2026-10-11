@@ -334,7 +334,7 @@ public abstract partial class CanvasItem
         foreach (var command in commands)
         {
             if (command.AnimationSlice is { } slice) { skipping = !slice.Includes(time); continue; }
-            if (skipping || command.Texture is ServerTexture { IsDisposed: true }) continue;
+            if (skipping || command.Texture is ServerTexture { IsDisposed: true } or TextureRD { IsDisposed: true }) continue;
             if (command.ClipIgnore is { } ignore) { commandClip = ignore ? null : clip; continue; }
             if (command.SetTransform) { drawingTransform = command.Transform; continue; }
             if (commandClip is { } empty && !empty.HasArea()) continue;
@@ -343,7 +343,7 @@ public abstract partial class CanvasItem
             {
                 var source = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget);
                 if (source is null) continue;
-                if (source is not ViewportTexture && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
+                if (source is not (ViewportTexture or TextureRD) && source.CapturePixels() is null) source = RenderingTextureRegistry.PlaceholderTexture;
                 replay = command with { Texture = source };
             }
             if (replay.MultiMesh is { } instances)

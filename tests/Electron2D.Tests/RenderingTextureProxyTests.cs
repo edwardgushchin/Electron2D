@@ -61,7 +61,8 @@ internal static partial class RenderingRuntimeTests
         using var green = Image.CreateEmpty(3, 2, false, Image.Format.Rgba8); green.Fill(Colors.Green);
         using var borrowed = ImageTexture.CreateFromImage(red);
         using var empty = new ImageTexture();
-        var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        // Avoid initial compositor resize so this test isolates retained proxy commands.
+        var window = new Window { Size = new(256, 128), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         RID first = default, second = default, proxy = default, nested = default, consumed = default, redirected = default, emptyProxy = default, borrowedProxy = default;
         var phase = 0; var draws = 0; var frames = 0; var warm = 0;
         long before = 0, allocated = 0, idleAllocated = 0;

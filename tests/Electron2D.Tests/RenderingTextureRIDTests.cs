@@ -68,7 +68,8 @@ internal static partial class RenderingRuntimeTests
             submissionChecked = true;
         });
         var resourceRID = resource.GetRID(); var atlasRID = atlas.GetRID();
-        var window = new Window { Size = new(96, 64), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
+        // Keep the initial client size above native decoration minimums so resize does not rerecord the fixture.
+        var window = new Window { Size = new(256, 128), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         RID owned = default, shutdown = default, placeholder = default;
         var phase = 0; var frames = 0; var drawn = 0; var warmedFrames = 0;
         long before = 0, activeBytes = 0, idleBytes = 0;
@@ -184,7 +185,7 @@ internal static partial class RenderingRuntimeTests
                     using var query = RenderingServer.Texture2DGet(resourceRID); Check(query is not null, "Post-draw reads remain available.");
                     var profile = Environment.GetEnvironmentVariable("SDL_VIDEODRIVER") == "dummy" ? $"{backend}-dummy" : backend;
                     frame.SavePNG(System.IO.Path.Combine(System.IO.Path.GetTempPath(), $"e2d-texture-rid-{profile}-{phase}.png"));
-                    if (phase < 3) Check(drawn == 1, "Update and replacement affect retained commands without redraw.");
+                    if (phase < 3) Check(drawn == 1, $"Update and replacement affect retained commands without redraw (phase={phase}, drawn={drawn}).");
                     if (++phase == 4)
                     {
                         n.DrawAction = item => { item.DrawTexture(resourceRID, new(44, 4)); item.DrawTextureRect(placeholder, new(60, 4, 16, 16), false); };

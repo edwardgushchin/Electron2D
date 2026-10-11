@@ -10,6 +10,9 @@ Electron2D is 2D-only. Its game runtime targets Windows, macOS, Linux on X11 and
 
 | Domain | Component | Production type | Source | Documentation | State |
 | --- | --- | --- | --- | --- | --- |
+| [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureRD](classes/TextureRD.md) | [TextureRD.cs](../src/Scene/Resources/TextureRD.cs) | Current | Borrowed sampled ordinary image, direct canvas/atlas/proxy rendering, explicit copied mip snapshot. |
+| [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureLayeredRD](classes/TextureLayeredRD.md) | [TextureLayeredRD.cs](../src/Scene/Resources/TextureLayeredRD.cs) | Current | Abstract borrowed independent array image, live metadata, explicit layer/mip snapshot. |
+| [Resources](domains/resources.md) | [Local compute](components/local-compute.md) | [TextureArrayRD](classes/TextureArrayRD.md) | [TextureArrayRD.cs](../src/Scene/Resources/TextureArrayRD.cs) | Current | Concrete device image array for typed canvas shader samplers, transient archives and borrowed duplication. |
 | [Scene](domains/scene.md) | [Tiles](components/tiles.md) | [TileMapLayer](classes/TileMapLayer.md) | [TileMapLayer.cs](../src/Scene/2D/TileMapLayer.cs) | Current | Scene layer, grid/neighbor queries, body-RID lookup and runtime updates. |
 | [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileMapLayer.DrawingBucket](classes/TileMapLayer.DrawingBucket.md) | [TileMapLayer.DrawingPolicy.cs](../src/Scene/2D/TileMapLayer.DrawingPolicy.cs) | Current | Immutable quadrant/quantized-Y drawing group key. |
 | [Resources](domains/resources.md) | [Tiles](components/tiles.md) | [TileMapLayer.DrawingCell](classes/TileMapLayer.DrawingCell.md) | [TileMapLayer.DrawingPolicy.cs](../src/Scene/2D/TileMapLayer.DrawingPolicy.cs) | Current | Cold planning record for cell/source/data/texture and retained command preparation. |

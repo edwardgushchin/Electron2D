@@ -16,7 +16,7 @@
       "godot": "class:RenderingDevice",
       "electron2d": "T:Electron2D.RenderingDevice",
       "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Specialization, dynamic descriptors, graphics and broader device roles remain integration gaps."
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Specialization, dynamic descriptors, graphics and broader device roles remain integration gaps. The active GPU renderer also retains this device and submits its image/compute work automatically before direct canvas consumers; explicit Submit/Sync/disposal remain local-only."
     },
     {
       "godot": "RenderingDevice::enum:ShaderStage",
@@ -2183,6 +2183,48 @@
       "electron2d": "method:Electron2D.RenderingDevice.TextureCopy(Electron2D.RID,Electron2D.RID,Electron2D.Vector3,Electron2D.Vector3,Electron2D.Vector3,System.UInt32,System.UInt32,System.UInt32,System.UInt32)",
       "state": "Partial",
       "reason": "ADR 0028: native owner-thread local color-image transfers, validated mip/layer regions and roles, GPU command ordering, retained scratch lifetime, queued snapshots and prepared zero managed allocation. RenderingDeviceTextureTransferTests executes real Linux/Vulkan output. Raw matching texel/block footprints copy without resampling, compressed edges and disjoint self copies execute. Depth/shared native views remain allocation prerequisites; reinterpretation on other native drivers needs the verified compatible-view adapter."
+    },
+    {
+      "godot": "class:Texture2DRD",
+      "electron2d": "T:Electron2D.TextureRD",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:TextureLayeredRD",
+      "electron2d": "T:Electron2D.TextureLayeredRD",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:Texture2DArrayRD",
+      "electron2d": "T:Electron2D.TextureArrayRD",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "Texture2DRD::property:texture_rd_rid",
+      "electron2d": "property:Electron2D.TextureRD.TextureRDRID()",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "TextureLayeredRD::property:texture_rd_rid",
+      "electron2d": "property:Electron2D.TextureLayeredRD.TextureRDRID()",
+      "state": "Partial",
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "Texture2DRD::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: static access retains one renderer-owned GPU device per session, returns null for absent/compatibility rendering, submits after canvas authoring and completes queued reads before FramePostDraw; resources retain inherited managed scene-local metadata with default false. Native frame/lifecycle/error fixtures execute."
+    },
+    {
+      "godot": "RenderingServer::method:get_rendering_device()",
+      "electron2d": "method:Electron2D.RenderingServer.GetRenderingDevice()",
+      "state": "Implemented",
+      "reason": "ADRs 0028/0095: static access retains one renderer-owned GPU device per session, returns null for absent/compatibility rendering, submits after canvas authoring and completes queued reads before FramePostDraw; resources retain inherited managed scene-local metadata with default false. Native frame/lifecycle/error fixtures execute."
     }
   ],
   "extras": [
@@ -2260,6 +2302,136 @@
       "electron2d": "method:Electron2D.RDTextureView.GetPropertyDescriptors()",
       "reason": "Typed managed construction and inherited property-descriptor projection of the copied device configuration lifetime.",
       "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureArrayRD..ctor()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureLayeredRD..ctor()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TextureRD..ctor()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureArrayRD.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.Dispose(System.Boolean)",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetFormat()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetHeight()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetLayerData(System.Int32)",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetLayers()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetPropertyDescriptors()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.GetWidth()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.HasMipmaps()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.CreateDuplicateInstance()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.Dispose(System.Boolean)",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.GetHeight()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.GetImage()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.GetPropertyDescriptors()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.GetWidth()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureRD.ValidateDisposal()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "property:Electron2D.TextureRD.HasAlpha()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "property:Electron2D.TextureRD.HasMipmaps()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "property:Electron2D.TextureRD.MipmapCount()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "property:Electron2D.TextureRD.PixelFormat()",
+      "reason": "Typed construction, inherited Texture/TextureLayered metadata and image-read overrides, Resource duplication/descriptors and managed disposal hooks of the native device image consumer. No public native handles; caller-owned resources borrow transient image identities.",
+      "adr": "0004, 0013, 0014, 0028"
+    },
+    {
+      "electron2d": "method:Electron2D.TextureLayeredRD.ValidateDisposal()",
+      "reason": "Inherited managed Resource disposal hook enforces the bound rendering-device owner/submission lifetime without owning device pixels.",
+      "adr": "0014, 0028"
     }
   ],
   "statusGroups": [
@@ -2516,6 +2688,15 @@
         "RenderingDevice::method:sampler_is_format_supported_for_filter(int:RenderingDevice.DataFormat,int:RenderingDevice.SamplerFilter)"
       ],
       "reason": "ADR 0028: backend-specific format filter-feature queries are not exposed by the native portable API; requires a verified feature query/adapter rather than a guess from scalar type."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:Texture2DRD",
+        "class:TextureLayeredRD",
+        "class:Texture2DArrayRD"
+      ],
+      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
     }
   ]
 }
