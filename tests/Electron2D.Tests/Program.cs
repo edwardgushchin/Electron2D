@@ -10,6 +10,7 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_BACKEND") is { } areaBackend) { PhysicsAreaBackendTests.Run(areaBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MOTION_PUBLICATION") is { } motionBackend) { PhysicsBackendOwnershipTests.MotionPublication(motionBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FORCE_INPUTS") is { } forceBackend) { PhysicsBackendOwnershipTests.ForceInputs(forceBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_HANDLE_REPLACEMENT") == "1") { RenderHandleReplacementTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHAPE_PAIRS") is { } pairBackend) { PhysicsBackendOwnershipTests.ShapePairs(pairBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }

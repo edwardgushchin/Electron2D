@@ -2,6 +2,7 @@ namespace Electron2D;
 
 internal sealed partial class PhysicsSpace
 {
+    private bool _testingMotion;
     internal bool TryGetBodyPointMotion(RID rid, Vector2 point, out Vector2 velocity, out uint layer)
     {
         EnsureQueryAccess();
@@ -21,8 +22,16 @@ internal sealed partial class PhysicsSpace
     internal MotionResultData TestBodyMotion(RID ownerRID, Transform from, Vector2 motion, float margin,
         bool recoveryAsCollision, RID[] excludedBodies, ulong[] excludedObjects, bool collideSeparationRay = false)
     {
+        EnsureQueryAccess();
+        if (_testingMotion) throw new InvalidOperationException("A selected motion query cannot recursively test its own space.");
         PrepareForQuery();
-        return _backend.TestBodyMotion(ownerRID, from, motion, margin, recoveryAsCollision,
-            excludedBodies, excludedObjects, collideSeparationRay);
+        BeginExtensionCallback(); _testingMotion = true;
+        try
+        {
+            var data = _backend.TestBodyMotion(ownerRID, from, motion, margin, recoveryAsCollision,
+                excludedBodies, excludedObjects, collideSeparationRay);
+            return PhysicsServer.Service.ValidateMotionResult(this, ownerRID, data, excludedBodies, excludedObjects);
+        }
+        finally { _testingMotion = false; EndExtensionCallback(); }
     }
 }

@@ -222,6 +222,7 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
     /// <param name="recoveryAsCollision">Whether initial depenetration can produce a collision result.</param>
     /// <returns>A caller-owned collision snapshot, or null when motion is unobstructed.</returns>
+    /// <remarks>Selected motion results are validated before applying travel; rejected output leaves the scene pose unchanged.</remarks>
     public KinematicCollision? MoveAndCollide(Vector2 motion, bool testOnly = false,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {
@@ -243,6 +244,7 @@ public abstract partial class PhysicsBody : CollisionObject
     /// <param name="safeMargin">Nonnegative contact recovery margin in scene units.</param>
     /// <param name="recoveryAsCollision">Whether initial depenetration counts as a collision.</param>
     /// <returns>Whether motion or requested recovery reaches a body contact.</returns>
+    /// <remarks>Selected motion results are validated before replacing the caller's collision snapshot.</remarks>
     public bool TestMove(Transform from, Vector2 motion, KinematicCollision? collision = null,
         float safeMargin = 0.08f, bool recoveryAsCollision = false)
     {

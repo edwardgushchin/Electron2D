@@ -2,6 +2,42 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    internal MotionResultData ValidateMotionResult(PhysicsSpace space, RID body, in MotionResultData data,
+        RID[] excludedBodies, ulong[] excludedObjects)
+    {
+        if (data.OwnerRID != body || !data.Travel.IsFinite() || !data.Remainder.IsFinite() ||
+            !float.IsFinite(data.SafeFraction) || !float.IsFinite(data.UnsafeFraction) ||
+            data.SafeFraction < 0 || data.SafeFraction > data.UnsafeFraction || data.UnsafeFraction > 1)
+            throw new InvalidOperationException("A selected motion query returned invalid displacement or fractions.");
+        if (!data.Collided)
+        {
+            if (data.SafeFraction != 1 || data.UnsafeFraction != 1 || data.Remainder != Vector2.Zero)
+                throw new InvalidOperationException("An unobstructed motion query must complete its displacement.");
+            return new(body, default, 0, 0, 0, default, default, 0, default,
+                data.Travel, data.Remainder, data.SafeFraction, data.UnsafeFraction, false);
+        }
+        if (data.ColliderRID == body || !data.Point.IsFinite() || !data.Normal.IsFinite() ||
+            !data.ColliderVelocity.IsFinite() || !float.IsFinite(data.Depth) || data.Depth < 0)
+            throw new InvalidOperationException("A selected motion query returned invalid collision geometry.");
+        try
+        {
+            var local = CaptureResultCollider(body, data.LocalShape, bodyOnly: true);
+            var remote = CaptureResultCollider(data.ColliderRID, data.ColliderShape, bodyOnly: true);
+            var owners = ShapeOwners(body, isArea: false);
+            var mask = owners.Scene is PhysicsBody scene ? scene.EffectiveCollisionMask : owners.Server!.CollisionMask;
+            var enabled = owners.Scene?.GlobalShapeSlot(data.LocalShape).Active ?? !owners.Server!.IsShapeDisabled(data.LocalShape);
+            if (!ReferenceEquals(local.Space, space) || !enabled || BodiesExcepted(body, data.ColliderRID) ||
+                remote.Identity.ID != 0 && excludedObjects.AsSpan().Contains(remote.Identity.ID))
+                throw new InvalidOperationException("A selected motion query returned an excluded body or disabled moving shape.");
+            ValidateQueryResult(data.ColliderRID, data.ColliderShape, space, mask, bodies: true, areas: false, canvas: null, excludedBodies);
+            return data with { ColliderID = remote.Identity.ID, ColliderIdentity = remote.Identity };
+        }
+        catch (Exception error) when (error is ArgumentException or ObjectDisposedException)
+        {
+            throw new InvalidOperationException("A selected motion query returned an invalid body or logical shape identity.", error);
+        }
+    }
+
     internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space, long Attachment) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false, bool contactResult = false)
     {
         ThrowIfDisposed();

@@ -41,6 +41,8 @@ marks the space failed and rejects later stepping/queries rather than replaying
 a partially committed interval on CPU. Disposal remains available. The independent GPU store uses the same fail-closed policy. Public startup
 selection and fallback are described in [physics backends](../components/physics-backends.md).
 
+Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration remains open under ADR 0103.
+
 TestBodyMotion prepares authored topology and delegates engine-unit inputs to the selected world owner. TryGetBodyPointMotion resolves the current scene/raw body by RID, verifies world ownership and delegates world-point velocity to its selected attachment. Neither operation carries native shape lists through common code; platform lookup does not scan world bodies. See [motion ownership](PhysicsWorldBackend.md#body-motion-and-platform-lookup).
 
 ## Invariants and verification

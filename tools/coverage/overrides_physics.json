@@ -4923,6 +4923,13 @@
       ],
       "state": "Blocked",
       "reason": "ADR 0103: internal selected resource/body-slot collision now executes with scene/raw/detached geometry, disabled logical slots, current composed poses and independent swept regions. Nested caller spans validate counts/finite points before output mutation; borrowed collider free preserves registry identity. GPU pose-only demand gathers sixteen pose bytes plus eight status bytes; CPU/GPU warm full-step/query checks assert zero managed allocation. Complete public backend/extension operation dispatch, named factory integration and public-only solver acceptance remain required."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)"
+      ],
+      "state": "Blocked",
+      "reason": "ADR 0103: internal selected motion now executes altered scene/raw/CharacterBody results with borrowed lifetime, atomic finite/fraction/logical-slot/world/filter/exclusion validation, engine-sampled weak object identity and failure/recursive recovery. Complete public backend registration, neutral parameter/result bridge and public-only independent solver acceptance remain open."
     }
   ]
 }
