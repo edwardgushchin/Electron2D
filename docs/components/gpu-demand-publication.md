@@ -189,3 +189,5 @@ combined headless attempt ended with process status 143 before writing a report;
 only the completed separate-process reports are used. Artifacts are in
 `headless-65536/`, `headless-cpu-65536.log` and `headless-gpu-65536.log` beneath the
 same evidence directory.
+
+Scalar GPU pose-only getters now use the existing sixteen-byte gather plus eight-byte dispatch status when neither full state nor a current pose is cached. Repeated requests reuse the current epoch; complete state is still read for velocity/fields/sleep or explicit portable demand. [Selected pair tests](physics-shape-pairs.md) measure the one-body request and retain replay/publication checks.

@@ -399,6 +399,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         _bodies.Clear(); _contactBodies.Clear(); _areas.Clear(); _serverColliders.Clear();
         _overlapEvents.Clear(); _serverAreaEvents.Clear(); _contactEvents.Clear(); _sleepEvents.Clear();
         _portableOneWayKeys.Clear();
+        _shapePairs.Clear();
         if (GPUStore is not null) Release(ReleaseGPUState);
         _disposed = true;
         if (_backend is not null) Release(_backend.Dispose);

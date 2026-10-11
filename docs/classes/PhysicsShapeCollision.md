@@ -1,6 +1,6 @@
 # PhysicsShapeCollision
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal static class PhysicsShapeCollision`
 
@@ -28,3 +28,7 @@ caller-owned results and reused hull buffers. See [collision priority](../compon
 ## Procedural resource geometry
 
 Runtime geometry decisions now use ShapeGeometry's represented primitive rather than concrete resource classes. Caller-defined Shape resources retain the same full-contour, infinite-boundary, directed-ray and zero-geometric-mass policies. Compound CPU contour metadata borrows any Shape with a large convex payload. Scene/raw geometry construction is preflighted before retiring existing CPU/GPU fixtures, so a failing protected hook leaves preparation retryable. See [procedural shape verification](../components/physics-shapes.md#caller-defined-shape-resources).
+
+## Selected shape-pair operations
+
+The internal resource/resource and body-slot/resource bridge now executes through the retained implementation with complete logical indices, composed global poses and validated nested caller-span results. Detached bodies use the same exact resource kernel without a solver; borrowed collider release is preflighted before registry cleanup. GPU scalar pose demand gathers sixteen pose bytes plus eight status bytes instead of complete motion/field/sleep state when no current cache exists. [The pair contract and checks](../components/physics-shape-pairs.md) distinguish this internal prerequisite from the pending complete public server-extension family.

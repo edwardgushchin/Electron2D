@@ -841,3 +841,9 @@ Failure retires owned/direct-state/space registrations and releases any implemen
 ## Retained named selection
 
 Existing CPU/GPU creation resolves built-in entries through the retained internal [PhysicsBackendRegistry](PhysicsBackendRegistry.md). A captured selection can retain its requested token and actual registration across lazy creation and shared World aliases. The common initialization transaction invokes the selected factory outside registry locks; internal name diagnostics distinguish a custom registration or built-in fallback. Public named registration and the complete operation bridge remain open. See [selection behavior and checks](../components/physics-backends.md#named-implementation-selection).
+
+## Selected shape-pair operations
+
+The internal resource/resource and body-slot/resource bridge now executes through the retained implementation with complete logical indices, composed global poses and validated nested caller-span results. Detached bodies use the same exact resource kernel without a solver; borrowed collider release is preflighted before registry cleanup. GPU scalar pose demand gathers sixteen pose bytes plus eight status bytes instead of complete motion/field/sleep state when no current cache exists. [The pair contract and checks](../components/physics-shape-pairs.md) distinguish this internal prerequisite from the pending complete public server-extension family.
+
+Internal `GetBodyShapePair(RID body, int index)` returns the logical shape RID and composed body/slot pose. `BodyCollideShapeCore(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)` selects an attached owner or executes a detached resource query, preserving complete caller point pairs and validated output. These native implementation capabilities are absent from the pinned bound public facade table; their eventual public/protected projection belongs to the complete backend/extension family.

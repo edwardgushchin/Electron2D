@@ -13,6 +13,8 @@ internal static partial class PhysicsBackendOwnershipTests
         internal int SpaceCreations, BodyCreations;
         internal ShapeInputHook? ShapeHook;
         internal float ImpulseScale = 1;
+        internal PairQueryHook? PairHook;
+        internal int ShapePairQueries, BodyPairQueries;
         internal Action? InitializeHook, FlushHook;
         internal Action<bool>? ActiveHook;
         internal Action<Exception?>? EndSyncHook;
@@ -63,6 +65,19 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void PrepareSolverCapacity() => _inner.PrepareSolverCapacity();
         internal override void PrepareMonitoringCapacity() => _inner.PrepareMonitoringCapacity();
         internal override PhysicsSpace.Statistics ReadStatistics() => _inner.ReadStatistics();
+        internal override bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second,
+            Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
+        {
+            ShapePairQueries++;
+            if (PairHook is not null) return PairHook(contacts, out count);
+            return _inner.CollideShapes(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
+        }
+        internal override bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)
+        {
+            BodyPairQueries++;
+            if (PairHook is not null) return PairHook(contacts, out count);
+            return _inner.BodyCollideShape(body, index, shape, pose, motion, contacts, out count);
+        }
         internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
         {
             var created = _inner.CreateCollider(collider);

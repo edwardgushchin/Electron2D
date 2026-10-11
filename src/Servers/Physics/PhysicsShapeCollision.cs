@@ -209,7 +209,7 @@ internal static class PhysicsShapeCollision
         return result;
     }
 
-    private static void Validate(Transform pose, Vector2 motion)
+    internal static void Validate(Transform pose, Vector2 motion)
     {
         if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
             throw new ArgumentException("Shape collision requires a finite unit-scale, zero-skew pose.", nameof(pose));
