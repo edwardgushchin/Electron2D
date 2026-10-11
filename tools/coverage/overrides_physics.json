@@ -1959,6 +1959,66 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_shape_transform(RID:,int:,Transform2D:)",
       "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
       "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaFields(ref Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_param(RID:,int:PhysicsServer2D.AreaParameter,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareWorld(System.Double,ref Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravitySpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravity(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityVector(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityPoint(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetGravityPointUnitDistance(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetLinearDampSpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetLinearDamp(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetAngularDampSpaceOverride(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetAngularDamp(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetPriority(Electron2D.RID)",
+      "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
     }
   ],
   "extras": [
@@ -3590,10 +3650,6 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Registered numerical writes reject before mutation; authored reads and body-state forwarding remain usable. See physics-registered-adapter.md#borrowed-body-authoring for public-only impulse/callback and zero-allocation evidence; full solver acceptance remains open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaFields(ref Electron2D.PhysicsAreaFieldConfiguration)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaMonitoring(System.Boolean,System.Boolean)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
@@ -4071,10 +4127,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareSolverCapacity(System.Int32,System.Int32,System.Int32)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareWorld(System.Double,ref Electron2D.PhysicsAreaFieldConfiguration)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {

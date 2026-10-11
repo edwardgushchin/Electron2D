@@ -21,7 +21,7 @@ internal sealed class PhysicsAreaRuntime(RID rid)
     {
         var owners = Owners;
         owners.Scene?.Tree?.EnsureOwnerThread();
-        owners.Scene?.EnsurePhysicsParticipationChange();
+        if (writing) owners.Scene?.EnsurePhysicsParticipationChange();
         Space?.EnsureQueryAccess();
         if (writing)
         {

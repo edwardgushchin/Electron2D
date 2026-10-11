@@ -33,7 +33,9 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta);
     /// <summary>Supplies the selected implementation operation: set area fields.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Samples the retained Area profile before nonzero interval preparation under the world owner guard.
+    /// The immutable configuration contains gravity, point-distance, damping, override modes and priority.
+    /// Nested Area/default-world field writes reject before mutation; ordinary post-step Area callbacks may edit the next interval's profile.</remarks>
     protected internal abstract void SetAreaFields(in PhysicsAreaFieldConfiguration configuration);
     /// <summary>Supplies the selected implementation operation: set area monitoring.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

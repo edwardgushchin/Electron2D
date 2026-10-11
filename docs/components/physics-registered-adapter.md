@@ -110,3 +110,26 @@ impulse. A blanket all-extension write guard failed the separately rebuilt
 PhysicsBodyExtension.Consumer forwarding test and was replaced by the numerical
 scope guard. Generic solver response and the complete extension contract remain
 open; these checks do not certify all parameter or mode semantics.
+
+## Registered Area fields
+
+The ten typed Area fields and the space-default shortcut retain one common
+profile. Writes reject during a numerical hook before authoring changes,
+including initial raw attachment. Guarded getters remain available. Default-field
+query/status hooks run outside the RID registry lock. Ordinary post-step Area
+callbacks can change the next interval's fields without resetting overlap
+histories; monitor-configuration guards are not reused for these field writes.
+
+The separate public-only consumer now implements bounded circle Area reduction
+from the selected SetAreaFields/PrepareWorld inputs. It checks all five override
+modes independently for gravity and both damping channels, descending priority,
+exact ten-component delivery, point unit distance, directional magnitude, masks
+and participation without monitoring/monitorability. Real point-field motion,
+ordinary callback edits, borrowed rejection, off-owner guards and 64 warmed edited
+full frames at zero owner/all-thread managed bytes are exercised. Zero-duration
+frames attach objects but do not simulate or publish overlap events, so numerical
+checks use nonzero intervals. Field tolerance is 0.00001 for the bounded fixtures;
+the point-motion velocity interval 0.49..0.51 includes the changing field distance.
+
+The two extension parameter rows remain Partial. Arbitrary geometry, full
+numerical/extension acceptance and final platform/performance gates remain open.

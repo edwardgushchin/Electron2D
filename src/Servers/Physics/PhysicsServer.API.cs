@@ -32,7 +32,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetGravitySpaceOverride(RID area, Area.SpaceOverride value) => Service.AreaSetGravitySpaceOverrideCore(area, value);
 
@@ -50,7 +50,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetGravity(RID area, float value) => Service.AreaSetGravityCore(area, value);
 
@@ -69,7 +69,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetGravityVector(RID area, Vector2 value) => Service.AreaSetGravityVectorCore(area, value);
 
@@ -88,7 +88,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     public static void AreaSetGravityPoint(RID area, bool value) => Service.AreaSetGravityPointCore(area, value);
 
     /// <summary>Gets whether the vector is a transformed attraction center.</summary>
@@ -105,7 +105,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetGravityPointUnitDistance(RID area, float value) => Service.AreaSetGravityPointUnitDistanceCore(area, value);
 
@@ -123,7 +123,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetLinearDampSpaceOverride(RID area, Area.SpaceOverride value) => Service.AreaSetLinearDampSpaceOverrideCore(area, value);
 
@@ -141,7 +141,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetLinearDamp(RID area, float value) => Service.AreaSetLinearDampCore(area, value);
 
@@ -160,7 +160,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetAngularDampSpaceOverride(RID area, Area.SpaceOverride value) => Service.AreaSetAngularDampSpaceOverrideCore(area, value);
 
@@ -178,7 +178,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or the mode is undefined.</exception>
     public static void AreaSetAngularDamp(RID area, float value) => Service.AreaSetAngularDampCore(area, value);
 
@@ -197,7 +197,7 @@ public sealed partial class PhysicsServer
     /// independently of monitor callbacks and monitorability; no overlap history is reset. Space defaults
     /// start from sampled ProjectSettings, with priority -1; their modes/priority are stored but do not gate the final fallback.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live Area or space.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or from a selected numerical hook; fields are unchanged.</exception>
     public static void AreaSetPriority(RID area, int value) => Service.AreaSetPriorityCore(area, value);
 
     /// <summary>Gets the integer reduction priority; larger values run first.</summary>

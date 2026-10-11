@@ -4,7 +4,8 @@ namespace Electron2D;
 /// <remarks>Public static operations delegate to the retained service object; its state, identity and ownership remain object-scoped.
 /// Body/Area shape-slot and filter writes, shared server-shape data replacement and release reject while an attached
 /// implementation hook is borrowed, before changing retained authoring. This includes partial initial attachment.
-/// Body force, mass, integration, motion, sleep and callback authoring reject during selected numerical hooks.
+/// Body force, mass, integration, motion, sleep and callback authoring, and Area/default-world field writes,
+/// reject during selected numerical hooks.
 /// Guarded authored reads remain available; ordinary body-state extension forwarding and post-solver callbacks keep their write access.</remarks>
 public sealed partial class PhysicsServer : ElectronObject
 {

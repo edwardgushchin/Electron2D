@@ -36,6 +36,13 @@ Overlapping areas can create zero-gravity zones, directional and point attractio
 
 ### Shared typed server Area fields
 
+Selected numerical hooks borrow Area and default-world profiles read-only. Reject
+field writes before authoring mutation, including initial Area attachment, while
+preserving guarded reads and the existing next-step edits from ordinary Area
+callbacks. Query/status hooks execute outside the RID registry lock. Monitor
+configuration guards do not apply to ordinary field edits and must not reset
+overlap histories.
+
 - Keep one internal PhysicsAreaFields profile per scene/server Area and per space default Area. Scene properties, descriptors and twenty concrete PhysicsServer getter/setters share that state. Reuse Area.SpaceOverride numeric values 0..4 for the server AreaSpaceOverrideMode projection; do not add a duplicate enum. All ten parameter capabilities execute: gravity mode, strength, vector, point flag, point unit distance, linear mode/rate, angular mode/rate and integer priority.
 - Preserve distinct pinned initial profiles: scene Area gravity 980 with vector (0, 1), server-created Area 9.80665 with (0, -1); both have disabled override modes, non-point gravity, zero unit distance/priority, linear damp 0.1 and angular damp 1. Direction and point center share one vector. Directional vectors stay unnormalized and independent of Area rotation. Point centers use the current global pose; nonpositive unit distance means constant strength, positive distance uses inverse-square falloff and exact zero distance yields zero gravity.
 - Add server-created Areas to the same stable descending-priority reducer as scene Areas. Select current geometry by exact overlap and directional mask against body layer, independently of callbacks, Monitoring and Monitorable. Deduplicate receiver geometry through one boolean overlap per Area/body. Disabled shapes, detach, reentry and free govern actual field membership. Resolve gravity and each damping channel independently, then apply the existing body scale/Combine/Replace and omission rules.

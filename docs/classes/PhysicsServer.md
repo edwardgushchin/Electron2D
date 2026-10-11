@@ -871,3 +871,5 @@ attachment. Direct-body setters/forces use the same qualified numerical guard.
 Guarded authored reads, ordinary post-solver callbacks and caller-created
 body-state forwarding remain available; hierarchy/resource-lifetime guards still
 cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
+
+[Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

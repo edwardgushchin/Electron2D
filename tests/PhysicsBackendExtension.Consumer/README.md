@@ -32,3 +32,10 @@ from initial and live numerical hooks for scene/raw bodies and direct views.
 Ordinary impulses and callbacks still execute. After 64 warmups, 64 edited full
 frames require zero owner/all-thread managed bytes. The separate body-state
 consumer checks ordinary requested writes forwarded through its inner state.
+
+Area field checks implement bounded independent circle reduction with descending
+priority, all five gravity/damping modes, point falloff, vector magnitude and masks.
+They verify exact ten-component delivery, monitoring independence, numerical
+borrow/owner rejection, registry-lock boundaries and ordinary callback edits.
+After 64 warmups, 64 edited full frames require zero owner/all-thread managed bytes.
+The fixture does not certify arbitrary shapes or a complete production solver.

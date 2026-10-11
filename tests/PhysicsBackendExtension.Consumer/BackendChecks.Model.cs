@@ -44,7 +44,7 @@ public static partial class BackendChecks
         { var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
         protected override PhysicsBackendJoint CreateJoint(RID joint) { var created = new Constraint(this, joint); Joints.Add(joint, created); return created; }
         protected override void BeginStep(double delta) => Ready = false;
-        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) => Fields = fields;
+        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
         protected override void Solve(double delta)
         {
@@ -153,6 +153,7 @@ public static partial class BackendChecks
         private Vector2 _center;
         private Transform _saved;
         private PhysicsBodyFields _fields;
+        internal PhysicsAreaFieldConfiguration AreaFields;
         internal bool Dynamic => !area && Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         internal void Advance(float dt)
         {
@@ -185,12 +186,12 @@ public static partial class BackendChecks
         protected override void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta)
         {
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
-            var f = solver.Fields;
-            _fields = new(f.GravityVector * f.Gravity * configuration.GravityScale,
+            var f = solver.ResolveFields(this);
+            _fields = new(f.Gravity * configuration.GravityScale,
                 configuration.LinearDamp + f.LinearDamp, configuration.AngularDamp + f.AngularDamp, true);
         }
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
-        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { }
+        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) => AreaFields = configuration;
         protected override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => _fields;
         protected override void RefreshIdentity(ulong objectID, ulong canvasID)
         { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }
