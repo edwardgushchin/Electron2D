@@ -1,6 +1,6 @@
 # GPUCanvasBackend
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 - Declaration: `internal sealed unsafe class GPUCanvasBackend : CanvasBackend`
 - Source: [GPUCanvasBackend.cs](../../src/Servers/Rendering/GPUCanvasBackend.cs)
@@ -90,3 +90,5 @@ On the current Linux Wayland Vulkan profile, remapping a previously presented ro
 Native group/copy boundaries end a render pass before switching attachments, copying a region or generating mipmaps. Screen sampling never reads the active writable group attachment. Default group output uses premultiplied storage/tint/blending; a cached overwrite pipeline clears the group region. Sampler roles resolve SCREEN_TEXTURE separately from ordinary texture resources. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 ClipChildren MaskBegin copies main background into BackBuffer, then captures children. MaskEnd restores main drawing. The built-in Clip shader separately samples command alpha and screen RGB using physical inverse dimensions; AndDraw reuses uploaded owner vertices for its early pass. Nested/writable-storage hazards reject before Draw. See [alpha masks](../components/canvas-rendering.md#canvas-alpha-masks).
+
+[Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.

@@ -66,7 +66,7 @@ def build_locked():
     recipe = hashlib.sha256(lock + Path(__file__).read_bytes()).hexdigest()
     receipt = output / 'recipe.sha256'
     if (receipt.exists() and receipt.read_text() == recipe and
-            all((output / 'bin' / (name + suffix)).is_file() for name in ('glslangValidator', 'spirv-val'))):
+            all((output / 'bin' / (name + suffix)).is_file() for name in ('glslangValidator', 'spirv-val', 'spirv-dis'))):
         return output
     build_sources(lock, output)
     receipt.write_text(recipe)
@@ -117,10 +117,11 @@ def build_sources(lock, output):
                     str(source / 'External/spirv-tools/CHANGES'), str(work / 'build/External/spirv-tools/build-version.inc')],
                    env=build_environment, check=True)
     subprocess.run(['cmake', '--build', str(work / 'build'), '--parallel', str(min(4, os.cpu_count() or 1)),
-                    '--target', 'glslang-standalone', 'spirv-val'], env=build_environment, check=True)
+                    '--target', 'glslang-standalone', 'spirv-val', 'spirv-dis'], env=build_environment, check=True)
     (output / 'bin').mkdir(parents=True, exist_ok=True)
     for name, built in [('glslangValidator', 'StandAlone/glslang'),
-                        ('spirv-val', 'External/spirv-tools/tools/spirv-val')]:
+                        ('spirv-val', 'External/spirv-tools/tools/spirv-val'),
+                        ('spirv-dis', 'External/spirv-tools/tools/spirv-dis')]:
         shutil.copy2(work / 'build' / (built + suffix), output / 'bin' / (name + suffix))
     for entry in sources:
         license_directory = output / 'licence'

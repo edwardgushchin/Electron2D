@@ -2,6 +2,8 @@ namespace Electron2D;
 
 internal static class BuiltInShaders
 {
+    internal static readonly byte[] LightingVertex = Read("CanvasLighting.vert.spv");
+    internal static readonly byte[] LightingInstancedVertex = Read("CanvasLightingInstanced.vert.spv");
     internal static readonly byte[] Vertex = Read("Canvas.vert.spv");
     internal static readonly byte[] InstancedVertex = Read("CanvasInstanced.vert.spv");
     internal static readonly byte[] SignedFragment = Read("CanvasSigned.frag.spv");
@@ -23,7 +25,7 @@ internal static class BuiltInShaders
     private static readonly byte[][] ClipVariants = [Read("Clip.frag.spv"), Read("Clip1.frag.spv"), Read("Clip2.frag.spv")];
     internal static byte[] Clip(int scalar) => ClipVariants[scalar];
 
-    private static byte[] Read(string name)
+    internal static byte[] Read(string name)
     {
         using var input = typeof(BuiltInShaders).Assembly.GetManifestResourceStream("Electron2D.Shaders." + name)
             ?? throw new InvalidOperationException("A built-in shader is missing: " + name);

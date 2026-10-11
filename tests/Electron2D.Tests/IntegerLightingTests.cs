@@ -8,12 +8,19 @@ internal static class IntegerLightingTests
         protected override void OnDraw() => DrawTextureRect(texture, new(0, 0, size, size), false, color == default ? Colors.White : color);
     }
     private static Color Bits(Color value) => new(BitConverter.Int32BitsToSingle((int)value.R), BitConverter.Int32BitsToSingle((int)value.G), BitConverter.Int32BitsToSingle((int)value.B), BitConverter.Int32BitsToSingle((int)value.A));
-    internal static void Run()
+    internal static void Run(bool programmable = false)
     {
         ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
         var root = new Window { Size = new(256, 128), CanvasItemDefaultTextureFilter = Viewport.DefaultCanvasItemTextureFilter.Nearest };
         var resources = new List<Resource>(); var native = new TextureRD[3, 3]; var reference = new Texture[3, 3]; var ids = new RID[3, 3];
         var values = new Color[,] { { new(1, 1, 1), new(2, -1, 1), new(2, 1, 0) }, { new(.5f, .5f, 0), new(-1, 1, 0), new(0, 0, 0) }, { new(.3f, .5f, .6f, .4f), new(-1, 2, 1, 0), new(1, 2, 0, 0) } };
+        var materials = new ShaderMaterial?[3];
+        if (programmable)
+            for (var scalar = 0; scalar < 3; scalar++)
+            {
+                var shader = new Shader(); shader.SetSPIRV(scalar switch { 1 => BuiltInShaders.SignedFragment, 2 => BuiltInShaders.UnsignedFragment, _ => BuiltInShaders.Fragment }); resources.Add(shader);
+                materials[scalar] = new ShaderMaterial { Shader = shader }; resources.Add(materials[scalar]!);
+            }
         var frames = 0; long before = 0, allocated = 0; RenderingDevice device = null!; RID maskID = default, signedMaskID = default, clipID = default, unsignedClipID = default;
         root.Ready += _ =>
         {
@@ -42,7 +49,7 @@ internal static class IntegerLightingTests
                         {
                             Texture Source(int channel, int scalar) => baseline || scalar == 0 ? reference[channel, scalar] : native[channel, scalar];
                             var canvas = new CanvasTexture { DiffuseTexture = Source(0, diffuse), NormalTexture = Source(1, normal), SpecularTexture = Source(2, specular), SpecularShininess = .2f }; resources.Add(canvas);
-                            root.AddChild(new Patch(canvas) { Name = $"channels_{index}_{baseline}", Position = new(index % 9 * 24 + (baseline ? 12 : 2), index / 9 * 24 + 2) });
+                            root.AddChild(new Patch(canvas) { Name = $"channels_{index}_{baseline}", Material = baseline ? null : materials[diffuse], Position = new(index % 9 * 24 + (baseline ? 12 : 2), index / 9 * 24 + 2) });
                         }
                     }
             root.AddChild(new DirectionalLight { Height = .5f, Energy = .08f, RangeZMax = 0 });
