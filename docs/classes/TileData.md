@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Overview
 
-Stores terrain assignments and weights, the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.
+Stores typed custom values, terrain assignments and weights, the visual transform, collision polygons and borrowed navigation polygons of one atlas alternative.
 
 ## Syntax
 
@@ -556,3 +556,81 @@ public System.Int32 TerrainSet { get; set; }
 Gets or sets the terrain set index, or -1 to disable terrain assignments.
 
 A change on data attached to a set clears its center and peering assignments. Standalone atlas authoring can retain indices before association.
+
+Actual custom values are independent of configured types. Runtime copies own separate value holders while borrowing their arrays/resources; typed replacements preserve authored values. See [custom data](../components/tiles.md#typed-custom-data) for schema/default, exceptions, storage and ownership.
+
+## Custom data methods
+
+| Signature | Contract |
+| --- | --- |
+| `public void SetCustomData<T>(string layerName, T value)` | Stores a typed value on the named custom layer, independently of its configured default type. |
+| `public T GetCustomData<T>(string layerName)` | Reads the named layer using its actual stored type. |
+| `public bool HasCustomData(string layerName)` | Tests whether the attached set defines this named custom layer, including nil entries. |
+| `public void SetCustomDataByLayerID<T>(int layerID, T value)` | Stores a typed value at a valid custom-layer index. |
+| `public T GetCustomDataByLayerID<T>(int layerID)` | Reads the indexed layer using its actual stored type. |
+
+### `public void SetCustomData<T>(string layerName, T value)`
+
+**summary:** Stores a typed value on the named custom layer, independently of its configured default type.
+
+**T:** The actual stored CLR value type.
+
+**layerName:** Exact nonempty layer name.
+
+**value:** Stored value; arrays and resources are borrowed.
+
+**remarks:** Named access requires an attached tile set. Every write emits Changed.
+
+
+### `public T GetCustomData<T>(string layerName)`
+
+**summary:** Reads the named layer using its actual stored type.
+
+**T:** The stored value type; resource base types can read derived resources.
+
+**layerName:** Exact layer name.
+
+**returns:** The stored value, or default(T) for a nil entry.
+
+**KeyNotFoundException:** The layer name or stored type does not match.
+
+**InvalidOperationException:** The data has no attached tile set.
+
+
+### `public bool HasCustomData(string layerName)`
+
+**summary:** Tests whether the attached set defines this named custom layer, including nil entries.
+
+**layerName:** Exact layer name.
+
+**returns:** Whether the named layer exists.
+
+
+### `public void SetCustomDataByLayerID<T>(int layerID, T value)`
+
+**summary:** Stores a typed value at a valid custom-layer index.
+
+**T:** The actual stored CLR value type.
+
+**layerID:** Zero-based custom layer index.
+
+**value:** Stored value; borrowed references retain their own ownership.
+
+**remarks:** Changing the configured layer type later converts or resets values. Stable typed writes reuse their prepared holder.
+
+**ArgumentOutOfRangeException:** The layer index is absent.
+
+
+### `public T GetCustomDataByLayerID<T>(int layerID)`
+
+**summary:** Reads the indexed layer using its actual stored type.
+
+**T:** The exact value type, or an assignable resource type.
+
+**layerID:** Zero-based layer index.
+
+**returns:** The stored value, or default(T) for nil.
+
+**ArgumentOutOfRangeException:** The layer index is absent.
+
+**KeyNotFoundException:** The non-nil stored type does not match T.

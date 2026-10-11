@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Overview
 
-Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, atlas sources and shared physics and navigation layer policies.
+Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, typed custom-data layers, atlas sources and shared physics and navigation layer policies.
 
 ## Syntax
 
@@ -1074,3 +1074,126 @@ Each level checks only its own original identity. Missing destinations are retai
 Clears all three replacement tables and emits Changed, including when already empty.
 
 All operations throw ObjectDisposedException on a disposed set. Resource authors coordinate edits with scene consumers. Value tuples are independent copied results; authoring/export may allocate, while warmed lookups do not allocate measured owner-thread managed bytes. See [explicit tile proxies](../components/tiles.md#explicit-tile-proxies) for the compiled workflow, storage/copy policy and verification limits.
+
+Ordered custom definitions, coherent schema edits and current exact-name lookup execute through every source alternative. See [custom data](../components/tiles.md#typed-custom-data) for conversions, generic factories and portable ownership.
+
+## Custom data methods
+
+| Signature | Contract |
+| --- | --- |
+| `public int GetCustomDataLayersCount()` | Returns the number of ordered custom-data layers. |
+| `public void AddCustomDataLayer(int toPosition = -1)` | Inserts an unnamed nil-type layer and its nil value into every alternative. |
+| `public void MoveCustomDataLayer(int layerIndex, int toPosition)` | Moves a layer before the insertion position, preserving each tile's corresponding value. |
+| `public void RemoveCustomDataLayer(int layerIndex)` | Removes a layer and its values from every alternative. |
+| `public int GetCustomDataLayerByName(string layerName)` | Finds a layer by its current exact nonempty name. |
+| `public bool HasCustomDataLayerByName(string layerName)` | Tests whether a current nonempty layer name exists. |
+| `public string GetCustomDataLayerName(int layerIndex)` | Returns a layer's name, empty for an unnamed layer. |
+| `public void SetCustomDataLayerName(int layerIndex, string layerName)` | Changes a layer's exact name and rebuilds current name lookup. |
+| `public Type? GetCustomDataLayerType(int layerIndex)` | Returns the configured default/conversion CLR type, or null for nil. |
+| `public void SetCustomDataLayerType(int layerIndex, Type? type)` | Changes the configured type using a previously prepared typed factory; null clears values to nil. |
+| `public void SetCustomDataLayerType<T>(int layerIndex)` | Prepares a direct factory for T and changes a layer's default/conversion type. |
+
+### `public int GetCustomDataLayersCount()`
+
+**summary:** Returns the number of ordered custom-data layers.
+
+**returns:** The layer count.
+
+
+### `public void AddCustomDataLayer(int toPosition = -1)`
+
+**summary:** Inserts an unnamed nil-type layer and its nil value into every alternative.
+
+**toPosition:** Insertion position; any negative value appends.
+
+**ArgumentOutOfRangeException:** Position exceeds the layer count.
+
+
+### `public void MoveCustomDataLayer(int layerIndex, int toPosition)`
+
+**summary:** Moves a layer before the insertion position, preserving each tile's corresponding value.
+
+**layerIndex:** Current zero-based layer index.
+
+**toPosition:** Insertion position, from zero through count.
+
+**ArgumentOutOfRangeException:** An index is outside its range.
+
+
+### `public void RemoveCustomDataLayer(int layerIndex)`
+
+**summary:** Removes a layer and its values from every alternative.
+
+**layerIndex:** Zero-based layer index.
+
+**ArgumentOutOfRangeException:** The layer does not exist.
+
+
+### `public int GetCustomDataLayerByName(string layerName)`
+
+**summary:** Finds a layer by its current exact nonempty name.
+
+**layerName:** Layer name.
+
+**returns:** The index, or minus one if absent or empty.
+
+
+### `public bool HasCustomDataLayerByName(string layerName)`
+
+**summary:** Tests whether a current nonempty layer name exists.
+
+**layerName:** Layer name.
+
+**returns:** Whether the named layer exists.
+
+
+### `public string GetCustomDataLayerName(int layerIndex)`
+
+**summary:** Returns a layer's name, empty for an unnamed layer.
+
+**layerIndex:** Layer index.
+
+**returns:** The layer name.
+
+
+### `public void SetCustomDataLayerName(int layerIndex, string layerName)`
+
+**summary:** Changes a layer's exact name and rebuilds current name lookup.
+
+**layerIndex:** Layer index.
+
+**layerName:** Unique nonempty name, or empty for unnamed.
+
+**ArgumentException:** Another layer has this nonempty name.
+
+
+### `public Type? GetCustomDataLayerType(int layerIndex)`
+
+**summary:** Returns the configured default/conversion CLR type, or null for nil.
+
+**layerIndex:** Layer index.
+
+**returns:** The configured type, independently of individual stored value types.
+
+
+### `public void SetCustomDataLayerType(int layerIndex, Type? type)`
+
+**summary:** Changes the configured type using a previously prepared typed factory; null clears values to nil.
+
+**layerIndex:** Layer index.
+
+**type:** CLR type prepared by a typed setter or registered portable codec/resource, or null.
+
+**remarks:** All value conversions prepare before definition/value commitment and callbacks.
+Unconvertible values reset to the type's default. Conversion overflow rejects the complete edit.
+
+**NotSupportedException:** No direct typed factory was prepared for this type.
+
+
+### `public void SetCustomDataLayerType<T>(int layerIndex)`
+
+**summary:** Prepares a direct factory for T and changes a layer's default/conversion type.
+
+**T:** Concrete CLR data type; prepare application portable codecs in each loading process.
+
+**layerIndex:** Layer index.

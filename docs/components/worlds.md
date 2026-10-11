@@ -1,6 +1,6 @@
 # Canvas and physics worlds
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
 A World combines one stable logical rendering canvas with one lazily created registered physics space. Viewport.World selects that runtime; CanvasItem.GetWorld resolves the nearest viewport's selection, or a SceneTree fallback in a viewport-free scene. FindWorld returns the live local world. Each ordinary viewport starts independently. Assigning another viewport's World shares scene canvas content and physics queries/simulation; null assignment creates a fresh independent default, matching the pinned viewport setter. CanvasLayer canvases keep their explicit viewport scope.
 
@@ -49,3 +49,5 @@ World association is live, discoverable typed state and is not stored in PackedS
 ELECTRON2D_TEST_WORLD_HOST=1 exercises actual Window/SubViewport targets with fallback disabled and the requested backend asserted. Five state phases after four warm frames verify independent/shared canvas pixels, per-view transforms, null replacement, source transform republishing, transition notification scope and native teardown. Optional ELECTRON2D_WORLD_SNAPSHOT writes final real rendered pixels. Current native evidence is Linux Wayland GPU and hardware compatibility; no foreign-platform or human acceptance is implied. Full-suite checks also cover existing physics, hierarchy, viewport and audio consumers under ADR 0021.
 
 The GPU and hardware compatibility final captures were inspected and are byte-identical: SHA-256 `a9f4652bfae6dc386a3f3542f4e9c5dccc188c0f15bd0c6e865c5af3aa013a0e`. They show both source viewport contributions in the restored shared world. Captures remain local ignored verification artifacts.
+
+WorldRuntime also retains an optional immutable internal named selection before lazy space creation. Aliases keep the same registration even if registry default priorities change; factories run only on first physics access. Public construction still selects CPU/GPU through the existing enum. [Named selection checks and limits](physics-backends.md#named-implementation-selection) cover real scene/raw solver behavior.

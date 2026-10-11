@@ -15,12 +15,14 @@ internal sealed class WorldRuntime
     internal PhysicsServer.Backend RequestedBackend { get; }
     private readonly bool _allowCPUFallback;
     private readonly Func<PhysicsSpace, PhysicsWorldBackend>? _backendFactory;
+    private readonly PhysicsBackendRegistry.Selection? _backendSelection;
     private bool _creatingSpace;
     internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false,
-        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null)
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, PhysicsBackendRegistry.Selection? selection = null)
     {
         if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
-        RequestedBackend = backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory;
+        if (factory is not null && selection is not null) throw new ArgumentException("A world cannot select two physics factories.");
+        RequestedBackend = selection?.Registration.BuiltIn ?? backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory; _backendSelection = selection;
         SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this);
     }
     internal void Retain() { lock (_gate) { EnsureAlive(); _resources++; } }
@@ -50,7 +52,7 @@ internal sealed class WorldRuntime
             PhysicsSpace? created = null;
             try
             {
-                created = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false, factory: _backendFactory);
+                created = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false, factory: _backendFactory, selection: _backendSelection);
                 lock (_gate) { EnsureAlive(); _spaceRID = created.RID; ExistingSpace = created; }
                 return created.RID;
             }

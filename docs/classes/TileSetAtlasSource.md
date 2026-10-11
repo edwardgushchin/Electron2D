@@ -1,6 +1,6 @@
 # TileSetAtlasSource
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Source:** [TileSetAtlasSource.cs](../../src/Scene/Resources/TileSetAtlasSource.cs).
 
@@ -691,3 +691,5 @@ Rect2i GetRuntimeTileTextureRegion(Vector2i atlasCoords, int frame)
 ```
 
 Returns the requested frame region in the runtime texture, accounting for extrusion stride.
+
+New alternatives initialize current custom-layer defaults. Standalone sources preserve indexed actual values; named access requires their set. Binding/transferring preflights destination conversions; duplication preserves actual types. See [custom data](../components/tiles.md#typed-custom-data).

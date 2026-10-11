@@ -151848,6 +151848,44 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileData.GetCustomDataByLayerID\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetCustomDataByLayerID",
+    "signature": "public T GetCustomDataByLayerID\u003CT\u003E(System.Int32 layerID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.GetCustomData\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "GetCustomData",
+    "signature": "public T GetCustomData\u003CT\u003E(System.String layerName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "T",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileData.GetNavigationPolygon(System.Int32,System.Boolean,System.Boolean,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.TileData",
@@ -151911,6 +151949,25 @@
       }
     ],
     "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.HasCustomData(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "HasCustomData",
+    "signature": "public System.Boolean HasCustomData(System.String layerName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -152133,6 +152190,54 @@
       {
         "name": "velocity",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCustomDataByLayerID\u00601(System.Int32,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCustomDataByLayerID",
+    "signature": "public System.Void SetCustomDataByLayerID\u003CT\u003E(System.Int32 layerID, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerID",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileData.SetCustomData\u00601(System.String,T)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileData",
+    "name": "SetCustomData",
+    "signature": "public System.Void SetCustomData\u003CT\u003E(System.String layerName, T value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "T",
         "default": null
       }
     ],
@@ -153225,6 +153330,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.AddCustomDataLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "AddCustomDataLayer",
+    "signature": "public System.Void AddCustomDataLayer(System.Int32 toPosition = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.AddNavigationLayer(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -153520,6 +153644,76 @@
       }
     ],
     "returnType": "System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetCustomDataLayerByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetCustomDataLayerByName",
+    "signature": "public System.Int32 GetCustomDataLayerByName(System.String layerName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetCustomDataLayerName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetCustomDataLayerName",
+    "signature": "public System.String GetCustomDataLayerName(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetCustomDataLayerType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetCustomDataLayerType",
+    "signature": "public System.Type GetCustomDataLayerType(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Type",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.GetCustomDataLayersCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "GetCustomDataLayersCount",
+    "signature": "public System.Int32 GetCustomDataLayersCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -153948,6 +154142,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TileSet.HasCustomDataLayerByName(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "HasCustomDataLayerByName",
+    "signature": "public System.Boolean HasCustomDataLayerByName(System.String layerName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TileSet.HasSource(System.Int32)",
     "kind": "method",
     "declaringType": "Electron2D.TileSet",
@@ -154012,6 +154225,30 @@
       }
     ],
     "returnType": "System.ValueTuple\u003CSystem.Int32, Electron2D.Vector2i, System.Int32\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.MoveCustomDataLayer(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "MoveCustomDataLayer",
+    "signature": "public System.Void MoveCustomDataLayer(System.Int32 layerIndex, System.Int32 toPosition)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "toPosition",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -154162,6 +154399,25 @@
       {
         "name": "coordsFrom",
         "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.RemoveCustomDataLayer(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "RemoveCustomDataLayer",
+    "signature": "public System.Void RemoveCustomDataLayer(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
         "default": null
       }
     ],
@@ -154378,6 +154634,73 @@
       {
         "name": "coordsTo",
         "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetCustomDataLayerName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetCustomDataLayerName",
+    "signature": "public System.Void SetCustomDataLayerName(System.Int32 layerIndex, System.String layerName)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "layerName",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetCustomDataLayerType(System.Int32,System.Type)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetCustomDataLayerType",
+    "signature": "public System.Void SetCustomDataLayerType(System.Int32 layerIndex, System.Type type)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "type",
+        "type": "System.Type",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSet.SetCustomDataLayerType\u00601(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSet",
+    "name": "SetCustomDataLayerType",
+    "signature": "public System.Void SetCustomDataLayerType\u003CT\u003E(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
         "default": null
       }
     ],

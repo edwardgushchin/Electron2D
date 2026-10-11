@@ -138,3 +138,5 @@ Threaded loading invokes compiled factories and codecs on workers, potentially c
 NavigationPolygon outlines/settings/generated geometry and NavigationMeshSourceGeometryData contour/projected payloads now have exact compiled portable schemas/factories. No transient workers, callbacks, parser RIDs or scene ownership is serialized. See [navigation baking](../components/navigation-baking.md).
 
 The built-in TileMapPattern factory and typed pattern-array codec support standalone resources and TileSet pattern lists in portable scene graphs; pattern cell records and extent restore through compiled descriptors. See [reusable patterns](../components/tiles.md#reusable-patterns).
+
+Portable value codec and resource registration also prepare direct per-T custom tile factories; application registrations must exist in a fresh loading process. See [custom data](../components/tiles.md#typed-custom-data).

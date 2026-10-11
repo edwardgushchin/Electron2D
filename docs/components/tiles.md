@@ -27,6 +27,25 @@ layer.SetCell(Vector2i.Zero, sourceID, Vector2i.Zero);
 // Add layer to a viewport's SceneTree, then flush deferred work or call UpdateInternals.
 ```
 
+## Typed custom data
+
+TileSet defines ordered named custom layers; TileData stores actual per-layer values with generic access. Names are exact/case-sensitive and unique when nonempty. Renaming/moving removes stale lookup aliases. A null configured type is nil; nil reads return default(T), while HasCustomData still reports the definition. Configured types provide defaults/conversions and do not restrict ordinary writes. Wrong non-nil reads or missing names throw KeyNotFoundException; named access without a set throws InvalidOperationException. Indices are checked.
+
+```csharp
+set.AddCustomDataLayer();
+set.SetCustomDataLayerName(0, "Damage");
+set.SetCustomDataLayerType<long>(0);
+TileData data = atlas.GetTileData(Vector2i.Zero, 0);
+data.SetCustomData("Damage", 12L);
+long damage = data.GetCustomData<long>("Damage");
+```
+
+Schema edits prepare all conversions before commitment; overflow rejects the entire edit. All child lists/current names are committed before notifications, reentrant schema edits reject, and a listener failure cannot leave alternatives on different indices. Source transfer preflights the destination schema. Copies retain actual values without rebinding conversion, including values differing from configured types. Arrays/resources are borrowed during ordinary assignment and runtime copies; deep duplication follows the existing typed Resource graph policy. Replacing a callback copy's value does not replace the authored value; editing a shared borrowed resource/array still affects its owner.
+
+Bool/numeric/text, Vector2/Vector2i, Vector4/Vector4i, Rect2/Rect2i and text/integer Color conversions execute. Incompatible types reset to default(T), with empty string/array, opaque black Color and identity Transform. Numeric text uses the documented prefix/saturation rules in [ADR 0101](../decisions/tiles.md#typed-custom-tile-data). Successful string conversion uses invariant scalar text, existing math text and bracketed arrays. Type edits are allocating authoring work. Warmed stable exact reads/writes reuse typed holders.
+
+SetCustomDataLayerType(int, Type?) requires a factory already prepared by typed setters or portable codec/resource registration. Its generic overload prepares a direct factory for T. Files store configured and actual stable IDs separately; a fresh host must register its application codecs/resource factories before loading. Portable writes/deep copies reject unsupported transient/application types through their existing storage contracts. Private stored count/type arrays reject more than 65536 entries. No active callback state is serialized.
+
 ## Runtime flow
 
 Cell/resource edits mark dirty cells or the full layer and queue one reusable tree action. UpdateInternals compiles dirty quadrants. A quadrant groups cells by physics layer, constant surface velocity, one-way policy/margin and one-way row. Polygons are unioned and convex-decomposed; a union containing holes is triangulated with the existing geometry dependency. Invalid topology contributes no fixtures. The compilation validates finite coordinates and clipping range before allocating server bodies.
@@ -85,7 +104,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Scene-collection sources, per-tile materials/Z sorting, custom data, tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Scene-collection sources, per-tile materials/Z sorting and tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 
@@ -195,3 +214,11 @@ The compiled test workflow assumes a live set with source zero and an atlas tile
 Assignments accept nonnegative source/atlas values and alternatives at least -1; target existence is not required. Queries without a stored mapping throw KeyNotFoundException, has queries return false. Set and clear always emit Resource.Changed; remove emits after successful deletion. Cleanup removes obsolete original keys (source existence at source level, tile existence at coordinate level, full alternative existence at alternative level), retaining missing targets. It prepares and commits all removals before one callback, so observer failure leaves coherent tables. Source renaming/removal does not rewrite keys. Copies own independent tables; portable typed arrays reject malformed shape, invalid bounds and duplicate keys before replacement, and restore before source associations without eager destination validation.
 
 TileProxyTests compares 19 pinned stages and 190 mapped identities, plus all getters/membership/removals, priority, valid-original bypass, negative/sentinel/transform values, cycles, source rename, cleanup, independent copies and malformed stored-array/callback failures. CPU/GPU worlds execute mapped and pattern-captured cells, actual owned collisions/navigation/baking, zero warmed scalar/unchanged-update brackets and fresh-process saved-scene remapping. Native GPU/compatibility workflows cover all three levels, editing to erase a destination, actual pixels/owners/regions and 24 warmed complete forced-redraw owner frames. All four native combinations pass with zero owner-thread managed bytes in each frame bracket; 1024 warmed query brackets cover all mapping branches and 256 unchanged updates retain zero owner bytes. Four captures have SHA-256 7b20659e129e1054f053c78b9738658b7a42af4db148ad220bb0c2ffdeb9ca11; one was visually inspected. Other platforms, native/all-thread allocation totals, dense migration throughput, editor workflow and human acceptance remain unverified.
+
+## Custom-data verification
+
+TileCustomDataTests compares the 30-stage pinned fixture, checks forward/backward layer moves, insertion/removal/name repair, conversions/defaults, overflow preflight, callback failure/reentry and independent alternative notification. It exercises arrays/resource graph duplication, mismatched actual/configured types, cache replacement, standalone indexed source files, malformed IDs/counts and fresh-process executable scenes, including an explicitly registered application value codec. In-memory typed rules control actual generated collision/navigation on both physics backends without changing authored scalar values.
+
+The native workflow verifies Tint pixels and Solid collision/navigation before and after edits for gpu/compatibility renderers with CPU/GPU physics. Each measured 24-frame warmed forced-redraw interval allocated 0 owner-thread managed bytes; exact typed reads/writes and name queries use 32 warmup/1024 measured operations, and unchanged layer updates use 32 warmup/256 measured calls. Four captured 320x160 PNGs have identical SHA-256 `27d2e2e6e9064b486850f9fee08c7b03bb0d04568f91d0b4b2d5e40a0095b450`; the representative capture was inspected. These checks establish current Linux native pixels/behavior, with no native allocator trace, foreign-platform or owner acceptance claim.
+
+Development producer `tools/tiles/custom_data_reference.gd` generated `tests/Electron2D.Tests/Fixtures/Tiles/custom-data-reference.json` with pin `ed1daf0bf001b61586d9930840f2f1394092c079`: 4204 bytes, SHA-256 `a6112bbd6545503917603c739deb3c60a86b9a363f1c481b6f3562ce5f5d5447`. The documented name-index/string-constructor corrections are checked separately from reference equality. Release runtime/test builds, complete executable harness with the stock ENet oracle, focused/native custom-data checks, formatting, compiled coverage and wiki generation/check are independent gates.

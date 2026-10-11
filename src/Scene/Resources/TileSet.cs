@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-/// <summary>Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, atlas sources and shared physics and navigation layer policies.</summary>
+/// <summary>Defines tile grid geometry, terrain definitions, reusable patterns, explicit tile proxies, typed custom-data layers, atlas sources and shared physics and navigation layer policies.</summary>
 /// <remarks>Sources are transferred between sets, while materials are borrowed. Copies duplicate sources
 /// even in shallow mode so copying cannot remove sources from the original set.</remarks>
 public sealed partial class TileSet : Resource
@@ -87,9 +87,13 @@ public sealed partial class TileSet : Resource
     }
     /// <summary>Adds a source under an explicit or automatically selected nonnegative identity.</summary>
     /// <returns>The assigned source identity.</returns>
+    /// <remarks>Destination custom-layer conversions prepare before source ownership changes; conversion overflow leaves its previous set intact.</remarks>
+    /// <exception cref="OverflowException">A custom value cannot fit its destination numeric type.</exception>
     /// <param name="source">Live source to transfer into this set.</param>
     /// <param name="atlasSourceIDOverride">Nonnegative source identity, or minus one to choose a free identity.</param>
     public int AddSource(TileSetSource source, int atlasSourceIDOverride = -1)
+        => AddSourceCore(source, atlasSourceIDOverride, true);
+    private int AddSourceCore(TileSetSource source, int atlasSourceIDOverride, bool convertCustom)
     {
         ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(source); ObjectDisposedException.ThrowIf(source.IsDisposed, source);
         if (atlasSourceIDOverride < -1) throw new ArgumentOutOfRangeException(nameof(atlasSourceIDOverride));
@@ -97,13 +101,22 @@ public sealed partial class TileSet : Resource
         if (_sources.TryGetValue(id, out var existing) && existing is not null) throw new ArgumentException("Source identity is occupied.", nameof(atlasSourceIDOverride));
         if (ReferenceEquals(source.OwnerSet, this)) throw new ArgumentException("The source already belongs to this set.", nameof(source));
         var previous = source.OwnerSet;
+        var data = source is TileSetAtlasSource atlas ? atlas.TerrainData().ToArray() : [];
+        var custom = data.Select(d => convertCustom ? d.PrepareCustomSchema(this) : d.CustomValues).ToArray();
         previous?.DetachSourceInstance(source);
         source.ResizePhysicsLayers(PhysicsLayers.Count); source.ResizeNavigationLayers(NavigationLayers.Count); source.OwnerSet = this;
         _sources[id] = source; source.Changed += SourceChanged; source.Disposed += SourceDisposed;
-        var data = source is TileSetAtlasSource atlas ? atlas.TerrainData().ToArray() : [];
+        for (var i = 0; i < data.Length; i++) data[i].CustomValues = custom[i];
         foreach (var item in data) item.TerrainSchemaChanged(false);
-        try { try { previous?.ChangedSchema(); } finally { foreach (var item in data) if (!item.IsDisposed) item.TerrainSchemaChanged(); } }
-        finally { ChangedSchema(); }
+        Exception? failure = null;
+        try { previous?.ChangedSchema(); } catch (Exception error) { failure ??= error; }
+        foreach (var item in data) if (!item.IsDisposed)
+            {
+                try { item.TerrainSchemaChanged(); } catch (Exception error) { failure ??= error; }
+                try { item.CustomChanged(); } catch (Exception error) { failure ??= error; }
+            }
+        try { ChangedSchema(); } catch (Exception error) { failure ??= error; }
+        if (failure is not null) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(failure).Throw();
         return id;
     }
     /// <summary>Removes a source without disposing its resource.</summary>
@@ -169,6 +182,7 @@ public sealed partial class TileSet : Resource
     {
         ClearPatterns();
         ClearProxies();
+        CustomLayers.Clear(); _customNames.Clear();
         foreach (var layer in PhysicsLayers) UnobserveMaterial(layer.Material); PhysicsLayers.Clear(); NavigationLayers.Clear();
         foreach (var source in _sources.Values) if (source is not null) { source.Changed -= SourceChanged; source.Disposed -= SourceDisposed; source.OwnerSet = null; }
         _sources.Clear();
@@ -181,6 +195,7 @@ public sealed partial class TileSet : Resource
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
         var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
+        copy.CustomLayers = CustomLayers.Select(l => l.Copy()).ToList(); copy._customNames = CustomNames(copy.CustomLayers);
         foreach (var layer in PhysicsLayers)
         {
             copy.PhysicsLayers.Add(new() { Layer = layer.Layer, Mask = layer.Mask, Priority = layer.Priority });
@@ -191,7 +206,7 @@ public sealed partial class TileSet : Resource
             if (pair.Value is null) continue;
             var source = (TileSetSource)force(pair.Value)!;
             if (ReferenceEquals(source, pair.Value)) source = (TileSetSource)pair.Value.Duplicate();
-            copy.AddSource(source, pair.Key);
+            copy.AddSourceCore(source, pair.Key, false);
         }
         copy.RestorePatterns(_patterns.Select(p => (TileMapPattern)(deep ? duplicate(p)! : p)).ToArray());
         foreach (var p in _sourceProxies) copy._sourceProxies.Add(p.Key, p.Value);
@@ -220,6 +235,7 @@ public sealed partial class TileSet : Resource
         foreach (var property in TerrainProperties()) yield return property;
         foreach (var property in PatternProperties()) yield return property;
         foreach (var property in ProxyProperties()) yield return property;
+        foreach (var property in CustomProperties()) yield return property;
         yield return new PropertyDescriptor<TileSet, Vector2i>(nameof(TileSize), n => n.TileSize, (n, v) => n.TileSize = v, _ => new(16, 16), stored: true);
         yield return new PropertyDescriptor<TileSet, int>("PhysicsLayerCount", n => n.GetPhysicsLayersCount(), (n, v) => n.RestoreLayerCount(v), _ => 0, stored: true);
         for (var i = 0; i < PhysicsLayers.Count; i++)

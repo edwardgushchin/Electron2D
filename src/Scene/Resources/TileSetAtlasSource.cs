@@ -171,7 +171,7 @@ public sealed partial class TileSetAtlasSource : TileSetSource
         return HasRoomForTile(coords, size, 0, Vector2i.Zero, 1, ignored);
     }
     internal IEnumerable<TileData> TerrainData() => _tiles.Values.SelectMany(t => t.Alternatives.Values);
-    private TileData NewData(bool alternative) { var data = new TileData(alternative) { TerrainSource = this }; data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
+    private TileData NewData(bool alternative) { var data = new TileData(alternative) { TerrainSource = this }; data.CustomValues = data.PrepareCustomSchema(OwnerSet); data.ResizeLayers(_physicsLayers); data.ResizeNavigationLayers(_navigationLayers); data.Changed += Change; return data; }
     private void ReleaseData(TileData data) { data.Changed -= Change; data.Release(); }
     private void Change() { _paddingDirty = true; NotifyPropertyListChanged(); EmitChanged(); }
     private void TextureChanged(Resource _) { _paddingDirty = true; EmitChanged(); }

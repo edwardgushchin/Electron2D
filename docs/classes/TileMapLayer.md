@@ -859,3 +859,5 @@ Returns the destination for a stored coordinate using current TileSet geometry, 
 Snapshots borrowed pattern data, maps/validates all destinations/identities, then commits the complete changed stamp and queues existing draw/physics/navigation publication. Explicit empty entries erase destinations; omitted cells/margins preserve them. An unchanged or empty stamp is quiet. Layer Changed runs once after commitment; listener failure leaves complete cells queued. Missing TileSet, invalid/disposed pattern, overflow and forbidden runtime-data callback mutation reject before cells change. Authoring may allocate.
 
 See [reusable patterns](../components/tiles.md#reusable-patterns) for the executable example, ownership, file graphs and verification boundaries.
+
+Runtime tile-data callbacks can read typed custom fields to control tint, physics and navigation. Their value holders are independent of authored data and are transient; referenced arrays/resources remain borrowed. See [custom data](../components/tiles.md#typed-custom-data).

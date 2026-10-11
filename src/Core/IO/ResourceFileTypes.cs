@@ -150,6 +150,7 @@ public static partial class ResourceFileTypes
     {
         Register(id, factory);
         RegisterResourceArray<TResource>();
+        TileCustomDataType.Register<TResource>();
     }
     private static void Register<T>(string id, Func<T> factory) where T : ElectronObject
     {
@@ -175,11 +176,13 @@ public static partial class ResourceFileTypes
         lock (Gate)
         {
             if (!Codecs.TryAdd(type, new ResourceValueCodec<TValue>(write, read))) throw new InvalidOperationException("Value codec already registered.");
+            TileCustomDataType.Register<TValue>();
         }
     }
     private static void RegisterResourceArray<T>() where T : Resource
     {
         lock (Gate) ResourceArrays.TryAdd(typeof(T[]), new ResourceArrayCodec<T>());
+        TileCustomDataType.Register<T[]>();
     }
     internal static ResourceArrayCodec ResourceArray(Type type)
     {
@@ -292,4 +295,5 @@ internal sealed class ResourceFileRegistry
     internal readonly Dictionary<Type, ResourceFileType> ByType = new();
     internal readonly Dictionary<Type, ResourceValueCodec> Codecs = new();
     internal readonly Dictionary<Type, ResourceArrayCodec> ResourceArrays = new();
+    internal readonly Dictionary<Type, TileCustomDataType> TileDataTypes = new();
 }
