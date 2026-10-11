@@ -2,17 +2,23 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    private (CollisionObject? Scene, PhysicsServerCollider? Server) ShapeOwners(RID rid, bool isArea, bool writing = false)
+    private (CollisionObject? Scene, PhysicsServerCollider? Server) ShapeOwners(RID rid, bool isArea, bool writing = false, bool contactResult = false)
     {
         ThrowIfDisposed();
         var scene = ResolveSceneObject(rid);
         if (isArea ? scene is Area : scene is PhysicsBody)
         {
-            EnsureSceneShapeAccess(scene!, writing);
+            if (contactResult)
+            {
+                scene!.Tree?.EnsureOwnerThread();
+                (scene is PhysicsBody body ? body.Space : ((Area)scene).Space)?.EnsureContactResultAccess();
+            }
+            else EnsureSceneShapeAccess(scene!, writing);
             return (scene, null);
         }
         var server = GetCollider(rid, isArea);
-        EnsureColliderSpaceAccessible(server);
+        if (contactResult) server.Space?.EnsureContactResultAccess();
+        else EnsureColliderSpaceAccessible(server);
         return (null, server);
     }
 

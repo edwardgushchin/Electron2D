@@ -1197,3 +1197,17 @@ Unconvertible values reset to the type's default. Conversion overflow rejects th
 **T:** Concrete CLR data type; prepare application portable codecs in each loading process.
 
 **layerIndex:** Layer index.
+
+## Tile drawing policies
+
+See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-order) for grouping, ownership, capability, storage and checked anchor boundaries.
+
+| Signature | Contract |
+| --- | --- |
+| `public bool UVClipping { get; set; }` | Gets or sets whether atlas sampling is constrained to the selected region's texel centers. |
+
+### `public bool UVClipping`
+
+**summary:** Gets or sets whether atlas sampling is constrained to the selected region's texel centers.
+
+**value:** False by default; true prevents neighboring atlas texels from bleeding during filtered sampling.

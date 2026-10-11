@@ -142,7 +142,7 @@ public sealed partial class TileData : ElectronObject
     }
     internal TileData Copy(Func<Resource?, Resource?>? duplicate = null)
     {
-        ThrowIfDisposed(); var copy = new TileData(_allowTransform) { _flipH = _flipH, _flipV = _flipV, _transpose = _transpose, _textureOrigin = _textureOrigin, _modulate = _modulate };
+        ThrowIfDisposed(); var copy = new TileData(_allowTransform) { _flipH = _flipH, _flipV = _flipV, _transpose = _transpose, _textureOrigin = _textureOrigin, _modulate = _modulate, _material = duplicate is null ? _material : (Material?)duplicate(_material), _zIndex = _zIndex, _ySortOrigin = _ySortOrigin };
         CopyTerrainTo(copy);
         foreach (var value in CustomValues) copy.CustomValues.Add(value?.Copy(duplicate));
         foreach (var layer in Layers) copy.Layers.Add(layer.Copy());
@@ -163,7 +163,7 @@ public sealed partial class TileData : ElectronObject
         base.ValidateDisposal();
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; TerrainSource = null; CustomValues.Clear(); Layers.Clear(); ResizeNavigationLayers(0); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; TerrainSource = null; CustomValues.Clear(); _material = null; Layers.Clear(); ResizeNavigationLayers(0); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(StoredProperties<TileData>("", static p => p));
 
@@ -178,6 +178,7 @@ public sealed partial class TileData : ElectronObject
         foreach (var property in NavigationProperties(prefix, data)) yield return property;
         foreach (var property in TerrainProperties(prefix, data)) yield return property;
         foreach (var property in CustomProperties(prefix, data)) yield return property;
+        foreach (var property in DrawingProperties(prefix, data)) yield return property;
         for (var i = 0; i < Layers.Count; i++)
         {
             var layer = i; var key = prefix + $"Physics/{i}/";

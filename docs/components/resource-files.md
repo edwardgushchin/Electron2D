@@ -104,3 +104,5 @@ TileSet/TileSetAtlasSource factories and source-owned TileData descriptors now p
 [Navigation baking](navigation-baking.md) now connects copied outline/source resources and registered schemas to actual clearance/carve/partition output, scene collection and owner-published worker results. NavigationRegion updates the same live map and emits completion. Separate-process BakedRoutes executes authored source geometry and rendered routes on Linux Wayland GPU/compatibility; remaining native/foreign/editor gates stay explicit.
 
 Custom tile graphs store ordered definition names/configured type IDs, then each alternative's actual type IDs and typed values. Copies, cache replacement and standalone sources preserve actual values independently of configured types. Application codecs/resource factories prepare the same direct custom-data factories in fresh processes. See [typed custom data](tiles.md#typed-custom-data).
+
+Tile drawing graphs store borrowed materials, Z/Y offsets, UVClipping and rendering quadrant/order policy through exact typed descriptors. Fresh-process TileDrawingTests reconstructs the authored graph; generated drawing items/commands stay transient.

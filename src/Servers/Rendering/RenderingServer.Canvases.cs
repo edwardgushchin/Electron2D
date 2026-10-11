@@ -21,7 +21,7 @@ public sealed partial class RenderingServer
         if (item.ServerState is { } existing) return existing;
         _serverSceneItems.Add(new(item)); return item.ServerState = new(this, false);
     }
-    private RenderingCanvasItemState Change(RID rid, out CanvasItem item) { EnsureTextureChange(); item = RenderingCanvasItemRegistry.Resolve(rid); return CanvasState(item); }
+    private RenderingCanvasItemState Change(RID rid, out CanvasItem item) { EnsureTextureChange(); item = RenderingCanvasItemRegistry.Resolve(rid); if (item.ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); return CanvasState(item); }
     private RenderingCanvasRuntime CanvasChange(RID rid) { EnsureTextureChange(); var canvas = RenderingCanvasRegistry.Resolve(rid); if (canvas.Owner is not null && !ReferenceEquals(canvas.Owner, this) || canvas.Layer is not null && canvas.Layer.TryGetTarget(out var layer) && layer.Tree is not null && !ReferenceEquals(layer.Tree, _window.Tree)) throw new InvalidOperationException("Canvas belongs to another renderer or scene owner."); if (canvas.World is not null && canvas.World.TryGetTarget(out var world) && world.SceneOwner is { } worldOwner && !ReferenceEquals(worldOwner, _window.Tree)) throw new InvalidOperationException("World canvas belongs to another scene owner."); if (canvas.Owner is null) { if (canvas.SessionOwner is not null && !ReferenceEquals(canvas.SessionOwner, this)) throw new InvalidOperationException("Canvas overrides belong to another session."); if (canvas.SessionOwner is null) { canvas.SessionOwner = this; _serverSceneCanvases.Add(canvas); } } return canvas; }
     private RenderingCanvasRuntime.Attachment ViewChange(RID viewport, RID canvas, out RenderingCanvasRuntime data)
     {
@@ -31,6 +31,12 @@ public sealed partial class RenderingServer
     }
     internal RID CanvasCreateCore() { EnsureTextureChange(); var value = RenderingCanvasRegistry.Register(owner: this); _ownedCanvasRIDs.Add(value.RID); return value.RID; }
     internal RID CanvasItemCreateCore() { EnsureTextureChange(); var item = new RenderingServerCanvasItem { ServerState = new(this, true) }; item.ServerState.ParentAssigned = true; var rid = RenderingCanvasItemRegistry.RegisterOwned(item, this); _ownedCanvasItems.Add(item); return rid; }
+    internal CanvasItem CreateTileCanvasItem(TileMapLayer owner)
+    { var item = RenderingCanvasItemRegistry.Resolve(CanvasItemCreateCore()); item.ServerState!.TileOwner = owner; return item; }
+    internal void AttachTileCanvasItem(CanvasItem item, TileMapLayer owner)
+    { EnsureTextureChange(); var parent = CanvasState(owner); parent.AddChild(item); item.ServerState!.Parent = owner.GetCanvasItem(); }
+    internal void ReleaseTileCanvasItem(CanvasItem item, TileMapLayer owner)
+    { if (item.IsDisposed) return; EnsureTextureChange(); if (!ReferenceEquals(item.ServerState?.TileOwner, owner)) throw new InvalidOperationException("Tile drawing owner mismatch."); item.ServerState.TileOwner = null; ReleaseCanvasRID(item.GetCanvasItem()); }
     internal void CanvasItemSetParentCore(RID rid, RID parent)
     {
         var state = Change(rid, out var item); CanvasItem? target = null;
@@ -62,7 +68,7 @@ public sealed partial class RenderingServer
     internal void CanvasItemSetModulateCore(RID item, Color color) { if (!color.IsFinite()) throw new ArgumentException("Canvas colors must be finite.", nameof(color)); Change(item, out _).Modulate = color; }
     internal void CanvasItemSetSelfModulateCore(RID item, Color color) { if (!color.IsFinite()) throw new ArgumentException("Canvas colors must be finite.", nameof(color)); Change(item, out _).SelfModulate = color; }
     internal void CanvasItemSetDrawBehindParentCore(RID item, bool enabled) => Change(item, out _).Behind = enabled;
-    internal void CanvasItemSetSortChildrenByYCore(RID item, bool enabled) => Change(item, out _).YSort = enabled;
+    internal void CanvasItemSetSortChildrenByYCore(RID item, bool enabled) { Change(item, out var node).YSort = enabled; if (node is TileMapLayer tiles) tiles.InvalidateTileDrawing(); }
     internal void CanvasItemSetZIndexCore(RID item, int z) { if (z < CanvasItem.MinimumZIndex || z > CanvasItem.MaximumZIndex) throw new ArgumentOutOfRangeException(nameof(z)); Change(item, out _).Z = z; }
     internal void CanvasItemSetZAsRelativeToParentCore(RID item, bool enabled) => Change(item, out _).ZRelative = enabled;
     internal void CanvasItemSetClipCore(RID item, bool clip) => Change(item, out _).Clip = clip;
@@ -100,11 +106,11 @@ public sealed partial class RenderingServer
         }
         if (!RenderingCanvasItemRegistry.Contains(rid)) return false;
         if (!RenderingCanvasItemRegistry.IsOwned(rid, this)) throw new InvalidOperationException("Scene canvas items cannot be freed by the renderer.");
-        var item = RenderingCanvasItemRegistry.Resolve(rid); _ownedCanvasItems.Remove(item); foreach (var canvasID in _ownedCanvasRIDs) RenderingCanvasRegistry.Resolve(canvasID).Mirroring.Remove(rid); foreach (var sceneCanvas in _serverSceneCanvases) sceneCanvas.Mirroring.Remove(rid); item.Dispose(); return true;
+        var item = RenderingCanvasItemRegistry.Resolve(rid); if (item.ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); item.RenderParent?.ServerState?.RemoveChild(item); _ownedCanvasItems.Remove(item); foreach (var canvasID in _ownedCanvasRIDs) RenderingCanvasRegistry.Resolve(canvasID).Mirroring.Remove(rid); foreach (var sceneCanvas in _serverSceneCanvases) sceneCanvas.Mirroring.Remove(rid); item.Dispose(); return true;
     }
     private void ReleaseOwnedCanvasGraph()
     {
-        foreach (var item in _ownedCanvasItems) { RenderingCanvasItemRegistry.Remove(item.GetCanvasItem()); item.Dispose(); }
+        foreach (var item in _ownedCanvasItems) { if (item.ServerState is { } state) state.TileOwner = null; RenderingCanvasItemRegistry.Remove(item.GetCanvasItem()); item.Dispose(); }
         _ownedCanvasItems.Clear();
         foreach (var rid in _ownedCanvasRIDs) RenderingCanvasRegistry.Remove(rid); _ownedCanvasRIDs.Clear();
         foreach (var canvas in _serverSceneCanvases) { canvas.Modulate = Colors.White; canvas.Attachments.Clear(); canvas.Mirroring.Clear(); canvas.SessionOwner = null; }

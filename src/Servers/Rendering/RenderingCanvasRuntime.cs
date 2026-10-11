@@ -47,6 +47,7 @@ internal sealed class RenderingCanvasItemState
 {
     internal readonly RenderingServer Owner;
     internal readonly bool Owned;
+    internal TileMapLayer? TileOwner;
     internal RID Parent, Material;
     internal bool MaterialAssigned;
     internal bool ParentAssigned;
@@ -61,5 +62,7 @@ internal sealed class RenderingCanvasItemState
     internal CanvasItem? Commands;
     internal readonly List<WeakReference<CanvasItem>> Children = [];
     internal RenderingCanvasItemState(RenderingServer owner, bool owned) { Owner = owner; Owned = owned; }
+    internal void RemoveChild(CanvasItem child)
+    { for (var i = Children.Count - 1; i >= 0; i--) if (!Children[i].TryGetTarget(out var old) || ReferenceEquals(old, child)) Children.RemoveAt(i); }
     internal void AddChild(CanvasItem child) { foreach (var weak in Children) if (weak.TryGetTarget(out var old) && ReferenceEquals(old, child)) return; Children.Add(new(child)); }
 }

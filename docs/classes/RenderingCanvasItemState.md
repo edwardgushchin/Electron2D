@@ -1,6 +1,6 @@
 # RenderingCanvasItemState
 
-Last updated: 2026-10-07
+Last updated: 2026-10-11
 
 - Visibility: internal
 - Source: [RenderingCanvasRuntime.cs](../../src/Servers/Rendering/RenderingCanvasRuntime.cs)
@@ -17,3 +17,5 @@ Separate native parent/field/command projections, renderer ownership and weak ex
 ## Low-level primitive integration
 
 Native DrawIndex and VisibilityLayer override renderer order/culling without changing authored Node/CanvasItem values. Renderer source-structure publication clears affected index overrides; the source mask setter republishes that mask. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
+
+TileOwner identifies a transient layer-owned drawing item. It projects current layer self modulation/visibility, guards caller mutation/lifetime and is cleared for authorized retirement. RemoveChild drops dead/retired weak links.

@@ -11,6 +11,7 @@ using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_BACKEND") is { } areaBackend) { PhysicsAreaBackendTests.Run(areaBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHAPE_PAIRS") is { } pairBackend) { PhysicsBackendOwnershipTests.ShapePairs(pairBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_PUBLICATION") is { } contactBackend) { PhysicsBackendOwnershipTests.ContactPublication(contactBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_TRANSFORMS") is { } transformBackend) { PhysicsBodyTransformTests.Run(transformBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is { } ownershipBackend)
 {
@@ -22,6 +23,9 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is {
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RESULT_CONSTRUCTION") is { } resultBackend) { PhysicsResultConstructionTests.Run(resultBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REPORT_ONLY") is { } reportOnlyBackend) { PhysicsReportOnlyTests.Run(reportOnlyBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILTERS") == "1") { PhysicsFilterTests.Run(); PhysicsFilterTests.Run(true); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_DRAW_NATIVE") == "1") { TileDrawingTests.RunNative(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_DRAW_FILE") is { } drawingFile) { TileDrawingTests.RunFile(drawingFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_DRAW") == "1") { TileDrawingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_CUSTOM_NATIVE") == "1") { TileCustomDataTests.RunNative(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_CUSTOM_FILE") is { } customFile) { TileCustomDataTests.RunFile(customFile); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TILE_CUSTOM") == "1") { TileCustomDataTests.Run(); return; }
@@ -798,6 +802,7 @@ TileTerrainTests.Run();
 TilePatternTests.Run();
 TileProxyTests.Run();
 TileCustomDataTests.Run();
+TileDrawingTests.Run();
 TileLayoutTests.Run();
 TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
 PhysicsShapeQueryTests.Run();

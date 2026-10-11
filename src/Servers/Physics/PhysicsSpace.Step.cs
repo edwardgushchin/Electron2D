@@ -31,11 +31,16 @@ internal sealed partial class PhysicsSpace
             foreach (var body in _bodies)
                 if (body is RigidBody rigid)
                 {
+                    if (rigid.NeedsContactSnapshot && rigid.Runtime.View is PhysicsDirectBodyStateExtension view)
+                    {
+                        try { view.ProjectContacts(); rigid.PublishContactMonitor(view); }
+                        catch (Exception error) { (errors ??= []).Add(error); }
+                    }
                     if (rigid.TakeSleepChange()) _sleepEvents.Add(rigid);
                     rigid.QueueContactChanges(_contactEvents);
                 }
             RecordStepPhase(5, ref profileMark);
-            backend.ScanAreas(); CaptureBodyStates(); PublishStatistics();
+            backend.ScanAreas(); CaptureBodyStates(ref errors); PublishStatistics();
             RecordStepPhase(6, ref profileMark);
         }
         catch (Exception error) { failure = error; (errors ??= []).Add(error); }

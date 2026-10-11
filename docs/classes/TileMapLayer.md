@@ -861,3 +861,35 @@ Snapshots borrowed pattern data, maps/validates all destinations/identities, the
 See [reusable patterns](../components/tiles.md#reusable-patterns) for the executable example, ownership, file graphs and verification boundaries.
 
 Runtime tile-data callbacks can read typed custom fields to control tint, physics and navigation. Their value holders are independent of authored data and are transient; referenced arrays/resources remain borrowed. See [custom data](../components/tiles.md#typed-custom-data).
+
+## Tile drawing policies
+
+See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-order) for grouping, ownership, capability, storage and checked anchor boundaries.
+
+| Signature | Contract |
+| --- | --- |
+| `public int RenderingQuadrantSize { get; set; }` | Gets or sets the positive side length of rendering quadrants in cells, independently of physical quadrants. |
+| `public int YSortOrigin { get; set; }` | Gets or sets the layer's additional Y sorting anchor offset in scene units. |
+| `public bool XDrawOrderReversed { get; set; }` | Gets or sets whether X cell ordering is reversed within a Y-sorted group. |
+
+### `public int RenderingQuadrantSize`
+
+**summary:** Gets or sets the positive side length of rendering quadrants in cells, independently of physical quadrants.
+
+**value:** 16 by default. Y sorting groups cells by their sorting anchor instead of this size.
+
+**ArgumentOutOfRangeException:** The value is less than one.
+
+
+### `public int YSortOrigin`
+
+**summary:** Gets or sets the layer's additional Y sorting anchor offset in scene units.
+
+**value:** Zero by default; only affects Y-sorted tile grouping.
+
+
+### `public bool XDrawOrderReversed`
+
+**summary:** Gets or sets whether X cell ordering is reversed within a Y-sorted group.
+
+**value:** False by default; ordinary quadrant cell order is unaffected.

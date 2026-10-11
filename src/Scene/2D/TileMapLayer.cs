@@ -187,8 +187,8 @@ public partial class TileMapLayer : Entity
     {
         ThrowIfDisposed(); return _cells.TryGetValue(coords, out var c) && (c.Alternative & bit) != 0;
     }
-    private void MarkCell(Vector2i coords) { _dirtyCells.Add(coords); Schedule(); Changed?.Invoke(); }
-    private void MarkAll() { _allDirty = true; Schedule(); Changed?.Invoke(); }
+    private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); Changed?.Invoke(); }
+    private void MarkAll() { _drawingDirty = true; _allDirty = true; Schedule(); Changed?.Invoke(); }
     private void Schedule() { QueueRedraw(); if (_queued || !IsInsideTree) return; _queued = true; Tree!.Defer(_deferredUpdate); }
     private void DeferredUpdate() { _queued = false; if (!IsDisposed && IsInsideTree) UpdateInternals(); }
     private void SetChanged(Resource _) => MarkAll();
@@ -197,7 +197,7 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void OnEnterTree() { base.OnEnterTree(); MarkAll(); }
     /// <inheritdoc />
-    protected override void OnExitTree() { try { ReleasePhysics(); ReleaseNavigation(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
+    protected override void OnExitTree() { try { ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
@@ -213,7 +213,7 @@ public partial class TileMapLayer : Entity
     protected override void Dispose(bool disposing)
     {
         try { if (disposing) DetachSet(); base.Dispose(disposing); }
-        finally { if (disposing) { ReleasePhysics(); ReleaseNavigation(); ClearRuntimeData(); Changed = null; } }
+        finally { if (disposing) { ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); Changed = null; } }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateTileLayer;

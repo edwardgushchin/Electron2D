@@ -636,3 +636,40 @@ Actual custom values are independent of configured types. Runtime copies own sep
 **KeyNotFoundException:** The non-nil stored type does not match T.
 
 Typed null resources retain exact and assignable base-resource read projections; scalar nil entries continue to return default(T). TileCustomDataTests checks both null projections alongside graph duplication.
+
+## Tile drawing policies
+
+See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-order) for grouping, ownership, capability, storage and checked anchor boundaries.
+
+| Signature | Contract |
+| --- | --- |
+| `public Material? Material { get; set; }` | Gets or sets the borrowed material used to draw this tile; null inherits the layer's material. |
+| `public int ZIndex { get; set; }` | Gets or sets this tile's drawing Z offset relative to its layer. |
+| `public int YSortOrigin { get; set; }` | Gets or sets the tile's Y sorting anchor offset in scene units; image and physics positions are unchanged. |
+
+### `public Material? Material`
+
+**summary:** Gets or sets the borrowed material used to draw this tile; null inherits the layer's material.
+
+**value:** Null by default.
+
+**remarks:** Assignments emit Changed, including equal assignments. Disposing tile data does not dispose this resource.
+A disposed borrowed material remains readable but cannot be rendered until replaced. Shader materials require a capable renderer.
+
+**ObjectDisposedException:** This data or the assigned material is disposed.
+
+
+### `public int ZIndex`
+
+**summary:** Gets or sets this tile's drawing Z offset relative to its layer.
+
+**value:** Zero by default, bounded by the canvas minimum and maximum Z indices.
+
+**ArgumentOutOfRangeException:** The value exceeds the canvas Z range.
+
+
+### `public int YSortOrigin`
+
+**summary:** Gets or sets the tile's Y sorting anchor offset in scene units; image and physics positions are unchanged.
+
+**value:** Zero by default; used when the layer enables Y sorting.

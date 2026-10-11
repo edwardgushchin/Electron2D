@@ -7,7 +7,7 @@ public abstract partial class CanvasItem
     internal Transform RenderLocal(float fraction) => ServerState?.Transform ?? GetInterpolatedVisualTransform(fraction);
     internal Transform RenderGlobal(float fraction) => RenderParent is { } parent ? parent.RenderGlobal(fraction) * RenderLocal(fraction) : RenderLocal(fraction);
     internal Color RenderModulate => ServerState?.Modulate ?? _modulate;
-    internal Color RenderSelfModulate => ServerState?.SelfModulate ?? _selfModulate;
+    internal Color RenderSelfModulate => ServerState?.TileOwner is { } tiles ? tiles.RenderSelfModulate : ServerState?.SelfModulate ?? _selfModulate;
     internal Color RenderInheritedModulate => RenderParent is { } parent ? parent.RenderInheritedModulate * RenderModulate : RenderModulate;
     internal bool RenderVisible => (ServerState?.Visible ?? _visible) && (RenderParent?.RenderVisible ?? (ServerState is { ParentAssigned: true } || !IsInsideTree || _parentVisible));
     internal bool RenderBehind => ServerState?.Behind ?? ShowBehindParent;
@@ -56,7 +56,7 @@ public abstract partial class CanvasItem
     {
         get { var commands = ServerState?.Commands?._canvasCommands ?? _canvasCommands; if (commands is not null) foreach (var command in commands) if (command.ClipIgnore == true) return true; return false; }
     }
-    internal uint RenderVisibilityLayer => ServerState?.VisibilityLayer ?? _visibilityLayer;
+    internal uint RenderVisibilityLayer => ServerState?.TileOwner is { } tiles ? tiles.RenderVisibilityLayer : ServerState?.VisibilityLayer ?? _visibilityLayer;
     internal void RecordServerClipIgnore(bool ignore) => (_canvasCommands ??= []).Add(new(false, default, default, Colors.White, 0, false, Transform.Identity, ClipIgnore: ignore));
     internal void RecordServerStroke(ReadOnlySpan<Vector2> points, ReadOnlySpan<Color> colors, float width, bool antialiased, bool connected)
     {
@@ -98,4 +98,7 @@ public abstract partial class CanvasItem
     }
 }
 
-internal sealed class RenderingServerCanvasItem : Entity { }
+internal sealed class RenderingServerCanvasItem : Entity
+{
+    protected override void ValidateDisposal() { if (ServerState?.TileOwner is not null) throw new InvalidOperationException("Generated tile drawing is owned by its layer."); base.ValidateDisposal(); }
+}

@@ -9,6 +9,7 @@ internal static partial class PhysicsBackendOwnershipTests
         Initialization(backend);
         NamedFactories(backend);
         ShapePairs(backend);
+        ContactPublication(backend);
         Lifecycle(backend);
         ExtensionBinding(backend);
         SelectedViews(backend);

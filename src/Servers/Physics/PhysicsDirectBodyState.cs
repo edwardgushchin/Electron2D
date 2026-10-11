@@ -8,7 +8,8 @@ namespace Electron2D;
 /// use global axes; the word local identifies this body rather than the collider. Caller disposal affects only the view
 /// and is rejected inside a borrowed callback. Solved contacts are fully captured before user callbacks and remain
 /// unchanged by subsequent pose or fixture edits. Contact-limit assignment explicitly clears the retained point count. Live field reads retain the attachment
-/// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all solver intervals of the completed outer physics step.</remarks>
+/// internally and validate its lifetime before access; zero-contact views do not request contact snapshots. Contact impulses include all solver intervals of the completed outer physics step. Factory-provided contact extensions
+/// publish their validated snapshot on the owner after native capture; cached contact getters retain those values through later edits.</remarks>
 public class PhysicsDirectBodyState : ElectronObject
 {
     private readonly PhysicsBodyRuntime _runtime;
@@ -19,6 +20,10 @@ public class PhysicsDirectBodyState : ElectronObject
     internal PhysicsBodyRuntime Runtime => _runtime;
     internal PhysicsSpace Space => _space;
     private Contact[] _contacts = [];
+    private Contact[] _backendContacts = [], _projectedContacts = [];
+    private int _backendContactCount;
+    private bool _readingBackendContacts;
+    private bool _hasPublishedContacts;
     private int _contactCount;
     private int _callbackDepth;
     internal readonly record struct Contact(RID Collider, ulong ColliderID, int LocalShape, int ColliderShape,
@@ -27,7 +32,8 @@ public class PhysicsDirectBodyState : ElectronObject
     {
         internal CollisionObject? SceneCollider => ColliderOwner is { } weak && weak.TryGetTarget(out var node) && !node.IsDisposed ? node : null;
     }
-    internal ReadOnlySpan<Contact> CapturedContacts => _contacts.AsSpan(0, _contactCount);
+    internal ReadOnlySpan<Contact> CapturedContacts => _readingBackendContacts
+        ? _backendContacts.AsSpan(0, _backendContactCount) : _contacts.AsSpan(0, _contactCount);
 
     internal PhysicsDirectBodyState(PhysicsBodyRuntime runtime, PhysicsSpace space)
     {
@@ -330,18 +336,61 @@ public class PhysicsDirectBodyState : ElectronObject
     internal void PrepareContacts(int limit)
     {
         if (_contacts.Length < limit) Array.Resize(ref _contacts, limit);
-        _contactCount = 0;
+        if (this is PhysicsDirectBodyStateExtension)
+        {
+            if (_backendContacts.Length < limit) Array.Resize(ref _backendContacts, limit);
+            if (_projectedContacts.Length < limit) Array.Resize(ref _projectedContacts, limit);
+        }
+        _contactCount = _backendContactCount = 0;
     }
 
     internal void CaptureContacts()
     {
+        if (this is PhysicsDirectBodyStateExtension)
+        {
+            var previousCount = _contactCount;
+            (_contacts, _backendContacts) = (_backendContacts, _contacts); _contactCount = 0;
+            try { _runtime.CaptureViewContacts(this); _backendContactCount = _contactCount; }
+            finally { (_contacts, _backendContacts) = (_backendContacts, _contacts); _contactCount = previousCount; }
+            return;
+        }
         _contactCount = 0;
         _runtime.CaptureViewContacts(this);
     }
 
-    internal void BeginContactSnapshot() => _contactCount = 0;
+    internal void ProjectContacts()
+    {
+        if (this is not PhysicsDirectBodyStateExtension extension) return;
+        _space.BeginContactResultPublication(); _runtime.BeginExtension(); BeginCallback();
+        _readingBackendContacts = true;
+        try
+        {
+            _runtime.ValidateAttachment(_space, _boundBackend, _boundAttachment);
+            var count = extension.ProjectContacts(_projectedContacts);
+            (_contacts, _projectedContacts) = (_projectedContacts, _contacts); _contactCount = count; _hasPublishedContacts = true;
+        }
+        finally
+        {
+            _readingBackendContacts = false;
+            EndCallback(); _runtime.EndExtension(); _space.EndContactResultPublication();
+        }
+    }
+    internal void BeginContactSnapshot() { if (this is not PhysicsDirectBodyStateExtension) _contactCount = 0; }
+    internal bool TryGetPublishedContactCount(out int count)
+    {
+        count = _contactCount;
+        return _hasPublishedContacts && ReferenceEquals(_runtime.View, this);
+    }
+    internal bool TryGetPublishedContact(int index, out PhysicsBodyContact contact)
+    {
+        contact = default;
+        if (!TryGetPublishedContactCount(out var count)) return false;
+        Access();
+        if ((uint)index >= (uint)count) throw new ArgumentOutOfRangeException(nameof(index));
+        contact = new(_runtime.RID, _boundAttachment, _contacts[index]); return true;
+    }
     internal void RestoreContacts(ReadOnlySpan<Contact> contacts)
-    { PrepareContacts(contacts.Length); contacts.CopyTo(_contacts); _contactCount = contacts.Length; }
+    { PrepareContacts(contacts.Length); contacts.CopyTo(_contacts); _contactCount = contacts.Length; _hasPublishedContacts = true; }
 
     internal int SelectContactSlot(float depth, int limit)
     {

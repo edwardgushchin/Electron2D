@@ -349,7 +349,7 @@ public abstract partial class CanvasItem : Node
     public bool YSortEnabled
     {
         get { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); return _ySortEnabled; }
-        set { EnsureMutable(); _ySortEnabled = value; if (ServerState is { } state) state.YSort = null; }
+        set { EnsureMutable(); var changed = _ySortEnabled != value; _ySortEnabled = value; if (ServerState is { } state) state.YSort = null; if (this is TileMapLayer tiles) tiles.DrawingYSortChanged(changed); }
     }
 
     /// <summary>Gets or sets whether this node ignores its parent's transform.</summary>

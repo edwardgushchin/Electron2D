@@ -11,6 +11,10 @@ public sealed partial class TileSet : Resource
         internal float Priority = 1;
         internal PhysicsMaterial? Material;
     }
+    private bool _uvClipping;
+    /// <summary>Gets or sets whether atlas sampling is constrained to the selected region's texel centers.</summary>
+    /// <value>False by default; true prevents neighboring atlas texels from bleeding during filtered sampling.</value>
+    public bool UVClipping { get { ThrowIfDisposed(); return _uvClipping; } set { ThrowIfDisposed(); if (_uvClipping == value) return; _uvClipping = value; EmitChanged(); } }
     private Vector2i _tileSize = new(16, 16);
     private readonly SortedDictionary<int, TileSetSource?> _sources = [];
     internal readonly List<PhysicsLayer> PhysicsLayers = [];
@@ -194,7 +198,7 @@ public sealed partial class TileSet : Resource
     /// <inheritdoc />
     protected override void CopyCustomStateTo(Resource target, bool deep, DeepDuplicateMode mode, Func<Resource?, Resource?> duplicate, Func<Resource?, Resource?> force)
     {
-        var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
+        var copy = (TileSet)target; copy.ClearContents(); copy._terrainSets.Clear(); foreach (var terrainSet in _terrainSets) copy._terrainSets.Add(terrainSet.Copy()); copy._uvClipping = _uvClipping; copy._tileSize = _tileSize; copy._tileShape = _tileShape; copy._tileLayout = _tileLayout; copy._tileOffsetAxis = _tileOffsetAxis; copy.NavigationLayers.AddRange(NavigationLayers);
         copy.CustomLayers = CustomLayers.Select(l => l.Copy()).ToList(); copy._customNames = CustomNames(copy.CustomLayers);
         foreach (var layer in PhysicsLayers)
         {
@@ -232,6 +236,7 @@ public sealed partial class TileSet : Resource
     {
         foreach (var property in base.GetPropertyDescriptors()) yield return property;
         foreach (var property in GeometryProperties()) yield return property;
+        yield return new PropertyDescriptor<TileSet, bool>(nameof(UVClipping), n => n.UVClipping, (n, v) => n.UVClipping = v, _ => false, stored: true);
         foreach (var property in TerrainProperties()) yield return property;
         foreach (var property in PatternProperties()) yield return property;
         foreach (var property in ProxyProperties()) yield return property;

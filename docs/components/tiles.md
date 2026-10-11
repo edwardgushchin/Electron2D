@@ -46,6 +46,28 @@ Bool/numeric/text, Vector2/Vector2i, Vector4/Vector4i, Rect2/Rect2i and text/int
 
 SetCustomDataLayerType(int, Type?) requires a factory already prepared by typed setters or portable codec/resource registration. Its generic overload prepares a direct factory for T. Files store configured and actual stable IDs separately; a fresh host must register its application codecs/resource factories before loading. Portable writes/deep copies reject unsupported transient/application types through their existing storage contracts. Private stored count/type arrays reject more than 65536 entries. No active callback state is serialized.
 
+## Per-tile materials and draw order
+
+TileData.Material borrows a material; null inherits the layer's effective material. ZIndex is a relative drawing offset within the canvas range, and YSortOrigin offsets the sorting anchor without moving image/collision/navigation geometry. Source data, runtime callback copies, deep/shallow duplicates and portable archives retain these fields. Every TileData assignment emits Changed, including equal values; disposed material assignment and invalid Z reject before mutation. Borrowed material disposal does not transfer ownership and rendering rejects its later use until replacement, as for CanvasItem.
+
+TileMapLayer.RenderingQuadrantSize defaults 16 and independently groups floored grid coordinates. YSortEnabled replaces ordinary quadrants with groups of Y anchors, including tile/layer offsets at hundredth-unit resolution. Cells sort by X then Y; XDrawOrderReversed only changes Y-sorted groups. Consecutive material/Z runs get separate internal canvas items; normal quadrants draw by mapped quadrant Y ascending/X descending, below authored children. Effective canvas Z takes precedence. Generated items are transient, layer-owned and absent from the authored hierarchy. Caller writes/free/disposal reject; removal, exit, disposal and renderer shutdown release them and their weak parent links.
+
+```csharp
+set.UVClipping = true;
+TileData data = atlas.GetTileData(Vector2i.Zero, 0);
+data.Material = material; // Caller-owned CanvasItemMaterial or ShaderMaterial.
+data.ZIndex = 2;
+data.YSortOrigin = 6;
+layer.RenderingQuadrantSize = 8;
+layer.YSortEnabled = true;
+layer.YSortOrigin = -4;
+layer.XDrawOrderReversed = true;
+```
+
+Required context: the live set/atlas/layer from the authoring example, plus caller-owned material. Tests compile the equivalent public workflow. Null material uses live inherited material policy; child groups retain layer modulation/self modulation, visibility masks and filter/repeat/transform/canvas routing. Shader parameters and fixed blend changes execute without regrouping. Both source animation modes retain their existing timed commands. UVClipping defaults false and controls source-region texel-center sampling, independently of padding.
+
+Preparation keeps previous groups until all candidates are ready; failures release candidates. Negative-edge quadrant multiplication is checked; nonrepresentable anchors reject rather than wrap. Y keys retain finite floating values rather than narrowing large hundredth-unit offsets to int32. Ordinary float scene precision remains the grid contract. Group preparation is allocating authoring work; unchanged and forced redraw frames reuse commands and identities.
+
 ## Runtime flow
 
 Cell/resource edits mark dirty cells or the full layer and queue one reusable tree action. UpdateInternals compiles dirty quadrants. A quadrant groups cells by physics layer, constant surface velocity, one-way policy/margin and one-way row. Polygons are unioned and convex-decomposed; a union containing holes is triangulated with the existing geometry dependency. Invalid topology contributes no fixtures. The compilation validates finite coordinates and clipping range before allocating server bodies.
@@ -104,7 +126,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Scene-collection sources, per-tile materials/Z sorting and tile occlusion are not implemented by this slice. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Scene-collection sources and tile occlusion retain their own prerequisites. Per-tile materials/order now execute through retained items. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 
@@ -222,3 +244,13 @@ TileCustomDataTests compares the 30-stage pinned fixture, checks forward/backwar
 The native workflow verifies Tint pixels and Solid collision/navigation before and after edits for gpu/compatibility renderers with CPU/GPU physics. Each measured 24-frame warmed forced-redraw interval allocated 0 owner-thread managed bytes; exact typed reads/writes and name queries use 32 warmup/1024 measured operations, and unchanged layer updates use 32 warmup/256 measured calls. Four captured 320x160 PNGs have identical SHA-256 `27d2e2e6e9064b486850f9fee08c7b03bb0d04568f91d0b4b2d5e40a0095b450`; the representative capture was inspected. These checks establish current Linux native pixels/behavior, with no native allocator trace, foreign-platform or owner acceptance claim.
 
 Development producer `tools/tiles/custom_data_reference.gd` generated `tests/Electron2D.Tests/Fixtures/Tiles/custom-data-reference.json` with pin `ed1daf0bf001b61586d9930840f2f1394092c079`: 4204 bytes, SHA-256 `a6112bbd6545503917603c739deb3c60a86b9a363f1c481b6f3562ce5f5d5447`. The documented name-index/string-constructor corrections are checked separately from reference equality. Release runtime/test builds, complete executable harness with the stock ENet oracle, focused/native custom-data checks, formatting, compiled coverage and wiki generation/check are independent gates.
+
+## Drawing-policy verification
+
+TileDrawingTests verifies defaults, repeated TileData notifications, invalid Z/size before mutation, shallow/deep material graphs, runtime copies and a fresh-process scene with every drawing policy. Native tests execute gpu/compatibility with CPU/GPU physics, check all 48 shape/layout/axis placements at negative coordinates, actual collision/navigation ownership, Z precedence, floored rendering quadrant anchors, scene/server Y-sort switches, conditional X reversal, tile/layer Y offsets, inherited self modulation, direct/inherited/live blend policy, UV clipping and runtime material/Z copies without authored mutation.
+
+The native failure path retains all previous drawing identities after an unrepresentable negative-edge anchor. Generated item mutation/free/disposal rejects; clearing releases commands and weak links. Each 24-frame warmed forced-redraw owner interval allocated 0 managed bytes and retained group RIDs; the cold capturing comparator had first allocated 40 B/frame and was moved behind the stable early-return path. Four 400x360 captures have SHA-256 `b56944ccc3e39d65cf8e0a56ea71c07ba990ab6590aefea7f619e5f834d90579`; one was inspected. GLSL/HLSL SPIR-V fixtures verify typed live GPU tile shader pixels and explicit compatibility rejection. Native allocator tracing, foreign platforms, editor authoring and owner acceptance remain separate gates.
+
+The internal headless command compiler retains atlas geometry/animation replay when no rendering session exists. It establishes prepared geometry/time only; material/order/canvas publication and real pixels use the actual retained renderer workflow above. This is separate from a native output acceptance claim under ADR 0090.
+
+Navigation/collision diagnostic geometry uses a separate relative Z=max-minus-one item, matching its overlay role. It remains visible with tile Z/Y grouping and can tint authored child route lines; the route pixel check now verifies the composited color rather than requiring its previous uncovered opaque blue.

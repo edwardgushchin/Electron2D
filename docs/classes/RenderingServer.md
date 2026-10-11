@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -1174,3 +1174,5 @@ A stable RID for one diagnostic layer until FreeRID or shutdown.
 
 - `T:System.ArgumentOutOfRangeException`: The sampling role is invalid.
 - `T:System.InvalidOperationException`: The native service is absent, off-owner, submitting or closing.
+
+Layer-generated tile items use existing retained canvas grouping/material/Z/Y routing. Their identities reject caller writes/free/disposal and retire with the layer/session; see [tile drawing](../components/tiles.md#per-tile-materials-and-draw-order).

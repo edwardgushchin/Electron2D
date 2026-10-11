@@ -201508,6 +201508,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.TileData.Material()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "Material",
+    "signature": "public Electron2D.Material Material { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TileData.Modulate()",
     "kind": "property",
     "declaringType": "Electron2D.TileData",
@@ -201583,6 +201596,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.YSortOrigin()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "YSortOrigin",
+    "signature": "public System.Int32 YSortOrigin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileData.ZIndex()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileData",
+    "name": "ZIndex",
+    "signature": "public System.Int32 ZIndex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -201664,6 +201703,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.TileMapLayer.RenderingQuadrantSize()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "RenderingQuadrantSize",
+    "signature": "public System.Int32 RenderingQuadrantSize { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TileMapLayer.TileMapData()",
     "kind": "property",
     "declaringType": "Electron2D.TileMapLayer",
@@ -201700,6 +201752,32 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.XDrawOrderReversed()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "XDrawOrderReversed",
+    "signature": "public System.Boolean XDrawOrderReversed { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileMapLayer.YSortOrigin()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileMapLayer",
+    "name": "YSortOrigin",
+    "signature": "public System.Int32 YSortOrigin { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -201752,6 +201830,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TileSet.UVClipping()",
+    "kind": "property",
+    "declaringType": "Electron2D.TileSet",
+    "name": "UVClipping",
+    "signature": "public System.Boolean UVClipping { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
     "value": null
   },
   {

@@ -1,6 +1,6 @@
 # CanvasItem
 
-Last updated: 2026-10-07
+Last updated: 2026-10-11
 
 **Inherits:** [Node](Node.md)
 
@@ -1322,3 +1322,5 @@ Native indexed triangle and primitive commands replay through existing storage. 
 [The program RID contract](../components/shader-materials.md#shader-and-material-identities) documents caller-owned create/set/query/free operations and borrowed resource identities. `CanvasItemSetMaterial` changes native material state independently of authored `Material`; its matching source setter republishes the authored reference. Shader replacement and typed uniform/texture updates reuse retained commands.
 
 `public const int NotificationWorldChanged = 36` reports committed world association; GetWorld observes the new canvas and physics space when it is delivered.
+
+TileMapLayer inherited Y sorting also invalidates its retained tile groups and delivers its Changed event on a changed authored value. Server Y-sort overrides use the same tile grouping path. Other canvas sorting remains submission-time behavior.

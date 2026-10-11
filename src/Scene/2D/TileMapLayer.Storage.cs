@@ -42,7 +42,7 @@ public partial class TileMapLayer
         }
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(TileProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(TileProperties).Concat(DrawingPolicyProperties());
     private static readonly PropertyDescriptor[] TileProperties =
     [
         new PropertyDescriptor<TileMapLayer, TileSet?>(nameof(TileSet), n => n.TileSet, (n,v) => n.TileSet = v, _ => null, stored: true),

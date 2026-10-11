@@ -3,222 +3,222 @@
     {
       "godot": "class:TileData",
       "electron2d": "T:Electron2D.TileData",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
     },
     {
       "godot": "TileData::method:add_collision_polygon(int:)",
       "electron2d": "method:Electron2D.TileData.AddCollisionPolygon(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_collision_polygon_one_way_margin(int:,int:)",
       "electron2d": "method:Electron2D.TileData.GetCollisionPolygonOneWayMargin(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_collision_polygon_points(int:,int:)",
       "electron2d": "method:Electron2D.TileData.GetCollisionPolygonPoints(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_collision_polygons_count(int:)",
       "electron2d": "method:Electron2D.TileData.GetCollisionPolygonsCount(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_constant_angular_velocity(int:)",
       "electron2d": "method:Electron2D.TileData.GetConstantAngularVelocity(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_constant_linear_velocity(int:)",
       "electron2d": "method:Electron2D.TileData.GetConstantLinearVelocity(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:is_collision_polygon_one_way(int:,int:)",
       "electron2d": "method:Electron2D.TileData.IsCollisionPolygonOneWay(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:remove_collision_polygon(int:,int:)",
       "electron2d": "method:Electron2D.TileData.RemoveCollisionPolygon(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_collision_polygon_one_way(int:,int:,bool:)",
       "electron2d": "method:Electron2D.TileData.SetCollisionPolygonOneWay(System.Int32,System.Int32,System.Boolean)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_collision_polygon_one_way_margin(int:,int:,float:)",
       "electron2d": "method:Electron2D.TileData.SetCollisionPolygonOneWayMargin(System.Int32,System.Int32,System.Single)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_collision_polygon_points(int:,int:,PackedVector2Array:)",
       "electron2d": "method:Electron2D.TileData.SetCollisionPolygonPoints(System.Int32,System.Int32,Electron2D.Vector2[])",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_collision_polygons_count(int:,int:)",
       "electron2d": "method:Electron2D.TileData.SetCollisionPolygonsCount(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_constant_angular_velocity(int:,float:)",
       "electron2d": "method:Electron2D.TileData.SetConstantAngularVelocity(System.Int32,System.Single)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:set_constant_linear_velocity(int:,Vector2:)",
       "electron2d": "method:Electron2D.TileData.SetConstantLinearVelocity(System.Int32,Electron2D.Vector2)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::property:flip_h",
       "electron2d": "property:Electron2D.TileData.FlipH()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::property:flip_v",
       "electron2d": "property:Electron2D.TileData.FlipV()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::property:modulate",
       "electron2d": "property:Electron2D.TileData.Modulate()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::property:texture_origin",
       "electron2d": "property:Electron2D.TileData.TextureOrigin()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::property:transpose",
       "electron2d": "property:Electron2D.TileData.Transpose()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::signal:changed()",
       "electron2d": "event:Electron2D.TileData.Changed()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "class:TileMapLayer",
       "electron2d": "T:Electron2D.TileMapLayer",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
     },
     {
       "godot": "TileMapLayer::enum:DebugVisibilityMode",
       "electron2d": "T:Electron2D.TileMapLayer.DebugVisibilityMode",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_DEFAULT",
       "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.Default()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_HIDE",
       "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceHide()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::enum_value:DebugVisibilityMode.DEBUG_VISIBILITY_MODE_FORCE_SHOW",
       "electron2d": "enumValue:Electron2D.TileMapLayer.DebugVisibilityMode.ForceShow()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:_tile_data_runtime_update(Vector2i:,TileData:)",
       "electron2d": "method:Electron2D.TileMapLayer.TileDataRuntimeUpdate(Electron2D.Vector2i,Electron2D.TileData)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:_update_cells(Vector2i[]:,bool:)",
       "electron2d": "method:Electron2D.TileMapLayer.UpdateCells(Electron2D.Vector2i[],System.Boolean)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:_use_tile_data_runtime_update(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.UseTileDataRuntimeUpdate(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:clear()",
       "electron2d": "method:Electron2D.TileMapLayer.Clear()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:erase_cell(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.EraseCell(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:fix_invalid_tiles()",
       "electron2d": "method:Electron2D.TileMapLayer.FixInvalidTiles()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_cell_alternative_tile(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetCellAlternativeTile(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_cell_atlas_coords(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetCellAtlasCoords(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_cell_source_id(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetCellSourceID(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_cell_tile_data(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetCellTileData(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_coords_for_body_rid(RID:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetCoordsForBodyRID(Electron2D.RID)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_used_cells()",
       "electron2d": "method:Electron2D.TileMapLayer.GetUsedCells()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_used_cells_by_id(int:,Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileMapLayer.GetUsedCellsByID(System.Int32,System.Nullable<Electron2D.Vector2i>,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:get_used_rect()",
       "electron2d": "method:Electron2D.TileMapLayer.GetUsedRect()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:has_body_rid(RID:)",
       "electron2d": "method:Electron2D.TileMapLayer.HasBodyRID(Electron2D.RID)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:is_cell_flipped_h(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.IsCellFlippedH(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:is_cell_flipped_v(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.IsCellFlippedV(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:is_cell_transposed(Vector2i:)",
       "electron2d": "method:Electron2D.TileMapLayer.IsCellTransposed(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:local_to_map(Vector2:)",
@@ -233,167 +233,167 @@
     {
       "godot": "TileMapLayer::method:notify_runtime_tile_data_update()",
       "electron2d": "method:Electron2D.TileMapLayer.NotifyRuntimeTileDataUpdate()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:set_cell(Vector2i:,int:,Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileMapLayer.SetCell(Electron2D.Vector2i,System.Int32,System.Nullable<Electron2D.Vector2i>,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::method:update_internals()",
       "electron2d": "method:Electron2D.TileMapLayer.UpdateInternals()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:collision_enabled",
       "electron2d": "property:Electron2D.TileMapLayer.CollisionEnabled()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:collision_visibility_mode",
       "electron2d": "property:Electron2D.TileMapLayer.CollisionVisibilityMode()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:enabled",
       "electron2d": "property:Electron2D.TileMapLayer.Enabled()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:physics_quadrant_size",
       "electron2d": "property:Electron2D.TileMapLayer.PhysicsQuadrantSize()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:tile_map_data",
       "electron2d": "property:Electron2D.TileMapLayer.TileMapData()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:tile_set",
       "electron2d": "property:Electron2D.TileMapLayer.TileSet()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::property:use_kinematic_bodies",
       "electron2d": "property:Electron2D.TileMapLayer.UseKinematicBodies()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileMapLayer::signal:changed()",
       "electron2d": "event:Electron2D.TileMapLayer.Changed()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "class:TileSet",
       "electron2d": "T:Electron2D.TileSet",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
     },
     {
       "godot": "TileSet::method:add_physics_layer(int:)",
       "electron2d": "method:Electron2D.TileSet.AddPhysicsLayer(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:add_source(TileSetSource:,int:)",
       "electron2d": "method:Electron2D.TileSet.AddSource(Electron2D.TileSetSource,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_next_source_id()",
       "electron2d": "method:Electron2D.TileSet.GetNextSourceID()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_physics_layer_collision_layer(int:)",
       "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionLayer(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_physics_layer_collision_mask(int:)",
       "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionMask(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_physics_layer_collision_priority(int:)",
       "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerCollisionPriority(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_physics_layer_physics_material(int:)",
       "electron2d": "method:Electron2D.TileSet.GetPhysicsLayerPhysicsMaterial(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_physics_layers_count()",
       "electron2d": "method:Electron2D.TileSet.GetPhysicsLayersCount()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_source(int:)",
       "electron2d": "method:Electron2D.TileSet.GetSource(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_source_count()",
       "electron2d": "method:Electron2D.TileSet.GetSourceCount()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:get_source_id(int:)",
       "electron2d": "method:Electron2D.TileSet.GetSourceID(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:has_source(int:)",
       "electron2d": "method:Electron2D.TileSet.HasSource(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:move_physics_layer(int:,int:)",
       "electron2d": "method:Electron2D.TileSet.MovePhysicsLayer(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:remove_physics_layer(int:)",
       "electron2d": "method:Electron2D.TileSet.RemovePhysicsLayer(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:remove_source(int:)",
       "electron2d": "method:Electron2D.TileSet.RemoveSource(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:set_physics_layer_collision_layer(int:,int:)",
       "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionLayer(System.Int32,System.UInt32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:set_physics_layer_collision_mask(int:,int:)",
       "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionMask(System.Int32,System.UInt32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:set_physics_layer_collision_priority(int:,float:)",
       "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerCollisionPriority(System.Int32,System.Single)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:set_physics_layer_physics_material(int:,PhysicsMaterial:)",
       "electron2d": "method:Electron2D.TileSet.SetPhysicsLayerPhysicsMaterial(System.Int32,Electron2D.PhysicsMaterial)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::method:set_source_id(int:,int:)",
       "electron2d": "method:Electron2D.TileSet.SetSourceID(System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSet::property:tile_size",
       "electron2d": "property:Electron2D.TileSet.TileSize()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "class:TileSetAtlasSource",
@@ -403,17 +403,17 @@
     {
       "godot": "TileSetAtlasSource::constant:TRANSFORM_FLIP_H",
       "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformFlipH()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::constant:TRANSFORM_FLIP_V",
       "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformFlipV()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::constant:TRANSFORM_TRANSPOSE",
       "electron2d": "constant:Electron2D.TileSetAtlasSource.TransformTranspose()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:clear_tiles_outside_texture()",
@@ -423,7 +423,7 @@
     {
       "godot": "TileSetAtlasSource::method:create_alternative_tile(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.CreateAlternativeTile(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:create_tile(Vector2i:,Vector2i:)",
@@ -433,12 +433,12 @@
     {
       "godot": "TileSetAtlasSource::method:get_atlas_grid_size()",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetAtlasGridSize()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:get_next_alternative_tile_id(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetNextAlternativeTileID(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:get_tile_at_coords(Vector2i:)",
@@ -448,12 +448,12 @@
     {
       "godot": "TileSetAtlasSource::method:get_tile_data(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileData(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:get_tile_size_in_atlas(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.GetTileSizeInAtlas(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:get_tile_texture_region(Vector2i:,int:)",
@@ -473,72 +473,72 @@
     {
       "godot": "TileSetAtlasSource::method:remove_alternative_tile(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.RemoveAlternativeTile(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:remove_tile(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.RemoveTile(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::method:set_alternative_tile_id(Vector2i:,int:,int:)",
       "electron2d": "method:Electron2D.TileSetAtlasSource.SetAlternativeTileID(Electron2D.Vector2i,System.Int32,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::property:margins",
       "electron2d": "property:Electron2D.TileSetAtlasSource.Margins()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::property:separation",
       "electron2d": "property:Electron2D.TileSetAtlasSource.Separation()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::property:texture",
       "electron2d": "property:Electron2D.TileSetAtlasSource.Texture()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetAtlasSource::property:texture_region_size",
       "electron2d": "property:Electron2D.TileSetAtlasSource.TextureRegionSize()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "class:TileSetSource",
       "electron2d": "T:Electron2D.TileSetSource",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute. ADRs 0097/0101: tile navigation layer masks and remapping, borrowed/cached transformed polygons with change/disposal observation, node-owned per-cell regions, selected/default maps, runtime-data consumers, root-local traversable baking and retained diagnostics. TileNavigationTests and separate-process TileRoutes/native pixel checks cover executable behavior; occlusion and server-global debug remain separate dependencies."
     },
     {
       "godot": "TileSetSource::method:get_alternative_tile_id(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetSource::method:get_alternative_tiles_count(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetSource::method:get_tile_id(int:)",
       "electron2d": "method:Electron2D.TileSetSource.GetTileID(System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetSource::method:get_tiles_count()",
       "electron2d": "method:Electron2D.TileSetSource.GetTilesCount()",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetSource::method:has_alternative_tile(Vector2i:,int:)",
       "electron2d": "method:Electron2D.TileSetSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileSetSource::method:has_tile(Vector2i:)",
       "electron2d": "method:Electron2D.TileSetSource.HasTile(Electron2D.Vector2i)",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": "TileData::method:get_navigation_polygon(int:,bool:,bool:,bool:)",
@@ -1284,6 +1284,41 @@
       "godot": "TileSet::method:set_custom_data_layer_type(int:,int:Variant.Type)",
       "electron2d": "method:Electron2D.TileSet.SetCustomDataLayerType(System.Int32,System.Type)",
       "reason": "ADRs 0001/0034/0095/0101: ordered typed custom layer definitions, independent actual per-T values, coherent name/value remapping, direct factories and checked conversion/default policies; runtime callbacks consume actual drawing and CPU/GPU collision/navigation. TileCustomDataTests verifies 30 pinned stages with documented stale-lookup/string-constructor corrections, failure/reentry/overflow, independent holders, arrays/resources, cache/standalone/fresh-process graph storage, native pixels and warmed managed allocation intervals."
+    },
+    {
+      "godot": "TileData::property:material",
+      "electron2d": "property:Electron2D.TileData.Material()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileData::property:y_sort_origin",
+      "electron2d": "property:Electron2D.TileData.YSortOrigin()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileData::property:z_index",
+      "electron2d": "property:Electron2D.TileData.ZIndex()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileMapLayer::property:rendering_quadrant_size",
+      "electron2d": "property:Electron2D.TileMapLayer.RenderingQuadrantSize()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileMapLayer::property:x_draw_order_reversed",
+      "electron2d": "property:Electron2D.TileMapLayer.XDrawOrderReversed()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileMapLayer::property:y_sort_origin",
+      "electron2d": "property:Electron2D.TileMapLayer.YSortOrigin()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileSet::property:uv_clipping",
+      "electron2d": "property:Electron2D.TileSet.UVClipping()",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
     }
   ],
   "extras": [
@@ -1464,35 +1499,35 @@
         "class:TileData"
       ],
       "state": "Partial",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
         "class:TileMapLayer"
       ],
       "state": "Partial",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
         "class:TileSet"
       ],
       "state": "Partial",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
         "class:TileSetAtlasSource"
       ],
       "state": "Partial",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
         "class:TileSetSource"
       ],
       "state": "Implemented",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
@@ -1598,7 +1633,7 @@
         "TileSetSource::method:has_tile(Vector2i:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion and material/Z-order consumers retain separate prerequisites."
+      "reason": "ADR 0101: typed square atlas authoring, source-owned data, merged physical quadrants in the selected CPU/GPU world, tile-owner projections, runtime updates and typed resource/scene storage. TileMapLayerTests exercises actual bodies, queries, callbacks, lifetime and fresh-process reconstruction. Tile occlusion retains its actual light/occlusion renderer prerequisite; per-tile materials/order now execute."
     },
     {
       "godot": [
@@ -1606,19 +1641,6 @@
       ],
       "state": "Partial",
       "reason": "ADR 0101 initial atlas/grid slice: static frame zero and square-cell coordinate mapping execute. Other frame indices are rejected until animated-atlas integration; other layouts require TileSet layout/shape authoring and matching mapping/render/physics tests."
-    },
-    {
-      "godot": [
-        "TileData::property:material",
-        "TileData::property:y_sort_origin",
-        "TileData::property:z_index",
-        "TileMapLayer::property:rendering_quadrant_size",
-        "TileMapLayer::property:x_draw_order_reversed",
-        "TileMapLayer::property:y_sort_origin",
-        "TileSet::property:uv_clipping"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: retained per-tile material/Z/Y-order and rendering-quadrant consumers after ADR 0101 atlas drawing. Current TileMapLayer records cells into one canvas item; first per-tile canvas grouping/sorting/clipping slice must connect these properties to real retained output and portable tile schemas."
     },
     {
       "godot": [
@@ -1822,11 +1844,9 @@
     {
       "godot": [
         "TileData::method:add_occluder_polygon(int:)",
-        "TileData::method:get_occluder(int:,bool:,bool:,bool:)",
         "TileData::method:get_occluder_polygon(int:,int:,bool:,bool:,bool:)",
         "TileData::method:get_occluder_polygons_count(int:)",
         "TileData::method:remove_occluder_polygon(int:,int:)",
-        "TileData::method:set_occluder(int:,OccluderPolygon2D:)",
         "TileData::method:set_occluder_polygon(int:,int:,OccluderPolygon2D:)",
         "TileData::method:set_occluder_polygons_count(int:,int:)",
         "TileMapLayer::property:occlusion_enabled",
@@ -1841,6 +1861,27 @@
       ],
       "state": "Blocked",
       "reason": "Trigger: first executable 2D light/occlusion renderer pass and LightOccluder/OccluderPolygon resource ownership under ADR 0028. That first consumer slice must include TileSet light masks/SDF policy, borrowed TileData occluders and TileMapLayer occlusion enablement. The current renderers have no such pass; no inert tile switches/resources are exposed."
+    },
+    {
+      "godot": [
+        "TileData::property:material",
+        "TileData::property:y_sort_origin",
+        "TileData::property:z_index",
+        "TileMapLayer::property:rendering_quadrant_size",
+        "TileMapLayer::property:x_draw_order_reversed",
+        "TileMapLayer::property:y_sort_origin",
+        "TileSet::property:uv_clipping"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": [
+        "TileData::method:get_occluder(int:,bool:,bool:,bool:)",
+        "TileData::method:set_occluder(int:,OccluderPolygon2D:)"
+      ],
+      "state": "Excluded",
+      "reason": "ADR 0004 pinned ed1daf0bf001b61586d9930840f2f1394092c079 TileData.xml deprecated metadata: get_occluder uses get_occluder_polygon instead; set_occluder uses set_occluder_polygon instead. Current plural polygon API retains its first actual light/occlusion renderer/resource trigger. No deprecated mirror or implementation trigger."
     }
   ]
 }

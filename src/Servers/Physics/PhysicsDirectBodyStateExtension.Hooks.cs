@@ -159,9 +159,11 @@ public abstract partial class PhysicsDirectBodyStateExtension
     /// <summary>Implements GetContactCount for the current borrowed attachment.</summary>
     /// <returns>The current engine-unit value described by the inherited operation.</returns>
     /// <remarks>Called on the world owner outside solving, with generation/lifetime guards and a borrowed hook context.
+    /// A factory-returned cached view invokes this hook during owner-only read-only contact publication after solver/worker completion;
+    /// its public contact getters then use the committed snapshot. Independent caller-created views invoke hooks directly.
     /// The inherited operation validates input/output; implementation errors unwind context in finally. See <see cref="PhysicsDirectBodyState.GetContactCount"/>.</remarks>
     protected abstract int GetContactCountCore();
-    internal int InvokeGetContactCount() => Read(static owner => owner.ResultContactCount(owner.GetContactCountCore()));
+    internal int InvokeGetContactCount() => TryGetPublishedContactCount(out var count) ? count : Read(static owner => owner.ResultContactCount(owner.GetContactCountCore()));
 
     /// <summary>Implements GetSpaceState for the current borrowed attachment.</summary>
     /// <returns>The current engine-unit value described by the inherited operation.</returns>
@@ -268,6 +270,8 @@ public abstract partial class PhysicsDirectBodyStateExtension
     /// <param name="contactIndex">Zero-based index in the completed contact snapshot.</param>
     /// <returns>An immutable contact captured with live validated identities; retain it across later edits.</returns>
     /// <remarks>Called on the world owner outside solving, with generation/lifetime guards and a borrowed hook context.
+    /// A factory-returned cached view invokes this hook during owner-only read-only contact publication after solver/worker completion;
+    /// its public contact getters then use the committed snapshot. Independent caller-created views invoke hooks directly.
     /// The inherited operation validates input/output; implementation errors unwind context in finally. See <see cref="PhysicsDirectBodyState.GetContactCollider(int)"/>.</remarks>
     protected abstract PhysicsBodyContact GetContactCore(int contactIndex);
 

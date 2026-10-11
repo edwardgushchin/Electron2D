@@ -156,6 +156,19 @@ internal sealed partial class PhysicsSpace : IDisposable
             throw new InvalidOperationException("Selected body publication requires this world's completed solver interval.");
         _extensionCallbackDepth++;
     }
+    private int _contactResultDepth;
+    internal void BeginContactResultPublication()
+    {
+        if (HasBackendFailure) throw new InvalidOperationException("A failed world cannot publish contact results.");
+        BeginBackendPublication(); _contactResultDepth++;
+    }
+    internal void EndContactResultPublication() { _contactResultDepth--; EndExtensionCallback(); }
+    internal void EnsureContactResultAccess()
+    {
+        if (_contactResultDepth == 0) { EnsureQueryAccess(); return; }
+        if (_disposed || !_stepping || HasBackendFailure || !BackendImplementation.ResultsReady || Environment.CurrentManagedThreadId != _ownerThreadID)
+            throw new InvalidOperationException("Contact result construction requires the owner of a completed selected interval.");
+    }
     internal void EnsureExtensionHierarchyChange()
     {
         if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Scene hierarchy cannot change while a physics extension hook is borrowed.");

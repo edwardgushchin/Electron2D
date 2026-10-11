@@ -284,7 +284,7 @@ internal static partial class PhysicsBackendOwnershipTests
         protected override void IntegrateForces(PhysicsDirectBodyState state) => OnState?.Invoke(state);
     }
 
-    private sealed class FactoryBodyState(RID body) : PhysicsDirectBodyStateExtension(body)
+    private class FactoryBodyState(RID body) : PhysicsDirectBodyStateExtension(body)
     {
         protected override float GetAngularVelocityCore() => Runtime.ViewAngularVelocity;
         protected override void SetAngularVelocityCore(float value) => Runtime.SetAngularVelocity(value);

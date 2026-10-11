@@ -54,13 +54,13 @@ public partial class TileMapLayer
     { var map = GetNavigationMap(); NavigationServer.Service.ValidateTileMap(map, Tree); foreach (var regions in _navigationCells.Values) foreach (var region in regions) NavigationServer.RegionSetMap(region.RID, map); }
     private void UpdateNavigationTransforms()
     { foreach (var regions in _navigationCells.Values) foreach (var region in regions) NavigationServer.RegionSetTransform(region.RID, GlobalTransform * region.CellTransform); }
-    private void DrawNavigation()
+    private void DrawNavigation(CanvasItem target)
     {
         if (!_navigationEnabled || _navigationVisibility == DebugVisibilityMode.ForceHide || _navigationVisibility == DebugVisibilityMode.Default && Tree?.DebugNavigationHint != true) return;
         foreach (var regions in _navigationCells.Values) foreach (var region in regions)
             {
-                if (region.Polygon.IsDisposed) continue; var geometry = region.Polygon.Snapshot(); DrawSetTransformMatrix(region.CellTransform);
-                foreach (var indices in geometry.Polygons) DrawColoredPolygon(indices.Select(i => geometry.Vertices[i]).ToArray(), new Color(.1f, .8f, .5f, .5f));
+                if (region.Polygon.IsDisposed) continue; var geometry = region.Polygon.Snapshot(); target.DrawSetTransformMatrix(region.CellTransform);
+                foreach (var indices in geometry.Polygons) target.DrawColoredPolygon(indices.Select(i => geometry.Vertices[i]).ToArray(), new Color(.1f, .8f, .5f, .5f));
             }
     }
     internal Vector2[][] CaptureNavigationTraversable()

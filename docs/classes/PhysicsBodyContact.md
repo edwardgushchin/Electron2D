@@ -1,6 +1,6 @@
 # PhysicsBodyContact
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `public readonly struct PhysicsBodyContact` · **Source:** [PhysicsBodyContact.cs](../../src/Servers/Physics/PhysicsBodyContact.cs) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 
@@ -49,3 +49,7 @@ All vectors must be finite. Invalid/non-body/wrong-world/detached IDs, invalid s
 ## Verification and limits
 
 The [separate consumer](../../tests/PhysicsBodyExtension.Consumer/Program.cs) checks real scene contact projection, all sampled values, invalid/default/wrong-world data, stale observed generation, collider release and weak target expiry on CPU/GPU/no-device CPU profiles. Warmed capture/projection through retained provider state allocates no managed bytes; user code and structural work may allocate. This result provides no backend registration or new wire representation. See [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+## Factory contact publication
+
+A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.

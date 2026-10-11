@@ -53,13 +53,17 @@ internal sealed partial class PhysicsSpace
         catch (ArgumentException) { return false; }
     }
 
-    private void CaptureBodyStates()
+    private void CaptureBodyStates(ref List<Exception>? errors)
     {
         foreach (var body in _callbackBodies)
         {
             if (body.Scene is not RigidBody &&
                 (body.Runtime.MaxContacts > 0 || body.Runtime.View is { IsDisposed: false, HasCapturedContacts: true }) && Current(body))
-                body.Runtime.GetView(this).CaptureContacts();
+            {
+                var view = body.Runtime.GetView(this); view.CaptureContacts();
+                try { view.ProjectContacts(); }
+                catch (Exception error) { (errors ??= []).Add(error); }
+            }
         }
     }
 

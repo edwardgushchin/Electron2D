@@ -25,7 +25,7 @@ internal static class TileNavigationRenderingTests
                 if (frames != 40) return;
                 Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Sixteen unchanged rendered frames allocate zero managed owner bytes.");
                 Check(scene.Route.Length >= 3 && scene.Route.First() == new Vector2(8, 8) && scene.Route.Last() == new Vector2(56, 56) && scene.Route.Any(p => p.X <= 16 || p.X >= 48 || p.Y <= 16 || p.Y >= 48), "Loaded tile map produces an obstacle-avoiding route.");
-                using var image = window.GetTexture().GetImage()!; Check(image.GetPixel(32, 32).G < .01f && image.GetPixel(8, 8).B > .8f, "Void stays dark and route produces actual pixels.");
+                using var image = window.GetTexture().GetImage()!; Check(image.GetPixel(32, 32).G < .01f && image.GetPixel(8, 8).B > .6f, "Void stays dark and route remains visible beneath the navigation overlay.");
                 if (Environment.GetEnvironmentVariable("ELECTRON2D_TILE_SNAPSHOT") is { } path) image.SavePNG(path); window.Tree!.Quit();
             };
         };
