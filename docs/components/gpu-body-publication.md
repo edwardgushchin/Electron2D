@@ -1,6 +1,6 @@
 # Changed GPU body publication
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
 ## Contract and consumer
 
@@ -23,7 +23,7 @@ The [Smash developer window](gpu-smash-preview.md) consumes this stream, updates
 retained CPU display/picking records and rewrites only changed instance records.
 An empty visible update does not upload another MultiMesh buffer. Its retained
 display state is needed by CPU pointer picking and ordinary MultiMesh rendering;
-it is not fed back into the solver. [Public PhysicsSpace selection and scene-body publication](physics-backends.md) now also consume this stream; networking remains open.
+it is not fed back into the solver. [Public PhysicsSpace selection and scene-body publication](physics-backends.md) now also consume this stream; portable network capture uses its explicit bound-state path.
 
 ## Storage and synchronization
 
@@ -34,14 +34,25 @@ buffer allocator; upload scratch is eight bytes. History grows through device co
 At 65,536 slots device payload is 10 MiB plus eight bytes; transfer capacity is
 reported by the executable check. These buffers are created only for this consumer.
 
-Each publication uploads eight reset bytes and a 16-byte uniform. One wait reads
-the count and error status (eight bytes). Nonempty publication needs a second wait
-to download exactly `80 * changedCount` bytes. The count determines the copy length;
-there is no full-state readback hidden in the first wait. A dense stream can cost
-more than explicit selected reads (64 bytes/body and one wait). Both paths remain
-available, and measurements must state their changed population. History advances
-on submission; any subsequent failure invalidates the store rather than silently
-consuming an undelivered batch or replaying a physics step.
+Each publication uploads eight reset bytes and a 16-byte uniform. The previous
+successful changed count is a scalar scheduling hint. Initial publication, or a
+previous count at least half the current slot population, downloads status and the
+bounded result capacity in one submission/wait. Only the validated current prefix
+is copied into caller output. A lower previous count downloads eight status bytes
+first and, when nonempty, exactly `80 * changedCount` bytes with a second wait.
+
+A dense-to-empty transition pays one bounded download before selecting the sparse
+path; an empty steady stream transfers only eight bytes. The hint never controls
+physical state, inclusion, identities or the reported count. Retained capacity does
+not leak into caller output. `ForceCountFirstChangeReadback` is an internal diagnostic
+control for the same-revision comparison, not a game-facing setting. No CPU body
+history is introduced and no new buffer capacity is required.
+
+History advances on submission; any subsequent failure invalidates the store rather
+than silently consuming an undelivered batch or replaying a physics step. The common
+world may reuse a preceding complete publication only when its epoch is current and
+every live collider cache remains valid. Callback writes, separate sleep invalidation,
+new attachments, completed simulation and correction retain their required reads.
 
 ## Verification
 
@@ -91,3 +102,45 @@ The complete `ELECTRON2D_TEST_GPU_PHYSICS=1` suite passed on the final implement
 renderer lifetime modes. Release build, unchanged compiled API coverage, wiki
 tests/generation/check, runtime shader generation checks and scoped whitespace
 checks also passed. No new public backend-selection capability is claimed.
+
+## Full-path control, 2026-10-11
+
+Linux/.NET 10 Release, Vulkan/NVIDIA GeForce RTX 3090 Ti. Evidence is retained in
+`bin/physics-change-readback/2026-10-11/`, including immutable assembly hashes and
+per-run commands. All nine comparisons use the same runtime/test assemblies,
+1,536 awake scene circles, four walls, four substeps, 16 solver iterations,
+contact monitoring with eight contacts/body, interpolation, 1,600 warmup ticks and
+1,024 measured ticks at 144 Hz. CPU, count-first GPU control and adaptive GPU rotate
+execution order across three repeats.
+
+| Full path | Repeat means ms | Median mean ms | Sends/tick | Download/tick |
+| --- | --- | ---: | ---: | ---: |
+| CPU | 9.7792, 6.8066, 6.7371 | 6.8066 | 0 | 0 B |
+| Count-first GPU | 10.3916, 10.1737, 10.1950 | 10.1950 | 20 | 1,112,864 B |
+| Adaptive GPU | 9.9749, 10.3688, 10.2626 | 10.2626 | 19 | 1,113,184 B |
+
+All physical gates pass and measured owner/all-thread managed allocation is zero.
+The adaptive path saves one submission/wait with 320 extra bytes for the four
+unchanged wall slots. This run does not establish a full-step time improvement;
+its median is slightly higher and GPU remains slower than CPU on this workload.
+Background compiler activity was observed during the first CPU repeat. Detailed
+p50/p95/p99, waits, phases and physical metrics remain in `comparison/reports.json`.
+GPU contact/state hashes vary between runs; they are auxiliary diagnostics, not a
+bitwise continuation requirement or proof that numerical results are identical.
+
+A separate 16,384-body raw circle pile uses four substeps, 16 iterations, disabled
+sleep, 240 warmup and 240 measured ticks at 60 Hz, with actual MultiMesh rendering
+and transform demand. CPU window mean step/frame/FPS is 55.7442/61.2780 ms/16.3190;
+a fresh GPU-only window is 15.1483/20.5427 ms/48.6790. Both captures were inspected
+and physical gates/zero managed physics allocations pass. The isolated GPU
+headless run also passes. This is a different explicit raw workload, not an
+improvement attributed to changed-body publication.
+
+The initial same-process CPU-then-GPU window run fails the GPU physical gate with
+escape 19,785.7109 and speed 5,681.7632 scene units/second. The fresh GPU-only run
+passes with zero escape; the cause and repeatability of the failure remain open.
+Do not accept the rendered performance family as complete from the isolated pass.
+The next investigation must distinguish window/device recreation, pose observation
+and numerical variability at the same 16,384-body population. No threshold or
+population was relaxed. Native allocator totals, other platforms, complete extension
+acceptance and final overall GPU performance remain open.

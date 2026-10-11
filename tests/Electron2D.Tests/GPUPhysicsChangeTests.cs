@@ -9,7 +9,33 @@ internal static class GPUPhysicsChangeTests
     {
         VerifyLifecycle();
         VerifySimulation();
+        VerifyReadbackModes();
         MeasurePublication();
+    }
+
+    private static void VerifyReadbackModes()
+    {
+        using var store = new Store(); var bodies = new Store.BodyHandle[8];
+        for (var i = 0; i < bodies.Length; i++) bodies[i] = store.Add(new(PhysicsServer.BodyMode.Rigid, new(i, 0), 0, default, 0));
+        var changes = new Store.BodyChange[9]; changes[^1].Generation = 123;
+        store.ReadChanges(changes);
+        Read(0, 1, 648); Read(0, 1, 8);
+        store.SetPose(bodies[0], new(10, 0), 0); store.Step(0, default); Read(1, 2, 88);
+        ChangeAll(20); Read(8, 2, 648);
+        ChangeAll(30); Read(8, 1, 648);
+        store.ForceCountFirstChangeReadback = true; ChangeAll(40); Read(8, 2, 648);
+        store.ForceCountFirstChangeReadback = false; Read(0, 1, 648); Read(0, 1, 8);
+        Check(changes[^1].Generation == 123, "Adaptive readback preserves output beyond the current prefix");
+        Console.WriteLine("Adaptive body publication: dense/sparse transitions, count-first control and exact submitted/read bytes passed.");
+        void ChangeAll(float offset)
+        { for (var i = 0; i < bodies.Length; i++) store.SetPose(bodies[i], new(i + offset, 0), 0); store.Step(0, default); }
+        void Read(int expected, long submissions, long bytes)
+        {
+            var before = store.SubmissionCount; var read = store.ReadbackBytes; var count = store.ReadChanges(changes);
+            Check(count == expected && store.SubmissionCount - before == submissions && store.ReadbackBytes - read == bytes,
+                $"Adaptive readback count/submissions/bytes: {count}/{store.SubmissionCount - before}/{store.ReadbackBytes - read}, expected {expected}/{submissions}/{bytes}");
+            Check(changes[^1].Generation == 123, "No dense transfer capacity leaks into caller output");
+        }
     }
 
     private static void VerifyLifecycle()

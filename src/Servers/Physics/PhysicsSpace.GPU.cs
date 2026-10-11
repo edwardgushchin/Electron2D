@@ -6,7 +6,7 @@ internal sealed partial class PhysicsSpace
     internal GPUPhysicsColliderImplementation GPUCollider(PhysicsColliderBackend collider) => GPUStore!.NativeCollider(collider);
     internal double GPUPrepareBodiesMS, GPUPrepareReportsMS, GPUPrepareWakesMS, GPUPrepareWakeWaitMS;
     // Diagnostic controls for comparing identical worlds with repeated policy checks and angle reconstruction.
-    internal bool ForceGPUParameterRefresh, DecodeGPUTransforms;
+    internal bool ForceGPUParameterRefresh, DecodeGPUTransforms, ForceGPUStatePublication;
     private bool _gpuWakePending;
     internal long GPUStateEpoch { get; private set; }
     internal long GPUStatePublicationEpoch { get; private set; } = -1;
@@ -81,6 +81,13 @@ internal sealed partial class PhysicsSpace
     internal void PublishGPU()
     {
         FlushGPUWakes();
+        if (!ForceGPUStatePublication && GPUStatePublicationEpoch == GPUStateEpoch)
+        {
+            var current = true;
+            foreach (var backend in _gpuColliders.Values)
+                if (!GPUCollider(backend).GPUStateValid) { current = false; break; }
+            if (current) return;
+        }
         PrepareGPUCapacity();
         var count = GPUStore!.ReadChanges(_gpuChanges);
         GPUStatePublicationEpoch = GPUStateEpoch;

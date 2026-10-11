@@ -63,13 +63,21 @@ internal static class PhysicsGPUPublicationTests
         Step(1); Check(body.Position.X > .9f && body.LinearVelocity.X > 59, "Plain scene body receives current solved pose/velocity");
         using var probe = new Probe { Name = "Probe", GravityScale = 0, CanSleep = false, CustomIntegrator = true }; root.AddChild(probe);
         Step(2); Check(probe.Calls == 1, "A scene integration override retains its active-before-step observation");
+        Step(2); Check(probe.Calls == 2, "A callback velocity write requires fresh activity publication");
         root.RemoveChild(probe); Step(1);
+        using var observer = new Observer { Name = "Observer", GravityScale = 0, CustomIntegrator = true }; root.AddChild(observer);
+        Step(2); Step(1); Check(observer.Calls == 2, "Read-only integration callbacks reuse a current complete publication");
+        observer.Sleeping = true; Step(2); Check(observer.Calls == 2, "A separately invalidated sleep cache requires fresh publication");
+        root.RemoveChild(observer); Step(1);
         using var state = PhysicsServer.BodyGetDirectState(body.GetRID())!; Step(1); Check(state.LinearVelocity.X > 59, "A live view without captured contacts needs no pre-step publication");
         Console.WriteLine($"Pre-step scene publication {backend}: plain bodies, custom integrator attach/detach and live direct view passed.");
         void Step(int publications)
         {
-            var before = store?.ChangePublicationCount ?? 0; tree.PhysicsFrame(1d / 60);
-            Check(store is null || store.ChangePublicationCount - before == publications, "Scene publication follows actual pre-step consumers");
+            var data = PhysicsServer.Service.GetSceneSpace(world.Space);
+            var before = store?.ChangePublicationCount ?? 0; var epoch = data.GPUStateEpoch; var published = data.GPUStatePublicationEpoch;
+            tree.PhysicsFrame(1d / 60);
+            Check(store is null || store.ChangePublicationCount - before == publications,
+                $"Scene publication count {store?.ChangePublicationCount - before}, expected {publications}; epochs {published}/{epoch} -> {data.GPUStatePublicationEpoch}/{data.GPUStateEpoch}");
         }
     }
     private static void ConnectedWake(PhysicsServer.Backend backend)
@@ -147,6 +155,8 @@ internal static class PhysicsGPUPublicationTests
         finally { PhysicsServer.FreeRID(sensor); PhysicsServer.FreeRID(raw); }
     }
     private static void Near(float value, float expected) => Check(Math.Abs(value - expected) < .001f, "A one-second-unit force integrated for 1/60 s agrees within .001 scene units/s (or rad/s)");
+    private sealed class Observer : RigidBody
+    { internal int Calls; protected override void IntegrateForces(PhysicsDirectBodyState state) { Calls++; } }
     private sealed class Probe : RigidBody
     { internal int Calls; protected override void IntegrateForces(PhysicsDirectBodyState state) { Calls++; state.LinearVelocity = new(5, 0); } }
 }
