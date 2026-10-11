@@ -107,10 +107,10 @@ internal sealed partial class GPUPhysicsColliderImplementation(PhysicsColliderBa
             if (rigid is not null) rigid.GPUParametersDirty = false;
         }
     }
-    internal void PublishGPUFields(PhysicsBodyRuntime runtime)
+    internal override void InvalidateCollisionExceptions() => Space.BackendImplementation.InvalidateCollisionExceptions(Owner);
+    internal override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)
     {
         ref readonly var state = ref GPUState;
-        runtime.Gravity = state.Gravity; runtime.LinearDamp = state.TotalLinearDamp;
-        runtime.AngularDamp = state.TotalAngularDamp; runtime.FieldsInitialized = state.FieldsInitialized;
+        return new(state.Gravity, state.TotalLinearDamp, state.TotalAngularDamp, state.FieldsInitialized);
     }
 }

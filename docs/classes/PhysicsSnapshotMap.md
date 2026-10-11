@@ -1,6 +1,6 @@
 # PhysicsSnapshotMap
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `public sealed partial class PhysicsSnapshotMap : IDisposable`
 
@@ -26,3 +26,7 @@ senders or decide whether a received tick is stale. CPU/GPU backends and local
 creation order may differ; scene/server roles and physical authoring must match.
 A validation failure preserves a usable world; a failure after mutation starts
 requires world disposal. See the component for exact state and verification limits.
+
+## Selected fields, exceptions and portable observation
+
+Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).

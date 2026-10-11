@@ -26,6 +26,8 @@ internal sealed partial class PhysicsSpace
     private int _gpuSensorShapeCount;
     internal bool TryGetGPUShapeOwner(uint index, out (PhysicsColliderBackend Owner, uint Generation, int Slot) owner) => _gpuShapeOwners.TryGetValue(index, out owner);
     internal int GPUSensorShapeCount => _gpuSensorShapeCount;
+    internal void ClearGPUReports() => _gpuReportRanges.Clear();
+    internal bool TryGetGPUCollider(RID rid, out PhysicsColliderBackend collider) => _gpuRIDColliders.TryGetValue((ulong)rid.GetID(), out collider!);
     internal bool TryGetGPUCollider(int index, out PhysicsColliderBackend collider) => _gpuColliders.TryGetValue(index, out collider!);
     private GPUPhysicsBodyStore.BodyChange[] _gpuChanges = [];
     private GPUPhysicsBodyStore.BodyHandle[] _gpuObservedBodies = [];
@@ -41,14 +43,14 @@ internal sealed partial class PhysicsSpace
     {
         _gpuColliders.Add(GPUCollider(backend).GPUHandle.Index, backend);
         _gpuRIDColliders.Add((ulong)backend.RID.GetID(), backend);
-        InvalidateGPUExceptions();
+        _backend.InvalidateCollisionExceptions(backend);
         GPUStore!.SetCollisionPriority(GPUCollider(backend).GPUHandle, backend.CollisionPriority);
         PrepareGPUCapacity();
     }
     internal void UnregisterGPUCollider(PhysicsColliderBackend backend)
     {
         _gpuColliders.Remove(GPUCollider(backend).GPUHandle.Index); _gpuRIDColliders.Remove((ulong)backend.RID.GetID());
-        InvalidateGPUExceptions();
+        _backend.InvalidateCollisionExceptions(backend);
         foreach (var shape in GPUCollider(backend).GPUShapes) UnregisterGPUShape(shape.Handle);
     }
     internal void RegisterGPUShape(PhysicsColliderBackend backend, GPUPhysicsBodyStore.ShapeHandle handle, int slot)
@@ -170,7 +172,6 @@ internal sealed partial class PhysicsSpace
     {
         _gpuQueryGeometry?.Dispose(); _gpuQueryGeometry = null; _gpuQueryShape = null;
         _gpuColliders.Clear(); _gpuRIDColliders.Clear(); _gpuShapeOwners.Clear(); _gpuReportRanges.Clear();
-        _gpuExceptions.Clear(); _gpuNextExceptions.Clear();
         _gpuChanges = []; _gpuObservedBodies = []; _gpuObservedStates = []; _gpuObservedBackends = []; _gpuReportBodies = []; _gpuReportLimits = []; _gpuReportCounts = []; _gpuReports = [];
         _gpuQueryExclusions = []; _gpuPointHits = []; _gpuShapeHits = [];
         _gpuShapeQuery[0] = default;

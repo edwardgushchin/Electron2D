@@ -174,3 +174,7 @@ World-point platform velocity now dispatches through the current selected attach
 ## Selected integration preparation
 
 PrepareDefaultForces dispatches to the current immutable attachment. Common CPU-only ClearTransientForces and ApplyFieldMotion entry points have been removed; their concrete implementation stays private to CPU. Authored and observed shared state retains its existing guards. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).
+
+## Selected fields, exceptions and portable observation
+
+Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).

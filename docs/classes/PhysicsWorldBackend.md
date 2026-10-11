@@ -120,3 +120,14 @@ Failure retires owned/direct-state/space registrations and releases any implemen
 ## Selected checkpoint ownership
 
 PrepareCheckpoint and the selected history operation family borrow library lifetime. GPU reports/epochs/collider caches stay in its concrete checkpoint; common authoring uses neutral field values. Failed capture is replaceable, validation rejection preserves state, begun restore failure is terminal, and cleanup failure still retires the point. See [the executing contract](../components/physics-backends.md#selected-checkpoint-ownership).
+
+## Selected fields, exceptions and portable observation
+
+Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).
+
+| Internal operation | Contract |
+| --- | --- |
+| `void InvalidateCollisionExceptions(PhysicsColliderBackend collider)` | Validate the current owned attachment and prepare CPU fixture or resident GPU exception policy. |
+| `void SynchronizeCollisionExceptions()` | Complete selected query/interval policy synchronization; GPU copies authoring RID pairs before implementation calls outside the registry lock. |
+| `void PreparePortableCapture()` | Prepare current authoring and required device wakes without advancing time. |
+| `void ReadPortableBodies(ReadOnlySpan<PhysicsColliderBackend> colliders, bool capture)` | Validate/read the exact bound object set through this owner; reuse implementation-local scratch and preserve the existing empty-apply flush. The input span is borrowed synchronously. |

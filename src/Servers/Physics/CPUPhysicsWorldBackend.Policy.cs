@@ -6,6 +6,13 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
+    internal override void InvalidateCollisionExceptions(PhysicsColliderBackend collider)
+    {
+        EnsureAccess(); _ = NativeCollider(collider);
+        var owners = PhysicsServer.Service.ResolveBodyOwners(collider.RID);
+        if (owners.Scene is { } body) body.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
+    }
+
     internal override void SetSleepSettings(in PhysicsSleepSettings settings)
     {
         EnsureAccess();

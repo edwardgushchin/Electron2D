@@ -23,8 +23,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     private readonly List<Binding> _objects = [], _joints = [];
     private readonly List<PhysicsReplayEntry> _poses = [];
     private readonly List<PhysicsPortableOneWay> _oneWays = [];
-    private GPUPhysicsBodyStore.BodyHandle[] _gpuHandles = [];
-    private GPUPhysicsBodyStore.Snapshot[] _gpuStates = [];
+    private PhysicsColliderBackend[] _captureBodies = [];
     private bool _busy;
     private readonly int _owner = Environment.CurrentManagedThreadId;
 
@@ -127,24 +126,21 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     {
         space.PreparePortableCapture();
         PhysicsReplayCopy.Require(space.Bodies.Count + space.Areas.Count + space.ServerColliders.Count == _objects.Count && space.SnapshotJoints.Count == _joints.Count);
-        if (space.GPUStore is not null && _gpuHandles.Length < _objects.Count) { Array.Resize(ref _gpuHandles, _objects.Count); Array.Resize(ref _gpuStates, _objects.Count); }
+        if (_captureBodies.Length < _objects.Count) Array.Resize(ref _captureBodies, _objects.Count);
         for (var i = 0; i < _objects.Count; i++)
         {
             var entry = _objects[i].Entry!;
             PhysicsReplayCopy.Require(entry.Backend.Space == space && entry.Backend.AttachmentVersion == _objects[i].Attachment);
-            if (space.GPUStore is not null) _gpuHandles[i] = space.GPUCollider(entry.Backend).GPUHandle;
+            _captureBodies[i] = entry.Backend;
         }
-        if (space.GPUStore is { } gpu)
-        {
-            if (_objects.Count == 0 && !capture) gpu.Step(0, default);
-            else gpu.Read(_gpuHandles.AsSpan(0, _objects.Count), _gpuStates);
-            for (var i = 0; i < _objects.Count; i++) space.GPUCollider(_objects[i].Entry!.Backend).AcceptGPUState(_gpuStates[i]);
-        }
+        space.BeginBackendCallback();
+        try { space.BackendImplementation.ReadPortableBodies(_captureBodies.AsSpan(0, _objects.Count), capture); }
+        finally { space.EndExtensionCallback(); Array.Clear(_captureBodies, 0, _objects.Count); }
         _poses.Clear(); _poses.EnsureCapacity(_objects.Count);
         for (var i = 0; i < _objects.Count; i++)
         {
             var entry = _objects[i].Entry!;
-            if (capture) entry.CapturePortable(space.GPUStore is null ? entry.Backend.PortableSleepTime : _gpuStates[i].SleepTime);
+            if (capture) entry.CapturePortable(entry.Backend.PortableSleepTime);
             else entry.Capture();
             _poses.Add(entry);
         }
@@ -164,7 +160,7 @@ public sealed partial class PhysicsSnapshotMap : IDisposable
     {
         if (_space is not { } space) return;
         if (_owner != Environment.CurrentManagedThreadId || _busy) throw new InvalidOperationException("Snapshot maps require an idle owner thread.");
-        _identities.Clear(); _local.Clear(); _objects.Clear(); _joints.Clear(); _poses.Clear(); _oneWays.Clear(); _gpuHandles = []; _gpuStates = [];
+        _identities.Clear(); _local.Clear(); _objects.Clear(); _joints.Clear(); _poses.Clear(); _oneWays.Clear(); _captureBodies = [];
         _space = null; space.UnregisterSnapshotMap(this);
     }
 }

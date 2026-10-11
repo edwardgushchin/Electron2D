@@ -39,3 +39,12 @@ Only internal CPU/GPU implementations are currently constructed. Public backend 
 ## Selected integration preparation
 
 PrepareDefaultForces consumes eligible pending forces through the selected collider after common role/activity guards. CPU owns native omission/gravity and persistent-force preparation; GPU publishes eligible pending forces while resident policy handles constants/fields. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).
+
+## Selected fields, exceptions and portable observation
+
+Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).
+
+| Internal operation | Contract |
+| --- | --- |
+| `PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)` | Return complete current observer fields in engine units; CPU preserves its completed common values, GPU samples its qualified resident cache. Common publication validates all fields atomically. |
+| `void InvalidateCollisionExceptions()` | Notify this attachment's actual world owner of changed shared exception authoring, without exposing native pair handles. |

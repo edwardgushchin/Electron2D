@@ -1,6 +1,6 @@
 # Portable physics snapshots
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 `PhysicsSnapshotMap` connects caller-assigned network identities to one live CPU or
 GPU world. `PhysicsSnapshot` owns a bounded reusable byte encoding. Together they
@@ -140,3 +140,7 @@ are additional memory. A bounded multi-tick history is not implemented by these 
 classes. A full CPU packet at 60 updates/s would already carry 27,650,640 payload
 bytes/s before transport framing; the future network controller must explicitly
 budget publication frequency and history rather than assuming free per-frame sync.
+
+## Selected preparation and observation
+
+The map validates bindings and sends a borrowed collider span to the selected world. GPU handles/state batch scratch belongs to that owner; common map/entry state uses engine fields and identities. Preparation and batch reads borrow context, so failure permits recapture without membership loss. The exact bound GPU object set is still read explicitly for authoritative state; ordinary unobserved steps retain demand-driven publication. Field/schema/wire values are unchanged. See [ownership and verification](physics-backends.md#selected-observation-and-collision-policy).

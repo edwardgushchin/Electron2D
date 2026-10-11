@@ -828,6 +828,44 @@ steps plus two audio queries and a field read allocate 0 owner/all-thread bytes.
 CPU also runs in the existing no-device ownership child. Native allocation,
 foreign execution and new full-step/FPS performance measurements remain unverified.
 
+## Selected observation and collision policy
+
+[PhysicsBodyFields](../classes/PhysicsBodyFields.md) carries resolved engine-unit
+gravity, signed linear/angular damping and initialization state. ReadResolvedFields
+receives the current common values: CPU preserves its completed field reduction;
+GPU samples its qualified resident observation cache. Scene/raw direct-state
+access, callbacks and portable capture reach the selected collider. Common runtime
+publication rejects nonfinite values before changing any field, rejects recursion
+and borrows body/world lifetime. Internal completed-step publication requires an
+owner-thread solved interval and retains the public query prohibition until common
+observer dispatch begins.
+
+Collision exception edits reach the selected collider and immutable world owner.
+CPU validates native ownership and dirties authored fixtures for existing pre-solve
+filter preparation. GPU owns its dirty flag, generation-qualified resident pair sets
+and reusable RID input list in GPUPhysicsWorldBackend.Exceptions. The service copies
+explicit RID pairs under its registry lock; implementation calls run afterward.
+Joint vetoes retain their independent resident joint policy and contribution counts.
+Query preparation and GPU interval/checkpoint preparation synchronize the same owner.
+
+Portable preparation and ReadPortableBodies now dispatch through the selected
+world. PhysicsSnapshotMap validates membership, supplies a borrowed common collider
+span and clears its retained reference scratch in finally. CPU validates native
+attachments already readable by current getters. GPU owns the reused handle/state
+batch, gathers exactly the requested bound object set and publishes those results
+to its concrete caches. This preserves the existing authoritative snapshot readback
+and empty-apply flush; no additional state mirror, transfer or wait is introduced.
+The wire/schema and ordinary unobserved GPU-step demand are unchanged. GPU restore
+clears its own report ranges instead of common replay manipulating them.
+
+[Selected-view tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedViews.cs)
+use real wrapped CPU/GPU colliders to reject invalid fields/reentry/release, preserve
+atomic state, suppress actual floor motion/contact response through exceptions,
+restore it on removal and exercise scene/raw hooks. Portable preparation/read
+failures release context and permit a fresh capture. Existing field, exception,
+joint, checkpoint, mixed-backend snapshot and network suites retain their own
+numerical and allocation boundaries. Public registration remains open under ADR 0103.
+
 ## Selected checkpoint ownership
 
 Common PhysicsSpace.Checkpoint now dispatches PrepareCheckpoint before creating

@@ -244,3 +244,7 @@ Failure retires owned/direct-state/space registrations and releases any implemen
 ## Borrowed selected checkpoint lifetime
 
 Selected checkpoint operations borrow the same world context as implementation hooks. Body/Area/joint addition and removal reject while an extension context is borrowed, including raw server transfer; normal observer delivery retains its existing membership rules. Preparation, capture/validate/restore and release use the selected owner. See [ownership and checks](../components/physics-backends.md#selected-checkpoint-ownership).
+
+## Selected fields, exceptions and portable observation
+
+Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).

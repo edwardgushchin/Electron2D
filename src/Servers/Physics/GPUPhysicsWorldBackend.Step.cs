@@ -47,7 +47,7 @@ internal sealed partial class GPUPhysicsWorldBackend
             if (!body.IsArea) Space.PrepareGPUMotion(body.Runtime, null, delta, _captureActivity);
         if (_callbacks) Space.PrepareCallbackBodies();
         foreach (var joint in Space.SnapshotJoints) joint.ApplySolverPolicy();
-        Space.SyncGPUExceptions();
+        SynchronizeCollisionExceptions();
         var mark = ProfilingEnabled ? System.Diagnostics.Stopwatch.GetTimestamp() : 0;
         if (ProfilingEnabled) Space.GPUPrepareBodiesMS += System.Diagnostics.Stopwatch.GetElapsedTime(start, mark).TotalMilliseconds;
         Space.PrepareGPUReports();
@@ -69,12 +69,12 @@ internal sealed partial class GPUPhysicsWorldBackend
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {
-        if (RequiresGPUCompletion(body, _callbacks)) GPUStore.NativeCollider(body.Backend).PublishGPUFields(body.Runtime);
+        if (RequiresGPUCompletion(body, _callbacks)) body.Runtime.PublishFields(completingStep: true);
         body.CompleteMotion();
     }
     internal override void CompleteBody(PhysicsBody body)
     {
-        GPUStore.NativeCollider(body.Backend).PublishGPUFields(body.Runtime); body.CompleteBackend();
+        body.Runtime.PublishFields(completingStep: true); body.CompleteBackend();
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
     }

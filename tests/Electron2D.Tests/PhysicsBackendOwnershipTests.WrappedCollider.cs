@@ -5,6 +5,8 @@ internal static partial class PhysicsBackendOwnershipTests
     private sealed class WrappedCollider(PhysicsColliderBackend owner, PhysicsSpace space, PhysicsColliderImplementation inner) : PhysicsColliderImplementation(owner, space)
     {
         internal int PolicyCalls, ImpulseCalls, IdentityCalls, PriorityCalls;
+        internal int FieldReads, ExceptionInvalidations;
+        internal Func<PhysicsBodyFields, PhysicsBodyFields>? FieldHook;
         internal ShapeInputHook? ShapeInputs;
         internal override int ShapeCount => inner.ShapeCount;
         internal override Vector2 LinearVelocity => inner.LinearVelocity;
@@ -25,6 +27,12 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void RefreshIdentity() { IdentityCalls++; inner.RefreshIdentity(); }
         internal override void SetCollisionPriority(float value) { PriorityCalls++; inner.SetCollisionPriority(value); }
         internal override void PrepareContactPolicy() { PolicyCalls++; inner.PrepareContactPolicy(); }
+        internal override void InvalidateCollisionExceptions() { ExceptionInvalidations++; inner.InvalidateCollisionExceptions(); }
+        internal override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)
+        {
+            FieldReads++; var value = inner.ReadResolvedFields(current);
+            return FieldHook is null ? value : FieldHook(value);
+        }
         internal override void UpdateFilter(uint layer, uint mask, bool wakeBody) => inner.UpdateFilter(layer, mask, wakeBody);
         internal override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {

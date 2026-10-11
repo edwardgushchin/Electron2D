@@ -39,7 +39,8 @@ internal sealed partial class GPUPhysicsWorldBackend : PhysicsWorldBackend
     {
         if (_disposed) return;
         _disposed = true;
-        _portableGPUOneWays = [];
+        _portableGPUOneWays = []; _portableBodies = []; _portableStates = [];
+        _exceptions.Clear(); _nextExceptions.Clear(); _exceptionPairs.Clear();
         _gpuAreaHits = []; _areaPointHits = []; _gpuAreaQuery[0] = default;
         _pointHits.Clear(); _shapeHits.Clear(); _contactPairs.Clear();
         GPUStore.Dispose();

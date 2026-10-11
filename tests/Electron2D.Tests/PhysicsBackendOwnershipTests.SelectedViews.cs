@@ -84,6 +84,37 @@ internal static partial class PhysicsBackendOwnershipTests
                 sceneView.GetContactCollider(0) == floor.GetRID() && rawView.GetContactCollider(0) == floor.GetRID(),
                 "Selected extension views receive actual completed scene/raw contact snapshots");
             Check(sensor.GetOverlappingBodies().Contains(scene), "Wrapped Area geometry executes real overlap monitoring");
+            var fieldsRuntime = PhysicsServer.Service.BodyRuntime(raw);
+            var fieldsOwner = (WrappedCollider)fieldsRuntime.Backend.Implementation!;
+            var previousFields = new PhysicsBodyFields(fieldsRuntime.Gravity, fieldsRuntime.LinearDamp, fieldsRuntime.AngularDamp, fieldsRuntime.FieldsInitialized);
+            Check(fieldsOwner.FieldReads > 0, "Selected resolved fields reach actual scene/raw view consumers");
+            fieldsOwner.FieldHook = value =>
+            {
+                RequireBorrowRejection(() => PhysicsServer.BodyGetDirectState(raw));
+                RequireBorrowRejection(() => PhysicsServer.FreeRID(raw));
+                RequireBorrowRejection(() => PhysicsServer.BodySetSpace(raw, default));
+                return value with { Gravity = new(float.NaN, 0) };
+            };
+            Reject<InvalidOperationException>(() => PhysicsServer.BodyGetDirectState(raw));
+            Check(new PhysicsBodyFields(fieldsRuntime.Gravity, fieldsRuntime.LinearDamp, fieldsRuntime.AngularDamp, fieldsRuntime.FieldsInitialized) == previousFields &&
+                PhysicsServer.BodyGetSpace(raw) == world.Space && !space.HasBackendFailure, "Invalid selected fields publish no partial state or attachment change");
+            fieldsOwner.FieldHook = null;
+            Check(ReferenceEquals(rawView, PhysicsServer.BodyGetDirectState(raw)), "Rejected fields release borrowing and preserve the selected view");
+            var beforeException = rawView.Transform;
+            using var exceptionMotion = new PhysicsTestMotionParameters { From = beforeException, Motion = new(0, 10) };
+            Check(PhysicsServer.BodyTestMotion(raw, exceptionMotion), "The floor blocks motion before selected exception invalidation");
+            PhysicsServer.BodyAddCollisionException(raw, floor.GetRID());
+            Check(fieldsOwner.ExceptionInvalidations == 1 && !PhysicsServer.BodyTestMotion(raw, exceptionMotion), "Selected exception policy suppresses real motion candidates");
+            rawView.LinearVelocity = new(0, 80);
+            for (var i = 0; i < 20; i++) tree.PhysicsFrame(1d / 60);
+            Check(rawView.Transform.Origin.Y > floor.GlobalPosition.Y + 10, "Selected exception policy suppresses actual CPU/GPU collision response");
+            PhysicsServer.BodyRemoveCollisionException(raw, floor.GetRID());
+            rawView.Transform = beforeException; rawView.LinearVelocity = default;
+            Check(fieldsOwner.ExceptionInvalidations == 2 && PhysicsServer.BodyTestMotion(raw, exceptionMotion), "Removing the exception restores the actual floor constraint");
+            var sceneOwner = (WrappedCollider)scene.Backend.Implementation!;
+            var sceneInvalidations = sceneOwner.ExceptionInvalidations;
+            scene.AddCollisionExceptionWith(floor); scene.RemoveCollisionExceptionWith(floor);
+            Check(sceneOwner.ExceptionInvalidations == sceneInvalidations + 2, "Scene exceptions reach the same selected invalidation family");
             using var associated = new Node();
             PhysicsServer.BodyAttachObject(raw, associated); PhysicsServer.BodyAttachCanvasInstanceID(raw, 777);
             PhysicsServer.BodySetCollisionPriority(raw, 2);
@@ -220,7 +251,26 @@ internal static partial class PhysicsBackendOwnershipTests
             using var map = new PhysicsSnapshotMap(world.Space);
             map.Bind(1, 1, scene.GetRID()); map.Bind(2, 1, floor.GetRID()); map.Bind(3, 1, sensor.GetRID());
             map.Bind(4, 1, raw); map.Bind(5, 1, foreign);
-            var snapshot = new PhysicsSnapshot(); map.Capture(snapshot); var saved = rawView.Transform;
+            var snapshot = new PhysicsSnapshot();
+            selected.PortablePreparationHook = () =>
+            {
+                RequireBorrowRejection(() => map.Capture(snapshot));
+                RequireBorrowRejection(() => PhysicsServer.BodySetSpace(raw, default));
+                throw new InvalidOperationException("Expected selected portable preparation failure");
+            };
+            Reject<InvalidOperationException>(() => map.Capture(snapshot));
+            selected.PortablePreparationHook = null;
+            selected.PortableReadHook = () =>
+            {
+                RequireBorrowRejection(() => map.Capture(snapshot));
+                RequireBorrowRejection(() => PhysicsServer.FreeRID(world.Space));
+                throw new InvalidOperationException("Expected selected portable observation failure");
+            };
+            Reject<InvalidOperationException>(() => map.Capture(snapshot));
+            selected.PortableReadHook = null;
+            map.Capture(snapshot); var saved = rawView.Transform;
+            Check(selected.PortablePreparations == 3 && selected.PortableReads == 2 && PhysicsServer.BodyGetSpace(raw) == world.Space,
+                "Selected portable preparation/read failures preserve real bindings and allow capture recovery");
             rawView.Transform = new(0, new(50, 0)); map.Apply(snapshot);
             Check(rawView.Transform.Origin.DistanceTo(saved.Origin) < .001f, "Selected ownership restores real portable body state and sleep through wrapped selected attachments");
             Console.WriteLine($"{backend}: selected scene/raw state/query factories, real hooks/contacts, identity/reentry/failure/borrow guards and 64 warmed steps: {owner}/{all} B.");
