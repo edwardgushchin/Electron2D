@@ -104,6 +104,11 @@ public sealed unsafe partial class RenderingDevice
         DataFormat.ASTC10X10SFLOATBLOCK => SDL.GPUTextureFormat.ASTC10X10Float,
         DataFormat.ASTC12X10SFLOATBLOCK => SDL.GPUTextureFormat.ASTC12X10Float,
         DataFormat.ASTC12X12SFLOATBLOCK => SDL.GPUTextureFormat.ASTC12X12Float,
+        DataFormat.D16UNORM => SDL.GPUTextureFormat.D16Unorm,
+        DataFormat.X8D24UNORMPACK32 => SDL.GPUTextureFormat.D24Unorm,
+        DataFormat.D32SFLOAT => SDL.GPUTextureFormat.D32Float,
+        DataFormat.D24UNORMS8UINT => SDL.GPUTextureFormat.D24UnormS8Uint,
+        DataFormat.D32SFLOATS8UINT => SDL.GPUTextureFormat.D32FloatS8Uint,
         _ => SDL.GPUTextureFormat.Invalid
     };
     private static (uint Width, uint Height) BlockDimensions(SDL.GPUTextureFormat format) => format switch

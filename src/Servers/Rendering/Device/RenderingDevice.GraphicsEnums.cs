@@ -147,6 +147,8 @@ public sealed unsafe partial class RenderingDevice
         ClearColor7 = 128,
         /// <summary>Selects ClearColorAll.</summary>
         ClearColorAll = 255,
+        /// <summary>Masks the per-color clear flags.</summary>
+        ClearColorMask = 255,
         /// <summary>Selects IgnoreColor0.</summary>
         IgnoreColor0 = 256,
         /// <summary>Selects IgnoreColor1.</summary>
@@ -165,6 +167,20 @@ public sealed unsafe partial class RenderingDevice
         IgnoreColor7 = 32768,
         /// <summary>Selects IgnoreColorAll.</summary>
         IgnoreColorAll = 65280,
+        /// <summary>Masks the per-color discard flags.</summary>
+        IgnoreColorMask = 65280,
+        /// <summary>Clears the complete depth aspect.</summary>
+        ClearDepth = 65536,
+        /// <summary>Discards existing depth before the pass.</summary>
+        IgnoreDepth = 131072,
+        /// <summary>Clears the complete stencil aspect.</summary>
+        ClearStencil = 262144,
+        /// <summary>Discards existing stencil before the pass.</summary>
+        IgnoreStencil = 524288,
+        /// <summary>Clears every color, depth and stencil aspect; absent aspects are ignored.</summary>
+        ClearAll = 327935,
+        /// <summary>Discards every color, depth and stencil aspect; absent aspects are ignored.</summary>
+        IgnoreAll = 720640,
     }
     /// <summary>Identifies BufferCreationBits values for executable graphics operations.</summary>
     [Flags]

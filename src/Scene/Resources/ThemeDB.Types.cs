@@ -285,6 +285,7 @@ public sealed partial class ThemeDB
         ["RDAttachmentFormat"] = ["RDAttachmentFormat", "ElectronObject"],
         ["RDPipelineColorBlendState"] = ["RDPipelineColorBlendState", "ElectronObject"],
         ["RDPipelineColorBlendStateAttachment"] = ["RDPipelineColorBlendStateAttachment", "ElectronObject"],
+        ["RDPipelineDepthStencilState"] = ["RDPipelineDepthStencilState", "ElectronObject"],
         ["RDPipelineRasterizationState"] = ["RDPipelineRasterizationState", "ElectronObject"],
         ["RDSamplerState"] = ["RDSamplerState", "ElectronObject"],
         ["RDShaderSPIRV"] = ["RDShaderSPIRV", "Resource", "ElectronObject"],

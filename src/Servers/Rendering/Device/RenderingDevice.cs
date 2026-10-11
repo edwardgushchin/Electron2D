@@ -60,7 +60,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal uint Size;
         internal StorageBufferUsage Usage;
         internal TextureInfo? Texture;
-        internal bool LinearSampling, GraphicsStorage, RestartIndices;
+        internal bool CompareSampling, LinearSampling, GraphicsStorage, RestartIndices;
         internal IndexBufferFormat IndexFormat;
         internal VertexArray? Vertices;
         internal IndexArray? Indices;
@@ -221,7 +221,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         foreach (var group in layoutBoth.GroupBy(b => (b.Set, b.Slot)))
         {
             var first = group.First();
-            if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared graphics descriptor has inconsistent stage types.", nameof(spirvData));
+            if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType || b.Depth != first.Depth)) throw new ArgumentException("A shared graphics descriptor has inconsistent stage types.", nameof(spirvData));
         }
         var interfaces = ShaderCompiler.ValidateDeviceGraphics(vertexCode, fragmentCode);
         var entry = new Entry { Kind = Kind.Shader, Stage = ShaderStage.Vertex, Layout = layoutBoth, Name = name, Inputs = interfaces.Inputs, Outputs = interfaces.Outputs };

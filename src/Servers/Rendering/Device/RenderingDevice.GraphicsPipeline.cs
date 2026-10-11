@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private sealed record GraphicsPipeline(int FramebufferFormat, int VertexFormat, RenderPrimitive Primitive, Color Constant, PipelineDynamicStateFlags Dynamic);
+    private sealed record GraphicsPipeline(int FramebufferFormat, int VertexFormat, RenderPrimitive Primitive, Color Constant, PipelineDynamicStateFlags Dynamic, byte StencilReference);
     private static SDL.GPUBlendFactor Blend(BlendFactor value) => value switch
     {
         >= BlendFactor.Zero and <= BlendFactor.OneMinusConstantColor => (SDL.GPUBlendFactor)((int)value + 1),
@@ -12,28 +12,31 @@ public sealed unsafe partial class RenderingDevice
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    /// <summary>Creates an executable single-sample color graphics pipeline.</summary>
+    /// <summary>Creates an executable single-sample color and depth/stencil graphics pipeline.</summary>
     /// <param name="shader">A live paired vertex/fragment shader.</param>
-    /// <param name="framebufferFormat">A color attachment layout on this device.</param>
+    /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
     /// <param name="primitive">Point, line or triangle topology.</param>
     /// <param name="rasterizationState">Copied rasterization configuration.</param>
     /// <param name="colorBlendState">Copied blending configuration, with one entry per target.</param>
     /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
+    /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
     /// <returns>A pipeline borrowing the shader identity.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
-    /// <remarks>Depth/stencil attachments, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.</remarks>
+    /// <remarks>Depth-bounds tests, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
-        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0)
+        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
         if ((dynamicStateFlags & ~PipelineDynamicStateFlags.BlendConstants) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
         var target = FramebufferFormat(framebufferFormat);
+        using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
+        var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference);
         var vertex = vertexFormat == -1 ? new VertexLayout([], [], []) : VertexFormat(vertexFormat);
         ValidateVertexInterface(program, vertex);
         foreach (var output in program.Outputs)
-            if (output.Location >= target.Formats.Length || output.Type != PixelType(target.Formats[output.Location])) throw new ArgumentException("Fragment outputs must match the framebuffer scalar formats.", nameof(framebufferFormat));
+            if (output.Location >= target.Colors.Length || output.Type != PixelType(target.Formats[target.Colors[output.Location]])) throw new ArgumentException("Fragment outputs must match the framebuffer scalar formats.", nameof(framebufferFormat));
         var topology = primitive switch
         {
             RenderPrimitive.Points => SDL.GPUPrimitiveType.PointList,
@@ -45,15 +48,15 @@ public sealed unsafe partial class RenderingDevice
         };
         if (!Enum.IsDefined(rasterizationState.CullMode) || !Enum.IsDefined(rasterizationState.FrontFace)) throw new ArgumentException("Unknown rasterization value.", nameof(rasterizationState));
         var attachments = colorBlendState.Attachments;
-        if (attachments.Length != target.Formats.Length) throw new ArgumentException("Provide blending for every color target.", nameof(colorBlendState));
+        if (attachments.Length != target.Colors.Length) throw new ArgumentException("Provide blending for every color target.", nameof(colorBlendState));
         var colors = stackalloc SDL.GPUColorTargetDescription[8];
         for (var i = 0; i < attachments.Length; i++)
         {
             var a = attachments[i];
-            if (a.EnableBlend && PixelType(target.Formats[i]) != 0) throw new ArgumentException("Integer color targets cannot blend.", nameof(colorBlendState));
+            if (a.EnableBlend && PixelType(target.Formats[target.Colors[i]]) != 0) throw new ArgumentException("Integer color targets cannot blend.", nameof(colorBlendState));
             colors[i] = new()
             {
-                Format = NativeFormat(target.Formats[i]),
+                Format = NativeFormat(target.Formats[target.Colors[i]]),
                 BlendState = new()
                 {
                     EnableBlend = a.EnableBlend,
@@ -81,13 +84,18 @@ public sealed unsafe partial class RenderingDevice
                     FillMode = rasterizationState.Wireframe ? SDL.GPUFillMode.Line : SDL.GPUFillMode.Fill,
                     CullMode = rasterizationState.CullMode switch { PolygonCullMode.Front => SDL.GPUCullMode.Front, PolygonCullMode.Back => SDL.GPUCullMode.Back, _ => SDL.GPUCullMode.None },
                     FrontFace = rasterizationState.FrontFace == PolygonFrontFace.Clockwise ? SDL.GPUFrontFace.Clockwise : SDL.GPUFrontFace.CounterClockwise,
-                    EnableDepthClip = !rasterizationState.EnableDepthClamp
+                    EnableDepthClip = !rasterizationState.EnableDepthClamp,
+                    EnableDepthBias = rasterizationState.DepthBiasEnabled,
+                    DepthBiasConstantFactor = rasterizationState.DepthBiasConstantFactor,
+                    DepthBiasClamp = rasterizationState.DepthBiasClamp,
+                    DepthBiasSlopeFactor = rasterizationState.DepthBiasSlopeFactor
                 },
                 VertexInputState = new() { VertexAttributes = (nint)attributes, NumVertexAttributes = (uint)vertex.Attributes.Length, VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = (uint)vertex.Buffers.Length },
-                TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)attachments.Length }
+                DepthStencilState = depthState,
+                TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)attachments.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
             };
             var handle = new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);
-            return Add(new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Handle = handle, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags) });
+            return Add(new Entry { Kind = Kind.GraphicsPipeline, Shader = shader, Handle = handle, Graphics = new(framebufferFormat, vertexFormat, primitive, colorBlendState.BlendConstant, dynamicStateFlags, stencilReference) });
         }
     }
     /// <summary>Reports whether a graphics pipeline and its borrowed shader are alive.</summary>

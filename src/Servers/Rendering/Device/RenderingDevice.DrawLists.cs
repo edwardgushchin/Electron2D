@@ -18,38 +18,52 @@ public sealed unsafe partial class RenderingDevice
         if (!float.IsFinite(p.X) || !float.IsFinite(p.Y) || !float.IsFinite(s.X) || !float.IsFinite(s.Y) || p.X < 0 || p.Y < 0 || s.X <= 0 || s.Y <= 0 || p.X + s.X > size.X || p.Y + s.Y > size.Y) throw new ArgumentOutOfRangeException(nameof(region));
         return region;
     }
-    /// <summary>Begins an ordered color render pass on borrowed framebuffer images.</summary>
-    /// <param name="framebuffer">A live single-sample color framebuffer.</param>
+    /// <summary>Begins an ordered color and depth/stencil render pass on borrowed framebuffer images.</summary>
+    /// <param name="framebuffer">A live single-sample framebuffer.</param>
     /// <param name="drawFlags">Per-target clear or discard load flags; default loads existing pixels.</param>
     /// <param name="clearColorValues">One clear value per attachment when any clear flag is set; finite float components or raw integer lane bits as in TextureClear.</param>
     /// <param name="region">Viewport and initial scissor; zero selects the whole framebuffer.</param>
+    /// <param name="clearDepthValue">Finite depth clear from zero through one; defaults to one.</param>
+    /// <param name="clearStencilValue">Eight-bit stencil clear; defaults to zero.</param>
     /// <returns>The active owner-thread draw-list identity.</returns>
     /// <remarks>Clears affect the complete attachment. The region restricts draws. Results become available to subsequent compute, copy and canvas passes after DrawListEnd.</remarks>
-    public long DrawListBegin(RID framebuffer, DrawFlags drawFlags = 0, ReadOnlySpan<Color> clearColorValues = default, Rect2 region = default)
+    public long DrawListBegin(RID framebuffer, DrawFlags drawFlags = 0, ReadOnlySpan<Color> clearColorValues = default, Rect2 region = default, float clearDepthValue = 1, int clearStencilValue = 0)
     {
         IdleList(); var target = GetFramebuffer(framebuffer); var actual = DrawRegion(region, target.Size);
-        if (((uint)drawFlags & ~65535u) != 0) throw new ArgumentOutOfRangeException(nameof(drawFlags));
-        var clears = (uint)drawFlags & 255; var ignores = (uint)drawFlags >> 8;
-        if ((clears & ignores) != 0 || clears != 0 && clearColorValues.Length != target.Textures.Length || clears == 0 && !clearColorValues.IsEmpty && clearColorValues.Length != target.Textures.Length) throw new ArgumentException("Clear colors and flags do not match the attachments.");
+        var layout = FramebufferFormat(target.Format); var depthIndex = layout.DepthIndex;
+        if (!float.IsFinite(clearDepthValue) || clearDepthValue is < 0 or > 1 || clearStencilValue is < 0 or > 255) throw new ArgumentOutOfRangeException(nameof(clearDepthValue));
+        if ((drawFlags & DrawFlags.ClearDepth) != 0 && (drawFlags & DrawFlags.IgnoreDepth) != 0 || (drawFlags & DrawFlags.ClearStencil) != 0 && (drawFlags & DrawFlags.IgnoreStencil) != 0) throw new ArgumentException("An aspect cannot both clear and discard.", nameof(drawFlags));
+
+        if (((uint)drawFlags & ~1048575u) != 0) throw new ArgumentOutOfRangeException(nameof(drawFlags));
+        var clears = (uint)drawFlags & 255; var ignores = ((uint)drawFlags >> 8) & 255;
+        if ((clears & ignores) != 0 || clears != 0 && clearColorValues.Length != layout.Colors.Length || clears == 0 && !clearColorValues.IsEmpty && clearColorValues.Length != layout.Colors.Length) throw new ArgumentException("Clear colors and flags do not match the attachments.");
         for (var i = 0; i < clearColorValues.Length; i++)
         {
-            var format = Get(target.Textures[i], Kind.Texture).Texture!.Format;
+            var format = Get(target.Textures[layout.Colors[i]], Kind.Texture).Texture!.Format;
             if (PixelType(format) == 0) FiniteColor(clearColorValues[i]);
             else { if (TextureDriver != "vulkan") throw new NotSupportedException("Integer clear lanes require verification of this native backend."); ValidateSignedClear(format, clearColorValues[i]); }
         }
         var colors = stackalloc SDL.GPUColorTargetInfo[8];
-        for (var i = 0; i < target.Textures.Length; i++)
+        for (var i = 0; i < layout.Colors.Length; i++)
         {
             var color = clearColorValues.IsEmpty ? default : clearColorValues[i];
             colors[i] = new()
             {
-                Texture = Get(target.Textures[i], Kind.Texture).Handle!.DangerousGetHandle(),
+                Texture = Get(target.Textures[layout.Colors[i]], Kind.Texture).Handle!.DangerousGetHandle(),
                 ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A },
                 LoadOp = (clears & (1u << i)) != 0 ? SDL.GPULoadOp.Clear : (ignores & (1u << i)) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
                 StoreOp = SDL.GPUStoreOp.Store
             };
         }
-        var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)target.Textures.Length, 0);
+        var depth = new SDL.GPUDepthStencilTargetInfo();
+        if (depthIndex >= 0)
+        {
+            depth.Texture = Get(target.Textures[depthIndex], Kind.Texture).Handle!.DangerousGetHandle(); depth.ClearDepth = clearDepthValue; depth.ClearStencil = (byte)clearStencilValue;
+            depth.LoadOp = (drawFlags & DrawFlags.ClearDepth) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreDepth) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.StencilLoadOp = (drawFlags & DrawFlags.ClearStencil) != 0 ? SDL.GPULoadOp.Clear : (drawFlags & DrawFlags.IgnoreStencil) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load;
+            depth.StoreOp = SDL.GPUStoreOp.Store; depth.StencilStoreOp = SDL.GPUStoreOp.Store;
+        }
+        var pass = SDL.BeginGPURenderPass(Commands(), (nint)colors, (uint)layout.Colors.Length, depthIndex >= 0 ? (nint)(&depth) : 0);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin device graphics pass");
         _drawPass = pass; _drawTarget = target; _drawRegion = actual; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _sets.Clear();
         SDL.SetGPUViewport(pass, new() { X = actual.Position.X, Y = actual.Position.Y, W = actual.Size.X, H = actual.Size.Y, MinDepth = 0, MaxDepth = 1 });
@@ -65,7 +79,7 @@ public sealed unsafe partial class RenderingDevice
     {
         DrawList(drawList); var entry = Get(renderPipeline, Kind.GraphicsPipeline); Get(entry.Shader, Kind.Shader);
         if (!FramebufferFormat(entry.Graphics!.FramebufferFormat).Formats.AsSpan().SequenceEqual(FramebufferFormat(_drawTarget!.Format).Formats)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
-        _graphicsPipeline = entry; SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant);
+        _graphicsPipeline = entry; SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>
     /// <param name="drawList">The active draw-list identity.</param>

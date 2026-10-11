@@ -1,6 +1,6 @@
 # RDAttachmentFormat
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDAttachmentFormat`. **Source:** [RDAttachmentFormat.cs](../../src/Servers/Rendering/Device/RDAttachmentFormat.cs). **Component:** [Local device](../components/local-compute.md).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned color attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment and one sample are required by the current executable pass. Depth/stencil, MSAA resolve and multiview remain precise coverage prerequisites.
+A caller-owned color or depth/stencil attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment or DepthStencilAttachment selects the corresponding role; one sample is required by the current executable pass. MSAA resolve and multiview remain precise coverage prerequisites.
 
 ## Example
 
@@ -25,8 +25,8 @@ var layout = device.FramebufferFormatCreate([attachment]);
 | --- | --- |
 | `public RDAttachmentFormat()` | Creates the default configuration. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Projects the caller-owned configuration through inherited typed property metadata. |
-| `public Electron2D.RenderingDevice.DataFormat Format { get; set; }` | Gets or sets the color attachment pixel format. |
-| `public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }` | Gets or sets the attachment sample count; the current color pass requires one sample. |
+| `public Electron2D.RenderingDevice.DataFormat Format { get; set; }` | Gets or sets the color or depth/stencil attachment pixel format. |
+| `public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }` | Gets or sets the attachment sample count; the current pass requires one sample. |
 | `public Electron2D.RenderingDevice.TextureUsageBits UsageFlags { get; set; }` | Gets or sets the required attachment allocation and transfer roles. |
 
 ## Member descriptions
@@ -60,7 +60,7 @@ Inherited descriptors followed by this description's properties; configuration i
 public Electron2D.RenderingDevice.DataFormat Format { get; set; }
 ```
 
-Gets or sets the color attachment pixel format.
+Gets or sets the color or depth/stencil attachment pixel format.
 
 Initially RenderingDevice.DataFormat.R8G8B8A8UNORM; validated and copied by its device consumer.
 
@@ -72,7 +72,7 @@ Initially RenderingDevice.DataFormat.R8G8B8A8UNORM; validated and copied by its 
 public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }
 ```
 
-Gets or sets the attachment sample count; the current color pass requires one sample.
+Gets or sets the attachment sample count; the current pass requires one sample.
 
 Initially RenderingDevice.TextureSamples.Samples1; validated and copied by its device consumer.
 

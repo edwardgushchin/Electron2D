@@ -1,6 +1,6 @@
 # RDTextureFormat
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDTextureFormat`. **Source:** [RDTextureFormat.cs](../../src/Servers/Rendering/Device/RDTextureFormat.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -165,3 +165,5 @@ Initially 1; copied when the device creates its resource.
 Configurations are independent caller-owned ElectronObject values; disposing a description does not free an already-created RID. Device identities belong to the creating thread/device and are freed through FreeRID or device disposal. Borrowed sampler/image bindings expire when either identity is freed. Enum values own no native state.
 
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
+
+Depth/stencil formats accept only DepthStencilAttachment and optional Sampling usage on this profile. Empty data initializes every depth layer/mip to zero through native passes. Raw aspect transfers and depth-bound state retain exact adapters in coverage. See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).

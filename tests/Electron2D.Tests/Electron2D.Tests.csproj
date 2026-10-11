@@ -52,7 +52,7 @@
     <EmbeddedResource Include="Fixtures/Fonts/*.woff2;Fixtures/Fonts/*.ttf;Fixtures/Fonts/*.ttc" LogicalName="TestFonts.%(Filename)%(Extension)" />
   </ItemGroup>
   <Import Project="../../tools/native-consumer.props" />
-  <ItemGroup><Electron2DComputeShader Include="Shaders/LocalCompute.comp.glsl;Shaders/LocalComputeHLSL.comp.hlsl;Shaders/IndirectArguments.comp.glsl;Shaders/DeviceArguments.comp.glsl;Shaders/LocalTextureInteger.comp.glsl;Shaders/LocalTextureModes.comp.glsl;Shaders/LocalTexture.comp.glsl;Shaders/LocalTextureHLSL.comp.hlsl" /></ItemGroup>
+  <ItemGroup><Electron2DComputeShader Include="Shaders/LocalDepthGLSL.comp.glsl;Shaders/LocalDepthHLSL.comp.hlsl;Shaders/LocalCompute.comp.glsl;Shaders/LocalComputeHLSL.comp.hlsl;Shaders/IndirectArguments.comp.glsl;Shaders/DeviceArguments.comp.glsl;Shaders/LocalTextureInteger.comp.glsl;Shaders/LocalTextureModes.comp.glsl;Shaders/LocalTexture.comp.glsl;Shaders/LocalTextureHLSL.comp.hlsl" /></ItemGroup>
   <Import Project="../../tools/shaders/ComputeShaders.targets" />
   <ItemGroup><Electron2DDeviceShader Include="Shaders/Device*.vert.glsl;Shaders/Device*.frag.glsl;Shaders/Device*.vert.hlsl;Shaders/Device*.frag.hlsl" /></ItemGroup>
   <Import Project="../../tools/shaders/DeviceShaders.targets" />

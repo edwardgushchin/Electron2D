@@ -1,6 +1,6 @@
 # RenderingDevice
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs). **Component:** [Local compute](../components/local-compute.md).
 
@@ -64,8 +64,8 @@ byte[] result = device.BufferGetData(buffer);
 | `public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)` | Creates a copied set of validated buffer/image/sampler bindings. |
 | `public System.Boolean UniformSetIsValid(Electron2D.RID uniformSet)` | Reports whether a set and every borrowed resource remain alive. |
 | `protected override System.Void ValidateDisposal()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
-| `public Electron2D.RID SamplerCreate(Electron2D.RDSamplerState state)` | Creates a device-owned sampler from copied filtering, addressing and LOD state. |
-| `public Electron2D.RID TextureCreate(Electron2D.RDTextureFormat format, Electron2D.RDTextureView view, System.ReadOnlySpan<System.Byte[]> data = default)` | Creates a device-owned two-dimensional image or image array with copied mip data. |
+| [`public Electron2D.RID SamplerCreate(Electron2D.RDSamplerState state)`](#member-fa590dca9f47) | Creates a device-owned sampler from copied filtering, addressing and LOD state. |
+| [`public Electron2D.RID TextureCreate(Electron2D.RDTextureFormat format, Electron2D.RDTextureView view, System.ReadOnlySpan<System.Byte[]> data = default)`](#member-e8e129d5af5f) | Creates a device-owned two-dimensional image or image array with copied mip data. |
 | `public System.Byte[] TextureGetData(Electron2D.RID texture, System.UInt32 layer)` | Synchronizes and returns an independent tightly packed layer mip chain. |
 | `public System.Void TextureGetData(Electron2D.RID texture, System.UInt32 layer, System.Span<System.Byte> destination)` | Synchronizes and reads one layer mip chain into caller-owned storage. |
 | `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Action<System.Byte[]> callback)` | Queues a request-time layer snapshot and delivers an independent mip chain at local completion. |
@@ -405,9 +405,11 @@ Creates a device-owned sampler from copied filtering, addressing and LOD state.
 
 An owned sampler identity.
 
-`state`: Caller-owned sampler configuration.
+| Parameter | Contract |
+| --- | --- |
+| `state` | Caller-owned sampler configuration. |
 
-Throws `System.NotSupportedException`: Border, mirror-clamp or unnormalized sampling requires a shader adapter.
+- `T:System.NotSupportedException`: Border, mirror-clamp or unnormalized sampling requires a shader adapter.
 <a id="member-e8e129d5af5f"></a>
 ### TextureCreate(Electron2D.RDTextureFormat, Electron2D.RDTextureView, System.ReadOnlySpan<System.Byte[]>)
 
@@ -419,13 +421,13 @@ Creates a device-owned two-dimensional image or image array with copied mip data
 
 A texture RID belonging to this device.
 
-`format`: Allocation description copied before returning.
+| Parameter | Contract |
+| --- | --- |
+| `format` | Allocation description copied before returning. |
+| `view` | Initial view description; native format reinterpretation and swizzles require a view adapter. |
+| `data` | One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. |
 
-`view`: Initial view description; native format reinterpretation and swizzles require a view adapter.
-
-`data`: One tightly packed mip chain per layer, or empty for zero initialization.
-
-Throws `System.NotSupportedException`: The requested format, view or allocation role is not supported.
+- `T:System.NotSupportedException`: The requested format, view or allocation role is not supported.
 <a id="member-a3f596fd4b89"></a>
 ### TextureGetData(Electron2D.RID, System.UInt32)
 
@@ -630,7 +632,7 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 
 | Declaration | Contract |
 | --- | --- |
-| `public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default)` | Begins an ordered color render pass on borrowed framebuffer images. |
+| [`public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default, System.Single clearDepthValue = 1f, System.Int32 clearStencilValue = 0)`](#member-c6018364e892) | Begins an ordered color and depth/stencil render pass on borrowed framebuffer images. |
 | `public System.Void DrawListBindIndexArray(System.Int64 drawList, Electron2D.RID indexArray)` | Binds a live borrowed index range for subsequent indexed draws. |
 | `public System.Void DrawListBindRenderPipeline(System.Int64 drawList, Electron2D.RID renderPipeline)` | Binds a graphics pipeline matching the active framebuffer. |
 | `public System.Void DrawListBindUniformSet(System.Int64 drawList, Electron2D.RID uniformSet, System.UInt32 setIndex)` | Binds a complete resource set at its logical shader set index. |
@@ -642,14 +644,14 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 | `public System.Void DrawListEnableScissor(System.Int64 drawList, Electron2D.Rect2 rect = default)` | Clips subsequent draws to the rectangle intersected with the framebuffer. |
 | `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
 | `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
-| `public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)` | Creates a framebuffer borrowing device-owned color images. |
-| `public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)` | Creates a copied single-pass color attachment layout. |
+| [`public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)`](#member-a56b363d17da) | Creates a framebuffer borrowing device-owned color and depth/stencil images. |
+| [`public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)`](#member-d154729327fd) | Creates a copied single-pass color and depth/stencil attachment layout. |
 | `public Electron2D.RenderingDevice.TextureSamples FramebufferFormatGetTextureSamples(System.Int32 framebufferFormat, System.UInt32 renderPass = 0)` | Reports the sample count of a framebuffer pass. |
 | `public System.Int32 FramebufferGetFormat(Electron2D.RID framebuffer)` | Reads the framebuffer's matching layout identity. |
 | `public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)` | Reports whether a framebuffer and all its borrowed attachments remain alive. |
 | `public Electron2D.RID IndexArrayCreate(Electron2D.RID indexBuffer, System.UInt32 indexOffset, System.UInt32 indexCount)` | Creates a borrowed index range. |
 | `public Electron2D.RID IndexBufferCreate(System.UInt32 sizeIndices, Electron2D.RenderingDevice.IndexBufferFormat format, System.ReadOnlySpan<System.Byte> data = default, System.Boolean useRestartIndices = false, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a copied unsigned index buffer. |
-| `public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0)` | Creates an executable single-sample color graphics pipeline. |
+| [`public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null)`](#member-22b7a5a537d5) | Creates an executable single-sample color and depth/stencil graphics pipeline. |
 | `public System.Boolean RenderPipelineIsValid(Electron2D.RID renderPipeline)` | Reports whether a graphics pipeline and its borrowed shader are alive. |
 | `public System.UInt64 ShaderGetVertexInputAttributeMask(Electron2D.RID shader)` | Returns the mask of vertex input locations declared by a graphics shader. |
 | `public Electron2D.RID VertexArrayCreate(System.UInt32 vertexCount, System.Int32 vertexFormat, System.ReadOnlySpan<Electron2D.RID> sourceBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)` | Creates a borrowed vertex-buffer array. |
@@ -658,28 +660,27 @@ The [graphics component contract](../components/local-compute.md#color-graphics-
 
 ## Graphics member descriptions
 
-<a id="member-d9d9b741ffcb"></a>
-### DrawListBegin(Electron2D.RID, Electron2D.RenderingDevice.DrawFlags, System.ReadOnlySpan<Electron2D.Color>, Electron2D.Rect2)
+<a id="member-c6018364e892"></a>
+### DrawListBegin(Electron2D.RID, Electron2D.RenderingDevice.DrawFlags, System.ReadOnlySpan<Electron2D.Color>, Electron2D.Rect2, System.Single, System.Int32)
 
 ```csharp
-public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default)
+public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default, System.Single clearDepthValue = 1f, System.Int32 clearStencilValue = 0)
 ```
 
-Begins an ordered color render pass on borrowed framebuffer images.
-
-The active owner-thread draw-list identity.
+Begins an ordered color and depth/stencil render pass on borrowed framebuffer images.
 
 Clears affect the complete attachment. The region restricts draws. Results become available to subsequent compute, copy and canvas passes after DrawListEnd.
 
-`framebuffer`: A live single-sample color framebuffer.
+The active owner-thread draw-list identity.
 
-`drawFlags`: Per-target clear or discard load flags; default loads existing pixels.
-
-`clearColorValues`: One clear value per attachment when any clear flag is set; finite float components or raw integer lane bits as in TextureClear.
-
-`region`: Viewport and initial scissor; zero selects the whole framebuffer.
-
-
+| Parameter | Contract |
+| --- | --- |
+| `framebuffer` | A live single-sample framebuffer. |
+| `drawFlags` | Per-target clear or discard load flags; default loads existing pixels. |
+| `clearColorValues` | One clear value per attachment when any clear flag is set; finite float components or raw integer lane bits as in TextureClear. |
+| `region` | Viewport and initial scissor; zero selects the whole framebuffer. |
+| `clearDepthValue` | Finite depth clear from zero through one; defaults to one. |
+| `clearStencilValue` | Eight-bit stencil clear; defaults to zero. |
 <a id="member-88d7ab8e682d"></a>
 ### DrawListBindIndexArray(System.Int64, Electron2D.RID)
 
@@ -889,15 +890,14 @@ Sets the finite blend constant for subsequent draws.
 public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)
 ```
 
-Creates a framebuffer borrowing device-owned color images.
+Creates a framebuffer borrowing device-owned color and depth/stencil images.
 
 A framebuffer identity invalidated when an attachment is freed.
 
-`textures`: One to eight ordinary single-layer, single-mip color images.
-
-`validateWithFormat`: An existing matching format, or -1 to create its layout.
-
-
+| Parameter | Contract |
+| --- | --- |
+| `textures` | Distinct ordinary single-layer, single-mip images; up to eight color targets and one depth/stencil target. |
+| `validateWithFormat` | An existing matching format, or -1 to create its layout. |
 <a id="member-d154729327fd"></a>
 ### FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)
 
@@ -905,15 +905,15 @@ A framebuffer identity invalidated when an attachment is freed.
 public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)
 ```
 
-Creates a copied single-pass color attachment layout.
+Creates a copied single-pass color and depth/stencil attachment layout.
 
 A device-local framebuffer format identifier.
 
-`attachments`: One to eight single-sample color target formats.
+| Parameter | Contract |
+| --- | --- |
+| `attachments` | Up to eight single-sample color targets and at most one depth/stencil target, in any order; at least one target is required. |
 
-`System.NotSupportedException`: An attachment role or sample count is unavailable.
-
-
+- `T:System.NotSupportedException`: An attachment role or sample count is unavailable.
 <a id="member-4807409af35f"></a>
 ### FramebufferFormatGetTextureSamples(System.Int32, System.UInt32)
 
@@ -998,36 +998,31 @@ A device-owned index buffer identity.
 `creationBits`: Optional storage role.
 
 
-<a id="member-f3bac59c50b9"></a>
-### RenderPipelineCreate(Electron2D.RID, System.Int32, System.Int32, Electron2D.RenderingDevice.RenderPrimitive, Electron2D.RDPipelineRasterizationState, Electron2D.RDPipelineColorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags)
+<a id="member-22b7a5a537d5"></a>
+### RenderPipelineCreate(Electron2D.RID, System.Int32, System.Int32, Electron2D.RenderingDevice.RenderPrimitive, Electron2D.RDPipelineRasterizationState, Electron2D.RDPipelineColorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags, Electron2D.RDPipelineDepthStencilState)
 
 ```csharp
-public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0)
+public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null)
 ```
 
-Creates an executable single-sample color graphics pipeline.
+Creates an executable single-sample color and depth/stencil graphics pipeline.
+
+Depth-bounds tests, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.
 
 A pipeline borrowing the shader identity.
 
-Depth/stencil attachments, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.
+| Parameter | Contract |
+| --- | --- |
+| `shader` | A live paired vertex/fragment shader. |
+| `framebufferFormat` | A color and optional depth/stencil layout on this device. |
+| `vertexFormat` | A copied vertex layout, or -1 for procedural vertices. |
+| `primitive` | Point, line or triangle topology. |
+| `rasterizationState` | Copied rasterization configuration. |
+| `colorBlendState` | Copied blending configuration, with one entry per target. |
+| `dynamicStateFlags` | Allows dynamic blend constants; other dynamic states require their native adapters. |
+| `depthStencilState` | Copied depth/stencil configuration; null disables both tests and depth writes. |
 
-`shader`: A live paired vertex/fragment shader.
-
-`framebufferFormat`: A color attachment layout on this device.
-
-`vertexFormat`: A copied vertex layout, or -1 for procedural vertices.
-
-`primitive`: Point, line or triangle topology.
-
-`rasterizationState`: Copied rasterization configuration.
-
-`colorBlendState`: Copied blending configuration, with one entry per target.
-
-`dynamicStateFlags`: Allows dynamic blend constants; other dynamic states require their native adapters.
-
-`System.ArgumentException`: Shader interfaces, layouts or configurations disagree.
-
-
+- `T:System.ArgumentException`: Shader interfaces, layouts or configurations disagree.
 <a id="member-3196828dde59"></a>
 ### RenderPipelineIsValid(Electron2D.RID)
 

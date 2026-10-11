@@ -4,7 +4,7 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0);
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0, bool Depth = false);
     private static (byte[] Code, Binding[] Layout) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
@@ -18,7 +18,7 @@ public sealed unsafe partial class RenderingDevice
         var sets = new Dictionary<uint, int>(); var slots = new Dictionary<uint, int>();
         var pointers = new Dictionary<uint, uint>(); var bufferBlocks = new HashSet<uint>();
         var variables = new List<(uint ID, uint Type, uint Storage)>();
-        var images = new Dictionary<uint, (uint Scalar, uint Array, uint Sampled, uint Format)>(); var scalars = new Dictionary<uint, int>(); var pairedSamplers = new HashSet<uint>(); var sampled = new Dictionary<uint, uint>(); var samplerTypes = new HashSet<uint>();
+        var images = new Dictionary<uint, (uint Scalar, uint Array, uint Sampled, uint Format, uint Depth)>(); var scalars = new Dictionary<uint, int>(); var pairedSamplers = new HashSet<uint>(); var sampled = new Dictionary<uint, uint>(); var samplerTypes = new HashSet<uint>();
         var entry = false; var localSize = false;
         for (var i = 5; i < words.Length;)
         {
@@ -39,8 +39,8 @@ public sealed unsafe partial class RenderingDevice
                     if (words[i + 2] == 32) scalars.Add(words[i + 1], 0);
                     break;
                 case 25 when size is 9 or 10:
-                    if (words[i + 3] != 1 || words[i + 4] != 0 || words[i + 5] > 1 || words[i + 6] != 0 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Compute images must be non-multisampled two-dimensional textures.");
-                    images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8])); break;
+                    if (words[i + 3] != 1 || words[i + 4] > 1 || words[i + 5] > 1 || words[i + 6] != 0 || words[i + 7] is not (1 or 2)) throw new NotSupportedException("Device images must be non-multisampled two-dimensional textures.");
+                    images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8], words[i + 4])); break;
                 case 26 when size == 2: samplerTypes.Add(words[i + 1]); break;
                 case 27 when size == 3: sampled.Add(words[i + 1], words[i + 2]); break;
                 case 30 when size >= 2: members.Add(words[i + 1], size - 2); break;
@@ -76,6 +76,7 @@ public sealed unsafe partial class RenderingDevice
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("Image descriptor arrays are not integrated.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 var writable = image.Sampled == 2;
+                if (image.Depth == 1 && (writable || pixelType != 0)) throw new NotSupportedException("Depth comparison requires a sampled floating-point image.");
                 if (!compute && writable && !readOnly.Contains(variable.ID)) throw new NotSupportedException("Graphics image storage requires a readonly declaration.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));
                 if (writable && image.Array != 0) throw new NotSupportedException("Array image storage requires subresource-view integration.");
@@ -83,7 +84,7 @@ public sealed unsafe partial class RenderingDevice
                 if (imageSlot > 8 || textureSlot > 16) throw new NotSupportedException("Compute image bindings exceed backend limits.");
                 var origin = logical[variable.ID];
                 if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Slot)) throw new ArgumentException("Duplicate image binding.", nameof(code));
-                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage));
+                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage, Depth: image.Depth == 1));
                 if (!writable && !combined)
                 {
                     var paired = variables.SingleOrDefault(v => pointers.TryGetValue(v.Type, out var ty) && samplerTypes.Contains(ty) && logical.TryGetValue(v.ID, out var loc) && loc == origin);

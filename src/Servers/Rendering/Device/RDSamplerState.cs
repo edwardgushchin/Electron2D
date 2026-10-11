@@ -48,9 +48,20 @@ public sealed class RDSamplerState : ElectronObject
     /// <summary>Gets or sets whether the sampler uses anisotropic filtering.</summary>
     /// <value>Initially false; copied when the device creates its resource.</value>
     public bool UseAnisotropy { get { ThrowIfDisposed(); return _useAnisotropy; } set { ThrowIfDisposed(); _useAnisotropy = value; } }
+    private bool _enableCompare = false;
+    /// <summary>Enables comparison sampling for a depth image.</summary>
+    /// <value>Initially false; copied at resource creation.</value>
+    public bool EnableCompare { get { ThrowIfDisposed(); return _enableCompare; } set { ThrowIfDisposed(); _enableCompare = value; } }
+    private RenderingDevice.CompareOperator _compareOp = RenderingDevice.CompareOperator.Always;
+    /// <summary>Selects comparison of a sample reference against stored depth.</summary>
+    /// <value>Initially RenderingDevice.CompareOperator.Always; copied at resource creation.</value>
+    public RenderingDevice.CompareOperator CompareOp { get { ThrowIfDisposed(); return _compareOp; } set { ThrowIfDisposed(); _compareOp = value; } }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [
+        new PropertyDescriptor<RDSamplerState, bool>(nameof(EnableCompare), p => p.EnableCompare, (p, v) => p.EnableCompare = v, _ => false),
+        new PropertyDescriptor<RDSamplerState, RenderingDevice.CompareOperator>(nameof(CompareOp), p => p.CompareOp, (p, v) => p.CompareOp = v, _ => RenderingDevice.CompareOperator.Always),
+
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MinFilter), p => p.MinFilter, (p, v) => p.MinFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MagFilter), p => p.MagFilter, (p, v) => p.MagFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),
             new PropertyDescriptor<RDSamplerState, RenderingDevice.SamplerFilter>(nameof(MipFilter), p => p.MipFilter, (p, v) => p.MipFilter = v, _ => RenderingDevice.SamplerFilter.Nearest),

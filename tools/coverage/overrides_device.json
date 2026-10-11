@@ -2660,9 +2660,9 @@
     },
     {
       "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_MASK",
-      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColorAll()",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColorMask()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_DEFAULT_ALL",
@@ -2726,9 +2726,9 @@
     },
     {
       "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_MASK",
-      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColorAll()",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColorMask()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT16",
@@ -2876,7 +2876,7 @@
     },
     {
       "godot": "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.DrawListBegin(Electron2D.RID,Electron2D.RenderingDevice.DrawFlags,System.ReadOnlySpan<Electron2D.Color>,Electron2D.Rect2)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBegin(Electron2D.RID,Electron2D.RenderingDevice.DrawFlags,System.ReadOnlySpan<Electron2D.Color>,Electron2D.Rect2,System.Single,System.Int32)",
       "state": "Partial",
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil clear values require depth/stencil attachments and state. Breadcrumb diagnostics need the native capture-marker adapter; no ignored arguments are exposed."
     },
@@ -2990,7 +2990,7 @@
     },
     {
       "godot": "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)",
-      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags)",
+      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState)",
       "state": "Partial",
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Required multisample/depth-stencil descriptions depend on their first attachment/state slice; omitted specialization and extra dynamic-state arguments need executable module rewriting and native state adapters."
     },
@@ -3066,6 +3066,312 @@
       "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_MAX",
       "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Max()",
       "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "class:RDPipelineDepthStencilState",
+      "electron2d": "T:Electron2D.RDPipelineDepthStencilState",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Depth bounds require a native bounds-test adapter; distinct masks/reference for both visible faces require per-face state."
+    },
+    {
+      "godot": "RenderingDevice::enum:CompareOperator",
+      "electron2d": "T:Electron2D.RenderingDevice.CompareOperator",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:StencilOperation",
+      "electron2d": "T:Electron2D.RenderingDevice.StencilOperation",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_ALWAYS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Always()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_EQUAL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Equal()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_GREATER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Greater()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_GREATER_OR_EQUAL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.GreaterOrEqual()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_LESS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Less()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_LESS_OR_EQUAL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.LessOrEqual()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Max()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_NEVER",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.Never()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_NOT_EQUAL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.CompareOperator.NotEqual()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_ALL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_DEPTH",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearDepth()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_STENCIL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearStencil()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_ALL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_DEPTH",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreDepth()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_STENCIL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreStencil()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_DECREMENT_AND_CLAMP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.DecrementAndClamp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_DECREMENT_AND_WRAP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.DecrementAndWrap()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INCREMENT_AND_CLAMP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.IncrementAndClamp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INCREMENT_AND_WRAP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.IncrementAndWrap()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INVERT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.Invert()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_KEEP",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.Keep()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.Max()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_REPLACE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.Replace()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_ZERO",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.StencilOperation.Zero()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_compare",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpCompare()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_compare_mask",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpCompareMask()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_depth_fail",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpDepthFail()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_fail",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpFail()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_pass",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpPass()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_reference",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpReference()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:back_op_write_mask",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.BackOpWriteMask()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:depth_compare_operator",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.DepthCompareOperator()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:enable_depth_test",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.EnableDepthTest()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:enable_depth_write",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.EnableDepthWrite()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:enable_stencil",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.EnableStencil()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_compare",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpCompare()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_compare_mask",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpCompareMask()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_depth_fail",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpDepthFail()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_fail",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpFail()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_pass",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpPass()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_reference",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpReference()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineDepthStencilState::property:front_op_write_mask",
+      "electron2d": "property:Electron2D.RDPipelineDepthStencilState.FrontOpWriteMask()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:depth_bias_clamp",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.DepthBiasClamp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:depth_bias_constant_factor",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.DepthBiasConstantFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:depth_bias_enabled",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.DepthBiasEnabled()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:depth_bias_slope_factor",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.DepthBiasSlopeFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDSamplerState::property:compare_op",
+      "electron2d": "property:Electron2D.RDSamplerState.CompareOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "RDSamplerState::property:enable_compare",
+      "electron2d": "property:Electron2D.RDSamplerState.EnableCompare()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
     }
   ],
   "extras": [
@@ -3323,6 +3629,16 @@
       "electron2d": "method:Electron2D.RDVertexAttribute.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDPipelineDepthStencilState..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptors for copied executable depth/stencil configuration."
+    },
+    {
+      "electron2d": "method:Electron2D.RDPipelineDepthStencilState.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptors for copied executable depth/stencil configuration."
     }
   ],
   "statusGroups": [
@@ -3434,20 +3750,6 @@
         "RDSamplerState::property:border_color"
       ],
       "reason": "ADR 0028: requires border/unnormalized-coordinate shader sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDSamplerState::property:compare_op"
-      ],
-      "reason": "ADR 0028: requires depth attachment and comparison sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDSamplerState::property:enable_compare"
-      ],
-      "reason": "ADR 0028: requires depth attachment and comparison sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
     },
     {
       "state": "Excluded",
@@ -3582,15 +3884,11 @@
     {
       "state": "Blocked",
       "godot": [
-        "RDPipelineRasterizationState::property:depth_bias_clamp",
-        "RDPipelineRasterizationState::property:depth_bias_constant_factor",
-        "RDPipelineRasterizationState::property:depth_bias_enabled",
-        "RDPipelineRasterizationState::property:depth_bias_slope_factor",
         "RDPipelineRasterizationState::property:discard_primitives",
         "RDPipelineRasterizationState::property:line_width",
         "RDPipelineRasterizationState::property:patch_control_points"
       ],
-      "reason": "Trigger: first executable owning slice under ADR 0028. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+      "reason": "Trigger: first executable owning slice under ADR 0028. Wide lines, raster discard and patch control require native raster/geometry adapters."
     },
     {
       "state": "Blocked",
@@ -3637,18 +3935,6 @@
         "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_DEVICE_ADDRESS_BIT"
       ],
       "reason": "Trigger: first native buffer-device-address shader interface slice (ADR 0028)."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_ALL",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_DEPTH",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_STENCIL",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_ALL",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_DEPTH",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_STENCIL"
-      ],
-      "reason": "Trigger: first depth/stencil attachment and clear-state integration slice (ADR 0028)."
     },
     {
       "state": "Excluded",
@@ -3906,20 +4192,19 @@
       "godot": [
         "class:RenderingDevice"
       ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil/MSAA/multiview/subpasses, push constants, specialization, geometry/tessellation and further device roles retain precise prerequisites."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Partial",
       "godot": [
         "RenderingDevice::enum:BlendFactor",
         "RenderingDevice::enum:BufferCreationBits",
-        "RenderingDevice::enum:DrawFlags",
         "RenderingDevice::enum:PipelineDynamicStateFlags",
         "RenderingDevice::enum:RenderPrimitive",
         "RenderingDevice::enum:ShaderStage",
         "RenderingDevice::enum:TextureSamples"
       ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Implemented",
@@ -3993,7 +4278,6 @@
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_6",
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_7",
         "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_ALL",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_MASK",
         "RenderingDevice::enum_value:DrawFlags.DRAW_DEFAULT_ALL",
         "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_0",
         "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_1",
@@ -4004,7 +4288,6 @@
         "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_6",
         "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_7",
         "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_ALL",
-        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_MASK",
         "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT16",
         "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT32",
         "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_BLEND_CONSTANTS",
@@ -4064,7 +4347,7 @@
         "RDAttachmentFormat::property:samples",
         "class:RDAttachmentFormat"
       ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Partial",
@@ -4078,7 +4361,7 @@
       "godot": [
         "class:RDPipelineRasterizationState"
       ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Partial",
@@ -4088,13 +4371,6 @@
         "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_8"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)"
-      ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil clear values require depth/stencil attachments and state. Breadcrumb diagnostics need the native capture-marker adapter; no ignored arguments are exposed."
     },
     {
       "state": "Partial",
@@ -4120,13 +4396,6 @@
     {
       "state": "Partial",
       "godot": [
-        "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)"
-      ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Required multisample/depth-stencil descriptions depend on their first attachment/state slice; omitted specialization and extra dynamic-state arguments need executable module rewriting and native state adapters."
-    },
-    {
-      "state": "Partial",
-      "godot": [
         "RenderingDevice::method:vertex_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. AsStorage executes. Device-address creation needs a native buffer-address shader interface; raytracing creation is excluded by ADR 0001."
@@ -4141,6 +4410,107 @@
         "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_MAX"
       ],
       "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDPipelineDepthStencilState"
+      ],
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Depth bounds require a native bounds-test adapter; distinct masks/reference for both visible faces require per-face state."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDPipelineDepthStencilState::property:back_op_compare",
+        "RDPipelineDepthStencilState::property:back_op_depth_fail",
+        "RDPipelineDepthStencilState::property:back_op_fail",
+        "RDPipelineDepthStencilState::property:back_op_pass",
+        "RDPipelineDepthStencilState::property:depth_compare_operator",
+        "RDPipelineDepthStencilState::property:enable_depth_test",
+        "RDPipelineDepthStencilState::property:enable_depth_write",
+        "RDPipelineDepthStencilState::property:enable_stencil",
+        "RDPipelineDepthStencilState::property:front_op_compare",
+        "RDPipelineDepthStencilState::property:front_op_depth_fail",
+        "RDPipelineDepthStencilState::property:front_op_fail",
+        "RDPipelineDepthStencilState::property:front_op_pass",
+        "RDPipelineRasterizationState::property:depth_bias_clamp",
+        "RDPipelineRasterizationState::property:depth_bias_constant_factor",
+        "RDPipelineRasterizationState::property:depth_bias_enabled",
+        "RDPipelineRasterizationState::property:depth_bias_slope_factor",
+        "RDSamplerState::property:compare_op",
+        "RDSamplerState::property:enable_compare",
+        "RenderingDevice::enum:CompareOperator",
+        "RenderingDevice::enum:StencilOperation",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_ALWAYS",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_EQUAL",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_GREATER",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_GREATER_OR_EQUAL",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_LESS",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_LESS_OR_EQUAL",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_MAX",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_NEVER",
+        "RenderingDevice::enum_value:CompareOperator.COMPARE_OP_NOT_EQUAL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_MASK",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_DEPTH",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_STENCIL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_MASK",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_DEPTH",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_STENCIL",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_DECREMENT_AND_CLAMP",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_DECREMENT_AND_WRAP",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INCREMENT_AND_CLAMP",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INCREMENT_AND_WRAP",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_INVERT",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_KEEP",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_MAX",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_REPLACE",
+        "RenderingDevice::enum_value:StencilOperation.STENCIL_OP_ZERO"
+      ],
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RDPipelineDepthStencilState::property:back_op_compare_mask",
+        "RDPipelineDepthStencilState::property:back_op_reference",
+        "RDPipelineDepthStencilState::property:back_op_write_mask",
+        "RDPipelineDepthStencilState::property:front_op_compare_mask",
+        "RDPipelineDepthStencilState::property:front_op_reference",
+        "RDPipelineDepthStencilState::property:front_op_write_mask"
+      ],
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Eight-bit effective masks/shared reference are executable; differing values on two visible faces require a native per-face state adapter. Culling selects the surviving face; references must fit eight bits."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineDepthStencilState::property:depth_range_max",
+        "RDPipelineDepthStencilState::property:depth_range_min",
+        "RDPipelineDepthStencilState::property:enable_depth_range"
+      ],
+      "reason": "ADR 0028: SDL_GPU has no depth-bounds test state; requires a native depth-bounds pipeline adapter and pixel verification. No inert property is exposed."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum:DrawFlags"
+      ],
+      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Complete load/clear/discard flag and mask family; absent aspects are ignored."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)"
+      ],
+      "reason": "ADR 0028: native color/depth/stencil clear/load/store, color-slot ordering and viewport/scissor execute with default depth one and stencil zero. Typed clear-depth/stencil arguments follow the established optional region argument. GPU crash breadcrumb recording requires a backend diagnostics adapter; no inert breadcrumb argument is exposed. MSAA targets require the separate resolve attachment lifetime slice. Linux/Vulkan GLSL/HLSL pixels and prepared zero managed bytes are checked; foreign backends/native allocations remain unverified."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)"
+      ],
+      "reason": "ADR 0028: native copied raster/depth/two-sided stencil/blend state, paired stages and typed layouts execute. Optional depth/stencil state follows the established managed blend/dynamic arguments; null disables tests/writes. Multisample state requires resolve/sample-count ownership, nonzero render passes require subpass integration and specialization requires shader constant translation. Both-visible-face unequal stencil masks/references and depth bounds retain exact native state adapters. Linux/Vulkan pixels and prepared zero managed bytes are checked; foreign backends/native allocations remain unverified."
     }
   ]
 }

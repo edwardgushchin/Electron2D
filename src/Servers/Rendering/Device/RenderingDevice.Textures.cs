@@ -20,6 +20,7 @@ public sealed unsafe partial class RenderingDevice
         if (binding.Type == UniformType.SamplerWithTexture)
         {
             var sampler = Get(ids[0], Kind.Sampler); if ((texture.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("Texture lacks the sampling role.", nameof(ids));
+            if (sampler.CompareSampling != binding.Depth || binding.Depth && !DepthFormat(texture.Format)) throw new ArgumentException("Comparison samplers require a depth image and a depth-comparison shader descriptor.", nameof(ids));
             if (binding.PixelType != 0 && sampler.LinearSampling) throw new ArgumentException("Integer textures require nearest filtering without anisotropy.", nameof(ids));
         }
         else
@@ -101,6 +102,7 @@ public sealed unsafe partial class RenderingDevice
         var native = (SDL.GPUTextureUsageFlags)0;
         if ((usage & TextureUsageBits.Sampling) != 0) native |= SDL.GPUTextureUsageFlags.Sampler;
         if ((usage & TextureUsageBits.Storage) != 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if ((usage & TextureUsageBits.DepthStencilAttachment) != 0) native |= SDL.GPUTextureUsageFlags.DepthStencilTarget;
         if ((usage & TextureUsageBits.ColorAttachment) != 0) native |= SDL.GPUTextureUsageFlags.ColorTarget;
         if (native == 0) native = SDL.GPUTextureUsageFlags.Sampler;
         return native;
@@ -112,14 +114,19 @@ public sealed unsafe partial class RenderingDevice
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
-        if ((usageFlags & (TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.DepthStencilAttachment)) != 0) return false;
+        if ((usageFlags & (TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment)) != 0) return false;
+        if (DepthFormat(format))
+        {
+            if ((usageFlags & TextureUsageBits.DepthStencilAttachment) == 0 || (usageFlags & ~(TextureUsageBits.DepthStencilAttachment | TextureUsageBits.Sampling)) != 0) return false;
+        }
+        else if ((usageFlags & TextureUsageBits.DepthStencilAttachment) != 0) return false;
         var native = NativeFormat(format);
         return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, NativeUsage(usageFlags));
     }
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
     /// <param name="view">Initial view description; native format reinterpretation and swizzles require a view adapter.</param>
-    /// <param name="data">One tightly packed mip chain per layer, or empty for zero initialization.</param>
+    /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero.</param>
     /// <returns>A texture RID belonging to this device.</returns>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
@@ -135,6 +142,18 @@ public sealed unsafe partial class RenderingDevice
             view.SwizzleB is not (TextureSwizzle.B or TextureSwizzle.Identity) || view.SwizzleA is not (TextureSwizzle.A or TextureSwizzle.Identity) ||
             shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats and channel views require texture-view integration.");
         if (!TextureIsFormatSupportedForUsage(pixelFormat, usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
+        if (DepthFormat(pixelFormat))
+        {
+            if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
+            if (layers > 256) throw new NotSupportedException("Depth initialization requires native eight-bit layer selection.");
+            var depthEntry = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable) };
+            try
+            {
+                depthEntry.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = kind == TextureType.Texture ? SDL.GPUTextureType.TextureType2D : SDL.GPUTextureType.TextureType2DArray, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = layers, NumLevels = mips, SampleCount = SDL.GPUSampleCount.SampleCount1, Usage = NativeUsage(usage) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                InitializeDepth(depthEntry); return Add(depthEntry);
+            }
+            catch { depthEntry.Handle?.Dispose(); throw; }
+        }
         if (!data.IsEmpty && data.Length != layers) throw new ArgumentException("Provide one mip chain per layer.", nameof(data));
         var native = NativeFormat(pixelFormat); var offsets = new uint[mips]; var packed = new uint[mips]; var sizes = new uint[mips]; uint total = 0, transferSize = 0;
         var alignment = Math.Max(4u, SDL.GPUTextureFormatTexelBlockSize(native));
@@ -258,7 +277,7 @@ public sealed unsafe partial class RenderingDevice
         static SDL.GPUSamplerAddressMode Address(SamplerRepeatMode mode) => mode switch { SamplerRepeatMode.Repeat => SDL.GPUSamplerAddressMode.Repeat, SamplerRepeatMode.MirroredRepeat => SDL.GPUSamplerAddressMode.MirroredRepeat, SamplerRepeatMode.ClampToEdge => SDL.GPUSamplerAddressMode.ClampToEdge, _ => throw new NotSupportedException("The native sampler has no border/mirror-clamp mode.") };
         if (state.MinLOD < 0 || state.MaxLOD < state.MinLOD) throw new ArgumentException("Invalid sampler LOD interval.", nameof(state));
         if (state.LODBias != 0 && SDL.GetGPUDeviceDriver(Device) == "metal") throw new NotSupportedException("This backend requires shader-applied LOD bias.");
-        var info = new SDL.GPUSamplerCreateInfo { MinFilter = (SDL.GPUFilter)state.MinFilter, MagFilter = (SDL.GPUFilter)state.MagFilter, MipmapMode = (SDL.GPUSamplerMipmapMode)state.MipFilter, AddressModeU = Address(state.RepeatU), AddressModeV = Address(state.RepeatV), AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge, MipLodBias = state.LODBias, MaxAnisotropy = state.AnisotropyMax, EnableAnisotropy = state.UseAnisotropy, MinLod = state.MinLOD, MaxLod = state.MaxLOD };
-        return Add(new Entry { Kind = Kind.Sampler, LinearSampling = state.MinFilter == SamplerFilter.Linear || state.MagFilter == SamplerFilter.Linear || state.MipFilter == SamplerFilter.Linear || state.UseAnisotropy, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
+        var info = new SDL.GPUSamplerCreateInfo { MinFilter = (SDL.GPUFilter)state.MinFilter, MagFilter = (SDL.GPUFilter)state.MagFilter, MipmapMode = (SDL.GPUSamplerMipmapMode)state.MipFilter, AddressModeU = Address(state.RepeatU), AddressModeV = Address(state.RepeatV), AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge, MipLodBias = state.LODBias, MaxAnisotropy = state.AnisotropyMax, EnableAnisotropy = state.UseAnisotropy, MinLod = state.MinLOD, MaxLod = state.MaxLOD, EnableCompare = state.EnableCompare, CompareOp = Compare(state.CompareOp) };
+        return Add(new Entry { Kind = Kind.Sampler, CompareSampling = state.EnableCompare, LinearSampling = state.MinFilter == SamplerFilter.Linear || state.MagFilter == SamplerFilter.Linear || state.MipFilter == SamplerFilter.Linear || state.UseAnisotropy, Handle = new(SDL.CreateGPUSampler(Device, info), h => SDL.ReleaseGPUSampler(Device, h), _context.Handle) });
     }
 }
