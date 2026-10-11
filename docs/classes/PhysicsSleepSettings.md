@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-09
 
-**Declaration:** `internal readonly record struct PhysicsSleepSettings(float LinearThreshold, float AngularThreshold, float TimeToSleep)`
+**Declaration:** `public readonly record struct PhysicsSleepSettings(float LinearThreshold, float AngularThreshold, float TimeToSleep)`
 
 **Source:** [PhysicsSleepSettings.cs](../../src/Servers/Physics/PhysicsSleepSettings.cs)
 **Component:** [World sleep policy](../components/physics-sleep.md)
@@ -19,3 +19,5 @@ ordinary ordered authoring path. Equal/invalid writes preserve the old state.
 
 PhysicsSleepPolicyTests verifies both consumers; public GPU world selection remains
 open. See [ADR 0089](../decisions/physics-activity.md#adr-0089).
+
+This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.

@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Adapts the full value-and-identity implementation contract to common scene/server ownership.</summary>
 internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBackend
 {
-    private readonly PhysicsBackendContract _implementation;
+    private readonly PhysicsServerBackend _implementation;
     private readonly Dictionary<PhysicsColliderBackend, Collider> _colliders = [];
     private readonly Dictionary<PhysicsJointBackend, Joint> _joints = [];
     private RID[] _portableBodies = [];
@@ -11,19 +11,29 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
     private readonly PhysicsTestMotionResult _motion = new();
     private readonly List<(RID From, RID To)> _sourceExceptions = [], _exceptions = [];
     private bool _exceptionsDirty = true;
-    private bool _disposed, _retiring, _solving, _resultsReady;
+    private bool _disposed, _retiring, _solving, _resultsReady, _readingFailure;
     private Exception? _failure;
-    internal RegisteredPhysicsWorldBackend(PhysicsSpace space, PhysicsBackendContract implementation)
+    internal RegisteredPhysicsWorldBackend(PhysicsSpace space, PhysicsServerBackend implementation)
         : base(space, PhysicsServer.Backend.Extension)
     {
         ArgumentNullException.ThrowIfNull(implementation); implementation.Claim(space.RID); _implementation = implementation;
     }
-    private void Enter() { if (_disposed) throw new ObjectDisposedException(nameof(RegisteredPhysicsWorldBackend)); Space.BeginImplementationCallback(_retiring); }
+    private void Enter() { if (_implementation.IsDisposed) throw new ObjectDisposedException(nameof(PhysicsServerBackend)); if (_disposed) throw new ObjectDisposedException(nameof(RegisteredPhysicsWorldBackend)); Space.BeginImplementationCallback(_retiring); }
     private void Exit() => Space.EndExtensionCallback();
     internal override PhysicsServer.Backend Kind => PhysicsServer.Backend.Extension;
-    internal override bool HasFailure => _failure is not null || _implementation.HasFailure;
+    internal override bool HasFailure
+    {
+        get
+        {
+            if (_failure is not null) return true;
+            if (_readingFailure) throw new InvalidOperationException("A physics status hook cannot recursively inspect its world.");
+            Enter(); _readingFailure = true;
+            try { return _implementation.HasFailure; }
+            finally { _readingFailure = false; Exit(); }
+        }
+    }
     internal override bool ResultsReady => _resultsReady;
-    internal override int PreparedBodyCapacity => _implementation.PreparedBodyCapacity;
+    internal override int PreparedBodyCapacity { get { Enter(); try { return CountResult(_implementation.PreparedBodyCapacity); } finally { Exit(); } } }
     internal override void EnsureAccess()
     {
         if (_disposed) throw new ObjectDisposedException(nameof(RegisteredPhysicsWorldBackend));
@@ -77,7 +87,18 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         finally { Exit(); }
     }
     internal override void BeginPortableRestore() { Enter(); try { _implementation.BeginPortableRestore(); } finally { Exit(); } }
-    internal override int ReadDebugContacts(Span<Vector2> output) { Enter(); try { return _implementation.ReadDebugContacts(output); } finally { Exit(); } }
+    internal override int ReadDebugContacts(Span<Vector2> output)
+    {
+        Enter();
+        try
+        {
+            var count = _implementation.ReadDebugContacts(output);
+            if ((uint)count > (uint)output.Length) throw new InvalidOperationException("Debug contact output exceeded its supplied capacity.");
+            for (var i = 0; i < count; i++) VectorResult(output[i]);
+            return count;
+        }
+        finally { Exit(); }
+    }
     internal override void SetSleepSettings(in PhysicsSleepSettings settings) { Enter(); try { _implementation.SetSleepSettings(settings); } finally { Exit(); } }
     internal override void SetContactSettings(in PhysicsContactSettings settings) { Enter(); try { _implementation.SetContactSettings(settings); } finally { Exit(); } }
     internal override void SetSolverIterations(int value) { Enter(); try { _implementation.SetSolverIterations(value); } finally { Exit(); } }
@@ -194,7 +215,13 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
         List<Exception>? errors = null;
         foreach (var pair in _colliders.Values.ToArray()) try { pair.Detach(); } catch (Exception error) { (errors ??= []).Add(error); }
         foreach (var pair in _joints.Values.ToArray()) try { pair.Detach(); } catch (Exception error) { (errors ??= []).Add(error); }
-        Enter(); try { _implementation.Finish(); } catch (Exception error) { (errors ??= []).Add(error); } finally { Exit(); _disposed = true; _colliders.Clear(); _joints.Clear(); _motion.Dispose(); }
+        Enter();
+        try
+        {
+            try { _implementation.Finish(); } catch (Exception error) { (errors ??= []).Add(error); }
+            try { _implementation.ReleaseImplementation(); } catch (Exception error) { (errors ??= []).Add(error); }
+        }
+        finally { Exit(); _disposed = true; _colliders.Clear(); _joints.Clear(); _motion.Dispose(); }
         if (errors is not null) throw new AggregateException("Registered physics cleanup failed.", errors);
     }
 }

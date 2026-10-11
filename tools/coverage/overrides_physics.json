@@ -1754,6 +1754,26 @@
       "godot": "PhysicsDirectBodyState2DExtension::method:_set_transform(Transform2D:)",
       "electron2d": "method:Electron2D.PhysicsDirectBodyStateExtension.SetTransformCore(Electron2D.Transform)",
       "reason": "ADR 0103: complete caller-created body-state dispatch executes through inherited public operations in a separate CPU/GPU/no-device consumer. Typed hooks preserve all engine-unit state, forces, sleep, filters and space access; contact getters project immutable engine-validated PhysicsBodyContact snapshots. Owner/solver/failure/generation and borrowed lifetime guards remain common. Registered factory-returned integration remains open."
+    },
+    {
+      "godot": "PhysicsServer2DManager::method:register_server(String:,Callable:)",
+      "electron2d": "method:Electron2D.PhysicsServerManager.RegisterServer(System.String,System.Func<Electron2D.PhysicsServerBackend>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "godot": "PhysicsServer2DManager::method:set_default_server(String:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServerManager.SetDefaultServer(System.String,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "godot": "class:PhysicsServer2DManager",
+      "electron2d": "T:Electron2D.PhysicsServerManager",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "godot": "class:PhysicsServer2DExtension",
+      "electron2d": "T:Electron2D.PhysicsServerExtension",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     }
   ],
   "extras": [
@@ -3067,6 +3087,1482 @@
     {
       "electron2d": "enumValue:Electron2D.PhysicsServer.Backend.Extension()",
       "reason": "Distinct implementation identity under ADRs 0054/0103. The internal numerical adapter executes independently owned simulation and reports Extension without claiming CPU/GPU ownership; enum creation still accepts built-ins only. Complete public named registration remains open."
+    },
+    {
+      "electron2d": "T:Electron2D.OneWayContactData",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsAreaFieldConfiguration",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendCheckpoint",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendCollider",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendJoint",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendOneWay",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendOverlap",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendShapeContact",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBackendStatistics",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBodyConfiguration",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBodyFields",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBodyForceConfiguration",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsBodyIntegrationConfiguration",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsColliderShape",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsContactSettings",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsJointConfiguration",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsMassProperties",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsServerBackend",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "T:Electron2D.PhysicsSleepSettings",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.OneWayContactData..ctor(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsAreaFieldConfiguration..ctor(Electron2D.Vector2,System.Single,System.Boolean,System.Single,System.Single,System.Single,Electron2D.Area.SpaceOverride,Electron2D.Area.SpaceOverride,Electron2D.Area.SpaceOverride,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendCheckpoint..ctor()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendCollider..ctor()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendJoint..ctor()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendOneWay..ctor(Electron2D.RID,System.Int32,System.Int32,Electron2D.RID,System.Int32,System.Int32,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendOverlap..ctor(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendShapeContact..ctor(Electron2D.RID,System.Int32,System.Int32,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBackendStatistics..ctor(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBodyConfiguration..ctor(Electron2D.PhysicsServer.BodyMode,Electron2D.Vector2,System.Single,System.Single,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBodyFields..ctor(Electron2D.Vector2,System.Single,System.Single,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBodyForceConfiguration..ctor(Electron2D.Vector2,System.Single,Electron2D.Vector2,System.Single,System.Single,System.Boolean,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsBodyIntegrationConfiguration..ctor(System.Single,System.Single,System.Single,Electron2D.RigidBody.DampMode,Electron2D.RigidBody.DampMode,System.Boolean,System.Boolean,Electron2D.Vector2,System.Single,Electron2D.CCDMode)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsColliderShape..ctor(Electron2D.Shape,Electron2D.Transform,System.Int32,System.Boolean,Electron2D.OneWayContactData)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsContactSettings..ctor(System.Single,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsJointConfiguration..ctor(Electron2D.PhysicsServer.JointType,Electron2D.Transform,Electron2D.Transform,System.Boolean,System.Single,System.Single,System.Single,System.Single,System.Single,System.Single,System.Boolean,System.Single,System.Single,System.Boolean,System.Single,System.Single,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsMassProperties..ctor(System.Single,System.Single,Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsServerBackend..ctor()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsServerExtension..ctor()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PhysicsSleepSettings..ctor(System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "constructor:Electron2D.World..ctor(System.String,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.<Clone>$()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.Deconstruct(ref Electron2D.Vector2,ref System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.Equals(Electron2D.OneWayContactData)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.OneWayContactData.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsAreaFieldConfiguration.Deconstruct(ref Electron2D.Vector2,ref System.Single,ref System.Boolean,ref System.Single,ref System.Single,ref System.Single,ref Electron2D.Area.SpaceOverride,ref Electron2D.Area.SpaceOverride,ref Electron2D.Area.SpaceOverride,ref System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsAreaFieldConfiguration.Equals(Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsAreaFieldConfiguration.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsAreaFieldConfiguration.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsAreaFieldConfiguration.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Capture()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Dispose()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.Restore()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCheckpoint.ValidateRestore()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyCentralForce(Electron2D.Vector2,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyImpulse(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyMassProfile(System.Single,System.Single,System.Nullable<Electron2D.Vector2>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyPortableMotion(Electron2D.Transform,Electron2D.Vector2,System.Single,System.Single,System.Boolean,System.Boolean,Electron2D.Vector2,System.Single,Electron2D.Vector2,System.Single,Electron2D.Vector2,System.Single,System.Single,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ApplyTorque(System.Single,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.Attach(Electron2D.Vector2,System.Single,ref Electron2D.PhysicsBodyConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ClearVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.Detach()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.GetPointVelocity(Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.GetPose()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.GetSolverMotion()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.GetTransform()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.GetWorldPointVelocity(Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.HasMotionMode(Electron2D.PhysicsServer.BodyMode)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.InvalidateCollisionExceptions()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.PrepareContactPolicy()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.PrepareDefaultForces(ref Electron2D.PhysicsBodyForceConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.PrepareIntegration(ref Electron2D.PhysicsBodyIntegrationConfiguration,System.Double)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ReadContacts(System.Span<Electron2D.PhysicsBodyContact>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ReadResolvedFields(ref Electron2D.PhysicsBodyFields)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RefreshIdentity(System.UInt64,System.UInt64)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RestorePose()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SampleJointLocalFrame(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SavePose()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAngularVelocity(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaFields(ref Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAreaMonitoring(System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetAwake(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetCanSleep(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetCollisionPriority(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetContactReporting(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetGravityScale(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetLinearVelocity(Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetMotionMode(Electron2D.PhysicsServer.BodyMode)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetPose(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetRotationLocked(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetSurfaceVelocity(Electron2D.Vector2,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.SetTargetPose(Electron2D.Transform,System.Double)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.ValidatePortablePiece(System.Int32,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.WakeTouching()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.ApplyPortableFrames(Electron2D.Transform,Electron2D.Transform)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.ApplySolverPolicy(ref Electron2D.PhysicsJointConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.Attach(Electron2D.RID,Electron2D.RID,ref Electron2D.PhysicsJointConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.Detach()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetCollideConnected(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetGrooveLimits(System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetPinLimits(System.Boolean,System.Single,System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetPinMotorEnabled(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetPinMotorMaxTorque(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendJoint.SetPinMotorVelocity(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOneWay.Deconstruct(ref Electron2D.RID,ref System.Int32,ref System.Int32,ref Electron2D.RID,ref System.Int32,ref System.Int32,ref System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOneWay.Equals(Electron2D.PhysicsBackendOneWay)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOneWay.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOneWay.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOneWay.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOverlap.Deconstruct(ref Electron2D.RID,ref System.Int32,ref System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOverlap.Equals(Electron2D.PhysicsBackendOverlap)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOverlap.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOverlap.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendOverlap.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendShapeContact.Deconstruct(ref Electron2D.RID,ref System.Int32,ref System.Int32,ref Electron2D.Vector2,ref Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendShapeContact.Equals(Electron2D.PhysicsBackendShapeContact)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendShapeContact.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendShapeContact.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendShapeContact.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendStatistics.Deconstruct(ref System.Int32,ref System.Int32,ref System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendStatistics.Equals(Electron2D.PhysicsBackendStatistics)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendStatistics.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendStatistics.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBackendStatistics.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyConfiguration.Deconstruct(ref Electron2D.PhysicsServer.BodyMode,ref Electron2D.Vector2,ref System.Single,ref System.Single,ref System.Boolean,ref System.Boolean,ref System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyConfiguration.Equals(Electron2D.PhysicsBodyConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyConfiguration.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyConfiguration.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyConfiguration.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyFields.Deconstruct(ref Electron2D.Vector2,ref System.Single,ref System.Single,ref System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyFields.Equals(Electron2D.PhysicsBodyFields)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyFields.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyFields.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyFields.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyForceConfiguration.Deconstruct(ref Electron2D.Vector2,ref System.Single,ref Electron2D.Vector2,ref System.Single,ref System.Single,ref System.Boolean,ref System.Boolean,ref System.Boolean,ref System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyForceConfiguration.Equals(Electron2D.PhysicsBodyForceConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyForceConfiguration.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyForceConfiguration.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyForceConfiguration.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyIntegrationConfiguration.Deconstruct(ref System.Single,ref System.Single,ref System.Single,ref Electron2D.RigidBody.DampMode,ref Electron2D.RigidBody.DampMode,ref System.Boolean,ref System.Boolean,ref Electron2D.Vector2,ref System.Single,ref Electron2D.CCDMode)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyIntegrationConfiguration.Equals(Electron2D.PhysicsBodyIntegrationConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyIntegrationConfiguration.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyIntegrationConfiguration.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsBodyIntegrationConfiguration.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsColliderShape.Deconstruct(ref Electron2D.Shape,ref Electron2D.Transform,ref System.Int32,ref System.Boolean,ref Electron2D.OneWayContactData)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsColliderShape.Equals(Electron2D.PhysicsColliderShape)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsColliderShape.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsColliderShape.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsColliderShape.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsContactSettings.Deconstruct(ref System.Single,ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsContactSettings.Equals(Electron2D.PhysicsContactSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsContactSettings.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsContactSettings.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsContactSettings.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsJointConfiguration.Deconstruct(ref Electron2D.PhysicsServer.JointType,ref Electron2D.Transform,ref Electron2D.Transform,ref System.Boolean,ref System.Single,ref System.Single,ref System.Single,ref System.Single,ref System.Single,ref System.Single,ref System.Boolean,ref System.Single,ref System.Single,ref System.Boolean,ref System.Single,ref System.Single,ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsJointConfiguration.Equals(Electron2D.PhysicsJointConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsJointConfiguration.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsJointConfiguration.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsJointConfiguration.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMassProperties.Deconstruct(ref System.Single,ref System.Single,ref Electron2D.Vector2)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMassProperties.Equals(Electron2D.PhysicsMassProperties)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMassProperties.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMassProperties.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsMassProperties.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceCreate(System.String,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBackendName(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetRequestedBackendName(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ApplyPortableSleep(Electron2D.RID,System.Single,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.AreaContainsPoint(Electron2D.RID,Electron2D.Vector2,System.UInt32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.BeginPortableRestore()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.BeginStep(System.Double)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CapturePortableOneWays(System.Span<Electron2D.PhysicsBackendOneWay>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CastMotion(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollectContacts()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollectPointHits(Electron2D.PhysicsPointQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollectShapeContacts(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollectShapeHits(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollideShapes(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CompleteBody(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CompletePortableRestore(System.ReadOnlySpan<Electron2D.PhysicsBackendOneWay>,System.UInt64)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateCheckpoint()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateCollider(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectBodyState(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectSpaceState(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CreateJoint(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.EndStep(System.Exception)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.EndSync(System.Exception)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Finish()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.FlushQueries()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.GetAreaOverlapCount(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.GetPortableOneWayCount()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.GetRestInfo(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Initialize()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.IntersectRay(Electron2D.Vector2,Electron2D.Vector2,System.UInt32,System.ReadOnlySpan<Electron2D.RID>,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.InvalidateCollisionExceptions(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareBodies(System.Double)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareCheckpoint()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareMonitoringCapacity(System.Int32,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PreparePortableCapture()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareSolverCapacity(System.Int32,System.Int32,System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.PrepareWorld(System.Double,ref Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadAreaOverlaps(Electron2D.RID,System.Span<Electron2D.PhysicsBackendOverlap>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadDebugContacts(System.Span<Electron2D.Vector2>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadPortableBodies(System.ReadOnlySpan<Electron2D.RID>,System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadPortableSleepTime(Electron2D.RID)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ReadStatistics()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ScanAreas()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetActive(System.Boolean)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetCollisionExceptions(System.ReadOnlySpan<System.ValueTuple<Electron2D.RID, Electron2D.RID>>)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetConstraintDefaultBias(System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetContactSettings(ref Electron2D.PhysicsContactSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSleepSettings(ref Electron2D.PhysicsSleepSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSolverIterations(System.Int32)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.Solve(System.Double)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SyncResults()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SynchronizeCollisionExceptions()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.TestBodyMotion(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.Boolean,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt64>,System.Boolean,Electron2D.PhysicsTestMotionResult)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServerBackend.ValidateDisposal()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSleepSettings.Deconstruct(ref System.Single,ref System.Single,ref System.Single)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSleepSettings.Equals(Electron2D.PhysicsSleepSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSleepSettings.Equals(System.Object)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSleepSettings.GetHashCode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsSleepSettings.ToString()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.OneWayContactData.op_Equality(Electron2D.OneWayContactData,Electron2D.OneWayContactData)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.OneWayContactData.op_Inequality(Electron2D.OneWayContactData,Electron2D.OneWayContactData)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsAreaFieldConfiguration.op_Equality(Electron2D.PhysicsAreaFieldConfiguration,Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsAreaFieldConfiguration.op_Inequality(Electron2D.PhysicsAreaFieldConfiguration,Electron2D.PhysicsAreaFieldConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendOneWay.op_Equality(Electron2D.PhysicsBackendOneWay,Electron2D.PhysicsBackendOneWay)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendOneWay.op_Inequality(Electron2D.PhysicsBackendOneWay,Electron2D.PhysicsBackendOneWay)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendOverlap.op_Equality(Electron2D.PhysicsBackendOverlap,Electron2D.PhysicsBackendOverlap)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendOverlap.op_Inequality(Electron2D.PhysicsBackendOverlap,Electron2D.PhysicsBackendOverlap)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendShapeContact.op_Equality(Electron2D.PhysicsBackendShapeContact,Electron2D.PhysicsBackendShapeContact)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendShapeContact.op_Inequality(Electron2D.PhysicsBackendShapeContact,Electron2D.PhysicsBackendShapeContact)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendStatistics.op_Equality(Electron2D.PhysicsBackendStatistics,Electron2D.PhysicsBackendStatistics)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBackendStatistics.op_Inequality(Electron2D.PhysicsBackendStatistics,Electron2D.PhysicsBackendStatistics)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyConfiguration.op_Equality(Electron2D.PhysicsBodyConfiguration,Electron2D.PhysicsBodyConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyConfiguration.op_Inequality(Electron2D.PhysicsBodyConfiguration,Electron2D.PhysicsBodyConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyFields.op_Equality(Electron2D.PhysicsBodyFields,Electron2D.PhysicsBodyFields)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyFields.op_Inequality(Electron2D.PhysicsBodyFields,Electron2D.PhysicsBodyFields)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyForceConfiguration.op_Equality(Electron2D.PhysicsBodyForceConfiguration,Electron2D.PhysicsBodyForceConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyForceConfiguration.op_Inequality(Electron2D.PhysicsBodyForceConfiguration,Electron2D.PhysicsBodyForceConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyIntegrationConfiguration.op_Equality(Electron2D.PhysicsBodyIntegrationConfiguration,Electron2D.PhysicsBodyIntegrationConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsBodyIntegrationConfiguration.op_Inequality(Electron2D.PhysicsBodyIntegrationConfiguration,Electron2D.PhysicsBodyIntegrationConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsColliderShape.op_Equality(Electron2D.PhysicsColliderShape,Electron2D.PhysicsColliderShape)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsColliderShape.op_Inequality(Electron2D.PhysicsColliderShape,Electron2D.PhysicsColliderShape)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsContactSettings.op_Equality(Electron2D.PhysicsContactSettings,Electron2D.PhysicsContactSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsContactSettings.op_Inequality(Electron2D.PhysicsContactSettings,Electron2D.PhysicsContactSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsJointConfiguration.op_Equality(Electron2D.PhysicsJointConfiguration,Electron2D.PhysicsJointConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsJointConfiguration.op_Inequality(Electron2D.PhysicsJointConfiguration,Electron2D.PhysicsJointConfiguration)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsMassProperties.op_Equality(Electron2D.PhysicsMassProperties,Electron2D.PhysicsMassProperties)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsMassProperties.op_Inequality(Electron2D.PhysicsMassProperties,Electron2D.PhysicsMassProperties)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsSleepSettings.op_Equality(Electron2D.PhysicsSleepSettings,Electron2D.PhysicsSleepSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "operator:Electron2D.PhysicsSleepSettings.op_Inequality(Electron2D.PhysicsSleepSettings,Electron2D.PhysicsSleepSettings)",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.OneWayContactData.LocalDirection()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.OneWayContactData.Margin()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.AngularDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.AngularMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.Gravity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.GravityMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.GravityPoint()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.GravityVector()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.LinearDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.LinearMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.PointUnitDistance()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsAreaFieldConfiguration.Priority()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCheckpoint.DeviceCapacityBytes()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.AngularVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.CenterOfMass()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.CenterOfMassLocal()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.InverseInertia()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.InverseMass()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.IsAwake()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.LinearVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.PortablePose()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.RotationLocked()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendCollider.ShapeCount()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendJoint.IsAttached()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.A()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.Allowed()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.B()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.PieceA()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.PieceB()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.ShapeA()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOneWay.ShapeB()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOverlap.LocalShape()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOverlap.Other()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendOverlap.RemoteShape()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendShapeContact.ColliderPoint()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendShapeContact.Piece()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendShapeContact.QueryPoint()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendShapeContact.RID()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendShapeContact.ShapeIndex()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendStatistics.Active()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendStatistics.Islands()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBackendStatistics.Pairs()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.AngularVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.CanSleep()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.GravityScale()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.LinearVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.LockRotation()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.Mode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyConfiguration.Sleeping()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyFields.AngularDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyFields.Gravity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyFields.Initialized()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyFields.LinearDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.ApplyPersistentForces()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.ConstantForce()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.ConstantTorque()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.GravityScale()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.OmitForces()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.PendingForce()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.PendingTorque()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.RefreshGravityScale()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyForceConfiguration.RotationLocked()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.AngularDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.AngularDampMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.CCDMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.ConstantForce()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.ConstantTorque()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.GravityScale()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.LinearDamp()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.LinearDampMode()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.LockRotation()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsBodyIntegrationConfiguration.OmitForces()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsColliderShape.Enabled()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsColliderShape.Index()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsColliderShape.OneWay()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsColliderShape.Shape()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsColliderShape.Transform()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsContactSettings.AllowedPenetration()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsContactSettings.Bias()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsContactSettings.MaxSeparation()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsContactSettings.RecycleRadius()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.Bias()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.DisableCollision()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.EffectiveSpringRestLength()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.FrameA()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.FrameB()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.LowerTranslation()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.MaxBias()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.MaxForce()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinLimitEnabled()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinLimitLower()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinLimitUpper()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinMotorEnabled()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinMotorMaxTorque()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinMotorVelocity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.PinSoftness()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.SpringDamping()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.SpringStiffness()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.Type()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsJointConfiguration.UpperTranslation()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsMassProperties.Center()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsMassProperties.Inertia()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsMassProperties.Mass()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsServerBackend.HasFailure()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsServerBackend.PreparedBodyCapacity()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsServerBackend.ResultsReady()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsServerBackend.SpaceRID()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSleepSettings.AngularThreshold()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSleepSettings.LinearThreshold()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.PhysicsSleepSettings.TimeToSleep()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.World.PhysicsBackendName()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
+    },
+    {
+      "electron2d": "property:Electron2D.World.RequestedPhysicsBackendName()",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     }
   ],
   "statusGroups": [
@@ -4915,25 +6411,34 @@
     },
     {
       "godot": [
-        "class:PhysicsServer2DExtension"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0103 requires the complete executing typed implementation family and public registration. Internal space RID registration precedes owner initialization; selected factories now supply validated direct-state/query views to real scene/raw consumers and callbacks, preserving contact snapshots, failure/reentry guards and zero warmed allocation on CPU/GPU/no-device. CPU native collider storage now stays in its owner, with real wrapped collider policy/force/query/Area/CCD and portable state paths; common scene/server identities expose no native CPU handles. GPU attachments now remain in their resident store; wrapped CPU/GPU implementations retain identity/priority hooks, queries/Areas/joints and local/portable restore without facade native aliases. Selected initialization/activation/flush/end-sync now run with guarded lifecycle, mandatory observer delivery, nested phase retirement and empty-world intervals. Selected collider shape creation now receives one neutral scene/raw body/Area input span, preserving disabled logical indices, transforms/one-way policy and guarded scratch/preparation. Selected joint creation/policy now consumes immutable engine-unit configurations; CPU spring scheduling resolves native attachments from their actual owner and matching retirement preserves replacements, including selected wrappers. Selected checkpoint preparation and history operations now borrow lifetime; GPU reports/epochs/collider caches stay with the selected GPU history, while common replay/portable schema uses neutral field values. Selected resolved field values, exception invalidation/synchronization and portable preparation/batch reads now execute through actual owners with borrowing guards; common server/replay/map code retains no GPU handles or state batches. Internal named factories/default priority now retain immutable lazy selections and execute fresh scene/explicit owners with real wrapped response and selected views, execution-context recursion rejection and failed-owner recovery. Public named factories and the complete operation bridge remain open. Numerical default-force, CPU field and GPU parameter preparation now consumes value-only engine-unit inputs; shared bindings retain queue/dirty flag ownership, with real transformed scene/raw force response and guarded pre-solve recovery. Selected cached contact hooks now publish complete immutable scene/raw snapshots on the owner after native worker capture, reaching real monitor events and callbacks; cached contact reads preserve those values. Invalid/count/stale/user failures isolate receivers while later callbacks and committed ticks continue. An internal value/RID-only implementation adapter now exercises independent scene/raw numerical integration, ordinary views, queries, Area/contact output, spring policy, history/portable restore and terminal failure; public backend/manager types and complete external geometry/consumer acceptance remain open."
-    },
-    {
-      "godot": [
         "PhysicsServer2DExtension::method:_body_collide_shape(RID:,int:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
         "PhysicsServer2DExtension::method:_shape_collide(RID:,Transform2D:,Vector2:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)"
       ],
       "state": "Blocked",
-      "reason": "ADR 0103: internal selected resource/body-slot collision now executes with scene/raw/detached geometry, disabled logical slots, current composed poses and independent swept regions. Nested caller spans validate counts/finite points before output mutation; borrowed collider free preserves registry identity. GPU pose-only demand gathers sixteen pose bytes plus eight status bytes; CPU/GPU warm full-step/query checks assert zero managed allocation. Complete public backend/extension operation dispatch, named factory integration and public-only solver acceptance remain required."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Current projection has real selected world dispatch; the applicable complete reference operation and custom geometry audit remains required."
     },
     {
       "godot": [
         "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)"
       ],
       "state": "Blocked",
-      "reason": "ADR 0103: internal selected motion now executes altered scene/raw/CharacterBody results with borrowed lifetime, atomic finite/fraction/logical-slot/world/filter/exclusion validation, engine-sampled weak object identity and failure/recursive recovery. Complete public backend registration, neutral parameter/result bridge and public-only independent solver acceptance remain open."
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Current projection has real selected world dispatch; the applicable complete reference operation and custom geometry audit remains required."
+    },
+    {
+      "godot": [
+        "class:PhysicsServer2DManager",
+        "PhysicsServer2DManager::method:register_server(String:,Callable:)",
+        "PhysicsServer2DManager::method:set_default_server(String:,int:)"
+      ],
+      "state": "Implemented",
+      "reason": "Public fresh factory registration/default selection verified in a separate assembly: strict priority/ties, immutable lazy captures, explicit choices, null/disposed/reuse/recursive/throwing rejection and outside-lock worker registration."
+    },
+    {
+      "godot": [
+        "class:PhysicsServer2DExtension"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     }
   ]
 }

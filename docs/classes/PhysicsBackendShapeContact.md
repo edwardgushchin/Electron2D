@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-11
 
-**Declaration:** `internal readonly record struct PhysicsBackendShapeContact` · **Source:** [PhysicsBackendObservations.cs](../../src/Servers/Physics/PhysicsBackendObservations.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
+**Declaration:** `public readonly record struct PhysicsBackendShapeContact` · **Source:** [PhysicsBackendObservations.cs](../../src/Servers/Physics/PhysicsBackendObservations.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
 ## Description
 

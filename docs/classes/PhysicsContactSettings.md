@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-09
 
-**Declaration:** `internal readonly record struct PhysicsContactSettings(float Bias, float AllowedPenetration, float RecycleRadius = 1, float MaxSeparation = 1.5f)`
+**Declaration:** `public readonly record struct PhysicsContactSettings(float Bias, float AllowedPenetration, float RecycleRadius = 1, float MaxSeparation = 1.5f)`
 
 **Source:** [PhysicsContactSettings.cs](../../src/Servers/Physics/PhysicsContactSettings.cs)
 **Component:** [Contact correction](../components/physics-contact-policy.md)
@@ -15,3 +15,5 @@ square and a nonzero squared backend distance for positive values. Zero is accep
 Validation runs before a world is created or an existing policy changes.
 CPU PhysicsSpace and independent GPUPhysicsBodyStore retain the same record; it
 contains no physical body state or host mirror. Public GPU binding remains open.
+
+This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.

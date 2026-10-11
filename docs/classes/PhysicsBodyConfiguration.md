@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-08
 
-**Declaration:** `internal readonly record struct PhysicsBodyConfiguration`
+**Declaration:** `public readonly record struct PhysicsBodyConfiguration`
 
 **Source:** [PhysicsBodyConfiguration.cs](../../src/Servers/Physics/PhysicsBodyConfiguration.cs)
 **Component:** [Scene physics bodies](../components/physics-bodies.md)
@@ -40,3 +40,5 @@ body/server state, initial mass/locks/sleep, disable/reentry, platform and Chara
 motion, both freeze modes and physical-bone transitions/serialization. The physical
 bone storage test also loads the saved scene in a separate process. Existing warmed
 allocation and numerical-response checks retain their original bounds.
+
+This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.

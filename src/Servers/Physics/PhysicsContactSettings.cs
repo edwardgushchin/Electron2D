@@ -1,7 +1,11 @@
 namespace Electron2D;
 
 /// <summary>Authored correction fraction, penetration slack and geometric contact-history limits.</summary>
-internal readonly record struct PhysicsContactSettings(float Bias, float AllowedPenetration, float RecycleRadius = 1, float MaxSeparation = 1.5f)
+/// <param name="Bias">Bias in the owning operation's engine-unit contract.</param>
+/// <param name="AllowedPenetration">Allowed Penetration in the owning operation's engine-unit contract.</param>
+/// <param name="RecycleRadius">Recycle Radius in the owning operation's engine-unit contract.</param>
+/// <param name="MaxSeparation">Max Separation in the owning operation's engine-unit contract.</param>
+public readonly record struct PhysicsContactSettings(float Bias, float AllowedPenetration, float RecycleRadius = 1, float MaxSeparation = 1.5f)
 {
     internal static bool ValidBias(float value) => float.IsFinite(value) && value >= 0 && value <= 1;
     internal static bool ValidPenetration(float value) => float.IsFinite(value) && value >= 0 && (value == 0 || value * PhysicsSpace.MetersPerUnit > 0) &&

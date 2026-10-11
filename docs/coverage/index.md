@@ -6,24 +6,24 @@ Last updated: 2026-10-11
 now routes resolved fields, collision-exception invalidation/synchronization and
 portable preparation/batch observation through the actual selected owner. Common
 server/replay/map code retains engine identities and values without GPU handles
-or snapshots. Public named registration and the complete external family remain open.
+or snapshots. Public named registration and its typed family now execute; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 now keeps GPU publication reports, epochs and collider caches with resident solver
 history. Common replay uses engine field values and guarded selected preparation,
-capture, validation, restore and release. Public registration remains open.
+capture, validation, restore and release. Public registration now executes; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Shared joint inputs and ownership](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
 now pass complete engine-unit configuration values to selected constraints. CPU
 spring scheduling resolves actual native attachments from its owner, including
 wrapped implementations; matching retirement preserves replacement attachments.
-Public named registration and the complete external family remain open.
+Public named registration and its typed family now execute; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Shared collider inputs](../components/physics-backends.md#shared-collider-shape-inputs)
 now project scene/raw body and Area authoring into one selected implementation
 span. Exact resources, transforms, logical disabled indices and one-way policy
 remain observable; source preflight, recursive preparation and scratch lifetime
-are guarded. Public registration and the complete external family remain open.
+are guarded. Public registration now executes; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Selected lifecycle](../components/physics-backends.md#selected-lifecycle-and-activity)
 now dispatches owner initialization, atomic local activation, query/event flushing
@@ -35,7 +35,7 @@ and the full external operation family remain open.
 resident handles and concrete GPU casts from the common collider facade.
 Actual attachments stay in the resident store; selected wrappers retain publication,
 Area/query/joint behavior and local/portable restoration. Identity/priority edits
-reach selected hooks. Public registration and the complete operation family stay open.
+reach selected hooks. Public registration now executes; arbitrary geometry and full operation acceptance remain open.
 
 [Explicit tile proxies](../components/tiles.md#explicit-tile-proxies) now pairs all 15 TileSet replacement operations with typed value results, valid-original bypass and one most-specific lookup. Independent source/coordinate/alternative tables copy and persist through scene graphs; cleanup removes obsolete original keys before callback delivery. Pinned stages cover ordering, validity, cycles and renaming. Actual mapped cell identities are consumed explicitly by existing layer/pattern placement, selected physics, navigation and rendering; they do not silently rewrite stored layer cells. Native/all-thread allocation totals, other platforms and editor migration remain separate verification boundaries.
 
@@ -307,11 +307,11 @@ The [RigidBody2D](classes/RigidBody2D.md) contact slice under [ADR 0058](../deci
 
 The first shared RID, PhysicsServer and World query slice executes under [ADR 0063](../decisions/physics.md#adr-0063). All eleven own [RID](classes/RID.md) rows and all nine [PhysicsRayQueryParameters](classes/PhysicsRayQueryParameters2D.md) rows are Implemented. [World](classes/World2D.md) exposes a stable scene space and direct state; [CollisionObject2D.GetRID](classes/CollisionObject2D.md) survives fixture rebuilds. [PhysicsDirectSpaceState.IntersectRay](../classes/PhysicsDirectSpaceState.md) returns a typed nearest hit; point queries return RID-ordered results with exact canvas-instance filtering. [PhysicsServer](../classes/PhysicsServer.md) executes explicit space/body/Area and six shape-family creation, typed state/filter assignments, live geometry copies, free and direct queries over the same solver space. PhysicsQueryTests covers zero/stale RIDs, server-only results, masks, exclusions, point caps, cross-space moves and stepping. Its remaining Unimplemented rows and separate Blocked/Partial rows retain their own work. Native allocation, other platforms and owner acceptance remain unverified.
 
-All six [direct-space operations](../components/physics-queries.md#runtime-flow) now dispatch through retained built-in world owners. Prepared scratch and shared guards preserve current array/span contracts; public registration and extension contexts remain open under ADR 0103.
+All six [direct-space operations](../components/physics-queries.md#runtime-flow) now dispatch through retained built-in world owners. Prepared scratch and shared guards preserve current array/span contracts; public registration now executes in a separate consumer; arbitrary geometry and unexercised extension operation acceptance remain open under ADR 0103.
 
-Selected world owners now create fresh internal CPU/GPU body/Area attachments behind the retained identity facade. The complete collider shape/state/force/mass/surface/contact/portable family uses that attachment; public registration and server/direct-state extension construction remain open under ADR 0103.
+Selected world owners now create fresh internal CPU/GPU body/Area attachments behind the retained identity facade. The complete collider shape/state/force/mass/surface/contact/portable family uses that attachment; public registration now executes in a separate consumer; arbitrary geometry and unexercised extension operation acceptance remain open under ADR 0103.
 
-Selected owners now also create fresh CPU/GPU constraint attachments for all three joint roles. Current-body frame sampling, policy/setters, portable frames, lifecycle and CPU world-anchor ownership use those implementations; public registration and complete server/direct-state extension contexts remain open.
+Selected owners now also create fresh CPU/GPU constraint attachments for all three joint roles. Current-body frame sampling, policy/setters, portable frames, lifecycle and CPU world-anchor ownership use those implementations; public registration now executes in a separate consumer; arbitrary geometry and unexercised extension operation acceptance remain open under ADR 0103.
 
 The direct shape-query slice implements all ten own [PhysicsShapeQueryParameters](classes/PhysicsShapeQueryParameters2D.md) rows and the four shape operations on [PhysicsDirectSpaceState](../classes/PhysicsDirectSpaceState.md). A borrowed Shape RID or explicit server shape RID supports swept `IntersectShape`, eight-refinement safe/unsafe `CastMotion`, paired `CollideShape` contacts and typed deepest `GetRestInfo`; compound pieces preserve one collider shape-owner identity. PhysicsShapeQueryTests covers defaults, RID/resource switching and disposal, live edits after callback failure, motion, margin, filters, Area and body results, manifold families, convex and hollow pieces, scene/server worlds, owner-thread rejection and warmed zero managed allocation for casts and rest queries. Standalone Shape methods retain separate coverage gaps; scene ShapeCast is covered by the following slice. Native allocation, other platforms and owner visual acceptance remain unverified.
 

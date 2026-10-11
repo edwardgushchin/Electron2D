@@ -45,3 +45,5 @@ World.NavigationMap now lazily owns an active borrowed map in the same runtime l
 [Shared public CPU/GPU scene checks](../components/physics-backends.md#public-scene-motion-conformance)
 now run WorldTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
+
+Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.

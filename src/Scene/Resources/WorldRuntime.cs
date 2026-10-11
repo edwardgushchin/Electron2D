@@ -13,6 +13,7 @@ internal sealed class WorldRuntime
     internal readonly RenderingCanvasRuntime Canvas;
     internal bool Alive => Volatile.Read(ref _alive);
     internal PhysicsServer.Backend RequestedBackend { get; }
+    internal string RequestedBackendName => _backendSelection?.RequestedName ?? RequestedBackend.ToString();
     private readonly bool _allowCPUFallback;
     private readonly Func<PhysicsSpace, PhysicsWorldBackend>? _backendFactory;
     private readonly PhysicsBackendRegistry.Selection? _backendSelection;
@@ -22,7 +23,7 @@ internal sealed class WorldRuntime
     {
         if (backend is not (PhysicsServer.Backend.CPU or PhysicsServer.Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(backend));
         if (factory is not null && selection is not null) throw new ArgumentException("A world cannot select two physics factories.");
-        RequestedBackend = selection?.Registration.BuiltIn ?? backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory; _backendSelection = selection;
+        RequestedBackend = selection is { } named ? named.Registration.BuiltIn ?? PhysicsServer.Backend.Extension : backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory; _backendSelection = selection;
         SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this);
     }
     internal void Retain() { lock (_gate) { EnsureAlive(); _resources++; } }
@@ -52,7 +53,7 @@ internal sealed class WorldRuntime
             PhysicsSpace? created = null;
             try
             {
-                created = PhysicsServer.Service.CreateRegisteredSpace(RequestedBackend, _allowCPUFallback, owned: false, factory: _backendFactory, selection: _backendSelection);
+                created = PhysicsServer.Service.CreateRegisteredSpace(_backendSelection is { } named ? named.Registration.BuiltIn ?? PhysicsServer.Backend.CPU : RequestedBackend, _allowCPUFallback, owned: false, factory: _backendFactory, selection: _backendSelection);
                 lock (_gate) { EnsureAlive(); _spaceRID = created.RID; ExistingSpace = created; }
                 return created.RID;
             }

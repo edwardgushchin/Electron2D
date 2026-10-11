@@ -6,7 +6,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-Adapts a single claimed PhysicsBackendContract to the complete common scene/server pipeline. It owns logical attachment tables, reusable portable RID/episode/query scratch and the reusable motion result. The implementation owns numerical simulation and geometry. Kind and Requested are Extension; enum-based built-in factories still accept CPU/GPU only.
+Adapts a single claimed PhysicsServerBackend to the complete common scene/server pipeline. It owns logical attachment tables, reusable portable RID/episode/query scratch and the reusable motion result. The implementation owns numerical simulation and geometry. Kind and Requested are Extension; enum-based built-in factories still accept CPU/GPU only.
 
 Numerical collider and joint hooks borrow the world on the owner. Collider output rejects invalid vectors/scalars/rigid poses/counts/mass. Contact data validates the whole supplied prefix before committing to the cached view. Read/projection failure isolates the receiver and retains its prior point count; later callbacks and committed tick continue. A failure during Solve or result synchronization is terminal with no built-in replay. Dispose attempts each attachment and Finish even after errors, and retains a cleanup-only context after common space retirement.
 
@@ -22,4 +22,4 @@ Portable one-way records translate between local logical RIDs and engine-owned n
 
 ## Verification and limits
 
-[PhysicsRegisteredBackendTests](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) uses an independent bounded circle/spring numerical model, never a built-in solver wrapper. It exercises real scene/raw motion and force response, callbacks, queries, Area events, contact publication/failure, joint policy and private/portable restore. Warmed full frames reuse managed storage. This is internal integration evidence; public registered factories, complete arbitrary geometry and a separate public-only consumer remain open. Native allocation and foreign/device/visual/performance acceptance are separate.
+[PhysicsRegisteredBackendTests](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) uses an independent bounded circle/spring numerical model, never a built-in solver wrapper. It exercises real scene/raw motion and force response, callbacks, queries, Area events, contact publication/failure, joint policy and private/portable restore. Warmed full frames reuse managed storage. This public-only consumer verifies registration and the exercised numerical paths. Arbitrary custom geometry and unexercised operation acceptance remain open. Native allocation and foreign/device/visual/performance acceptance are separate.

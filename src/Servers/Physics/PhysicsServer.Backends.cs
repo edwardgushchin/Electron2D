@@ -22,6 +22,25 @@ public sealed partial class PhysicsServer
     /// <remarks>Fallback occurs only during creation. A failed GPU step never replays on CPU.</remarks>
     public static RID SpaceCreate(Backend backend, bool allowCPUFallback = false) => Service.SpaceCreateCore(backend, allowCPUFallback);
 
+    /// <summary>Creates an inactive space using a captured named registration.</summary>
+    /// <param name="backendName">A registered name, CPU, GPU or DEFAULT.</param>
+    /// <param name="allowCPUFallback">Allows startup fallback only for built-in GPU.</param>
+    /// <returns>A caller-owned space RID released with FreeRID.</returns>
+    /// <exception cref="ArgumentException">The registration is unknown or empty.</exception>
+    public static RID SpaceCreate(string backendName, bool allowCPUFallback = false)
+    {
+        var selection = Service.BackendRegistry.Resolve(backendName);
+        return Service.CreateRegisteredSpace(selection.Registration.BuiltIn ?? Backend.CPU, allowCPUFallback, true, selection: selection).RID;
+    }
+    /// <summary>Gets the original named selection of a live space.</summary>
+    /// <param name="space">Live scene or caller-owned space RID.</param>
+    /// <returns>The requested name, including DEFAULT when supplied.</returns>
+    public static string SpaceGetRequestedBackendName(RID space) => Service.GetSceneSpace(space).RequestedBackendName;
+    /// <summary>Gets the actual implementation registration used by a live space.</summary>
+    /// <param name="space">Live scene or caller-owned space RID.</param>
+    /// <returns>The captured registration name or CPU after permitted startup fallback.</returns>
+    public static string SpaceGetBackendName(RID space) => Service.GetSceneSpace(space).ActualBackendName;
+
     /// <summary>Gets the implementation requested when the space was created.</summary>
     /// <param name="space">A live scene or explicitly created space RID.</param>
     /// <returns>The original requested implementation, including after startup fallback.</returns>

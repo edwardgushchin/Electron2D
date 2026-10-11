@@ -1,19 +1,41 @@
 namespace Electron2D;
 
 /// <summary>Defines one selected constraint using logical body identities and immutable solver policy.</summary>
-internal abstract class PhysicsBackendJoint
+public abstract class PhysicsBackendJoint
 {
     private int _claimed;
     internal void Claim() { if (Interlocked.CompareExchange(ref _claimed, 1, 0) != 0) throw new InvalidOperationException("A joint implementation can belong to only one attachment."); }
-    internal abstract bool IsAttached { get; }
-    internal abstract void Attach(RID first, RID second, in PhysicsJointConfiguration settings);
-    internal abstract void Detach();
-    internal abstract void ApplySolverPolicy(in PhysicsJointConfiguration settings);
-    internal abstract void ApplyPortableFrames(Transform first, Transform second);
-    internal abstract void SetCollideConnected(bool value);
-    internal abstract void SetPinLimits(bool enabled, float lower, float upper);
-    internal abstract void SetPinMotorEnabled(bool value);
-    internal abstract void SetPinMotorVelocity(float value);
-    internal abstract void SetPinMotorMaxTorque(float value);
-    internal abstract void SetGrooveLimits(float lower, float upper);
+    /// <summary>Supplies the selected implementation operation: is attached.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract bool IsAttached { get; }
+    /// <summary>Supplies the selected implementation operation: attach.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void Attach(RID first, RID second, in PhysicsJointConfiguration settings);
+    /// <summary>Supplies the selected implementation operation: detach.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void Detach();
+    /// <summary>Supplies the selected implementation operation: apply solver policy.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void ApplySolverPolicy(in PhysicsJointConfiguration settings);
+    /// <summary>Supplies the selected implementation operation: apply portable frames.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void ApplyPortableFrames(Transform first, Transform second);
+    /// <summary>Supplies the selected implementation operation: set collide connected.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetCollideConnected(bool value);
+    /// <summary>Supplies the selected implementation operation: set pin limits.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetPinLimits(bool enabled, float lower, float upper);
+    /// <summary>Supplies the selected implementation operation: set pin motor enabled.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetPinMotorEnabled(bool value);
+    /// <summary>Supplies the selected implementation operation: set pin motor velocity.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetPinMotorVelocity(float value);
+    /// <summary>Supplies the selected implementation operation: set pin motor max torque.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetPinMotorMaxTorque(float value);
+    /// <summary>Supplies the selected implementation operation: set groove limits.</summary>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    protected internal abstract void SetGrooveLimits(float lower, float upper);
 }

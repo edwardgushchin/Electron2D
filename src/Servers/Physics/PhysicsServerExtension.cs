@@ -1,0 +1,11 @@
+namespace Electron2D;
+
+/// <summary>Base for caller-defined world physics implementations using the complete typed backend hook family.</summary>
+/// <remarks>Register a factory with PhysicsServerManager. Each returned object belongs to exactly one world;
+/// all hooks run under its guarded owner-thread context. The engine owns logical identities and observers,
+/// while this implementation owns numerical bodies, constraints, geometry and private history.</remarks>
+public abstract class PhysicsServerExtension : PhysicsServerBackend
+{
+    /// <summary>Creates an unbound implementation for a registered factory.</summary>
+    protected PhysicsServerExtension() { }
+}

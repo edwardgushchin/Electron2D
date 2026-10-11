@@ -1,13 +1,19 @@
 using Electron2D;
 
-internal static partial class PhysicsRegisteredBackendTests
+public static partial class BackendChecks
 {
-    private sealed partial class Solver : PhysicsBackendContract
+    private sealed partial class Solver : PhysicsServerExtension
     {
         private readonly List<PhysicsPointResult> _pointHits = [];
         private readonly List<PhysicsShapeResult> _shapeHits = [];
         private readonly List<PhysicsBackendShapeContact> _shapeContacts = [];
-        internal override int ReadDebugContacts(Span<Vector2> output) => 0;
+        protected override int ReadDebugContacts(Span<Vector2> output)
+        {
+            DebugReads++;
+            if (BadDebugCount) return output.Length + 1;
+            if (BadDebugPoint && !output.IsEmpty) { output[0] = new(float.NaN, 0); return 1; }
+            return 0;
+        }
         private static bool Eligible(Body b, uint mask, bool bodies, bool areas, ReadOnlySpan<RID> excluded) =>
             b.Shapes != 0 && (b.Layer & mask) != 0 && (b.IsArea ? areas : bodies) && !excluded.Contains(b.RID);
         private static bool Sweep(Vector2 from, Vector2 motion, Vector2 center, float radius, out float fraction)
@@ -18,7 +24,7 @@ internal static partial class PhysicsRegisteredBackendTests
             if (a == 0 || d < 0) { fraction = 1; return false; }
             fraction = (-b - MathF.Sqrt(d)) / a; return fraction >= 0 && fraction <= 1;
         }
-        internal override PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, ReadOnlySpan<RID> excluded,
+        protected override PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, ReadOnlySpan<RID> excluded,
             bool collideWithAreas, bool collideWithBodies, bool hitFromInside)
         {
             Body? best = null; var fraction = 1f; var motion = to - from;
@@ -31,53 +37,53 @@ internal static partial class PhysicsRegisteredBackendTests
             if (best is null) return null;
             var point = from + motion * fraction; return new(best.RID, 0, point, (point - best.Position).Normalized());
         }
-        internal override List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters)
+        protected override List<PhysicsPointResult> CollectPointHits(PhysicsPointQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
             _pointHits.Clear();
             foreach (var b in Bodies.Values)
-                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, parameters.ExclusionsArray) &&
+                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
                     b.Canvas == parameters.CanvasInstanceID && parameters.Position.DistanceTo(b.Position) <= b.Radius) _pointHits.Add(new(b.RID, 0));
             _pointHits.Sort(static (a, b) => a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _pointHits;
         }
         private static float Radius(RID rid) => PhysicsServer.ShapeGetData(rid) is CircleShape c ? c.Radius : throw new NotSupportedException("Independent query fixture supports circles only.");
-        internal override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters)
+        protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
             _shapeHits.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
             foreach (var b in Bodies.Values)
-                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, parameters.ExclusionsArray) &&
+                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
                     Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out _)) _shapeHits.Add(new(b.RID, 0));
             _shapeHits.Sort(static (a, b) => a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _shapeHits;
         }
-        internal override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters)
+        protected override (float SafeFraction, float UnsafeFraction) CastMotion(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
             var fraction = 1f; var radius = Radius(parameters.ShapeRID) + parameters.Margin;
             foreach (var b in Bodies.Values)
-                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, parameters.ExclusionsArray) &&
+                if (Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) &&
                     Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out var f)) fraction = MathF.Min(fraction, f);
             return (fraction, fraction);
         }
-        internal override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, int limit)
+        protected override List<PhysicsBackendShapeContact> CollectShapeContacts(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded, int limit)
         {
             _shapeContacts.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
             foreach (var b in Bodies.Values)
             {
                 if (_shapeContacts.Count == limit) break;
-                if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, parameters.ExclusionsArray) ||
+                if (!Eligible(b, parameters.CollisionMask, parameters.CollideWithBodies, parameters.CollideWithAreas, excluded) ||
                     !Sweep(parameters.Transform.Origin, parameters.Motion, b.Position, b.Radius + radius, out var f)) continue;
                 var center = parameters.Transform.Origin + parameters.Motion * f; var normal = (center - b.Position).Normalized();
                 _shapeContacts.Add(new(b.RID, 0, 0, center - normal * radius, b.Position + normal * b.Radius));
             }
             return _shapeContacts;
         }
-        internal override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters)
+        protected override PhysicsRestInfo? GetRestInfo(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
-            var hits = CollectShapeContacts(parameters, 1); if (hits.Count == 0) return null;
-            var h = hits[0]; var b = Bodies[h.RID]; return new(h.RID, 0, h.ColliderPoint, (h.QueryPoint - b.Position).Normalized(), b.GetWorldPointVelocity(h.ColliderPoint));
+            var hits = CollectShapeContacts(parameters, excluded, 1); if (hits.Count == 0) return null;
+            var h = hits[0]; var b = Bodies[h.RID]; return new(h.RID, 0, h.ColliderPoint, (h.QueryPoint - b.Position).Normalized(), b.PointVelocity(h.ColliderPoint));
         }
-        internal override bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second,
+        protected override bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second,
             Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count) =>
             Pair(firstPose.Origin, Radius(first), secondPose.Origin, Radius(second), firstMotion - secondMotion, contacts, out count);
-        internal override bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)
+        protected override bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)
         {
             if (index != 0) throw new ArgumentOutOfRangeException(nameof(index)); var b = Bodies[body];
             return Pair(b.Position, b.Radius, pose.Origin, Radius(shape), -motion, contacts, out count);
@@ -92,7 +98,7 @@ internal static partial class PhysicsRegisteredBackendTests
             }
             return true;
         }
-        internal override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
+        protected override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)
         {
             var local = Bodies[body]; Body? best = null; var fraction = 1f;
@@ -103,7 +109,7 @@ internal static partial class PhysicsRegisteredBackendTests
                 { best = other; fraction = f; }
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var normal = (from.Origin + travel - best.Position).Normalized(); var point = best.Position + normal * best.Radius;
-            result.SetCollision(body, 0, best.RID, 0, point, normal, 0, best.GetWorldPointVelocity(point), travel, motion - travel, fraction, fraction); return true;
+            result.SetCollision(body, 0, best.RID, 0, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction); return true;
         }
     }
 }

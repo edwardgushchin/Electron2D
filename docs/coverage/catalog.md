@@ -624,8 +624,8 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | RefCounted | Implemented | 8 |
 | [PhysicsRayQueryParameters3D](classes/PhysicsRayQueryParameters3D.md) | RefCounted | Excluded | 9 |
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | Object | Partial | 214 |
-| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | PhysicsServer2D | Blocked | 140 |
-| [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | Object | Blocked | 2 |
+| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | PhysicsServer2D | Partial | 140 |
+| [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | Object | Implemented | 2 |
 | [PhysicsServer3D](classes/PhysicsServer3D.md) | Object | Excluded | 342 |
 | [PhysicsServer3DExtension](classes/PhysicsServer3DExtension.md) | PhysicsServer3D | Excluded | 196 |
 | [PhysicsServer3DManager](classes/PhysicsServer3DManager.md) | Object | Excluded | 2 |

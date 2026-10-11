@@ -31,7 +31,7 @@ public sealed partial class PhysicsServer : ElectronObject
     private PhysicsServer() { }
 
     internal static PhysicsServer Service => SharedInstance;
-    private readonly PhysicsBackendRegistry _backendRegistry = new();
+    internal readonly PhysicsBackendRegistry BackendRegistry = new();
 
     internal RID RegisterSceneObject(CollisionObject node)
     {
@@ -83,7 +83,7 @@ public sealed partial class PhysicsServer : ElectronObject
     {
         ThrowIfDisposed();
         if (backend is not (Backend.CPU or Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(backend));
-        if (selection is null && factory is null) selection = _backendRegistry.Resolve(backend.ToString());
+        if (selection is null && factory is null) selection = BackendRegistry.Resolve(backend.ToString());
         var rid = RID.Allocate();
         var space = new PhysicsSpace(rid);
         lock (_registryGate)

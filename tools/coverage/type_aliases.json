@@ -93,7 +93,9 @@
     "PlaceholderTexture2DArray": "PlaceholderTextureArray",
     "PhysicsDirectSpaceState2DExtension": "PhysicsDirectSpaceStateExtension",
     "PhysicsDirectBodyState2DExtension": "PhysicsDirectBodyStateExtension",
-    "NavigationMeshSourceGeometryData2D": "NavigationMeshSourceGeometryData"
+    "NavigationMeshSourceGeometryData2D": "NavigationMeshSourceGeometryData",
+    "PhysicsServer2DManager": "PhysicsServerManager",
+    "PhysicsServer2DExtension": "PhysicsServerExtension"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

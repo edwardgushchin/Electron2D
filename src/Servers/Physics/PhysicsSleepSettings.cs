@@ -1,7 +1,10 @@
 namespace Electron2D;
 
 /// <summary>Shared authored world thresholds in scene units/s, radians/s and seconds.</summary>
-internal readonly record struct PhysicsSleepSettings(float LinearThreshold, float AngularThreshold, float TimeToSleep)
+/// <param name="LinearThreshold">Linear Threshold in the owning operation's engine-unit contract.</param>
+/// <param name="AngularThreshold">Angular Threshold in the owning operation's engine-unit contract.</param>
+/// <param name="TimeToSleep">Time To Sleep in the owning operation's engine-unit contract.</param>
+public readonly record struct PhysicsSleepSettings(float LinearThreshold, float AngularThreshold, float TimeToSleep)
 {
     internal static PhysicsSleepSettings FromProject()
     {

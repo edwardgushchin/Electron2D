@@ -20,8 +20,8 @@ internal sealed partial class PhysicsSpace
             try { CaptureObservers(); }
             catch { _kernel.Dispose(); throw; }
         }
-        internal override long DeviceCapacityBytes => _kernel.DeviceCapacityBytes;
-        internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
+        protected internal override long DeviceCapacityBytes => _kernel.DeviceCapacityBytes;
+        protected internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
         private void CaptureObservers()
         {
             var s = _space;
@@ -35,8 +35,8 @@ internal sealed partial class PhysicsSpace
         }
         private void CaptureCollider(PhysicsColliderBackend collider) => _colliders.Add(collider, _store.NativeCollider(collider).CaptureReplay());
         private void RequireAlive() { if (_disposed) throw new ObjectDisposedException(nameof(GPUCheckpoint)); }
-        internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
-        internal override void Restore()
+        protected internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
+        protected internal override void Restore()
         {
             ValidateRestore(); _kernel.Restore(); var s = _space;
             PhysicsReplayCopy.Buffer<GPUPhysicsBodyStore.ContactReport>(_reports, ref s._gpuReports);

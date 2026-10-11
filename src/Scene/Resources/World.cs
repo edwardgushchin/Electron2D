@@ -17,10 +17,23 @@ public sealed class World : Resource
     /// <exception cref="ArgumentOutOfRangeException">The backend is not a selectable built-in implementation.</exception>
     /// <remarks>The device is initialized only on first physics access. Duplicates share the same selected runtime.</remarks>
     public World(PhysicsServer.Backend backend, bool allowCPUFallback = false) : this(new WorldRuntime(false, backend, allowCPUFallback)) { }
+    /// <summary>Creates a world with a named registered implementation captured now and constructed on first physics access.</summary>
+    /// <param name="backendName">A registered name, CPU, GPU or DEFAULT.</param>
+    /// <param name="allowCPUFallback">Allows startup fallback only for the built-in GPU selection.</param>
+    /// <exception cref="ArgumentException">The name is empty or unregistered.</exception>
+    public World(string backendName, bool allowCPUFallback = false) : this(new WorldRuntime(false, allowCPUFallback: allowCPUFallback,
+        selection: PhysicsServer.Service.BackendRegistry.Resolve(backendName)))
+    { }
+    /// <summary>Gets the original named selection without creating physics storage.</summary>
+    /// <value>The supplied name or the explicit built-in enum identity.</value>
+    public string RequestedPhysicsBackendName { get { ThrowIfDisposed(); _runtime.EnsureAlive(); return _runtime.RequestedBackendName; } }
+    /// <summary>Gets the actual registered implementation name, initializing physics if needed.</summary>
+    /// <value>The captured registration name, or CPU after allowed GPU startup fallback.</value>
+    public string PhysicsBackendName { get { ThrowIfDisposed(); return _runtime.Space.ActualBackendName; } }
     internal World(WorldRuntime runtime) { _runtime = runtime; runtime.Retain(); }
     internal WorldRuntime Runtime => _runtime;
     /// <summary>Gets the requested physics implementation without initializing it.</summary>
-    /// <value>The original CPU or GPU choice.</value>
+    /// <value>The original CPU, GPU or registered extension choice.</value>
     public PhysicsServer.Backend RequestedPhysicsBackend { get { ThrowIfDisposed(); _runtime.EnsureAlive(); return _runtime.RequestedBackend; } }
     /// <summary>Gets the selected implementation, initializing the physics space if needed.</summary>
     /// <value>The actual implementation after startup policy is applied.</value>

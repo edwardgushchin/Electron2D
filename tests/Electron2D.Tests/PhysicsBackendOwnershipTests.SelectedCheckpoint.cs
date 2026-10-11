@@ -4,10 +4,10 @@ internal static partial class PhysicsBackendOwnershipTests
 {
     private sealed class WrappedCheckpoint(ViewBackend owner, PhysicsBackendCheckpoint inner) : PhysicsBackendCheckpoint
     {
-        internal override long DeviceCapacityBytes => inner.DeviceCapacityBytes;
-        internal override void Capture() { owner.CheckpointCaptures++; owner.CheckpointCaptureHook?.Invoke(); inner.Capture(); }
-        internal override void ValidateRestore() { owner.CheckpointValidations++; owner.CheckpointValidationHook?.Invoke(); inner.ValidateRestore(); }
-        internal override void Restore() { owner.CheckpointRestores++; owner.CheckpointRestoreHook?.Invoke(); inner.Restore(); }
+        protected internal override long DeviceCapacityBytes => inner.DeviceCapacityBytes;
+        protected internal override void Capture() { owner.CheckpointCaptures++; owner.CheckpointCaptureHook?.Invoke(); inner.Capture(); }
+        protected internal override void ValidateRestore() { owner.CheckpointValidations++; owner.CheckpointValidationHook?.Invoke(); inner.ValidateRestore(); }
+        protected internal override void Restore() { owner.CheckpointRestores++; owner.CheckpointRestoreHook?.Invoke(); inner.Restore(); }
         public override void Dispose()
         {
             owner.CheckpointReleases++;

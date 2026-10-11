@@ -20,10 +20,10 @@ internal sealed partial class RegisteredPhysicsWorldBackend
     { VectorResult(value.Position); ScalarResult(value.Rotation); return value; }
     private static (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) MotionResult((Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) value)
     { VectorResult(value.LinearVelocity); ScalarResult(value.AngularVelocity); return value; }
-    private static PhysicsMass.Properties MassResult(PhysicsMass.Properties value)
+    private static PhysicsMass.Properties MassResult(PhysicsMassProperties value)
     {
         ScalarResult(value.Mass); NonnegativeResult(value.Inertia); VectorResult(value.Center);
-        if (value.Mass <= 0) throw new InvalidOperationException("A selected implementation returned nonpositive mass."); return value;
+        if (value.Mass <= 0) throw new InvalidOperationException("A selected implementation returned nonpositive mass."); return new(value.Mass, value.Inertia, value.Center);
     }
     private static PhysicsBodyFields FieldResult(PhysicsBodyFields value)
     { VectorResult(value.Gravity); ScalarResult(value.LinearDamp); ScalarResult(value.AngularDamp); return value; }

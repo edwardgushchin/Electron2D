@@ -864,7 +864,7 @@ atomic state, suppress actual floor motion/contact response through exceptions,
 restore it on removal and exercise scene/raw hooks. Portable preparation/read
 failures release context and permit a fresh capture. Existing field, exception,
 joint, checkpoint, mixed-backend snapshot and network suites retain their own
-numerical and allocation boundaries. Public registration remains open under ADR 0103.
+numerical and allocation boundaries. Public registration now executes under ADR 0103; arbitrary geometry and unexercised operation acceptance remain open.
 
 ## Selected checkpoint ownership
 
@@ -969,7 +969,7 @@ acceptance remain open.
 
 ## Space construction transaction
 
-Space RID registration now precedes selected-owner construction for both explicit and lazy scene worlds. A retained owner can initialize against a live context and execute guarded query extensions before publication, while step/activation/attachment/release remain blocked. Failure cleans registry and native ownership; a rejected foreign owner stays alive in its original world. Constructor recursion cannot create a second implementation on the same context. [Initialization ownership checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) cover these phases on CPU/GPU/no-device. Public registration remains open under ADR 0103.
+Space RID registration now precedes selected-owner construction for both explicit and lazy scene worlds. A retained owner can initialize against a live context and execute guarded query extensions before publication, while step/activation/attachment/release remain blocked. Failure cleans registry and native ownership; a rejected foreign owner stays alive in its original world. Constructor recursion cannot create a second implementation on the same context. [Initialization ownership checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.Initialization.cs) cover these phases on CPU/GPU/no-device. Public registration now executes under ADR 0103; arbitrary geometry and unexercised operation acceptance remain open.
 
 ## Named implementation selection
 
@@ -995,13 +995,15 @@ Selected default-force preparation now receives [PhysicsBodyForceConfiguration](
 
 ## Selected motion-result publication
 
-Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration remains open under ADR 0103.
+Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration now executes under ADR 0103; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Motion publication checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.MotionPublication.cs) exercise altered scene/raw motion and CharacterBody execution, invalid results, stale/foreign/Area IDs, disabled slots, filters/exclusions, weak identity rebind, release/transfer/hierarchy/recursive rejection and retry after failure. The fixture measures 64 warmup and 64 full-frame/query cycles with zero owner/all-thread managed bytes on CPU/GPU. Supplied test vectors are checked exactly; built-in motion checks retain .0001 scene-unit conversion and .002 point-velocity tolerances. These checks establish only their exercised scope; complete public backend registration and independent custom solver acceptance remain open.
 
 ## Independent implementation bridge
 
 
-[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
+[Registered numerical adapter](physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
 
 The complete internal contract and its exercised boundaries are documented in [Registered numerical solver adapter](physics-registered-adapter.md). Backend.Extension is an observed implementation identity, not a built-in creation option. Existing CPU/GPU enum factories preserve their explicit startup rules.
+
+Public [registered implementations](physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.

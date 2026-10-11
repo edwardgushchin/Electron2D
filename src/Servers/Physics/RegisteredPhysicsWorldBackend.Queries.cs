@@ -40,7 +40,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         var canvas = parameters.CanvasInstanceID; var excluded = parameters.ExclusionsArray; var frame = BeginQuery();
         try
         {
-            var values = _implementation.CollectPointHits(parameters) ?? throw new InvalidOperationException("A point query returned no collection.");
+            var values = _implementation.CollectPointHits(parameters, parameters.ExclusionsArray) ?? throw new InvalidOperationException("A point query returned no collection.");
             frame.Points.Clear(); frame.Points.EnsureCapacity(values.Count);
             foreach (var hit in values)
             {
@@ -61,7 +61,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         var excluded = parameters.ExclusionsArray; var frame = BeginQuery();
         try
         {
-            var values = _implementation.CollectShapeHits(parameters) ?? throw new InvalidOperationException("A shape query returned no collection.");
+            var values = _implementation.CollectShapeHits(parameters, parameters.ExclusionsArray) ?? throw new InvalidOperationException("A shape query returned no collection.");
             frame.Shapes.Clear(); frame.Shapes.EnsureCapacity(values.Count);
             foreach (var hit in values)
             {
@@ -81,7 +81,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         Enter();
         try
         {
-            var result = _implementation.CastMotion(parameters);
+            var result = _implementation.CastMotion(parameters, parameters.ExclusionsArray);
             if (!float.IsFinite(result.SafeFraction) || !float.IsFinite(result.UnsafeFraction) || result.SafeFraction < 0 ||
                 result.SafeFraction > result.UnsafeFraction || result.UnsafeFraction > 1)
                 throw new InvalidOperationException("A motion cast returned invalid fractions.");
@@ -95,7 +95,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         var excluded = parameters.ExclusionsArray; var frame = BeginQuery();
         try
         {
-            var values = _implementation.CollectShapeContacts(parameters, limit) ?? throw new InvalidOperationException("A contact query returned no collection.");
+            var values = _implementation.CollectShapeContacts(parameters, parameters.ExclusionsArray, limit) ?? throw new InvalidOperationException("A contact query returned no collection.");
             if (values.Count > limit) throw new InvalidOperationException("A contact query returned too many pairs.");
             frame.Contacts.Clear(); frame.Contacts.EnsureCapacity(values.Count);
             foreach (var hit in values)
@@ -114,7 +114,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         var excluded = parameters.ExclusionsArray; Enter();
         try
         {
-            var result = _implementation.GetRestInfo(parameters);
+            var result = _implementation.GetRestInfo(parameters, parameters.ExclusionsArray);
             if (result is not { } hit) return null;
             ValidateHit(hit.ColliderRID, hit.ShapeIndex, mask, bodies, areas, null, excluded);
             return new(hit.ColliderRID, hit.ShapeIndex, hit.Point, hit.Normal, hit.LinearVelocity);

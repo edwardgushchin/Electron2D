@@ -65,6 +65,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend
         try { _implementation.SyncResults(); _resultsReady = !_implementation.HasFailure && _implementation.ResultsReady; }
         finally { Exit(); }
         if (!_resultsReady) throw new InvalidOperationException("A completed registered solve did not publish its results.");
+        Space.CaptureDebugContacts();
     }
     internal override void CompleteBody(PhysicsServerCollider body)
     {

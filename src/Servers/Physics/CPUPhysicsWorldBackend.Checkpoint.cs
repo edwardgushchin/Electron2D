@@ -22,8 +22,8 @@ internal sealed partial class CPUPhysicsWorldBackend
             _owner = owner; _kernel = new(owner.WorldID);
             try { CaptureObservers(); } catch { _kernel.Dispose(); throw; }
         }
-        internal override long DeviceCapacityBytes => 0;
-        internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
+        protected internal override long DeviceCapacityBytes => 0;
+        protected internal override void Capture() { RequireAlive(); _kernel.Capture(); CaptureObservers(); }
         private void CaptureObservers()
         {
             var s = _owner;
@@ -37,8 +37,8 @@ internal sealed partial class CPUPhysicsWorldBackend
             _step = s._contactStep; _aggregate = s._aggregateContactImpulses;
         }
         private void RequireAlive() { if (_disposed) throw new ObjectDisposedException(nameof(SolverCheckpoint)); _owner.EnsureAccess(); }
-        internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
-        internal override void Restore()
+        protected internal override void ValidateRestore() { RequireAlive(); _kernel.ValidateRestore(); }
+        protected internal override void Restore()
         {
             ValidateRestore(); _kernel.Restore(); var s = _owner;
             PhysicsReplayCopy.Map(_oneWay, s._oneWayPairs);

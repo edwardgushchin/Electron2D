@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-11
 
-**Declaration:** `internal readonly record struct PhysicsJointConfiguration` · **Source:** [PhysicsJointConfiguration.cs](../../src/Servers/Physics/PhysicsJointConfiguration.cs) · **Component:** [Physics backends](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
+**Declaration:** `public readonly record struct PhysicsJointConfiguration` · **Source:** [PhysicsJointConfiguration.cs](../../src/Servers/Physics/PhysicsJointConfiguration.cs) · **Component:** [Physics backends](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
 
 ## Description
 
@@ -24,3 +24,5 @@ Internal flow: `joint.Configuration` is passed by readonly reference to the sele
 ## Ownership and verification
 
 The runtime validates authored setters and retains membership/lifetime. CPU/GPU implementations compile values independently; CPU spring scheduling resolves the actual native attachment from its world owner. [Selected-view tests](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.SelectedViews.cs) wrap real pin/groove/spring implementations, check refreshed bias/force values and execute physical response. Shared joint conformance retains numerical, lifecycle and allocation boundaries. Public extension registration and the complete operation bridge remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+This immutable value is now public and crosses the [registered implementation boundary](../components/physics-registered-adapter.md); complete sampled fields retain the contracts above. No backend storage or native handles are exposed.

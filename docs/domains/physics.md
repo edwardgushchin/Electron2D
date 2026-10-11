@@ -2,30 +2,30 @@
 
 Last updated: 2026-10-11
 
-[Selected motion-result publication](../components/physics-backends.md#selected-motion-result-publication) now validates geometry, logical identities and filters before scene movement or caller result replacement. Engine-sampled weak object identity and borrowed lifetime cover raw/scene/CharacterBody motion; failures release the query without committing a tick. Public registration remains open.
+[Selected motion-result publication](../components/physics-backends.md#selected-motion-result-publication) now validates geometry, logical identities and filters before scene movement or caller result replacement. Engine-sampled weak object identity and borrowed lifetime cover raw/scene/CharacterBody motion; failures release the query without committing a tick. Public named registration now executes through PhysicsServerManager; arbitrary custom geometry and full extension acceptance remain open.
 
 [Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)
 now routes resolved fields, collision-exception invalidation/synchronization and
 portable preparation/batch observation through the actual selected owner. Common
 server/replay/map code retains engine identities and values without GPU handles
-or snapshots. Public named registration and the complete external family remain open.
+or snapshots. Public named registration and its value/RID family now execute in the separate backend consumer; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 now keeps GPU publication reports, epochs and collider caches with resident solver
 history. Common replay uses engine field values and guarded selected preparation,
-capture, validation, restore and release. Public registration remains open.
+capture, validation, restore and release. Public named registration now executes through PhysicsServerManager; arbitrary custom geometry and full extension acceptance remain open.
 
 [Shared joint inputs and ownership](../components/physics-backends.md#shared-joint-inputs-and-native-ownership)
 now pass complete engine-unit configuration values to selected constraints. CPU
 spring scheduling resolves actual native attachments from its owner, including
 wrapped implementations; matching retirement preserves replacement attachments.
-Public named registration and the complete external family remain open.
+Public named registration and its value/RID family now execute in the separate backend consumer; arbitrary geometry and unexercised operation acceptance remain open.
 
 [Shared collider inputs](../components/physics-backends.md#shared-collider-shape-inputs)
 now project scene/raw body and Area authoring into one selected implementation
 span. Exact resources, transforms, logical disabled indices and one-way policy
 remain observable; source preflight, recursive preparation and scratch lifetime
-are guarded. Public registration and the complete external family remain open.
+are guarded. Public registration now executes; arbitrary custom geometry and complete operation acceptance remain open.
 
 [Selected lifecycle](../components/physics-backends.md#selected-lifecycle-and-activity)
 now dispatches owner initialization, atomic local activation, query/event flushing
@@ -37,7 +37,7 @@ and the full external operation family remain open.
 resident handles and concrete GPU casts from the common collider facade.
 Actual attachments stay in the resident store; selected wrappers retain publication,
 Area/query/joint behavior and local/portable restoration. Identity/priority edits
-reach selected hooks. Public registration and the complete operation family stay open.
+reach selected hooks. Public registration now executes; arbitrary geometry and full operation acceptance remain open.
 
 [CPU collider ownership](../components/physics-backends.md#cpu-collider-ownership)
 now confines native body/shape IDs to the CPU owner and its attachments. Common
@@ -405,7 +405,7 @@ CPU/GPU World and server-space creation, startup fallback diagnostics, independe
 resident body/shape/joint attachments and common query/event publication. Complete
 conformance, performance and networking acceptance remain open.
 
-All six [direct-space queries](../components/physics-queries.md#runtime-flow) now dispatch through the retained selected CPU/GPU implementation with prepared scratch. Shared public guards and array/span projection preserve identity, filtering and lifetime; public registration and extension contexts remain open under ADR 0103.
+All six [direct-space queries](../components/physics-queries.md#runtime-flow) now dispatch through the retained selected CPU/GPU implementation with prepared scratch. Shared public guards and array/span projection preserve identity, filtering and lifetime; public registration now executes in a separate consumer; arbitrary geometry and unexercised extension operation acceptance remain open under ADR 0103.
 
 ## Completed-step diagnostics
 
@@ -538,9 +538,9 @@ an internal extension prerequisite, not public backend registration.
 
 [Space initialization](../components/physics-backends.md#space-construction-transaction) registers immutable world identity before implementation construction. The same transaction publishes explicit/inactive and scene/active spaces, guards initialization reentrancy and rolls back failed native/registry state. Public third-party factory operation integration remains open.
 
-[Named implementation selection](../components/physics-backends.md#named-implementation-selection) now retains immutable internal factories, strict default priorities and lazy World alias identity. Existing built-in CPU/GPU creation uses the registry and preserves no-device/fallback behavior. Real wrapped scene/raw impulse response and selected views execute through this path; public manager/server-extension families remain open.
+[Named implementation selection](../components/physics-backends.md#named-implementation-selection) now retains immutable internal factories, strict default priorities and lazy World alias identity. Existing built-in CPU/GPU creation uses the registry and preserves no-device/fallback behavior. Real wrapped scene/raw impulse response and selected views execute through this path; public manager/server-extension families now execute in a separate consumer; arbitrary geometry and full operation acceptance remain open.
 
-[Selected shape-pair queries](../components/physics-shape-pairs.md) now execute resource/body-slot collision through actual retained owners, including detached bodies, disabled logical geometry and atomic nested results. GPU pose-only demand no longer reads an unnecessary full state record. Borrowed collider free rejects before registry cleanup. This closes an internal operation prerequisite; the complete public manager/server-extension family remains open.
+[Selected shape-pair queries](../components/physics-shape-pairs.md) now execute resource/body-slot collision through actual retained owners, including detached bodies, disabled logical geometry and atomic nested results. GPU pose-only demand no longer reads an unnecessary full state record. Borrowed collider free rejects before registry cleanup. This closes an internal operation prerequisite; the complete public manager/server-extension family now executes; arbitrary geometry and full operation acceptance remain open.
 
 [Selected contact publication](../components/physics-body-extensions.md#selected-contact-publication) now connects factory-provided body contact count/values to actual scene/raw snapshots and monitored events. Native worker capture stays separate from owner-thread hooks; complete immutable output commits before observers. User contact failures preserve the receiver's prior state and allow later callbacks/committed ticks. Public manager/server-extension and custom algorithms remain open.
 
@@ -550,3 +550,5 @@ The [scene pipeline performance fixture](../../tests/Electron2D.Tests/PhysicsPip
 
 
 [Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.
+
+Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
