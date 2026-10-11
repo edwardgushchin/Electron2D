@@ -17,7 +17,9 @@ public abstract partial class Material : Resource
 /// <remarks>A null shader uses normal color drawing. An assigned shader requires the GPU backend, including
 /// an identity shader. Shader resources are borrowed; resource duplication follows the requested graph policy.
 /// Reserved TIME and SCREEN_PIXEL_SIZE uniforms and SCREEN_TEXTURE sampling are filled by the renderer
-/// and excluded from parameter access, stored properties and value migration.</remarks>
+/// and excluded from parameter access, stored properties and value migration. Scene lights compose the authored fragment color before blend while preserving discard and parameters.
+/// Normal/specular channels and point masks share the native sixteen-sampler stage capacity; overflow rejects
+/// before drawing. All four user uniform-buffer slots remain available.</remarks>
 public sealed class ShaderMaterial : Material
 {
     private readonly object _gate = new();

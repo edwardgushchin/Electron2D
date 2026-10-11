@@ -5,11 +5,11 @@
     </PropertyGroup>
     <Exec Command="&quot;$(Electron2DNativePython)&quot; -B &quot;$(MSBuildThisFileDirectory)build_runtime.py&quot; --output &quot;$(_RuntimeShaders)&quot;" />
     <ItemGroup>
-      <_RuntimeRenderingShader Include="$(_RuntimeShaders)/Rendering/*.spv" />
+      <_RuntimeRenderingShader Include="$(_RuntimeShaders)/Rendering/*.spv;$(_RuntimeShaders)/Rendering/*.reloc" />
       <_RuntimePhysicsShader Include="$(_RuntimeShaders)/Physics/*.spv" />
       <EmbeddedResource Include="%(_RuntimeRenderingShader.Identity)" LogicalName="Electron2D.Shaders.%(_RuntimeRenderingShader.Filename)%(_RuntimeRenderingShader.Extension)" />
       <EmbeddedResource Include="%(_RuntimePhysicsShader.Identity)" LogicalName="Electron2D.PhysicsShaders.%(_RuntimePhysicsShader.Filename)%(_RuntimePhysicsShader.Extension)" />
-      <FileWrites Include="$(_RuntimeShaders)/**/*.spv;$(_RuntimeShaders)/manifest.json" />
+      <FileWrites Include="$(_RuntimeShaders)/**/*.spv;$(_RuntimeShaders)/**/*.reloc;$(_RuntimeShaders)/manifest.json" />
     </ItemGroup>
   </Target>
 </Project>

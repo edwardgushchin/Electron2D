@@ -10,6 +10,7 @@ import subprocess
 import tempfile
 
 import build_toolchain
+import material_lighting
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -19,7 +20,7 @@ def generate(output, source_root=ROOT):
     toolchain = build_toolchain.build()
     compiler = toolchain / 'bin' / ('glslangValidator' + build_toolchain.suffix)
     validator = toolchain / 'bin' / ('spirv-val' + build_toolchain.suffix)
-    recipe = (toolchain / 'recipe.sha256').read_bytes() + Path(__file__).read_bytes()
+    recipe = (toolchain / 'recipe.sha256').read_bytes() + Path(__file__).read_bytes() + Path(material_lighting.__file__).read_bytes()
     output = output.resolve()
     output.mkdir(parents=True, exist_ok=True)
     with build_toolchain.exclusive(output.parent / (output.name + '.lock')):
@@ -39,6 +40,8 @@ def generate(output, source_root=ROOT):
                     digest.update(dependency.read_bytes())
             programs = [(source, source.stem, []) for source in sources if '.inc.' not in source.name]
             for source in sources:
+                if source.name in ('Canvas.vert.hlsl', 'CanvasInstanced.vert.hlsl'):
+                    programs.append((source, source.stem.replace('Canvas', 'CanvasLighting'), ['-DE2D_LIGHTING=1']))
                 if source.name == 'Lighting.frag.hlsl':
                     for types in itertools.product(range(3), repeat=3):
                         if types == (0, 0, 0):
@@ -73,7 +76,31 @@ def generate(output, source_root=ROOT):
                     if not target.exists() or target.read_bytes() != data:
                         os.replace(compiled, target)
                     current[name] = {'source': fingerprint, 'binary': hashlib.sha256(data).hexdigest()}
-        for stale in output.glob('*/*.spv'):
+            if domain == 'Rendering' and (directory / 'Lighting.frag.hlsl').exists():
+                lighting = (directory / 'Lighting.frag.hlsl').read_text()
+                for normal, specular, masks in itertools.product(range(-1, 3), range(-1, 3), (False, True)):
+                    key = ((normal + 1) * 4 + specular + 1) * 2 + int(masks)
+                    shader = material_lighting.source(lighting, normal, specular, masks)
+                    fingerprint = hashlib.sha256(recipe + shader.encode()).hexdigest()
+                    name = f'Rendering/LightCompose{key}.frag.spv'
+                    reloc_name = name.removesuffix('.spv') + '.reloc'
+                    target, reloc_target = output / name, output / reloc_name
+                    names = (name, reloc_name)
+                    if all(previous.get(n, {}).get('source') == fingerprint and (output/n).exists() and previous[n].get('binary') == hashlib.sha256((output/n).read_bytes()).hexdigest() for n in names):
+                        for n in names: current[n] = previous[n]
+                        continue
+                    with tempfile.TemporaryDirectory(dir=target.parent) as temporary:
+                        source = Path(temporary) / 'library.frag.glsl'; source.write_text(shader)
+                        compiled = Path(temporary) / 'shader.spv'
+                        subprocess.run([str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', 'frag', '-e', 'main', '-o', str(compiled), str(source)], check=True)
+                        subprocess.run([str(validator), '--target-env', 'vulkan1.0', str(compiled)], check=True)
+                        binary = compiled.read_bytes()
+                        relocation = material_lighting.relocations(compiled, toolchain / 'bin' / ('spirv-dis' + build_toolchain.suffix))
+                        for n, data in ((name, binary), (reloc_name, relocation)):
+                            file = output/n
+                            if not file.exists() or file.read_bytes() != data: file.write_bytes(data)
+                            current[n] = {'source': fingerprint, 'binary': hashlib.sha256(data).hexdigest()}
+        for stale in output.glob('*/*'):
             if stale.relative_to(output).as_posix() not in current:
                 stale.unlink()
         content = json.dumps(current, indent=2) + '\n'

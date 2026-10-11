@@ -77,8 +77,8 @@ Console.WriteLine($"Verified {count} generated resources in published assembly")
     subprocess.run(['dotnet', 'publish', str(root / 'Probe.csproj'), '-c', 'Release', '-o', str(publish), '--nologo'], check=True)
     generated = root / 'obj/Release/net10.0/shaders'
     subprocess.run(['dotnet', str(publish / 'Probe.dll'), str(generated)], check=True)
-    assert not any(path.suffix in ('.spv', '.glsl', '.hlsl', '.py') or path.name in ('glslangValidator', 'spirv-val')
+    assert not any(path.suffix in ('.spv', '.reloc', '.glsl', '.hlsl', '.py') or path.name in ('glslangValidator', 'spirv-val')
                    for path in publish.rglob('*')), 'Build inputs/tools leaked into publish'
     subprocess.run(['dotnet', 'clean', str(root / 'Probe.csproj'), '-c', 'Release', '--nologo'], check=True)
-    assert not list(generated.rglob('*.spv')) and not (generated / 'manifest.json').exists(), 'Clean left generated shaders'
+    assert not list(generated.rglob('*.reloc')) and not list(generated.rglob('*.spv')) and not (generated / 'manifest.json').exists(), 'Clean left generated shaders'
 print('Runtime shader generation checks passed')

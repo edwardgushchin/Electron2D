@@ -6,6 +6,17 @@ namespace Electron2D;
 internal sealed unsafe partial class GPUCanvasBackend
 {
     private RenderHandle? _lightAtlas;
+    private readonly Dictionary<(ShaderProgram Program, int Variant), byte[]> _litPrograms = [];
+    private readonly HashSet<(ShaderProgram Program, int Variant)> _usedLitPrograms = [];
+    private int[] _lightingOffsets = [];
+    private bool _materialMasks;
+    private int MaterialVariant(CanvasBatch batch, out int normal, out int specular)
+    {
+        var channels = Channels(batch.Texture);
+        normal = channels?.NormalTexture is { } n ? ShaderTexture.ResourcePixelType(n) : -1;
+        specular = channels?.SpecularTexture is { } s ? ShaderTexture.ResourcePixelType(s) : -1;
+        return ((normal + 1) * 4 + specular + 1) * 2 + (_materialMasks ? 1 : 0);
+    }
     private Vector2i _lightAtlasSize;
     private readonly RenderHandle?[] _lightMaskPipelines = new RenderHandle?[3];
     private Func<Texture, Vector2i>? _lightMaskSize;
@@ -14,7 +25,13 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (batch.MaskShader) return BuiltInShaders.Clip(ShaderTexture.ResourcePixelType(batch.Texture));
         if (batch.Lighting is not null)
         {
-            if (batch.Material is not null) throw new NotSupportedException("Programmable canvas materials require an explicit lighting shader interface before receiving scene lights.");
+            if (batch.Material is { } material)
+            {
+                var key = (material.Program, MaterialVariant(batch, out var normal, out var specular));
+                _usedLitPrograms.Add(key);
+                if (!_litPrograms.TryGetValue(key, out var composed)) _litPrograms.Add(key, composed = MaterialLightingProgram.Compose(material.Program, normal, specular, _materialMasks));
+                return composed;
+            }
             var channels = Channels(batch.Texture);
             return BuiltInShaders.Lighting(ShaderTexture.ResourcePixelType(batch.Texture), ShaderTexture.ResourcePixelType(channels?.NormalTexture), ShaderTexture.ResourcePixelType(channels?.SpecularTexture));
         }
@@ -30,10 +47,11 @@ internal sealed unsafe partial class GPUCanvasBackend
     private void PrepareLightingChannels(CanvasBatch batch)
     {
         var channels = Channels(batch.Texture);
-        _ = CanvasBinding(batch);
-        _ = CanvasBinding(batch with { Texture = null });
-        if (channels?.NormalTexture is { } normal) _ = CanvasBinding(batch with { Texture = normal });
-        if (channels?.SpecularTexture is { } specular) _ = CanvasBinding(batch with { Texture = specular });
+        if (UsesCanvasTexture(batch)) _ = CanvasBinding(batch);
+        var plain = batch with { Material = null };
+        _ = CanvasBinding(plain with { Texture = null });
+        if (channels?.NormalTexture is { } normal) _ = CanvasBinding(plain with { Texture = normal });
+        if (channels?.SpecularTexture is { } specular) _ = CanvasBinding(plain with { Texture = specular });
     }
 
     private void PrepareLightingAtlas(CanvasLightingFrame frame)
@@ -99,8 +117,8 @@ internal sealed unsafe partial class GPUCanvasBackend
         if (pass == 0) throw Failure("begin the light-mask atlas");
         try
         {
-            var dimensions = new Vector2(frame.AtlasSize.X, frame.AtlasSize.Y);
-            SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector2));
+            var dimensions = new Vector4(frame.AtlasSize.X, frame.AtlasSize.Y, 0, 0);
+            SDL.PushGPUVertexUniformData(command, 0, (nint)(&dimensions), (uint)sizeof(Vector4));
             var binding = new SDL.GPUBufferBinding { Buffer = _vertexBuffer!.DangerousGetHandle(), Offset = (uint)lightingBytes };
             SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(&binding, 1), 1);
             for (var index = 0; index < frame.Masks.Count; index++)
@@ -114,6 +132,35 @@ internal sealed unsafe partial class GPUCanvasBackend
             }
         }
         finally { SDL.EndGPURenderPass(pass); }
+    }
+
+    private void PrepareMaterialLighting(ReadOnlySpan<CanvasBatch> batches, CanvasLightingFrame frame)
+    {
+        var baseCount = checked(frame.LightCount * 9 + frame.SegmentCount * 2);
+        if (frame.Data.Count > baseCount) frame.Data.RemoveRange(baseCount, frame.Data.Count - baseCount);
+        if (_lightingOffsets.Length < batches.Length) Array.Resize(ref _lightingOffsets, Math.Max(32, batches.Length));
+        for (var index = 0; index < batches.Length; index++)
+        {
+            _lightingOffsets[index] = 0;
+            var batch = batches[index]; if (batch.Lighting is not { } item || batch.Material is null || batch.MaskShader || batch.GroupShader) continue;
+            var channels = Channels(batch.Texture); var specular = channels?.SpecularColor ?? Colors.White;
+            _lightingOffsets[index] = frame.Data.Count;
+            frame.Data.Add(new(item.Ambient.R, item.Ambient.G, item.Ambient.B, item.Ambient.A));
+            frame.Data.Add(new(specular.R, specular.G, specular.B, channels?.SpecularShininess ?? 1));
+            frame.Data.Add(new(BitConverter.UInt32BitsToSingle(item.Mask), BitConverter.Int32BitsToSingle(item.Z), BitConverter.Int32BitsToSingle(item.Layer), BitConverter.Int32BitsToSingle((int)item.Mode)));
+            frame.Data.Add(new(BitConverter.Int32BitsToSingle(frame.LightCount), BitConverter.Int32BitsToSingle(frame.SegmentCount), BitConverter.Int32BitsToSingle(channels?.NormalTexture is null ? 0 : 1), BitConverter.Int32BitsToSingle(channels?.SpecularTexture is null ? 0 : 1)));
+            frame.Data.Add(new(1f / frame.AtlasSize.X, 1f / frame.AtlasSize.Y, 0, 0));
+        }
+    }
+
+    private void BindMaterialLighting(nint pass, CanvasBatch batch)
+    {
+        var bindings = stackalloc SDL.GPUTextureSamplerBinding[3]; var count = 0; var plain = batch with { Material = null }; var channels = Channels(batch.Texture);
+        if (channels?.NormalTexture is { } normal) bindings[count++] = CanvasBinding(plain with { Texture = normal });
+        if (channels?.SpecularTexture is { } specular) bindings[count++] = CanvasBinding(plain with { Texture = specular });
+        if (_materialMasks) bindings[count++] = new() { Texture = _lightAtlas!.DangerousGetHandle(), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
+        if (count != 0) SDL.BindGPUFragmentSamplers(pass, (uint)batch.Material!.Program.Textures.Length, new ReadOnlySpan<SDL.GPUTextureSamplerBinding>(bindings, count), (uint)count);
+        var buffer = _vertexBuffer!.DangerousGetHandle(); SDL.BindGPUFragmentStorageBuffers(pass, 0, (nint)(&buffer), 1);
     }
 
     [StructLayout(LayoutKind.Sequential)]
