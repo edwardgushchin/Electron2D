@@ -2,13 +2,17 @@ using System.Runtime.InteropServices;
 
 namespace Electron2D;
 
-internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null)
+internal sealed class ShaderProgram(byte[] code, int[] bufferSizes, Dictionary<string, ShaderUniform> uniforms, ShaderTexture[]? textures = null, ShaderUniform? timeUniform = null, ShaderUniform? screenPixelSizeUniform = null, ShaderUniform? sdfCoordsUniform = null, Dictionary<string, ShaderUniform>? instanceUniforms = null)
 {
     internal static readonly ShaderProgram Default = new(BuiltInShaders.Fragment, [], new(StringComparer.Ordinal), [new("TEXTURE", 0)]);
     internal readonly byte[] Code = code;
     internal readonly int[] BufferSizes = bufferSizes;
     internal readonly Dictionary<string, ShaderUniform> Uniforms = uniforms;
     internal readonly ShaderTexture[] Textures = textures ?? [];
+    internal readonly Dictionary<string, ShaderUniform> InstanceUniforms = instanceUniforms ?? new(StringComparer.Ordinal);
+    internal readonly bool HasInstanceUniforms = instanceUniforms is { Count: > 0 };
+    internal readonly IReadOnlyList<PropertyDescriptor> InstanceDescriptors = Array.AsReadOnly((instanceUniforms ?? []).Values.Select(u => u.DescribeInstance(u.Name)).ToArray());
+    internal readonly IReadOnlyList<PropertyDescriptor> CanvasInstanceDescriptors = Array.AsReadOnly((instanceUniforms ?? []).Values.Select(u => u.DescribeInstance("instance_shader_parameters/" + u.Name)).ToArray());
     internal readonly ShaderUniform? TimeUniform = timeUniform;
     internal readonly ShaderUniform? ScreenPixelSizeUniform = screenPixelSizeUniform;
     internal readonly ShaderUniform? SDFCoordsUniform = sdfCoordsUniform;
@@ -59,6 +63,9 @@ internal sealed record ShaderTexture(string Name, int Binding, bool IsArray = fa
         if (IsArray ? texture is not TextureLayered : texture is not Texture) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled image shape.");
         if (ResourcePixelType(texture) != PixelType) throw new ArgumentException($"Texture parameter '{Name}' has a different sampled scalar type.");
     }
+    internal PropertyDescriptor DescribeDefault() => IsArray
+        ? new PropertyDescriptor<Shader, TextureLayered?>("default_texture_parameter/" + Name, shader => shader.GetDefaultLayeredTextureParameter(Name), (shader, value) => shader.SetDefaultLayeredTextureParameter(Name, value), _ => null, stored: true)
+        : new PropertyDescriptor<Shader, Texture?>("default_texture_parameter/" + Name, shader => shader.GetDefaultTextureParameter(Name), (shader, value) => shader.SetDefaultTextureParameter(Name, value), _ => null, stored: true);
     internal PropertyDescriptor Describe(string propertyName) => IsArray
         ? new PropertyDescriptor<ShaderMaterial, TextureLayered?>(propertyName, m => m.GetShaderLayeredParameter(Name), (m, t) => m.SetShaderLayeredParameter(Name, t), _ => null, stored: true)
         : new PropertyDescriptor<ShaderMaterial, Texture?>(propertyName,
@@ -75,6 +82,9 @@ internal sealed record ShaderUniform(string Name, Type Type, int Buffer, int Off
         Type == typeof(bool) ? Describe<bool>(propertyName) : Type == typeof(int) ? Describe<int>(propertyName) : Type == typeof(uint) ? Describe<uint>(propertyName) :
         Type == typeof(Vector2) ? Describe<Vector2>(propertyName) : Type == typeof(Vector3) ? Describe<Vector3>(propertyName) : Type == typeof(Vector4) ? Describe<Vector4>(propertyName) :
         Type == typeof(Transform) ? Describe<Transform>(propertyName) : Type == typeof(Vector2i) ? Describe<Vector2i>(propertyName) : Type == typeof(Vector3i) ? Describe<Vector3i>(propertyName) : Describe<Vector4i>(propertyName);
+
+    internal PropertyDescriptor DescribeInstance(string name) => Type == typeof(float) ? InstanceDescriptor<float>(name) : Type == typeof(bool) ? InstanceDescriptor<bool>(name) : Type == typeof(int) ? InstanceDescriptor<int>(name) : Type == typeof(uint) ? InstanceDescriptor<uint>(name) : Type == typeof(Vector2) ? InstanceDescriptor<Vector2>(name) : Type == typeof(Vector3) ? InstanceDescriptor<Vector3>(name) : Type == typeof(Vector4) ? InstanceDescriptor<Vector4>(name) : Type == typeof(Vector2i) ? InstanceDescriptor<Vector2i>(name) : Type == typeof(Vector3i) ? InstanceDescriptor<Vector3i>(name) : InstanceDescriptor<Vector4i>(name);
+    private PropertyDescriptor InstanceDescriptor<T>(string propertyName) where T : unmanaged => new PropertyDescriptor<CanvasItem, T?>(propertyName, item => item.GetStoredInstanceParameter<T>(Name), (item, value) => item.SetInstanceShaderParameter<T>(Name, value), _ => null, stored: true) { StoredSetter = (item, value) => item.RestoreInstanceParameter<T>(Name, value) };
 
     internal void Write<T>(Span<byte> target, in T value) where T : unmanaged
     {

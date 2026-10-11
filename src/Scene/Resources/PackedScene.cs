@@ -396,7 +396,8 @@ public sealed class PackedScene : Resource
                 descriptors.TryGetValue(property.Name, out descriptor);
             }
             if (descriptor is null)
-                descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType);
+                descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
+            if (descriptor?.ValueType != property.Value.ValueType) descriptor = InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType) ?? descriptor;
             if (descriptor is null || !descriptor.IsStored ||
                 descriptor.ValueType != property.Value.ValueType)
             {

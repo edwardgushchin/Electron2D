@@ -230,7 +230,7 @@ public sealed class ShaderMaterial : Material
         EmitChanged();
     }
 
-    private static void ValidateValue<T>(in T value) where T : unmanaged
+    internal static void ValidateValue<T>(in T value) where T : unmanaged
     {
         if (typeof(T) != typeof(float) && typeof(T) != typeof(Vector2) && typeof(T) != typeof(Vector3) && typeof(T) != typeof(Vector4) && typeof(T) != typeof(Color) && typeof(T) != typeof(Rect2) && typeof(T) != typeof(Transform)) return;
         foreach (var component in MemoryMarshal.Cast<T, float>(MemoryMarshal.CreateReadOnlySpan(in value, 1)))
@@ -335,7 +335,7 @@ internal sealed class MaterialState
             }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default, CanvasItem? instance = null)
     {
         lock (_gate)
         {
@@ -345,8 +345,12 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[pixels.Buffer].AsSpan(pixels.Offset, sizeof(float) * 2), in screenPixelSize);
             if (Program.SDFCoordsUniform is { } sdf)
                 MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
+            var instanceBuffer = Program.HasInstanceUniforms ? instance?.InstanceUniforms.Prepare(Program) : null;
             for (var i = 0; i < Buffers.Length; i++)
-                SDL.PushGPUFragmentUniformData(command, (uint)i, Buffers[i].AsSpan(), (uint)Buffers[i].Length);
+            {
+                var bytes = instanceBuffer is not null && instanceBuffer[i] is { } own ? own : Buffers[i];
+                SDL.PushGPUFragmentUniformData(command, (uint)i, bytes.AsSpan(), (uint)bytes.Length);
+            }
         }
     }
 }

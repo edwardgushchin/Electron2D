@@ -1328,3 +1328,15 @@ TileMapLayer inherited Y sorting also invalidates its retained tile groups and d
 ## Canvas lighting integration
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
+
+The item owns copied nullable scalar/vector overrides separately from Material. Detached authoring, owner/capture guards, geometry-preserving edits, inherited/surface lookup and authored storage descriptors follow [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+### Instance parameter access
+
+```csharp
+item.SetInstanceShaderParameter<Color>("tint", Colors.Red);
+Color? tint = item.GetInstanceShaderParameter<Color>("tint");
+item.SetInstanceShaderParameter<Color>("tint", null);
+```
+
+These operations require the scene owner for attached items and reject mutation during capture or after disposal. No renderer is required for detached authoring. The current compiled profile declares zero scalar/vector defaults.

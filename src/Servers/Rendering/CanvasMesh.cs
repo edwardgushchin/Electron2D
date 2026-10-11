@@ -36,7 +36,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
                             AppendSurface(vertices, surface.Data, surface.Primitive, Transform.Identity, Colors.White, false, default, default, Transform.Identity, Transform.Identity);
                         }
                         else AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
-                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, firstInstance, instanceCount);
+                        AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner, firstInstance, instanceCount);
                     }
                 }
                 return;
@@ -45,7 +45,7 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
             for (var i = 0; i < _customCount; i++)
             {
                 var first = vertices.Count; var surface = _custom[i]; AppendSurfaceInstances(vertices, surface.Data, surface.Primitive, transform, color, snap, instances, fraction, palette, toPalette, fromPalette);
-                AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip);
+                AddBatch(batches, first, vertices.Count - first, surface.Material, inheritedMaterial, inheritedBlend, texture, filter, repeat, anisotropy, clip, skinOwner);
             }
         }
         finally { if (lease is not null) lease.ReplayReaders--; }
@@ -110,13 +110,14 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
         return bounds;
     }
     private static void AddBatch(List<CanvasBatch> batches, int first, int count, Material? surfaceMaterial, MaterialState? inheritedMaterial, BlendMode inheritedBlend,
-        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, int firstInstance = 0, int instanceCount = 0)
+        Texture? texture, TextureFilter filter, TextureRepeat repeat, int anisotropy, Rect2i? clip, CanvasItem? owner, int firstInstance = 0, int instanceCount = 0)
     {
         if (count == 0) return;
         var material = surfaceMaterial is null ? inheritedMaterial : surfaceMaterial.GetCanvasState(); var blend = surfaceMaterial is null ? inheritedBlend : surfaceMaterial.GetCanvasBlendMode();
-        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Material == material && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
+        var instanceOwner = material?.Program.HasInstanceUniforms == true ? owner : null;
+        if (instanceCount == 0 && batches.Count != 0 && batches[^1] is var last && last.InstanceCount == 0 && last.Operation == CanvasOperation.Draw && last.Material == material && last.InstanceOwner == instanceOwner && last.Texture == texture && last.Filter == filter && last.Repeat == repeat && last.MaxAnisotropy == anisotropy && last.Blend == blend && last.Clip == clip)
             batches[^1] = last with { Count = last.Count + count };
-        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount));
+        else batches.Add(new(first, count, material, texture, filter, repeat, anisotropy, blend, clip, FirstInstance: firstInstance, InstanceCount: instanceCount, InstanceOwner: instanceOwner));
     }
     private static bool TryInstanceBounds(MeshSurfaceData data, out Rect2 bounds)
     {

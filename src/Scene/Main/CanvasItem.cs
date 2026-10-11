@@ -205,7 +205,7 @@ public abstract partial class CanvasItem : Node
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() =>
-        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties).Concat(SamplingProperties);
+        base.GetPropertyDescriptors().Concat(CanvasItemProperties).Concat(DrawingProperties).Concat(SamplingProperties).Concat(_instanceUniforms?.StoredDescriptors ?? []).Concat(InstanceParameterDescriptors(storedNames: true).Where(d => _instanceUniforms?.HasStored(d.Name[27..]) != true));
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
@@ -217,7 +217,7 @@ public abstract partial class CanvasItem : Node
             {
                 lock (_canvasItemRIDGate) { if (_canvasItemRID.IsValid()) RenderingCanvasItemRegistry.Remove(_canvasItemRID); _canvasItemRID = AttachedSkeleton = default; }
                 ServerState?.Commands?.Dispose(); ServerState = null;
-                _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null;
+                _canvasCommands?.Clear(); _meshes?.Clear(); _meshCount = 0; _multiMeshes?.Clear(); _multiMeshCount = 0; _polygons?.Clear(); _polygonCount = 0; _strokes?.Clear(); _strokePoints = []; _strokeCount = 0; _material = null; _instanceUniforms = null;
                 VisibilityChanged = null; Hidden = null; Draw = null; ItemRectChanged = null; LocalTransformChanged = null; TransformChanged = null;
             }
         }

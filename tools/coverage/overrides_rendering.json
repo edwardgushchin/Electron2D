@@ -4401,6 +4401,36 @@
       "electron2d": "method:Electron2D.RenderingServer.TextureReplace(Electron2D.RID,Electron2D.RID)",
       "state": "Partial",
       "reason": "ADRs 0028/0095: same-role ordinary/array device-wrapper replacement preserves destination resource/RID, copies borrowed image identity/path/display metadata, redirects aliases and consumes only replacement wrapper. Existing CPU-image replacement remains executable. Mixed CPU-backed/device wrapper storage replacement requires the native export/cache lifetime adapter and rejects atomically until then. Native direct/atlas/proxy and layered HLSL/GLSL tests exercise current roles. RenderingTextureRIDTests and TextureArrayRenderingTests retain CPU-backed update/replacement coverage; RenderingDeviceCanvasTests exercises the borrowed device roles."
+    },
+    {
+      "godot": "CanvasItem::method:get_instance_shader_parameter(StringName:)",
+      "electron2d": "method:Electron2D.CanvasItem.GetInstanceShaderParameter`1(System.String)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)",
+      "electron2d": "method:Electron2D.CanvasItem.SetInstanceShaderParameter`1(System.String,Nullable<T>)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_get_instance_shader_parameter(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameter`1(Electron2D.RID,System.String)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_instance_shader_parameter(RID:,StringName:,Variant:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetInstanceShaderParameter`1(Electron2D.RID,System.String,Nullable<T>)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_get_instance_shader_parameter_default_value(RID:,StringName:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameterDefaultValue`1(Electron2D.RID,System.String)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_get_instance_shader_parameter_list(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameterList(Electron2D.RID)",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger."
     }
   ],
   "statusGroups": [
@@ -5076,14 +5106,6 @@
       "godot": [
         "CanvasItem::method:draw_lcd_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:)",
         "CanvasItem::method:draw_msdf_texture_rect_region(Texture2D:,Rect2:,Rect2:,Color:,float:,float:,float:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "First per-item shader parameter interface must implement typed parameter setters/getters together with SPIR-V reflection, retained instance values, material overrides and verified GPU binding; shared material uniforms are already available but are not instance parameters.",
-      "godot": [
-        "CanvasItem::method:get_instance_shader_parameter(StringName:)",
-        "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)"
       ]
     },
     {
@@ -6153,6 +6175,48 @@
       ],
       "reason": "Requires an executable editor scene-rendering host and editor-hint ownership. No inert EditorOnly switch is exposed in the runtime slice.",
       "state": "Blocked"
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "CanvasItem::method:get_instance_shader_parameter(StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "RenderingServer::method:canvas_item_get_instance_shader_parameter(RID:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "RenderingServer::method:canvas_item_set_instance_shader_parameter(RID:,StringName:,Variant:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "RenderingServer::method:canvas_item_get_instance_shader_parameter_default_value(RID:,StringName:)"
+      ]
+    },
+    {
+      "state": "Implemented",
+      "reason": "Typed nullable scalar/vector values are owned by each CanvasItem and borrowed scene/owned retained RID. ADR 0028 reserves the std140 Instance block (maximum 16 members) separately from shared material parameters; null resets the supported zero default. Name/type validation, parent and surface material discovery, shape-aware reload, packed/file scene storage and independent ordinary/mesh/hardware-instance GPU binding execute without rerecording geometry. InstanceUniformTests and both pinned source import paths verify this slice on Linux Vulkan; foreign backend/platform gates remain explicit. Nonzero source initializers require the separate typed default metadata trigger.",
+      "godot": [
+        "RenderingServer::method:canvas_item_get_instance_shader_parameter_list(RID:)"
+      ]
     }
   ],
   "extras": [
@@ -7176,6 +7240,10 @@
       "electron2d": "property:Electron2D.CanvasTexture.HasAlpha()",
       "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
       "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.Shader.GetPropertyDescriptors()",
+      "reason": "Typed portable Shader schema persists copied compiled bytecode and borrowed sampled defaults before restoring ShaderMaterial parameters in scene archives; required by the per-item uniform storage vertical slice under ADR 0028."
     }
   ]
 }

@@ -1,6 +1,6 @@
 # ResourceFileCodecs
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 Internal/private runtime implementation. **Source:** [ResourceFileCodecs.cs](../../src/Core/IO/ResourceFileCodecs.cs).
 
@@ -19,3 +19,7 @@ ResourceArchiveTests exercises the public producer/consumer boundary, graph and 
 ## Tile integration
 
 Vector2i arrays now have a typed portable codec used by atlas tile-coordinate storage; fresh-process tile scene loading exercises cloning and decoding. See [the tile component](../components/tiles.md) for behavior and verification.
+
+Nullable uint, Vector3/4, Rect2 and integer Vector2/3/4 codecs supplement existing nullable scalar/Color/Vector2 schemas for per-item values. Remaining bool/uint/vector/matrix arrays have portable codecs for shared ShaderMaterial graph parameters. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+Byte arrays accept the shader's sixteen MiB payload budget; other arrays retain the one-million-element bound. Writers reject oversized arrays before archive publication, and byte readers reject truncated payloads before allocating their declared storage.

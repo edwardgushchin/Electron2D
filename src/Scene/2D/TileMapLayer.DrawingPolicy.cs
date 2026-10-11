@@ -5,6 +5,16 @@ public partial class TileMapLayer
     private int _renderingQuadrantSize = 16, _ySortOrigin;
     private bool _xDrawOrderReversed, _drawingDirty = true, _drawingYSorted;
     private readonly List<CanvasItem> _drawingItems = [];
+    internal ShaderProgram? FindTileInstanceProgram(string name)
+    {
+        foreach (var item in _drawingItems) if (item.InstanceProgram is { } program && program.InstanceUniforms.ContainsKey(name)) return program;
+        return null;
+    }
+    internal IEnumerable<ShaderProgram> TileInstancePrograms()
+    {
+        foreach (var item in _drawingItems) if (item.InstanceProgram is { } program) yield return program;
+    }
+
     /// <summary>Gets or sets the positive side length of rendering quadrants in cells, independently of physical quadrants.</summary>
     /// <value>16 by default. Y sorting groups cells by their sorting anchor instead of this size.</value>
     /// <exception cref="ArgumentOutOfRangeException">The value is less than one.</exception>

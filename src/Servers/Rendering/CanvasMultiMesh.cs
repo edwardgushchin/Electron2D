@@ -3,6 +3,7 @@ namespace Electron2D;
 internal sealed class CanvasMultiMesh(MultiMesh resource)
 {
     private CanvasMesh? _mesh;
+    internal Mesh? Mesh => resource.Mesh;
     internal void Set(MultiMesh value) { resource = value; }
     internal void Clear() { resource = null!; _mesh?.Clear(); }
     internal Rect2 Bounds() => resource.GetAABB();

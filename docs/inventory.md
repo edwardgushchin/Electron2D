@@ -775,6 +775,7 @@ These types stay inside Electron2D.dll. Games and editor consumers use the publi
 | [ShaderTexture](classes/ShaderTexture.md) | [ShaderProgram.cs](../src/Servers/Rendering/ShaderProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [MaterialState](classes/MaterialState.md) | [Material.cs](../src/Scene/Resources/Material.cs) | [shader-materials](components/shader-materials.md) |
 | [BuiltInShaders](classes/BuiltInShaders.md) | [BuiltInShaders.cs](../src/Servers/Rendering/BuiltInShaders.cs) | [canvas-rendering](components/canvas-rendering.md) |
+| [InstanceUniformState](classes/InstanceUniformState.md) | [InstanceUniformState.cs](../src/Servers/Rendering/InstanceUniformState.cs) | [shader-materials](components/shader-materials.md#per-item-shader-parameters) |
 | [MaterialLightingProgram](classes/MaterialLightingProgram.md) | [MaterialLightingProgram.cs](../src/Servers/Rendering/MaterialLightingProgram.cs) | [shader-materials](components/shader-materials.md) |
 | [ShaderCompiler](classes/ShaderCompiler.md) | [ShaderCompiler.cs](../src/Servers/Rendering/ShaderCompiler.cs) | [shader-materials](components/shader-materials.md) |
 | [SpirvReflection](classes/SpirvReflection.md) | [SpirvReflection.cs](../src/Servers/Rendering/SpirvReflection.cs), [boolean metadata](../src/Servers/Rendering/SpirvReflection.Booleans.cs) | [shader-materials](components/shader-materials.md) |

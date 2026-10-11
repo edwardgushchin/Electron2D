@@ -1192,3 +1192,16 @@ Layer-generated tile items use existing retained canvas grouping/material/Z/Y ro
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
 
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
+
+Static scene/retained item setters, effective getters, declaration defaults and immutable descriptor lists reuse the owner's CanvasItem state. [Per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters) records the compiled source profile and identity/thread checks.
+
+### Instance parameter operations
+
+| Method | Result |
+| --- | --- |
+| `CanvasItemSetInstanceShaderParameter<T>(RID instance, string parameter, T? value)` | Copies one override; null resets it. |
+| `CanvasItemGetInstanceShaderParameter<T>(RID instance, string parameter)` | Effective nullable value. |
+| `CanvasItemGetInstanceShaderParameterDefaultValue<T>(RID instance, string parameter)` | Declared zero default ignoring overrides, or null when absent. |
+| `CanvasItemGetInstanceShaderParameterList(RID instance)` | Immutable copied typed descriptors for effective item/surface shaders. |
+
+A live rendering session and its owner thread are required. Scene and retained item identities share state. Invalid identities and foreign sessions fail; setter capture/generated-tile ownership guards remain in force.

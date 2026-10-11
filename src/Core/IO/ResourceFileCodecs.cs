@@ -110,6 +110,13 @@ internal static class ResourceFileCodecs
         Nullable<double>();
         Nullable<Color>();
         Nullable<Vector2>();
+        Nullable<uint>();
+        Nullable<Vector3>();
+        Nullable<Vector4>();
+        Nullable<Rect2>();
+        Nullable<Vector2i>();
+        Nullable<Vector3i>();
+        Nullable<Vector4i>();
         Add<GraphConnection>((s, v) => { ResourceArchiveStrings.Write(s, v.FromNode); s.Put32(v.FromPort); ResourceArchiveStrings.Write(s, v.ToNode); s.Put32(v.ToPort); s.PutU8(v.KeepAlive ? (byte)1 : (byte)0); }, s => { var from = ResourceArchiveStrings.Read(s); var fp = s.Get32(); var to = ResourceArchiveStrings.Read(s); var tp = s.Get32(); var alive = s.GetU8(); if (alive > 1 || fp < 0 || tp < 0 || from.Length == 0 || to.Length == 0) throw new InvalidDataException("Invalid graph connection."); return new(from, fp, to, tp, alive == 1); });
         Arrays<GraphConnection>();
         Add<Dictionary<int, string>>((s, v) => { s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key)) { s.Put32(pair.Key); ResourceArchiveStrings.Write(s, pair.Value); } }, s => { var count = s.Get32(); if (count < 0 || count > 1048576) throw new InvalidDataException("Graph type-name count exceeds file budget."); var result = new Dictionary<int, string>(); for (var i = 0; i < count; i++) if (!result.TryAdd(s.Get32(), ResourceArchiveStrings.Read(s))) throw new InvalidDataException("Duplicate graph type identifier."); return result; });
@@ -122,6 +129,14 @@ internal static class ResourceFileCodecs
         Arrays<Vector2i>();
         Arrays<Color>();
         Arrays<int[]>();
+        Arrays<bool>();
+        Arrays<uint>();
+        Arrays<Vector3>();
+        Arrays<Vector4>();
+        Arrays<Rect2>();
+        Arrays<Vector3i>();
+        Arrays<Vector4i>();
+        Arrays<Transform>();
     }
     private static void Add<T>(Action<StreamPeerBuffer, T> write, Func<StreamPeerBuffer, T> read) => ResourceFileTypes.RegisterValueCodec(write, read);
     private static void Nullable<T>() where T : struct => Add<T?>((s, v) =>
@@ -137,11 +152,11 @@ internal static class ResourceFileCodecs
 );
     private static void Arrays<T>() => Add<T[]>((s, v) =>
     {
-        s.Put32(v is null ? -1 : v.Length); if (v is not null) foreach (var item in v) ResourceFileTypes.Codec<T>().Write(s, item);
+        if (v is { Length: > 0 } && v.Length > (typeof(T) == typeof(byte) ? 16777216 : 1048576)) throw new InvalidDataException("Array exceeds file budget."); s.Put32(v is null ? -1 : v.Length); if (v is not null) foreach (var item in v) ResourceFileTypes.Codec<T>().Write(s, item);
     }
 , s =>
 {
-    var count = s.Get32(); if (count == -1) return null!; if (count is < 0 or > 1048576) throw new InvalidDataException("Array exceeds file budget."); var value = new T[count]; for (var i = 0; i < count; i++) value[i] = ResourceFileTypes.Codec<T>().Read(s); return value;
+    var count = s.Get32(); if (count == -1) return null!; if (count < 0 || count > (typeof(T) == typeof(byte) ? 16777216 : 1048576)) throw new InvalidDataException("Array exceeds file budget."); if (typeof(T) == typeof(byte) && count > s.GetAvailableBytes()) throw new InvalidDataException("Truncated byte array."); var value = new T[count]; for (var i = 0; i < count; i++) value[i] = ResourceFileTypes.Codec<T>().Read(s); return value;
 }
 );
 }

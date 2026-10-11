@@ -224,3 +224,5 @@ The active GPU renderer now retains a RenderingDevice and directly samples its o
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
 
 [Shader material lighting](../components/shader-materials.md#automatic-scene-lighting) now composes user fragment colors with the existing light/contour consumers, preserving original parameters, discard, returns, instancing and blend order. Capacity overflow fails explicitly.
+
+[Per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters) now provide independent typed overrides over shared materials, including scene/server, inherited/surface mesh, hardware-instance and group consumers. Layout/type validation, source boolean metadata and scene archives use the same compiled profile.

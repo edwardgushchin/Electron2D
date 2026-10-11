@@ -67,7 +67,8 @@ public sealed partial class RenderingServer
                     fit = GrowFinite(fit, canvasGroup.FitMargin);
                     var localFit = item.Transform.AffineInverse() * fit;
                     var drawFirst = _vertices.Count; Quad(localFit, color, pixels, item.Transform);
-                    _batches.Add(new(drawFirst, 6, material?.GetCanvasState(), Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: clip));
+                    var state = material?.GetCanvasState();
+                    _batches.Add(new(drawFirst, 6, state, Blend: material?.GetCanvasBlendMode() ?? BlendMode.Mix, Clip: clip, InstanceOwner: state?.Program.HasInstanceUniforms == true ? canvasGroup : null));
                 }
                 var builtIn = active.CanvasMaterial is null;
                 for (var i = ownBatch; i < _batches.Count; i++)

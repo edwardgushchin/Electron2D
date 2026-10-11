@@ -1,6 +1,6 @@
 # ShaderProgram
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 - Declaration: `internal sealed class ShaderProgram`
 - Source: [ShaderProgram.cs](../../src/Servers/Rendering/ShaderProgram.cs)
@@ -103,3 +103,5 @@ Returns the named texture index, excluding reserved TEXTURE. Null/blank or unkno
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
 
 The immutable reflected program includes UsesScreenTexture and optional ScreenPixelSizeUniform. Descriptors/FindTexture exclude both renderer-owned texture roles; resource uniforms retain their previous behavior. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+InstanceUniforms, HasInstanceUniforms, InstanceDescriptors and CanvasInstanceDescriptors publish separate per-item layout and typed metadata. BufferSizes includes every shared/instance block under the four-slot fragment limit. The constructor also accepts SDFCoordsUniform and instanceUniforms. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

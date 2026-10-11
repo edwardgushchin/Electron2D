@@ -14,3 +14,5 @@ Retains borrowed MultiMesh and a reusable CanvasMesh. Append serializes against 
 Attached palette skin is now passed to CanvasMesh. Replay bypasses authored/rest bounds conservatively for live palette attachments so deformation into the viewport survives culling; ordinary instances keep their existing bounds/scissor checks.
 
 Owned canvas command clear/record/replay reuses that wrapper without retaining removed mesh resources; RenderingCanvasTests measures 128 combined Mesh/MultiMesh command cycles.
+
+The internal Mesh accessor supports parameter discovery from surface shaders before recording. Append forwards its canvas owner to surface/hardware batches. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

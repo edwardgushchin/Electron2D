@@ -347,7 +347,8 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
         foreach (var property in properties)
         {
             var descriptor = descriptors.FirstOrDefault(p => p.Name == property.Name && p.IsStored && !p.IsReadOnly);
-            if (descriptor is null && owner is Node node) descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType);
+            if (descriptor is null && owner is Node node) descriptor = ThemeOwner.StoredOverride(node, property.Name, property.Value.ValueType) ?? InstanceUniformState.StoredParameter(node, property.Name, property.Value.ValueType);
+            if (descriptor?.ValueType != property.Value.ValueType && owner is CanvasItem canvas) descriptor = InstanceUniformState.StoredParameter(canvas, property.Name, property.Value.ValueType) ?? descriptor;
             if (descriptor is null) throw new InvalidDataException("Stored schema has no matching descriptor.");
             if (descriptor.ValueType != property.Value.ValueType) throw new InvalidDataException("Stored property schema changed.");
             ResourceArchiveStrings.Write(stream, property.Name);
@@ -471,7 +472,7 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
         }
         else for (var i = 0; i < count; i++) LoadIdentity(i);
         // Validate scene references against prepared root metadata, independent of archive table order.
-        foreach (var i in Enumerable.Range(0, count).OrderBy(index => _resources[index] is PackedScene ? 0 : 1))
+        foreach (var i in Enumerable.Range(0, count).OrderBy(index => _resources[index] is PackedScene ? 0 : _resources[index] is Shader ? 1 : 2))
         {
             var d = _definitions[i];
             if (d.Path.Length != 0) continue;
@@ -534,7 +535,8 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
             var descriptor = descriptors.FirstOrDefault(p => p.Name == name && p.IsStored && !p.IsReadOnly);
             if (descriptor is null && owner is Node node && ResourceFileTypes.FindValueType(schema) is
                 { }
-             valueType) descriptor = ThemeOwner.StoredOverride(node, name, valueType);
+             valueType) descriptor = ThemeOwner.StoredOverride(node, name, valueType) ?? InstanceUniformState.StoredParameter(node, name, valueType);
+            if (owner is CanvasItem canvas && ResourceFileTypes.FindValueType(schema) is { } storedType && descriptor?.ValueType != storedType) descriptor = InstanceUniformState.StoredParameter(canvas, name, storedType) ?? descriptor;
             if (descriptor is null) throw new InvalidDataException("Unknown stored property.");
             if (ResourceFileTypes.ValueID(descriptor.ValueType) != schema) throw new InvalidDataException("Stored property type mismatch.");
             var size = Count(stream, ResourceArchive.Limit);

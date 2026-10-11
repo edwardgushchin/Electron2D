@@ -899,3 +899,5 @@ Scene-source cells instantiate ordinary owned-at-runtime child hierarchies throu
 ## Canvas lighting integration
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
+
+Generated tile items consume the layer's [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters), including TileData material overrides. Active generated declarations participate in typed getters/lists; server mutations of generated drawing remain layer-owned. Native InstanceUniformTests verifies values without rebuilding tile drawing.

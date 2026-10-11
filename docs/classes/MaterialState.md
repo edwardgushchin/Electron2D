@@ -1,6 +1,6 @@
 # MaterialState
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 - Declaration: `internal sealed class MaterialState`
 - Source: [Material.cs](../../src/Scene/Resources/Material.cs)
@@ -85,3 +85,5 @@ While holding the same gate used by setters, writes the supplied finite float32 
 [RenderingRuntimeTests](../../tests/Electron2D.Tests/RenderingRuntimeTests.cs), [RenderingTextureTests](../../tests/Electron2D.Tests/RenderingTextureTests.cs) and [shader import checks](../../tools/shaders/check.py) exercise the supported interface, bad inputs and resource lifecycle. GPU output is verified on Linux Wayland/Vulkan; broader shader features and other backends remain incomplete.
 
 CopyTextures leaves renderer-owned command/screen sampler slots null for native binding. PushUniforms additionally writes inverse target dimensions into SCREEN_PIXEL_SIZE under the material lock; TIME remains independent. The state owns no native backbuffer. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
+
+PushUniforms additionally accepts the owning CanvasItem. It selects reusable item bytes for Instance blocks and shared bytes for other blocks immediately before drawing; reserved renderer values remain shared engine bindings. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

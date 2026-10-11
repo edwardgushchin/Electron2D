@@ -80,6 +80,8 @@ public static partial class ResourceFileTypes
         RegisterResource("FastNoiseLite", CreateFastNoiseResource);
         RegisterResource("NoiseTexture", CreateNoiseTextureResource);
         RegisterResource("CanvasItemMaterial", CreateCanvasItemMaterialResource);
+        RegisterResource("Shader", CreateShaderFileResource);
+        RegisterResource("ShaderMaterial", CreateShaderMaterialFileResource);
         RegisterResource("CircleShape", CreateCircleFileResource);
         RegisterResource("CapsuleShape", CreateCapsuleFileResource);
         RegisterResource("SegmentShape", CreateSegmentFileResource);
@@ -91,6 +93,8 @@ public static partial class ResourceFileTypes
         ResourceFileCodecs.Prepare();
         RegisterResourceArray<Font>();
     }
+    private static Shader CreateShaderFileResource() => new();
+    private static ShaderMaterial CreateShaderMaterialFileResource() => new();
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();
     private static PointLight CreatePointLight() => new();

@@ -142,3 +142,5 @@ The built-in TileMapPattern factory and typed pattern-array codec support standa
 Portable value codec and resource registration also prepare direct per-T custom tile factories; application registrations must exist in a fresh loading process. See [custom data](../components/tiles.md#typed-custom-data).
 
 Typed tile scene references now resolve registered TileSetScenesCollectionSource graphs. Archive restoration prepares PackedScene root metadata before dependent validated resource properties; internal canvas-root validation reads stored compiled factory types without executing factories.
+
+Built-in Shader and ShaderMaterial factories now preserve compiled material graphs in scene archives. Shader payload restoration precedes shared parameter decoding. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

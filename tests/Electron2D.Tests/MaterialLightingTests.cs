@@ -12,7 +12,7 @@ internal static class MaterialLightingTests
         if (Environment.GetEnvironmentVariable("ELECTRON2D_LIGHTING_EXPORT_DIR") is { } exportDirectory) Directory.CreateDirectory(exportDirectory);
         if (Environment.GetEnvironmentVariable("ELECTRON2D_LIGHTING_COLD") == "1")
         {
-            foreach (var name in new[] { "CanvasGLSL", "CanvasHLSL", "MaterialLightGLSL", "MaterialLightHLSL", "MaterialLightNew", "MaterialLightMany" })
+            foreach (var name in new[] { "CanvasGLSL", "CanvasHLSL", "MaterialLightGLSL", "MaterialLightHLSL", "MaterialLightNew", "MaterialLightMany", "ItemUniformsGLSL", "ItemUniformsHLSL", "ItemUniformTypes" })
             { using var shader = Load(name); Export(shader, name, all: name != "MaterialLightMany"); }
             Console.WriteLine("Composed modules exported without native drawing."); return;
         }

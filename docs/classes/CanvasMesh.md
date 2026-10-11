@@ -13,3 +13,5 @@ Replay now resolves the drawing item palette once, holds owned storage against c
 ## Low-level primitive integration
 
 PrepareSkin now supplies one shared palette/basis/lease policy to ordinary mesh surfaces and low-level indexed triangles. AppendTriangleData uses existing vertex deformation, finite validation, color/UV capture and lease cleanup. See [the executable primitive contract](../components/canvas-rendering.md#low-level-primitive-commands).
+
+Surface and inherited material batches retain the drawing CanvasItem as InstanceOwner when their shader declares instance fields. Hardware MultiMesh batches use the node's one parameter set. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

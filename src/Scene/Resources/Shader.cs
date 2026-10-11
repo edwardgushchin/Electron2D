@@ -14,6 +14,9 @@ namespace Electron2D;
 /// by ProjectSettings.RenderingTimeRolloverSeconds. It continues during scene pause and is not a material parameter.
 /// Logical boolean types are retained by validated metadata in the imported SPIR-V payload. External modules may
 /// supply the same metadata; unannotated unsigned storage retains its numeric type.
+/// A fragment uniform block named Instance (type.Instance in imported HLSL) owns at most sixteen scalar/vector
+/// per-item fields. CanvasItem and RenderingServer instance access is independent of shared material values.
+/// Instance arrays, matrices and renderer-owned fields are rejected; supported declaration defaults are zero.
 /// Material uniforms use validated std140 buffers at descriptor
 /// set three and sampled 2D or image-array textures at set two. Named textures use linear/base-level/clamp sampling, independently
 /// of canvas properties. Sampler configuration, matrices other than float2x2, nested uniform structs and user vertex programs remain pending.</remarks>
@@ -176,6 +179,11 @@ public sealed partial class Shader : Resource
     {
         lock (_codeGate) { ThrowIfDisposed(); return _program; }
     }
+
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
+        [new PropertyDescriptor<Shader, byte[]>("SPIRV", shader => shader.GetSPIRV(), (shader, code) => shader.SetSPIRV(code), stored: true)])
+        .Concat(GetProgram().Textures.Where(texture => !texture.IsEngineTexture).Select(texture => texture.DescribeDefault()));
 
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new Shader();

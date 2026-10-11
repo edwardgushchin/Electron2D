@@ -102,13 +102,13 @@ void main() { gl_Position=vec4((position+uv)/frame.size,0,1); tint=color; data=c
                                      ('hlsl', 'Booleans', 'BooleansHLSL'), ('glsl', 'Booleans', 'BooleansGLSL'), ('glsl', 'BooleansReordered', 'BooleansReordered'),
                                      ('hlsl', 'Matrices', 'MatricesHLSL'), ('glsl', 'Matrices', 'MatricesGLSL'), ('glsl', 'MatricesReordered', 'MatricesReordered'),
                                      ('hlsl', 'Values', 'ValuesHLSL'), ('glsl', 'Values', 'ValuesGLSL'), ('glsl', 'ValuesReordered', 'ValuesReordered'), ('glsl', 'ValuesSigned', 'ValuesSigned'),
-                                     ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly')]:
+                                     ('hlsl', 'Time', 'TimeHLSL'), ('glsl', 'Time', 'TimeGLSL'), ('glsl', 'TimeReordered', 'TimeReordered'), ('glsl', 'TimeOnly', 'TimeOnly'), ('glsl', 'ItemUniforms', 'ItemUniformsGLSL'), ('hlsl', 'ItemUniforms', 'ItemUniformsHLSL'), ('glsl', 'ItemUniformsReordered', 'ItemUniformsReordered'), ('glsl', 'ItemUniformTypes', 'ItemUniformTypes')]:
         source = root / f'tests/Electron2D.Tests/Shaders/{stem}.frag.{language}'
         invoke(source, output)
         assert output.read_bytes() == (root / f'tests/Electron2D.Tests/Shaders/{artifact}.spv').read_bytes()
         previous = output.read_bytes()
         wrong_binding = directory / f'wrong-binding.{language}'
-        wrong_binding.write_text(source.read_text().replace('space3', 'space0').replace('set = 3', 'set = 0'))
+        wrong_binding.write_text(re.sub(r'\bset\s*=\s*3\b', 'set = 0', source.read_text().replace('space3', 'space0')))
         assert 'descriptor set' in invoke(wrong_binding, output, success=False)
         assert output.read_bytes() == previous, 'An incompatible resource interface replaced the usable artifact'
     original = (root / 'tests/Electron2D.Tests/Shaders/Material.frag.glsl').read_text()

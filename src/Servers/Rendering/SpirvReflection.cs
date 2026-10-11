@@ -38,6 +38,7 @@ internal static unsafe partial class SpirvReflection
         if (bufferCount > 4) throw new NotSupportedException("Canvas shaders support at most four uniform buffers per stage.");
         var sizes = new int[(int)bufferCount];
         var uniforms = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
+        var instanceBuffers = new HashSet<int>();
         foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)pointer, (int)bufferCount))
         {
             if (HasDecoration(compiler, resource.Id, DescriptorSet) == 0 || HasDecoration(compiler, resource.Id, Binding) == 0 ||
@@ -46,6 +47,8 @@ internal static unsafe partial class SpirvReflection
             var binding = GetDecoration(compiler, resource.Id, Binding);
             if (binding >= bufferCount || sizes[binding] != 0)
                 throw new NotSupportedException("Uniform buffer bindings must be unique and contiguous, starting at zero.");
+            var typeName = Marshal.PtrToStringUTF8(GetName(compiler, resource.BaseTypeId));
+            if (fragment && typeName is "Instance" or "type.Instance") instanceBuffers.Add((int)binding);
             var type = GetType(compiler, resource.BaseTypeId);
             if (GetArrayDimensions(GetType(compiler, resource.TypeId)) != 0)
                 throw new NotSupportedException("Arrays of uniform buffers are not supported by the canvas interface.");
@@ -193,7 +196,16 @@ internal static unsafe partial class SpirvReflection
         uniforms.Remove("TIME", out var timeUniform);
         uniforms.Remove("SCREEN_PIXEL_SIZE", out var screenPixelSizeUniform);
         uniforms.Remove("SDF_COORDS", out var sdfCoordsUniform);
-        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform);
+        var instances = new Dictionary<string, ShaderUniform>(StringComparer.Ordinal);
+        foreach (var pair in uniforms.ToArray()) if (instanceBuffers.Contains(pair.Value.Buffer))
+            {
+                if (pair.Value.ArrayLength != 0 || pair.Value.Type == typeof(Transform)) throw new NotSupportedException("Instance parameters support only scalar and vector values.");
+                instances.Add(pair.Key, pair.Value); uniforms.Remove(pair.Key);
+            }
+        if (instances.Count > 16) throw new NotSupportedException("A shader supports at most sixteen instance parameters.");
+        if (instanceBuffers.Any(b => timeUniform?.Buffer == b || screenPixelSizeUniform?.Buffer == b || sdfCoordsUniform?.Buffer == b))
+            throw new NotSupportedException("Renderer-owned uniforms cannot be declared in the Instance block.");
+        return new ShaderProgram(code, sizes, uniforms, textures, timeUniform, screenPixelSizeUniform, sdfCoordsUniform, instances);
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -248,6 +260,8 @@ internal static unsafe partial class SpirvReflection
     private static partial uint GetMemberCount(nint type);
     [LibraryImport(Library, EntryPoint = "spvc_type_get_member_type"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial uint GetMemberType(nint type, uint member);
+    [LibraryImport(Library, EntryPoint = "spvc_compiler_get_name"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
+    private static partial nint GetName(nint compiler, uint id);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_get_member_name"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]
     private static partial nint GetMemberName(nint compiler, uint type, uint member);
     [LibraryImport(Library, EntryPoint = "spvc_compiler_get_declared_struct_size"), UnmanagedCallConv(CallConvs = [typeof(CallConvCdecl)])]

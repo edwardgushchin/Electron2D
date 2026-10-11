@@ -39,3 +39,5 @@ Returns Material.Program.Code or null for the default program. The byte array is
 The complete internal constructor also carries BlendMode Blend, nullable Clip, CanvasOperation Operation, Region, Mipmaps and GroupShader fields. Draw ranges can coalesce only with Draw ranges; Copy/GroupBegin/GroupEnd preserve render boundaries and borrowed material lifetime. Zero-count control operations are valid. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 MaskShader selects the built-in final alpha mask while preserving command texture/UV/color. MaskBegin/MaskEnd/MaskFinish carry capture/finalization boundaries and fitted screen regions. Materials are borrowed; the built-in AndDraw final pass deliberately clears its material state.
+
+InstanceOwner carries the CanvasItem supplying per-item uniform buffers. Adjacent batches merge only when this owner also matches. Group/mask operations preserve it through batch rewrites. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).

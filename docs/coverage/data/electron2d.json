@@ -71711,6 +71711,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.CanvasItem.GetInstanceShaderParameter\u00601(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "GetInstanceShaderParameter",
+    "signature": "public Nullable\u003CT\u003E GetInstanceShaderParameter\u003CT\u003E(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Nullable\u003CT\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.CanvasItem.GetLocalMousePosition()",
     "kind": "method",
     "declaringType": "Electron2D.CanvasItem",
@@ -71958,6 +71977,30 @@
     "baseType": null,
     "interfaces": null,
     "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.CanvasItem.SetInstanceShaderParameter\u00601(System.String,Nullable\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.CanvasItem",
+    "name": "SetInstanceShaderParameter",
+    "signature": "public System.Void SetInstanceShaderParameter\u003CT\u003E(System.String name, Nullable\u003CT\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Nullable\u003CT\u003E",
+        "default": null
+      }
+    ],
     "returnType": "System.Void",
     "value": null
   },
@@ -137688,6 +137731,73 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameterDefaultValue\u00601(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemGetInstanceShaderParameterDefaultValue",
+    "signature": "public static Nullable\u003CT\u003E CanvasItemGetInstanceShaderParameterDefaultValue\u003CT\u003E(Electron2D.RID instance, System.String parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parameter",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Nullable\u003CT\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameterList(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemGetInstanceShaderParameterList",
+    "signature": "public static System.Collections.Generic.IReadOnlyList\u003CElectron2D.PropertyDescriptor\u003E CanvasItemGetInstanceShaderParameterList(Electron2D.RID instance)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemGetInstanceShaderParameter\u00601(Electron2D.RID,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemGetInstanceShaderParameter",
+    "signature": "public static Nullable\u003CT\u003E CanvasItemGetInstanceShaderParameter\u003CT\u003E(Electron2D.RID instance, System.String parameter)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parameter",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "Nullable\u003CT\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.CanvasItemSetClip(Electron2D.RID,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -137830,6 +137940,35 @@
       {
         "name": "index",
         "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.CanvasItemSetInstanceShaderParameter\u00601(Electron2D.RID,System.String,Nullable\u003CT\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "CanvasItemSetInstanceShaderParameter",
+    "signature": "public static System.Void CanvasItemSetInstanceShaderParameter\u003CT\u003E(Electron2D.RID instance, System.String parameter, Nullable\u003CT\u003E value)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "instance",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "parameter",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "value",
+        "type": "Nullable\u003CT\u003E",
         "default": null
       }
     ],
@@ -147893,6 +148032,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Shader.Mode",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.Shader.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.Shader",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
     "value": null
   },
   {

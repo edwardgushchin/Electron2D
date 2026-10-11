@@ -9,7 +9,7 @@ internal enum CanvasOperation { Draw, Copy, GroupBegin, GroupEnd, MaskBegin, Mas
 internal readonly record struct CanvasBatch(int First, int Count, MaterialState? Material, Texture? Texture = null,
     TextureFilter Filter = TextureFilter.Nearest,
     TextureRepeat Repeat = TextureRepeat.Disabled, int MaxAnisotropy = 1,
-    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null)
+    BlendMode Blend = BlendMode.Mix, Rect2i? Clip = null, CanvasOperation Operation = CanvasOperation.Draw, Rect2i Region = default, bool Mipmaps = false, bool GroupShader = false, bool MaskShader = false, int FirstInstance = 0, int InstanceCount = 0, CanvasLightingItem? Lighting = null, CanvasItem? InstanceOwner = null)
 {
     internal byte[]? ShaderCode => Material?.Program.Code;
 }

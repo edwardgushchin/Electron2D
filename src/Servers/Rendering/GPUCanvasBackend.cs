@@ -273,7 +273,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                 SDL.BindGPUVertexBuffers(pass, 0, new ReadOnlySpan<SDL.GPUBufferBinding>(bindings, bindingCount), (uint)bindingCount);
                 var pipeline = batch.Operation == CanvasOperation.GroupBegin ? _clearPipeline! : _pipelines[(BatchCode(batch), batch.GroupShader ? BlendMode.PremultAlpha : batch.Blend, batch.InstanceCount > 0)];
                 SDL.BindGPUGraphicsPipeline(pass, pipeline.DangerousGetHandle());
-                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting));
+                batch.Material?.PushUniforms(command, (float)time, new(1f / size.X, 1f / size.Y), SDFCoords(lighting), batch.InstanceOwner);
                 if (batch.MaskShader)
                 {
                     var inverse = new Vector4(1f / size.X, 1f / size.Y, 0, 0);
