@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-11
 
-The renderer-retained device now executes compute/image work before direct canvas consumers through TextureRD/TextureLayeredRD/TextureArrayRD and owned server wrappers. Real ordinary/atlas/proxy and HLSL/GLSL array pixels, queued snapshots, GPU conversion, lifetime/error cleanup and warmed allocation gates execute on Linux/Vulkan. Integer canvas descriptors, alternate sRGB views and renderer-managed upload/viewport export remain precise Partial dependencies; see [the device image contract](../components/local-compute.md#device-images-in-canvas).
+The renderer-retained device now executes compute/image work before direct canvas consumers through TextureRD/TextureLayeredRD/TextureArrayRD and owned server wrappers. Real ordinary/atlas/proxy and HLSL/GLSL array pixels, queued snapshots, GPU conversion, lifetime/error cleanup and warmed allocation gates execute on Linux/Vulkan. Scalar-aware integer light/mask composition, alternate sRGB views and renderer-managed upload/viewport export remain precise Partial dependencies; see [the device image contract](../components/local-compute.md#device-images-in-canvas).
 
 [Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)
 now routes resolved fields, collision-exception invalidation/synchronization and

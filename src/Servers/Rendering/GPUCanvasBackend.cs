@@ -325,12 +325,14 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         SDL.BlitGPUTexture(command, in blit);
     }
 
-    private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1)
+    private nint Sampler(TextureFilter filter, TextureRepeat repeat, int anisotropy = 1, bool integer = false)
     {
+        if (integer && (filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic || filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1)) throw new NotSupportedException("Integer canvas images require nearest filtering without anisotropy.");
+        var nearestMipmaps = integer || _nearestMipmaps;
         var anisotropic = filter >= TextureFilter.NearestWithMipmapsAnisotropic && anisotropy > 1;
         if (_relaxedAndroidDevice && anisotropic)
             throw new NotSupportedException("Anisotropic texture filtering is unavailable on this Android GPU device.");
-        var key = (filter, repeat, anisotropic ? anisotropy : 1, _nearestMipmaps);
+        var key = (filter, repeat, anisotropic ? anisotropy : 1, nearestMipmaps);
         if (!_samplers.TryGetValue(key, out var sampler))
         {
             var linear = filter is TextureFilter.Linear or TextureFilter.LinearWithMipmaps or TextureFilter.LinearWithMipmapsAnisotropic;
@@ -344,7 +346,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             {
                 MinFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
                 MagFilter = linear ? SDL.GPUFilter.Linear : SDL.GPUFilter.Nearest,
-                MipmapMode = _nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
+                MipmapMode = nearestMipmaps ? SDL.GPUSamplerMipmapMode.Nearest : SDL.GPUSamplerMipmapMode.Linear,
                 AddressModeU = address,
                 AddressModeV = address,
                 AddressModeW = SDL.GPUSamplerAddressMode.ClampToEdge,
@@ -375,7 +377,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             }
             texture = _whiteTexture;
         }
-        return new() { Texture = PrepareTexture(texture), Sampler = Sampler(batch.Filter, batch.Repeat, batch.MaxAnisotropy) };
+        var scalar = ShaderTexture.ResourcePixelType(texture);
+        if (batch.Material is { } material && material.Program.Textures[0].PixelType != scalar) throw new ArgumentException("The canvas image scalar type does not match TEXTURE.");
+        return new() { Texture = PrepareTexture(texture), Sampler = Sampler(batch.Filter, batch.Repeat, batch.MaxAnisotropy, scalar != 0) };
     }
 
     private nint PrepareTexture(Texture texture)
@@ -430,7 +434,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             for (var i = 0; i < bindings.Length; i++)
             {
                 if (material.Program.Textures[i].IsEngineTexture) continue;
-                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = Sampler(TextureFilter.Linear, TextureRepeat.Disabled) };
+                bindings[i] = new SDL.GPUTextureSamplerBinding { Texture = _textureScratch[i] is TextureLayered array ? PrepareLayeredTexture(array) : PrepareTexture((Texture)_textureScratch[i]!), Sampler = Sampler(material.Program.Textures[i].PixelType == 0 ? TextureFilter.Linear : TextureFilter.Nearest, TextureRepeat.Disabled, integer: material.Program.Textures[i].PixelType != 0) };
             }
         }
         finally { Array.Clear(_textureScratch); }

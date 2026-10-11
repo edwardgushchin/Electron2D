@@ -4388,7 +4388,7 @@
       "godot": "RenderingServer::method:texture_rd_create(RID:,int:RenderingServer.TextureLayeredType)",
       "electron2d": "method:Electron2D.RenderingServer.TextureRDCreate(Electron2D.RID,Electron2D.TextureLayered.LayeredType)",
       "state": "Partial",
-      "reason": "ADR 0028: renderer-retained owner-thread device images execute directly in canvas, atlas/proxy and HLSL/GLSL array samplers without a CPU frame bridge. Borrowed image lifetime, atomic binding/list/thread checks, native mip/layer readback, GPU floating conversion, transient archives and duplicate bindings execute. RenderingDeviceCanvasTests verifies real Linux/Vulkan pixels, queued callbacks, session/error cleanup and warmed owner-thread allocations. Integer canvas sampling still requires matching integer material descriptors/pipelines; foreign platforms and native allocations remain unverified."
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "RenderingServer::method:texture_get_rd_texture(RID:,bool:)",

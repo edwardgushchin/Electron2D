@@ -4,6 +4,8 @@ internal static class BuiltInShaders
 {
     internal static readonly byte[] Vertex = Read("Canvas.vert.spv");
     internal static readonly byte[] InstancedVertex = Read("CanvasInstanced.vert.spv");
+    internal static readonly byte[] SignedFragment = Read("CanvasSigned.frag.spv");
+    internal static readonly byte[] UnsignedFragment = Read("CanvasUnsigned.frag.spv");
     internal static readonly byte[] Fragment = Read("Canvas.frag.spv");
 
     internal static readonly byte[] SDF = Read("SDF.frag.spv");

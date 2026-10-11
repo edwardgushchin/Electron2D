@@ -175,7 +175,7 @@ public sealed class ShaderMaterial : Material
         {
             var state = RequireState();
             var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(false);
-            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            state.Program.Textures[slot].Validate(texture);
             state.Textures[slot] = texture;
         }
         EmitChanged();
@@ -205,7 +205,7 @@ public sealed class ShaderMaterial : Material
         lock (_gate)
         {
             var state = RequireState(); var slot = state.Program.FindTexture(name); state.Program.Textures[slot].RequireShape(true);
-            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            state.Program.Textures[slot].Validate(texture);
             state.Textures[slot] = texture;
         }
         EmitChanged();
@@ -319,7 +319,7 @@ internal sealed class MaterialState
                 }
         for (var i = 0; i < Textures.Length; i++)
             for (var j = 0; j < previous.Textures.Length; j++)
-                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].IsArray == previous.Program.Textures[j].IsArray) Textures[i] = previous.Textures[j];
+                if (program.Textures[i].Name == previous.Program.Textures[j].Name && program.Textures[i].SameType(previous.Program.Textures[j])) Textures[i] = previous.Textures[j];
     }
 
     internal void CopyTextures(Span<Resource?> target)

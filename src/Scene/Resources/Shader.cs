@@ -65,7 +65,7 @@ public sealed partial class Shader : Resource
         {
             ThrowIfDisposed(); _program = program;
             foreach (var entry in _defaultTextures)
-                if (!program.Textures.Any(t => !t.IsEngineTexture && t.Name == entry.Key && t.IsArray == (entry.Value is TextureLayered))) _defaultTextures.Remove(entry.Key);
+                if (!program.Textures.Any(t => !t.IsEngineTexture && t.Name == entry.Key && t.IsArray == (entry.Value is TextureLayered) && t.PixelType == ShaderTexture.ResourcePixelType(entry.Value))) _defaultTextures.Remove(entry.Key);
         }
         EmitChanged();
     }
@@ -78,7 +78,7 @@ public sealed partial class Shader : Resource
     /// <summary>Returns typed material property descriptors for this program's reflected uniforms.</summary>
     /// <returns>An immutable list with case-sensitive member names. Float4 values use Vector4 descriptors;
     /// material access also accepts Color and Rect2. Float2x2 uses Transform with an identity revert value. Float3 uses Vector3; material access also accepts Color with alpha one on read. Signed/unsigned integer vectors
-    /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed arrays use array-valued descriptors; sampled images use Texture or TextureLayered descriptors.
+    /// use Vector2i, Vector3i or Vector4i with preserved component bits. Logical bool uses bool; boolean vectors use int component masks. Fixed arrays use array-valued descriptors; sampled images use Texture or TextureLayered descriptors matched by array role and float/signed/unsigned scalar type.
     /// The built-in command TEXTURE and render TIME are omitted.</returns>
     /// <remarks>Descriptors access ShaderMaterial values through its typed parameter methods. Buffer padding and
     /// resource handles remain internal. The returned list describes this program version and does not change after reload.</remarks>
@@ -100,7 +100,7 @@ public sealed partial class Shader : Resource
             ThrowIfDisposed();
             if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
             _program.Textures[_program.FindTexture(name)].RequireShape(false);
-            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            _program.Textures[_program.FindTexture(name)].Validate(texture);
             if (texture is null) _defaultTextures.Remove(name); else _defaultTextures[name] = texture;
         }
         EmitChanged();
@@ -128,7 +128,7 @@ public sealed partial class Shader : Resource
     /// <param name="name">The exact reflected array sampler name.</param>
     /// <param name="texture">A live array resource, or null to clear its default.</param>
     /// <param name="index">Zero; descriptor binding arrays are not integrated.</param>
-    /// <remarks>Material overrides take precedence. Ownership remains with the caller; Changed follows mutation.</remarks>
+    /// <remarks>Material overrides take precedence. Ownership remains with the caller; Changed follows mutation. Sampling scalar type and array role must match the reflected shader; reload drops incompatible bindings.</remarks>
     /// <exception cref="ArgumentException">The parameter is not a layered sampler.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The index is not zero.</exception>
     /// <exception cref="ObjectDisposedException">The shader or resource is disposed.</exception>
@@ -138,7 +138,7 @@ public sealed partial class Shader : Resource
         {
             ThrowIfDisposed(); if (index != 0) throw new ArgumentOutOfRangeException(nameof(index));
             _program.Textures[_program.FindTexture(name)].RequireShape(true);
-            if (texture is { IsDisposed: true }) throw new ObjectDisposedException(nameof(texture));
+            _program.Textures[_program.FindTexture(name)].Validate(texture);
             if (texture is null) _defaultTextures.Remove(name); else _defaultTextures[name] = texture;
         }
         EmitChanged();

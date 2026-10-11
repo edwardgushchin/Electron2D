@@ -87,7 +87,7 @@ internal static unsafe class ShaderCompiler
                     var r = metadata.ResourceInfo;
                     if (r.NumSamplers != program.Textures.Length || r.NumStorageTextures != 0 || r.NumStorageBuffers != 0 ||
                         r.NumUniformBuffers != program.BufferSizes.Length || !fragment && r.NumUniformBuffers != 1)
-                        throw new NotSupportedException("The reflected resources do not match the canvas stage interface.");
+                        throw new NotSupportedException($"The reflected resources do not match the canvas stage interface (samplers={r.NumSamplers}/{program.Textures.Length}, storage images={r.NumStorageTextures}, buffers={r.NumStorageBuffers}, uniforms={r.NumUniformBuffers}/{program.BufferSizes.Length}).");
                     if (metadata.NumInputs > (fragment ? 3 : 7) || (fragment ? metadata.NumOutputs != 1 : metadata.NumOutputs is < 2 or > 3))
                         throw new NotSupportedException("Canvas shaders use color at zero, UV at one, optional instance data at two and one fragment color output.");
                     if (fragment) ValidateVaryings(metadata.Inputs, metadata.NumInputs);

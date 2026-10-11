@@ -649,7 +649,7 @@ def main():
         device_rows = pages[CLASS_PAGES / f"{resource}.md"].splitlines()
         declaration = next(row for row in device_rows if row.startswith("| [`class "))
         assert f"Electron2D.{target}" in declaration and " | Partial | " in declaration
-        assert "Integer canvas sampling" in declaration and "RenderingDeviceCanvasTests" in declaration
+        assert "scalar-aware composition" in declaration and "IntegerCanvasTests" in declaration
     inverse_image = next(row for row in rendering_rows if "method texture_get_rd_texture(" in row)
     assert " | Partial | " in inverse_image and "borrowed native allocation lifetime" in inverse_image
 
