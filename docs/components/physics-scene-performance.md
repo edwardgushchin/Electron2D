@@ -79,3 +79,23 @@ ELECTRON2D_TEST_PHYSICS_PERFORMANCE=1 ELECTRON2D_PHYSICS_PERFORMANCE_COUNT=1536 
 Use count 4096 and samples 256 for the second trial; all other physical settings stay the same. Backend cpu/gpu selects one explicit implementation; both is the default. The former CPU-only native-state/profile probe is replaced by this shared public-state protocol.
 
 Ignored evidence is in bin/physics-scene-pipeline/2026-10-11: original smoke, allocation-phases, allocation-growth, fixed-smoke, rejected exact-publication diagnostics, final-validated/1536 and /4096, revision-before/after JSON, host inventory and verification logs. Each final run records its exact command/environment/exit and binary/source fingerprints; both paired processes returned zero. Public backend registration and complete custom algorithms, repeatable ordinary-scene GPU advantage, native allocator accounting, other platforms and final real-window/network performance remain open under ADR 0054 and ADR 0103.
+
+## Adaptive proposal batches, 2026-10-11
+
+A controlled comparison based on main `89d6c24a` changes only the initial contact proposal budget from previous completed rounds plus four (minimum eight) to plus one (minimum four). Unfinished graphs still extend by sixteen and retain the same completion/conflict checks, 32-color/64-round fallback, contact rows and sixteen solver sweeps. The benchmark additionally reports final color/round counts and cumulative fallbacks; these final counts are diagnostics rather than sample distributions.
+
+The same 1536-body workload above ran with 1600 warmup and 1024 measured frames. One control and two candidate paired trials returned zero; executable hashes stayed unchanged during each run and five-second process samples found no other build/test processes. These are sequential desktop trials with scheduling variability, not an isolated statistical experiment.
+
+| Trial | CPU p50 / p95 / p99, ms | GPU p50 / p95 / p99, ms | GPU submissions per tick | Owner / all-thread bytes |
+| --- | --- | --- | ---: | --- |
+| Original budget control | 7.0722 / 9.1946 / 11.5407 | 10.5366 / 12.4585 / 13.3977 | 19 | 0 / 0 |
+| Adaptive budget | 7.0024 / 8.0185 / 8.5251 | 10.0061 / 11.6528 / 12.4242 | 19.1895 | 0 / 0 |
+| Adaptive repeat | 6.8748 / 7.9657 / 8.6419 | 10.2630 / 12.0836 / 13.0053 | 19.1631 | 0 / 0 |
+
+GPU mean frame times were 10.6297 ms for the control and 10.0991/10.3902 ms for the candidates. Median summed device waits were 3.9664 ms and 3.8414/4.0310 ms. All three uploaded 24,856 bytes per tick; readback was 1,113,184 bytes for the control and 1,113,211.3/1,113,207.5 bytes for the candidates. The extra status reads account for the slight traffic increase; full observed motion/field/contact publication remains required by this workload.
+
+The candidate GPU medians were 2.6–5.0 percent below the control in these trials. More frequent completion checks can add a status fence for a growing graph; the measured submission count records that cost. Both candidates retained zero fallbacks in this workload, all physical/publication gates and 0/0 warm managed bytes. Their maximum pair penetration was .154352/.131744 and wall escape .125427/.105042 scene units against the unchanged .601 limit. No cross-backend trajectory equality was required.
+
+Resident solver checks also passed the 16,384-body dirty-scratch initialization, momentum/energy/material/ray/joint checks, changing 64/257-support fallback graph and 4096/65,536-body contact workloads. This does not establish GPU advantage over CPU: the full monitored scene still costs more on GPU, and a rendered-window comparison was not run for this change. The wider numerical-extension/network/platform acceptance remains open.
+
+Ignored evidence is in `bin/physics-scene-pipeline/2026-10-11/adaptive-color-rounds`: `control`, `paired`, `repeat`, source diff/hash and solver logs. A prior trial overlapping rendering integration is diagnostic only and is excluded from this comparison.

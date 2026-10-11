@@ -298,7 +298,7 @@ prepared constraints on device, verifies that a color has no shared dynamic body
 and dispatches independent ranges in sequence. Coupled joint rows follow each sweep.
 Color overflow retains all constraints on the GPU Jacobi path. ContactColorCount,
 ContactColorRounds and ContactColorFallbacks are internal diagnostics. Derived
-schedule scratch is rebuilt after checkpoint restore and has no public identity.
+schedule scratch is rebuilt after checkpoint restore and has no public identity. Proposal batches use the prior completed round count plus one (minimum four), extend unfinished graphs in batches of sixteen and retain the existing 32-color/64-round fallback.
 
 Colored solving packs coefficients/impulses by color and velocity/correction/mass/
 surface data into 48-byte body records. Joints consume those current velocities;

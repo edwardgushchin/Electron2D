@@ -36,7 +36,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         UploadSpatial(copy, _colorStatus!, 0, 16); SDL.EndGPUCopyPass(copy);
         ColorPass(command, 0, _highWater, 0); ColorPass(command, 1, ContactPointCount, 0); ColorPass(command, 7, 32, 0);
         // shortcut: 32 colors/64 rounds use complete Jacobi on overflow; enlarge the schedule if high-degree workloads need colored convergence.
-        var limit = (uint)Math.Clamp(ContactColorRounds + 4, 8, 64); var round = 0u;
+        var limit = (uint)Math.Clamp(ContactColorRounds + 1, 4, 64); var round = 0u;
         while (true)
         {
             for (; round < limit; round++)

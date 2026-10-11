@@ -37,8 +37,15 @@ whole constraint batch uses the complete GPU Jacobi update/gather path; no conta
 are truncated and no CPU solve is substituted. The 64/257-support checks exercise
 that high-degree path. Improving convergence for overflowing graphs remains open.
 
-The next round budget starts near the previous completed round count. If incomplete,
-the same graph continues for more rounds; it is not reset or physically replayed.
+Proposal batches start with the previous completed round count plus one, bounded
+to 4 through 64 rounds. A device-confirmed unfinished batch extends by sixteen
+rounds until completion or the existing limit. This reduces commands for rounds
+that would do no work after completion; it does not accept an incomplete graph,
+change configured solver sweeps or discard contact rows. Graph growth may add a
+status fence, measured by the complete scene benchmark. Its JSON records final
+color/round counts and cumulative fallbacks separately from frame timing.
+
+An unfinished graph continues without resetting or physically replaying it.
 Derived colors, owners, buckets and order are rebuilt from current constraints and
 are not physical checkpoint state. Generation, geometry and contact-history guards
 remain in preparation. Owner-thread and failed-world lifetimes are unchanged.
