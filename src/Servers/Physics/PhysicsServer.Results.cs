@@ -2,7 +2,7 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space, long Attachment) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false)
+    internal (CollisionObject? Scene, ObjectIdentity Identity, PhysicsSpace? Space, long Attachment) CaptureResultCollider(RID collider, int shapeIndex, bool bodyOnly = false, bool contactResult = false)
     {
         ThrowIfDisposed();
         var scene = ResolveSceneObject(collider);
@@ -13,7 +13,7 @@ public sealed partial class PhysicsServer
                 if (_serverColliders.TryGetValue(collider, out var server)) area = server.IsArea;
         }
         if (bodyOnly && area) throw new ArgumentException("Motion results require a body collider.", nameof(collider));
-        var owners = ShapeOwners(collider, area);
+        var owners = ShapeOwners(collider, area, contactResult: contactResult);
         var count = owners.Scene?.ShapeSlots.Count ?? owners.Server!.ShapeCount;
         if ((uint)shapeIndex >= (uint)count) throw new ArgumentOutOfRangeException(nameof(shapeIndex));
         var shape = owners.Scene?.GlobalShapeSlot(shapeIndex).Shape ?? owners.Server!.GetShape(shapeIndex).Geometry;

@@ -980,3 +980,7 @@ The internal [PhysicsBackendRegistry](../classes/PhysicsBackendRegistry.md) now 
 ## Selected shape-pair operations
 
 [Resource and body-slot pairs](physics-shape-pairs.md) now execute through selected owners, preserve original resource geometry/disabled logical indices and compose authored slot poses with current body poses. Nested staging validates counts and finite output before caller mutation. GPU scalar pose demand now uses a sixteen-byte gather plus eight-byte status; no complete solved-state mirror is added. Borrowed body/Area release rejects before registry cleanup. Public server-extension declarations and custom algorithms remain open.
+
+## Selected contact publication
+
+[Factory contact hooks](physics-body-extensions.md#selected-contact-publication) now determine real scene monitor contacts and raw callback snapshots. CPU workers only capture native input; the owner projects complete validated immutable output. Cached contact getters preserve that output through later association/geometry edits, and user projection failures isolate the receiver without replaying or poisoning a completed GPU step. The full public registered server/algorithm family remains open.

@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -85,8 +85,21 @@ interception would leave scene behavior and direct queries outside the extension
   implementations ship. Every inherited public operation must reach its typed hook,
   with the same guarded context, result validation and nested exclusion lifetime.
   The view owns no body/world and does not replace the cached built-in view. Body contexts are qualified by attachment generation and cannot revive on reentry.
-  This executes the caller-created view capability; factory-returned scene/server
-  integration and the wider server/custom-geometry families remain open. The complete contact getter family may project one immutable PhysicsBodyContact hook result: its engine-validated construction samples RID/shape/object identity once, so retained contact values survive later geometry/association changes without trusting forged IDs.
+  This executes the caller-created view capability. Internal selected factories
+  supply scene/server integration views; public registered factories and the wider
+  server/custom-geometry families remain open. The complete contact getter family may project one immutable PhysicsBodyContact hook result: its engine-validated construction samples RID/shape/object identity once, so retained contact values survive later geometry/association changes without trusting forged IDs.
+- A factory-returned cached body extension supplies its contact count/values during
+  owner-thread publication after native solver/worker capture completes. The engine
+  validates and commits a complete immutable contact snapshot before scene monitors
+  and user callbacks. Later cached getters project that snapshot without reinvoking
+  contact hooks or resampling associations; uncached caller-created views retain
+  their ordinary direct hook dispatch. Count assignment and replay restore keep
+  their established snapshot semantics. A qualified engine-only publication scope
+  permits PhysicsBodyContact identity construction, not general solver queries,
+  state mutation or hierarchy/lifetime changes. One bad contact receiver retains
+  its prior published snapshot and contributes an aggregated callback error while
+  other receivers and the already committed solver tick continue. Native device
+  or solver failures keep their existing terminal policy.
 - Map raw output pointers to typed spans/values using the existing query/motion
   result family. Provide the complete construction/projection path required by
   backend authors. The library samples object associations and validates physical

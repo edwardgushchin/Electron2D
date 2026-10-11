@@ -105,9 +105,13 @@ public partial class RigidBody
 
     internal void CollectContacts(PhysicsDirectBodyState state)
     {
-        _shapePairs.Begin();
         state.BeginContactSnapshot();
         if (HasBackend) state.CaptureContacts();
+        if (state is not PhysicsDirectBodyStateExtension) PublishContactMonitor(state);
+    }
+    internal void PublishContactMonitor(PhysicsDirectBodyState state)
+    {
+        _shapePairs.Begin();
         if (_contactMonitor)
             foreach (ref readonly var contact in state.CapturedContacts)
                 _shapePairs.Observe(new(contact.Collider, contact.Identity, false, contact.ColliderShape, contact.LocalShape));

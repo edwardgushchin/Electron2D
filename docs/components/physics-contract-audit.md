@@ -429,3 +429,7 @@ The pinned manager's two methods and server extension's 140 methods have no depr
 The pinned native body-pair implementation composes body and requested logical-slot poses and delegates to resource collision, including disabled geometry; it does not require a world. Both selected Electron2D owners now execute this typed internal family with real scene/raw/detached inputs, nested staging and validated output. GPU scalar pose demand gathers sixteen pose bytes plus eight status bytes rather than a full sixty-four-byte state record. A borrowed body/Area FreeRID now rejects before cleanup can retire its registry entry. Public manager/server-extension and custom geometry declarations stay open.
 
 The pinned native contact-depth-threshold setter is inert and its getter returns zero, but the abstract/extension header declares both methods without deprecation. That does not authorize an inert public mirror under ADR 0004: their useful typed extension contract remains to be resolved in the complete public family.
+
+## Selected contact publication prerequisite, 2026-10-11
+
+Factory-provided body contact hooks now execute on the owner after native worker capture, and their validated immutable output reaches scene monitors and raw callbacks. Cached reads do not rerun or double-transform hooks or resample later associations. Failure/stale/count/value guards isolate receivers while preserving solver commits and later callback delivery. This closes an internal publication integration gap; the full public manager/server-extension/custom algorithm census remains open.

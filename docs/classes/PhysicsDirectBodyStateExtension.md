@@ -1,6 +1,6 @@
 # PhysicsDirectBodyStateExtension
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState` · **Inherits:** [PhysicsDirectBodyState](PhysicsDirectBodyState.md) · **Component:** [Body-state extensions](../components/physics-body-extensions.md)
 
@@ -309,4 +309,8 @@ Return the complete immutable captured contact at the supplied zero-based index.
 
 The separate consumer exercises every hook through actual inherited API on CPU/GPU and CPU without display/GPU access. It verifies real force/contact/motion, .001 physical velocity/force tolerances, exact identities/snapshot values, invalid input/output, nesting/failure, release/binding/hierarchy/checkpoint/step guards, cached-view disposal, off-owner access, raw/scene transfer/reentry/free and previous-generation contacts. Full unchanged operation cycles warm for at least one second before 64 measured cycles with strict zero owner/all-thread managed bytes.
 
-Registered backend factories do not yet provide these views to scene/server integration callbacks; class coverage stays Partial. Custom Shape and full server backend registration/operation remain open. Native allocation, foreign-platform and new full-step/window-performance acceptance are separate gates under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+Internal selected factories now provide these views to scene/server integration callbacks. Public registered factories remain absent; class coverage stays Partial. Custom Shape and full server backend registration/operation remain open. Native allocation, foreign-platform and new full-step/window-performance acceptance are separate gates under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+## Factory contact publication
+
+A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.

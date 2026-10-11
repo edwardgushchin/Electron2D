@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Retains immutable solved body-contact values with engine-sampled weak collider identity.</summary>
 /// <remarks>Construct while both bodies and their logical slots are live in the same world. Values and sampled IDs
 /// survive later shape edits, rebinds or collider release; the weak object target expires on disposal or collection.
-/// Positions, normals and velocities use global axes. Local identifies this body, not a coordinate system.</remarks>
+/// Positions, normals and velocities use global axes. Local identifies this body, not a coordinate system.
+/// Construction also runs inside an engine-qualified selected contact-publication hook after solving;
+/// this grants only immutable contact identity capture, while ordinary solver queries and state mutation remain forbidden.</remarks>
 public readonly struct PhysicsBodyContact
 {
     /// <summary>Captures validated logical identities and finite scene-unit contact values.</summary>
@@ -27,13 +29,21 @@ public readonly struct PhysicsBodyContact
         if (!localPosition.IsFinite() || !colliderPosition.IsFinite() || !normal.IsFinite() || !localVelocity.IsFinite() ||
             !colliderVelocity.IsFinite() || !impulse.IsFinite()) throw new ArgumentOutOfRangeException(nameof(localPosition));
         if (body == collider) throw new ArgumentException("A body contact requires a distinct collider.", nameof(collider));
-        var first = PhysicsServer.Service.CaptureResultCollider(body, localShape, bodyOnly: true);
-        var second = PhysicsServer.Service.CaptureResultCollider(collider, colliderShape, bodyOnly: true);
+        var first = PhysicsServer.Service.CaptureResultCollider(body, localShape, bodyOnly: true, contactResult: true);
+        var second = PhysicsServer.Service.CaptureResultCollider(collider, colliderShape, bodyOnly: true, contactResult: true);
         if (first.Space is null || !ReferenceEquals(first.Space, second.Space))
             throw new ArgumentException("Body contact identities require one live shared physics world.", nameof(collider));
         BodyRID = body; BodyAttachment = first.Attachment; LocalShape = localShape; ColliderRID = collider; ColliderShape = colliderShape; Identity = second.Identity;
         LocalPosition = localPosition; ColliderPosition = colliderPosition; Normal = normal; LocalVelocity = localVelocity;
         ColliderVelocity = colliderVelocity; Impulse = impulse;
+        ColliderOwner = second.Scene?.Backend.SceneOwnerReference;
+    }
+    internal PhysicsBodyContact(RID body, long attachment, in PhysicsDirectBodyState.Contact contact)
+    {
+        BodyRID = body; BodyAttachment = attachment; LocalShape = contact.LocalShape;
+        ColliderRID = contact.Collider; ColliderShape = contact.ColliderShape; Identity = contact.Identity; ColliderOwner = contact.ColliderOwner;
+        LocalPosition = contact.LocalPoint; ColliderPosition = contact.ColliderPoint; Normal = contact.Normal;
+        LocalVelocity = contact.LocalVelocity; ColliderVelocity = contact.ColliderVelocity; Impulse = contact.Impulse;
     }
     /// <summary>Gets the observed body identity.</summary>
     /// <value>The sampled physical RID.</value>
@@ -54,6 +64,7 @@ public readonly struct PhysicsBodyContact
     /// <value>The sampled object, or null after disposal/collection or when unassigned.</value>
     public ElectronObject? ColliderObject => Identity.Target;
     internal ObjectIdentity Identity { get; }
+    internal WeakReference<CollisionObject>? ColliderOwner { get; }
     internal long BodyAttachment { get; }
     /// <summary>Gets this body's global contact position.</summary>
     /// <value>The finite point in scene units.</value>

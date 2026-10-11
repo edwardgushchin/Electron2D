@@ -107,3 +107,7 @@ ApplyBeforeStep now owns only common contact-reporting, role/activity gates and 
 ## Selected fields, exceptions and portable observation
 
 PublishFields validates complete immutable [PhysicsBodyFields](PhysicsBodyFields.md) values before assignment. It borrows body/world lifetime and rejects recursion or nonfinite fields. Completed-step publication uses a separate owner-only solved phase while public queries remain closed.
+
+## Factory contact publication
+
+A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.

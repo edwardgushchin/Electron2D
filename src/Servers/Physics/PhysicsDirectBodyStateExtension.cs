@@ -4,6 +4,9 @@ namespace Electron2D;
 /// <remarks>Inherited public operations validate inputs and dispatch typed hooks on the bound world owner outside solving.
 /// Binding is qualified by attachment generation and never revives after detach/reentry. Contact hooks return immutable
 /// engine-validated snapshots; caller-created views do not replace the server's cached built-in view. Hook nesting is allowed.
+/// Factory-returned cached views project contact hooks on the owner after native capture and retain immutable published contact values.
+/// Cached contact getters do not reinvoke those hooks; independent caller-created views dispatch directly.
+/// Contact result construction is allowed during that read-only publication phase; general solver queries and mutation still reject.
 /// View/body/world release, attachment transfer, active recursive stepping and checkpoints reject while a hook is borrowed.
 /// Library dispatch allocates no warmed managed memory; user code retains responsibility for physical algorithms and its allocations.</remarks>
 public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBodyState
@@ -71,13 +74,36 @@ public abstract partial class PhysicsDirectBodyStateExtension : PhysicsDirectBod
         if (value is null) throw new InvalidOperationException("A body-state hook returned no space view.");
         value.EnsureContext(Space); return value;
     }
-    internal PhysicsBodyContact ReadContact(int index) => Read(index, static (owner, index) =>
+    internal PhysicsBodyContact ReadContact(int index)
     {
-        var count = owner.ResultContactCount(owner.GetContactCountCore());
-        if ((uint)index >= (uint)count) throw new ArgumentOutOfRangeException(nameof(index));
-        var contact = owner.GetContactCore(index);
-        if (contact.BodyRID != owner.Runtime.RID || contact.BodyAttachment != owner.Runtime.Backend.AttachmentVersion || !contact.ColliderRID.IsValid())
+        if (TryGetPublishedContact(index, out var snapshot)) return snapshot;
+        return Read(index, static (owner, index) =>
+        {
+            var count = owner.ResultContactCount(owner.GetContactCountCore());
+            if ((uint)index >= (uint)count) throw new ArgumentOutOfRangeException(nameof(index));
+            return owner.ResultContact(owner.GetContactCore(index));
+        });
+    }
+    private PhysicsBodyContact ResultContact(PhysicsBodyContact contact)
+    {
+        if (contact.BodyRID != Runtime.RID || contact.BodyAttachment != Runtime.Backend.AttachmentVersion || !contact.ColliderRID.IsValid())
             throw new InvalidOperationException("A body-state hook returned an invalid observed-body contact identity.");
         return contact;
-    });
+    }
+    internal int ProjectContacts(Span<Contact> output)
+    {
+        var count = ResultContactCount(GetContactCountCore());
+        if (count > output.Length) throw new InvalidOperationException("A contact hook exceeded prepared publication storage.");
+        var native = CapturedContacts;
+        for (var index = 0; index < count; index++)
+        {
+            var contact = ResultContact(GetContactCore(index));
+            var depth = index < native.Length && native[index].Collider == contact.ColliderRID && native[index].LocalShape == contact.LocalShape &&
+                native[index].ColliderShape == contact.ColliderShape ? native[index].Depth : 0;
+            output[index] = new(contact.ColliderRID, contact.ColliderID, contact.LocalShape, contact.ColliderShape,
+                contact.LocalPosition, contact.ColliderPosition, contact.Normal, contact.LocalVelocity, contact.ColliderVelocity,
+                contact.Impulse, depth, contact.ColliderOwner, contact.Identity);
+        }
+        return count;
+    }
 }

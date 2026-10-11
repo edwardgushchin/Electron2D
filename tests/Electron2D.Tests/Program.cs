@@ -11,6 +11,7 @@ using EngineTimer = Electron2D.Timer;
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_BACKEND") is { } areaBackend) { PhysicsAreaBackendTests.Run(areaBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SHAPE_PAIRS") is { } pairBackend) { PhysicsBackendOwnershipTests.ShapePairs(pairBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTACT_PUBLICATION") is { } contactBackend) { PhysicsBackendOwnershipTests.ContactPublication(contactBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BODY_TRANSFORMS") is { } transformBackend) { PhysicsBodyTransformTests.Run(transformBackend == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_BACKEND_OWNERSHIP") is { } ownershipBackend)
 {

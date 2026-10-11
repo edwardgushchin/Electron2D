@@ -1,6 +1,6 @@
 # RigidBody
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Inherits:** [PhysicsBody](PhysicsBody.md), [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -265,3 +265,7 @@ separates verified motion/lifetime/allocation cases from remaining physics cover
 MaxContactsReported assignment immediately synchronizes live reporting eligibility.
 A positive cap exposes a frozen Kinematic body as active before another step;
 contact membership and monitor events still refresh after the next completed step.
+
+## Factory contact publication
+
+A factory-returned cached body extension now projects its contact count/values on the world owner after native capture and before scene/raw observer delivery. Complete validated snapshots commit atomically; cached getters retain immutable data and do not reinvoke contact hooks. Independent caller-created views keep ordinary guarded direct hook dispatch. Qualified publication permits immutable PhysicsBodyContact identity construction while ordinary solver queries/mutation stay blocked. Bad receivers retain their prior published state while other callbacks and committed ticks continue. [The executing contract and verification](../components/physics-body-extensions.md#selected-contact-publication) retain public registration/native/platform/performance limits.
