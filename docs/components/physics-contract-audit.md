@@ -503,6 +503,14 @@ Registered [collider metadata](physics-registered-adapter.md#initial-collider-me
 
 [Integration/contact policy](physics-registered-adapter.md#integration-and-contact-publication-policy) now verifies omission, callbacks, contact caps and scene numerical guards with one public-only consumer on CPU/GPU/independent implementations. Six extension rows are Partial; full numerical and final performance acceptance stay open.
 
-The pinned contact-depth-threshold pair has no deprecated XML metadata, but its [built-in server implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp#L931) validates the body, ignores the assigned threshold and returns zero. This is not evidence of a working filter. The two extension rows remain open pending an explicit applicable typed decision; no inert public switch was added.
+The pinned contact-depth-threshold pair has no deprecated XML metadata, but its [built-in server implementation](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp#L931) validates the body, ignores the assigned threshold and returns zero. This is not evidence of a working filter. The two extension rows remain open pending an explicit applicable typed decision; no inert public switch was added. A fresh pinned-source check also confirms that the plain [ClassDB server bindings](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/physics_2d/physics_server_2d.cpp) register neither operation, while the [extension header](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/physics_2d/physics_server_2d_extension.h#L378) retains both virtual hooks. This evidence does not authorize an invented filter or a zero-result public mirror. The existing rows stay Unimplemented until a useful, bounded typed dispatch contract is resolved.
 
 [Window checks at 567be307](physics-current-performance.md#window-checks-at-567be307) pass ordinary, NaN-filled and finite-nonzero buffer sequences with real rendered captures, 16,384 active bodies and zero warm physics/frame managed bytes. The resident first-step check now covers both dirty patterns. Sustained 60 Hz, native allocations, full scene-window/network performance and the earlier uninstrumented failure cause remain open.
+
+
+[Scoped scene/window allocation](physics-scene-performance.md#physics-and-native-event-allocation-boundaries)
+now separates complete PhysicsFrame memory from native input, pose publication,
+idle and render memory. Deterministic native mouse input reproduces 320 bytes per
+event outside physics on CPU/GPU; these bytes remain in the full-window report.
+The earlier aggregate rejection does not establish a physical-step allocation.
+Physical invariants, observer quality and the zero-byte physical gate remain unchanged.

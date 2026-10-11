@@ -5,6 +5,8 @@ Last updated: 2026-10-11
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual
 image and instance validation, reported VSync and zero warmed managed-byte checks.
+Complete PhysicsFrame zero-allocation is gated separately from native input/window
+bytes; deterministic mouse events retain their reported 320-byte pump cost.
 The fixed-frame host is separate from real-time catch-up scheduling; numerical,
 network and final performance acceptance retain their stated limits.
 

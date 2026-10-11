@@ -12,10 +12,15 @@ internal static partial class PhysicsPipelinePerformance
         private readonly MultiMesh _instances = new() { UseColors = true };
         private readonly float[] _current, _previous;
         private readonly float _scale;
+        private readonly uint _windowID;
+        internal bool InjectInput { get; } = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_INJECT_INPUT") == "1";
         internal Window Window { get; }
         internal string VSync { get; private set; } = "";
         internal double PublishMS { get; private set; }
         internal double RenderMS { get; private set; }
+        internal long PublishOwnerBytes { get; private set; }
+        internal long ProcessOwnerBytes { get; private set; }
+        internal long RenderOwnerBytes { get; private set; }
 
         internal SceneDisplay(World world, int count, float bottom)
         {
@@ -32,6 +37,9 @@ internal static partial class PhysicsPipelinePerformance
             {
                 ProjectSettings.Set(ProjectSettings.RenderingMethod, "gpu"); ProjectSettings.Set(ProjectSettings.RenderingFallback, false);
                 Window.OpenNative();
+                var windows = SDL3.SDL.GetWindows(out var windowCount);
+                Check(windowCount == 1 && windows is { Length: 1 }, "The scene host owns one native window");
+                _windowID = SDL3.SDL.GetWindowID(windows![0]);
                 Check(RenderingServer.GetCurrentRenderingMethod() == "gpu", "The monitored scene opens a real GPU-rendered window for either physics backend");
                 DisplayServer.WindowSetVSyncMode(DisplayServer.VSyncMode.Disabled); VSync = DisplayServer.WindowGetVSyncMode().ToString();
                 RenderingServer.SetDefaultClearColor(new(.145f, .105f, .16f));
@@ -47,11 +55,19 @@ internal static partial class PhysicsPipelinePerformance
         }
 
         internal void Pump(SceneTree tree)
-        { Window.PumpEvents(); Check(!tree.QuitRequested, "The native window was not closed before measurement completed"); }
+        {
+            if (InjectInput)
+            {
+                var input = new SDL3.SDL.Event { Motion = new SDL3.SDL.MouseMotionEvent { Type = SDL3.SDL.EventType.MouseMotion, WindowID = _windowID, X = 10, Y = 10, XRel = 1 } };
+                Check(SDL3.SDL.PushEvent(ref input), "The scene host accepts deterministic native input");
+            }
+            Window.PumpEvents(); Check(!tree.QuitRequested, "The native window was not closed before measurement completed");
+        }
 
         internal void Draw(SceneTree tree, RigidBody[] bodies, double delta)
         {
             var start = Stopwatch.GetTimestamp();
+            var owner = GC.GetAllocatedBytesForCurrentThread();
             _current.CopyTo(_previous, 0);
             for (var i = 0; i < bodies.Length; i++)
             {
@@ -63,9 +79,14 @@ internal static partial class PhysicsPipelinePerformance
             }
             _instances.SetBufferInterpolated(_current, _previous);
             PublishMS = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+            PublishOwnerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
+            owner = GC.GetAllocatedBytesForCurrentThread();
             tree.ProcessFrame(delta);
+            ProcessOwnerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
+            owner = GC.GetAllocatedBytesForCurrentThread();
             start = Stopwatch.GetTimestamp(); Window.Render(tree, delta);
             RenderMS = Stopwatch.GetElapsedTime(start).TotalMilliseconds;
+            RenderOwnerBytes = GC.GetAllocatedBytesForCurrentThread() - owner;
         }
 
         internal string Capture(RigidBody[] bodies)

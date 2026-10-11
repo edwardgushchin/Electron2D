@@ -259,3 +259,58 @@ checks and 0/0 physics and window-loop managed bytes. Its runtime/test SHA-256 a
 4b70511c0a171d4750f4166a13f9753a2088cf0e671d718bfe72f94e26dbebee.
 Evidence is under bin/physics-scene-window/2026-10-11/integrated-smoke-64. This
 functional regression does not refresh the large-scene performance numbers above.
+
+## Physics and native event allocation boundaries
+
+The first fresh 16,384-body CPU window run based on 3bc28190 passed physical and
+publication invariants and recorded 0/0 PhysicsFrame managed bytes, but the whole
+window loop allocated 320 owner/all-thread bytes. Schema 3 rejected the aggregate
+and stopped before GPU; this is a failed run, not a completed CPU/GPU pair. Evidence
+is bin/physics-scene-window/2026-10-11/3bc28190-refresh. The original event/segment
+was not instrumented, so its exact source is unproven.
+
+Schema 4 retains the complete loop byte counts and explicitly separates
+physicsManagedZero from frameManagedZero. The requested zero-allocation physics
+gate covers the whole PhysicsFrame, including scene publication, monitoring,
+callbacks and interpolation history on owner/all threads. Window event pumping,
+pose-buffer publication, idle processing and native rendering expose separate
+owner-byte totals. Frame allocation remains visible even when the physical gate
+passes; headless mode additionally retains its aggregate zero-byte gate. No
+physical settings, objects, contacts, events or rendering work are removed.
+
+A deterministic native mouse-motion probe adds one SDL event before each pump
+with ELECTRON2D_PHYSICS_PERFORMANCE_INJECT_INPUT=1. In the 64-body CPU/GPU
+256-warmup/64-sample probe, each implementation allocated exactly 20,480 bytes in
+the pump, or 320 per event. Pose publication, idle processing, native rendering
+and the entire physics bracket each allocated zero. The public input event is a
+fresh owned object in the native dispatch path. Both physical/instance/image
+checks passed; frameManagedZero is explicitly false in both reports. This
+reproduces a possible 320-byte event source without claiming the uninstrumented
+large run's exact cause. Injection is a diagnostic workload and remains disabled
+in performance comparisons. The probe is under injected-input-64.
+
+### Scoped 16,384-body refresh on 3bc28190
+
+The same 1600-warmup/256-sample native-window workload ran after the schema-4 instrumentation change. Both implementations returned zero, retained every body and passed physical/publication/instance/image checks. Source and loaded runtime/test fingerprints were identical before/after the paired process. The fixed-host/presentation/VSync limits above remain unchanged; deterministic input injection was disabled.
+
+| Evidence | SHA-256 |
+| --- | --- |
+| C# source | `d51a89b862477009b61fda2614d946dff279d328799ba840b9cbd29408d46e5b` |
+| Electron2D.Tests.dll | `d88988aceb2603a026b74b2d5b1a370f62a1ad97158489534439baffd4f74756` |
+| Electron2D.dll | `2328a2d993315b88941b6cccb3c7bf5c3cf57dd8dfb543bd0c3a37e63857ad26` |
+
+| Backend | Physics mean, ms | Physics p50 / p95 / p99 / max, ms | Full frame p50 / p95 / p99 / max, ms | Window-loop FPS |
+| --- | ---: | --- | --- | ---: |
+| CPU | 127.1079 | 121.4342 / 144.8258 / 446.5245 / 481.3297 | 193.8159 / 239.6429 / 663.7224 / 1076.8348 | 4.9026 |
+| GPU | 98.2498 | 85.0174 / 166.5107 / 385.0471 / 479.4756 | 159.2044 / 278.1808 / 566.2099 / 784.8720 | 5.7116 |
+
+Both physical and whole-loop owner/all-thread allocations were 0/0 in this repetition; all four extra window segment counters were zero. GPU physics median was 30.0 percent lower and FPS 16.5 percent higher in this single shared-desktop pair. Large tails remain visible and their cause is unproven. This is measured progress on the preserved mass scene, not complete objective acceptance. Native render p50 was 70.0257 ms on CPU and 70.5925 ms on GPU.
+
+GPU physical wait p50/p95/p99/max was 25.1897/59.7602/90.5693/112.2805 ms. Store upload/readback was 262488/11863229.5625 B per tick, uniform 64605.875 B and submissions 21.06640625. The established counter scopes exclude final validation/capture and separate graphics traffic. CPU/GPU penetration/escape was .291941/.299999 and .279062/.156250, below the unchanged .601 limit. Native allocation, isolated graphics costs, real-time scheduler and final numerical/network acceptance remain open.
+
+| Raw physical report under scoped-16384 | SHA-256 |
+| --- | --- |
+| `CPU.json` | `5645f8da53fdd4f5e639392ae6f8cc0164be27e957f97b1c0fd25b82c311b7c1` |
+| `GPU.json` | `8fb21cba48cfaa8a4fd90c44aa361bf2a5815d035fe57e77b74aa06da4f1b1e3` |
+
+The ignored directory bin/physics-scene-window/2026-10-11/scoped-16384 contains the exact provenance/command, full physical/lifecycle reports, PNG captures and terminal log. The earlier 3bc28190-refresh rejection is retained separately; it is not relabeled as a passing pair.

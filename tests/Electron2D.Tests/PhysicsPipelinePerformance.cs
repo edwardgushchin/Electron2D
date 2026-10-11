@@ -106,11 +106,14 @@ internal static partial class PhysicsPipelinePerformance
             var tick = PhysicsServer.SpaceGetTick(world.Space);
             var total = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
             long physicsOwnerBytes = 0, physicsAllThreadsBytes = 0;
+            long pumpOwnerBytes = 0, publishOwnerBytes = 0, processOwnerBytes = 0, renderOwnerBytes = 0;
             var frameStart = Stopwatch.GetTimestamp();
             for (var i = 0; i < samples; i++)
             {
                 var frame = Stopwatch.GetTimestamp();
+                var pumpOwner = GC.GetAllocatedBytesForCurrentThread();
                 display?.Pump(tree);
+                pumpOwnerBytes += GC.GetAllocatedBytesForCurrentThread() - pumpOwner;
                 var physicalOwner = GC.GetAllocatedBytesForCurrentThread(); var physicalAll = GC.GetTotalAllocatedBytes(true);
                 var wait = gpu?.WaitMS ?? 0; var start = Stopwatch.GetTimestamp();
                 tree.PhysicsFrame(delta);
@@ -123,6 +126,7 @@ internal static partial class PhysicsPipelinePerformance
                 {
                     display.Draw(tree, bodies, delta);
                     publishTimes[i] = display.PublishMS; renderTimes[i] = display.RenderMS;
+                    publishOwnerBytes += display.PublishOwnerBytes; processOwnerBytes += display.ProcessOwnerBytes; renderOwnerBytes += display.RenderOwnerBytes;
                     frameTimes[i] = Stopwatch.GetElapsedTime(frame).TotalMilliseconds;
                 }
             }
@@ -178,11 +182,13 @@ internal static partial class PhysicsPipelinePerformance
             var penetrationLimit = 2 * PhysicsServer.SpaceGetContactMaxAllowedPenetration(world.Space) + .001f;
             var physicalValid = maxEscape <= penetrationLimit && maxPenetration <= penetrationLimit && maxSpeed < 1000 &&
                 double.IsFinite(energy) && energy < initialEnergy * 1.02 && entered > 0 && reportedContacts > 0;
-            var valid = physicalValid && allocated == 0 && total == 0;
+            var physicsManagedZero = physicsOwnerBytes == 0 && physicsAllThreadsBytes == 0;
+            var frameManagedZero = allocated == 0 && total == 0;
+            var valid = physicalValid && physicsManagedZero && (display is not null || frameManagedZero);
             var capture = display?.Capture(bodies);
             var report = JsonSerializer.Serialize(new
             {
-                schema = 3,
+                schema = 4,
                 backend = backend.ToString(),
                 bodies = count,
                 walls = 4,
@@ -214,6 +220,13 @@ internal static partial class PhysicsPipelinePerformance
                 allThreadsBytes = total,
                 physicsOwnerBytes,
                 physicsAllThreadsBytes,
+                physicsManagedZero,
+                frameManagedZero,
+                pumpOwnerBytes,
+                publishOwnerBytes,
+                processOwnerBytes,
+                renderOwnerBytes,
+                nativeInputInjection = display?.InjectInput ?? false,
                 frameSeconds = display is null ? (double?)null : frameSeconds,
                 windowFPS = display is null ? (double?)null : samples / frameSeconds,
                 frame = display is null ? null : Distribution(frameTimes),
@@ -245,7 +258,7 @@ internal static partial class PhysicsPipelinePerformance
             {
                 Directory.CreateDirectory(output); File.WriteAllText(System.IO.Path.Combine(output, backend + ".json"), report + Environment.NewLine);
             }
-            Check(valid, $"Scene pipeline gates: managed {allocated}/{total} B, escape/penetration {maxEscape}/{maxPenetration} <= {penetrationLimit}, speed {maxSpeed}, energy {energy}/{initialEnergy}");
+            Check(valid, $"Scene pipeline gates: physics managed {physicsOwnerBytes}/{physicsAllThreadsBytes} B, whole loop {allocated}/{total} B, escape/penetration {maxEscape}/{maxPenetration} <= {penetrationLimit}, speed {maxSpeed}, energy {energy}/{initialEnergy}");
             void Append(Vector2 value) { Check(value.IsFinite(), "Reported contact values are finite"); contactValues.Add(value.X); contactValues.Add(value.Y); }
         }
         finally
