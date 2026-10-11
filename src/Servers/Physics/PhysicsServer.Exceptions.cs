@@ -110,21 +110,19 @@ public sealed partial class PhysicsServer
     {
         if (ResolveSceneObject(body) is PhysicsBody sceneBody)
         {
-            sceneBody.Space?.InvalidateGPUExceptions();
-            if (sceneBody.Space?.GPUStore is not null) return;
-            sceneBody.MarkShapesDirty();
+            if (sceneBody.Space is null) sceneBody.MarkShapesDirty(); else sceneBody.Backend.InvalidateCollisionExceptions();
             return;
         }
         var collider = GetCollider(body, isArea: false);
-        collider.Space?.InvalidateGPUExceptions();
-        if (collider.Space?.GPUStore is null) collider.MarkShapesDirty();
+        if (collider.Space is null) collider.MarkShapesDirty(); else collider.Backend.InvalidateCollisionExceptions();
     }
 
-    internal void ObserveGPUExceptions(PhysicsSpace space)
+    internal void CopyCollisionExceptions(List<(RID From, RID To)> destination)
     {
         lock (_registryGate)
         {
-            foreach (var pair in _bodyExceptions) foreach (var target in pair.Value) space.ObserveGPUException(pair.Key, target);
+            destination.Clear();
+            foreach (var pair in _bodyExceptions) foreach (var target in pair.Value) destination.Add((pair.Key, target));
         }
     }
 }

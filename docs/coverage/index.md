@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)
+now routes resolved fields, collision-exception invalidation/synchronization and
+portable preparation/batch observation through the actual selected owner. Common
+server/replay/map code retains engine identities and values without GPU handles
+or snapshots. Public named registration and the complete external family remain open.
+
 [Selected checkpoint ownership](../components/physics-backends.md#selected-checkpoint-ownership)
 now keeps GPU publication reports, epochs and collider caches with resident solver
 history. Common replay uses engine field values and guarded selected preparation,

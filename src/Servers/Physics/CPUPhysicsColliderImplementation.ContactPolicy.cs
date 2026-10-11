@@ -7,6 +7,8 @@ internal sealed partial class CPUPhysicsColliderImplementation
     // CPU queries and pre-solve policy read the shared identity and priority directly.
     internal override void RefreshIdentity() { }
     internal override void SetCollisionPriority(float value) { }
+    internal override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => current;
+    internal override void InvalidateCollisionExceptions() => Space.BackendImplementation.InvalidateCollisionExceptions(Owner);
     private long _shapePolicyEpoch = -1;
     internal override void PrepareContactPolicy()
     {

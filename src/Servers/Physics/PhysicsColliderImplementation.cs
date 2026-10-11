@@ -14,6 +14,8 @@ internal abstract class PhysicsColliderImplementation(PhysicsColliderBackend own
     internal abstract void SetMotionMode(PhysicsServer.BodyMode mode);
     internal abstract void SetContactReporting(bool enabled);
     internal abstract void PrepareContactPolicy();
+    internal abstract void InvalidateCollisionExceptions();
+    internal abstract PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current);
     internal abstract void RefreshIdentity();
     internal abstract void SetCollisionPriority(float value);
     internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);

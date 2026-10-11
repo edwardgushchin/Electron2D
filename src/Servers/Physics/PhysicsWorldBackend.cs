@@ -11,6 +11,10 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
     internal string? FallbackReason { get; } = fallbackReason;
     internal abstract bool HasFailure { get; }
     internal abstract void PrepareCheckpoint();
+    internal abstract void PreparePortableCapture();
+    internal abstract void ReadPortableBodies(ReadOnlySpan<PhysicsColliderBackend> colliders, bool capture);
+    internal abstract void InvalidateCollisionExceptions(PhysicsColliderBackend collider);
+    internal abstract void SynchronizeCollisionExceptions();
     internal abstract PhysicsBackendCheckpoint CreateCheckpoint();
     internal abstract void BeginPortableRestore();
     internal abstract void CompletePortableRestore(PhysicsSnapshotMap map, List<PhysicsPortableOneWay> pairs, ulong tick);

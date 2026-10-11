@@ -6,6 +6,13 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsWorldBackend
 {
+    internal override void PreparePortableCapture() => EnsureAccess();
+    internal override void ReadPortableBodies(ReadOnlySpan<PhysicsColliderBackend> colliders, bool capture)
+    {
+        EnsureAccess();
+        foreach (var collider in colliders) _ = NativeCollider(collider);
+    }
+    internal override void SynchronizeCollisionExceptions() => EnsureAccess();
     private readonly Dictionary<ulong, (ulong ID, int Slot, int Piece)> _portableShapeLookup = [];
     internal override void BeginPortableRestore()
     {

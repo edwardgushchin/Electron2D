@@ -19,6 +19,8 @@ internal static partial class PhysicsBackendOwnershipTests
         internal int CheckpointPreparations;
         internal Action? CheckpointCaptureHook, CheckpointValidationHook, CheckpointRestoreHook, CheckpointReleaseHook;
         internal int CheckpointCaptures, CheckpointValidations, CheckpointRestores, CheckpointReleases;
+        internal int PortablePreparations, PortableReads;
+        internal Action? PortablePreparationHook, PortableReadHook;
         internal int Initializations, Activations, Flushes, EndSynchronizations;
         internal override void Initialize() { Initializations++; InitializeHook?.Invoke(); _inner.Initialize(); }
         internal override void ApplyActive(bool active) { Activations++; ActiveHook?.Invoke(active); _inner.SetActive(active); }
@@ -40,6 +42,11 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override int PreparedBodyCapacity => _inner.PreparedBodyCapacity;
         internal override bool ResultsReady => _inner.ResultsReady;
         internal override void PrepareCheckpoint() { CheckpointPreparations++; CheckpointPreparationHook?.Invoke(); _inner.PrepareCheckpoint(); }
+        internal override void PreparePortableCapture() { PortablePreparations++; PortablePreparationHook?.Invoke(); _inner.PreparePortableCapture(); }
+        internal override void ReadPortableBodies(ReadOnlySpan<PhysicsColliderBackend> colliders, bool capture)
+        { PortableReads++; PortableReadHook?.Invoke(); _inner.ReadPortableBodies(colliders, capture); }
+        internal override void InvalidateCollisionExceptions(PhysicsColliderBackend collider) => _inner.InvalidateCollisionExceptions(collider);
+        internal override void SynchronizeCollisionExceptions() => _inner.SynchronizeCollisionExceptions();
         internal override PhysicsBackendCheckpoint CreateCheckpoint() => new WrappedCheckpoint(this, _inner.CreateCheckpoint());
         internal override void BeginPortableRestore() => _inner.BeginPortableRestore();
         internal override float ReadPortableSleepTime(PhysicsColliderBackend collider) => _inner.ReadPortableSleepTime(collider);

@@ -12,7 +12,7 @@ internal sealed partial class GPUPhysicsWorldBackend
             if (body.IsArea) GPUStore.SetAreaFields(GPUStore.NativeCollider(body.Backend).GPUHandle, PhysicsSpace.GPUFields(body.AreaFields!), areaOrder++);
             else GPUStore.NativeCollider(body.Backend).PrepareGPUParameters(body.Runtime);
         foreach (var joint in Space.SnapshotJoints) joint.ApplySolverPolicy();
-        Space.SyncGPUExceptions();
+        SynchronizeCollisionExceptions();
     }
     internal override PhysicsBackendCheckpoint CreateCheckpoint() => new PhysicsSpace.GPUCheckpoint(Space, GPUStore);
 }

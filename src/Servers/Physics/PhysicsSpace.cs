@@ -141,6 +141,12 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
     internal void EndExtensionCallback() => _extensionCallbackDepth--;
     internal void BeginBackendCallback() { EnsureReleaseAccess(); _extensionCallbackDepth++; }
+    internal void BeginBackendPublication()
+    {
+        if (_disposed || !_stepping || !BackendImplementation.ResultsReady || Environment.CurrentManagedThreadId != _ownerThreadID)
+            throw new InvalidOperationException("Selected body publication requires this world's completed solver interval.");
+        _extensionCallbackDepth++;
+    }
     internal void EnsureExtensionHierarchyChange()
     {
         if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Scene hierarchy cannot change while a physics extension hook is borrowed.");
@@ -165,7 +171,7 @@ internal sealed partial class PhysicsSpace : IDisposable
         foreach (var body in _bodies) body.PrepareBackend();
         foreach (var area in _areas) area.PrepareBackend();
         foreach (var collider in _serverColliders) collider.PrepareBackend();
-        SyncGPUExceptions();
+        _backend.SynchronizeCollisionExceptions();
     }
 
     internal void PrepareMonitoringCapacity()

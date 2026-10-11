@@ -1,6 +1,6 @@
 # PhysicsBodyRuntime
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Declaration:** `internal sealed partial class PhysicsBodyRuntime`
 
@@ -103,3 +103,7 @@ See [implementation and verification](../components/cpu-continuous-collision.md)
 ## Selected integration preparation
 
 ApplyBeforeStep now owns only common contact-reporting, role/activity gates and observed pre-step activity before dispatching PrepareDefaultForces to the selected attachment. CPU field resolution has moved to its collider implementation; authored policy and observed gravity/damping totals remain shared. [Contract and checks](../components/physics-backends.md#selected-body-integration-preparation).
+
+## Selected fields, exceptions and portable observation
+
+PublishFields validates complete immutable [PhysicsBodyFields](PhysicsBodyFields.md) values before assignment. It borrows body/world lifetime and rejects recursion or nonfinite fields. Completed-step publication uses a separate owner-only solved phase while public queries remain closed.
