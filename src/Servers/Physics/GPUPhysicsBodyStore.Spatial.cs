@@ -118,7 +118,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     {
         if (count <= capacity) return;
         var next = Capacity(count);
-        var replacement = Buffer(checked((uint)(next * stride)));
+        var replacement = CreateBuffer(checked((uint)(next * stride)));
         try
         {
             if (preserve && target is not null)
@@ -130,22 +130,29 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                     var copy = SDL.BeginGPUCopyPass(command);
                     if (copy == 0) throw GPUPhysicsDevice.Failure("begin geometry growth");
                     var bytes = checked((uint)(capacity * stride));
-                    SDL.CopyGPUBufferToBuffer(copy, new() { Buffer = target.DangerousGetHandle() }, new() { Buffer = replacement.DangerousGetHandle() }, bytes, false);
+                    SDL.CopyGPUBufferToBuffer(copy, new() { Buffer = target.DangerousGetHandle() }, new() { Buffer = replacement }, bytes, false);
                     SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command); _failed = false;
                     DeviceCopyBytes += bytes;
                 }
                 finally { if (command != 0) SDL.CancelGPUCommandBuffer(command); }
             }
-            target?.Dispose(); target = replacement; replacement = null!; capacity = next;
+            var adopted = replacement; replacement = 0;
+            if (target is null) target = new(adopted, handle => SDL.ReleaseGPUBuffer(Device, handle), _context.Handle);
+            else target.ReplaceNative(adopted);
+            capacity = next;
         }
-        finally { replacement?.Dispose(); }
+        finally { if (replacement != 0) SDL.ReleaseGPUBuffer(Device, replacement); }
     }
 
     private void GrowTransfer(ref RenderHandle? target, ref int capacity, int bytes, SDL.GPUTransferBufferUsage usage)
     {
         if (bytes <= capacity) return;
-        var next = Capacity(bytes); var replacement = Transfer((uint)next, usage);
-        target?.Dispose(); target = replacement; capacity = next;
+        var next = Capacity(bytes);
+        var replacement = SDL.CreateGPUTransferBuffer(Device, new SDL.GPUTransferBufferCreateInfo { Size = (uint)next, Usage = usage });
+        if (replacement == 0) throw GPUPhysicsDevice.Failure("create resident transfer buffer");
+        if (target is null) target = new(replacement, handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _context.Handle);
+        else target.ReplaceNative(replacement);
+        capacity = next;
     }
 
     private int DispatchSpatial(bool retry, bool pairs = true)

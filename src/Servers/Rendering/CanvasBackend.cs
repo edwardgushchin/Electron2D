@@ -68,6 +68,22 @@ internal sealed class RenderHandle : SafeHandleZeroOrMinusOneIsInvalid
         catch { release(value); throw; }
     }
 
+    /// <summary>Adopts an exclusively owned private capacity buffer while retaining its wrapper and device reference.</summary>
+    /// <remarks>Consumes the incoming nonzero resource on every path. Old release failure leaves the replacement owned;
+    /// closed wrappers clean the incoming resource and reject. Call only on the resource owner, without borrowed aliases.</remarks>
+    internal void ReplaceNative(nint value)
+    {
+        if (value == 0) throw CanvasBackend.Failure("create a native graphics resource");
+        try
+        {
+            ObjectDisposedException.ThrowIf(IsClosed, this);
+            var previous = handle;
+            SetHandle(value); value = 0;
+            _release(previous);
+        }
+        finally { if (value != 0) _release(value); }
+    }
+
     protected override bool ReleaseHandle()
     {
         try { _release(handle); }

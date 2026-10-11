@@ -161,3 +161,5 @@ version still named the parent commit; it was replaced by the freshly built tria
 above rather than used to certify current-source performance. Generated evidence
 is excluded from the engine commit; this page retains the measured contract,
 values, provenance and limits.
+
+The [complete scene measurements](physics-scene-performance.md) now cover a separate CPU/GPU RigidBody/monitor/interpolation workload with zero warmed managed bytes. Its 1536-body GPU cost is higher and its 4096-body medians are close; the raw-body/window advantage above does not establish a scene-wide performance claim.

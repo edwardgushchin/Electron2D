@@ -330,3 +330,9 @@ Idle kinematic velocity clearing and unchanged targets do not generate a wake
 when real motion is already zero. Actual platform movement/stopping still wakes
 contacts, while explicit assignments retain their wake and ordering semantics.
 See [resident kinematics](../components/gpu-resident-kinematic.md#idle-platform-wake-policy).
+
+## Capacity growth without new managed wrappers
+
+Private storage and transfer buffers now retain their existing RenderHandle and device reference while adopting a larger native allocation. Preserved storage still copies its old capacity and completes the copy before retirement; copy/wait accounting and capacity-recovery rules are unchanged. Failed native creation leaves the old allocation owned, pre-adoption failures retire the candidate, and an old-release failure leaves the adopted replacement available for terminal cleanup. No public resource or borrowed native identity is retargeted.
+
+[The full scene pipeline fixture](../../tests/Electron2D.Tests/PhysicsPipelinePerformance.cs) now runs explicit CPU/GPU World selection, actual RigidBody monitors and interpolation through the same PhysicsFrame workload. The 64-body 256-warmup/64-sample control previously allocated 1344 owner/all-thread bytes when twelve resident buffers crossed their capacity after warmup. Reusing wrappers removed those managed allocations while preserving the same physical gates and population. Native allocations and copies still occur and retain their separate costs. [The private lifetime test](../../tests/Electron2D.Tests/RenderHandleReplacementTests.cs) covers parent retention, closed adoption, cleanup failure and exact release.

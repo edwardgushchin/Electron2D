@@ -319,8 +319,14 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (_failed && !allowFailed) throw new InvalidOperationException("The GPU body store failed and must be disposed.");
     }
 
-    private RenderHandle Buffer(uint size) => new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
-    { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite }),
+    private nint CreateBuffer(uint size)
+    {
+        var value = SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
+        { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite });
+        if (value == 0) throw GPUPhysicsDevice.Failure("create resident buffer");
+        return value;
+    }
+    private RenderHandle Buffer(uint size) => new(CreateBuffer(size),
         handle => SDL.ReleaseGPUBuffer(Device, handle), _context.Handle);
     private RenderHandle Transfer(uint size, SDL.GPUTransferBufferUsage usage) => new(SDL.CreateGPUTransferBuffer(Device,
         new SDL.GPUTransferBufferCreateInfo { Size = size, Usage = usage }), handle => SDL.ReleaseGPUTransferBuffer(Device, handle), _context.Handle);

@@ -1,6 +1,6 @@
 # Resident GPU physics stages
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Implemented boundary
 
@@ -402,3 +402,9 @@ population, edits, renderer, warmup and four-second measurement policy; actual w
 completed differs because the old version cannot keep up. Log:
 `/tmp/e2d-velocity-window-baseline.log`; captures
 `/tmp/e2d-velocity-window-before-{CPU,GPU}.png`.
+
+## Late capacity growth
+
+Resident storage/transfer growth now reuses private managed RenderHandle wrappers. It still creates native allocations, preserves data where required, waits for the copy, and retires the previous native allocation. The wrapper keeps its original device reference and release callback, so a larger contact batch after warmup no longer creates a new delegate and SafeHandle for each grown buffer. Published graphics resources and scene/body RID identities are unchanged. The 64-body full-scene control exercises twelve such late buffer increases with zero owner/all-thread managed bytes after the fix; this does not claim zero native allocation or eliminate growth waits.
+
+The existing PhysicsPipelinePerformance runner now compares CPU/GPU ordinary RigidBody scenes with contact monitoring and interpolation. Whole PhysicsFrame timing includes scene publication and observer work; solver phases, GPU transfers/waits and memory are separate report fields. All sampled bodies remain awake; physical/identity gates use public API rather than native CPU handles. This extends the raw-body performance evidence and keeps the complete extension/native/platform/window gates open.
