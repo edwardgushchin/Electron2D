@@ -2,11 +2,11 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    private PhysicsBodyRuntime ForceRuntime(RID body, bool prepareGeometry = false)
+    private PhysicsBodyRuntime ForceRuntime(RID body, bool prepareGeometry = false, bool writing = true)
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
-        runtime.PrepareForceAccess(prepareGeometry);
+        runtime.PrepareForceAccess(prepareGeometry, writing);
         return runtime;
     }
 
@@ -81,7 +81,7 @@ public sealed partial class PhysicsServer
         runtime.SetConstants(force, runtime.GetConstantTorque(), force != Vector2.Zero);
     }
 
-    internal Vector2 BodyGetConstantForceCore(RID body) => ForceRuntime(body).GetConstantForce();
+    internal Vector2 BodyGetConstantForceCore(RID body) => ForceRuntime(body, writing: false).GetConstantForce();
 
     internal void BodySetConstantTorqueCore(RID body, float torque)
     {
@@ -90,5 +90,5 @@ public sealed partial class PhysicsServer
         runtime.SetConstants(runtime.GetConstantForce(), torque, torque != 0);
     }
 
-    internal float BodyGetConstantTorqueCore(RID body) => ForceRuntime(body).GetConstantTorque();
+    internal float BodyGetConstantTorqueCore(RID body) => ForceRuntime(body, writing: false).GetConstantTorque();
 }

@@ -144,3 +144,11 @@ The next investigation must distinguish window/device recreation, pose observati
 and numerical variability at the same 16,384-body population. No threshold or
 population was relaxed. Native allocator totals, other platforms, complete extension
 acceptance and final overall GPU performance remain open.
+
+
+[Scratch preparation verification](gpu-contact-colors.md#scratch-initialization-and-preparation-order)
+adds three passing unchanged-assembly CPU-then-GPU repetitions and a separate
+first-use NaN-buffer failure/fix regression. Final ordinary and NaN-buffer window
+runs also pass at 16,384 bodies. The injected preparation defect is resolved; a
+causal connection to the earlier uninstrumented escape has not been established,
+so its acceptance limitation remains open.

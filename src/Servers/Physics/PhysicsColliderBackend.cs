@@ -16,12 +16,17 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     internal long AttachmentVersion { get; private set; }
     internal float CollisionPriority { get; private set; } = 1;
     private ulong _canvasInstanceID;
-    internal ulong CanvasInstanceID { get => _canvasInstanceID; set { _canvasInstanceID = value; _implementation?.RefreshIdentity(); } }
+    internal ulong CanvasInstanceID
+    {
+        get => _canvasInstanceID;
+        set { Space?.EnsureExtensionHierarchyChange(); _canvasInstanceID = value; _implementation?.RefreshIdentity(); }
+    }
     internal ObjectIdentity ObjectIdentity { get; private set; } = sceneOwner?.BorrowIdentity() ?? default;
 
     internal void AttachObject(ElectronObject? value)
     {
         Space?.EnsureQueryAccess();
+        Space?.EnsureExtensionHierarchyChange();
         if (value?.IsDisposed == true) throw new ObjectDisposedException(nameof(value));
         if (value is Node node) { node.Tree?.EnsureOwnerThread(); node.EnsurePhysicsObjectAccess(); }
         var identity = value?.BorrowIdentity() ?? default;
@@ -40,7 +45,7 @@ internal sealed partial class PhysicsColliderBackend(RID rid, CollisionObject? s
     }
     internal void SetCollisionPriority(float value)
     {
-        Space?.EnsureQueryAccess(); ValidateCollisionPriority(value); CollisionPriority = value;
+        Space?.EnsureQueryAccess(); Space?.EnsureExtensionHierarchyChange(); ValidateCollisionPriority(value); CollisionPriority = value;
         _implementation?.SetCollisionPriority(value);
     }
 

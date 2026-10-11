@@ -2,14 +2,12 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
-    private PhysicsBodyRuntime ParameterRuntime(RID body)
+    private PhysicsBodyRuntime ParameterRuntime(RID body, bool writing = true)
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
         var owners = runtime.Owners;
-        owners.Scene?.Tree?.EnsureOwnerThread();
-        owners.Scene?.EnsurePhysicsParticipationChange();
-        runtime.EnsureMutable();
+        runtime.EnsureAccess(writing);
         if (runtime.Space is not null)
         {
             if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
@@ -27,7 +25,7 @@ public sealed partial class PhysicsServer
         runtime.SetMassProfile(mass, ConfiguredInertia(runtime), ConfiguredCenter(runtime));
     }
 
-    internal float BodyGetMassCore(RID body) => ConfiguredMass(ParameterRuntime(body));
+    internal float BodyGetMassCore(RID body) => ConfiguredMass(ParameterRuntime(body, writing: false));
 
     internal void BodySetInertiaCore(RID body, float inertia)
     {
@@ -37,7 +35,7 @@ public sealed partial class PhysicsServer
 
     internal float BodyGetInertiaCore(RID body)
     {
-        var runtime = ParameterRuntime(body);
+        var runtime = ParameterRuntime(body, writing: false);
         var value = ConfiguredInertia(runtime);
         return value > 0 ? value : runtime.MassProperties.Inertia;
     }
@@ -50,7 +48,7 @@ public sealed partial class PhysicsServer
 
     internal Vector2 BodyGetCenterOfMassCore(RID body)
     {
-        var runtime = ParameterRuntime(body);
+        var runtime = ParameterRuntime(body, writing: false);
         return ConfiguredCenter(runtime) ?? runtime.MassProperties.Center;
     }
 

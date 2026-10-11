@@ -340,3 +340,6 @@ Private storage and transfer buffers now retain their existing RenderHandle and 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
 
 Body changes use an adaptive bounded download for dense output and count-first exact-prefix download for sparse output. The previous successful count is only a scheduling hint; validation, output-prefix ownership and terminal post-submission failure policy are unchanged. See [publication transfer costs](../components/gpu-body-publication.md).
+
+
+Contact-color and packed-state resources are prepared before solver command recording. A scoped internal allocation diagnostic can initialize each new storage buffer; tests use NaN contents to verify first-use initialization. [Preparation and limits](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order).

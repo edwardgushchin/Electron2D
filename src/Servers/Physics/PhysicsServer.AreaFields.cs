@@ -73,16 +73,18 @@ public sealed partial class PhysicsServer
     private PhysicsAreaFields AreaFieldState(RID area, bool writing = false)
     {
         ThrowIfDisposed();
-        lock (_registryGate)
-            if (_sceneSpaces.TryGetValue(area, out var space))
-            {
-                space.EnsureQueryAccess();
-                return space.DefaultAreaFields;
-            }
+        PhysicsSpace? space;
+        lock (_registryGate) _sceneSpaces.TryGetValue(area, out space);
+        if (space is not null)
+        {
+            space.EnsureQueryAccess();
+            if (writing) space.EnsureImplementationWriteAccess();
+            return space.DefaultAreaFields;
+        }
         var runtime = AreaRuntime(area);
         runtime.EnsureAccess();
         var owners = runtime.Owners;
-        if (writing) owners.Scene?.EnsureFieldChange();
+        if (writing) { runtime.Space?.EnsureImplementationWriteAccess(); owners.Scene?.EnsureFieldChange(); }
         return owners.Scene?.Fields ?? owners.Server!.AreaFields!;
     }
 }

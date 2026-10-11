@@ -182,3 +182,6 @@ Resolved fields and exception invalidation dispatch through the selected collide
 ## Value-only integration preparation
 
 [Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.
+
+
+Object/canvas/priority writes reject a borrowed extension scope before changing retained values. Registered attachments publish current metadata after numerical Attach, before shape preparation; [the metadata protocol](../components/physics-registered-adapter.md#initial-collider-metadata) preserves detached authoring and fresh-world transfer.

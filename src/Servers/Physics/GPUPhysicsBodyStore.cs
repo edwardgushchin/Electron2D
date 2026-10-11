@@ -319,11 +319,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore : IDisposable
         if (_failed && !allowFailed) throw new InvalidOperationException("The GPU body store failed and must be disposed.");
     }
 
+    // Diagnostic initialization runs before the new buffer enters recorded compute work.
+    internal static Action<nint, nint, uint>? BufferCreatedForTesting { get; set; }
     private nint CreateBuffer(uint size)
     {
         var value = SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo
         { Size = size, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite });
         if (value == 0) throw GPUPhysicsDevice.Failure("create resident buffer");
+        try { BufferCreatedForTesting?.Invoke(Device, value, size); }
+        catch { SDL.ReleaseGPUBuffer(Device, value); throw; }
         return value;
     }
     private RenderHandle Buffer(uint size) => new(CreateBuffer(size),

@@ -22,7 +22,7 @@ PhysicsServerManager.RegisterServer and SetDefaultServer now execute through a r
 
 The public immutable configuration/result family includes body integration/forces, Area fields, joints, sleep/contact policy, logical shape slots, resolved fields, mass properties, overlap/shape contacts, statistics and one-way episodes. Collider and joint objects are fresh per attachment; checkpoint objects provide private history hooks. Query exclusion spans are passed explicitly and borrowed only during the synchronous call. The consumer compiles without internal access and executes both SceneTree frames and explicitly owned SpaceStep.
 
-Arbitrary custom geometry and every extension operation's acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Backend rows stay Partial or Blocked where their named path is absent; the bounded test solver does not certify the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
+Every extension operation's acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Backend rows stay Partial or Blocked where their named path is absent; the bounded test solver does not certify the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
 
 Initialization/Finish/disposal failure injection retains all three errors after retirement. Scene diagnostic capture executes the selected ReadDebugContacts hook after synchronization; invalid count or nonfinite points reject before diagnostic publication and fail the started interval.
 
@@ -31,3 +31,105 @@ Status and capacity hooks also borrow the owner context; recursive world inspect
 [Custom geometry](physics-custom-geometry.md) now executes with an external annulus/circle implementation: canonical data, exact mass, standalone/selected queries, body contacts, Area observations, server mutation and private/portable replay. Generic custom format file codecs/editor authoring, unexercised extension operations, native/foreign acceptance and final performance remain open.
 
 Portable one-way capture is now bounded by the current declared count, independently of retained array capacity. Shared validation rejects self/unbound/disabled/invalid-piece/duplicate episodes before encoding. The public-only consumer restores a rejected episode into a separately created explicit world with different local RIDs and verifies pass-through at 60 units/second versus a real impulse to 30 for the accepted state. Repeated restore reinstates the decision; 64 warmed capture/apply cycles allocate zero managed bytes.
+
+
+## Initial collider metadata
+
+The adapter publishes retained object/canvas IDs and collision priority immediately
+after successful numerical Attach and before logical shapes are prepared. Earlier
+code sent only live edits, so a registered solver's first query could miss a canvas
+association authored while detached. Reattachment to another selected world now
+receives current values through the same hooks. Body and Area identity share this
+protocol; scene CanvasLayer entry/exit retains its ordinary live updates.
+
+`BackendChecks.IdentityChecks` in the public-only consumer detects the prior bug
+before any physics tick. It exercises body/Area detached/live/clear assignment,
+weak sampled object identity, exact 64-bit point membership, two-world transfer,
+scene body/Area hooks, failed initial identity/priority hooks with retry, owner and
+borrow guards, and zero owner/all-thread managed allocation over 128 edited queries
+after 64 warmup iterations. Allocation counters are initialized before warmup;
+the first uninitialized-counter measurement reported 0/1,008 owner/all-thread
+bytes, while initialized counters followed by warmup produced 0/0 with the same
+queries. Zero-byte assertions remain exact. Queries use the external circle model,
+not a built-in solver delegate.
+
+Coverage pairs all ten reference object/canvas/priority operations with their typed
+attachment/facade projections under ADR 0103. These rows remain Partial: identity
+publication is verified, while complete extension-operation acceptance and general
+third-party numerical priority response remain open. No runtime declaration or
+public singleton instance accessor is added. Native allocator, other platforms,
+final performance and the separately recorded sporadic GPU window failure remain
+unverified here.
+
+
+The initial-hook reentry check also exposed missing guards: an identity hook could
+recursively assign canvas metadata, and a not-yet-committed raw attachment had a
+world reference before its public SpaceRID was assigned. Shared collider metadata
+writes now reject a borrowed extension scope before assignment; raw lifetime
+preflight uses the live world reference to reject release/transfer during that
+scope. Both body and Area initial hooks exercise these paths. Typed immutable
+result construction and supported nested query scratch keep their existing paths.
+
+## Borrowed shape authoring
+
+Body/Area slot add, replace, transform, disable, remove and clear, body one-way
+settings, collision layers/masks, shared server-shape data replacement and release
+reject inside a registered hook before changing common authoring or numerical
+state. Raw colliders use their live world reference even during initial attachment
+before the public SpaceRID is committed. Qualified immutable result construction
+and guarded logical getters retain their existing read access. This does not
+claim a blanket ban on every engine operation from a hook.
+
+The public-only ShapeMutationChecks exercises initial identity, live shape and
+filter hooks, scene body/Area entry, owner-thread rejection and actual query
+membership after ordinary replacement, disable, removal, clear and shared data
+edits. It samples delivered transform/one-way values; the bounded circle solver
+does not certify arbitrary transform or one-way numerical response. After 64
+warmups, 128 layer-edit/point-query cycles require zero owner/all-thread managed
+bytes. The old runtime failed the initial BodyClearShapes rejection before the
+shared guard. The 27 corresponding extension shape/filter setter/getter rows
+remain Partial; generic geometry and complete solver acceptance remain open.
+
+## Borrowed body authoring
+
+Body force/impulse, persistent force/torque, mass/center/inertia, material and
+integration parameters, pose/velocities, sleep, CCD, contact capacity and callback
+writes reject from a selected numerical hook before authoring changes. The raw
+mode setter is guarded too. Direct-body setters and force/integration operations
+cannot bypass this boundary. World numerical borrowing has a separate depth from
+caller-created direct-state extension borrowing, so legitimate state-view
+forwarding keeps working. Read paths and transform batches do not request writer
+access. Existing owner, solve/failure and attachment checks remain in place.
+
+The public-only BodyMutationChecks reproduces initial raw mutation and the direct
+view sleep bypass, then verifies rejection on both scene/raw bodies, retained
+authoring, real impulses, ordinary integration/sync callbacks and 64 full warmed
+edited frames at zero owner/all-thread managed bytes. Exact impulse deltas use
+0.001 velocity tolerance; the test accounts for the world's damping before the
+impulse. A blanket all-extension write guard failed the separately rebuilt
+PhysicsBodyExtension.Consumer forwarding test and was replaced by the numerical
+scope guard. Generic solver response and the complete extension contract remain
+open; these checks do not certify all parameter or mode semantics.
+
+## Registered Area fields
+
+The ten typed Area fields and the space-default shortcut retain one common
+profile. Writes reject during a numerical hook before authoring changes,
+including initial raw attachment. Guarded getters remain available. Default-field
+query/status hooks run outside the RID registry lock. Ordinary post-step Area
+callbacks can change the next interval's fields without resetting overlap
+histories; monitor-configuration guards are not reused for these field writes.
+
+The separate public-only consumer now implements bounded circle Area reduction
+from the selected SetAreaFields/PrepareWorld inputs. It checks all five override
+modes independently for gravity and both damping channels, descending priority,
+exact ten-component delivery, point unit distance, directional magnitude, masks
+and participation without monitoring/monitorability. Real point-field motion,
+ordinary callback edits, borrowed rejection, off-owner guards and 64 warmed edited
+full frames at zero owner/all-thread managed bytes are exercised. Zero-duration
+frames attach objects but do not simulate or publish overlap events, so numerical
+checks use nonzero intervals. Field tolerance is 0.00001 for the bounded fixtures;
+the point-motion velocity interval 0.49..0.51 includes the changing field distance.
+
+The two extension parameter rows remain Partial. Arbitrary geometry, full
+numerical/extension acceptance and final platform/performance gates remain open.

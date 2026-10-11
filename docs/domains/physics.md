@@ -558,3 +558,15 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 [Portable continuation validation](../components/physics-snapshots.md) now guards registered episode counts and identity/shape/piece data before encoding. The external consumer checks failed-capture preservation, reordered local RID creation, actual pass-through/contact response and zero warmed capture/restore allocation. Complete extension-operation and final platform/performance acceptance remain open.
 
 [GPU body publication](../components/gpu-body-publication.md) uses one bounded download when the previous stream was dense and exact-prefix transfers when sparse. Current complete caches may serve read-only callbacks; callback edits and invalid caches retain fresh publication. Full CPU/GPU advantage and rendered-window acceptance remain open.
+
+
+[GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) now prepares contact-color and packing resources before recording solver work. A 16,384-body NaN-buffer regression exercises first-use packed state; the earlier intermittent uninstrumented window failure and final performance acceptance remain open.
+
+
+Registered [initial collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now publishes detached object/canvas IDs and priority before shape preparation. The public-only consumer verifies first queries, body/Area transfers, scene canvas membership, initial-hook cleanup and zero warmed edited-query allocation. Full extension-operation acceptance remains open.
+
+Registered [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring) now applies the same pre-mutation guard to raw/scene body and Area slots, filters and shared server-shape data/lifetime, including initial attachment. The public-only consumer exercises actual query membership and zero warmed filter/query allocation. Arbitrary numerical response and complete extension acceptance remain open.
+
+[Borrowed body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring) now guards scene/raw force, mass, state, integration and callback writes during numerical hooks, including direct-body views. Authored reads, ordinary callbacks and body-state forwarding retain access. The independent consumer exercises real impulses and zero warmed edited full-frame allocation; complete numerical/extension acceptance remains open.
+
+[Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

@@ -54,7 +54,7 @@ public sealed partial class PhysicsServer
 
     internal void BodySetForceIntegrationCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); runtime.ForceCallback = callback;
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true); runtime.ForceCallback = callback;
     }
 
     internal void BodySetForceIntegrationCallbackCore<T>(RID body, Action<PhysicsDirectBodyState, T>? callback, T userData) =>
@@ -62,25 +62,25 @@ public sealed partial class PhysicsServer
 
     internal void BodySetStateSyncCallbackCore(RID body, Action<PhysicsDirectBodyState>? callback)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); runtime.SyncCallback = callback;
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true); runtime.SyncCallback = callback;
     }
 
     internal void BodySetOmitForceIntegrationCore(RID body, bool enable)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable();
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
         if (runtime.Owners.Scene is RigidBody rigid) rigid.CustomIntegrator = enable;
         else runtime.OmitForces = enable;
     }
 
     internal bool BodyIsOmittingForceIntegrationCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); return runtime.Omitted;
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.Omitted;
     }
 
     internal void BodySetMaxContactsReportedCore(RID body, int amount)
     {
         ThrowIfDisposed(); if ((uint)amount > PhysicsBodyRuntime.MaxContactLimit) throw new ArgumentOutOfRangeException(nameof(amount));
-        var runtime = BodyRuntime(body); runtime.EnsureMutable();
+        var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
         if (runtime.Owners.Scene is RigidBody rigid) rigid.MaxContactsReported = amount;
         else
         {
@@ -91,18 +91,18 @@ public sealed partial class PhysicsServer
 
     internal int BodyGetMaxContactsReportedCore(RID body)
     {
-        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureMutable(); return runtime.ContactLimit;
+        ThrowIfDisposed(); var runtime = BodyRuntime(body); runtime.EnsureAccess(); return runtime.ContactLimit;
     }
     internal void BodySetTransformCore(RID body, Transform transform) => ForceRuntime(body).SetTransform(transform);
-    internal Transform BodyGetTransformCore(RID body) => ForceRuntime(body).GetTransform();
+    internal Transform BodyGetTransformCore(RID body) => ForceRuntime(body, writing: false).GetTransform();
     internal void BodySetLinearVelocityCore(RID body, Vector2 velocity) => ForceRuntime(body).SetLinearVelocity(velocity);
-    internal Vector2 BodyGetLinearVelocityCore(RID body) => ForceRuntime(body).GetLinearVelocity();
+    internal Vector2 BodyGetLinearVelocityCore(RID body) => ForceRuntime(body, writing: false).GetLinearVelocity();
     internal void BodySetAngularVelocityCore(RID body, float velocity) => ForceRuntime(body).SetAngularVelocity(velocity);
-    internal float BodyGetAngularVelocityCore(RID body) => ForceRuntime(body).GetAngularVelocity();
+    internal float BodyGetAngularVelocityCore(RID body) => ForceRuntime(body, writing: false).GetAngularVelocity();
     internal void BodySetSleepingCore(RID body, bool sleeping) => ForceRuntime(body).SetSleeping(sleeping);
-    internal bool BodyGetSleepingCore(RID body) => ForceRuntime(body).GetSleeping();
+    internal bool BodyGetSleepingCore(RID body) => ForceRuntime(body, writing: false).GetSleeping();
     internal void BodySetCanSleepCore(RID body, bool canSleep) => ForceRuntime(body).SetCanSleep(canSleep);
-    internal bool BodyGetCanSleepCore(RID body) => ForceRuntime(body).GetCanSleep();
+    internal bool BodyGetCanSleepCore(RID body) => ForceRuntime(body, writing: false).GetCanSleep();
     internal void BodySetAxisVelocityCore(RID body, Vector2 axisVelocity) => ForceRuntime(body).SetAxisVelocity(axisVelocity);
 
 }

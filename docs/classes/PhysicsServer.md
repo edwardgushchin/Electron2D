@@ -859,3 +859,17 @@ A factory-returned cached body extension now projects its contact count/values o
 Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
 
 [Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.
+
+
+Registered [initial collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) receives retained object/canvas IDs and priority before shapes. Body/Area live metadata writes and raw release/transfer reject a borrowed extension scope before changing bindings, including initial attachment before SpaceRID publication. Common getters and weak sampled query identities retain their existing contract.
+
+Body/Area shape-slot and layer/mask writes, shared server-shape data replacement and release reject while their registered implementation is borrowed, before changing retained authoring. This also covers partial initial attachment; guarded getters and immutable result construction retain their existing access. See [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring).
+
+Body force, mass, integration, motion, sleep, CCD and callback authoring now
+reject before mutation during selected numerical hooks, including initial
+attachment. Direct-body setters/forces use the same qualified numerical guard.
+Guarded authored reads, ordinary post-solver callbacks and caller-created
+body-state forwarding remain available; hierarchy/resource-lifetime guards still
+cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
+
+[Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

@@ -5,6 +5,10 @@ public static partial class BackendChecks
     public static void Run()
     {
         Solver? solver = null;
+        AreaFieldChecks();
+        BodyMutationChecks();
+        ShapeMutationChecks();
+        IdentityChecks();
         CustomChecks();
         PortableEpisodeChecks();
         SelectionChecks();

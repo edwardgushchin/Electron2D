@@ -21,10 +21,11 @@ internal sealed class PhysicsAreaRuntime(RID rid)
     {
         var owners = Owners;
         owners.Scene?.Tree?.EnsureOwnerThread();
-        owners.Scene?.EnsurePhysicsParticipationChange();
+        if (writing) owners.Scene?.EnsurePhysicsParticipationChange();
         Space?.EnsureQueryAccess();
         if (writing)
         {
+            Space?.EnsureExtensionHierarchyChange();
             if (_dispatching) throw new InvalidOperationException("Area monitor configuration cannot change from its callback.");
             owners.Scene?.EnsureMonitorConfigurationChange();
         }

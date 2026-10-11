@@ -663,3 +663,15 @@ checks CPU/public and internal GPU behavior; [measurements](../components/physic
 do not certify public GPU selection or large-world speedup.
 
 The [image-array slice](../components/texture-arrays.md) adds typed TextureLayered/ImageTextureLayered/TextureArray resources, metadata placeholders, the shared array-only enum and three server endpoints. HLSL/GLSL pixels, all layer/mip readbacks, HDR/compatible updates, owned/proxy replacement, typed storage/default/override/reload/duplication and warmed allocation checks execute. Compressed/integer formats activate five exact Partial dependencies; cube values remain Excluded and RD/compressed import integration remains Blocked. Twenty-six rows become Implemented, with zero unmapped declarations.
+
+
+[GPU scratch initialization](../components/gpu-contact-colors.md#scratch-initialization-and-preparation-order) adds a dense first-use regression and moves private contact-color/packing preparation ahead of recorded solver work. This changes no public declaration accounting; the sporadic rendered failure and full backend/performance acceptance remain open.
+
+
+Registered [collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now has explicit typed projections for all ten object/canvas/priority operations. Attach-time publication, live edits, two-world transfers, weak results, failed hooks and zero warmed edited queries execute. These rows remain Partial; numerical priority and complete extension-operation acceptance remain open.
+
+[Borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring) now guards initial/live raw and scene body/Area slot/filter edits and shared server-shape replacement/release. Twenty-seven extension shape/filter operations project through existing RebuildShapes/UpdateFilter and guarded facade getters; rows remain Partial pending arbitrary solver semantics and complete acceptance.
+
+[Borrowed body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring) now guards scene/raw force, mass, state, integration and callback writes during numerical hooks, including direct-body views. Authored reads, ordinary callbacks and body-state forwarding retain access. The independent consumer exercises real impulses and zero warmed edited full-frame allocation; complete numerical/extension acceptance remains open.
+
+[Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

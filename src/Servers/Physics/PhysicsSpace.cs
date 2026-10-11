@@ -147,12 +147,19 @@ internal sealed partial class PhysicsSpace : IDisposable
 
     internal void EnsureWorldBindingChange() { EnsureQueryAccess(); EnsureWorldRelease(); }
     private int _extensionCallbackDepth;
+    private int _implementationCallbackDepth;
     internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
     internal void BeginImplementationCallback(bool cleanup = false)
     {
         if (_disposed && !cleanup) throw new ObjectDisposedException(nameof(PhysicsSpace));
         if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics implementations require the space owner thread.");
         _extensionCallbackDepth++;
+        _implementationCallbackDepth++;
+    }
+    internal void EndImplementationCallback() { _implementationCallbackDepth--; EndExtensionCallback(); }
+    internal void EnsureImplementationWriteAccess()
+    {
+        if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Body authoring cannot change while a numerical physics implementation hook is borrowed.");
     }
     internal void EnsureImplementationRelease()
     {
@@ -182,7 +189,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
     internal void EnsureExtensionHierarchyChange()
     {
-        if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Scene hierarchy cannot change while a physics extension hook is borrowed.");
+        if (_extensionCallbackDepth != 0) throw new InvalidOperationException("Physics bindings and scene hierarchy cannot change while a physics extension hook is borrowed.");
     }
     private bool DispatchingCallbacks => _backend?.IsFlushingQueries == true || _extensionCallbackDepth != 0 || _dispatchingBodyStates || _dispatching || _dispatchingContacts || _dispatchingServerAreas;
     internal void EnsureWorldRelease()

@@ -43,7 +43,15 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
     internal bool Omitted { get => Owners.Scene is RigidBody rigid ? rigid.CustomIntegrator : OmitForces; }
     internal int ContactLimit => Owners.Scene is RigidBody rigid ? rigid.MaxContactsReported : MaxContacts;
 
-    internal void EnsureMutable() => Space?.EnsureQueryAccess();
+    internal void EnsureAccess(bool writing = false)
+    {
+        var owners = Owners;
+        owners.Scene?.Tree?.EnsureOwnerThread();
+        if (writing) owners.Scene?.EnsurePhysicsParticipationChange();
+        var space = Space;
+        space?.EnsureQueryAccess();
+        if (writing) space?.EnsureImplementationWriteAccess();
+    }
 
     internal void ApplyMassProfile()
     {
@@ -56,7 +64,7 @@ internal sealed partial class PhysicsBodyRuntime(RID rid, WeakReference<Collisio
 
     internal void SetMassProfile(float mass, float inertia, Vector2? center)
     {
-        EnsureMutable();
+        EnsureAccess(writing: true);
         PhysicsMass.Validate(mass, inertia, center);
         var owners = Owners;
         if (owners.Scene is RigidBody rigid)

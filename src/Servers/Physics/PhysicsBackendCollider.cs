@@ -33,7 +33,9 @@ public abstract class PhysicsBackendCollider
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta);
     /// <summary>Supplies the selected implementation operation: set area fields.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Samples the retained Area profile before nonzero interval preparation under the world owner guard.
+    /// The immutable configuration contains gravity, point-distance, damping, override modes and priority.
+    /// Nested Area/default-world field writes reject before mutation; ordinary post-step Area callbacks may edit the next interval's profile.</remarks>
     protected internal abstract void SetAreaFields(in PhysicsAreaFieldConfiguration configuration);
     /// <summary>Supplies the selected implementation operation: set area monitoring.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -44,17 +46,26 @@ public abstract class PhysicsBackendCollider
     /// <summary>Supplies the selected implementation operation: read resolved fields.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current);
-    /// <summary>Supplies the selected implementation operation: refresh identity.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes the owning collider's object and canvas associations.</summary>
+    /// <remarks>Called after Attach and before shape preparation, including values authored while detached.
+    /// Later association changes call this hook again. Zero clears either association; IDs retain all 64 bits.
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// <param name="objectID">The retained weak object association's instance ID, or zero.</param>
+    /// <param name="canvasID">The exact point-query canvas association, or zero for the default canvas.</param>
     protected internal abstract void RefreshIdentity(ulong objectID, ulong canvasID);
-    /// <summary>Supplies the selected implementation operation: set collision priority.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Publishes the owning collider's finite positive collision priority.</summary>
+    /// <remarks>Called after initial identity publication, including detached authoring, and on later priority changes.
+    /// The call borrows the world owner context. Failure during attachment retires that attachment.</remarks>
+    /// <param name="value">The retained finite positive priority, initially 1 unless authored otherwise.</param>
     protected internal abstract void SetCollisionPriority(float value);
     /// <summary>Supplies the selected implementation operation: update filter.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Nested body/Area shape-slot,
+    /// filter, shared server-shape data and release writes reject before changing retained authoring. Reads remain guarded and available.</remarks>
     protected internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
     /// <summary>Supplies the selected implementation operation: rebuild shapes.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// Nested body/Area shape-slot, filter, shared server-shape data and release writes reject before changing retained authoring,
+    /// including initial attachment before the public space binding is committed.</remarks>
     protected internal abstract void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     /// <summary>Supplies the selected implementation operation: get pose.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

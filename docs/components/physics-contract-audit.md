@@ -465,3 +465,15 @@ CPU-then-GPU window sequence fails with severe escape/speed. This stability/life
 case is open and prevents final rendered-family acceptance. It must be diagnosed
 without reducing population or relaxing physical tolerances. These findings do not
 close complete extension operations or final CPU/GPU performance acceptance.
+
+
+[GPU scratch initialization](gpu-contact-colors.md#scratch-initialization-and-preparation-order) now exercises a 16,384-body NaN-initialized packed first step. Private color/packing resources are prepared before recording solver work. This does not close the sporadic uninstrumented window failure or final performance acceptance.
+
+
+Registered [collider metadata](physics-registered-adapter.md#initial-collider-metadata) now reaches Attach-time object/canvas/priority hooks as well as live edits. Public body/Area queries, weak identities, transfers and initial-hook failures execute in a separate consumer. Ten extension rows now have explicit Partial projections; numerical priority and full operation acceptance remain open.
+
+[Borrowed shape authoring](physics-registered-adapter.md#borrowed-shape-authoring) now rejects raw/scene body and Area slot/filter edits and shared server-shape replacement/release before mutation, including partial initial attachment. The independent consumer checks ordinary numerical query membership and zero warmed filter/query allocation. The complete 27-member shape/filter projection remains Partial; arbitrary numerical semantics and full extension acceptance remain open.
+
+[Borrowed body authoring](physics-registered-adapter.md#borrowed-body-authoring) now guards scene/raw force, mass, state, integration and callback writes during numerical hooks, including direct-body views. Authored reads, ordinary callbacks and body-state forwarding retain access. The independent consumer exercises real impulses and zero warmed edited full-frame allocation; complete numerical/extension acceptance remains open.
+
+[Registered Area fields](physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

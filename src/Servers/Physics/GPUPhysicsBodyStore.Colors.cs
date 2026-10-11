@@ -16,7 +16,8 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal int ContactColorCount { get; private set; }
     internal int ContactColorRounds { get; private set; }
     internal long ContactColorFallbacks { get; private set; }
-    private int BuildContactColors(ref nint command)
+    /// <summary>Creates schedule resources before any solver commands are recorded.</summary>
+    private void PrepareContactColors()
     {
         _colorPipeline ??= _context.CreatePipeline("PhysicsResidentColors.comp.spv");
         _coloredSolvePipeline ??= _context.CreatePipeline("PhysicsResidentColoredSolve.comp.spv");
@@ -24,12 +25,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         Grow(ref _colorOwners, ref _colorOwnerCapacity, _highWater, 8, false);
         Grow(ref _colorOrder, ref _colorOrderCapacity, ContactPointCount, 4, false);
         _colorBuckets ??= Buffer(384); _colorStatus ??= Buffer(16); _colorDownload ??= Transfer(144, SDL.GPUTransferBufferUsage.Download);
+    }
+    private int BuildContactColors(ref nint command)
+    {
         var mapped = SDL.MapGPUTransferBuffer(Device, _spatialUpload!.DangerousGetHandle(), false);
         if (mapped == 0) throw GPUPhysicsDevice.Failure("map contact coloring reset");
         ((ulong*)mapped)[0] = ((ulong*)mapped)[1] = 0; SDL.UnmapGPUTransferBuffer(Device, _spatialUpload.DangerousGetHandle());
         var copy = SDL.BeginGPUCopyPass(command);
         if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact coloring reset");
-        UploadSpatial(copy, _colorStatus, 0, 16); SDL.EndGPUCopyPass(copy);
+        UploadSpatial(copy, _colorStatus!, 0, 16); SDL.EndGPUCopyPass(copy);
         ColorPass(command, 0, _highWater, 0); ColorPass(command, 1, ContactPointCount, 0); ColorPass(command, 7, 32, 0);
         // shortcut: 32 colors/64 rounds use complete Jacobi on overflow; enlarge the schedule if high-degree workloads need colored convergence.
         var limit = (uint)Math.Clamp(ContactColorRounds + 4, 8, 64); var round = 0u;
@@ -45,10 +49,10 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
             ColorPass(command, 8, 1, 0); ColorPass(command, 9, ContactPointCount, 0);
             copy = SDL.BeginGPUCopyPass(command);
             if (copy == 0) throw GPUPhysicsDevice.Failure("begin contact coloring result");
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _colorStatus.DangerousGetHandle(), Size = 16 }, new() { TransferBuffer = _colorDownload.DangerousGetHandle() });
-            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _colorBuckets.DangerousGetHandle(), Size = 128 }, new() { TransferBuffer = _colorDownload.DangerousGetHandle(), Offset = 16 });
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _colorStatus!.DangerousGetHandle(), Size = 16 }, new() { TransferBuffer = _colorDownload!.DangerousGetHandle() });
+            SDL.DownloadFromGPUBuffer(copy, new() { Buffer = _colorBuckets!.DangerousGetHandle(), Size = 128 }, new() { TransferBuffer = _colorDownload!.DangerousGetHandle(), Offset = 16 });
             SDL.EndGPUCopyPass(copy); _failed = true; Finish(ref command); ReadbackBytes += 144;
-            mapped = SDL.MapGPUTransferBuffer(Device, _colorDownload.DangerousGetHandle(), false);
+            mapped = SDL.MapGPUTransferBuffer(Device, _colorDownload!.DangerousGetHandle(), false);
             if (mapped == 0) throw GPUPhysicsDevice.Failure("map contact coloring result");
             bool incomplete, fallback;
             try
@@ -66,7 +70,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
                 }
                 if (offset > ContactPointCount) throw new InvalidOperationException("GPU contact coloring exceeded its point count.");
             }
-            finally { SDL.UnmapGPUTransferBuffer(Device, _colorDownload.DangerousGetHandle()); }
+            finally { SDL.UnmapGPUTransferBuffer(Device, _colorDownload!.DangerousGetHandle()); }
             command = SDL.AcquireGPUCommandBuffer(Device);
             if (command == 0) throw GPUPhysicsDevice.Failure("acquire colored contact solve");
             if (!incomplete) { if (fallback) ContactColorFallbacks++; break; }
@@ -107,11 +111,15 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         SDL.PushGPUComputeUniformData(command, 0, (nint)(&settings), (uint)sizeof(SolverUniforms));
         SDL.DispatchGPUCompute(compute, (settings.Count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute); UniformBytes += sizeof(SolverUniforms);
     }
-    private void PackSolverState(nint command, uint stage)
+    /// <summary>Creates packed scratch before command recording, including first-use pipeline setup.</summary>
+    private void PreparePackedSolver()
     {
         _packSolverPipeline ??= _context.CreatePipeline("PhysicsResidentPackSolver.comp.spv");
         Grow(ref _packedConstraints, ref _packedConstraintCapacity, ContactPointCount, 64, false);
         Grow(ref _packedImpulses, ref _packedImpulseCapacity, ContactPointCount, 32, false);
+    }
+    private void PackSolverState(nint command, uint stage)
+    {
         var inputs = stackalloc nint[2] { _constraintsGPU!.DangerousGetHandle(), _colorOrder!.DangerousGetHandle() };
         var outputs = stackalloc SDL.GPUStorageBufferReadWriteBinding[6]
         {
@@ -121,7 +129,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
         };
         var compute = SDL.BeginGPUComputePass(command, 0, 0, (nint)outputs, 6);
         if (compute == 0) throw GPUPhysicsDevice.Failure("begin packed solver state");
-        SDL.BindGPUComputePipeline(compute, _packSolverPipeline.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
+        SDL.BindGPUComputePipeline(compute, _packSolverPipeline!.DangerousGetHandle()); SDL.BindGPUComputeStorageBuffers(compute, 0, (nint)inputs, 2);
         var count = (uint)(stage >= 2 ? _highWater : _colorStarts[ContactColorCount - 1] + _colorCounts[ContactColorCount - 1]);
         var settings = stackalloc uint[4] { stage, count, 0, 0 };
         SDL.PushGPUComputeUniformData(command, 0, (nint)settings, 16); SDL.DispatchGPUCompute(compute, (count + 63) / 64, 1, 1); SDL.EndGPUComputePass(compute); UniformBytes += 16;

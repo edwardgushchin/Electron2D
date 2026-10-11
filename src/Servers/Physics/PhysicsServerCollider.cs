@@ -220,6 +220,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     private bool _validatingGeometry;
     internal void EnsureGeometryLifetimeAccess()
     {
+        Space?.EnsureExtensionHierarchyChange();
         if (_validatingGeometry) throw new InvalidOperationException("A collider cannot be released or transferred while its geometry is borrowed.");
     }
     internal void ValidateGeometry(PhysicsSpace space)

@@ -16,7 +16,7 @@ public sealed partial class PhysicsServer
     /// <returns>The stored mode, Disabled by default, including while detached or not dynamic.</returns>
     /// <exception cref="ArgumentException">The identity does not refer to a live body.</exception>
     /// <exception cref="InvalidOperationException">The caller is off-owner or the world is stepping.</exception>
-    public static CCDMode BodyGetContinuousCollisionDetectionMode(RID body) => Service.ForceRuntime(body).ContinuousMode;
+    public static CCDMode BodyGetContinuousCollisionDetectionMode(RID body) => Service.ForceRuntime(body, writing: false).ContinuousMode;
 }
 
 internal sealed partial class PhysicsBodyRuntime
@@ -24,7 +24,7 @@ internal sealed partial class PhysicsBodyRuntime
     internal CCDMode ContinuousMode { get; private set; }
     internal void SetCCDMode(CCDMode mode)
     {
-        EnsureMutable();
+        EnsureAccess(writing: true);
         if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
         if (ContinuousMode == mode) return;
         ContinuousMode = mode; GPUParametersDirty = true; Wake();

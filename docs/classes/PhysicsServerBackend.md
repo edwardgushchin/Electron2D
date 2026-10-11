@@ -74,3 +74,10 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 [Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The separate public-only consumer implements a bounded circle/spring model; it is a test solver, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
 
 `GetPortableOneWayCount` bounds the next `CapturePortableOneWays` span, even after retained storage has grown. Returned count cannot exceed that current span. Valid continuation requires distinct bound colliders, enabled logical shapes, implementation-validated nonnegative pieces and no duplicate unordered pair. `CompletePortableRestore` receives the translated local identities; the external consumer checks actual pass-through and contact impulses after restore.
+
+Body force, mass, integration, motion, sleep, CCD and callback authoring now
+reject before mutation during selected numerical hooks, including initial
+attachment. Direct-body setters/forces use the same qualified numerical guard.
+Guarded authored reads, ordinary post-solver callbacks and caller-created
+body-state forwarding remain available; hierarchy/resource-lifetime guards still
+cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).

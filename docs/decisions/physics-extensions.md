@@ -88,6 +88,13 @@ interception would leave scene behavior and direct queries outside the extension
   This executes the caller-created view capability. Internal selected factories
   supply scene/server integration views; public registered factories and the wider
   server/custom-geometry families remain open. The complete contact getter family may project one immutable PhysicsBodyContact hook result: its engine-validated construction samples RID/shape/object identity once, so retained contact values survive later geometry/association changes without trusting forged IDs.
+- Body authoring and direct-body writes reject before mutation while a selected
+  numerical implementation hook is borrowed, including partial initial attachment.
+  Keep numerical borrowing distinct from a caller-created body-state view's
+  ordinary requested write: that view may forward to its inner state. Guarded
+  authored reads and ordinary post-solver callback writes retain their existing
+  access. Hierarchy/resource-lifetime guards continue to cover every extension
+  scope; state-write delegation does not authorize binding or geometry changes.
 - A factory-returned cached body extension supplies its contact count/values during
   owner-thread publication after native solver/worker capture completes. The engine
   validates and commits a complete immutable contact snapshot before scene monitors

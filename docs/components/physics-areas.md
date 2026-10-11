@@ -1,6 +1,6 @@
 # Physics areas component
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 ## Scope and owned types
 
@@ -42,3 +42,5 @@ GPUPhysicsWorldBackend; shared PhysicsSpace commits observer histories and dispa
 events after solving. [The shared CPU/GPU fixture](../../tests/Electron2D.Tests/PhysicsAreaBackendTests.cs)
 checks mixed scene/raw fields, logical slots, masks, audio, disabled geometry, transfer,
 reentry, free and 64 warmed step/audio/read cycles at zero owner/all-thread bytes.
+
+[Registered Area fields](physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.

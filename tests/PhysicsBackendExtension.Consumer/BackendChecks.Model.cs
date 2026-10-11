@@ -13,6 +13,10 @@ public static partial class BackendChecks
         internal int Steps, Flushes, Synchronizations, Pairs, DebugReads;
         internal bool BadDebugCount, BadDebugPoint;
         internal RID ContactFailure;
+        internal Action<RID>? IdentityHook;
+        internal Action<RID>? ShapeHook, FilterHook;
+        internal Action<RID>? BodyHook;
+        internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal PhysicsAreaFieldConfiguration Fields;
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
@@ -40,7 +44,7 @@ public static partial class BackendChecks
         { var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
         protected override PhysicsBackendJoint CreateJoint(RID joint) { var created = new Constraint(this, joint); Joints.Add(joint, created); return created; }
         protected override void BeginStep(double delta) => Ready = false;
-        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) => Fields = fields;
+        protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
         protected override void Solve(double delta)
         {
@@ -139,7 +143,9 @@ public static partial class BackendChecks
         internal bool IsArea => area;
         internal bool Monitoring, Monitorable = true;
         internal uint Layer, Mask;
-        internal ulong Canvas;
+        internal PhysicsColliderShape LastShape;
+        internal ulong Canvas, ObjectID;
+        internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
         internal float Rotation, Angular, Torque, SurfaceAngular, Mass = 1, Inertia = 1, Radius, SleepTime;
         internal bool Awake = true, CanSleep = true, Locked, Detached, Omit;
@@ -147,6 +153,7 @@ public static partial class BackendChecks
         private Vector2 _center;
         private Transform _saved;
         private PhysicsBodyFields _fields;
+        internal PhysicsAreaFieldConfiguration AreaFields;
         internal bool Dynamic => !area && Mode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear;
         internal void Advance(float dt)
         {
@@ -179,19 +186,23 @@ public static partial class BackendChecks
         protected override void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta)
         {
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;
-            var f = solver.Fields;
-            _fields = new(f.GravityVector * f.Gravity * configuration.GravityScale,
+            var f = solver.ResolveFields(this);
+            _fields = new(f.Gravity * configuration.GravityScale,
                 configuration.LinearDamp + f.LinearDamp, configuration.AngularDamp + f.AngularDamp, true);
         }
         protected override void SetAreaMonitoring(bool monitoring, bool monitorable) { Monitoring = monitoring; Monitorable = monitorable; }
-        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) { }
+        protected override void SetAreaFields(in PhysicsAreaFieldConfiguration configuration) => AreaFields = configuration;
         protected override PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current) => _fields;
-        protected override void RefreshIdentity(ulong objectID, ulong canvasID) => Canvas = canvasID;
-        protected override void SetCollisionPriority(float value) { }
-        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { Layer = layer; Mask = mask; }
+        protected override void RefreshIdentity(ulong objectID, ulong canvasID)
+        { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }
+        protected override void SetCollisionPriority(float value)
+        { solver.PriorityHook?.Invoke(); Priority = value; }
+        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { solver.FilterHook?.Invoke(rid); Layer = layer; Mask = mask; }
         protected override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {
+            solver.ShapeHook?.Invoke(rid);
             Shapes = 0; Layer = layer; Mask = mask;
+            LastShape = slots.IsEmpty ? default : slots[^1];
             foreach (ref readonly var s in slots)
                 if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
         }
@@ -206,7 +217,7 @@ public static partial class BackendChecks
         protected override void SetTargetPose(Transform pose, double delta) { Velocity = (pose.Origin - Position) / (float)delta; Angular = (pose.Rotation - Rotation) / (float)delta; }
         protected override void SavePose() => _saved = GetTransform();
         protected override void RestorePose() => SetPose(_saved.Origin, _saved.Rotation);
-        protected override void SetLinearVelocity(Vector2 velocity) => Velocity = velocity;
+        protected override void SetLinearVelocity(Vector2 velocity) { solver.BodyHook?.Invoke(rid); Velocity = velocity; }
         protected override void SetAngularVelocity(float velocity) => Angular = velocity;
         protected override void ClearVelocity() { Velocity = default; Angular = 0; }
         protected override void SetAwake(bool awake) { Awake = awake; if (!awake) ClearVelocity(); }
