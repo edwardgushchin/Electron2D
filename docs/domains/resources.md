@@ -207,3 +207,7 @@ AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typ
 [Per-tile drawing](../components/tiles.md#per-tile-materials-and-draw-order) now connects material resources, Z/Y offsets, UV clipping and stored layer grouping/order to actual retained canvas output.
 
 [Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.
+
+## Native device image consumers
+
+The active GPU renderer now retains a RenderingDevice and directly samples its ordinary/array images through TextureRD, TextureLayeredRD and TextureArrayRD. Native allocations stay on the device timeline; canvas frames require no CPU snapshot/upload. Borrowed/owned canvas wrapper lifetimes, role validation, transient archive bindings, readback conversion, alias replacement and automatic global submission are described in [local compute](../components/local-compute.md#device-images-in-canvas).

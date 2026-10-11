@@ -3,9 +3,10 @@ using SDL3;
 
 namespace Electron2D;
 
-/// <summary>A local, owner-thread compute device with owned buffer, shader and uniform-set identities.</summary>
-/// <remarks>Create through RenderingServer.CreateLocalRenderingDevice. Compute lists record in order; Submit
-/// starts execution and Sync waits. Buffer reads synchronize pending work. Resource identities never cross devices.
+/// <summary>An owner-thread compute device with owned buffer, shader and uniform-set identities.</summary>
+/// <remarks>Create a local device through RenderingServer.CreateLocalRenderingDevice or borrow the retained renderer device
+/// through RenderingServer.GetRenderingDevice. Local Submit starts execution and Sync waits; the renderer device
+/// flushes before canvas submission and completes queued reads before FramePostDraw. Buffer reads synchronize pending work. Resource identities never cross devices.
 /// The compute profile supports buffers, sampled images/samplers and writable images; graphics pipelines remain unavailable.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
@@ -68,8 +69,9 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private nint _command, _fence;
     private long _activeList, _nextList;
     private nint Device => _context.Device;
-    internal RenderingDevice() { }
-    private void Access() { ThrowIfDisposed(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A local device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
+    private readonly RenderingServer? _serverOwner;
+    internal RenderingDevice(RenderingServer? serverOwner = null) { _serverOwner = serverOwner; }
+    private void Access(bool canvasMetadata = false) { ThrowIfDisposed(); if (!canvasMetadata) _serverOwner?.EnsureDeviceAccess(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A rendering device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
     private Entry Get(RID rid) { Access(); return _entries.TryGetValue(rid, out var entry) ? entry : throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
     private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
@@ -171,7 +173,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         entry.Download ??= Transfer(entry.Size, SDL.GPUTransferBufferUsage.Download);
         var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("begin buffer read");
         SDL.DownloadFromGPUBuffer(copy, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offsetBytes, Size = (uint)destination.Length }, new() { TransferBuffer = entry.Download.DangerousGetHandle() });
-        SDL.EndGPUCopyPass(copy); Submit(); CompleteSubmission();
+        SDL.EndGPUCopyPass(copy); SubmitRecorded(); CompleteSubmission();
         var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map buffer read");
         try { new ReadOnlySpan<byte>((void*)pointer, destination.Length).CopyTo(destination); }
@@ -289,8 +291,14 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <summary>Ends the active list without submitting it.</summary>
     public void ComputeListEnd() { List(_activeList); _activeList = 0; _pipeline = null; _sets.Clear(); }
     /// <summary>Submits all recorded uploads, compute lists and readback requests.</summary>
-    /// <remarks>Host-only and empty readback batches also require Sync before another explicit Submit.</remarks>
+    /// <remarks>Local devices only. Host-only and empty readback batches also require Sync before another explicit Submit.</remarks>
+    /// <exception cref="InvalidOperationException">The device belongs to the renderer or a previous submission is pending.</exception>
     public void Submit()
+    {
+        if (_serverOwner is not null) throw new InvalidOperationException("The renderer submits its device; explicit submission belongs to local devices.");
+        SubmitRecorded();
+    }
+    private void SubmitRecorded()
     {
         IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
         if (_command != 0)
@@ -305,11 +313,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         while (_recordedReadbacks.TryDequeue(out var request)) _submittedReadbacks.Enqueue(request);
     }
     /// <summary>Waits for submitted work, releases its fence and delivers completed readback callbacks.</summary>
-    /// <remarks>Callbacks run once in request order on the owner thread. Nested Sync defers callback
+    /// <remarks>Local devices only. Callbacks run once in request order on the owner thread. Nested Sync defers callback
     /// delivery to the outer delivery loop. Disposal during a callback cancels remaining callbacks.</remarks>
     /// <exception cref="AggregateException">One or more callbacks failed; other completed callbacks were attempted.</exception>
     public void Sync()
     {
+        if (_serverOwner is not null) throw new InvalidOperationException("Explicit synchronization belongs to local devices.");
         IdleList(); CompleteSubmission(); DeliverReadbacks();
     }
     /// <summary>Returns the selected compute-device name.</summary>
@@ -323,12 +332,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public void FreeRID(RID rid)
     {
         IdleList(); var entry = Get(rid); CompleteSubmission();
-        if (_command != 0 || _recordedReadbacks.Count != 0) { Submit(); CompleteSubmission(); }
+        if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
         _entries.Remove(rid); entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
-    protected override void ValidateDisposal() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the compute list before disposing the device."); base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { if (_serverOwner is not null && !_serverOwner.DeviceClosing) throw new InvalidOperationException("The renderer owns this device lifetime."); Access(); if (_activeList != 0 && _serverOwner is null) throw new InvalidOperationException("End the compute list before disposing the device."); base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
@@ -337,7 +346,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
-            _entries.Clear(); CancelReadbacks(); _context.Dispose();
+            _entries.Clear(); _sets.Clear(); _pipeline = null; _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);
     }

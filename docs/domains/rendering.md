@@ -216,3 +216,7 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Menu strips](../components/menu-strips.md) add shaped translated RTL headers, all ordinary/mirrored state styles and flat/focus text behavior to current embedded PopupMenu presentation and typed theme lookup.
 
 [Canvas lights and occlusion](../components/canvas-lights.md) integrate scene/retained sources, multichannel textures, shadow contours and tile distance-field policies. Compatibility and programmable-material limitations remain explicit.
+
+## Native device image consumers
+
+The active GPU renderer now retains a RenderingDevice and directly samples its ordinary/array images through TextureRD, TextureLayeredRD and TextureArrayRD. Native allocations stay on the device timeline; canvas frames require no CPU snapshot/upload. Borrowed/owned canvas wrapper lifetimes, role validation, transient archive bindings, readback conversion, alias replacement and automatic global submission are described in [local compute](../components/local-compute.md#device-images-in-canvas).

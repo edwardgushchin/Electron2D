@@ -643,6 +643,16 @@ def main():
     for name in ('texture_2d_create(', 'texture_2d_get(', 'texture_2d_update(', 'texture_get_format(', 'texture_replace(', 'free_rid('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Partial | ' in row and 'RenderingTextureRIDTests' in row, row
+    device_factory = next(row for row in rendering_rows if "get_rendering_device(" in row)
+    assert " | Partial | " in device_factory and "renderer-owned" in device_factory
+    for resource, target in (("TextureRD", "TextureRD"), ("TextureLayeredRD", "TextureLayeredRD"), ("TextureArrayRD", "TextureArrayRD")):
+        device_rows = pages[CLASS_PAGES / f"{resource}.md"].splitlines()
+        declaration = next(row for row in device_rows if row.startswith("| [`class "))
+        assert f"Electron2D.{target}" in declaration and " | Partial | " in declaration
+        assert "Integer canvas sampling" in declaration and "RenderingDeviceCanvasTests" in declaration
+    inverse_image = next(row for row in rendering_rows if "method texture_get_rd_texture(" in row)
+    assert " | Partial | " in inverse_image and "borrowed native allocation lifetime" in inverse_image
+
     for name in ('texture_proxy_create(', 'texture_proxy_update('):
         row, = [line for line in rendering_rows if line.startswith(f'| [`method {name}')]
         assert ' | Partial | ' in row and 'RenderingTextureProxyTests' in row and 'actual methods' in row, row

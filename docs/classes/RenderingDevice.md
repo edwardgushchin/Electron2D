@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned, owner-thread compute device created by RenderingServer.CreateLocalRenderingDevice. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+An owner-thread compute device created locally by RenderingServer.CreateLocalRenderingDevice or retained by the active GPU renderer through RenderingServer.GetRenderingDevice. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
 
 ## Example
 

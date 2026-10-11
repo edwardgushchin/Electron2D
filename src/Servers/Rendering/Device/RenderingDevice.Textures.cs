@@ -89,7 +89,7 @@ public sealed unsafe partial class RenderingDevice
         41 => DataFormat.R64SINT,
         _ => DataFormat.Max
     };
-    private sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable);
+    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable);
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
         var native = (SDL.GPUTextureUsageFlags)0;
@@ -191,17 +191,17 @@ public sealed unsafe partial class RenderingDevice
         var pass = SDL.BeginGPUCopyPass(Commands()); if (pass == 0) throw GPUPhysicsDevice.Failure("begin texture read");
         try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) SDL.DownloadFromGPUTexture(pass, Region(entry, layer, mip), new() { TransferBuffer = entry.Download.DangerousGetHandle(), Offset = entry.Texture.Offsets[mip] }); }
         finally { SDL.EndGPUCopyPass(pass); }
-        Submit(); CompleteSubmission(); var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
+        SubmitRecorded(); CompleteSubmission(); var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map texture read");
         try { for (var mip = 0; mip < entry.Texture!.Mips; mip++) new ReadOnlySpan<byte>((void*)(pointer + (nint)entry.Texture.Offsets[mip]), (int)entry.Texture.Sizes[mip]).CopyTo(destination.Slice((int)entry.Texture.PackedOffsets[mip], (int)entry.Texture.Sizes[mip])); }
         finally { SDL.UnmapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle()); }
         DeliverReadbacks();
     }
-    /// <summary>Queues a request-time layer snapshot and delivers an independent mip chain at local completion.</summary>
+    /// <summary>Queues a request-time layer snapshot and delivers an independent mip chain at device completion.</summary>
     /// <param name="texture">A live readable texture of this device.</param>
     /// <param name="layer">Zero-based layer.</param>
     /// <param name="callback">Receives tight mip-chain bytes on the creating thread.</param>
-    /// <remarks>End the compute list, queue the read, Submit, then Sync. This shares buffer readback FIFO,
+    /// <remarks>End the compute list and queue the read. Local devices use Submit/Sync; the retained renderer device completes before FramePostDraw. This shares buffer readback FIFO,
     /// callback-error, reentrancy and cancellation behavior. Later texture updates cannot replace the snapshot.</remarks>
     public void TextureGetDataAsync(RID texture, uint layer, Action<byte[]> callback)
     {

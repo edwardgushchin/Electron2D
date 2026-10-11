@@ -10632,6 +10632,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextureArrayRD",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureArrayRD",
+    "name": "TextureArrayRD",
+    "signature": "public sealed class Electron2D.TextureArrayRD",
+    "visibility": "public",
+    "baseType": "Electron2D.TextureLayeredRD",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextureButton",
     "kind": "type",
     "declaringType": "Electron2D.TextureButton",
@@ -10698,6 +10713,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TextureLayeredRD",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "TextureLayeredRD",
+    "signature": "public abstract class Electron2D.TextureLayeredRD",
+    "visibility": "public",
+    "baseType": "Electron2D.TextureLayered",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TextureProgressBar",
     "kind": "type",
     "declaringType": "Electron2D.TextureProgressBar",
@@ -10725,6 +10755,21 @@
       "System.IConvertible",
       "System.IFormattable",
       "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.TextureRD",
+    "kind": "type",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "TextureRD",
+    "signature": "public sealed class Electron2D.TextureRD",
+    "visibility": "public",
+    "baseType": "Electron2D.Texture",
+    "interfaces": [
+      "System.IDisposable"
     ],
     "parameters": null,
     "returnType": null,
@@ -20403,6 +20448,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.TextureArrayRD..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextureArrayRD",
+    "name": ".ctor",
+    "signature": "public TextureArrayRD()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.TextureButton..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.TextureButton",
@@ -20429,11 +20487,37 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.TextureLayeredRD..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": ".ctor",
+    "signature": "protected TextureLayeredRD()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.TextureProgressBar..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.TextureProgressBar",
     "name": ".ctor",
     "signature": "public TextureProgressBar()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TextureRD..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TextureRD",
+    "name": ".ctor",
+    "signature": "public TextureRD()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -139158,6 +139242,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.GetRenderingDevice()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "GetRenderingDevice",
+    "signature": "public static Electron2D.RenderingDevice GetRenderingDevice()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.GetShaderParameterList(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -140879,6 +140976,30 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingServer.TextureGetRDTexture(Electron2D.RID,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureGetRDTexture",
+    "signature": "public static Electron2D.RID TextureGetRDTexture(Electron2D.RID texture, System.Boolean SRGB = false)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "texture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "SRGB",
+        "type": "System.Boolean",
+        "default": "false"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingServer.TextureProxyCreate(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingServer",
@@ -140919,6 +141040,30 @@
       }
     ],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingServer.TextureRDCreate(Electron2D.RID,Electron2D.TextureLayered.LayeredType)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingServer",
+    "name": "TextureRDCreate",
+    "signature": "public static Electron2D.RID TextureRDCreate(Electron2D.RID deviceTexture, Electron2D.TextureLayered.LayeredType layerType = Array)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "deviceTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "layerType",
+        "type": "Electron2D.TextureLayered.LayeredType",
+        "default": "Array"
+      }
+    ],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {
@@ -161672,6 +161817,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextureArrayRD.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureArrayRD",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextureButton.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.TextureButton",
@@ -161910,6 +162068,174 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.TextureLayeredRD.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetFormat()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetFormat",
+    "signature": "public override Electron2D.Image.Format GetFormat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetLayerData(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetLayerData",
+    "signature": "public override Electron2D.Image GetLayerData(System.Int32 layerIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "layerIndex",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetLayers()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetLayers",
+    "signature": "public override System.Int32 GetLayers()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.HasMipmaps()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "HasMipmaps",
+    "signature": "public override System.Boolean HasMipmaps()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureLayeredRD.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.TextureProgressBar.CreateSceneInstanceFactory()",
     "kind": "method",
     "declaringType": "Electron2D.TextureProgressBar",
@@ -162020,6 +162346,142 @@
         "default": null
       }
     ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.GetHeight()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "GetHeight",
+    "signature": "public override System.Int32 GetHeight()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.GetImage()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "GetImage",
+    "signature": "public override Electron2D.Image GetImage()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.GetWidth()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "GetWidth",
+    "signature": "public override System.Int32 GetWidth()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TextureRD.ValidateDisposal()",
+    "kind": "method",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "ValidateDisposal",
+    "signature": "protected override System.Void ValidateDisposal()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
     "returnType": "System.Void",
     "value": null
   },
@@ -216609,6 +217071,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.TextureLayeredRD.TextureRDRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureLayeredRD",
+    "name": "TextureRDRID",
+    "signature": "public Electron2D.RID TextureRDRID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.TextureProgressBar.FillMode()",
     "kind": "property",
     "declaringType": "Electron2D.TextureProgressBar",
@@ -216814,6 +217289,71 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureRD.HasAlpha()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "HasAlpha",
+    "signature": "public System.Boolean HasAlpha { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureRD.HasMipmaps()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "HasMipmaps",
+    "signature": "public System.Boolean HasMipmaps { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureRD.MipmapCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "MipmapCount",
+    "signature": "public System.Int32 MipmapCount { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureRD.PixelFormat()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "PixelFormat",
+    "signature": "public Electron2D.Image.Format PixelFormat { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Image.Format",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.TextureRD.TextureRDRID()",
+    "kind": "property",
+    "declaringType": "Electron2D.TextureRD",
+    "name": "TextureRDRID",
+    "signature": "public Electron2D.RID TextureRDRID { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RID",
     "value": null
   },
   {

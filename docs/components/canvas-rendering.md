@@ -481,3 +481,7 @@ SubViewportContainerTests verifies typed defaults/packing/invalid writes, size p
 Eligible MultiMesh triangle children retain hardware instancing inside CanvasGroup. Composition uses transformed instance bounds and excludes untransformed base vertices from the group region; opacity still applies once to the composed surface. Canvas masks retain expanded geometry. MultiMeshRenderingTests verifies grouped translated/live instances, opacity pixels and actual stream selection on GPU and compatibility.
 
 [Canvas lights and occlusion](canvas-lights.md) now integrate scene and retained sources, normal/specular channels, open/closed contours, tile policies and programmable signed-distance-field sampling. See that component for actual renderer limits and verification boundaries.
+
+## Native device image consumers
+
+The active GPU renderer now retains a RenderingDevice and directly samples its ordinary/array images through TextureRD, TextureLayeredRD and TextureArrayRD. Native allocations stay on the device timeline; canvas frames require no CPU snapshot/upload. Borrowed/owned canvas wrapper lifetimes, role validation, transient archive bindings, readback conversion, alias replacement and automatic global submission are described in [local compute](../components/local-compute.md#device-images-in-canvas).

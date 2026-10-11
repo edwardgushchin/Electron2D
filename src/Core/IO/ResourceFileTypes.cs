@@ -62,6 +62,8 @@ public static partial class ResourceFileTypes
         RegisterResource("Image", CreateImage);
         RegisterResource("ImageTexture", CreateImageTexture);
         RegisterResource("TextureArray", CreateTextureArray);
+        RegisterResource("TextureRD", CreateTextureRD);
+        RegisterResource("TextureArrayRD", CreateTextureArrayRD);
         RegisterResource("PlaceholderTextureArray", CreatePlaceholderTextureArray);
         RegisterResource("AtlasTexture", CreateAtlasTexture);
 
@@ -139,6 +141,8 @@ public static partial class ResourceFileTypes
     private static Image CreateImage() => new();
     private static ImageTexture CreateImageTexture() => new();
     private static TextureArray CreateTextureArray() => new();
+    private static TextureRD CreateTextureRD() => new();
+    private static TextureArrayRD CreateTextureArrayRD() => new();
     private static PlaceholderTextureArray CreatePlaceholderTextureArray() => new();
     private static AtlasTexture CreateAtlasTexture() => new();
     private static CircleShape CreateCircleFileResource() => new();

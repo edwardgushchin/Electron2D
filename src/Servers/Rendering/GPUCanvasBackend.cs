@@ -380,6 +380,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private nint PrepareTexture(Texture texture)
     {
+        if (texture is ServerTexture { IsProxy: true } proxy) texture = RenderingTextureRegistry.ResolveProxySource(proxy.ProxyTarget) ?? RenderingTextureRegistry.PlaceholderTexture;
         if (texture is AtlasTexture atlas) texture = atlas.RenderingTexture
             ?? throw new InvalidOperationException("A sampled atlas has no source texture.");
         if (texture is ViewportTexture viewportTexture)
@@ -387,6 +388,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             var viewport = viewportTexture.Bound ?? throw new InvalidOperationException("The sampled viewport texture is unresolved.");
             return (FindTarget(viewport) ?? throw new InvalidOperationException("The sampled viewport has no native target.")).Current.DangerousGetHandle();
         }
+        if (texture is TextureRD deviceTexture && deviceTexture.NativeTexture(Device) is var native && native != 0) return native;
         if (_usedTextures.Add(texture))
         {
             var pixels = texture.CapturePixels() ?? RenderingTextureRegistry.PlaceholderPixels;
@@ -402,6 +404,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
 
     private nint PrepareLayeredTexture(TextureLayered texture)
     {
+        if (texture is LayeredTextureProxy proxy) texture = RenderingTextureRegistry.ResolveLayeredProxySource(proxy.ProxyTarget) ?? throw new InvalidOperationException("The sampled layered proxy has no live source.");
+        if (texture is TextureLayeredRD deviceTexture && deviceTexture.NativeTexture(Device) is var native && native != 0) return native;
         if (_usedLayeredTextures.Add(texture))
         {
             if (texture.GetLayeredType() != TextureLayered.LayeredType.Array) throw new NotSupportedException("Only independent image-array sampling is applicable.");

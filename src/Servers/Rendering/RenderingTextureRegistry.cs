@@ -141,8 +141,8 @@ internal sealed class ServerTexture : Texture
         return IsProxy && !_proxySizeOverride && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source
             ? ProxySize(source) : new(Size.X, Size.Y);
     }
-    public override Image? GetImage() => IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is ViewportTexture view ? view.GetImage() : CapturePixels()?.CopyImage();
-    public override Image.Format PixelFormat => IsProxy ? CapturePixels()?.Source.Format ?? _proxyFormat : base.PixelFormat;
+    public override Image? GetImage() => IsProxy && RenderingTextureRegistry.ResolveProxySource(ProxyTarget) is { } source ? source.GetImage() : CapturePixels()?.CopyImage();
+    public override Image.Format PixelFormat => IsProxy ? RenderingTextureRegistry.ResolveProxySource(ProxyTarget)?.PixelFormat ?? _proxyFormat : base.PixelFormat;
     internal override TexturePixels? CapturePixels()
     {
         ThrowIfDisposed();
@@ -153,7 +153,7 @@ internal sealed class ServerTexture : Texture
         ProxySize(source);
         var size = new Vector2i(source.GetWidth(), source.GetHeight());
         if (size == Vector2i.Zero) size = new(4, 4);
-        var format = source.CapturePixels()?.Source.Format ?? Image.Format.Rgba8;
+        var format = source.PixelFormat;
         var path = source is ServerTexture owned ? owned.Path : source.ResourcePath;
         ThrowIfDisposed();
         RenderingTextureRegistry.Resolve(target);
