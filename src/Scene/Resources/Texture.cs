@@ -5,6 +5,16 @@ namespace Electron2D;
 /// The renderer caches a copied image until Changed. Consumers borrow textures; GPU resources belong to the renderer. ViewportTexture uses live native targets and explicit GetImage readback.</remarks>
 public abstract class Texture : Resource
 {
+    internal void BindRenderingRID(RID rid)
+    {
+        lock (_ridGate) { if (_renderingRID.IsValid()) throw new InvalidOperationException("Texture already has a rendering identity."); _renderingRID = rid; }
+    }
+    internal static readonly object TextureGraphGate = new();
+    internal virtual bool ReferencesTexture(Texture target, int depth)
+    {
+        if (depth > 1024) throw new ArgumentException("Texture graph depth exceeds 1024.");
+        return ReferenceEquals(this, target);
+    }
     // Font caches and attached controls retain their known state textures without retaining their owners.
     private int _retainRendererCache;
     private int _rendererCacheUsers;

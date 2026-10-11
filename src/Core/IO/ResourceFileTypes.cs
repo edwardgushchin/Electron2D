@@ -16,6 +16,11 @@ public static partial class ResourceFileTypes
     {
         RegisterNode("Node", CreateNode);
         RegisterNode("Entity", CreateEntity);
+        RegisterNode("PointLight", CreatePointLight);
+        RegisterNode("DirectionalLight", CreateDirectionalLight);
+        RegisterNode("LightOccluder", CreateLightOccluder);
+        RegisterResource("CanvasTexture", CreateCanvasTexture);
+        RegisterResource("OccluderPolygon", CreateOccluderPolygon);
         RegisterNode("CPUParticles", CreateCPUParticles);
         RegisterNode("Skeleton", CreateSkeleton);
         RegisterNode("Bone", CreateBone);
@@ -86,6 +91,11 @@ public static partial class ResourceFileTypes
     }
     private static Node CreateNode() => new();
     private static Entity CreateEntity() => new();
+    private static PointLight CreatePointLight() => new();
+    private static DirectionalLight CreateDirectionalLight() => new();
+    private static LightOccluder CreateLightOccluder() => new();
+    private static CanvasTexture CreateCanvasTexture() => new();
+    private static OccluderPolygon CreateOccluderPolygon() => new();
     private static CPUParticles CreateCPUParticles() => new();
     private static Skeleton CreateSkeleton() => new();
     private static Bone CreateBone() => new();

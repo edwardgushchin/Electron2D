@@ -333,7 +333,7 @@ internal sealed class MaterialState
             }
     }
 
-    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize)
+    internal void PushUniforms(nint command, float time, Vector2 screenPixelSize, Vector4 sdfCoords = default)
     {
         lock (_gate)
         {
@@ -341,6 +341,8 @@ internal sealed class MaterialState
                 MemoryMarshal.Write(Buffers[clock.Buffer].AsSpan(clock.Offset, sizeof(float)), in time);
             if (Program.ScreenPixelSizeUniform is { } pixels)
                 MemoryMarshal.Write(Buffers[pixels.Buffer].AsSpan(pixels.Offset, sizeof(float) * 2), in screenPixelSize);
+            if (Program.SDFCoordsUniform is { } sdf)
+                MemoryMarshal.Write(Buffers[sdf.Buffer].AsSpan(sdf.Offset, sizeof(float) * 4), in sdfCoords);
             for (var i = 0; i < Buffers.Length; i++)
                 SDL.PushGPUFragmentUniformData(command, (uint)i, Buffers[i].AsSpan(), (uint)Buffers[i].Length);
         }

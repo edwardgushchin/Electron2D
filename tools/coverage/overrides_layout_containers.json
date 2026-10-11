@@ -111,5 +111,6 @@
       "electron2d": "method:Electron2D.MarginContainer.OnNotification(System.Int32)",
       "reason": "Typed C# constructor, protected lifecycle/layout hook or margin query projecting the executable Container behavior under ADR 0081; no separate pinned XML row."
     }
-  ]
+  ],
+  "statusGroups": []
 }

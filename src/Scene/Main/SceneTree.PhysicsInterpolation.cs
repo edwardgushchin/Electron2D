@@ -19,6 +19,7 @@ public sealed partial class SceneTree
             EnsureOwnerThread(); EnsureAcceptingWork();
             if (_physicsInterpolation == value) return;
             _physicsInterpolation = value;
+            RenderingServer.Service?.ResetLightingInterpolation(this);
             Root.PropagateNotification(Node.NotificationResetPhysicsInterpolation);
         }
     }
@@ -28,6 +29,7 @@ public sealed partial class SceneTree
 
     private void CapturePhysicsInterpolation(bool start, ref List<Exception>? errors)
     {
+        RenderingServer.Service?.LightingPhysicsTick(this, start);
         try { RenderingMultiMeshRegistry.PhysicsTick(start); } catch (Exception error) { CollectException(errors ??= [], error); }
         _scheduleTraversal.Clear();
         _scheduleTraversal.Add(Root);

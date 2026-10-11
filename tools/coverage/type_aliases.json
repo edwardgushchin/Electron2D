@@ -93,7 +93,12 @@
     "PlaceholderTexture2DArray": "PlaceholderTextureArray",
     "PhysicsDirectSpaceState2DExtension": "PhysicsDirectSpaceStateExtension",
     "PhysicsDirectBodyState2DExtension": "PhysicsDirectBodyStateExtension",
-    "NavigationMeshSourceGeometryData2D": "NavigationMeshSourceGeometryData"
+    "NavigationMeshSourceGeometryData2D": "NavigationMeshSourceGeometryData",
+    "Light2D": "Light",
+    "PointLight2D": "PointLight",
+    "DirectionalLight2D": "DirectionalLight",
+    "LightOccluder2D": "LightOccluder",
+    "OccluderPolygon2D": "OccluderPolygon"
   },
   "enums": {
     "CPUParticles2D.DrawOrder": "CPUParticles.DrawOrderMode",

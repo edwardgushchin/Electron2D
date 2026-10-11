@@ -12,7 +12,7 @@ Decisions in this log: [0028](#adr-0028), [0046](#adr-0046).
 <a id="adr-0028"></a>
 ## ADR 0028: GPU-first 2D rendering, shared SPIR-V shaders, browser WebGPU, and SDL_Renderer fallback
 
-Last updated: 2026-10-08
+Last updated: 2026-10-11
 
 ### Status
 
@@ -32,6 +32,7 @@ The pinned SDL GPU API has no browser backend. A standalone Chrome probe rendere
 
 ### Decision
 
+- The first canvas-light consumer uses retained point/directional sources, multichannel CanvasTexture resources and copied contour geometry, shared by scene nodes, static server identities and tiles. Evaluate direct contour visibility in the fragment pass; None/PCF5/PCF13 retain their sample counts with screen-pixel spacing. This is an explicit backend adaptation of quantized shadow-atlas filtering. Generate a shader-requested signed nearest-contour field on GPU; overlapping contours retain internal distance features. Expose this through renderer-owned SDF_TEXTURE/SDF_COORDS in the existing HLSL/GLSL profile and executable viewport area/resolution presets. Do not expose editor-only light switches until editor scene/hint rendering exists. Programmable fragments that receive scene lights must reject until their automatic lighting composition interface executes; shader-source/profile integration remains a separate exact prerequisite. Ordinary unlit canvas output must not require floating-point light targets.
 - The primary native Electron2D rendering backend uses the SDL3 GPU API through the vendored SDL3-CS binding.
 - On Web, use a separate engine-owned WebGPU canvas backend through browser interop. It submits the same retained canvas batches and applies the same typed ShaderMaterial parameters and textures. Keep browser WebGPU and JavaScript objects behind the existing backend-neutral public API. A persistent, nonblocking browser host owns WebGPU initialization, frame submission and disposal; it must not rely on SDL_GPU becoming available in the browser.
 - Electron2D will support engine-provided and user-authored graphics shaders for 2D rendering on the GPU backend. Three-dimensional pipelines and shader functionality are outside the product boundary.

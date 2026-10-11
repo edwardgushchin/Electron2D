@@ -161,3 +161,7 @@ Material overrides take precedence. Ownership remains with the caller; Changed f
 ## Prepared reference publication
 
 The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook maps freshly prepared references to final cached/new identities before owner publication under ADR 0013. Resource defaults to stored resource descriptors; PackedScene includes its node model; Shader includes default texture bindings. Opaque application storage overrides this hook and calls base for descriptor state. Primitive descriptors are not rewritten by the default remapper. This is a typed graph-publication extension, not a dynamic property API.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

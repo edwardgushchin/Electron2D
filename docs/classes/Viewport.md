@@ -563,3 +563,7 @@ require normal scene ownership; disposed access rejects. Exit-handler failures a
 aggregated after cleanup; clearing from an active picking callback finishes at its
 pass boundary. [Physics picking](../components/physics-picking.md) records semantics,
 examples, costs and verification.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

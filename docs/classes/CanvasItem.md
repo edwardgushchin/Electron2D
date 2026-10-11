@@ -1324,3 +1324,7 @@ Native indexed triangle and primitive commands replay through existing storage. 
 `public const int NotificationWorldChanged = 36` reports committed world association; GetWorld observes the new canvas and physics space when it is delivered.
 
 TileMapLayer inherited Y sorting also invalidates its retained tile groups and delivers its Changed event on a changed authored value. Server Y-sort overrides use the same tile grouping path. Other canvas sorting remains submission-time behavior.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

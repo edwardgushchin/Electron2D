@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <remarks>Public static operations delegate to the retained service object; state, identity and ownership remain object-scoped.
 /// Engine.Run owns startup, frame submission and shutdown on the scene owner thread. Geometry uses
 /// source-alpha blending into an RGBA8 framebuffer. GPU initialization may fall back according to project settings.
-/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Lights, general canvas clipping and device recovery
+/// CanvasLayer groups are ordered before per-canvas item Z/Y order. Rectangles, strokes, curves, filled polygons, short primitives, image textures, retained animation intervals and Control descendant clipping are integrated. Shader materials require the GPU path. Independent single-layer viewport targets and texture dependencies execute on both backends. Programmable-material light composition, general canvas clipping and device recovery
 /// are not integrated. Owned two-dimensional texture RIDs support copied images, compatible updates, replacement,
 /// placeholders and explicit free; resource texture RIDs remain borrowed. Screen notifier bounds and processing enablers follow submitted canvas culling. Owned SDL handles remain internal; DisplayServer can expose borrowed native context identities.</remarks>
 public sealed partial class RenderingServer : ElectronObject
@@ -124,6 +124,7 @@ public sealed partial class RenderingServer : ElectronObject
         internal readonly Viewport Viewport = viewport;
         internal readonly List<CanvasItem> Nodes = [];
         internal readonly List<CanvasVertex> Vertices = [];
+        internal readonly CanvasLightingFrame Lighting = new();
         internal readonly List<CanvasInstance> Instances = [];
         internal readonly List<CanvasBatch> Batches = [];
         internal readonly List<RenderEntry> Order = [];
@@ -135,10 +136,11 @@ public sealed partial class RenderingServer : ElectronObject
     }
     private Viewport _viewport;
     private Transform _canvasBasis;
+    private CanvasLightingFrame _lighting = new();
     private readonly Dictionary<Viewport, CanvasFrame> _canvasFrames = new(ReferenceEqualityComparer.Instance);
     private readonly List<CanvasFrame> _activeFrames = [];
     private void UseFrame(CanvasFrame frame)
-    { _viewport = frame.Viewport; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
+    { _viewport = frame.Viewport; _lighting = frame.Lighting; _nodes = frame.Nodes; _vertices = frame.Vertices; _instances = frame.Instances; _batches = frame.Batches; _order = frame.Order; _repeatTransforms = frame.Repeats; _canvasTransforms = frame.Transforms; _ySort = frame.YSort; }
     private Color FrameClear(Viewport viewport) => viewport.TransparentBG ? default : _clearColor with { A = 1 };
     private void CaptureViewports(Node node)
     {
@@ -195,6 +197,10 @@ public sealed partial class RenderingServer : ElectronObject
     private void SubmitTexture(Texture? texture, SceneTree tree)
     {
         while (texture is AtlasTexture atlas) texture = atlas.RenderingTexture;
+        if (texture is CanvasTexture channels)
+        {
+            SubmitTexture(channels.DiffuseTexture, tree); SubmitTexture(channels.NormalTexture, tree); SubmitTexture(channels.SpecularTexture, tree); return;
+        }
         if (texture is not ViewportTexture view || view.Bound is not { } viewport || !_canvasFrames.TryGetValue(viewport, out var frame) || !ReferenceEquals(viewport.Tree, tree)) return;
         if (viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.Disabled } || viewport is Window { Visible: false }) return;
         frame.Wanted = true; SubmitFrame(frame, tree);
@@ -214,10 +220,11 @@ public sealed partial class RenderingServer : ElectronObject
                 Array.Clear(frame.TextureScratch);
             }
         }
+        foreach (var mask in frame.Lighting.Masks) SubmitTexture(mask.Texture, tree);
         foreach (var child in _activeFrames) if (child.Viewport is SubViewport { RenderTargetUpdateMode: ViewportUpdateMode.WhenParentVisible } && ReferenceEquals(child.Viewport.Parent?.GetViewport(), frame.Viewport)) { child.Wanted = true; SubmitFrame(child, tree); }
         var target = _backend.FindTarget(frame.Viewport); if (target is null) return;
         _submittingTextures = true;
-        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances)); }
+        try { _backend.Draw(target, CollectionsMarshal.AsSpan(frame.Vertices), CollectionsMarshal.AsSpan(frame.Batches), FrameClear(frame.Viewport), frame.Viewport is not SubViewport sub || sub.RenderTargetClearMode != ViewportClearMode.Never, ReferenceEquals(frame.Viewport, _window) && _window.Visible, CanvasTime, CollectionsMarshal.AsSpan(frame.Instances), frame.Lighting); }
         finally { _submittingTextures = false; }
         if (frame.Viewport is SubViewport completed) completed.Submitted();
         frame.State = 2; frame.Drawn = true;
@@ -271,6 +278,8 @@ public sealed partial class RenderingServer : ElectronObject
             order = x.Z.CompareTo(y.Z); return order != 0 ? order : x.Order.CompareTo(y.Order);
         });
         _submittingTextures = true;
+        CaptureCanvasLighting(framebufferTransform);
+        _lighting.ConfigureSDF(viewport, pixels);
         ComposeFrame(pixels);
     }
 
@@ -483,6 +492,7 @@ public sealed partial class RenderingServer : ElectronObject
                 try { ReleaseOwnedMultiMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 ReleaseOwnedSkeletons();
                 ReleaseOwnedCanvasGraph();
+                ReleaseOwnedLighting();
                 ReleaseOwnedPrograms();
                 try { ReleaseOwnedMeshes(); } catch (Exception error) { (errors ??= []).Add(error); }
                 try { ReleaseOwnedTextures(); } catch (Exception error) { (errors ??= []).Add(error); }

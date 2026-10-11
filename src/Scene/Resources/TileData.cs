@@ -148,6 +148,12 @@ public sealed partial class TileData : ElectronObject
         foreach (var layer in Layers) copy.Layers.Add(layer.Copy());
         copy.ResizeNavigationLayers(Navigation.Count);
         for (var i = 0; i < Navigation.Count; i++) copy.SetNavigationPolygon(i, duplicate is null ? Navigation[i].Polygon : (NavigationPolygon?)duplicate(Navigation[i].Polygon));
+        copy.ResizeOcclusionLayers(Occlusion.Count);
+        for (var i = 0; i < Occlusion.Count; i++)
+        {
+            copy.SetOccluderPolygonsCount(i, Occlusion[i].Count);
+            for (var j = 0; j < Occlusion[i].Count; j++) copy.SetOccluderPolygon(i, j, duplicate is null ? Occlusion[i][j].Polygon : (OccluderPolygon?)duplicate(Occlusion[i][j].Polygon));
+        }
         return copy;
     }
     internal void Release()
@@ -163,7 +169,7 @@ public sealed partial class TileData : ElectronObject
         base.ValidateDisposal();
     }
     /// <inheritdoc />
-    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; TerrainSource = null; CustomValues.Clear(); _material = null; Layers.Clear(); ResizeNavigationLayers(0); } base.Dispose(disposing); }
+    protected override void Dispose(bool disposing) { if (disposing) { Changed = null; TerrainSource = null; CustomValues.Clear(); _material = null; Layers.Clear(); ResizeNavigationLayers(0); ResizeOcclusionLayers(0); } base.Dispose(disposing); }
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(StoredProperties<TileData>("", static p => p));
 
@@ -176,6 +182,7 @@ public sealed partial class TileData : ElectronObject
         yield return new PropertyDescriptor<T, Color>(prefix + nameof(Modulate), n => data(n).Modulate, (n, v) => data(n).Modulate = v, _ => Colors.White, stored: true);
         yield return new PropertyDescriptor<T, int>(prefix + "PhysicsLayerCount", n => data(n).Layers.Count, (n, v) => data(n).ResizeLayers(v), _ => 0, stored: true);
         foreach (var property in NavigationProperties(prefix, data)) yield return property;
+        foreach (var property in OcclusionProperties(prefix, data)) yield return property;
         foreach (var property in TerrainProperties(prefix, data)) yield return property;
         foreach (var property in CustomProperties(prefix, data)) yield return property;
         foreach (var property in DrawingProperties(prefix, data)) yield return property;

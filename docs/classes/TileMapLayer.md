@@ -895,3 +895,7 @@ See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-
 **value:** False by default; ordinary quadrant cell order is unaffected.
 
 Scene-source cells instantiate ordinary owned-at-runtime child hierarchies through the deferred/explicit tile batch. Null Owner excludes these generated roots from Pack(layer). Entity/Control placement, error cleanup, safe deletion, preserved identities on hiding/atlas-only settings and physics transform prerequisites are described in [Scene collections](../components/tiles.md#scene-collections). GetCellTileData returns null for these cells; colliders/regions retain their normal child owner identities.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

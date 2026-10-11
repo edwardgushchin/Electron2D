@@ -693,3 +693,7 @@ Rect2i GetRuntimeTileTextureRegion(Vector2i atlasCoords, int frame)
 Returns the requested frame region in the runtime texture, accounting for extrusion stride.
 
 New alternatives initialize current custom-layer defaults. Standalone sources preserve indexed actual values; named access requires their set. Binding/transferring preflights destination conversions; duplication preserves actual types. See [custom data](../components/tiles.md#typed-custom-data).
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

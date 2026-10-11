@@ -30,6 +30,10 @@ public abstract class TileSetSource : Resource
     /// <param name="alternativeTile">Alternative identity, including optional cell transform flags where supported.</param>
     /// <returns>Tests whether a tile and alternative exist.</returns>
     public abstract bool HasAlternativeTile(Vector2i atlasCoords, int alternativeTile);
+    internal abstract void ResizeOcclusionLayers(int count);
+    internal abstract void InsertOcclusionLayer(int index);
+    internal abstract void RemoveOcclusionLayer(int index);
+    internal abstract void MoveOcclusionLayer(int from, int to);
     internal abstract void ResizeNavigationLayers(int count);
     internal abstract void InsertNavigationLayer(int index);
     internal abstract void RemoveNavigationLayer(int index);

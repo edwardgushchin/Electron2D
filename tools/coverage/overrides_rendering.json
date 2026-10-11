@@ -3578,6 +3578,816 @@
       "godot": "ShaderMaterial::method:get_shader_parameter(StringName:)",
       "electron2d": "method:Electron2D.ShaderMaterial.CopyShaderParameterArray`1(System.String,Span<T>)",
       "reason": "Caller-owned shader/material RID storage and borrowed resource identities feed retained canvas replay through the existing Shader/ShaderMaterial kernels (ADRs 0004/0005/0028/0095). Binary SPIR-V adapts source-code storage under ADR 0028; immutable typed descriptors replace dictionaries and typed scalar/array/texture operations replace Variant. Ownership, rollback, reload, native GPU pixels and compatibility rejection/cleanup are checked by RenderingProgramTests; unsupported profiles retain their exact dependencies."
+    },
+    {
+      "godot": "CanvasItem::property:light_mask",
+      "electron2d": "property:Electron2D.CanvasItem.LightMask()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasItemMaterial::enum:LightMode",
+      "electron2d": "T:Electron2D.LightMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY",
+      "electron2d": "enumValue:Electron2D.LightMode.LightOnly()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL",
+      "electron2d": "enumValue:Electron2D.LightMode.Normal()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED",
+      "electron2d": "enumValue:Electron2D.LightMode.Unshaded()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasItemMaterial::property:light_mode",
+      "electron2d": "property:Electron2D.CanvasItemMaterial.LightMode()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:CanvasTexture",
+      "electron2d": "T:Electron2D.CanvasTexture",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:diffuse_texture",
+      "electron2d": "property:Electron2D.CanvasTexture.DiffuseTexture()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:normal_texture",
+      "electron2d": "property:Electron2D.CanvasTexture.NormalTexture()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:resource_local_to_scene",
+      "electron2d": "property:Electron2D.Resource.ResourceLocalToScene()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:specular_color",
+      "electron2d": "property:Electron2D.CanvasTexture.SpecularColor()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:specular_shininess",
+      "electron2d": "property:Electron2D.CanvasTexture.SpecularShininess()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:specular_texture",
+      "electron2d": "property:Electron2D.CanvasTexture.SpecularTexture()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:texture_filter",
+      "electron2d": "property:Electron2D.CanvasTexture.TextureFilter()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "CanvasTexture::property:texture_repeat",
+      "electron2d": "property:Electron2D.CanvasTexture.TextureRepeat()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:DirectionalLight2D",
+      "electron2d": "T:Electron2D.DirectionalLight",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "DirectionalLight2D::property:height",
+      "electron2d": "property:Electron2D.DirectionalLight.Height()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "DirectionalLight2D::property:max_distance",
+      "electron2d": "property:Electron2D.DirectionalLight.MaxDistance()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:Light2D",
+      "electron2d": "T:Electron2D.Light",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum:BlendMode",
+      "electron2d": "T:Electron2D.LightBlendMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum:ShadowFilter",
+      "electron2d": "T:Electron2D.LightShadowFilter",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:BlendMode.BLEND_MODE_ADD",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Add()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:BlendMode.BLEND_MODE_MIX",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Mix()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:BlendMode.BLEND_MODE_SUB",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Sub()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_NONE",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.None()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_PCF13",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.PCF13()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_PCF5",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.PCF5()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::method:get_height()",
+      "electron2d": "method:Electron2D.Light.GetHeight()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::method:set_height(float:)",
+      "electron2d": "method:Electron2D.Light.SetHeight(System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:blend_mode",
+      "electron2d": "property:Electron2D.Light.BlendMode()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:color",
+      "electron2d": "property:Electron2D.Light.Color()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:enabled",
+      "electron2d": "property:Electron2D.Light.Enabled()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:energy",
+      "electron2d": "property:Electron2D.Light.Energy()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:range_item_cull_mask",
+      "electron2d": "property:Electron2D.Light.RangeItemCullMask()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:range_layer_max",
+      "electron2d": "property:Electron2D.Light.RangeLayerMax()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:range_layer_min",
+      "electron2d": "property:Electron2D.Light.RangeLayerMin()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:range_z_max",
+      "electron2d": "property:Electron2D.Light.RangeZMax()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:range_z_min",
+      "electron2d": "property:Electron2D.Light.RangeZMin()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:shadow_color",
+      "electron2d": "property:Electron2D.Light.ShadowColor()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:shadow_enabled",
+      "electron2d": "property:Electron2D.Light.ShadowEnabled()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:shadow_filter",
+      "electron2d": "property:Electron2D.Light.ShadowFilter()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:shadow_filter_smooth",
+      "electron2d": "property:Electron2D.Light.ShadowFilterSmooth()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Light2D::property:shadow_item_cull_mask",
+      "electron2d": "property:Electron2D.Light.ShadowItemCullMask()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:LightOccluder2D",
+      "electron2d": "T:Electron2D.LightOccluder",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "LightOccluder2D::property:occluder",
+      "electron2d": "property:Electron2D.LightOccluder.Occluder()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "LightOccluder2D::property:occluder_light_mask",
+      "electron2d": "property:Electron2D.LightOccluder.OccluderLightMask()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "LightOccluder2D::property:sdf_collision",
+      "electron2d": "property:Electron2D.LightOccluder.SDFCollision()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:OccluderPolygon2D",
+      "electron2d": "T:Electron2D.OccluderPolygon",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::enum:CullMode",
+      "electron2d": "T:Electron2D.OccluderCullMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::enum_value:CullMode.CULL_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.Clockwise()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::enum_value:CullMode.CULL_COUNTER_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.CounterClockwise()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::enum_value:CullMode.CULL_DISABLED",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.Disabled()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::property:closed",
+      "electron2d": "property:Electron2D.OccluderPolygon.Closed()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::property:cull_mode",
+      "electron2d": "property:Electron2D.OccluderPolygon.CullMode()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "OccluderPolygon2D::property:polygon",
+      "electron2d": "property:Electron2D.OccluderPolygon.Polygon()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "class:PointLight2D",
+      "electron2d": "T:Electron2D.PointLight",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "PointLight2D::property:height",
+      "electron2d": "property:Electron2D.PointLight.Height()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "PointLight2D::property:offset",
+      "electron2d": "property:Electron2D.PointLight.Offset()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "PointLight2D::property:texture",
+      "electron2d": "property:Electron2D.PointLight.Texture()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "PointLight2D::property:texture_scale",
+      "electron2d": "property:Electron2D.PointLight.TextureScale()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasLightBlendMode",
+      "electron2d": "T:Electron2D.LightBlendMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasLightMode",
+      "electron2d": "T:Electron2D.CanvasLightMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasLightShadowFilter",
+      "electron2d": "T:Electron2D.LightShadowFilter",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasOccluderPolygonCullMode",
+      "electron2d": "T:Electron2D.OccluderCullMode",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:CanvasTextureChannel",
+      "electron2d": "T:Electron2D.CanvasTextureChannel",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportSDFOversize",
+      "electron2d": "T:Electron2D.CanvasSDFOversize",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum:ViewportSDFScale",
+      "electron2d": "T:Electron2D.CanvasSDFScale",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_ADD",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Add()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_MIX",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Mix()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_SUB",
+      "electron2d": "enumValue:Electron2D.LightBlendMode.Sub()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightMode.CANVAS_LIGHT_MODE_DIRECTIONAL",
+      "electron2d": "enumValue:Electron2D.CanvasLightMode.Directional()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightMode.CANVAS_LIGHT_MODE_POINT",
+      "electron2d": "enumValue:Electron2D.CanvasLightMode.Point()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_MAX",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.Max()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_NONE",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.None()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_PCF13",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.PCF13()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_PCF5",
+      "electron2d": "enumValue:Electron2D.LightShadowFilter.PCF5()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.Clockwise()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.CounterClockwise()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_DISABLED",
+      "electron2d": "enumValue:Electron2D.OccluderCullMode.Disabled()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_DIFFUSE",
+      "electron2d": "enumValue:Electron2D.CanvasTextureChannel.Diffuse()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_NORMAL",
+      "electron2d": "enumValue:Electron2D.CanvasTextureChannel.Normal()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_SPECULAR",
+      "electron2d": "enumValue:Electron2D.CanvasTextureChannel.Specular()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_100_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent100()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_120_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent120()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_150_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent150()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_200_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent200()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Max()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_100_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent100()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_25_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent25()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_50_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent50()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Max()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_item_set_light_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasItemSetLightMask(Electron2D.RID,System.UInt32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_attach_to_canvas(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightAttachToCanvas(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightCreate()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_attach_to_canvas(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderAttachToCanvas(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderCreate()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_reset_physics_interpolation(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderResetPhysicsInterpolation(Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_as_sdf_collision(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetAsSDFCollision(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_interpolated(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetInterpolated(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_light_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetLightMask(Electron2D.RID,System.UInt32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_polygon(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetPolygon(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_occluder_transform_physics_interpolation(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightOccluderTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_reset_physics_interpolation(RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightResetPhysicsInterpolation(Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_blend_mode(RID:,int:RenderingServer.CanvasLightBlendMode)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetBlendMode(Electron2D.RID,Electron2D.LightBlendMode)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_color(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetColor(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_energy(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetEnergy(Electron2D.RID,System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_height(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetHeight(Electron2D.RID,System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_interpolated(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetInterpolated(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_item_cull_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetItemCullMask(Electron2D.RID,System.UInt32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_item_shadow_cull_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetItemShadowCullMask(Electron2D.RID,System.UInt32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_layer_range(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetLayerRange(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_mode(RID:,int:RenderingServer.CanvasLightMode)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetMode(Electron2D.RID,Electron2D.CanvasLightMode)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_shadow_color(RID:,Color:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetShadowColor(Electron2D.RID,Electron2D.Color)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_shadow_enabled(RID:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetShadowEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_shadow_filter(RID:,int:RenderingServer.CanvasLightShadowFilter)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetShadowFilter(Electron2D.RID,Electron2D.LightShadowFilter)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_shadow_smooth(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetShadowSmooth(Electron2D.RID,System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_texture(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetTexture(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_texture_offset(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetTextureOffset(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_texture_scale(RID:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetTextureScale(Electron2D.RID,System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_transform(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_set_z_range(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightSetZRange(Electron2D.RID,System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_light_transform_physics_interpolation(RID:,Transform2D:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasLightTransformPhysicsInterpolation(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_occluder_polygon_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasOccluderPolygonCreate()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_occluder_polygon_set_cull_mode(RID:,int:RenderingServer.CanvasOccluderPolygonCullMode)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasOccluderPolygonSetCullMode(Electron2D.RID,Electron2D.OccluderCullMode)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_occluder_polygon_set_shape(RID:,PackedVector2Array:,bool:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasOccluderPolygonSetShape(Electron2D.RID,Electron2D.Vector2[],System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_texture_create()",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasTextureCreate()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_texture_set_channel(RID:,int:RenderingServer.CanvasTextureChannel,RID:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasTextureSetChannel(Electron2D.RID,Electron2D.CanvasTextureChannel,Electron2D.RID)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_texture_set_shading_parameters(RID:,Color:,float:)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasTextureSetShadingParameters(Electron2D.RID,Electron2D.Color,System.Single)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_texture_set_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasTextureSetTextureFilter(Electron2D.RID,Electron2D.TextureFilter)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:canvas_texture_set_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+      "electron2d": "method:Electron2D.RenderingServer.CanvasTextureSetTextureRepeat(Electron2D.RID,Electron2D.TextureRepeat)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "RenderingServer::method:viewport_set_sdf_oversize_and_scale(RID:,int:RenderingServer.ViewportSDFOversize,int:RenderingServer.ViewportSDFScale)",
+      "electron2d": "method:Electron2D.RenderingServer.ViewportSetSDFOversizeAndScale(Electron2D.RID,Electron2D.CanvasSDFOversize,Electron2D.CanvasSDFScale)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:add_occluder_polygon(int:)",
+      "electron2d": "method:Electron2D.TileData.AddOccluderPolygon(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:get_occluder_polygon(int:,int:,bool:,bool:,bool:)",
+      "electron2d": "method:Electron2D.TileData.GetOccluderPolygon(System.Int32,System.Int32,System.Boolean,System.Boolean,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:get_occluder_polygons_count(int:)",
+      "electron2d": "method:Electron2D.TileData.GetOccluderPolygonsCount(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:remove_occluder_polygon(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.RemoveOccluderPolygon(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:set_occluder_polygon(int:,int:,OccluderPolygon2D:)",
+      "electron2d": "method:Electron2D.TileData.SetOccluderPolygon(System.Int32,System.Int32,Electron2D.OccluderPolygon)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileData::method:set_occluder_polygons_count(int:,int:)",
+      "electron2d": "method:Electron2D.TileData.SetOccluderPolygonsCount(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileMapLayer::property:occlusion_enabled",
+      "electron2d": "property:Electron2D.TileMapLayer.OcclusionEnabled()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:add_occlusion_layer(int:)",
+      "electron2d": "method:Electron2D.TileSet.AddOcclusionLayer(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:get_occlusion_layer_light_mask(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetOcclusionLayerLightMask(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:get_occlusion_layer_sdf_collision(int:)",
+      "electron2d": "method:Electron2D.TileSet.GetOcclusionLayerSDFCollision(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:get_occlusion_layers_count()",
+      "electron2d": "method:Electron2D.TileSet.GetOcclusionLayersCount()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:move_occlusion_layer(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.MoveOcclusionLayer(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:remove_occlusion_layer(int:)",
+      "electron2d": "method:Electron2D.TileSet.RemoveOcclusionLayer(System.Int32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:set_occlusion_layer_light_mask(int:,int:)",
+      "electron2d": "method:Electron2D.TileSet.SetOcclusionLayerLightMask(System.Int32,System.UInt32)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "TileSet::method:set_occlusion_layer_sdf_collision(int:,bool:)",
+      "electron2d": "method:Electron2D.TileSet.SetOcclusionLayerSDFCollision(System.Int32,System.Boolean)",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum:SDFOversize",
+      "electron2d": "T:Electron2D.CanvasSDFOversize",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum:SDFScale",
+      "electron2d": "T:Electron2D.CanvasSDFScale",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_100_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent100()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_120_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent120()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_150_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent150()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_200_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Percent200()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasSDFOversize.Max()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFScale.SDF_SCALE_100_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent100()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFScale.SDF_SCALE_25_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent25()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFScale.SDF_SCALE_50_PERCENT",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Percent50()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::enum_value:SDFScale.SDF_SCALE_MAX",
+      "electron2d": "enumValue:Electron2D.CanvasSDFScale.Max()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::property:sdf_oversize",
+      "electron2d": "property:Electron2D.Viewport.SDFOversize()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
+    },
+    {
+      "godot": "Viewport::property:sdf_scale",
+      "electron2d": "property:Electron2D.Viewport.SDFScale()",
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates."
     }
   ],
   "statusGroups": [
@@ -3651,8 +4461,8 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "Five executable blend modes and the four live particle sprite-sheet properties execute through retained drawing, duplication and typed archive storage. LightMode and actual light-pass integration retain their exact owning slice.",
+      "state": "Implemented",
+      "reason": "All applicable fixed blending, particle-sheet and ambient/light-mode consumers execute through retained drawing, copying and typed storage. LightingTests and existing material/particle tests verify the complete family; GPU light passes and compatibility rejection remain explicit.",
       "godot": [
         "class:CanvasItemMaterial"
       ]
@@ -3663,17 +4473,6 @@
       "godot": [
         "CanvasItemMaterial::enum:BlendMode",
         "CanvasItemMaterial::property:blend_mode"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: first 2D light and occlusion renderer slice; integrate LightMode with actual light-pass selection and verify all values on both supported hardware backends (ADR 0028).",
-      "godot": [
-        "CanvasItemMaterial::enum:LightMode",
-        "CanvasItemMaterial::property:light_mode",
-        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY",
-        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL",
-        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED"
       ]
     },
     {
@@ -4272,13 +5071,6 @@
       "godot": [
         "CanvasItem::method:get_instance_shader_parameter(StringName:)",
         "CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "First Light resource and 2D lighting backend slice must connect LightMask to light selection and actual rendering, with stored state and pixel checks.",
-      "godot": [
-        "CanvasItem::property:light_mask"
       ]
     },
     {
@@ -5182,6 +5974,187 @@
         "Material::method:_get_shader_mode()"
       ],
       "reason": "Trigger: an executable editor material-extension contract and inspector consumer under ADRs 0027/0028. These pinned required virtual hooks are documented for editor tools; runtime Material remains assembly-restricted and new program RID storage alone does not supply the editor extension workflow."
+    },
+    {
+      "godot": [
+        "CanvasItem::property:light_mask",
+        "CanvasItemMaterial::enum:LightMode",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_LIGHT_ONLY",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_NORMAL",
+        "CanvasItemMaterial::enum_value:LightMode.LIGHT_MODE_UNSHADED",
+        "CanvasItemMaterial::property:light_mode",
+        "class:CanvasTexture",
+        "CanvasTexture::property:diffuse_texture",
+        "CanvasTexture::property:normal_texture",
+        "CanvasTexture::property:resource_local_to_scene",
+        "CanvasTexture::property:specular_color",
+        "CanvasTexture::property:specular_shininess",
+        "CanvasTexture::property:specular_texture",
+        "CanvasTexture::property:texture_filter",
+        "CanvasTexture::property:texture_repeat",
+        "class:DirectionalLight2D",
+        "DirectionalLight2D::property:height",
+        "DirectionalLight2D::property:max_distance",
+        "Light2D::enum:BlendMode",
+        "Light2D::enum:ShadowFilter",
+        "Light2D::enum_value:BlendMode.BLEND_MODE_ADD",
+        "Light2D::enum_value:BlendMode.BLEND_MODE_MIX",
+        "Light2D::enum_value:BlendMode.BLEND_MODE_SUB",
+        "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_NONE",
+        "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_PCF13",
+        "Light2D::enum_value:ShadowFilter.SHADOW_FILTER_PCF5",
+        "Light2D::method:get_height()",
+        "Light2D::method:set_height(float:)",
+        "Light2D::property:blend_mode",
+        "Light2D::property:color",
+        "Light2D::property:enabled",
+        "Light2D::property:energy",
+        "Light2D::property:range_item_cull_mask",
+        "Light2D::property:range_layer_max",
+        "Light2D::property:range_layer_min",
+        "Light2D::property:range_z_max",
+        "Light2D::property:range_z_min",
+        "Light2D::property:shadow_color",
+        "Light2D::property:shadow_enabled",
+        "Light2D::property:shadow_filter",
+        "Light2D::property:shadow_filter_smooth",
+        "Light2D::property:shadow_item_cull_mask",
+        "class:LightOccluder2D",
+        "LightOccluder2D::property:occluder",
+        "LightOccluder2D::property:occluder_light_mask",
+        "LightOccluder2D::property:sdf_collision",
+        "class:OccluderPolygon2D",
+        "OccluderPolygon2D::enum:CullMode",
+        "OccluderPolygon2D::enum_value:CullMode.CULL_CLOCKWISE",
+        "OccluderPolygon2D::enum_value:CullMode.CULL_COUNTER_CLOCKWISE",
+        "OccluderPolygon2D::enum_value:CullMode.CULL_DISABLED",
+        "OccluderPolygon2D::property:closed",
+        "OccluderPolygon2D::property:cull_mode",
+        "OccluderPolygon2D::property:polygon",
+        "class:PointLight2D",
+        "PointLight2D::property:height",
+        "PointLight2D::property:offset",
+        "PointLight2D::property:texture",
+        "PointLight2D::property:texture_scale",
+        "RenderingServer::enum:CanvasLightBlendMode",
+        "RenderingServer::enum:CanvasLightMode",
+        "RenderingServer::enum:CanvasLightShadowFilter",
+        "RenderingServer::enum:CanvasOccluderPolygonCullMode",
+        "RenderingServer::enum:CanvasTextureChannel",
+        "RenderingServer::enum:ViewportSDFOversize",
+        "RenderingServer::enum:ViewportSDFScale",
+        "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_ADD",
+        "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_MIX",
+        "RenderingServer::enum_value:CanvasLightBlendMode.CANVAS_LIGHT_BLEND_MODE_SUB",
+        "RenderingServer::enum_value:CanvasLightMode.CANVAS_LIGHT_MODE_DIRECTIONAL",
+        "RenderingServer::enum_value:CanvasLightMode.CANVAS_LIGHT_MODE_POINT",
+        "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_MAX",
+        "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_NONE",
+        "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_PCF13",
+        "RenderingServer::enum_value:CanvasLightShadowFilter.CANVAS_LIGHT_FILTER_PCF5",
+        "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_CLOCKWISE",
+        "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_COUNTER_CLOCKWISE",
+        "RenderingServer::enum_value:CanvasOccluderPolygonCullMode.CANVAS_OCCLUDER_POLYGON_CULL_DISABLED",
+        "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_DIFFUSE",
+        "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_NORMAL",
+        "RenderingServer::enum_value:CanvasTextureChannel.CANVAS_TEXTURE_CHANNEL_SPECULAR",
+        "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_100_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_120_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_150_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_200_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFOversize.VIEWPORT_SDF_OVERSIZE_MAX",
+        "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_100_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_25_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_50_PERCENT",
+        "RenderingServer::enum_value:ViewportSDFScale.VIEWPORT_SDF_SCALE_MAX",
+        "RenderingServer::method:canvas_item_set_light_mask(RID:,int:)",
+        "RenderingServer::method:canvas_light_attach_to_canvas(RID:,RID:)",
+        "RenderingServer::method:canvas_light_create()",
+        "RenderingServer::method:canvas_light_occluder_attach_to_canvas(RID:,RID:)",
+        "RenderingServer::method:canvas_light_occluder_create()",
+        "RenderingServer::method:canvas_light_occluder_reset_physics_interpolation(RID:)",
+        "RenderingServer::method:canvas_light_occluder_set_as_sdf_collision(RID:,bool:)",
+        "RenderingServer::method:canvas_light_occluder_set_enabled(RID:,bool:)",
+        "RenderingServer::method:canvas_light_occluder_set_interpolated(RID:,bool:)",
+        "RenderingServer::method:canvas_light_occluder_set_light_mask(RID:,int:)",
+        "RenderingServer::method:canvas_light_occluder_set_polygon(RID:,RID:)",
+        "RenderingServer::method:canvas_light_occluder_set_transform(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_light_occluder_transform_physics_interpolation(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_light_reset_physics_interpolation(RID:)",
+        "RenderingServer::method:canvas_light_set_blend_mode(RID:,int:RenderingServer.CanvasLightBlendMode)",
+        "RenderingServer::method:canvas_light_set_color(RID:,Color:)",
+        "RenderingServer::method:canvas_light_set_enabled(RID:,bool:)",
+        "RenderingServer::method:canvas_light_set_energy(RID:,float:)",
+        "RenderingServer::method:canvas_light_set_height(RID:,float:)",
+        "RenderingServer::method:canvas_light_set_interpolated(RID:,bool:)",
+        "RenderingServer::method:canvas_light_set_item_cull_mask(RID:,int:)",
+        "RenderingServer::method:canvas_light_set_item_shadow_cull_mask(RID:,int:)",
+        "RenderingServer::method:canvas_light_set_layer_range(RID:,int:,int:)",
+        "RenderingServer::method:canvas_light_set_mode(RID:,int:RenderingServer.CanvasLightMode)",
+        "RenderingServer::method:canvas_light_set_shadow_color(RID:,Color:)",
+        "RenderingServer::method:canvas_light_set_shadow_enabled(RID:,bool:)",
+        "RenderingServer::method:canvas_light_set_shadow_filter(RID:,int:RenderingServer.CanvasLightShadowFilter)",
+        "RenderingServer::method:canvas_light_set_shadow_smooth(RID:,float:)",
+        "RenderingServer::method:canvas_light_set_texture(RID:,RID:)",
+        "RenderingServer::method:canvas_light_set_texture_offset(RID:,Vector2:)",
+        "RenderingServer::method:canvas_light_set_texture_scale(RID:,float:)",
+        "RenderingServer::method:canvas_light_set_transform(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_light_set_z_range(RID:,int:,int:)",
+        "RenderingServer::method:canvas_light_transform_physics_interpolation(RID:,Transform2D:)",
+        "RenderingServer::method:canvas_occluder_polygon_create()",
+        "RenderingServer::method:canvas_occluder_polygon_set_cull_mode(RID:,int:RenderingServer.CanvasOccluderPolygonCullMode)",
+        "RenderingServer::method:canvas_occluder_polygon_set_shape(RID:,PackedVector2Array:,bool:)",
+        "RenderingServer::method:canvas_texture_create()",
+        "RenderingServer::method:canvas_texture_set_channel(RID:,int:RenderingServer.CanvasTextureChannel,RID:)",
+        "RenderingServer::method:canvas_texture_set_shading_parameters(RID:,Color:,float:)",
+        "RenderingServer::method:canvas_texture_set_texture_filter(RID:,int:RenderingServer.CanvasItemTextureFilter)",
+        "RenderingServer::method:canvas_texture_set_texture_repeat(RID:,int:RenderingServer.CanvasItemTextureRepeat)",
+        "RenderingServer::method:viewport_set_sdf_oversize_and_scale(RID:,int:RenderingServer.ViewportSDFOversize,int:RenderingServer.ViewportSDFScale)",
+        "TileData::method:add_occluder_polygon(int:)",
+        "TileData::method:get_occluder_polygon(int:,int:,bool:,bool:,bool:)",
+        "TileData::method:get_occluder_polygons_count(int:)",
+        "TileData::method:remove_occluder_polygon(int:,int:)",
+        "TileData::method:set_occluder_polygon(int:,int:,OccluderPolygon2D:)",
+        "TileData::method:set_occluder_polygons_count(int:,int:)",
+        "TileMapLayer::property:occlusion_enabled",
+        "TileSet::method:add_occlusion_layer(int:)",
+        "TileSet::method:get_occlusion_layer_light_mask(int:)",
+        "TileSet::method:get_occlusion_layer_sdf_collision(int:)",
+        "TileSet::method:get_occlusion_layers_count()",
+        "TileSet::method:move_occlusion_layer(int:,int:)",
+        "TileSet::method:remove_occlusion_layer(int:)",
+        "TileSet::method:set_occlusion_layer_light_mask(int:,int:)",
+        "TileSet::method:set_occlusion_layer_sdf_collision(int:,bool:)",
+        "Viewport::enum:SDFOversize",
+        "Viewport::enum:SDFScale",
+        "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_100_PERCENT",
+        "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_120_PERCENT",
+        "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_150_PERCENT",
+        "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_200_PERCENT",
+        "Viewport::enum_value:SDFOversize.SDF_OVERSIZE_MAX",
+        "Viewport::enum_value:SDFScale.SDF_SCALE_100_PERCENT",
+        "Viewport::enum_value:SDFScale.SDF_SCALE_25_PERCENT",
+        "Viewport::enum_value:SDFScale.SDF_SCALE_50_PERCENT",
+        "Viewport::enum_value:SDFScale.SDF_SCALE_MAX",
+        "Viewport::property:sdf_oversize",
+        "Viewport::property:sdf_scale"
+      ],
+      "reason": "ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "state": "Implemented"
+    },
+    {
+      "godot": [
+        "class:Light2D"
+      ],
+      "reason": "Runtime light family executes all common members except EditorOnly. Exact prerequisite: an editor scene-rendering host and editor-hint ownership; the current branded editor screen has no such consumer.",
+      "state": "Partial"
+    },
+    {
+      "godot": [
+        "Light2D::property:editor_only"
+      ],
+      "reason": "Requires an executable editor scene-rendering host and editor-hint ownership. No inert EditorOnly switch is exposed in the runtime slice.",
+      "state": "Blocked"
     }
   ],
   "extras": [
@@ -6065,6 +7038,146 @@
     {
       "electron2d": "method:Electron2D.NoiseTexture.ValidateDisposal()",
       "reason": "C# deterministic disposal precondition: reject recursive sampling and worker disposal of unfinished generation before logical lifetime mutation, preserving pool dependency guards under ADRs 0013/0014/0104."
+    },
+    {
+      "electron2d": "constructor:Electron2D.CanvasTexture..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "constructor:Electron2D.DirectionalLight..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "constructor:Electron2D.Light..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "constructor:Electron2D.LightOccluder..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "constructor:Electron2D.OccluderPolygon..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "constructor:Electron2D.PointLight..ctor()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.CreateDuplicateInstance()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.Dispose(System.Boolean)",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.GetHeight()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.GetImage()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.GetSize()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.GetWidth()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.CanvasTexture.IsPixelOpaque(System.Int32,System.Int32)",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.DirectionalLight.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.DirectionalLight.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.Light.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.LightOccluder.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.LightOccluder.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.OccluderPolygon.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.OccluderPolygon.CreateDuplicateInstance()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.OccluderPolygon.Dispose(System.Boolean)",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.OccluderPolygon.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.OccluderPolygon.GetRID()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.PointLight.CreateSceneInstanceFactory()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "method:Electron2D.PointLight.GetPropertyDescriptors()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
+    },
+    {
+      "electron2d": "property:Electron2D.CanvasTexture.HasAlpha()",
+      "reason": "Typed construction, resource ownership/copy/property-descriptor or scene-factory projection of the executable light/texture/contour family. ADRs 0004/0028/0051/0095: executable GPU light, multichannel shading, ray/edge shadow and shader-requested distance-field consumers; static retained identities, scene/archive ownership and tile occlusion integrate the same behavior. LightingTests and native pixel/allocation checks establish the current Linux profile; compatibility explicitly rejects shader-dependent passes. See docs/components/canvas-lights.md for exact sampling/profile adaptations and remaining gates.",
+      "adr": "ADRs 0004/0013/0014/0028/0051"
     }
   ]
 }

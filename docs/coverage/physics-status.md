@@ -248,7 +248,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 
 | Declaring type | Base | Implemented | Partial | Blocked | Unimplemented | Excluded |
 | --- | --- | ---: | ---: | ---: | ---: | ---: |
-| [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 77 | 27 | 11 | 0 | 0 |
+| [CanvasItem](classes/CanvasItem.md) | [Node](classes/Node.md) | 78 | 27 | 10 | 0 | 0 |
 | [MainLoop](classes/MainLoop.md) | [Object](classes/Object.md) | 12 | 6 | 0 | 0 | 0 |
 | [Node](classes/Node.md) | [Object](classes/Object.md) | 86 | 64 | 6 | 58 | 0 |
 | [Node2D](classes/Node2D.md) | [CanvasItem](classes/CanvasItem.md) | 24 | 0 | 0 | 0 | 0 |
@@ -256,7 +256,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [RefCounted](classes/RefCounted.md) | [Object](classes/Object.md) | 0 | 0 | 0 | 0 | 5 |
 | [Resource](classes/Resource.md) | [RefCounted](classes/RefCounted.md) | 4 | 21 | 0 | 2 | 2 |
 | [SkeletonModification2D](classes/SkeletonModification2D.md) | [Resource](classes/Resource.md) | 8 | 1 | 3 | 0 | 0 |
-| **Total** | | 213 | 142 | 22 | 92 | 22 |
+| **Total** | | 214 | 142 | 21 | 92 | 22 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -297,7 +297,6 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`CanvasItem::method:make_canvas_position_local(Vector2:)`](classes/CanvasItem.md) | Partial | Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection. |
 | [`CanvasItem::method:make_input_local(InputEvent:)`](classes/CanvasItem.md) | Partial | Root viewport canvas/final transform integration is audited against pinned viewport.cpp, canvas_item.cpp and window.cpp. CanvasCoordinateTests verifies composition, defaults, non-stored descriptors, inverse/owner/lifetime errors and event ownership; CanvasCoordinateRenderingTests verifies native Wayland GPU/compatibility and dummy pixels, injected mouse input, HLSL/GLSL and allocation. Camera and CanvasLayer now have separate runtime audits; root content stretch, embedded viewport containers and non-root GUI remain missing integrations; independent single-layer SubViewport transforms now execute (ADRs 0008, 0028, 0038); other native platforms and successful pointer warping are unverified. CanvasItem screen coordinates retain explicit Wayland desktop-position rejection. |
 | [`CanvasItem::method:set_instance_shader_parameter(StringName:,Variant:)`](classes/CanvasItem.md) | Blocked | First per-item shader parameter interface must implement typed parameter setters/getters together with SPIR-V reflection, retained instance values, material overrides and verified GPU binding; shared material uniforms are already available but are not instance parameters. |
-| [`CanvasItem::property:light_mask`](classes/CanvasItem.md) | Blocked | First Light resource and 2D lighting backend slice must connect LightMask to light selection and actual rendering, with stored state and pixel checks. |
 | [`CanvasItem::property:oversampling_with_scale`](classes/CanvasItem.md) | Blocked | First Font/TextServer or DPITexture oversampling integration must implement scale inheritance, invalidation, resource reference accounting and raster output together; ordinary texture scaling is not oversampling. |
 | [`CanvasItem::property:top_level`](classes/CanvasItem.md) | Partial | Default false; toggling preserves local transform and ends transform/material/modulation/Z inheritance, while visibility follows direct canvas parents. SceneHierarchyTests verifies the transform boundary. CanvasOrderingTests verifies independent canvas-root subtree order, later-root order and Z precedence on Wayland GPU/compatibility and dummy/software. CanvasLifecycleTests now verifies canvas exit/entry notification ordering, redraw, failure continuation and reattachment. Remaining gap: interpolation reset on toggling; trigger: physics-interpolation integration under ADRs 0008/0028. |
 | [`class:MainLoop`](classes/MainLoop.md) | Partial | Typed C# type exists; inheritance, signatures and behavior require row-level audit. |

@@ -6,6 +6,10 @@ internal static class BuiltInShaders
     internal static readonly byte[] InstancedVertex = Read("CanvasInstanced.vert.spv");
     internal static readonly byte[] Fragment = Read("Canvas.frag.spv");
 
+    internal static readonly byte[] SDF = Read("SDF.frag.spv");
+
+    internal static readonly byte[] Lighting = Read("Lighting.frag.spv");
+
     internal static readonly byte[] Clip = Read("Clip.frag.spv");
 
     private static byte[] Read(string name)

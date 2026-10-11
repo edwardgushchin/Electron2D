@@ -110,6 +110,10 @@ public sealed class TileSetScenesCollectionSource : TileSetSource
         foreach (var id in _scenes.Keys) { var key = id; yield return new PropertyDescriptor<TileSetScenesCollectionSource, PackedScene?>("Scenes/" + key, n => n._scenes[key], (n, v) => n.SetSceneTileScene(key, v), _ => null, stored: true); }
         yield return new PropertyDescriptor<TileSetScenesCollectionSource, int>("NextSceneID", n => n._nextSceneID, (n, v) => { if (v != -1) CheckID(v); if (v == 0 || v > 1073741823 || v == -1 && n._scenes.Count < 1073741823 || v >= 0 && n._scenes.ContainsKey(v)) throw new ArgumentException("Invalid next scene identity."); n._nextSceneID = v; }, _ => 1, stored: true);
     }
+    internal override void ResizeOcclusionLayers(int count) { }
+    internal override void InsertOcclusionLayer(int index) { }
+    internal override void RemoveOcclusionLayer(int index) { }
+    internal override void MoveOcclusionLayer(int from, int to) { }
     internal override void ResizeNavigationLayers(int count) { }
     internal override void InsertNavigationLayer(int index) { }
     internal override void RemoveNavigationLayer(int index) { }

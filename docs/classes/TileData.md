@@ -673,3 +673,7 @@ A disposed borrowed material remains readable but cannot be rendered until repla
 **summary:** Gets or sets the tile's Y sorting anchor offset in scene units; image and physics positions are unchanged.
 
 **value:** Zero by default; used when the layer enables Y sorting.
+
+## Canvas lighting integration
+
+[Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.

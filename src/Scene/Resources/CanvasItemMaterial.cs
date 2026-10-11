@@ -1,5 +1,16 @@
 namespace Electron2D;
 
+/// <summary>Selects ambient and light contribution for canvas drawing.</summary>
+public enum LightMode
+{
+    /// <summary>Combines ambient canvas modulation with illumination.</summary>
+    Normal = 0,
+    /// <summary>Uses item color independently of ambient modulation and lights.</summary>
+    Unshaded = 1,
+    /// <summary>Uses illumination without ambient contribution.</summary>
+    LightOnly = 2,
+}
+
 /// <summary>Defines how source color and alpha combine with the canvas target.</summary>
 public enum BlendMode
 {
@@ -21,9 +32,19 @@ public sealed partial class CanvasItemMaterial : Material
 {
     private readonly object _gate = new();
     private BlendMode _blendMode;
+    private LightMode _lightMode;
 
     /// <summary>Creates a material with normal alpha blending.</summary>
     public CanvasItemMaterial() { }
+
+    /// <summary>Gets or sets ambient and light-pass participation.</summary>
+    /// <value>Normal initially; existing commands read the mode each frame.</value>
+    /// <exception cref="ArgumentOutOfRangeException">The value is undefined.</exception>
+    public LightMode LightMode
+    {
+        get { lock (_gate) { ThrowIfDisposed(); return _lightMode; } }
+        set { if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); lock (_gate) { ThrowIfDisposed(); if (_lightMode == value) return; _lightMode = value; } EmitChanged(); }
+    }
 
     /// <summary>Gets or sets the canvas blend mode.</summary>
     /// <value><see cref="BlendMode.Mix"/> by default.</value>
@@ -54,11 +75,12 @@ public sealed partial class CanvasItemMaterial : Material
 
     private void CopyMaterial(CanvasItemMaterial target)
     {
-        lock (_gate) { ThrowIfDisposed(); target._blendMode = _blendMode; target._particlesAnimation = _particlesAnimation; target._particlesAnimHFrames = _particlesAnimHFrames; target._particlesAnimVFrames = _particlesAnimVFrames; target._particlesAnimLoop = _particlesAnimLoop; }
+        lock (_gate) { ThrowIfDisposed(); target._blendMode = _blendMode; target._lightMode = _lightMode; target._particlesAnimation = _particlesAnimation; target._particlesAnimHFrames = _particlesAnimHFrames; target._particlesAnimVFrames = _particlesAnimVFrames; target._particlesAnimLoop = _particlesAnimLoop; }
     }
 
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(ParticleProperties).Concat(
-        [new PropertyDescriptor<CanvasItemMaterial, BlendMode>(nameof(BlendMode), m => m.BlendMode,
+        [new PropertyDescriptor<CanvasItemMaterial, LightMode>(nameof(LightMode), m => m.LightMode, (m, v) => m.LightMode = v, _ => LightMode.Normal, stored: true),
+        new PropertyDescriptor<CanvasItemMaterial, BlendMode>(nameof(BlendMode), m => m.BlendMode,
             (m, v) => m.BlendMode = v, _ => BlendMode.Mix, stored: true)]);
 }
