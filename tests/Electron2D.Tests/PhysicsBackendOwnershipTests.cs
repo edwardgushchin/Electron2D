@@ -7,6 +7,7 @@ internal static partial class PhysicsBackendOwnershipTests
     internal static void Run(PhysicsServer.Backend backend)
     {
         Initialization(backend);
+        NamedFactories(backend);
         Lifecycle(backend);
         ExtensionBinding(backend);
         SelectedViews(backend);
@@ -619,7 +620,8 @@ internal static partial class PhysicsBackendOwnershipTests
         {
             var space = PhysicsServer.Service.GetSceneSpace(fallback);
             Check(space.BackendImplementation is CPUPhysicsWorldBackend && space.RequestedBackend == PhysicsServer.Backend.GPU &&
-                space.ActualBackend == PhysicsServer.Backend.CPU && !string.IsNullOrWhiteSpace(space.BackendFallbackReason), "Startup fallback owns an actual CPU implementation with retained request diagnostics");
+                space.ActualBackend == PhysicsServer.Backend.CPU && space.RequestedBackendName == "GPU" && space.ActualBackendName == "CPU" &&
+                !string.IsNullOrWhiteSpace(space.BackendFallbackReason), "Startup fallback owns an actual CPU implementation with retained request diagnostics");
         }
         finally { PhysicsServer.FreeRID(fallback); }
         Console.WriteLine("Fresh CPU implementation, strict unavailable GPU and explicit startup fallback passed without a graphics device.");

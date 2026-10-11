@@ -6,6 +6,7 @@ internal static partial class PhysicsBackendOwnershipTests
     {
         internal int PolicyCalls, ImpulseCalls, IdentityCalls, PriorityCalls;
         internal int FieldReads, ExceptionInvalidations;
+        internal float ImpulseScale = 1;
         internal Func<PhysicsBodyFields, PhysicsBodyFields>? FieldHook;
         internal ShapeInputHook? ShapeInputs;
         internal override int ShapeCount => inner.ShapeCount;
@@ -60,7 +61,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void WakeTouching() => inner.WakeTouching();
         internal override Vector2 GetPointVelocity(Vector2 offset) => inner.GetPointVelocity(offset);
         internal override Vector2 GetWorldPointVelocity(Vector2 point) => inner.GetWorldPointVelocity(point);
-        internal override void ApplyImpulse(Vector2 impulse, float moment) { ImpulseCalls++; inner.ApplyImpulse(impulse, moment); }
+        internal override void ApplyImpulse(Vector2 impulse, float moment) { ImpulseCalls++; inner.ApplyImpulse(impulse * ImpulseScale, moment * ImpulseScale); }
         internal override void SetSurfaceVelocity(Vector2 linear, float angular) => inner.SetSurfaceVelocity(linear, angular);
         internal override void CaptureViewContacts(PhysicsDirectBodyState view, int limit) => inner.CaptureViewContacts(view, limit);
         internal override void ApplyPortableMotion(Transform pose, Vector2 linear, float angular, float sleepTime, bool canSleep, bool sleeping, Vector2 surface, float surfaceAngular, Vector2 force, float torque, Vector2 gravity, float linearDamp, float angularDamp, bool fieldsInitialized) => inner.ApplyPortableMotion(pose, linear, angular, sleepTime, canSleep, sleeping, surface, surfaceAngular, force, torque, gravity, linearDamp, angularDamp, fieldsInitialized);

@@ -374,8 +374,9 @@ are concrete integration prerequisites, not a reason to exclude extension behavi
 [ADR 0103](../decisions/physics-extensions.md#adr-0103) resolves the implementation
 object/static-service role boundary and requires complete typed dispatch and
 supporting construction/lifetime paths. Registration-only enum aliases and virtual
-signatures with no scene/query consumer are rejected. The four extension-family
-coverage pages remain Blocked until implementation and executable acceptance.
+signatures with no scene/query consumer are rejected. Manager/server-extension declarations remain Blocked until complete public
+implementation and executable acceptance. Caller-created direct-state families
+execute; their class status remains Partial pending registered public integration.
 
 Area implementation dispatch now moves CPU native overlap/priority reduction and
 pre-step body preparation out of the shared space. Scene/raw observer scans and
@@ -418,3 +419,7 @@ and the full selected operation bridge. Independent body binding closes
 that cache-bootstrap prerequisite, not registered callback delivery. These are
 implementation requirements rather than missing user permission; current
 caller-created views do not prove the registered path.
+
+## Internal named factory prerequisite, 2026-10-11
+
+The pinned manager's two methods and server extension's 140 methods have no deprecated owner/member exclusion. [Named selection](physics-backends.md#named-implementation-selection) now executes internal registration, strict default priorities, immutable lazy selections and real fresh scene/explicit owner construction. Selected wrappers alter real body impulse response and supply actual views on CPU/GPU/no-device. Public manager/backend/extension types, named public entry points, complete operation dispatch and a public-only third-party solver consumer remain absent; all 144 class/member census rows stay Blocked. No custom algorithm or final performance acceptance follows from these internal checks.

@@ -12,6 +12,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal Func<PhysicsBodyRuntime, PhysicsDirectBodyState>? BodyFactory;
         internal int SpaceCreations, BodyCreations;
         internal ShapeInputHook? ShapeHook;
+        internal float ImpulseScale = 1;
         internal Action? InitializeHook, FlushHook;
         internal Action<bool>? ActiveHook;
         internal Action<Exception?>? EndSyncHook;
@@ -65,7 +66,7 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override PhysicsColliderImplementation CreateCollider(PhysicsColliderBackend collider)
         {
             var created = _inner.CreateCollider(collider);
-            return new WrappedCollider(collider, Space, created) { ShapeInputs = ShapeHook };
+            return new WrappedCollider(collider, Space, created) { ShapeInputs = ShapeHook, ImpulseScale = ImpulseScale };
         }
         internal override PhysicsJointImplementation CreateJoint(PhysicsJointBackend joint) => new WrappedJoint(Space, _inner.CreateJoint(joint));
         internal CPUPhysicsJointImplementation NativeJoint(PhysicsJointBackend joint) => ((CPUPhysicsWorldBackend)_inner).NativeJoint(joint);

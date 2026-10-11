@@ -46,6 +46,8 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal PhysicsServer.Backend RequestedBackend => BackendImplementation.Requested;
     internal PhysicsServer.Backend ActualBackend => BackendImplementation.Kind;
     internal string? BackendFallbackReason => BackendImplementation.FallbackReason;
+    internal string RequestedBackendName { get; private set; } = string.Empty;
+    internal string ActualBackendName { get; private set; } = string.Empty;
 
     internal PhysicsSpace(RID rid)
     {
@@ -67,20 +69,27 @@ internal sealed partial class PhysicsSpace : IDisposable
     }
 
     internal void InitializeBackend(PhysicsServer.Backend backend, bool allowCPUFallback,
-        Func<PhysicsSpace, PhysicsWorldBackend>? factory, Action<PhysicsSpace>? initialize)
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory, Action<PhysicsSpace>? initialize, PhysicsBackendRegistry.Selection? selection = null)
     {
         EnsureReleaseAccess();
         if (_backendCreationStarted) throw new InvalidOperationException("A physics implementation can be initialized only once.");
         _backendCreationStarted = true;
         try
         {
-            var created = factory is null ? PhysicsWorldBackend.Create(this, backend, allowCPUFallback) : factory(this);
-            if (created is null || !created.OwnsSpace(this)) throw new InvalidOperationException("A factory must return an implementation owned by this physics space.");
-            _backend = created;
-            BeginBackendCallback();
-            try { created.Initialize(); }
-            finally { EndExtensionCallback(); }
-            initialize?.Invoke(this);
+            if (factory is not null && selection is not null) throw new ArgumentException("A space cannot select two physics factories.");
+            RequestedBackendName = selection?.RequestedName ?? backend.ToString();
+            if (selection is { } selected) selected.Registration.Create(this, allowCPUFallback, Initialize);
+            else Initialize(factory is null ? PhysicsWorldBackend.Create(this, backend, allowCPUFallback) : factory(this));
+            void Initialize(PhysicsWorldBackend created)
+            {
+                if (created is null || !created.OwnsSpace(this)) throw new InvalidOperationException("A factory must return an implementation owned by this physics space.");
+                _backend = created;
+                ActualBackendName = selection is { Registration.BuiltIn: null } custom ? custom.Registration.Name : created.Kind.ToString();
+                BeginBackendCallback();
+                try { created.Initialize(); }
+                finally { EndExtensionCallback(); }
+                initialize?.Invoke(this);
+            }
         }
         finally { _initializing = false; }
     }

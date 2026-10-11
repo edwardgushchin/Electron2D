@@ -248,3 +248,7 @@ Selected checkpoint operations borrow the same world context as implementation h
 ## Selected fields, exceptions and portable observation
 
 Resolved fields and exception invalidation dispatch through the selected collider/world; common server/replay/map code retains no GPU handle/state aliases. Portable preparation and bound-body observation use the selected owner and borrowed common inputs. GPU pair/batch scratch stays private; CPU preserves existing field/fixture preparation. See [the executing contract and limits](../components/physics-backends.md#selected-observation-and-collision-policy).
+
+## Retained named selection
+
+Existing CPU/GPU creation resolves built-in entries through the retained internal [PhysicsBackendRegistry](PhysicsBackendRegistry.md). A captured selection can retain its requested token and actual registration across lazy creation and shared World aliases. The common initialization transaction invokes the selected factory outside registry locks; internal name diagnostics distinguish a custom registration or built-in fallback. Public named registration and the complete operation bridge remain open. See [selection behavior and checks](../components/physics-backends.md#named-implementation-selection).

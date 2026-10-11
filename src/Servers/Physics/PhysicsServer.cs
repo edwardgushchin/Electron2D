@@ -31,6 +31,7 @@ public sealed partial class PhysicsServer : ElectronObject
     private PhysicsServer() { }
 
     internal static PhysicsServer Service => SharedInstance;
+    private readonly PhysicsBackendRegistry _backendRegistry = new();
 
     internal RID RegisterSceneObject(CollisionObject node)
     {
@@ -77,10 +78,12 @@ public sealed partial class PhysicsServer : ElectronObject
     }
 
     internal PhysicsSpace CreateRegisteredSpace(Backend backend, bool allowCPUFallback, bool owned,
-        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, Action<PhysicsSpace>? initialize = null)
+        Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, Action<PhysicsSpace>? initialize = null,
+        PhysicsBackendRegistry.Selection? selection = null)
     {
         ThrowIfDisposed();
         if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        if (selection is null && factory is null) selection = _backendRegistry.Resolve(backend.ToString());
         var rid = RID.Allocate();
         var space = new PhysicsSpace(rid);
         lock (_registryGate)
@@ -90,7 +93,7 @@ public sealed partial class PhysicsServer : ElectronObject
         }
         try
         {
-            space.InitializeBackend(backend, allowCPUFallback, factory, initialize);
+            space.InitializeBackend(backend, allowCPUFallback, factory, initialize, selection);
             if (!owned) space.SetActive(true);
             return space;
         }
