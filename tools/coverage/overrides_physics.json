@@ -2314,6 +2314,31 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_constant_torque(RID:,float:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantTorque(Electron2D.RID,System.Single)",
       "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_add_collision_exception(RID:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddCollisionException(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_collision_exceptions(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.GetCollisionExceptions(Electron2D.RID)",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_remove_collision_exception(RID:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyRemoveCollisionException(Electron2D.RID,Electron2D.RID)",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_disable_collisions_between_bodies(RID:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointDisableCollisionsBetweenBodies(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_is_disabled_collisions_between_bodies(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointIsDisabledCollisionsBetweenBodies(Electron2D.RID)",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
     }
   ],
   "extras": [
@@ -7051,6 +7076,17 @@
       ],
       "state": "Partial",
       "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_add_collision_exception(RID:,RID:)",
+        "PhysicsServer2DExtension::method:_body_get_collision_exceptions(RID:)",
+        "PhysicsServer2DExtension::method:_body_remove_collision_exception(RID:,RID:)",
+        "PhysicsServer2DExtension::method:_joint_disable_collisions_between_bodies(RID:,bool:)",
+        "PhysicsServer2DExtension::method:_joint_is_disabled_collisions_between_bodies(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
     }
   ]
 }

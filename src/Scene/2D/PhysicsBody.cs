@@ -199,6 +199,7 @@ public abstract partial class PhysicsBody : CollisionObject
     }
 
     /// <summary>Adds another physics body to this body's collision-exception list.</summary>
+    /// <remarks>Requests wakeup even for an existing entry. Numerical implementation hooks reject this authoring before mutation.</remarks>
     /// <param name="body">A live scene physics body.</param>
     /// <exception cref="ArgumentNullException">The body is null.</exception>
     public void AddCollisionExceptionWith(PhysicsBody body)
@@ -209,6 +210,7 @@ public abstract partial class PhysicsBody : CollisionObject
     }
 
     /// <summary>Removes another body from this body's collision-exception list.</summary>
+    /// <remarks>Requests wakeup even for an absent entry. Numerical implementation hooks reject this authoring before mutation.</remarks>
     /// <param name="body">A live scene physics body.</param>
     /// <exception cref="ArgumentNullException">The body is null.</exception>
     public void RemoveCollisionExceptionWith(PhysicsBody body)

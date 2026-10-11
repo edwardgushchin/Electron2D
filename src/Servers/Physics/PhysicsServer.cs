@@ -65,6 +65,7 @@ public sealed partial class PhysicsServer : ElectronObject
         {
             _sceneObjects.Remove(rid);
             _bodyExceptions.Remove(rid);
+            _jointBodyExceptions.Remove(rid);
             _bodyRuntimes.Remove(rid);
             _areaRuntimes.Remove(rid);
         }

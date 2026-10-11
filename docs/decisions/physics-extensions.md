@@ -1,6 +1,6 @@
 # Physics backend extension decisions
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 <a id="adr-0103"></a>
 ## ADR 0103: Registered world backends and typed extension dispatch
@@ -74,6 +74,19 @@ interception would leave scene behavior and direct queries outside the extension
   reach the same attached implementation. A backend can own its simulation and
   geometry; an extension restricted to modifying built-in forces is insufficient.
   Do not export abstract or virtual families whose runtime call paths are absent.
+- Exception authoring remains in the common facade. Its add/remove operations reject
+  numerical-hook writes before changing the owner list. The applicable extension
+  exception getter projects to protected PhysicsServerBackend.GetCollisionExceptions
+  rather than adding a game-facing server helper: it copies retained explicit
+  entries followed by deduplicated active-joint targets, preserving inert RIDs.
+  It requires a bound live owner-thread world, rejects foreign attached bodies,
+  and may read detached common authoring. During that implementation's numerical
+  hooks it reads only common authored input, without querying or reentering solver
+  state; ordinary post-hook reads retain world-failure guards. Returned arrays
+  belong to the caller and intentionally allocate. Selected pair spans remain
+  the allocation-free input for steady simulation. Scene enumeration projects the
+  same list to nodes/null slots. This is the typed projection of the pinned
+  `_body_get_collision_exceptions` capability, not backend state exposure.
 - Direct-body and direct-space extensions preserve their applicable base API and
   inheritance through guarded public operations and typed protected implementation
   hooks. Library context constructors bind current space/body attachment identity;

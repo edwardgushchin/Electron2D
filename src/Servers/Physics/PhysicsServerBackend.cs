@@ -22,6 +22,20 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Gets the immutable engine-assigned world identity during implementation hooks.</summary>
     /// <value>A live space after factory binding; invalid before binding.</value>
     protected RID SpaceRID => _space;
+    /// <summary>Returns the body's retained explicit and active-joint collision exceptions.</summary>
+    /// <param name="body">A live scene or server body in this world, or a detached body.</param>
+    /// <returns>A caller-owned deduplicated RID array, with explicit entries in insertion order before active joint targets. Empty and retired target RIDs remain inert entries.</returns>
+    /// <remarks>This input read is available during numerical hooks, including solving, without observing numerical state.
+    /// Each call creates a snapshot; retain supplied exception-pair spans or implementation-owned buffers for warmed solver work.</remarks>
+    /// <exception cref="ArgumentException">The owner is not a live body or belongs to another world.</exception>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, called off-owner, or its world has failed outside a numerical hook.</exception>
+    /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
+    protected RID[] GetCollisionExceptions(RID body)
+    {
+        ThrowIfDisposed();
+        if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
+        return PhysicsServer.Service.GetBodyCollisionExceptions(body, PhysicsServer.Service.GetSceneSpace(_space));
+    }
     /// <summary>Rejects caller disposal while this implementation belongs to its world.</summary>
     protected sealed override void ValidateDisposal()
     {
@@ -62,8 +76,10 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Supplies the selected implementation operation: invalidate collision exceptions.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void InvalidateCollisionExceptions(RID collider);
-    /// <summary>Supplies the selected implementation operation: set collision exceptions.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Supplies the current world's deduplicated explicit and active-joint exclusion pairs.</summary>
+    /// <remarks>Pairs contain only live attachments in this world. Either direction suppresses solid response and body motion;
+    /// Area sensing and ordinary direct-space queries retain their own filtering. The span is borrowed for this call only.
+    /// Use the scoped exception getter when retained ordered or inert authoring entries are required.</remarks>
     protected internal abstract void SetCollisionExceptions(ReadOnlySpan<(RID From, RID To)> pairs);
     /// <summary>Supplies the selected implementation operation: synchronize collision exceptions.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

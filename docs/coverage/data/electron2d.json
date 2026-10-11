@@ -129608,6 +129608,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServerBackend.GetCollisionExceptions(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServerBackend",
+    "name": "GetCollisionExceptions",
+    "signature": "protected Electron2D.RID[] GetCollisionExceptions(Electron2D.RID body)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID[]",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServerBackend.GetPortableOneWayCount()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServerBackend",

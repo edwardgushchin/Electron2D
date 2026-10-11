@@ -158,6 +158,13 @@ internal sealed partial class PhysicsSpace : IDisposable
         _implementationCallbackDepth++;
     }
     internal void EndImplementationCallback() { _implementationCallbackDepth--; EndExtensionCallback(); }
+    internal void EnsureImplementationInputReadAccess()
+    {
+        if (_implementationCallbackDepth == 0) { EnsureQueryAccess(); return; }
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (Environment.CurrentManagedThreadId != _ownerThreadID)
+            throw new InvalidOperationException("Physics implementation inputs require the space owner thread.");
+    }
     internal void EnsureImplementationWriteAccess()
     {
         if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics authoring requires the space owner thread.");

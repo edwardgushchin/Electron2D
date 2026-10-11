@@ -301,6 +301,7 @@ public sealed partial class PhysicsServer
                     if (_bodyRuntimes.Remove(rid, out var runtime)) runtime.Released = true;
                     _areaRuntimes.Remove(rid);
                     _bodyExceptions.Remove(rid);
+                    _jointBodyExceptions.Remove(rid);
                 }
             }
         }

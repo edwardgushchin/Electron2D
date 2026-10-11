@@ -2,35 +2,32 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    // Empty lists retain warmed storage until their body owner retires.
     private readonly Dictionary<RID, List<RID>> _bodyExceptions = [];
     private readonly Dictionary<RID, List<RID>> _jointBodyExceptions = [];
 
     internal void BodyAddCollisionExceptionCore(RID body, RID exceptedBody)
     {
         ThrowIfDisposed();
-        var space = GetBodySpace(body);
-        space?.EnsureQueryAccess();
+        var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
+        bool changed;
         lock (_registryGate)
         {
             if (!_bodyExceptions.TryGetValue(body, out var entries))
                 _bodyExceptions.Add(body, entries = []);
-            if (entries.Contains(exceptedBody)) return;
-            entries.Add(exceptedBody);
+            changed = !entries.Contains(exceptedBody);
+            if (changed) entries.Add(exceptedBody);
         }
-        InvalidateBodyContacts(body);
+        if (changed) InvalidateBodyContacts(body); else runtime.Wake();
     }
 
     internal void BodyRemoveCollisionExceptionCore(RID body, RID exceptedBody)
     {
         ThrowIfDisposed();
-        var space = GetBodySpace(body);
-        space?.EnsureQueryAccess();
-        lock (_registryGate)
-        {
-            if (!_bodyExceptions.TryGetValue(body, out var entries) || !entries.Remove(exceptedBody)) return;
-            if (entries.Count == 0) _bodyExceptions.Remove(body);
-        }
-        InvalidateBodyContacts(body);
+        var runtime = BodyRuntime(body); runtime.EnsureAccess(writing: true);
+        bool changed;
+        lock (_registryGate) changed = _bodyExceptions.TryGetValue(body, out var entries) && entries.Remove(exceptedBody);
+        if (changed) InvalidateBodyContacts(body); else runtime.Wake();
     }
 
     internal void CopyReplayExceptions(RID body, List<RID> destination)
@@ -45,8 +42,22 @@ public sealed partial class PhysicsServer
     internal RID[] GetBodyCollisionExceptions(RID body)
     {
         ThrowIfDisposed();
-        var space = GetBodySpace(body);
-        space?.EnsureQueryAccess();
+        BodyRuntime(body).EnsureAccess();
+        return CopyBodyCollisionExceptions(body);
+    }
+
+    internal RID[] GetBodyCollisionExceptions(RID body, PhysicsSpace context)
+    {
+        ThrowIfDisposed(); context.EnsureImplementationInputReadAccess();
+        var runtime = BodyRuntime(body);
+        runtime.Owners.Scene?.Tree?.EnsureOwnerThread();
+        if (runtime.Space is { } attached && !ReferenceEquals(attached, context))
+            throw new ArgumentException("The body belongs to another physics world.", nameof(body));
+        return CopyBodyCollisionExceptions(body);
+    }
+
+    private RID[] CopyBodyCollisionExceptions(RID body)
+    {
         lock (_registryGate)
         {
             var result = _bodyExceptions.TryGetValue(body, out var entries) ? new List<RID>(entries) : [];
@@ -90,7 +101,6 @@ public sealed partial class PhysicsServer
             }
             // Repeated entries retain one contribution per joint, independent of explicit exceptions.
             if (add) entries.Add(target); else entries.Remove(target);
-            if (entries.Count == 0) _jointBodyExceptions.Remove(body);
         }
         void TryInvalidate(RID body)
         {
@@ -99,22 +109,19 @@ public sealed partial class PhysicsServer
         }
     }
 
-    private PhysicsSpace? GetBodySpace(RID body)
-    {
-        if (ResolveSceneObject(body) is PhysicsBody sceneBody)
-            return sceneBody.Space;
-        return GetCollider(body, isArea: false).Space;
-    }
-
     private void InvalidateBodyContacts(RID body)
     {
-        if (ResolveSceneObject(body) is PhysicsBody sceneBody)
+        var runtime = BodyRuntime(body); var owners = runtime.Owners;
+        if (runtime.Space?.HasBackendFailure == true) return;
+        if (runtime.Space is null)
         {
-            if (sceneBody.Space is null) sceneBody.MarkShapesDirty(); else sceneBody.Backend.InvalidateCollisionExceptions();
-            return;
+            if (owners.Scene is { } scene) scene.MarkShapesDirty(); else owners.Server!.MarkShapesDirty();
         }
-        var collider = GetCollider(body, isArea: false);
-        if (collider.Space is null) collider.MarkShapesDirty(); else collider.Backend.InvalidateCollisionExceptions();
+        else
+        {
+            runtime.Backend.InvalidateCollisionExceptions(); runtime.Backend.WakeTouching();
+        }
+        runtime.Wake();
     }
 
     internal void CopyCollisionExceptions(List<(RID From, RID To)> destination, bool includeJoints = false)
