@@ -1189,3 +1189,5 @@ Selected body contact publication belongs to existing [PhysicsDirectBodyState/Ex
 | [Physics](domains/physics.md) | [Typed backend values](components/physics-registered-adapter.md) | [PhysicsColliderShape](classes/PhysicsColliderShape.md) | [PhysicsColliderShape.cs](../src/Servers/Physics/PhysicsColliderShape.cs) | Public | Immutable sampled engine-unit implementation policy or logical shape input. |
 
 | [Physics](domains/physics.md) | [Custom geometry](components/physics-custom-geometry.md) | [CustomShape](classes/CustomShape.md), [ShapeCollisionAlgorithm](classes/ShapeCollisionAlgorithm.md) | [resource](../src/Scene/Resources/CustomShape.cs), [data and pair algorithm](../src/Scene/Resources/ShapeGeometry.Custom.cs) | Public | Immutable custom format data, exact mass/bounds, diagnostic drawing, standalone pair dispatch, selected numerical participation and authoring-qualified replay. |
+
+GPU body publication scheduling and its existing store/space roles are described in [changed publication](components/gpu-body-publication.md); adaptive transfer and valid-cache reuse add no public types or CPU solver mirror.

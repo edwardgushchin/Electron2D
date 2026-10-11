@@ -449,3 +449,19 @@ Default-force, CPU resolved-field and GPU parameter preparation now consume immu
 Public manager registration and the scoped backend/extension family now execute with the separate public-only consumer; custom annulus geometry also executes. The earlier internal prerequisites do not describe the current public boundary. Manager registration/default rows are Implemented; the extension owner remains Partial and its operation-specific rows retain open acceptance where the named behavior is absent or unverified.
 
 Portable one-way output now uses the current declared count rather than retained buffer length. Shared capture/apply validation checks different bound colliders, enabled logical slots, valid nonnegative pieces and unique unordered pairs before encoding or mutation. The external consumer rejects malformed output without losing a previous packet, restores network identities into a different local creation order and checks numerical pass-through versus an accepted impulse. Generic one-way detection, complete operation-family acceptance, separate-process extension networking, foreign platforms and final GPU/window performance remain open.
+
+## GPU publication transfer control, 2026-10-11
+
+[Publication measurements](gpu-body-publication.md#full-path-control-2026-10-11)
+compare full scene steps with identical assemblies and population. Dense output
+combines status/results in one wait; sparse output keeps exact-prefix transfer.
+Current complete caches may serve read-only callbacks, while callback writes and
+separate cache invalidation retain fresh reads. Three 1,536-body repetitions save
+one submission but do not show a reliable full-step improvement; GPU remains slower
+than CPU on this monitored scene. All physical/managed-allocation gates pass.
+
+The 16,384-body CPU window and fresh GPU-only/headless controls pass, but the first
+CPU-then-GPU window sequence fails with severe escape/speed. This stability/lifecycle
+case is open and prevents final rendered-family acceptance. It must be diagnosed
+without reducing population or relaxing physical tolerances. These findings do not
+close complete extension operations or final CPU/GPU performance acceptance.

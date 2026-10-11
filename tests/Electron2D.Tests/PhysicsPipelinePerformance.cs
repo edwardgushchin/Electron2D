@@ -87,6 +87,9 @@ internal static class PhysicsPipelinePerformance
             PhysicsServer.SpaceSetSolverIterations(world.Space, 16);
             Check(world.PhysicsBackend == backend && world.RequestedPhysicsBackend == backend, "Full scene pipeline uses the explicit requested backend");
             var data = PhysicsServer.Service.GetSceneSpace(world.Space); var gpu = data.GPUStore;
+            var publicationControl = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_PUBLICATION_CONTROL") == "1";
+            data.ForceGPUStatePublication = publicationControl;
+            if (gpu is not null) gpu.ForceCountFirstChangeReadback = publicationControl;
             var times = new double[samples]; var waits = new double[samples]; var phases = new double[8]; var phaseBytes = new long[8];
             for (var i = 0; i < warmup; i++) tree.PhysicsFrame(delta);
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: true, compacting: false); GC.WaitForPendingFinalizers();
@@ -168,6 +171,7 @@ internal static class PhysicsPipelinePerformance
                 interpolation = true,
                 sleeping = false,
                 rendered = false,
+                publicationControl,
                 warmup,
                 samples,
                 meanMS = times.Average(),
