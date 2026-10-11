@@ -85,3 +85,6 @@ body-state forwarding remain available; hierarchy/resource-lifetime guards still
 cover every extension scope. See [body authoring](../components/physics-registered-adapter.md#borrowed-body-authoring).
 
 Protected `RID[] GetCollisionExceptions(RID body)` copies guarded common authoring: ordered explicit entries followed by deduplicated active-joint targets, including inert values. It is readable in the owning numerical hook without observing solver state; snapshots belong to the caller and allocate. See [collision-exception response](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) for full lifetime and verification limits.
+
+
+Joint parameter authoring follows the same borrowed numerical boundary as body authoring. Typed facade reads retain common values; immutable PhysicsJointConfiguration and concrete joint hooks carry the full profile. The guard applies during initial attachment and live hooks.

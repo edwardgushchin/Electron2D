@@ -1,6 +1,10 @@
 namespace Electron2D;
 
 /// <summary>Defines one selected constraint using logical body identities and immutable solver policy.</summary>
+/// <remarks>Common typed getters retain authoring; configuration supplies the complete parameter and flag family.
+/// Numerical hooks cannot change scene/server joint paths, geometry or parameters, including unchanged assignments.
+/// Ordinary game callbacks retain their configuration writes. The engine prepares automatic scene spring rest length
+/// before numerical solving.</remarks>
 public abstract class PhysicsBackendJoint
 {
     private int _claimed;

@@ -1,6 +1,6 @@
 # Joint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -117,3 +117,6 @@ uses prepared storage without managed allocation and preserves its anchor respon
 on CPU and GPU. See [joint storage](../components/physics-joints.md).
 
 Collision-policy setters reject numerical hooks before changing values or endpoint contributions, including unchanged assignments. They retain prepared geometry and reuse contribution storage; [exception conformance](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) covers all three raw roles and a scene joint.
+
+
+Path, geometry and all common/concrete parameter writes reject initial/live selected numerical hooks before changing retained values, even for unchanged assignments. The attached scene world is checked while the joint is pending. Ordinary game callbacks can author the next interval.

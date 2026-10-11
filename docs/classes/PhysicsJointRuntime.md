@@ -1,6 +1,6 @@
 # PhysicsJointRuntime
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** System.Object · **Declaration:** `internal sealed class PhysicsJointRuntime`
 
@@ -66,3 +66,6 @@ ordering; old CPU handle checks remain supplementary lifecycle diagnostics.
 Bias (default zero), MaxBias/MaxForce (default float.MaxValue) are common authored values. SetBias/SetMaxBias/SetMaxForce validate before mutation; ApplySolverPolicy updates an attached backend without reanchoring. PinSoftness defaults zero, is nonnegative inverse-mass compliance, and is changed through SetPinSoftness. General policy survives Clear and raw concrete replacement; the pin-specific value resets on replacement. Scene descriptors serialize the same shared values. See [joint policies](../components/physics-joint-policies.md) for units, wake/history behavior and tests.
 
 [Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+
+
+EnsureWriteAccess checks attached scene, current joint and endpoint worlds before any scalar/path/geometry mutation, including pending attachment and unchanged values. It guards numerical borrowing separately from ordinary query phases so engine spring preparation can resolve automatic rest length before solving.

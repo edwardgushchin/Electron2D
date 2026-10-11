@@ -1,6 +1,6 @@
 # Physics domain
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Full monitored scene window measurements](../components/physics-scene-performance.md#full-monitored-scene-in-a-native-window)
 now use the same complete scene fixture with separate physics/frame costs, actual
@@ -612,3 +612,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 [Registered force and axis operations](../components/physics-registered-adapter.md#force-impulse-and-axis-response) now have one public-only numeric/lifetime fixture shared by CPU, GPU and an independent solver. It checks rotated-center moments, pending and persistent cadence, invalid candidates and zero managed allocation for 128 edited full frames after collection. Fourteen extension rows remain Partial; this does not close the complete physics objective.
 
 [Collision-exception response](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) now shares scene/raw numerical and lifetime checks across CPU/GPU/registered implementations. Scoped implementation input reads preserve inert RID authoring; body/joint writes reject numerical borrowing. CPU refreshes existing contact policy without geometry replacement; 128 edited full frames allocate zero managed bytes. Complete extension, platform and physics/network acceptance remain open.
+
+
+[Joint parameter authoring](../components/physics-registered-adapter.md#joint-parameter-authoring) now guards the complete common/pin/spring typed family and scene path/geometry during initial/live numerical calls. CPU/GPU/registered checks exercise retained profiles, endpoint reentry and real spring response; registered pin/groove numerical acceptance remains open.

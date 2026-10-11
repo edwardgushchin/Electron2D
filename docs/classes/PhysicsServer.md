@@ -885,3 +885,6 @@ cover every extension scope. See [body authoring](../components/physics-register
 Callback registration, force omission and contact caps share scene/raw guarded configuration. The public-only integration consumer checks the same numerical behavior on CPU/GPU and an independent implementation: pending/persistent force omission with active impulses/contacts, force-scene-sync ordering, strongly typed userdata, exception continuation and clearing delegates. Numerical implementation hooks cannot change these settings or inherited scene integration/contact properties; ordinary game callbacks retain access.
 
 Collision-exception add/remove preserves insertion order and requests wakeup even for duplicate/absent entries. Numerical hooks cannot change body or joint exclusion authoring. Geometry remains reusable; [selected exception checks](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) cover physical response, immediate motion, sensor independence and warmed memory.
+
+
+All typed common/pin/spring parameter getter/setter pairs share retained scene/raw authoring. Initial/live selected numerical hooks reject writes before mutation, including unchanged assignments; ordinary state callbacks may edit the next interval.

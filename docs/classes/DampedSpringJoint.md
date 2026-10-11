@@ -1,6 +1,6 @@
 # DampedSpringJoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -75,3 +75,6 @@ The inherited [Joint](Joint.md) paths, collision policy, warnings and scene life
 The inherited stable RID and shared server settings are described by [Joint.GetRID](Joint.md) and [PhysicsServer joint methods](PhysicsServer.md#joints), under [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
+
+
+Inherited numerical borrowing guards cover Length, RestLength, Stiffness and Damping before retained values change. Engine preparation may resolve automatic scene rest length before solving; ordinary game callbacks can edit the next interval.

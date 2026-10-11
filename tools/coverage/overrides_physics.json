@@ -2339,6 +2339,126 @@
       "godot": "PhysicsServer2DExtension::method:_joint_is_disabled_collisions_between_bodies(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointIsDisabledCollisionsBetweenBodies(Electron2D.RID)",
       "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitLower(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitUpper(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorTargetVelocity(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitLower(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitUpper(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorTargetVelocity(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetRestLength(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetStiffness(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointGetDamping(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetRestLength(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetStiffness(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.DampedSpringJointSetDamping(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetAngularLimitEnabled(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetMotorEnabled(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetAngularLimitEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetMotorEnabled(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetBias(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxBias(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxBias(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointGetMaxForce(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.JointSetMaxForce(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointGetSoftness(Electron2D.RID)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.PinJointSetSoftness(Electron2D.RID,System.Single)",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
     }
   ],
   "extras": [
@@ -7087,6 +7207,20 @@
       ],
       "state": "Partial",
       "reason": "ADR 0063/0087/0103: common ordered explicit and independently counted active-joint inputs drive selected contact/motion policy. The protected scoped getter preserves retained/inert RID snapshots and reads authored input during solving without numerical queries; lifetime/owner/failure guards apply. All scene siblings and raw owners reject numerical body/joint writes before mutation. Public-only CPU/GPU/registered checks prove real response/contact identity, immediate bidirectional motion, independent sensing, wake on changed/duplicate/absent calls, joint union/clear and 128 measured edited full frames at 0/0 owner/all-thread bytes after collection. CPU updates cached contact flags without geometry rebuild; live owner buffers retire on free. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_damped_spring_joint_get_param(RID:,int:PhysicsServer2D.DampedSpringParam)",
+        "PhysicsServer2DExtension::method:_damped_spring_joint_set_param(RID:,int:PhysicsServer2D.DampedSpringParam,float:)",
+        "PhysicsServer2DExtension::method:_joint_get_param(RID:,int:PhysicsServer2D.JointParam)",
+        "PhysicsServer2DExtension::method:_joint_set_param(RID:,int:PhysicsServer2D.JointParam,float:)",
+        "PhysicsServer2DExtension::method:_pin_joint_get_flag(RID:,int:PhysicsServer2D.PinJointFlag)",
+        "PhysicsServer2DExtension::method:_pin_joint_get_param(RID:,int:PhysicsServer2D.PinJointParam)",
+        "PhysicsServer2DExtension::method:_pin_joint_set_flag(RID:,int:PhysicsServer2D.PinJointFlag,bool:)",
+        "PhysicsServer2DExtension::method:_pin_joint_set_param(RID:,int:PhysicsServer2D.PinJointParam,float:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0087/0103: complete common typed getter/setter pairs retain joint bias, correction/force caps, positional pin softness, angular limits, motor flags/speed and spring coefficients; immutable configuration and selected joint hooks receive the same authored values. Initial/live numerical hooks reject raw and scene writes, including local path/geometry and unchanged assignments, before mutation. Public-only CPU/GPU/registered checks verify every typed value, invalid candidates, endpoint reentry, ordinary callback writes, real capped spring response (0.001 scene-unit/s tolerance), and 64 measured edited full frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete numerical-extension acceptance remain open."
     }
   ]
 }

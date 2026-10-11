@@ -1,6 +1,6 @@
 # PinJoint
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 [Shared joint conformance](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 exercises this family through explicitly selected CPU and independent GPU worlds.
@@ -73,3 +73,6 @@ All pin properties and inherited Joint paths/collision policy are stored in Pack
 The inherited stable RID and shared server settings are described by [Joint.GetRID](Joint.md) and [PhysicsServer joint methods](PhysicsServer.md#joints), under [ADR 0087](../decisions/physics-joints.md#adr-0087).
 
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
+
+
+Inherited numerical borrowing guards cover Softness, angular limit values/flag and motor values/flag together with common joint settings. Invalid or rejected writes preserve the retained profile; endpoint reentry keeps its values.

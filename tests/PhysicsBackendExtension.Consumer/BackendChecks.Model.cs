@@ -17,6 +17,7 @@ public static partial class BackendChecks
         internal Action<RID>? IdentityHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
+        internal Action<RID>? JointHook;
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
@@ -265,16 +266,16 @@ public static partial class BackendChecks
         private RID _first, _second;
         private bool _attached;
         protected override bool IsAttached => _attached;
-        protected override void Attach(RID first, RID second, in PhysicsJointConfiguration settings) { _first = first; _second = second; Settings = settings; _attached = true; }
+        protected override void Attach(RID first, RID second, in PhysicsJointConfiguration settings) { _first = first; _second = second; Settings = settings; _attached = true; solver.JointHook?.Invoke(rid); }
         protected override void Detach() { _attached = false; solver.Joints.Remove(rid); }
-        protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings) => Settings = settings;
+        protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings) { Settings = settings; solver.JointHook?.Invoke(rid); }
         protected override void ApplyPortableFrames(Transform first, Transform second) => Settings = Settings with { FrameA = first, FrameB = second };
-        protected override void SetCollideConnected(bool value) => Settings = Settings with { DisableCollision = !value };
-        protected override void SetPinLimits(bool enabled, float lower, float upper) => Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper };
-        protected override void SetPinMotorEnabled(bool value) => Settings = Settings with { PinMotorEnabled = value };
-        protected override void SetPinMotorVelocity(float value) => Settings = Settings with { PinMotorVelocity = value };
-        protected override void SetPinMotorMaxTorque(float value) => Settings = Settings with { PinMotorMaxTorque = value };
-        protected override void SetGrooveLimits(float lower, float upper) => Settings = Settings with { LowerTranslation = lower, UpperTranslation = upper };
+        protected override void SetCollideConnected(bool value) { Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinLimits(bool enabled, float lower, float upper) { Settings = Settings with { PinLimitEnabled = enabled, PinLimitLower = lower, PinLimitUpper = upper }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorEnabled(bool value) { Settings = Settings with { PinMotorEnabled = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorVelocity(float value) { Settings = Settings with { PinMotorVelocity = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetPinMotorMaxTorque(float value) { Settings = Settings with { PinMotorMaxTorque = value }; solver.JointHook?.Invoke(rid); }
+        protected override void SetGrooveLimits(float lower, float upper) { Settings = Settings with { LowerTranslation = lower, UpperTranslation = upper }; solver.JointHook?.Invoke(rid); }
         internal void Solve(float dt)
         {
             if (Settings.Type != PhysicsServer.JointType.DampedSpring) return;

@@ -1,6 +1,6 @@
 # Physics joints component
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Physical skeletal integration
 
@@ -64,3 +64,6 @@ storage. Populated colors retain their buffers. The common public server-joint s
 checks a pin/contact component's first recoloring, zero owner/all-thread managed
 allocation and its subsequent anchor response on CPU and GPU. See the
 [network regression record](physics-network-example.md#joint-wake-allocation-regression-2026-10-10).
+
+
+The shared runtime rejects scene/raw parameter and local path/geometry writes inside initial/live numerical hooks before mutation. Typed authoring survives endpoint reentry and ordinary callbacks retain writes. [Registered joint parameters](physics-registered-adapter.md#joint-parameter-authoring) records complete profile propagation, bounded spring response and allocation checks.

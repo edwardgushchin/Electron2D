@@ -1,6 +1,6 @@
 # Registered numerical solver adapter
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Scope and ownership
 
@@ -308,3 +308,32 @@ and collection between brackets: 128 measured frames at 0/0 owner/all-thread B
 on CPU/GPU/registered paths. Five extension rows remain Partial pending complete
 numerical-extension acceptance. Snapshot-getter allocations are outside that
 physical-frame bracket by their documented caller-owned contract.
+
+
+## Joint parameter authoring
+
+Common typed getters/setters retain Bias, MaxBias, MaxForce, pin positional softness,
+limits, motor flags/speed/torque and spring rest/stiffness/damping. The selected joint
+receives immutable complete configuration plus concrete live hooks. Every scalar
+setter checks scene, joint and endpoint numerical borrowing before validation or
+unchanged-value returns. Scene path and local groove/spring geometry check the same
+boundary before field mutation, including pending initial attachment. Ordinary game
+callbacks keep next-interval writes. Engine pre-solve automatic spring rest-length
+preparation remains valid.
+
+`BackendChecks.JointParameterChecks` exercises all three raw and scene roles on
+explicit CPU, GPU and the independent registered fixture: exact typed/configuration
+values, initial/live hook rejection, retained values after invalid candidates,
+owner checks, endpoint detach/reentry and ordinary state callbacks. A two-body
+mass-2 spring produces opposite velocities .1, .15, .1 and .05 scene units/s as
+stiffness, full force cap, damping and literal rest length change. The .001
+scene-unit/s tolerance bounds substep displacement differences for this short
+low-speed test; it is not a general solver tolerance. After 64 warmup frames,
+64 edited complete PhysicsFrame cycles allocate 0 owner/all-thread managed bytes
+on each backend, including the first frame after collection.
+
+The eight extension parameter/flag selector operations map to their complete typed
+facade family under ADR 0087/0103 and remain Partial. Registered pin/groove numerical
+response and complete numerical-extension acceptance remain open; built-in joint
+response uses the existing shared CPU/GPU contract tests. Native allocations, other
+platforms, networking and final window/performance acceptance are unverified here.

@@ -1,6 +1,6 @@
 # PhysicsBackendJoint
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `public abstract class PhysicsBackendJoint` · **Source:** [PhysicsBackendJoint.cs](../../src/Servers/Physics/PhysicsBackendJoint.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -29,3 +29,6 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 ## Verification and limits
 
 [Independent solver probe](../../tests/Electron2D.Tests/PhysicsRegisteredBackendTests.cs) exercises scene/raw integration, ordinary views, queries, Area events, contacts, spring policy, local/portable restore, guarded lifetime and terminal solve failure. The test solver implements a bounded circle/spring model; it is a separate public-only test consumer, not a production backend. Arbitrary custom geometry and unexercised operation acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103).
+
+
+The complete typed facade parameter/flag family projects retained common authoring into Attach, ApplySolverPolicy and the concrete pin/groove hooks. Initial/live hooks cannot recursively change scene/raw paths, geometry or scalars. The independent consumer verifies profile propagation and spring motion; registered pin/groove numerical response remains open.

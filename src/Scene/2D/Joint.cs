@@ -3,7 +3,9 @@ namespace Electron2D;
 /// <summary>Connects two scene physics bodies in their shared physics world.</summary>
 /// <remarks>Node paths resolve from this node. A valid connection is built after both bodies enter the tree
 /// and is removed before either backend body leaves. The anchor is sampled at connection time; moving this
-/// node alone does not retune it. Concrete engine-owned subclasses supply the constraint.</remarks>
+/// node alone does not retune it. Concrete engine-owned subclasses supply the constraint.
+/// Path, geometry and parameter writes reject while a selected numerical hook is borrowed, including initial
+/// attachment and unchanged assignments. Ordinary game callbacks may author the next interval.</remarks>
 public abstract class Joint : Entity
 {
     private static readonly PropertyDescriptor[] JointProperties =
@@ -222,6 +224,7 @@ public abstract class Joint : Entity
     internal void EnsureJointChange()
     {
         EnsureMutable();
+        Runtime.EnsureWriteAccess();
         _space?.EnsureQueryAccess();
         Runtime.EnsureAccess();
     }

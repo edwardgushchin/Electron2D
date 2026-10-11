@@ -8,6 +8,7 @@ public static partial class BackendChecks
         StateChecks();
         ForceChecks();
         ExceptionChecks();
+        JointParameterChecks();
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();
