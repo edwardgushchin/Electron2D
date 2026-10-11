@@ -4,10 +4,15 @@ namespace Electron2D;
 
 public sealed unsafe partial class RenderingDevice
 {
-    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0);
-    private static (byte[] Code, Binding[] Layout) Remap(byte[] code)
+    private readonly record struct Binding(uint Set, int Slot, UniformType Type, int Native, bool Array = false, uint ImageFormat = 0, int PixelType = 0, ShaderStage Stage = ShaderStage.Compute, uint MinimumSize = 0);
+    private static (byte[] Code, Binding[] Layout) Remap(byte[] code, ShaderStage stage = ShaderStage.Compute)
     {
         if (code.Length < 20 || code.Length > 16 * 1024 * 1024 || code.Length % 4 != 0) throw new ArgumentException("A compute module must contain aligned SPIR-V words.", nameof(code));
+        var compute = stage == ShaderStage.Compute;
+        var nativeSet = stage == ShaderStage.Fragment ? 2u : 0u;
+        var model = compute ? 5u : stage == ShaderStage.Fragment ? 4u : 0u;
+        var readOnly = new HashSet<uint>();
+        var members = new Dictionary<uint, int>(); var readonlyMembers = new Dictionary<uint, HashSet<uint>>();
         var words = MemoryMarshal.Cast<byte, uint>(code.AsSpan());
         if (words[0] != 0x07230203 || words[3] == 0 || words[3] > 1_048_576 || words[4] != 0) throw new ArgumentException("Invalid SPIR-V header.", nameof(code));
         var sets = new Dictionary<uint, int>(); var slots = new Dictionary<uint, int>();
@@ -22,9 +27,9 @@ public sealed unsafe partial class RenderingDevice
             switch (op)
             {
                 case 15:
-                    if (entry || size < 5 || words[i + 1] != 5 || words[i + 3] != 0x6e69616d || words[i + 4] != 0) throw new NotSupportedException("One compute entry point named main is required.");
+                    if (entry || size < 5 || words[i + 1] != model || words[i + 3] != 0x6e69616d || words[i + 4] != 0) throw new NotSupportedException("One entry point named main matching the requested stage is required.");
                     entry = true; break;
-                case 16 when size >= 3 && words[i + 2] == 17:
+                case 16 when compute && size >= 3 && words[i + 2] == 17:
                     if (size != 6 || words[i + 3] is 0 or > 1024 || words[i + 4] is 0 or > 1024 || words[i + 5] is 0 or > 1024 || (ulong)words[i + 3] * words[i + 4] * words[i + 5] > 1024) throw new ArgumentException("Invalid compute workgroup dimensions.", nameof(code));
                     localSize = true; break;
                 case 21 when size == 4:
@@ -38,27 +43,31 @@ public sealed unsafe partial class RenderingDevice
                     images.Add(words[i + 1], (words[i + 2], words[i + 5], words[i + 7], words[i + 8])); break;
                 case 26 when size == 2: samplerTypes.Add(words[i + 1]); break;
                 case 27 when size == 3: sampled.Add(words[i + 1], words[i + 2]); break;
+                case 30 when size >= 2: members.Add(words[i + 1], size - 2); break;
                 case 32 when size == 4: pointers.Add(words[i + 1], words[i + 3]); break;
                 case 59 when size >= 4: variables.Add((words[i + 2], words[i + 1], words[i + 3])); break;
                 case 71 when size >= 3:
                     if (words[i + 2] == 34 && size == 4) sets.Add(words[i + 1], i + 3);
                     else if (words[i + 2] == 33 && size == 4) slots.Add(words[i + 1], i + 3);
                     else if (words[i + 2] == 3) bufferBlocks.Add(words[i + 1]);
-                    else if (words[i + 2] == 24) for (var j = 0; j < size; j++) words[i + j] = 1u << 16;
+                    else if (words[i + 2] == 24) { readOnly.Add(words[i + 1]); if (compute) for (var j = 0; j < size; j++) words[i + j] = 1u << 16; }
                     break;
                 case 72 when size >= 4 && words[i + 3] == 24:
-                    for (var j = 0; j < size; j++) words[i + j] = 1u << 16;
+                    if (!readonlyMembers.TryGetValue(words[i + 1], out var fields)) readonlyMembers.Add(words[i + 1], fields = []);
+                    fields.Add(words[i + 2]); if (compute) for (var j = 0; j < size; j++) words[i + j] = 1u << 16;
                     break;
             }
             i += size;
         }
-        if (!entry || !localSize) throw new ArgumentException("Missing compute entry point or static workgroup dimensions.", nameof(code));
+        foreach (var pair in readonlyMembers) if (members.TryGetValue(pair.Key, out var count) && pair.Value.Count == count && pair.Value.All(m => m < count)) readOnly.Add(pair.Key);
+        if (!entry || compute && !localSize) throw new ArgumentException("Missing compute entry point or static workgroup dimensions.", nameof(code));
+        var minimumSizes = SpirvReflection.DeviceUniformSizes(code);
         var logical = new Dictionary<uint, (uint Set, int Slot)>();
         foreach (var v in variables) if (sets.TryGetValue(v.ID, out var ds) && slots.TryGetValue(v.ID, out var bs)) logical[v.ID] = (words[ds], checked((int)words[bs]));
         var layout = new List<Binding>(); var storage = 0; var uniform = 0; var imageSlot = 0; var textureSlot = 0;
         foreach (var variable in variables)
         {
-            if (variable.Storage == 9) throw new NotSupportedException("Push constants are not integrated into local compute.");
+            if (variable.Storage == 9) throw new NotSupportedException("Push constants require native uniform-slot translation.");
             if (variable.Storage == 0)
             {
                 if (!sets.TryGetValue(variable.ID, out var imageSet) || !slots.TryGetValue(variable.ID, out var imageBinding) || !pointers.TryGetValue(variable.Type, out var imageType)) throw new ArgumentException("An image has no descriptor layout.", nameof(code));
@@ -67,37 +76,42 @@ public sealed unsafe partial class RenderingDevice
                 if (!images.TryGetValue(imageType, out var image)) throw new NotSupportedException("Image descriptor arrays are not integrated.");
                 if (!scalars.TryGetValue(image.Scalar, out var pixelType)) throw new NotSupportedException("Compute images require 32-bit float, signed or unsigned pixel scalars.");
                 var writable = image.Sampled == 2;
+                if (!compute && writable && !readOnly.Contains(variable.ID)) throw new NotSupportedException("Graphics image storage requires a readonly declaration.");
                 if (combined && writable) throw new ArgumentException("A storage image cannot contain a combined sampler.", nameof(code));
                 if (writable && image.Array != 0) throw new NotSupportedException("Array image storage requires subresource-view integration.");
                 var nativeImage = writable ? imageSlot++ : textureSlot++;
                 if (imageSlot > 8 || textureSlot > 16) throw new NotSupportedException("Compute image bindings exceed backend limits.");
                 var origin = logical[variable.ID];
                 if (layout.Any(b => b.Set == origin.Set && b.Slot == origin.Slot)) throw new ArgumentException("Duplicate image binding.", nameof(code));
-                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType));
+                layout.Add(new(words[imageSet], checked((int)words[imageBinding]), writable ? UniformType.Image : UniformType.SamplerWithTexture, nativeImage, image.Array != 0, image.Format, pixelType, stage));
                 if (!writable && !combined)
                 {
                     var paired = variables.SingleOrDefault(v => pointers.TryGetValue(v.Type, out var ty) && samplerTypes.Contains(ty) && logical.TryGetValue(v.ID, out var loc) && loc == origin);
                     if (paired == default) throw new NotSupportedException("A separate image requires a sampler at the same logical set/binding.");
                     if (!pairedSamplers.Add(paired.ID)) throw new NotSupportedException("A separate sampler must pair with exactly one image.");
-                    words[sets[paired.ID]] = 0; words[slots[paired.ID]] = (uint)nativeImage;
+                    words[sets[paired.ID]] = nativeSet; words[slots[paired.ID]] = (uint)nativeImage;
                 }
-                words[imageSet] = writable ? 1u : 0u; words[imageBinding] = (uint)nativeImage;
+                words[imageSet] = compute ? writable ? 1u : 0u : nativeSet; words[imageBinding] = (uint)nativeImage;
                 continue;
             }
             if (variable.Storage is not (2 or 12)) continue;
             if (!sets.TryGetValue(variable.ID, out var setOffset) || !slots.TryGetValue(variable.ID, out var slotOffset) || !pointers.TryGetValue(variable.Type, out var block)) throw new ArgumentException("A buffer is missing its descriptor layout.", nameof(code));
             var isStorage = variable.Storage == 12 || bufferBlocks.Contains(block);
+            if (!compute && isStorage && !readOnly.Contains(variable.ID) && !readOnly.Contains(block)) throw new NotSupportedException("Graphics storage buffers require readonly declarations.");
             var native = isStorage ? storage++ : uniform++;
             if (storage > 8 || uniform > 4) throw new NotSupportedException("Local compute supports eight storage buffers and four uniform buffers per shader.");
-            var binding = new Binding(words[setOffset], checked((int)words[slotOffset]), isStorage ? UniformType.StorageBuffer : UniformType.UniformBuffer, native);
+            var binding = new Binding(words[setOffset], checked((int)words[slotOffset]), isStorage ? UniformType.StorageBuffer : UniformType.UniformBuffer, native, Stage: stage, MinimumSize: isStorage ? 0 : minimumSizes.GetValueOrDefault((words[setOffset], checked((int)words[slotOffset]))));
             if (layout.Any(b => b.Set == binding.Set && b.Slot == binding.Slot)) throw new ArgumentException("Duplicate shader descriptor binding.", nameof(code));
-            layout.Add(binding); words[setOffset] = isStorage ? 1u : 2u; words[slotOffset] = (uint)native;
+            layout.Add(binding); words[setOffset] = compute ? isStorage ? 1u : 2u : isStorage ? nativeSet : nativeSet + 1; words[slotOffset] = (uint)native;
         }
         foreach (var variable in variables)
             if (variable.Storage == 0 && pointers.TryGetValue(variable.Type, out var type) && samplerTypes.Contains(type) && !pairedSamplers.Contains(variable.ID)) throw new NotSupportedException("An orphan sampler has no paired image.");
         // Writable image slots precede writable buffer slots in the native compute interface.
         foreach (var variable in variables.Where(v => v.Storage is 2 or 12))
-            if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && words[si] == 1) words[bi] += (uint)imageSlot;
+            if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && (compute ? words[si] == 1 : words[si] == nativeSet)) words[bi] += (uint)(compute ? imageSlot : imageSlot + textureSlot);
+        if (!compute) foreach (var variable in variables.Where(v => v.Storage == 0))
+                if (sets.TryGetValue(variable.ID, out var si) && slots.TryGetValue(variable.ID, out var bi) && pointers.TryGetValue(variable.Type, out var ty) && images.TryGetValue(ty, out var image) && image.Sampled == 2)
+                    words[bi] += (uint)textureSlot;
         return (code, layout.ToArray());
     }
 }

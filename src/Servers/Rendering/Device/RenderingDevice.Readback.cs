@@ -63,7 +63,7 @@ public sealed unsafe partial class RenderingDevice
 
     private void QueueReadback(Entry entry, Memory<byte> destination, uint offset, Action<byte[]>? arrayCallback, byte[]? data, Action? callback, uint layer = 0)
     {
-        var download = entry.Kind is Kind.Storage or Kind.Texture && !destination.IsEmpty;
+        var download = entry.Kind is Kind.Storage or Kind.Vertex or Kind.Index or Kind.Texture && !destination.IsEmpty;
         var command = download ? Commands() : 0;
         var request = _idleReadbacks.TryPop(out var idle) ? idle : new Readback();
         try

@@ -1,23 +1,22 @@
 # RDShaderSPIRV
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local compute](../components/local-compute.md).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RDShaderSPIRV`. **Source:** [RDShaderSPIRV.cs](../../src/Servers/Rendering/Device/RDShaderSPIRV.cs). **Component:** [Local device](../components/local-compute.md).
 
 **Inherits:** [Resource](Resource.md).
 
 ## Description
 
-Owns independent copies of compute-stage SPIR-V bytes and its compiler diagnostic. Setters emit Changed. Typed descriptors, Resource duplication/copy and .e2dres serialization preserve the stored values. Device shader creation rejects a nonempty diagnostic or invalid/unsupported module. Other graphics/ray-tracing stages are not exposed by this compute resource slice. The resource owns no GPU handles; device-created shaders copy their module.
+A Resource owning copied stage bytecode and diagnostics. Every bytecode getter returns an independent array; setters copy and emit Changed. Duplication and resource archives preserve vertex, fragment and compute modules independently. RenderingDevice creation accepts either compute or both vertex and fragment; mixed, failed or incomplete programs reject. Geometry/tessellation and raytracing stages remain precise backend/product boundaries.
 
 ## Example
 
-The snippet assumes the shown shader bindings and caller-provided compiled bytecode/buffer identities. The complete executable consumer is [WaterSimulation.GPU.cs](../../examples/WaterPlayground/WaterSimulation.GPU.cs).
+Partial snippet requiring a live device and, for bytecode examples, compiled module arrays. The [complete public-API consumer](../../tests/Electron2D.Tests/RenderingDeviceGraphicsTests.cs) exercises this configuration.
 
 ```csharp
-using var compiled = new RDShaderSPIRV { BytecodeCompute = File.ReadAllBytes("water.comp.spv") };
-using var copy = (RDShaderSPIRV)compiled.Duplicate();
-var shader = device.ShaderCreateFromSPIRV(copy, "Water");
+using var stages = new RDShaderSPIRV { BytecodeVertex = vertexBytes, BytecodeFragment = fragmentBytes };
+var shader = device.ShaderCreateFromSPIRV(stages);
 ```
 
 ## API
@@ -25,15 +24,19 @@ var shader = device.ShaderCreateFromSPIRV(copy, "Water");
 | Declaration | Contract |
 | --- | --- |
 | `public RDShaderSPIRV()` | Creates an empty compiled shader resource. |
-| `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
-| `protected override Electron2D.Resource CreateDuplicateInstance()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
-| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
-| `public System.Byte[] GetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage)` | Returns copied bytecode for a supported stage. |
-| `public System.String GetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage)` | Returns the compiler diagnostic for a supported stage. |
-| `public System.Void SetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage, System.Byte[] bytecode)` | Replaces copied bytecode for a supported stage. |
-| `public System.Void SetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage, System.String compileError)` | Replaces the compiler diagnostic for a supported stage. |
+| `protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)` | Preserves the declaring type's lifecycle contract. |
+| `protected override Electron2D.Resource CreateDuplicateInstance()` | Preserves the declaring type's lifecycle contract. |
+| `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Projects the inherited typed property metadata and this description's values. |
+| `public System.Byte[] GetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage)` | Returns copied bytecode for an integrated stage. |
+| `public System.String GetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage)` | Returns the diagnostic for an integrated stage. |
+| `public System.Void SetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage, System.Byte[] bytecode)` | Replaces copied bytecode for an integrated stage. |
+| `public System.Void SetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage, System.String compileError)` | Replaces the diagnostic for an integrated stage. |
 | `public System.Byte[] BytecodeCompute { get; set; }` | Gets or replaces copied compute-stage bytecode. |
+| `public System.Byte[] BytecodeFragment { get; set; }` | Gets or replaces copied fragment-stage bytecode. |
+| `public System.Byte[] BytecodeVertex { get; set; }` | Gets or replaces copied vertex-stage bytecode. |
 | `public System.String CompileErrorCompute { get; set; }` | Gets or sets the compute compiler diagnostic. |
+| `public System.String CompileErrorFragment { get; set; }` | Gets or sets the fragment compiler diagnostic. |
+| `public System.String CompileErrorVertex { get; set; }` | Gets or sets the vertex compiler diagnostic. |
 
 ## Member descriptions
 
@@ -46,12 +49,16 @@ public RDShaderSPIRV()
 
 Creates an empty compiled shader resource.
 
+
 <a id="member-514c36168f4a"></a>
 ### CopyCustomStateTo(Electron2D.Resource, System.Boolean, Electron2D.DeepDuplicateMode, System.Func<Electron2D.Resource, Electron2D.Resource>, System.Func<Electron2D.Resource, Electron2D.Resource>)
 
 ```csharp
 protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func<Electron2D.Resource, Electron2D.Resource> duplicateSubresource, System.Func<Electron2D.Resource, Electron2D.Resource> forceDuplicateSubresource)
 ```
+
+Preserves the declaring type's lifecycle contract.
+
 
 <a id="member-996dcafb86f9"></a>
 ### CreateDuplicateInstance()
@@ -60,12 +67,18 @@ protected override System.Void CopyCustomStateTo(Electron2D.Resource target, Sys
 protected override Electron2D.Resource CreateDuplicateInstance()
 ```
 
+Preserves the declaring type's lifecycle contract.
+
+
 <a id="member-59e972049cdd"></a>
 ### GetPropertyDescriptors()
 
 ```csharp
 protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()
 ```
+
+Projects the inherited typed property metadata and this description's values.
+
 
 <a id="member-43799afa56f0"></a>
 ### GetStageBytecode(Electron2D.RenderingDevice.ShaderStage)
@@ -74,11 +87,14 @@ protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDes
 public System.Byte[] GetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage)
 ```
 
-Returns copied bytecode for a supported stage.
+Returns copied bytecode for an integrated stage.
 
-A copy of the compute module.
+An independent module copy.
 
-`stage`: Compute; other pipeline domains are not integrated.
+`stage`: Vertex, fragment or compute.
+
+`System.ArgumentOutOfRangeException`: The stage is invalid.
+
 
 <a id="member-8c1f34a802f8"></a>
 ### GetStageCompileError(Electron2D.RenderingDevice.ShaderStage)
@@ -87,11 +103,14 @@ A copy of the compute module.
 public System.String GetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage)
 ```
 
-Returns the compiler diagnostic for a supported stage.
+Returns the diagnostic for an integrated stage.
 
-The diagnostic, or an empty string.
+The compiler diagnostic, empty when absent.
 
-`stage`: Compute.
+`stage`: Vertex, fragment or compute.
+
+`System.ArgumentOutOfRangeException`: The stage is invalid.
+
 
 <a id="member-321557e9aaf9"></a>
 ### SetStageBytecode(Electron2D.RenderingDevice.ShaderStage, System.Byte[])
@@ -100,11 +119,14 @@ The diagnostic, or an empty string.
 public System.Void SetStageBytecode(Electron2D.RenderingDevice.ShaderStage stage, System.Byte[] bytecode)
 ```
 
-Replaces copied bytecode for a supported stage.
+Replaces copied bytecode for an integrated stage.
 
-`stage`: Compute.
+`stage`: Vertex, fragment or compute.
 
 `bytecode`: Compiled module bytes.
+
+`System.ArgumentOutOfRangeException`: The stage is invalid.
+
 
 <a id="member-e1378740d071"></a>
 ### SetStageCompileError(Electron2D.RenderingDevice.ShaderStage, System.String)
@@ -113,11 +135,14 @@ Replaces copied bytecode for a supported stage.
 public System.Void SetStageCompileError(Electron2D.RenderingDevice.ShaderStage stage, System.String compileError)
 ```
 
-Replaces the compiler diagnostic for a supported stage.
+Replaces the diagnostic for an integrated stage.
 
-`stage`: Compute.
+`stage`: Vertex, fragment or compute.
 
-`compileError`: The diagnostic, or an empty string.
+`compileError`: The diagnostic, empty when absent.
+
+`System.ArgumentOutOfRangeException`: The stage is invalid.
+
 
 <a id="member-062f4aaa06dd"></a>
 ### BytecodeCompute
@@ -130,6 +155,31 @@ Gets or replaces copied compute-stage bytecode.
 
 An independent SPIR-V byte array; empty initially.
 
+
+<a id="member-02aa24515db9"></a>
+### BytecodeFragment
+
+```csharp
+public System.Byte[] BytecodeFragment { get; set; }
+```
+
+Gets or replaces copied fragment-stage bytecode.
+
+An independent SPIR-V byte array; empty initially.
+
+
+<a id="member-a1e79e81c613"></a>
+### BytecodeVertex
+
+```csharp
+public System.Byte[] BytecodeVertex { get; set; }
+```
+
+Gets or replaces copied vertex-stage bytecode.
+
+An independent SPIR-V byte array; empty initially.
+
+
 <a id="member-a0fad7f77cc7"></a>
 ### CompileErrorCompute
 
@@ -141,6 +191,30 @@ Gets or sets the compute compiler diagnostic.
 
 An empty string means no reported compiler error.
 
-## Verification and limits
 
-[RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous texture transfer APIs and additional platforms are not established by this slice.
+<a id="member-bc2e221a82c8"></a>
+### CompileErrorFragment
+
+```csharp
+public System.String CompileErrorFragment { get; set; }
+```
+
+Gets or sets the fragment compiler diagnostic.
+
+An empty string means no reported compiler error.
+
+
+<a id="member-5765982a02f2"></a>
+### CompileErrorVertex
+
+```csharp
+public System.String CompileErrorVertex { get; set; }
+```
+
+Gets or sets the vertex compiler diagnostic.
+
+An empty string means no reported compiler error.
+
+## Lifetime and verification
+
+Device-owned resources remain on their creating thread. Descriptions are caller-owned and copied at creation; inherited disposal guards apply. Invalid configurations, foreign/freed RIDs and list-state errors reject explicitly. Native creation failures propagate. RenderingDeviceGraphicsTests checks Linux/Vulkan pixels, resource storage, lifetime and prepared owner-thread allocation boundaries. Other platforms and native/driver allocations remain unverified. See [ADR 0028](../decisions/rendering.md#adr-0028) and [coverage](../coverage/classes/RDShaderSPIRV.md) for absent roles.

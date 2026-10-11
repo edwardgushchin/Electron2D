@@ -1,0 +1,13 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DDevicePython Condition="'$(Electron2DDevicePython)' == ''">python3</Electron2DDevicePython>
+  </PropertyGroup>
+  <Target Name="CompileElectron2DDeviceShaders" BeforeTargets="AssignTargetPaths" Condition="'$(DesignTimeBuild)' != 'true' and '@(Electron2DDeviceShader)' != ''">
+    <Exec Command="&quot;$(Electron2DDevicePython)&quot; -B &quot;$(MSBuildThisFileDirectory)compile_compute.py&quot; --source &quot;%(Electron2DDeviceShader.FullPath)&quot; --stage &quot;$([System.IO.Path]::GetExtension('%(Electron2DDeviceShader.Filename)').TrimStart('.'))&quot; --output &quot;$(IntermediateOutputPath)device/%(Electron2DDeviceShader.Filename).spv&quot;" />
+    <ItemGroup>
+      <_ApplicationDeviceShader Include="@(Electron2DDeviceShader->'$(IntermediateOutputPath)device/%(Filename).spv')" />
+      <EmbeddedResource Include="%(_ApplicationDeviceShader.Identity)" LogicalName="Electron2D.Device.%(_ApplicationDeviceShader.Filename)%(_ApplicationDeviceShader.Extension)" />
+      <FileWrites Include="$(IntermediateOutputPath)device/*" />
+    </ItemGroup>
+  </Target>
+</Project>

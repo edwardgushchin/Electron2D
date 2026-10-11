@@ -7,7 +7,13 @@ public sealed unsafe partial class RenderingDevice
     private void ValidateBinding(Binding binding, RID[] ids)
     {
         if (ids.Length != (binding.Type == UniformType.SamplerWithTexture ? 2 : 1)) throw new ArgumentException("Incorrect descriptor resource count.", nameof(ids));
-        if (binding.Type is UniformType.StorageBuffer or UniformType.UniformBuffer) { Get(ids[0], binding.Type == UniformType.StorageBuffer ? Kind.Storage : Kind.Uniform); return; }
+        if (binding.Type == UniformType.UniformBuffer) { if (Get(ids[0], Kind.Uniform).Size < binding.MinimumSize) throw new ArgumentException("The uniform buffer is shorter than its shader block.", nameof(ids)); return; }
+        if (binding.Type == UniformType.StorageBuffer)
+        {
+            var buffer = Get(ids[0]);
+            if (buffer.Kind != Kind.Storage && !(buffer.Kind is Kind.Vertex or Kind.Index && buffer.GraphicsStorage)) throw new ArgumentException("A storage-capable buffer is required.", nameof(ids));
+            return;
+        }
         var texture = Get(ids[binding.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture).Texture!;
         if (PixelType(texture.Format) != binding.PixelType) throw new ArgumentException("The shader pixel scalar type does not match the texture format.", nameof(ids));
         if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
@@ -94,7 +100,8 @@ public sealed unsafe partial class RenderingDevice
     {
         var native = (SDL.GPUTextureUsageFlags)0;
         if ((usage & TextureUsageBits.Sampling) != 0) native |= SDL.GPUTextureUsageFlags.Sampler;
-        if ((usage & TextureUsageBits.Storage) != 0) native |= SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if ((usage & TextureUsageBits.Storage) != 0) native |= SDL.GPUTextureUsageFlags.GraphicsStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageRead | SDL.GPUTextureUsageFlags.ComputeStorageWrite | SDL.GPUTextureUsageFlags.ComputeStorageSimultaneousReadWrite;
+        if ((usage & TextureUsageBits.ColorAttachment) != 0) native |= SDL.GPUTextureUsageFlags.ColorTarget;
         if (native == 0) native = SDL.GPUTextureUsageFlags.Sampler;
         return native;
     }
@@ -105,7 +112,7 @@ public sealed unsafe partial class RenderingDevice
     public bool TextureIsFormatSupportedForUsage(DataFormat format, TextureUsageBits usageFlags)
     {
         Access(); RDTextureConfiguration.FormatValue(format); RDTextureConfiguration.Usage(usageFlags);
-        if ((usageFlags & (TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.DepthStencilAttachment | TextureUsageBits.ColorAttachment)) != 0) return false;
+        if ((usageFlags & (TextureUsageBits.StorageAtomic | TextureUsageBits.InputAttachment | TextureUsageBits.DepthResolveAttachment | TextureUsageBits.DepthStencilAttachment)) != 0) return false;
         var native = NativeFormat(format);
         return native != SDL.GPUTextureFormat.Invalid && SDL.GPUTextureSupportsFormat(Device, native, SDL.GPUTextureType.TextureType2D, NativeUsage(usageFlags));
     }

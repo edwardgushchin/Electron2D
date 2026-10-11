@@ -226,3 +226,8 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 [Shader material lighting](../components/shader-materials.md#automatic-scene-lighting) now composes user fragment colors with the existing light/contour consumers, preserving original parameters, discard, returns, instancing and blend order. Capacity overflow fails explicitly.
 
 [Per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters) now provide independent typed overrides over shared materials, including scene/server, inherited/surface mesh, hardware-instance and group consumers. Layout/type validation, source boolean metadata and scene archives use the same compiled profile.
+
+
+## Device color graphics
+
+The [local device component](../components/local-compute.md#color-graphics-and-compute-integration) executes paired vertex/fragment shaders, borrowed vertex/index arrays and color framebuffer passes, including procedural/instanced/indexed/indirect draws. Compute-generated geometry and commands remain on the GPU timeline. Retained device textures feed ordinary canvas consumers. Depth/stencil, MSAA resolve, subpasses and additional shader interfaces retain explicit prerequisites in coverage.

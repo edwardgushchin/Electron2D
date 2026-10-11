@@ -1,0 +1,12 @@
+diff --git a/SDL/GPU/gpu/PInvoke.cs b/SDL/GPU/gpu/PInvoke.cs
+index de35e674..94dd77df 100644
+--- a/SDL/GPU/gpu/PInvoke.cs
++++ b/SDL/GPU/gpu/PInvoke.cs
+@@ -1537,2 +1537,2 @@ internal partial class SDL
+-    private static partial void SDL_SetGPUBlendConstants(IntPtr renderPass, in FColor blendConstants);
+-    private delegate void SetGPUBlendConstantsNativeDelegate(IntPtr renderPass, in FColor blendConstants);
++    private static partial void SDL_SetGPUBlendConstants(IntPtr renderPass, FColor blendConstants);
++    private delegate void SetGPUBlendConstantsNativeDelegate(IntPtr renderPass, FColor blendConstants);
+@@ -1552 +1552 @@ internal partial class SDL
+-        SetGPUBlendConstantsNativeFunction(renderPass, in blendConstants);
++        SetGPUBlendConstantsNativeFunction(renderPass, blendConstants);

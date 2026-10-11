@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-An owner-thread compute device created locally by RenderingServer.CreateLocalRenderingDevice or retained by the active GPU renderer through RenderingServer.GetRenderingDevice. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+An owner-thread graphics and compute device created locally by RenderingServer.CreateLocalRenderingDevice or retained by the active GPU renderer through RenderingServer.GetRenderingDevice. The retained renderer device flushes after canvas authoring and before drawing, and completes queued reads before FramePostDraw; Submit, Sync and public disposal are local-only. Renderer-owned image RIDs bind directly to TextureRD/TextureArrayRD canvas resources. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
 
 ## Example
 
@@ -56,7 +56,7 @@ byte[] result = device.BufferGetData(buffer);
 | `protected override System.Void Dispose(System.Boolean disposing)` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
 | `public System.Void FreeRID(Electron2D.RID rid)` | Frees a resource after completing pending work. |
 | `public System.String GetDeviceName()` | Returns the selected compute-device name. |
-| `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader from compiled bytecode. |
+| `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader or a paired graphics shader from compiled bytecode. |
 | `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
 | `public System.Void Sync()` | Waits for submitted work, releases its fence and delivers completed readback callbacks. |
@@ -270,11 +270,11 @@ The native device description.
 public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")
 ```
 
-Validates and creates a compute shader from compiled bytecode.
+Validates and creates a compute shader or a paired graphics shader from compiled bytecode.
 
 A shader identity owned by this device.
 
-`spirvData`: The copied compute stage, with no compiler error.
+`spirvData`: Copied modules with no compiler errors: either compute or both vertex and fragment.
 
 `name`: Optional diagnostic label.
 
@@ -623,3 +623,490 @@ device.Sync();
 ```
 
 Recorded copies and clears obey queued snapshot ordering and retain private native scratch storage until completion/free. Vulkan native results include normalized quantization ties, linear-to-sRGB conversion and raw integer clear lanes. Exact byte preservation, malformed ranges, roles/lifetimes, self copies, compressed edges and prepared zero owner-thread managed allocation are checked. Other native drivers, encoded-block clears, native allocator measurements and canvas/device sharing retain explicit verification limits/dependencies. See [regional profile](../components/local-compute.md#image-region-copies-and-clears).
+
+## Color graphics API
+
+The [graphics component contract](../components/local-compute.md#color-graphics-and-compute-integration) defines copied descriptions, borrowed resource identities, single-sample color passes, shader interface matching, stage resources, direct/indexed/instanced/procedural/indirect work, and retained canvas consumption. Compute and draw lists share one owner-thread timeline; only one list is active.
+
+| Declaration | Contract |
+| --- | --- |
+| `public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default)` | Begins an ordered color render pass on borrowed framebuffer images. |
+| `public System.Void DrawListBindIndexArray(System.Int64 drawList, Electron2D.RID indexArray)` | Binds a live borrowed index range for subsequent indexed draws. |
+| `public System.Void DrawListBindRenderPipeline(System.Int64 drawList, Electron2D.RID renderPipeline)` | Binds a graphics pipeline matching the active framebuffer. |
+| `public System.Void DrawListBindUniformSet(System.Int64 drawList, Electron2D.RID uniformSet, System.UInt32 setIndex)` | Binds a complete resource set at its logical shader set index. |
+| `public System.Void DrawListBindVertexArray(System.Int64 drawList, Electron2D.RID vertexArray)` | Binds a live borrowed vertex array for subsequent draws. |
+| `public System.Void DrawListBindVertexBuffersFormat(System.Int64 drawList, System.Int32 vertexFormat, System.UInt32 vertexCount, System.ReadOnlySpan<Electron2D.RID> vertexBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)` | Binds copied buffer identities and offsets directly for a vertex layout. |
+| `public System.Void DrawListDisableScissor(System.Int64 drawList)` | Disables custom scissoring by restoring the complete framebuffer. |
+| `public System.Void DrawListDraw(System.Int64 drawList, System.Boolean useIndices, System.UInt32 instances, System.UInt32 proceduralVertexCount = 0)` | Records a procedural, vertex-array or indexed draw with validated instance capacity. |
+| `public System.Void DrawListDrawIndirect(System.Int64 drawList, System.Boolean useIndices, Electron2D.RID buffer, System.UInt32 offset = 0, System.UInt32 drawCount = 1, System.UInt32 stride = 0)` | Records GPU-directed draws from validated indirect command ranges. |
+| `public System.Void DrawListEnableScissor(System.Int64 drawList, Electron2D.Rect2 rect = default)` | Clips subsequent draws to the rectangle intersected with the framebuffer. |
+| `public System.Void DrawListEnd()` | Ends the active draw list, preserving its results for subsequent device work. |
+| `public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)` | Sets the finite blend constant for subsequent draws. |
+| `public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)` | Creates a framebuffer borrowing device-owned color images. |
+| `public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)` | Creates a copied single-pass color attachment layout. |
+| `public Electron2D.RenderingDevice.TextureSamples FramebufferFormatGetTextureSamples(System.Int32 framebufferFormat, System.UInt32 renderPass = 0)` | Reports the sample count of a framebuffer pass. |
+| `public System.Int32 FramebufferGetFormat(Electron2D.RID framebuffer)` | Reads the framebuffer's matching layout identity. |
+| `public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)` | Reports whether a framebuffer and all its borrowed attachments remain alive. |
+| `public Electron2D.RID IndexArrayCreate(Electron2D.RID indexBuffer, System.UInt32 indexOffset, System.UInt32 indexCount)` | Creates a borrowed index range. |
+| `public Electron2D.RID IndexBufferCreate(System.UInt32 sizeIndices, Electron2D.RenderingDevice.IndexBufferFormat format, System.ReadOnlySpan<System.Byte> data = default, System.Boolean useRestartIndices = false, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a copied unsigned index buffer. |
+| `public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0)` | Creates an executable single-sample color graphics pipeline. |
+| `public System.Boolean RenderPipelineIsValid(Electron2D.RID renderPipeline)` | Reports whether a graphics pipeline and its borrowed shader are alive. |
+| `public System.UInt64 ShaderGetVertexInputAttributeMask(Electron2D.RID shader)` | Returns the mask of vertex input locations declared by a graphics shader. |
+| `public Electron2D.RID VertexArrayCreate(System.UInt32 vertexCount, System.Int32 vertexFormat, System.ReadOnlySpan<Electron2D.RID> sourceBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)` | Creates a borrowed vertex-buffer array. |
+| `public Electron2D.RID VertexBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)` | Creates a zero-filled vertex buffer with a copied initial prefix. |
+| `public System.Int32 VertexFormatCreate(System.ReadOnlySpan<Electron2D.RDVertexAttribute> vertexDescriptions)` | Creates a copied, validated vertex layout. |
+
+## Graphics member descriptions
+
+<a id="member-d9d9b741ffcb"></a>
+### DrawListBegin(Electron2D.RID, Electron2D.RenderingDevice.DrawFlags, System.ReadOnlySpan<Electron2D.Color>, Electron2D.Rect2)
+
+```csharp
+public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan<Electron2D.Color> clearColorValues = default, Electron2D.Rect2 region = default)
+```
+
+Begins an ordered color render pass on borrowed framebuffer images.
+
+The active owner-thread draw-list identity.
+
+Clears affect the complete attachment. The region restricts draws. Results become available to subsequent compute, copy and canvas passes after DrawListEnd.
+
+`framebuffer`: A live single-sample color framebuffer.
+
+`drawFlags`: Per-target clear or discard load flags; default loads existing pixels.
+
+`clearColorValues`: One clear value per attachment when any clear flag is set; finite float components or raw integer lane bits as in TextureClear.
+
+`region`: Viewport and initial scissor; zero selects the whole framebuffer.
+
+
+<a id="member-88d7ab8e682d"></a>
+### DrawListBindIndexArray(System.Int64, Electron2D.RID)
+
+```csharp
+public System.Void DrawListBindIndexArray(System.Int64 drawList, Electron2D.RID indexArray)
+```
+
+Binds a live borrowed index range for subsequent indexed draws.
+
+`drawList`: The active draw-list identity.
+
+`indexArray`: A live borrowed range with its source buffer intact.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-e7ccb29b43a5"></a>
+### DrawListBindRenderPipeline(System.Int64, Electron2D.RID)
+
+```csharp
+public System.Void DrawListBindRenderPipeline(System.Int64 drawList, Electron2D.RID renderPipeline)
+```
+
+Binds a graphics pipeline matching the active framebuffer.
+
+`drawList`: The active draw-list identity.
+
+`renderPipeline`: A live matching pipeline of this device.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-2a8067379751"></a>
+### DrawListBindUniformSet(System.Int64, Electron2D.RID, System.UInt32)
+
+```csharp
+public System.Void DrawListBindUniformSet(System.Int64 drawList, Electron2D.RID uniformSet, System.UInt32 setIndex)
+```
+
+Binds a complete resource set at its logical shader set index.
+
+`drawList`: The active draw-list identity.
+
+`uniformSet`: A complete live set belonging to the selected shader.
+
+`setIndex`: The set logical descriptor index.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-f8ef4caed14f"></a>
+### DrawListBindVertexArray(System.Int64, Electron2D.RID)
+
+```csharp
+public System.Void DrawListBindVertexArray(System.Int64 drawList, Electron2D.RID vertexArray)
+```
+
+Binds a live borrowed vertex array for subsequent draws.
+
+`drawList`: The active draw-list identity.
+
+`vertexArray`: A live borrowed array with all source buffers intact.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-7b4ca82180b7"></a>
+### DrawListBindVertexBuffersFormat(System.Int64, System.Int32, System.UInt32, System.ReadOnlySpan<Electron2D.RID>, System.ReadOnlySpan<System.UInt32>)
+
+```csharp
+public System.Void DrawListBindVertexBuffersFormat(System.Int64 drawList, System.Int32 vertexFormat, System.UInt32 vertexCount, System.ReadOnlySpan<Electron2D.RID> vertexBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)
+```
+
+Binds copied buffer identities and offsets directly for a vertex layout.
+
+This convenience binding copies arrays. Use a prepared VertexArray for allocation-sensitive draws.
+
+`drawList`: The active draw list.
+
+`vertexFormat`: A device-local vertex layout.
+
+`vertexCount`: Available vertex count.
+
+`vertexBuffers`: One live buffer per layout binding.
+
+`offsets`: Optional byte offsets copied before returning.
+
+
+<a id="member-aea5a5fd17ba"></a>
+### DrawListDisableScissor(System.Int64)
+
+```csharp
+public System.Void DrawListDisableScissor(System.Int64 drawList)
+```
+
+Disables custom scissoring by restoring the complete framebuffer.
+
+`drawList`: The active draw-list identity.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-3758c88cffcd"></a>
+### DrawListDraw(System.Int64, System.Boolean, System.UInt32, System.UInt32)
+
+```csharp
+public System.Void DrawListDraw(System.Int64 drawList, System.Boolean useIndices, System.UInt32 instances, System.UInt32 proceduralVertexCount = 0)
+```
+
+Records a procedural, vertex-array or indexed draw with validated instance capacity.
+
+Index values produced or changed by GPU work must refer to vertices in the bound array. Index contents are not synchronously read back.
+
+`drawList`: The active draw list.
+
+`useIndices`: Draw the bound index range.
+
+`instances`: Positive instance count.
+
+`proceduralVertexCount`: Positive count when drawing without a vertex layout; otherwise zero.
+
+
+<a id="member-5599d5d805fd"></a>
+### DrawListDrawIndirect(System.Int64, System.Boolean, Electron2D.RID, System.UInt32, System.UInt32, System.UInt32)
+
+```csharp
+public System.Void DrawListDrawIndirect(System.Int64 drawList, System.Boolean useIndices, Electron2D.RID buffer, System.UInt32 offset = 0, System.UInt32 drawCount = 1, System.UInt32 stride = 0)
+```
+
+Records GPU-directed draws from validated indirect command ranges.
+
+Nonindexed commands contain four unsigned words: vertex count, instance count, first vertex and first instance. Indexed commands contain five words: index count, instance count, first index, signed vertex offset and first instance. The GPU producer must keep counts and offsets within bound vertex, instance and index capacities. Contents stay on the GPU. Keep first vertex/instance zero when shaders depend on portable built-in vertex/instance identifiers.
+
+`drawList`: The active draw list.
+
+`useIndices`: Use the bound index range.
+
+`buffer`: A storage buffer created with DispatchIndirect usage.
+
+`offset`: Four-byte-aligned first command byte offset.
+
+`drawCount`: Command count; zero validates without drawing.
+
+`stride`: Four-byte-aligned command spacing, or zero for tightly packed commands.
+
+
+<a id="member-55eb3fcba774"></a>
+### DrawListEnableScissor(System.Int64, Electron2D.Rect2)
+
+```csharp
+public System.Void DrawListEnableScissor(System.Int64 drawList, Electron2D.Rect2 rect = default)
+```
+
+Clips subsequent draws to the rectangle intersected with the framebuffer.
+
+`drawList`: The active draw-list identity.
+
+`rect`: A finite nonnegative rectangle, intersected with the framebuffer; zero clips all pixels.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-637824d02788"></a>
+### DrawListEnd()
+
+```csharp
+public System.Void DrawListEnd()
+```
+
+Ends the active draw list, preserving its results for subsequent device work.
+
+
+<a id="member-fe1e70626f75"></a>
+### DrawListSetBlendConstants(System.Int64, Electron2D.Color)
+
+```csharp
+public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)
+```
+
+Sets the finite blend constant for subsequent draws.
+
+`drawList`: The active draw-list identity.
+
+`color`: Finite components used by enabled constant blend factors.
+
+`System.ArgumentException`: A list, resource identity, descriptor index or value is invalid.
+
+`System.InvalidOperationException`: The creating thread, selected pipeline or resource dependencies are invalid.
+
+
+<a id="member-a56b363d17da"></a>
+### FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>, System.Int32)
+
+```csharp
+public Electron2D.RID FramebufferCreate(System.ReadOnlySpan<Electron2D.RID> textures, System.Int32 validateWithFormat = -1)
+```
+
+Creates a framebuffer borrowing device-owned color images.
+
+A framebuffer identity invalidated when an attachment is freed.
+
+`textures`: One to eight ordinary single-layer, single-mip color images.
+
+`validateWithFormat`: An existing matching format, or -1 to create its layout.
+
+
+<a id="member-d154729327fd"></a>
+### FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)
+
+```csharp
+public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat> attachments)
+```
+
+Creates a copied single-pass color attachment layout.
+
+A device-local framebuffer format identifier.
+
+`attachments`: One to eight single-sample color target formats.
+
+`System.NotSupportedException`: An attachment role or sample count is unavailable.
+
+
+<a id="member-4807409af35f"></a>
+### FramebufferFormatGetTextureSamples(System.Int32, System.UInt32)
+
+```csharp
+public Electron2D.RenderingDevice.TextureSamples FramebufferFormatGetTextureSamples(System.Int32 framebufferFormat, System.UInt32 renderPass = 0)
+```
+
+Reports the sample count of a framebuffer pass.
+
+The format sample count.
+
+`framebufferFormat`: A live single-pass format identifier.
+
+`renderPass`: Zero for the supported single pass.
+
+
+<a id="member-1d252c9c44a2"></a>
+### FramebufferGetFormat(Electron2D.RID)
+
+```csharp
+public System.Int32 FramebufferGetFormat(Electron2D.RID framebuffer)
+```
+
+Reads the framebuffer's matching layout identity.
+
+A device-local format identifier.
+
+`framebuffer`: A live framebuffer with live borrowed attachments.
+
+
+<a id="member-eeb8089a3f6a"></a>
+### FramebufferIsValid(Electron2D.RID)
+
+```csharp
+public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)
+```
+
+Reports whether a framebuffer and all its borrowed attachments remain alive.
+
+True for a live framebuffer with intact dependencies on this device.
+
+`framebuffer`: The identity to inspect.
+
+
+<a id="member-671070e0471a"></a>
+### IndexArrayCreate(Electron2D.RID, System.UInt32, System.UInt32)
+
+```csharp
+public Electron2D.RID IndexArrayCreate(Electron2D.RID indexBuffer, System.UInt32 indexOffset, System.UInt32 indexCount)
+```
+
+Creates a borrowed index range.
+
+A device-owned range identity invalidated by the source buffer.
+
+`indexBuffer`: A live index buffer.
+
+`indexOffset`: First index.
+
+`indexCount`: Positive index count.
+
+
+<a id="member-c8b5dc0ced55"></a>
+### IndexBufferCreate(System.UInt32, Electron2D.RenderingDevice.IndexBufferFormat, System.ReadOnlySpan<System.Byte>, System.Boolean, Electron2D.RenderingDevice.BufferCreationBits)
+
+```csharp
+public Electron2D.RID IndexBufferCreate(System.UInt32 sizeIndices, Electron2D.RenderingDevice.IndexBufferFormat format, System.ReadOnlySpan<System.Byte> data = default, System.Boolean useRestartIndices = false, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)
+```
+
+Creates a copied unsigned index buffer.
+
+A device-owned index buffer identity.
+
+`sizeIndices`: Positive index capacity.
+
+`format`: Unsigned 16 or 32-bit indices.
+
+`data`: Initial byte prefix.
+
+`useRestartIndices`: Enables maximum unsigned index values as strip restart markers.
+
+`creationBits`: Optional storage role.
+
+
+<a id="member-f3bac59c50b9"></a>
+### RenderPipelineCreate(Electron2D.RID, System.Int32, System.Int32, Electron2D.RenderingDevice.RenderPrimitive, Electron2D.RDPipelineRasterizationState, Electron2D.RDPipelineColorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags)
+
+```csharp
+public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0)
+```
+
+Creates an executable single-sample color graphics pipeline.
+
+A pipeline borrowing the shader identity.
+
+Depth/stencil attachments, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.
+
+`shader`: A live paired vertex/fragment shader.
+
+`framebufferFormat`: A color attachment layout on this device.
+
+`vertexFormat`: A copied vertex layout, or -1 for procedural vertices.
+
+`primitive`: Point, line or triangle topology.
+
+`rasterizationState`: Copied rasterization configuration.
+
+`colorBlendState`: Copied blending configuration, with one entry per target.
+
+`dynamicStateFlags`: Allows dynamic blend constants; other dynamic states require their native adapters.
+
+`System.ArgumentException`: Shader interfaces, layouts or configurations disagree.
+
+
+<a id="member-3196828dde59"></a>
+### RenderPipelineIsValid(Electron2D.RID)
+
+```csharp
+public System.Boolean RenderPipelineIsValid(Electron2D.RID renderPipeline)
+```
+
+Reports whether a graphics pipeline and its borrowed shader are alive.
+
+True for an intact executable pipeline of this device.
+
+`renderPipeline`: The identity to inspect.
+
+
+<a id="member-3172a816f389"></a>
+### ShaderGetVertexInputAttributeMask(Electron2D.RID)
+
+```csharp
+public System.UInt64 ShaderGetVertexInputAttributeMask(Electron2D.RID shader)
+```
+
+Returns the mask of vertex input locations declared by a graphics shader.
+
+A bit per declared location; procedural shaders return zero.
+
+`shader`: A live paired graphics shader.
+
+
+<a id="member-0b72eb527f6d"></a>
+### VertexArrayCreate(System.UInt32, System.Int32, System.ReadOnlySpan<Electron2D.RID>, System.ReadOnlySpan<System.UInt32>)
+
+```csharp
+public Electron2D.RID VertexArrayCreate(System.UInt32 vertexCount, System.Int32 vertexFormat, System.ReadOnlySpan<Electron2D.RID> sourceBuffers, System.ReadOnlySpan<System.UInt32> offsets = default)
+```
+
+Creates a borrowed vertex-buffer array.
+
+A device-owned array identity invalidated by its source buffers.
+
+`vertexCount`: Number of available vertices.
+
+`vertexFormat`: A live vertex layout.
+
+`sourceBuffers`: One device-owned vertex buffer per layout binding.
+
+`offsets`: Optional byte offset per buffer.
+
+
+<a id="member-87c976b5fe22"></a>
+### VertexBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>, Electron2D.RenderingDevice.BufferCreationBits)
+
+```csharp
+public Electron2D.RID VertexBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)
+```
+
+Creates a zero-filled vertex buffer with a copied initial prefix.
+
+A device-owned buffer identity.
+
+`sizeBytes`: Positive byte capacity.
+
+`data`: Initial byte prefix.
+
+`creationBits`: Optional storage role.
+
+
+<a id="member-56a2ae97c2fa"></a>
+### VertexFormatCreate(System.ReadOnlySpan<Electron2D.RDVertexAttribute>)
+
+```csharp
+public System.Int32 VertexFormatCreate(System.ReadOnlySpan<Electron2D.RDVertexAttribute> vertexDescriptions)
+```
+
+Creates a copied, validated vertex layout.
+
+A device-local format identifier.
+
+`vertexDescriptions`: Locations, buffer bindings, strides and formats.
+
+`System.ArgumentException`: Bindings, locations or ranges are inconsistent.
+
+`System.NotSupportedException`: An encoding is not supported.

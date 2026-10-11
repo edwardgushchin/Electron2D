@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; Mipmaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. Depth, multisample and transient/resolve lifetimes remain coverage dependencies.
+A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; Mipmaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth, multisample and transient/resolve lifetimes remain coverage dependencies.
 
 ## Example
 

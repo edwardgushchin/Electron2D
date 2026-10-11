@@ -8188,6 +8188,66 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RDAttachmentFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": "RDAttachmentFormat",
+    "signature": "public sealed class Electron2D.RDAttachmentFormat",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDPipelineColorBlendState",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineColorBlendState",
+    "name": "RDPipelineColorBlendState",
+    "signature": "public sealed class Electron2D.RDPipelineColorBlendState",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDPipelineColorBlendStateAttachment",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "RDPipelineColorBlendStateAttachment",
+    "signature": "public sealed class Electron2D.RDPipelineColorBlendStateAttachment",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDPipelineRasterizationState",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "RDPipelineRasterizationState",
+    "signature": "public sealed class Electron2D.RDPipelineRasterizationState",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RDSamplerState",
     "kind": "type",
     "declaringType": "Electron2D.RDSamplerState",
@@ -8253,6 +8313,21 @@
     "declaringType": "Electron2D.RDUniform",
     "name": "RDUniform",
     "signature": "public sealed class Electron2D.RDUniform",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDVertexAttribute",
+    "kind": "type",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "RDVertexAttribute",
+    "signature": "public sealed class Electron2D.RDVertexAttribute",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -8553,11 +8628,173 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.BlendFactor",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "BlendFactor",
+    "signature": "public enum Electron2D.RenderingDevice.BlendFactor",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.BlendOperation",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "BlendOperation",
+    "signature": "public enum Electron2D.RenderingDevice.BlendOperation",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.BufferCreationBits",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.BufferCreationBits",
+    "name": "BufferCreationBits",
+    "signature": "public enum Electron2D.RenderingDevice.BufferCreationBits",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.DataFormat",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.DataFormat",
     "name": "DataFormat",
     "signature": "public enum Electron2D.RenderingDevice.DataFormat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.DrawFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "DrawFlags",
+    "signature": "public enum Electron2D.RenderingDevice.DrawFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.IndexBufferFormat",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.IndexBufferFormat",
+    "name": "IndexBufferFormat",
+    "signature": "public enum Electron2D.RenderingDevice.IndexBufferFormat",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "PipelineDynamicStateFlags",
+    "signature": "public enum Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.PolygonCullMode",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "name": "PolygonCullMode",
+    "signature": "public enum Electron2D.RenderingDevice.PolygonCullMode",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.PolygonFrontFace",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "name": "PolygonFrontFace",
+    "signature": "public enum Electron2D.RenderingDevice.PolygonFrontFace",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.RenderPrimitive",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "RenderPrimitive",
+    "signature": "public enum Electron2D.RenderingDevice.RenderPrimitive",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -8643,6 +8880,24 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RenderingDevice.TextureSamples",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "TextureSamples",
+    "signature": "public enum Electron2D.RenderingDevice.TextureSamples",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RenderingDevice.TextureSwizzle",
     "kind": "type",
     "declaringType": "Electron2D.RenderingDevice.TextureSwizzle",
@@ -8702,6 +8957,24 @@
     "declaringType": "Electron2D.RenderingDevice.UniformType",
     "name": "UniformType",
     "signature": "public enum Electron2D.RenderingDevice.UniformType",
+    "visibility": "public",
+    "baseType": "System.Enum",
+    "interfaces": [
+      "System.IComparable",
+      "System.IConvertible",
+      "System.IFormattable",
+      "System.ISpanFormattable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RenderingDevice.VertexFrequency",
+    "kind": "type",
+    "declaringType": "Electron2D.RenderingDevice.VertexFrequency",
+    "name": "VertexFrequency",
+    "signature": "public enum Electron2D.RenderingDevice.VertexFrequency",
     "visibility": "public",
     "baseType": "System.Enum",
     "interfaces": [
@@ -18858,6 +19131,58 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.RDAttachmentFormat..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": ".ctor",
+    "signature": "public RDAttachmentFormat()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineColorBlendState..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineColorBlendState",
+    "name": ".ctor",
+    "signature": "public RDPipelineColorBlendState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineColorBlendStateAttachment..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": ".ctor",
+    "signature": "public RDPipelineColorBlendStateAttachment()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineRasterizationState..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": ".ctor",
+    "signature": "public RDPipelineRasterizationState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.RDSamplerState..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.RDSamplerState",
@@ -18915,6 +19240,19 @@
     "declaringType": "Electron2D.RDUniform",
     "name": ".ctor",
     "signature": "public RDUniform()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDVertexAttribute..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": ".ctor",
+    "signature": "public RDVertexAttribute()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -36378,6 +36716,279 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.ConstantColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "ConstantColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor ConstantColor = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.DstAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "DstAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor DstAlpha = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.DstColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "DstColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor DstColor = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor Max = 19",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "19"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.One()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "One",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor One = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusConstantColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusConstantColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusConstantColor = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusDstAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusDstAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusDstAlpha = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusDstColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusDstColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusDstColor = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrcAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusSrcAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusSrcAlpha = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrcColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "OneMinusSrcColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor OneMinusSrcColor = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcAlpha()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "SrcAlpha",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor SrcAlpha = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "6"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcAlphaSaturate()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "SrcAlphaSaturate",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor SrcAlphaSaturate = 14",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "14"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcColor()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "SrcColor",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor SrcColor = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendFactor.Zero()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendFactor",
+    "name": "Zero",
+    "signature": "public const Electron2D.RenderingDevice.BlendFactor Zero = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.Add()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "Add",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation Add = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation Max = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "5"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.Maximum()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "Maximum",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation Maximum = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.Minimum()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "Minimum",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation Minimum = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.ReverseSubtract()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "ReverseSubtract",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation ReverseSubtract = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BlendOperation.Subtract()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BlendOperation",
+    "name": "Subtract",
+    "signature": "public const Electron2D.RenderingDevice.BlendOperation Subtract = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.BufferCreationBits.AsStorage()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.BufferCreationBits",
+    "name": "AsStorage",
+    "signature": "public const Electron2D.RenderingDevice.BufferCreationBits AsStorage = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BufferCreationBits",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.DataFormat.A1R5G5B5UNORMPACK16()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.DataFormat",
@@ -39407,6 +40018,448 @@
     "value": "124"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor0()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor0",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor0 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor1()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor1",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor1 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor2",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor2 = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor3",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor3 = 8",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "8"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor4",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor4 = 16",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "16"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor5()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor5",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor5 = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "32"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor6()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor6",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor6 = 64",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "64"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor7()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColor7",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColor7 = 128",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "128"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColorAll()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "ClearColorAll",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags ClearColorAll = 255",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "255"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.DefaultAll()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "DefaultAll",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags DefaultAll = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor0()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor0",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor0 = 256",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "256"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor1()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor1",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor1 = 512",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "512"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor2",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor2 = 1024",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "1024"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor3()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor3",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor3 = 2048",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "2048"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor4",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor4 = 4096",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "4096"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor5()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor5",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor5 = 8192",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "8192"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor6()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor6",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor6 = 16384",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "16384"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor7()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColor7",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColor7 = 32768",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "32768"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColorAll()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.DrawFlags",
+    "name": "IgnoreColorAll",
+    "signature": "public const Electron2D.RenderingDevice.DrawFlags IgnoreColorAll = 65280",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DrawFlags",
+    "value": "65280"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.IndexBufferFormat.UInt16()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.IndexBufferFormat",
+    "name": "UInt16",
+    "signature": "public const Electron2D.RenderingDevice.IndexBufferFormat UInt16 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.IndexBufferFormat",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.IndexBufferFormat.UInt32()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.IndexBufferFormat",
+    "name": "UInt32",
+    "signature": "public const Electron2D.RenderingDevice.IndexBufferFormat UInt32 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.IndexBufferFormat",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.BlendConstants()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "name": "BlendConstants",
+    "signature": "public const Electron2D.RenderingDevice.PipelineDynamicStateFlags BlendConstants = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+    "value": "4"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Back()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "name": "Back",
+    "signature": "public const Electron2D.RenderingDevice.PolygonCullMode Back = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Disabled()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "name": "Disabled",
+    "signature": "public const Electron2D.RenderingDevice.PolygonCullMode Disabled = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Front()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "name": "Front",
+    "signature": "public const Electron2D.RenderingDevice.PolygonCullMode Front = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PolygonFrontFace.Clockwise()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "name": "Clockwise",
+    "signature": "public const Electron2D.RenderingDevice.PolygonFrontFace Clockwise = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.PolygonFrontFace.CounterClockwise()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "name": "CounterClockwise",
+    "signature": "public const Electron2D.RenderingDevice.PolygonFrontFace CounterClockwise = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.LineStrips()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "LineStrips",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive LineStrips = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "3"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Lines()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "Lines",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive Lines = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive Max = 11",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "11"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Points()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "Points",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive Points = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.TriangleStrips()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "TriangleStrips",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive TriangleStrips = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.TriangleStripsWithRestartIndex()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "TriangleStripsWithRestartIndex",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive TriangleStripsWithRestartIndex = 9",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "9"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Triangles()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "name": "Triangles",
+    "signature": "public const Electron2D.RenderingDevice.RenderPrimitive Triangles = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.RenderPrimitive",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.SamplerFilter.Linear()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.SamplerFilter",
@@ -39524,6 +40577,45 @@
     "value": "4"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.ShaderStage.Fragment()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.ShaderStage",
+    "name": "Fragment",
+    "signature": "public const Electron2D.RenderingDevice.ShaderStage Fragment = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderStage",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.ShaderStage.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.ShaderStage",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.ShaderStage Max = 10",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderStage",
+    "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.ShaderStage.Vertex()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.ShaderStage",
+    "name": "Vertex",
+    "signature": "public const Electron2D.RenderingDevice.ShaderStage Vertex = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.ShaderStage",
+    "value": "0"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.StorageBufferUsage.DispatchIndirect()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.StorageBufferUsage",
@@ -39535,6 +40627,71 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.StorageBufferUsage",
     "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Max()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Max",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Max = 7",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "7"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples1()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples1",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples1 = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "0"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples2",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples2 = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples4()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples4",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples4 = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples8()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples8",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples8 = 3",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "3"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.TextureSwizzle.A()",
@@ -39977,6 +41134,32 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.UniformType",
     "value": "10"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.VertexFrequency.Instance()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.VertexFrequency",
+    "name": "Instance",
+    "signature": "public const Electron2D.RenderingDevice.VertexFrequency Instance = 1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.VertexFrequency",
+    "value": "1"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.VertexFrequency.Vertex()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.VertexFrequency",
+    "name": "Vertex",
+    "signature": "public const Electron2D.RenderingDevice.VertexFrequency Vertex = 0",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.VertexFrequency",
+    "value": "0"
   },
   {
     "id": "enumValue:Electron2D.Repeat.Mirror()",
@@ -133526,6 +134709,71 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RDAttachmentFormat.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineColorBlendState.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineColorBlendState",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineColorBlendStateAttachment.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineColorBlendStateAttachment.SetAsMix()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "SetAsMix",
+    "signature": "public System.Void SetAsMix()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineRasterizationState.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RDSamplerState.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RDSamplerState",
@@ -133802,6 +135050,19 @@
     "id": "method:Electron2D.RDUniform.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RDUniform",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDVertexAttribute.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDVertexAttribute",
     "name": "GetPropertyDescriptors",
     "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
     "visibility": "protected",
@@ -136420,6 +137681,443 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.DrawListBegin(Electron2D.RID,Electron2D.RenderingDevice.DrawFlags,System.ReadOnlySpan\u003CElectron2D.Color\u003E,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBegin",
+    "signature": "public System.Int64 DrawListBegin(Electron2D.RID framebuffer, Electron2D.RenderingDevice.DrawFlags drawFlags = DefaultAll, System.ReadOnlySpan\u003CElectron2D.Color\u003E clearColorValues = default, Electron2D.Rect2 region = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "framebuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "drawFlags",
+        "type": "Electron2D.RenderingDevice.DrawFlags",
+        "default": "DefaultAll"
+      },
+      {
+        "name": "clearColorValues",
+        "type": "System.ReadOnlySpan\u003CElectron2D.Color\u003E",
+        "default": "default"
+      },
+      {
+        "name": "region",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Int64",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListBindIndexArray(System.Int64,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBindIndexArray",
+    "signature": "public System.Void DrawListBindIndexArray(System.Int64 drawList, Electron2D.RID indexArray)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "indexArray",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListBindRenderPipeline(System.Int64,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBindRenderPipeline",
+    "signature": "public System.Void DrawListBindRenderPipeline(System.Int64 drawList, Electron2D.RID renderPipeline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "renderPipeline",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListBindUniformSet(System.Int64,Electron2D.RID,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBindUniformSet",
+    "signature": "public System.Void DrawListBindUniformSet(System.Int64 drawList, Electron2D.RID uniformSet, System.UInt32 setIndex)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "uniformSet",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "setIndex",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListBindVertexArray(System.Int64,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBindVertexArray",
+    "signature": "public System.Void DrawListBindVertexArray(System.Int64 drawList, Electron2D.RID vertexArray)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "vertexArray",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListBindVertexBuffersFormat(System.Int64,System.Int32,System.UInt32,System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.ReadOnlySpan\u003CSystem.UInt32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListBindVertexBuffersFormat",
+    "signature": "public System.Void DrawListBindVertexBuffersFormat(System.Int64 drawList, System.Int32 vertexFormat, System.UInt32 vertexCount, System.ReadOnlySpan\u003CElectron2D.RID\u003E vertexBuffers, System.ReadOnlySpan\u003CSystem.UInt32\u003E offsets = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "vertexFormat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "vertexCount",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "vertexBuffers",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "offsets",
+        "type": "System.ReadOnlySpan\u003CSystem.UInt32\u003E",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListDisableScissor(System.Int64)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListDisableScissor",
+    "signature": "public System.Void DrawListDisableScissor(System.Int64 drawList)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListDraw(System.Int64,System.Boolean,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListDraw",
+    "signature": "public System.Void DrawListDraw(System.Int64 drawList, System.Boolean useIndices, System.UInt32 instances, System.UInt32 proceduralVertexCount = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "useIndices",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "instances",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "proceduralVertexCount",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListDrawIndirect(System.Int64,System.Boolean,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListDrawIndirect",
+    "signature": "public System.Void DrawListDrawIndirect(System.Int64 drawList, System.Boolean useIndices, Electron2D.RID buffer, System.UInt32 offset = 0, System.UInt32 drawCount = 1, System.UInt32 stride = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "useIndices",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "buffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "offset",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "drawCount",
+        "type": "System.UInt32",
+        "default": "1"
+      },
+      {
+        "name": "stride",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListEnableScissor(System.Int64,Electron2D.Rect2)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListEnableScissor",
+    "signature": "public System.Void DrawListEnableScissor(System.Int64 drawList, Electron2D.Rect2 rect = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "rect",
+        "type": "Electron2D.Rect2",
+        "default": "default"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListEnd()",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListEnd",
+    "signature": "public System.Void DrawListEnd()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.DrawListSetBlendConstants(System.Int64,Electron2D.Color)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "DrawListSetBlendConstants",
+    "signature": "public System.Void DrawListSetBlendConstants(System.Int64 drawList, Electron2D.Color color)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "drawList",
+        "type": "System.Int64",
+        "default": null
+      },
+      {
+        "name": "color",
+        "type": "Electron2D.Color",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferCreate",
+    "signature": "public Electron2D.RID FramebufferCreate(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.Int32 validateWithFormat = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "textures",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "validateWithFormat",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferFormatCreate",
+    "signature": "public System.Int32 FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "attachments",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferFormatGetTextureSamples(System.Int32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferFormatGetTextureSamples",
+    "signature": "public Electron2D.RenderingDevice.TextureSamples FramebufferFormatGetTextureSamples(System.Int32 framebufferFormat, System.UInt32 renderPass = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "framebufferFormat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "renderPass",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferGetFormat(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferGetFormat",
+    "signature": "public System.Int32 FramebufferGetFormat(Electron2D.RID framebuffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "framebuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferIsValid(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferIsValid",
+    "signature": "public System.Boolean FramebufferIsValid(Electron2D.RID framebuffer)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "framebuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.FreeRID(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -136449,6 +138147,142 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.IndexArrayCreate(Electron2D.RID,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "IndexArrayCreate",
+    "signature": "public Electron2D.RID IndexArrayCreate(Electron2D.RID indexBuffer, System.UInt32 indexOffset, System.UInt32 indexCount)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "indexBuffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "indexOffset",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "indexCount",
+        "type": "System.UInt32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.IndexBufferCreate(System.UInt32,Electron2D.RenderingDevice.IndexBufferFormat,System.ReadOnlySpan\u003CSystem.Byte\u003E,System.Boolean,Electron2D.RenderingDevice.BufferCreationBits)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "IndexBufferCreate",
+    "signature": "public Electron2D.RID IndexBufferCreate(System.UInt32 sizeIndices, Electron2D.RenderingDevice.IndexBufferFormat format, System.ReadOnlySpan\u003CSystem.Byte\u003E data = default, System.Boolean useRestartIndices = false, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sizeIndices",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "format",
+        "type": "Electron2D.RenderingDevice.IndexBufferFormat",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": "default"
+      },
+      {
+        "name": "useRestartIndices",
+        "type": "System.Boolean",
+        "default": "false"
+      },
+      {
+        "name": "creationBits",
+        "type": "Electron2D.RenderingDevice.BufferCreationBits",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "RenderPipelineCreate",
+    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shader",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "framebufferFormat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "vertexFormat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "primitive",
+        "type": "Electron2D.RenderingDevice.RenderPrimitive",
+        "default": null
+      },
+      {
+        "name": "rasterizationState",
+        "type": "Electron2D.RDPipelineRasterizationState",
+        "default": null
+      },
+      {
+        "name": "colorBlendState",
+        "type": "Electron2D.RDPipelineColorBlendState",
+        "default": null
+      },
+      {
+        "name": "dynamicStateFlags",
+        "type": "Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.RenderPipelineIsValid(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "RenderPipelineIsValid",
+    "signature": "public System.Boolean RenderPipelineIsValid(Electron2D.RID renderPipeline)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "renderPipeline",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
     "value": null
   },
   {
@@ -136492,6 +138326,25 @@
       }
     ],
     "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.ShaderGetVertexInputAttributeMask(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "ShaderGetVertexInputAttributeMask",
+    "signature": "public System.UInt64 ShaderGetVertexInputAttributeMask(Electron2D.RID shader)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shader",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.UInt64",
     "value": null
   },
   {
@@ -136971,6 +138824,88 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.VertexArrayCreate(System.UInt32,System.Int32,System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.ReadOnlySpan\u003CSystem.UInt32\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "VertexArrayCreate",
+    "signature": "public Electron2D.RID VertexArrayCreate(System.UInt32 vertexCount, System.Int32 vertexFormat, System.ReadOnlySpan\u003CElectron2D.RID\u003E sourceBuffers, System.ReadOnlySpan\u003CSystem.UInt32\u003E offsets = default)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertexCount",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "vertexFormat",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "sourceBuffers",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "offsets",
+        "type": "System.ReadOnlySpan\u003CSystem.UInt32\u003E",
+        "default": "default"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.VertexBufferCreate(System.UInt32,System.ReadOnlySpan\u003CSystem.Byte\u003E,Electron2D.RenderingDevice.BufferCreationBits)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "VertexBufferCreate",
+    "signature": "public Electron2D.RID VertexBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan\u003CSystem.Byte\u003E data = default, Electron2D.RenderingDevice.BufferCreationBits creationBits = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
+        "default": null
+      },
+      {
+        "name": "data",
+        "type": "System.ReadOnlySpan\u003CSystem.Byte\u003E",
+        "default": "default"
+      },
+      {
+        "name": "creationBits",
+        "type": "Electron2D.RenderingDevice.BufferCreationBits",
+        "default": "0"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.VertexFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDVertexAttribute\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "VertexFormatCreate",
+    "signature": "public System.Int32 VertexFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDVertexAttribute\u003E vertexDescriptions)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "vertexDescriptions",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDVertexAttribute\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
     "value": null
   },
   {
@@ -211841,6 +213776,266 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDAttachmentFormat.Format()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": "Format",
+    "signature": "public Electron2D.RenderingDevice.DataFormat Format { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DataFormat",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDAttachmentFormat.Samples()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": "Samples",
+    "signature": "public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDAttachmentFormat.UsageFlags()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDAttachmentFormat",
+    "name": "UsageFlags",
+    "signature": "public Electron2D.RenderingDevice.TextureUsageBits UsageFlags { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureUsageBits",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendState.Attachments()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendState",
+    "name": "Attachments",
+    "signature": "public Electron2D.RDPipelineColorBlendStateAttachment[] Attachments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RDPipelineColorBlendStateAttachment[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendState.BlendConstant()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendState",
+    "name": "BlendConstant",
+    "signature": "public Electron2D.Color BlendConstant { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Color",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.AlphaBlendOp()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "AlphaBlendOp",
+    "signature": "public Electron2D.RenderingDevice.BlendOperation AlphaBlendOp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.ColorBlendOp()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "ColorBlendOp",
+    "signature": "public Electron2D.RenderingDevice.BlendOperation ColorBlendOp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendOperation",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.DstAlphaBlendFactor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "DstAlphaBlendFactor",
+    "signature": "public Electron2D.RenderingDevice.BlendFactor DstAlphaBlendFactor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.DstColorBlendFactor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "DstColorBlendFactor",
+    "signature": "public Electron2D.RenderingDevice.BlendFactor DstColorBlendFactor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.EnableBlend()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "EnableBlend",
+    "signature": "public System.Boolean EnableBlend { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.SrcAlphaBlendFactor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "SrcAlphaBlendFactor",
+    "signature": "public Electron2D.RenderingDevice.BlendFactor SrcAlphaBlendFactor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.SrcColorBlendFactor()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "SrcColorBlendFactor",
+    "signature": "public Electron2D.RenderingDevice.BlendFactor SrcColorBlendFactor { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.BlendFactor",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteA()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "WriteA",
+    "signature": "public System.Boolean WriteA { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteB()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "WriteB",
+    "signature": "public System.Boolean WriteB { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteG()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "WriteG",
+    "signature": "public System.Boolean WriteG { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteR()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineColorBlendStateAttachment",
+    "name": "WriteR",
+    "signature": "public System.Boolean WriteR { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineRasterizationState.CullMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "CullMode",
+    "signature": "public Electron2D.RenderingDevice.PolygonCullMode CullMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonCullMode",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineRasterizationState.EnableDepthClamp()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "EnableDepthClamp",
+    "signature": "public System.Boolean EnableDepthClamp { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineRasterizationState.FrontFace()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "FrontFace",
+    "signature": "public Electron2D.RenderingDevice.PolygonFrontFace FrontFace { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.PolygonFrontFace",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineRasterizationState.Wireframe()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineRasterizationState",
+    "name": "Wireframe",
+    "signature": "public System.Boolean Wireframe { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDSamplerState.AnisotropyMax()",
     "kind": "property",
     "declaringType": "Electron2D.RDSamplerState",
@@ -211984,11 +214179,63 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDShaderSPIRV.BytecodeFragment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSPIRV",
+    "name": "BytecodeFragment",
+    "signature": "public System.Byte[] BytecodeFragment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSPIRV.BytecodeVertex()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSPIRV",
+    "name": "BytecodeVertex",
+    "signature": "public System.Byte[] BytecodeVertex { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Byte[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDShaderSPIRV.CompileErrorCompute()",
     "kind": "property",
     "declaringType": "Electron2D.RDShaderSPIRV",
     "name": "CompileErrorCompute",
     "signature": "public System.String CompileErrorCompute { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSPIRV.CompileErrorFragment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSPIRV",
+    "name": "CompileErrorFragment",
+    "signature": "public System.String CompileErrorFragment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDShaderSPIRV.CompileErrorVertex()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDShaderSPIRV",
+    "name": "CompileErrorVertex",
+    "signature": "public System.String CompileErrorVertex { get; set; }",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -212176,6 +214423,84 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.UniformType",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Binding()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Binding",
+    "signature": "public System.UInt32 Binding { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Format()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Format",
+    "signature": "public Electron2D.RenderingDevice.DataFormat Format { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.DataFormat",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Frequency()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Frequency",
+    "signature": "public Electron2D.RenderingDevice.VertexFrequency Frequency { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.VertexFrequency",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Location()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Location",
+    "signature": "public System.UInt32 Location { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Offset()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Offset",
+    "signature": "public System.UInt32 Offset { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDVertexAttribute.Stride()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDVertexAttribute",
+    "name": "Stride",
+    "signature": "public System.UInt32 Stride { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.UInt32",
     "value": null
   },
   {

@@ -10,6 +10,24 @@ internal static unsafe partial class SpirvReflection
     private const string Library = "spirv-cross-c-shared";
     private const int Binding = 33, DescriptorSet = 34;
 
+    internal static Dictionary<(uint Set, int Slot), uint> DeviceUniformSizes(byte[] code)
+    {
+        if (CreateContext(out var context) != 0 || context == 0) throw new InvalidOperationException("Could not create the device reflection context.");
+        using var owner = new RenderHandle(context, DestroyContext);
+        void Check(int result) { if (result != 0) throw new ArgumentException("Device reflection failed: " + Marshal.PtrToStringUTF8(GetError(context)), nameof(code)); }
+        nint ir; fixed (byte* pointer = code) Check(Parse(context, (nint)pointer, (nuint)(code.Length / 4), out ir));
+        Check(CreateCompiler(context, 0, ir, 1, out var compiler)); Check(GetActiveVariables(compiler, out var active)); Check(CreateResources(compiler, out var resources, active));
+        Check(GetResources(resources, 1, out var fields, out var count));
+        var result = new Dictionary<(uint Set, int Slot), uint>();
+        foreach (var resource in new ReadOnlySpan<ReflectedResource>((void*)fields, checked((int)count)))
+        {
+            Check(GetStructSize(compiler, GetType(compiler, resource.BaseTypeId), out var bytes));
+            if (bytes is 0 or > 16384) throw new NotSupportedException("Device uniform blocks require a positive size at most sixteen KiB.");
+            result.Add((GetDecoration(compiler, resource.Id, DescriptorSet), checked((int)GetDecoration(compiler, resource.Id, Binding))), checked((uint)bytes));
+        }
+        return result;
+    }
+
     internal static ShaderProgram Read(byte[] code, bool fragment,
         IReadOnlyDictionary<(int Buffer, string Name), (int BooleanWidth, int ArrayLength)>? sourceTypes = null)
     {

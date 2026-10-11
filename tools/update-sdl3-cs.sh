@@ -25,6 +25,9 @@ sed -i '1s/^\xEF\xBB\xBF/#pragma warning disable CS0649 \/\/ Native SDL initiali
     "$scratch/SDL/File and IO Abstractions/storage/StorageInterface.cs"
 mv "$scratch/LICENSE" "$scratch/SDL3-CS-LICENSE.txt"
 git -C "$scratch" apply --unidiff-zero "$root/tools/sdl3-window-flags.patch"
+if rg -q 'SDL_SetGPUBlendConstants\(IntPtr renderPass, in FColor blendConstants\)' "$scratch/SDL/GPU/gpu/PInvoke.cs"; then
+    git -C "$scratch" apply --unidiff-zero "$root/tools/sdl3-gpu-blend-constants.patch"
+fi
 cat > "$scratch/UPSTREAM.md" <<EOF
 # SDL3-CS core, shadercross and image binding source
 
@@ -43,6 +46,10 @@ Native SDL IO read/write results use pointer-sized size_t on both 32-bit and
 64-bit hosts; the managed binding convenience result remains ulong.
 Window flag imports use primitive ulong at the native boundary to preserve the
 64-bit ABI in the WebAssembly interpreter. Managed wrappers keep WindowFlags.
+GPU blend constants use a by-value native SDL_FColor parameter while preserving
+the managed in-parameter wrapper. Upstream fix: https://github.com/edwardgushchin/SDL3-CS/pull/321
+(commit 1c673cb25e94051fbfa1ae28e3b1332036883dd9). The ABI regression is covered by device
+graphics pixels and the upstream focused wrapper/native tests.
 The upstream license is retained.
 Refresh with tools/update-sdl3-cs.sh and a release tag, then inspect the diff and
 run the engine, test, coverage, and native example checks.

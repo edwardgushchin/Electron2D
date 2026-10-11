@@ -65,6 +65,45 @@ internal static unsafe class ShaderCompiler
         }
     });
 
+    internal readonly record struct DeviceIO(uint Location, int Type, uint Width);
+    internal static (DeviceIO[] Inputs, DeviceIO[] Outputs) ValidateDeviceGraphics(byte[] vertex, byte[] fragment) => Run(() =>
+    {
+        (DeviceIO[] Inputs, DeviceIO[] Outputs) Reflect(byte[] code)
+        {
+            fixed (byte* pointer = code)
+            {
+                var memory = ShaderCross.ReflectGraphicsSPIRV((nint)pointer, (nuint)code.Length, 0);
+                if (memory == 0) throw new ArgumentException("Graphics reflection failed: " + SDL.GetError(), nameof(code));
+                try
+                {
+                    var metadata = Marshal.PtrToStructure<ShaderCross.GraphicsShaderMetadata>(memory);
+                    var resources = metadata.ResourceInfo;
+                    if (resources.NumSamplers > 16 || resources.NumStorageBuffers > 8 || resources.NumStorageTextures > 8 || resources.NumUniformBuffers > 4)
+                        throw new NotSupportedException("Graphics resources exceed per-stage native binding limits.");
+                    DeviceIO[] Read(nint fields, uint count)
+                    {
+                        if (count > 16) throw new NotSupportedException("Graphics interfaces support sixteen locations per stage.");
+                        var result = new DeviceIO[count]; var mask = 0u;
+                        for (var i = 0; i < count; i++)
+                        {
+                            var field = Marshal.PtrToStructure<ShaderCross.IOVarMetadata>(fields + i * Marshal.SizeOf<ShaderCross.IOVarMetadata>());
+                            var type = field.VectorType switch { ShaderCross.IOVarType.Float32 => 0, ShaderCross.IOVarType.Int32 => 1, ShaderCross.IOVarType.UInt32 => 2, _ => throw new NotSupportedException("Graphics interfaces require 32-bit scalar or vector fields.") };
+                            if (field.Location >= 16 || field.VectorSize is < 1 or > 4 || (mask & (1u << (int)field.Location)) != 0) throw new ArgumentException("Invalid or duplicate graphics interface location.");
+                            mask |= 1u << (int)field.Location; result[i] = new(field.Location, type, field.VectorSize);
+                        }
+                        return result;
+                    }
+                    return (Read(metadata.Inputs, metadata.NumInputs), Read(metadata.Outputs, metadata.NumOutputs));
+                }
+                finally { SDL.Free(memory); }
+            }
+        }
+        var v = Reflect(vertex); var f = Reflect(fragment);
+        foreach (var input in f.Inputs)
+            if (!v.Outputs.Contains(input)) throw new ArgumentException("Fragment inputs require matching vertex outputs.");
+        return (v.Inputs, f.Outputs);
+    });
+
     internal static ShaderProgram ValidateFragmentInterface(ReadOnlySpan<byte> bytecode) => ValidateInterface(bytecode, fragment: true);
 
     internal static ShaderProgram ValidateInterface(ReadOnlySpan<byte> bytecode, bool fragment,

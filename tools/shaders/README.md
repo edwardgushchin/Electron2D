@@ -198,3 +198,8 @@ Application compute sources can use `Electron2DComputeShader` items with `Comput
 Built-in lighting generates the 27 diffuse/normal/specular float, signed and unsigned sampling variants from one source. Alpha clipping generates three scalar variants. Variant definitions participate in the build fingerprint; bytecode stays in intermediate output and is embedded in the runtime assembly.
 
 Automatic material lighting embeds 32 internal function profiles and exact ID relocation resources derived with the pinned disassembler. Private vertex variants deliver storage-record indices. Runtime composition needs no compiler tools. `python3 -B tools/shaders/check_material_lighting.py` validates fresh composed GLSL/DXC/SPIR-V modules independently of native rendering.
+
+
+## Application device graphics
+
+Import `DeviceShaders.targets` and add `Electron2DDeviceShader` items ending in `.vert.glsl`, `.frag.glsl`, `.vert.hlsl` or `.frag.hlsl`. This low-level device profile uses the same pinned glslang frontend and independent `spirv-val` check as compute modules; it preserves shader source/stage diagnostics and atomically replaces completed bytecode. Results are embedded as `Electron2D.Device.<filename>.spv`. Load both stages into `RDShaderSPIRV` and use the public device pipeline/draw API. The device validates paired stage interfaces and logical resources at creation. Canvas material imports retain their separate ShaderImport profile. Source compilers remain build-time tools.

@@ -3,18 +3,24 @@ using SDL3;
 
 namespace Electron2D;
 
-/// <summary>An owner-thread compute device with owned buffer, shader and uniform-set identities.</summary>
+/// <summary>An owner-thread graphics and compute device with owned resource identities.</summary>
 /// <remarks>Create a local device through RenderingServer.CreateLocalRenderingDevice or borrow the retained renderer device
 /// through RenderingServer.GetRenderingDevice. Local Submit starts execution and Sync waits; the renderer device
 /// flushes before canvas submission and completes queued reads before FramePostDraw. Buffer reads synchronize pending work. Resource identities never cross devices.
-/// The compute profile supports buffers, sampled images/samplers and writable images; graphics pipelines remain unavailable.</remarks>
+/// The device executes compute and single-sample color graphics pipelines, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
-    /// <summary>Identifies the executable compute stage.</summary>
+    /// <summary>Identifies executable shader stages.</summary>
     public enum ShaderStage
     {
+        /// <summary>A vertex processing stage.</summary>
+        Vertex = 0,
+        /// <summary>A fragment processing stage.</summary>
+        Fragment = 1,
         /// <summary>A general-purpose compute shader.</summary>
-        Compute = 4
+        Compute = 4,
+        /// <summary>Marks the exclusive stage numeric extent; it is not an executable stage.</summary>
+        Max = 10
     }
     /// <summary>Identifies a shader descriptor's resource category.</summary>
     public enum UniformType
@@ -44,7 +50,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         /// <summary>A storage buffer with dynamic offset.</summary>
         StorageBufferDynamic = 11
     }
-    private enum Kind { Storage, Uniform, Shader, Pipeline, Set, Texture, Sampler }
+    private enum Kind { Storage, Uniform, Shader, Pipeline, Set, Texture, Sampler, Vertex, Index, VertexArray, IndexArray, Framebuffer, GraphicsPipeline }
     private sealed class Entry
     {
         internal Kind Kind;
@@ -54,9 +60,17 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal uint Size;
         internal StorageBufferUsage Usage;
         internal TextureInfo? Texture;
-        internal bool LinearSampling;
+        internal bool LinearSampling, GraphicsStorage, RestartIndices;
+        internal IndexBufferFormat IndexFormat;
+        internal VertexArray? Vertices;
+        internal IndexArray? Indices;
+        internal Framebuffer? Target;
+        internal GraphicsPipeline? Graphics;
+        internal ShaderCompiler.DeviceIO[] Inputs = [], Outputs = [];
         internal RID Shader;
         internal string Name = "";
+        internal ShaderStage Stage = ShaderStage.Compute;
+        internal RenderHandle? FragmentHandle;
         internal uint Set;
         internal Binding[] Layout = [];
         internal Dictionary<int, RID[]> Bindings = [];
@@ -67,6 +81,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private readonly int _owner = Environment.CurrentManagedThreadId;
     private Entry? _pipeline;
     private nint _command, _fence;
+    private nint _drawPass;
     private long _activeList, _nextList;
     private nint Device => _context.Device;
     private readonly RenderingServer? _serverOwner;
@@ -75,8 +90,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private Entry Get(RID rid) { Access(); return _entries.TryGetValue(rid, out var entry) ? entry : throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
     private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
-    private void IdleList() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the active compute list first."); }
-    private void List(long id) { Access(); if (_activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
+    private void IdleList() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the active command list first."); }
+    private void List(long id) { Access(); if (_drawPass != 0 || _activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
     private nint Commands()
     {
         if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission();
@@ -98,7 +113,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         var entry = new Entry { Kind = Kind.Storage, Size = sizeBytes, Usage = usage };
         try
         {
-            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = sizeBytes, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | (usage.HasFlag(StorageBufferUsage.DispatchIndirect) ? SDL.GPUBufferUsageFlags.Indirect : 0) }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
+            entry.Handle = new(SDL.CreateGPUBuffer(Device, new SDL.GPUBufferCreateInfo { Size = sizeBytes, Usage = SDL.GPUBufferUsageFlags.ComputeStorageRead | SDL.GPUBufferUsageFlags.ComputeStorageWrite | SDL.GPUBufferUsageFlags.GraphicsStorageRead | (usage.HasFlag(StorageBufferUsage.DispatchIndirect) ? SDL.GPUBufferUsageFlags.Indirect : 0) }), h => SDL.ReleaseGPUBuffer(Device, h), _context.Handle);
             entry.Upload = Transfer(sizeBytes, SDL.GPUTransferBufferUsage.Upload);
             var initial = new byte[sizeBytes]; data.CopyTo(initial); Upload(entry, 0, initial);
             return Add(entry);
@@ -131,7 +146,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     }
     private static void Range(Entry entry, uint offset, uint size)
     {
-        if (entry.Kind is not (Kind.Storage or Kind.Uniform)) throw new ArgumentException("The RID is not a buffer.");
+        if (entry.Kind is not (Kind.Storage or Kind.Uniform or Kind.Vertex or Kind.Index)) throw new ArgumentException("The RID is not a buffer.");
         if (offset > entry.Size || size > entry.Size - offset) throw new ArgumentOutOfRangeException(nameof(offset));
     }
     private void Upload(Entry entry, uint offset, ReadOnlySpan<byte> data)
@@ -181,22 +196,47 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         DeliverReadbacks();
     }
 
-    /// <summary>Validates and creates a compute shader from compiled bytecode.</summary>
-    /// <param name="spirvData">The copied compute stage, with no compiler error.</param>
+    /// <summary>Validates and creates a compute shader or a paired graphics shader from compiled bytecode.</summary>
+    /// <param name="spirvData">Copied stage modules with no compiler errors; either compute or both vertex and fragment.</param>
     /// <param name="name">Optional diagnostic label.</param>
     /// <returns>A shader identity owned by this device.</returns>
     public RID ShaderCreateFromSPIRV(RDShaderSPIRV spirvData, string name = "")
     {
         IdleList(); ArgumentNullException.ThrowIfNull(spirvData); ArgumentNullException.ThrowIfNull(name);
-        if (spirvData.CompileErrorCompute.Length != 0) throw new ArgumentException(spirvData.CompileErrorCompute, nameof(spirvData));
-        var (code, layout) = Remap(spirvData.BytecodeCompute);
-        var handle = new RenderHandle(ShaderCompiler.CreateComputePipeline(Device, code), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
-        return Add(new Entry { Kind = Kind.Shader, Handle = handle, Layout = layout, Name = name });
+        var compute = spirvData.BytecodeCompute;
+        var vertex = spirvData.BytecodeVertex; var fragment = spirvData.BytecodeFragment;
+        if (compute.Length != 0)
+        {
+            if (vertex.Length != 0 || fragment.Length != 0) throw new ArgumentException("Compute and graphics modules cannot share a shader identity.", nameof(spirvData));
+            if (spirvData.CompileErrorCompute.Length != 0) throw new ArgumentException(spirvData.CompileErrorCompute, nameof(spirvData));
+            var (code, layout) = Remap(compute);
+            var handle = new RenderHandle(ShaderCompiler.CreateComputePipeline(Device, code), h => SDL.ReleaseGPUComputePipeline(Device, h), _context.Handle);
+            return Add(new Entry { Kind = Kind.Shader, Handle = handle, Layout = layout, Name = name });
+        }
+        if (vertex.Length == 0 || fragment.Length == 0 || spirvData.CompileErrorVertex.Length != 0 || spirvData.CompileErrorFragment.Length != 0)
+            throw new ArgumentException("A graphics shader requires successful vertex and fragment modules.", nameof(spirvData));
+        var (vertexCode, vertexLayout) = Remap(vertex, ShaderStage.Vertex);
+        var (fragmentCode, fragmentLayout) = Remap(fragment, ShaderStage.Fragment);
+        var layoutBoth = vertexLayout.Concat(fragmentLayout).ToArray();
+        foreach (var group in layoutBoth.GroupBy(b => (b.Set, b.Slot)))
+        {
+            var first = group.First();
+            if (group.Any(b => b.Type != first.Type || b.Array != first.Array || b.ImageFormat != first.ImageFormat || b.PixelType != first.PixelType)) throw new ArgumentException("A shared graphics descriptor has inconsistent stage types.", nameof(spirvData));
+        }
+        var interfaces = ShaderCompiler.ValidateDeviceGraphics(vertexCode, fragmentCode);
+        var entry = new Entry { Kind = Kind.Shader, Stage = ShaderStage.Vertex, Layout = layoutBoth, Name = name, Inputs = interfaces.Inputs, Outputs = interfaces.Outputs };
+        try
+        {
+            entry.Handle = new(ShaderCompiler.CreateShader(Device, vertexCode, false), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
+            entry.FragmentHandle = new(ShaderCompiler.CreateShader(Device, fragmentCode, true), h => SDL.ReleaseGPUShader(Device, h), _context.Handle);
+            return Add(entry);
+        }
+        catch { entry.FragmentHandle?.Dispose(); entry.Handle?.Dispose(); throw; }
     }
     /// <summary>Creates an executable pipeline borrowing a live compute shader.</summary>
     /// <param name="shader">A shader on this device.</param>
     /// <returns>A pipeline identity invalidated when its shader is freed.</returns>
-    public RID ComputePipelineCreate(RID shader) { Get(shader, Kind.Shader); return Add(new Entry { Kind = Kind.Pipeline, Shader = shader }); }
+    public RID ComputePipelineCreate(RID shader) { if (Get(shader, Kind.Shader).Stage != ShaderStage.Compute) throw new ArgumentException("A compute shader is required.", nameof(shader)); return Add(new Entry { Kind = Kind.Pipeline, Shader = shader }); }
     /// <summary>Reports whether a pipeline and its shader remain alive.</summary>
     /// <param name="pipeline">The identity to inspect.</param>
     /// <returns>True for a live executable pipeline of this device.</returns>
@@ -214,12 +254,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         {
             ArgumentNullException.ThrowIfNull(uniform); var ids = uniform.GetIDs();
             if (uniform.Binding < 0 || ids.Length == 0) throw new ArgumentException("Each supported binding needs one buffer.", nameof(uniforms));
-            var descriptor = program.Layout.SingleOrDefault(b => b.Set == shaderSet && b.Slot == uniform.Binding);
+            var descriptor = program.Layout.FirstOrDefault(b => b.Set == shaderSet && b.Slot == uniform.Binding);
             if (descriptor == default || descriptor.Type != uniform.UniformType) throw new ArgumentException("Descriptor does not match the shader.", nameof(uniforms));
-            ValidateBinding(descriptor, ids);
+            foreach (var stageBinding in program.Layout) if (stageBinding.Set == shaderSet && stageBinding.Slot == uniform.Binding) ValidateBinding(stageBinding, ids);
             if (!entry.Bindings.TryAdd(uniform.Binding, ids)) throw new ArgumentException("Duplicate descriptor binding.", nameof(uniforms));
         }
-        if (program.Layout.Count(b => b.Set == shaderSet) != entry.Bindings.Count) throw new ArgumentException("The uniform set is incomplete.", nameof(uniforms));
+        if (program.Layout.Where(b => b.Set == shaderSet).Select(b => b.Slot).Distinct().Count() != entry.Bindings.Count) throw new ArgumentException("The uniform set is incomplete.", nameof(uniforms));
         return Add(entry);
     }
     /// <summary>Reports whether a set and every borrowed resource remain alive.</summary>
@@ -333,20 +373,21 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         IdleList(); var entry = Get(rid); CompleteSubmission();
         if (_command != 0 || _recordedReadbacks.Count != 0) { SubmitRecorded(); CompleteSubmission(); }
-        _entries.Remove(rid); entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
+        _entries.Remove(rid); entry.Handle?.Dispose(); entry.FragmentHandle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose(); entry.TextureScratch?.Dispose();
         DeliverReadbacks();
     }
     /// <inheritdoc />
-    protected override void ValidateDisposal() { if (_serverOwner is not null && !_serverOwner.DeviceClosing) throw new InvalidOperationException("The renderer owns this device lifetime."); Access(); if (_activeList != 0 && _serverOwner is null) throw new InvalidOperationException("End the compute list before disposing the device."); base.ValidateDisposal(); }
+    protected override void ValidateDisposal() { if (_serverOwner is not null && !_serverOwner.DeviceClosing) throw new InvalidOperationException("The renderer owns this device lifetime."); Access(); if (_activeList != 0 && _serverOwner is null) throw new InvalidOperationException("End the command list before disposing the device."); base.ValidateDisposal(); }
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            if (_drawPass != 0) { SDL.EndGPURenderPass(_drawPass); _drawPass = 0; }
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
-            foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
-            _entries.Clear(); _sets.Clear(); _pipeline = null; _activeList = 0; CancelReadbacks(); _context.Dispose();
+            foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.FragmentHandle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); e.TextureScratch?.Dispose(); }
+            _entries.Clear(); _sets.Clear(); _pipeline = null; _drawPass = 0; _drawTarget = null; _graphicsPipeline = null; _drawVertices = null; _drawIndices = null; _vertexFormats.Clear(); _framebufferFormats.Clear(); _activeList = 0; CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);
     }

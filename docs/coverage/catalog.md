@@ -669,14 +669,14 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Quaternion](classes/Quaternion.md) | — | Excluded | 43 |
 | [RDAccelerationStructureGeometry](classes/RDAccelerationStructureGeometry.md) | RefCounted | Excluded | 9 |
 | [RDAccelerationStructureInstance](classes/RDAccelerationStructureInstance.md) | RefCounted | Excluded | 6 |
-| [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Blocked | 3 |
+| [RDAttachmentFormat](classes/RDAttachmentFormat.md) | RefCounted | Partial | 3 |
 | [RDFramebufferPass](classes/RDFramebufferPass.md) | RefCounted | Blocked | 6 |
 | [RDHitGroup](classes/RDHitGroup.md) | RefCounted | Excluded | 3 |
-| [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Blocked | 4 |
-| [RDPipelineColorBlendStateAttachment](classes/RDPipelineColorBlendStateAttachment.md) | RefCounted | Blocked | 12 |
+| [RDPipelineColorBlendState](classes/RDPipelineColorBlendState.md) | RefCounted | Partial | 4 |
+| [RDPipelineColorBlendStateAttachment](classes/RDPipelineColorBlendStateAttachment.md) | RefCounted | Implemented | 12 |
 | [RDPipelineDepthStencilState](classes/RDPipelineDepthStencilState.md) | RefCounted | Blocked | 21 |
 | [RDPipelineMultisampleState](classes/RDPipelineMultisampleState.md) | RefCounted | Blocked | 6 |
-| [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Blocked | 11 |
+| [RDPipelineRasterizationState](classes/RDPipelineRasterizationState.md) | RefCounted | Partial | 11 |
 | [RDPipelineShader](classes/RDPipelineShader.md) | RefCounted | Blocked | 2 |
 | [RDPipelineSpecializationConstant](classes/RDPipelineSpecializationConstant.md) | RefCounted | Blocked | 2 |
 | [RDSamplerState](classes/RDSamplerState.md) | RefCounted | Partial | 15 |
@@ -686,7 +686,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RDTextureFormat](classes/RDTextureFormat.md) | RefCounted | Partial | 13 |
 | [RDTextureView](classes/RDTextureView.md) | RefCounted | Partial | 5 |
 | [RDUniform](classes/RDUniform.md) | RefCounted | Implemented | 5 |
-| [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Blocked | 6 |
+| [RDVertexAttribute](classes/RDVertexAttribute.md) | RefCounted | Implemented | 6 |
 | [RID](classes/RID.md) | — | Implemented | 10 |
 | [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Implemented | 9 |
 | [Range](classes/Range.md) | Control | Implemented | 17 |

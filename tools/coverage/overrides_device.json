@@ -4,7 +4,7 @@
       "godot": "class:RDShaderSPIRV",
       "electron2d": "T:Electron2D.RDShaderSPIRV",
       "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Specialization, dynamic descriptors, graphics and broader device roles remain integration gaps."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Geometry/tessellation stages require a backend stage adapter; raytracing stages are excluded by ADR 0001."
     },
     {
       "godot": "class:RDUniform",
@@ -16,13 +16,13 @@
       "godot": "class:RenderingDevice",
       "electron2d": "T:Electron2D.RenderingDevice",
       "state": "Partial",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified. Specialization, dynamic descriptors, graphics and broader device roles remain integration gaps. The active GPU renderer also retains this device and submits its image/compute work automatically before direct canvas consumers; explicit Submit/Sync/disposal remain local-only."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil/MSAA/multiview/subpasses, push constants, specialization, geometry/tessellation and further device roles retain precise prerequisites."
     },
     {
       "godot": "RenderingDevice::enum:ShaderStage",
       "electron2d": "T:Electron2D.RenderingDevice.ShaderStage",
       "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RenderingDevice::enum:UniformType",
@@ -34,7 +34,7 @@
       "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE",
       "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Compute()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE",
@@ -111,26 +111,26 @@
     {
       "godot": "RDShaderSPIRV::method:get_stage_bytecode(int:RenderingDevice.ShaderStage)",
       "electron2d": "method:Electron2D.RDShaderSPIRV.GetStageBytecode(Electron2D.RenderingDevice.ShaderStage)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDShaderSPIRV::method:get_stage_compile_error(int:RenderingDevice.ShaderStage)",
       "electron2d": "method:Electron2D.RDShaderSPIRV.GetStageCompileError(Electron2D.RenderingDevice.ShaderStage)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDShaderSPIRV::method:set_stage_bytecode(int:RenderingDevice.ShaderStage,PackedByteArray:)",
       "electron2d": "method:Electron2D.RDShaderSPIRV.SetStageBytecode(Electron2D.RenderingDevice.ShaderStage,System.Byte[])",
-      "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
       "electron2d": "method:Electron2D.RDShaderSPIRV.SetStageCompileError(Electron2D.RenderingDevice.ShaderStage,System.String)",
-      "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDUniform::method:add_id(RID:)",
@@ -147,12 +147,6 @@
     {
       "godot": "RDUniform::method:get_ids()",
       "electron2d": "method:Electron2D.RDUniform.GetIDs()",
-      "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
-    },
-    {
-      "godot": "RenderingDevice::method:buffer_get_data(RID:,int:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.BufferGetData(Electron2D.RID,System.Span<System.Byte>,System.UInt32)",
       "state": "Implemented",
       "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
     },
@@ -232,7 +226,7 @@
       "godot": "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
       "electron2d": "method:Electron2D.RenderingDevice.ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV,System.String)",
       "state": "Partial",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Compute and paired vertex/fragment modules execute. Geometry/tessellation stages require a backend stage adapter; raytracing stages remain excluded by ADR 0001."
     },
     {
       "godot": "RenderingDevice::method:storage_buffer_create(int:,PackedByteArray:,int:RenderingDevice.StorageBufferUsage,int:RenderingDevice.BufferCreationBits)",
@@ -280,13 +274,13 @@
       "godot": "RDShaderSPIRV::property:bytecode_compute",
       "electron2d": "property:Electron2D.RDShaderSPIRV.BytecodeCompute()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDShaderSPIRV::property:compile_error_compute",
       "electron2d": "property:Electron2D.RDShaderSPIRV.CompileErrorCompute()",
       "state": "Implemented",
-      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
     },
     {
       "godot": "RDUniform::property:binding",
@@ -2120,19 +2114,7 @@
     },
     {
       "godot": "RenderingDevice::method:texture_get_data(RID:,int:)",
-      "electron2d": "method:Electron2D.RenderingDevice.TextureGetData(Electron2D.RID,System.UInt32)",
-      "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
-    },
-    {
-      "godot": "RenderingDevice::method:texture_get_data(RID:,int:)",
       "electron2d": "method:Electron2D.RenderingDevice.TextureGetData(Electron2D.RID,System.UInt32,System.Span<System.Byte>)",
-      "state": "Implemented",
-      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
-    },
-    {
-      "godot": "RenderingDevice::method:texture_get_data_async(RID:,int:,Callable:)",
-      "electron2d": "method:Electron2D.RenderingDevice.TextureGetDataAsync(Electron2D.RID,System.UInt32,System.Action<System.Byte[]>)",
       "state": "Implemented",
       "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
     },
@@ -2225,6 +2207,865 @@
       "electron2d": "method:Electron2D.RenderingServer.GetRenderingDevice()",
       "state": "Implemented",
       "reason": "ADRs 0028/0095: static access retains one renderer-owned GPU device per session, returns null for absent/compatibility rendering, submits after canvas authoring and completes queued reads before FramePostDraw; resources retain inherited managed scene-local metadata with default false. Native frame/lifecycle/error fixtures execute."
+    },
+    {
+      "godot": "class:RDAttachmentFormat",
+      "electron2d": "T:Electron2D.RDAttachmentFormat",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+    },
+    {
+      "godot": "RDAttachmentFormat::property:format",
+      "electron2d": "property:Electron2D.RDAttachmentFormat.Format()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDAttachmentFormat::property:samples",
+      "electron2d": "property:Electron2D.RDAttachmentFormat.Samples()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+    },
+    {
+      "godot": "RDAttachmentFormat::property:usage_flags",
+      "electron2d": "property:Electron2D.RDAttachmentFormat.UsageFlags()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:RDPipelineColorBlendState",
+      "electron2d": "T:Electron2D.RDPipelineColorBlendState",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support."
+    },
+    {
+      "godot": "RDPipelineColorBlendState::property:attachments",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendState.Attachments()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendState::property:blend_constant",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendState.BlendConstant()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:RDPipelineColorBlendStateAttachment",
+      "electron2d": "T:Electron2D.RDPipelineColorBlendStateAttachment",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::method:set_as_mix()",
+      "electron2d": "method:Electron2D.RDPipelineColorBlendStateAttachment.SetAsMix()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:alpha_blend_op",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.AlphaBlendOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:color_blend_op",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.ColorBlendOp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:dst_alpha_blend_factor",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.DstAlphaBlendFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:dst_color_blend_factor",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.DstColorBlendFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:enable_blend",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.EnableBlend()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:src_alpha_blend_factor",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.SrcAlphaBlendFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:src_color_blend_factor",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.SrcColorBlendFactor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:write_a",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteA()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:write_b",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteB()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:write_g",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteG()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineColorBlendStateAttachment::property:write_r",
+      "electron2d": "property:Electron2D.RDPipelineColorBlendStateAttachment.WriteR()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:RDPipelineRasterizationState",
+      "electron2d": "T:Electron2D.RDPipelineRasterizationState",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:cull_mode",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.CullMode()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:enable_depth_clamp",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.EnableDepthClamp()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:front_face",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.FrontFace()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDPipelineRasterizationState::property:wireframe",
+      "electron2d": "property:Electron2D.RDPipelineRasterizationState.Wireframe()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:bytecode_fragment",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.BytecodeFragment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:bytecode_vertex",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.BytecodeVertex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:compile_error_fragment",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.CompileErrorFragment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDShaderSPIRV::property:compile_error_vertex",
+      "electron2d": "property:Electron2D.RDShaderSPIRV.CompileErrorVertex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "class:RDVertexAttribute",
+      "electron2d": "T:Electron2D.RDVertexAttribute",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:binding",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Binding()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:format",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Format()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:frequency",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Frequency()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:location",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Location()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:offset",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Offset()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RDVertexAttribute::property:stride",
+      "electron2d": "property:Electron2D.RDVertexAttribute.Stride()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:BlendFactor",
+      "electron2d": "T:Electron2D.RenderingDevice.BlendFactor",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:BlendOperation",
+      "electron2d": "T:Electron2D.RenderingDevice.BlendOperation",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:BufferCreationBits",
+      "electron2d": "T:Electron2D.RenderingDevice.BufferCreationBits",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:DrawFlags",
+      "electron2d": "T:Electron2D.RenderingDevice.DrawFlags",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:IndexBufferFormat",
+      "electron2d": "T:Electron2D.RenderingDevice.IndexBufferFormat",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:PipelineDynamicStateFlags",
+      "electron2d": "T:Electron2D.RenderingDevice.PipelineDynamicStateFlags",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:PolygonCullMode",
+      "electron2d": "T:Electron2D.RenderingDevice.PolygonCullMode",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:PolygonFrontFace",
+      "electron2d": "T:Electron2D.RenderingDevice.PolygonFrontFace",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:RenderPrimitive",
+      "electron2d": "T:Electron2D.RenderingDevice.RenderPrimitive",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:TextureSamples",
+      "electron2d": "T:Electron2D.RenderingDevice.TextureSamples",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum:VertexFrequency",
+      "electron2d": "T:Electron2D.RenderingDevice.VertexFrequency",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_CONSTANT_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.ConstantColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_DST_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.DstAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_DST_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.DstColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.One()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusConstantColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_DST_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusDstAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_DST_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusDstColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrcAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.OneMinusSrcColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_ALPHA",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcAlpha()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_ALPHA_SATURATE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcAlphaSaturate()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_COLOR",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.SrcColor()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ZERO",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.Zero()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_ADD",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.Add()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MAXIMUM",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.Maximum()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MINIMUM",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.Minimum()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_REVERSE_SUBTRACT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.ReverseSubtract()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_SUBTRACT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.Subtract()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_AS_STORAGE_BIT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BufferCreationBits.AsStorage()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_0",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor0()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_1",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor1()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_2",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor2()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_3",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor3()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_4",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor4()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_5",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor5()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_6",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor6()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_7",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColor7()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_ALL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColorAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_MASK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.ClearColorAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_DEFAULT_ALL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.DefaultAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_0",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor0()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_1",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor1()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_2",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor2()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_3",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor3()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_4",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor4()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_5",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor5()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_6",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor6()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_7",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColor7()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_ALL",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColorAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_MASK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.DrawFlags.IgnoreColorAll()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT16",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.IndexBufferFormat.UInt16()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT32",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.IndexBufferFormat.UInt32()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_BLEND_CONSTANTS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PipelineDynamicStateFlags.BlendConstants()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_BACK",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Back()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_DISABLED",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Disabled()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_FRONT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PolygonCullMode.Front()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PolygonFrontFace.POLYGON_FRONT_FACE_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PolygonFrontFace.Clockwise()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:PolygonFrontFace.POLYGON_FRONT_FACE_COUNTER_CLOCKWISE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.PolygonFrontFace.CounterClockwise()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINES",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Lines()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINESTRIPS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.LineStrips()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_POINTS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Points()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLES",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Triangles()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLE_STRIPS",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.TriangleStrips()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_RESTART_INDEX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.TriangleStripsWithRestartIndex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_FRAGMENT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Fragment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_TESSELATION_CONTROL_BIT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Compute()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_VERTEX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Vertex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_VERTEX_BIT",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Fragment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_1",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples1()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_2",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples2()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_4",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples4()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_8",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples8()",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:VertexFrequency.VERTEX_FREQUENCY_INSTANCE",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.VertexFrequency.Instance()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:VertexFrequency.VERTEX_FREQUENCY_VERTEX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.VertexFrequency.Vertex()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBegin(Electron2D.RID,Electron2D.RenderingDevice.DrawFlags,System.ReadOnlySpan<Electron2D.Color>,Electron2D.Rect2)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil clear values require depth/stencil attachments and state. Breadcrumb diagnostics need the native capture-marker adapter; no ignored arguments are exposed."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_bind_index_array(int:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBindIndexArray(System.Int64,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_bind_render_pipeline(int:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBindRenderPipeline(System.Int64,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_bind_uniform_set(int:,RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBindUniformSet(System.Int64,Electron2D.RID,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_bind_vertex_array(int:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBindVertexArray(System.Int64,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_bind_vertex_buffers_format(int:,int:,int:,RID[]:,PackedInt64Array:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListBindVertexBuffersFormat(System.Int64,System.Int32,System.UInt32,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt32>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_disable_scissor(int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListDisableScissor(System.Int64)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_draw(int:,bool:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListDraw(System.Int64,System.Boolean,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_draw_indirect(int:,bool:,RID:,int:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListDrawIndirect(System.Int64,System.Boolean,Electron2D.RID,System.UInt32,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_enable_scissor(int:,Rect2:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListEnableScissor(System.Int64,Electron2D.Rect2)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_end()",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListEnd()",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:draw_list_set_blend_constants(int:,Color:)",
+      "electron2d": "method:Electron2D.RenderingDevice.DrawListSetBlendConstants(System.Int64,Electron2D.Color)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreate(System.ReadOnlySpan<Electron2D.RID>,System.Int32)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multiview requires layered attachment views and native view-index rendering; view_count is not an inert argument."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multisample/depth/stencil/multiview layouts require allocation/resolve and native view-index attachment integration."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatGetTextureSamples(System.Int32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_get_format(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferGetFormat(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_is_valid(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferIsValid(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:index_array_create(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.IndexArrayCreate(Electron2D.RID,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:index_buffer_create(int:,int:RenderingDevice.IndexBufferFormat,PackedByteArray:,bool:,int:RenderingDevice.BufferCreationBits)",
+      "electron2d": "method:Electron2D.RenderingDevice.IndexBufferCreate(System.UInt32,Electron2D.RenderingDevice.IndexBufferFormat,System.ReadOnlySpan<System.Byte>,System.Boolean,Electron2D.RenderingDevice.BufferCreationBits)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. AsStorage and strip restart execute. Device-address creation needs a native buffer-address shader interface; raytracing creation is excluded by ADR 0001."
+    },
+    {
+      "godot": "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)",
+      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Required multisample/depth-stencil descriptions depend on their first attachment/state slice; omitted specialization and extra dynamic-state arguments need executable module rewriting and native state adapters."
+    },
+    {
+      "godot": "RenderingDevice::method:render_pipeline_is_valid(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineIsValid(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:shader_get_vertex_input_attribute_mask(RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.ShaderGetVertexInputAttributeMask(Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:vertex_array_create(int:,int:,RID[]:,PackedInt64Array:)",
+      "electron2d": "method:Electron2D.RenderingDevice.VertexArrayCreate(System.UInt32,System.Int32,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt32>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:vertex_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)",
+      "electron2d": "method:Electron2D.RenderingDevice.VertexBufferCreate(System.UInt32,System.ReadOnlySpan<System.Byte>,Electron2D.RenderingDevice.BufferCreationBits)",
+      "state": "Partial",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. AsStorage executes. Device-address creation needs a native buffer-address shader interface; raytracing creation is excluded by ADR 0001."
+    },
+    {
+      "godot": "RenderingDevice::method:vertex_format_create(RDVertexAttribute[]:)",
+      "electron2d": "method:Electron2D.RenderingDevice.VertexFormatCreate(System.ReadOnlySpan<Electron2D.RDVertexAttribute>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_get_data(RID:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferGetData(Electron2D.RID,System.Span<System.Byte>,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_get_data(RID:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureGetData(Electron2D.RID,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_get_data_async(RID:,int:,Callable:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureGetDataAsync(Electron2D.RID,System.UInt32,System.Action<System.Byte[]>)",
+      "state": "Implemented",
+      "reason": "ADR 0028: executable local color image/array mip-chain upload, update, synchronous/queued readback, sampled sampler and writable image descriptors. Native GLSL/HLSL, scalar/format/array validation, filtering/LOD/addressing, lifetime and prepared managed-allocation checks run on Linux/Vulkan. Other platforms and native allocator behavior remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendFactor.Max()",
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.BlendOperation.Max()",
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.RenderPrimitive.Max()",
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.ShaderStage.Max()",
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_MAX",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Max()",
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
     }
   ],
   "extras": [
@@ -2432,63 +3273,65 @@
       "electron2d": "method:Electron2D.TextureLayeredRD.ValidateDisposal()",
       "reason": "Inherited managed Resource disposal hook enforces the bound rendering-device owner/submission lifetime without owning device pixels.",
       "adr": "0014, 0028"
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDAttachmentFormat..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDPipelineColorBlendState..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDPipelineColorBlendStateAttachment..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDPipelineRasterizationState..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDVertexAttribute..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDAttachmentFormat.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDPipelineColorBlendState.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDPipelineColorBlendStateAttachment.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDPipelineRasterizationState.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
+    },
+    {
+      "electron2d": "method:Electron2D.RDVertexAttribute.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed managed construction and inherited property-descriptor projection of copied device configuration; no separate game capability."
     }
   ],
   "statusGroups": [
     {
-      "state": "Excluded",
-      "reason": "Three-dimensional ray-tracing and acceleration-structure pipelines are outside the 2D product boundary (ADRs 0004/0028); no implementation trigger.",
-      "godot": [
-        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_LOW_MEMORY_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_OPAQUE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_NO_OPAQUE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_OPAQUE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT",
-        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FLIP_FACING_BIT",
-        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT",
-        "RenderingDevice::enum_value:Features.SUPPORTS_RAYTRACING_PIPELINE",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT_BIT",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT_BIT",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION_BIT",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN_BIT",
-        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_ACCELERATION_STRUCTURE",
-        "RenderingDevice::method:blas_build(RID:)",
-        "RenderingDevice::method:blas_create(RDAccelerationStructureGeometry[]:,int:RenderingDevice.AccelerationStructureFlagBits)",
-        "RenderingDevice::method:raytracing_list_begin()",
-        "RenderingDevice::method:raytracing_list_bind_raytracing_pipeline(int:,RID:)",
-        "RenderingDevice::method:raytracing_list_bind_uniform_set(int:,RID:,int:)",
-        "RenderingDevice::method:raytracing_list_end()",
-        "RenderingDevice::method:raytracing_list_set_push_constant(int:,PackedByteArray:,int:)",
-        "RenderingDevice::method:raytracing_list_trace_rays(int:,int:,RID:,int:,int:,int:)",
-        "RenderingDevice::method:raytracing_pipeline_create(RDPipelineShader[]:,RDPipelineShader[]:,RDHitGroup[]:,int:)",
-        "RenderingDevice::method:raytracing_pipeline_is_valid(RID:)",
-        "RenderingDevice::method:tlas_build(RID:,RDAccelerationStructureInstance[]:)",
-        "RenderingDevice::method:tlas_create(int:,int:RenderingDevice.AccelerationStructureFlagBits)"
-      ]
-    },
-    {
       "state": "Partial",
       "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified. This slice executes compute-stage storage/uniform buffers only. Specialized pipeline constants, dynamic/texture descriptors, additional buffer creation roles and other shader stages remain separate integration gaps; omitted optional parameters are not inert switches.",
       "godot": [
-        "class:RDShaderSPIRV",
-        "class:RenderingDevice",
-        "RenderingDevice::enum:ShaderStage",
         "RenderingDevice::enum:UniformType",
-        "RDShaderSPIRV::method:get_stage_bytecode(int:RenderingDevice.ShaderStage)",
-        "RDShaderSPIRV::method:get_stage_compile_error(int:RenderingDevice.ShaderStage)",
-        "RDShaderSPIRV::method:set_stage_bytecode(int:RenderingDevice.ShaderStage,PackedByteArray:)",
-        "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
         "RenderingDevice::method:compute_pipeline_create(RID:,RDPipelineSpecializationConstant[]:)",
-        "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)",
         "RenderingDevice::method:uniform_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)",
         "RenderingDevice::method:uniform_set_create(RDUniform[]:,RID:,int:)"
       ]
@@ -2498,7 +3341,6 @@
       "reason": "ADR 0028: executable owner-thread local compute, device-owned RIDs, copied SPIR-V buffer interfaces, descriptor remapping, ordered dispatch/barriers, explicit submit/sync/readback and validated lifetime. RenderingDeviceTests exercises real native computation and errors on Linux/Vulkan; other platforms remain unverified.",
       "godot": [
         "class:RDUniform",
-        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_IMAGE_BUFFER",
         "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_INPUT_ATTACHMENT",
@@ -2529,8 +3371,6 @@
         "RenderingDevice::method:sync()",
         "RenderingDevice::method:uniform_set_is_valid(RID:)",
         "RenderingServer::method:create_local_rendering_device()",
-        "RDShaderSPIRV::property:bytecode_compute",
-        "RDShaderSPIRV::property:compile_error_compute",
         "RDUniform::property:binding",
         "RDUniform::property:uniform_type"
       ]
@@ -2699,6 +3539,608 @@
         "TextureLayeredRD::property:texture_rd_rid"
       ],
       "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers execute automatic SPIR-V composition with validated total native sampler capacity; foreign platforms and native allocator behavior remain unverified."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_COMPACTION_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_ALLOW_UPDATE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_LOW_MEMORY_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_BUILD_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureFlagBits.ACCELERATION_STRUCTURE_PREFER_FAST_TRACE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_NO_DUPLICATE_ANY_HIT_INVOCATION_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureGeometryFlagBits.ACCELERATION_STRUCTURE_GEOMETRY_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_NO_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_FORCE_OPAQUE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FACING_CULL_DISABLE_BIT",
+        "RenderingDevice::enum_value:AccelerationStructureInstanceFlagBits.ACCELERATION_STRUCTURE_INSTANCE_TRIANGLE_FLIP_FACING_BIT",
+        "RenderingDevice::enum_value:Features.SUPPORTS_RAYTRACING_PIPELINE",
+        "RenderingDevice::enum_value:UniformType.UNIFORM_TYPE_ACCELERATION_STRUCTURE",
+        "RenderingDevice::method:blas_build(RID:)",
+        "RenderingDevice::method:blas_create(RDAccelerationStructureGeometry[]:,int:RenderingDevice.AccelerationStructureFlagBits)",
+        "RenderingDevice::method:raytracing_list_begin()",
+        "RenderingDevice::method:raytracing_list_bind_raytracing_pipeline(int:,RID:)",
+        "RenderingDevice::method:raytracing_list_bind_uniform_set(int:,RID:,int:)",
+        "RenderingDevice::method:raytracing_list_end()",
+        "RenderingDevice::method:raytracing_list_set_push_constant(int:,PackedByteArray:,int:)",
+        "RenderingDevice::method:raytracing_list_trace_rays(int:,int:,RID:,int:,int:,int:)",
+        "RenderingDevice::method:raytracing_pipeline_create(RDPipelineShader[]:,RDPipelineShader[]:,RDHitGroup[]:,int:)",
+        "RenderingDevice::method:raytracing_pipeline_is_valid(RID:)",
+        "RenderingDevice::method:tlas_build(RID:,RDAccelerationStructureInstance[]:)",
+        "RenderingDevice::method:tlas_create(int:,int:RenderingDevice.AccelerationStructureFlagBits)"
+      ],
+      "reason": "Three-dimensional ray-tracing and acceleration-structure pipelines are outside the 2D product boundary (ADRs 0004/0028); no implementation trigger."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineColorBlendState::property:enable_logic_op",
+        "RDPipelineColorBlendState::property:logic_op"
+      ],
+      "reason": "Trigger: first executable owning slice under ADR 0028. Logic operations require native per-target logic-operation support."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineRasterizationState::property:depth_bias_clamp",
+        "RDPipelineRasterizationState::property:depth_bias_constant_factor",
+        "RDPipelineRasterizationState::property:depth_bias_enabled",
+        "RDPipelineRasterizationState::property:depth_bias_slope_factor",
+        "RDPipelineRasterizationState::property:discard_primitives",
+        "RDPipelineRasterizationState::property:line_width",
+        "RDPipelineRasterizationState::property:patch_control_points"
+      ],
+      "reason": "Trigger: first executable owning slice under ADR 0028. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDShaderSPIRV::property:bytecode_any_hit",
+        "RDShaderSPIRV::property:bytecode_closest_hit",
+        "RDShaderSPIRV::property:bytecode_intersection",
+        "RDShaderSPIRV::property:bytecode_miss",
+        "RDShaderSPIRV::property:bytecode_raygen",
+        "RDShaderSPIRV::property:bytecode_tesselation_control",
+        "RDShaderSPIRV::property:bytecode_tesselation_evaluation",
+        "RDShaderSPIRV::property:compile_error_any_hit",
+        "RDShaderSPIRV::property:compile_error_closest_hit",
+        "RDShaderSPIRV::property:compile_error_intersection",
+        "RDShaderSPIRV::property:compile_error_miss",
+        "RDShaderSPIRV::property:compile_error_raygen",
+        "RDShaderSPIRV::property:compile_error_tesselation_control",
+        "RDShaderSPIRV::property:compile_error_tesselation_evaluation"
+      ],
+      "reason": "Trigger: first executable owning slice under ADR 0028. Geometry/tessellation stages require a backend stage adapter; raytracing stages are excluded by ADR 0001."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_CONSTANT_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC1_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC1_COLOR"
+      ],
+      "reason": "Trigger: first separate constant-alpha or dual-source per-target blending adapter slice (ADR 0028)."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_ACCELERATION_STRUCTURE_BUILD_INPUT_READ_ONLY_BIT"
+      ],
+      "reason": "ADR 0001: three-dimensional raytracing acceleration-structure creation is outside the 2D engine."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_DEVICE_ADDRESS_BIT"
+      ],
+      "reason": "Trigger: first native buffer-device-address shader interface slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_DEPTH",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_STENCIL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_DEPTH",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_STENCIL"
+      ],
+      "reason": "Trigger: first depth/stencil attachment and clear-state integration slice (ADR 0028)."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_BUFFER"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_BUFFER] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_COMPUTE_PIPELINE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_COMPUTE_PIPELINE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_DESCRIPTOR_SET"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_UNIFORM_SET] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_DEVICE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_LOGICAL_DEVICE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_IMAGE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_TEXTURE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_IMAGE_NATIVE_TEXTURE_FORMAT"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_TEXTURE_DATA_FORMAT] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_IMAGE_VIEW"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_TEXTURE_VIEW] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_INSTANCE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_TOPMOST_OBJECT] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_PHYSICAL_DEVICE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_PHYSICAL_DEVICE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_QUEUE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_COMMAND_QUEUE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_QUEUE_FAMILY_INDEX"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_QUEUE_FAMILY] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_RENDER_PIPELINE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_RENDER_PIPELINE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:DriverResource.DRIVER_RESOURCE_VULKAN_SAMPLER"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [constant DRIVER_RESOURCE_SAMPLER] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_CONTINUE",
+        "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_DISCARD",
+        "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_MAX",
+        "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_READ",
+        "RenderingDevice::enum_value:FinalAction.FINAL_ACTION_STORE"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Final actions are solved automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR_REGION",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CLEAR_REGION_CONTINUE",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_CONTINUE",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_DISCARD",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_DROP",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_KEEP",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_LOAD",
+        "RenderingDevice::enum_value:InitialAction.INITIAL_ACTION_MAX"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Initial actions are solved automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BIAS",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_DEPTH_BOUNDS",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_LINE_WIDTH",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_COMPARE_MASK",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_REFERENCE",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_STENCIL_WRITE_MASK"
+      ],
+      "reason": "Trigger: first native depth/stencil/raster state setters and attachment integration slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINESTRIPS_WITH_ADJACENCY",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINES_WITH_ADJACENCY",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TESSELATION_PATCH",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLES_WITH_ADJACENCY",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_AJACENCY"
+      ],
+      "reason": "Trigger: first geometry/tessellation stage adapter for adjacency/patch primitives slice (ADR 0028)."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_ANY_HIT_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_CLOSEST_HIT_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_INTERSECTION_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_MISS",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_MISS_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_RAYGEN_BIT"
+      ],
+      "reason": "ADR 0001: three-dimensional raytracing pipeline stages are outside the 2D engine."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_FRAGMENT_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_TESSELATION_CONTROL",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_TESSELATION_EVALUATION",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_TESSELATION_EVALUATION_BIT"
+      ],
+      "reason": "Trigger: first geometry/tessellation stage adapter and executable pipeline interface slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_16",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_32",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_64"
+      ],
+      "reason": "Trigger: first native MSAA allocation/resolve sample-count support slice (ADR 0028)."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::method:barrier(int:RenderingDevice.BarrierMask,int:RenderingDevice.BarrierMask)",
+        "RenderingDevice::method:full_barrier()"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Barriers are automatically inserted by RenderingDevice.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::method:draw_command_insert_label(String:,Color:)"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Inserting labels no longer applies due to command reordering.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::method:draw_list_begin_split(RID:,int:,int:RenderingDevice.InitialAction,int:RenderingDevice.FinalAction,int:RenderingDevice.InitialAction,int:RenderingDevice.FinalAction,PackedColorArray:,float:,int:,Rect2:,RID[]:)",
+        "RenderingDevice::method:draw_list_switch_to_next_pass_split(int:)"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Split draw lists are used automatically by RenderingDevice.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "RenderingDevice::method:texture_get_native_handle(RID:)"
+      ],
+      "reason": "ADR 0004: pinned deprecated=\"Use [method get_driver_resource] with [constant DRIVER_RESOURCE_TEXTURE] instead.\"; no public mirror or implementation trigger."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::method:draw_list_begin_for_screen(int:,Color:)"
+      ],
+      "reason": "Trigger: first renderer-owned swapchain acquisition, screen framebuffer formats and presentation ownership slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::method:draw_list_set_push_constant(int:,PackedByteArray:,int:)"
+      ],
+      "reason": "Trigger: first SPIR-V push-constant to reserved uniform-slot translation with copied bytes and both-stage limits slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::method:draw_list_switch_to_next_pass()",
+        "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
+        "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)"
+      ],
+      "reason": "Trigger: first RDFramebufferPass attachment lifetime, input-attachment shader translation and ordered subpass integration slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::method:framebuffer_create_empty(Vector2i:,int:RenderingDevice.TextureSamples,int:)",
+        "RenderingDevice::method:framebuffer_format_create_empty(int:RenderingDevice.TextureSamples)"
+      ],
+      "reason": "Trigger: first native attachmentless render-pass and raster-discard support slice (ADR 0028)."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RenderingDevice::method:screen_get_framebuffer_format(int:)"
+      ],
+      "reason": "Trigger: first renderer-owned swapchain screen layout and presentation ownership slice (ADR 0028)."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDShaderSPIRV"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Geometry/tessellation stages require a backend stage adapter; raytracing stages are excluded by ADR 0001."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RenderingDevice"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil/MSAA/multiview/subpasses, push constants, specialization, geometry/tessellation and further device roles retain precise prerequisites."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::enum:BlendFactor",
+        "RenderingDevice::enum:BufferCreationBits",
+        "RenderingDevice::enum:DrawFlags",
+        "RenderingDevice::enum:PipelineDynamicStateFlags",
+        "RenderingDevice::enum:RenderPrimitive",
+        "RenderingDevice::enum:ShaderStage",
+        "RenderingDevice::enum:TextureSamples"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDAttachmentFormat::property:format",
+        "RDAttachmentFormat::property:usage_flags",
+        "RDPipelineColorBlendState::property:attachments",
+        "RDPipelineColorBlendState::property:blend_constant",
+        "RDPipelineColorBlendStateAttachment::method:set_as_mix()",
+        "RDPipelineColorBlendStateAttachment::property:alpha_blend_op",
+        "RDPipelineColorBlendStateAttachment::property:color_blend_op",
+        "RDPipelineColorBlendStateAttachment::property:dst_alpha_blend_factor",
+        "RDPipelineColorBlendStateAttachment::property:dst_color_blend_factor",
+        "RDPipelineColorBlendStateAttachment::property:enable_blend",
+        "RDPipelineColorBlendStateAttachment::property:src_alpha_blend_factor",
+        "RDPipelineColorBlendStateAttachment::property:src_color_blend_factor",
+        "RDPipelineColorBlendStateAttachment::property:write_a",
+        "RDPipelineColorBlendStateAttachment::property:write_b",
+        "RDPipelineColorBlendStateAttachment::property:write_g",
+        "RDPipelineColorBlendStateAttachment::property:write_r",
+        "RDPipelineRasterizationState::property:cull_mode",
+        "RDPipelineRasterizationState::property:enable_depth_clamp",
+        "RDPipelineRasterizationState::property:front_face",
+        "RDPipelineRasterizationState::property:wireframe",
+        "RDShaderSPIRV::method:get_stage_bytecode(int:RenderingDevice.ShaderStage)",
+        "RDShaderSPIRV::method:get_stage_compile_error(int:RenderingDevice.ShaderStage)",
+        "RDShaderSPIRV::method:set_stage_bytecode(int:RenderingDevice.ShaderStage,PackedByteArray:)",
+        "RDShaderSPIRV::method:set_stage_compile_error(int:RenderingDevice.ShaderStage,String:)",
+        "RDShaderSPIRV::property:bytecode_compute",
+        "RDShaderSPIRV::property:bytecode_fragment",
+        "RDShaderSPIRV::property:bytecode_vertex",
+        "RDShaderSPIRV::property:compile_error_compute",
+        "RDShaderSPIRV::property:compile_error_fragment",
+        "RDShaderSPIRV::property:compile_error_vertex",
+        "RDVertexAttribute::property:binding",
+        "RDVertexAttribute::property:format",
+        "RDVertexAttribute::property:frequency",
+        "RDVertexAttribute::property:location",
+        "RDVertexAttribute::property:offset",
+        "RDVertexAttribute::property:stride",
+        "RenderingDevice::enum:BlendOperation",
+        "RenderingDevice::enum:IndexBufferFormat",
+        "RenderingDevice::enum:PolygonCullMode",
+        "RenderingDevice::enum:PolygonFrontFace",
+        "RenderingDevice::enum:VertexFrequency",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_CONSTANT_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_DST_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_DST_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_CONSTANT_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_DST_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_DST_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ONE_MINUS_SRC_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_ALPHA",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_ALPHA_SATURATE",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_SRC_COLOR",
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_ZERO",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_ADD",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MAXIMUM",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MINIMUM",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_REVERSE_SUBTRACT",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_SUBTRACT",
+        "RenderingDevice::enum_value:BufferCreationBits.BUFFER_CREATION_AS_STORAGE_BIT",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_0",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_1",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_2",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_3",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_4",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_5",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_6",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_7",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_CLEAR_COLOR_MASK",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_DEFAULT_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_0",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_1",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_2",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_3",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_4",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_5",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_6",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_7",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_ALL",
+        "RenderingDevice::enum_value:DrawFlags.DRAW_IGNORE_COLOR_MASK",
+        "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT16",
+        "RenderingDevice::enum_value:IndexBufferFormat.INDEX_BUFFER_FORMAT_UINT32",
+        "RenderingDevice::enum_value:PipelineDynamicStateFlags.DYNAMIC_STATE_BLEND_CONSTANTS",
+        "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_BACK",
+        "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_DISABLED",
+        "RenderingDevice::enum_value:PolygonCullMode.POLYGON_CULL_FRONT",
+        "RenderingDevice::enum_value:PolygonFrontFace.POLYGON_FRONT_FACE_CLOCKWISE",
+        "RenderingDevice::enum_value:PolygonFrontFace.POLYGON_FRONT_FACE_COUNTER_CLOCKWISE",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINES",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_LINESTRIPS",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_POINTS",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLES",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLE_STRIPS",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_TRIANGLE_STRIPS_WITH_RESTART_INDEX",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_COMPUTE",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_FRAGMENT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_TESSELATION_CONTROL_BIT",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_VERTEX",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_VERTEX_BIT",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_1",
+        "RenderingDevice::enum_value:VertexFrequency.VERTEX_FREQUENCY_INSTANCE",
+        "RenderingDevice::enum_value:VertexFrequency.VERTEX_FREQUENCY_VERTEX",
+        "RenderingDevice::method:draw_list_bind_index_array(int:,RID:)",
+        "RenderingDevice::method:draw_list_bind_render_pipeline(int:,RID:)",
+        "RenderingDevice::method:draw_list_bind_uniform_set(int:,RID:,int:)",
+        "RenderingDevice::method:draw_list_bind_vertex_array(int:,RID:)",
+        "RenderingDevice::method:draw_list_bind_vertex_buffers_format(int:,int:,int:,RID[]:,PackedInt64Array:)",
+        "RenderingDevice::method:draw_list_disable_scissor(int:)",
+        "RenderingDevice::method:draw_list_draw(int:,bool:,int:,int:)",
+        "RenderingDevice::method:draw_list_draw_indirect(int:,bool:,RID:,int:,int:,int:)",
+        "RenderingDevice::method:draw_list_enable_scissor(int:,Rect2:)",
+        "RenderingDevice::method:draw_list_end()",
+        "RenderingDevice::method:draw_list_set_blend_constants(int:,Color:)",
+        "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)",
+        "RenderingDevice::method:framebuffer_get_format(RID:)",
+        "RenderingDevice::method:framebuffer_is_valid(RID:)",
+        "RenderingDevice::method:index_array_create(RID:,int:,int:)",
+        "RenderingDevice::method:render_pipeline_is_valid(RID:)",
+        "RenderingDevice::method:shader_get_vertex_input_attribute_mask(RID:)",
+        "RenderingDevice::method:vertex_array_create(int:,int:,RID[]:,PackedInt64Array:)",
+        "RenderingDevice::method:vertex_format_create(RDVertexAttribute[]:)",
+        "class:RDPipelineColorBlendStateAttachment",
+        "class:RDVertexAttribute"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Compute and paired vertex/fragment modules execute. Geometry/tessellation stages require a backend stage adapter; raytracing stages remain excluded by ADR 0001."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RDAttachmentFormat::property:samples",
+        "class:RDAttachmentFormat"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDPipelineColorBlendState"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Logic operations require native per-target logic-operation support."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDPipelineRasterizationState"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth bias requires the first depth attachment/state slice. Wide lines, raster discard and patch control require native raster/geometry adapters."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_2",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_4",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_8"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:draw_list_begin(RID:,int:RenderingDevice.DrawFlags,PackedColorArray:,float:,int:,Rect2:,int:)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil clear values require depth/stencil attachments and state. Breadcrumb diagnostics need the native capture-marker adapter; no ignored arguments are exposed."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multiview requires layered attachment views and native view-index rendering; view_count is not an inert argument."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multisample/depth/stencil/multiview layouts require allocation/resolve and native view-index attachment integration."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:index_buffer_create(int:,int:RenderingDevice.IndexBufferFormat,PackedByteArray:,bool:,int:RenderingDevice.BufferCreationBits)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. AsStorage and strip restart execute. Device-address creation needs a native buffer-address shader interface; raytracing creation is excluded by ADR 0001."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Required multisample/depth-stencil descriptions depend on their first attachment/state slice; omitted specialization and extra dynamic-state arguments need executable module rewriting and native state adapters."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:vertex_buffer_create(int:,PackedByteArray:,int:RenderingDevice.BufferCreationBits)"
+      ],
+      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. AsStorage executes. Device-address creation needs a native buffer-address shader interface; raytracing creation is excluded by ADR 0001."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum_value:BlendFactor.BLEND_FACTOR_MAX",
+        "RenderingDevice::enum_value:BlendOperation.BLEND_OP_MAX",
+        "RenderingDevice::enum_value:RenderPrimitive.RENDER_PRIMITIVE_MAX",
+        "RenderingDevice::enum_value:ShaderStage.SHADER_STAGE_MAX",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_MAX"
+      ],
+      "reason": "ADR 0028: retained exclusive numeric extent, rejected as an executable selection."
     }
   ]
 }
