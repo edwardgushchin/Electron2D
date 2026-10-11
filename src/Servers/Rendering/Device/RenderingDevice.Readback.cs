@@ -9,6 +9,7 @@ public sealed unsafe partial class RenderingDevice
         internal RenderHandle? Transfer;
         internal uint Capacity;
         internal bool Download;
+        internal TextureInfo? Texture;
         internal Memory<byte> Destination;
         internal byte[]? Data;
         internal Action<byte[]>? ArrayCallback;
@@ -60,23 +61,29 @@ public sealed unsafe partial class RenderingDevice
         QueueReadback(entry, destination, offsetBytes, null, null, callback);
     }
 
-    private void QueueReadback(Entry entry, Memory<byte> destination, uint offset, Action<byte[]>? arrayCallback, byte[]? data, Action? callback)
+    private void QueueReadback(Entry entry, Memory<byte> destination, uint offset, Action<byte[]>? arrayCallback, byte[]? data, Action? callback, uint layer = 0)
     {
-        var download = entry.Kind == Kind.Storage && !destination.IsEmpty;
+        var download = entry.Kind is Kind.Storage or Kind.Texture && !destination.IsEmpty;
         var command = download ? Commands() : 0;
         var request = _idleReadbacks.TryPop(out var idle) ? idle : new Readback();
         try
         {
-            request.Destination = destination; request.ArrayCallback = arrayCallback; request.Data = data; request.Callback = callback; request.Download = download;
+            request.Destination = destination; request.ArrayCallback = arrayCallback; request.Data = data; request.Callback = callback; request.Download = download; request.Texture = entry.Texture;
             if (download)
             {
-                if (request.Transfer is null || request.Capacity < destination.Length)
+                var capacity = entry.Texture?.TransferSize ?? (uint)destination.Length;
+                if (request.Transfer is null || request.Capacity < capacity)
                 {
-                    var transfer = Transfer((uint)destination.Length, SDL.GPUTransferBufferUsage.Download);
-                    request.Transfer?.Dispose(); request.Transfer = transfer; request.Capacity = (uint)destination.Length;
+                    var transfer = Transfer(capacity, SDL.GPUTransferBufferUsage.Download);
+                    request.Transfer?.Dispose(); request.Transfer = transfer; request.Capacity = capacity;
                 }
                 var pass = SDL.BeginGPUCopyPass(command); if (pass == 0) throw GPUPhysicsDevice.Failure("begin asynchronous buffer read");
-                try { SDL.DownloadFromGPUBuffer(pass, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offset, Size = (uint)destination.Length }, new() { TransferBuffer = request.Transfer.DangerousGetHandle() }); }
+                try
+                {
+                    if (entry.Texture is { } texture)
+                        for (var mip = 0; mip < texture.Mips; mip++) SDL.DownloadFromGPUTexture(pass, Region(entry, layer, mip), new() { TransferBuffer = request.Transfer.DangerousGetHandle(), Offset = texture.Offsets[mip] });
+                    else SDL.DownloadFromGPUBuffer(pass, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offset, Size = (uint)destination.Length }, new() { TransferBuffer = request.Transfer.DangerousGetHandle() });
+                }
                 finally { SDL.EndGPUCopyPass(pass); }
             }
             else if (entry.Kind == Kind.Uniform) entry.Data.AsSpan((int)offset, destination.Length).CopyTo(ReadbackDestination(destination));
@@ -92,7 +99,7 @@ public sealed unsafe partial class RenderingDevice
     }
     private void RecycleReadback(Readback request)
     {
-        request.Destination = default; request.ArrayCallback = null; request.Data = null; request.Callback = null; request.Download = false;
+        request.Destination = default; request.ArrayCallback = null; request.Data = null; request.Callback = null; request.Download = false; request.Texture = null;
         _idleReadbacks.Push(request);
     }
     private void CompleteSubmission()
@@ -110,7 +117,12 @@ public sealed unsafe partial class RenderingDevice
                 var destination = ReadbackDestination(request.Destination);
                 var pointer = SDL.MapGPUTransferBuffer(Device, request.Transfer!.DangerousGetHandle(), false);
                 if (pointer == 0) throw GPUPhysicsDevice.Failure("map asynchronous buffer read");
-                try { new ReadOnlySpan<byte>((void*)pointer, request.Destination.Length).CopyTo(destination); }
+                try
+                {
+                    if (request.Texture is { } texture)
+                        for (var mip = 0; mip < texture.Mips; mip++) new ReadOnlySpan<byte>((void*)(pointer + (nint)texture.Offsets[mip]), (int)texture.Sizes[mip]).CopyTo(destination.Slice((int)texture.PackedOffsets[mip], (int)texture.Sizes[mip]));
+                    else new ReadOnlySpan<byte>((void*)pointer, request.Destination.Length).CopyTo(destination);
+                }
                 finally { SDL.UnmapGPUTransferBuffer(Device, request.Transfer.DangerousGetHandle()); }
             }
             _completedReadbacks.Enqueue(new(request.ArrayCallback, request.Data, request.Callback));
@@ -130,7 +142,7 @@ public sealed unsafe partial class RenderingDevice
             }
         }
         finally { _deliveringReadbacks = false; }
-        if (errors is not null) throw new AggregateException("Asynchronous buffer callbacks failed.", errors);
+        if (errors is not null) throw new AggregateException("Asynchronous readback callbacks failed.", errors);
     }
     private void CancelReadbacks()
     {

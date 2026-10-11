@@ -4,8 +4,8 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1388 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
-2. Complete 1462 missing declarations in already represented type families; split each type by its documented dependency trigger.
+1. Close 1429 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+2. Complete 1215 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
 ## Existing type backlog
@@ -14,8 +14,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 
 | Godot class | Unimplemented members | Partial members |
 | --- | ---: | ---: |
-| [RenderingDevice](classes/RenderingDevice.md) | 521 | 7 |
 | [RenderingServer](classes/RenderingServer.md) | 428 | 30 |
+| [RenderingDevice](classes/RenderingDevice.md) | 274 | 21 |
 | [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | 133 | 0 |
 | [OS](classes/OS.md) | 94 | 6 |
 | [Node](classes/Node.md) | 58 | 63 |
@@ -48,6 +48,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [ItemList](classes/ItemList.md) | 0 | 19 |
 | [Line2D](classes/Line2D.md) | 0 | 14 |
 | [InputEventKey](classes/InputEventKey.md) | 0 | 10 |
+| [RDSamplerState](classes/RDSamplerState.md) | 0 | 10 |
+| [RDTextureFormat](classes/RDTextureFormat.md) | 0 | 9 |
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
@@ -62,6 +64,7 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [InputEventMouseMotion](classes/InputEventMouseMotion.md) | 0 | 5 |
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
+| [RDTextureView](classes/RDTextureView.md) | 0 | 5 |
 | [RigidBody2D](classes/RigidBody2D.md) | 0 | 5 |
 | [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | 0 | 3 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
@@ -97,8 +100,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | --- | ---: |
 | Trigger: first typed 2D visual-shader graph translation and shader-import slice (ADR 0028). | 92 |
 | Trigger: first self-hosted editor executable slice under ADR 0027. | 65 |
-| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 20 |
 | GUI: trigger is the first typed 2D GUI and theme slice after rendering (ADR 0028). | 19 |
+| Trigger: the owning portable RenderingDevice pipeline/resource integration under revised ADR 0028. Local compute buffers and dispatch are the first connected slice; device graphics/texture pipelines, additional descriptor kinds, source import and their caches require their executing consumers. Three-dimensional and ray-tracing operations remain outside the 2D product boundary. | 17 |
 | Trigger: an accepted typed scripting or extension-host contract and its first executable slice (ADR 0001). | 8 |
 | Trigger: first typed asset loader, scene-file format and import slice after a concrete format is selected (ADRs 0013 and 0023). | 8 |
 | Trigger: first Android or Web host-interoperability slice after the portable SDL host (ADR 0021). | 6 |

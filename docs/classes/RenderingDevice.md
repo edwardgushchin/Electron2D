@@ -8,7 +8,7 @@ Last updated: 2026-10-11
 
 ## Description
 
-A caller-owned, owner-thread compute device created by RenderingServer.CreateLocalRenderingDevice. It supports native compute independently of the canvas rendering method. Each device owns its buffer/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
+A caller-owned, owner-thread compute device created by RenderingServer.CreateLocalRenderingDevice. It supports native compute independently of the canvas rendering method. Each device owns its buffer/image/sampler/shader/pipeline/set RIDs; cross-device and freed identities reject. An active list is exclusive. End lists before submission, reads, frees or disposal; Submit starts recorded work, Sync waits, and BufferGetData synchronizes pending writes before returning. Disposal cancels unsubmitted commands and waits for submitted work. Buffer range/type, descriptor layout and thread/lifetime errors throw typed exceptions.
 
 ## Example
 
@@ -61,9 +61,19 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
 | `public System.Void Sync()` | Waits for submitted work, releases its fence and delivers completed readback callbacks. |
 | `public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)` | Creates a constant uniform buffer. |
-| `public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)` | Creates a copied set of validated buffer bindings. |
+| `public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)` | Creates a copied set of validated buffer/image/sampler bindings. |
 | `public System.Boolean UniformSetIsValid(Electron2D.RID uniformSet)` | Reports whether a set and every borrowed resource remain alive. |
 | `protected override System.Void ValidateDisposal()` | Overrides the inherited typed lifetime, property-metadata or Resource-copy hook. |
+| `public Electron2D.RID SamplerCreate(Electron2D.RDSamplerState state)` | Creates a device-owned sampler from copied filtering, addressing and LOD state. |
+| `public Electron2D.RID TextureCreate(Electron2D.RDTextureFormat format, Electron2D.RDTextureView view, System.ReadOnlySpan<System.Byte[]> data = default)` | Creates a device-owned two-dimensional image or image array with copied mip data. |
+| `public System.Byte[] TextureGetData(Electron2D.RID texture, System.UInt32 layer)` | Synchronizes and returns an independent tightly packed layer mip chain. |
+| `public System.Void TextureGetData(Electron2D.RID texture, System.UInt32 layer, System.Span<System.Byte> destination)` | Synchronizes and reads one layer mip chain into caller-owned storage. |
+| `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Action<System.Byte[]> callback)` | Queues a request-time layer snapshot and delivers an independent mip chain at local completion. |
+| `public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Memory<System.Byte> destination, System.Action callback)` | Queues a layer snapshot into reusable caller-owned storage. |
+| `public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)` | Copies the actual texture allocation description. |
+| `public System.Boolean TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureUsageBits usageFlags)` | Reports whether the selected format supports the requested two-dimensional texture usage. |
+| `public System.Boolean TextureIsValid(Electron2D.RID texture)` | Reports whether an identity is a live texture of this device. |
+| `public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)` | Updates one complete layer including every mip level. |
 
 ## Member descriptions
 
@@ -321,7 +331,7 @@ A device-owned buffer identity.
 public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)
 ```
 
-Creates a copied set of validated buffer bindings.
+Creates a copied set of validated buffer/image/sampler bindings.
 
 A set identity borrowing its shader and buffers.
 
@@ -378,3 +388,155 @@ The request records the snapshot before subsequent buffer updates or dispatches;
 [RenderingDeviceTests.Readback](../../tests/Electron2D.Tests/RenderingDeviceTests.Readback.cs) verifies real compute snapshots, source updates, independent retained arrays, caller storage, queue/transfer reuse, native owner-thread delivery, host/empty requests, invalid inputs, nested operations, freeing sources, callback failures and disposal. Prepare the largest range and concurrent count for zero managed infrastructure allocations with the Memory overload; output arrays are intentional allocations. This establishes Linux/Vulkan behavior; other platforms and native/driver allocator measurements remain unverified.
 
 Caller-defined MemoryManager accessors cannot reenter this device while its destination span is being acquired. Attempts to synchronize, mutate or dispose it throw InvalidOperationException before native mapping or state mutation. A failed destination acquisition retains the submitted request for retry or cancellation during disposal. The native readback fixture verifies this guard and invalidated caller memory.
+
+
+## Device image and sampler members
+
+<a id="member-fa590dca9f47"></a>
+### SamplerCreate(Electron2D.RDSamplerState)
+
+```csharp
+public Electron2D.RID SamplerCreate(Electron2D.RDSamplerState state)
+```
+
+Creates a device-owned sampler from copied filtering, addressing and LOD state.
+
+An owned sampler identity.
+
+`state`: Caller-owned sampler configuration.
+
+Throws `System.NotSupportedException`: Border, mirror-clamp or unnormalized sampling requires a shader adapter.
+<a id="member-e8e129d5af5f"></a>
+### TextureCreate(Electron2D.RDTextureFormat, Electron2D.RDTextureView, System.ReadOnlySpan<System.Byte[]>)
+
+```csharp
+public Electron2D.RID TextureCreate(Electron2D.RDTextureFormat format, Electron2D.RDTextureView view, System.ReadOnlySpan<System.Byte[]> data = default)
+```
+
+Creates a device-owned two-dimensional image or image array with copied mip data.
+
+A texture RID belonging to this device.
+
+`format`: Allocation description copied before returning.
+
+`view`: Initial view description; native format reinterpretation and swizzles require a view adapter.
+
+`data`: One tightly packed mip chain per layer, or empty for zero initialization.
+
+Throws `System.NotSupportedException`: The requested format, view or allocation role is not supported.
+<a id="member-a3f596fd4b89"></a>
+### TextureGetData(Electron2D.RID, System.UInt32)
+
+```csharp
+public System.Byte[] TextureGetData(Electron2D.RID texture, System.UInt32 layer)
+```
+
+Synchronizes and returns an independent tightly packed layer mip chain.
+
+A copied layer mip chain.
+
+`texture`: Live texture owned by this device.
+
+`layer`: Zero-based layer.
+<a id="member-5814cdb3b991"></a>
+### TextureGetData(Electron2D.RID, System.UInt32, System.Span<System.Byte>)
+
+```csharp
+public System.Void TextureGetData(Electron2D.RID texture, System.UInt32 layer, System.Span<System.Byte> destination)
+```
+
+Synchronizes and reads one layer mip chain into caller-owned storage.
+
+`texture`: Live texture owned by this device.
+
+`layer`: Zero-based layer.
+
+`destination`: Storage with the exact layer byte capacity.
+<a id="member-909d746c6568"></a>
+### TextureGetDataAsync(Electron2D.RID, System.UInt32, System.Action<System.Byte[]>)
+
+```csharp
+public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Action<System.Byte[]> callback)
+```
+
+Queues a request-time layer snapshot and delivers an independent mip chain at local completion.
+
+End the compute list, queue the read, Submit, then Sync. This shares buffer readback FIFO, callback-error, reentrancy and cancellation behavior. Later texture updates cannot replace the snapshot.
+
+`texture`: A live readable texture of this device.
+
+`layer`: Zero-based layer.
+
+`callback`: Receives tight mip-chain bytes on the creating thread.
+<a id="member-a05e2b60b188"></a>
+### TextureGetDataAsync(Electron2D.RID, System.UInt32, System.Memory<System.Byte>, System.Action)
+
+```csharp
+public System.Void TextureGetDataAsync(Electron2D.RID texture, System.UInt32 layer, System.Memory<System.Byte> destination, System.Action callback)
+```
+
+Queues a layer snapshot into reusable caller-owned storage.
+
+Preparation must cover the largest physical mip-chain size and peak concurrent request count. Device disposal cancels undelivered callbacks. Memory accessors cannot reenter this device.
+
+`texture`: A live readable texture of this device.
+
+`layer`: Zero-based layer.
+
+`destination`: Exact tight mip-chain capacity; keep valid and untouched until completion.
+
+`callback`: Runs after the destination is filled on the owner thread.
+<a id="member-5495c94e7264"></a>
+### TextureGetFormat(Electron2D.RID)
+
+```csharp
+public Electron2D.RDTextureFormat TextureGetFormat(Electron2D.RID texture)
+```
+
+Copies the actual texture allocation description.
+
+A caller-owned description independent of the allocation.
+
+`texture`: Live texture owned by this device.
+<a id="member-1c2cef0b1c48"></a>
+### TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat, Electron2D.RenderingDevice.TextureUsageBits)
+
+```csharp
+public System.Boolean TextureIsFormatSupportedForUsage(Electron2D.RenderingDevice.DataFormat format, Electron2D.RenderingDevice.TextureUsageBits usageFlags)
+```
+
+Reports whether the selected format supports the requested two-dimensional texture usage.
+
+False for formats or roles unavailable on this backend.
+
+`format`: A concrete format to query.
+
+`usageFlags`: Requested allocation and transfer roles.
+<a id="member-b883b624c27c"></a>
+### TextureIsValid(Electron2D.RID)
+
+```csharp
+public System.Boolean TextureIsValid(Electron2D.RID texture)
+```
+
+Reports whether an identity is a live texture of this device.
+
+True only for a live owned texture.
+
+`texture`: The identity to inspect.
+<a id="member-f116e57f58db"></a>
+### TextureUpdate(Electron2D.RID, System.UInt32, System.ReadOnlySpan<System.Byte>)
+
+```csharp
+public System.Void TextureUpdate(Electron2D.RID texture, System.UInt32 layer, System.ReadOnlySpan<System.Byte> data)
+```
+
+Updates one complete layer including every mip level.
+
+`texture`: Live texture owned by this device.
+
+`layer`: Zero-based layer.
+
+`data`: Exact tightly packed layer mip-chain bytes.
+
+Image data uses exact tightly packed mip chains per layer with hidden native offsets. The array and Memory asynchronous overloads share buffer readback completion, FIFO, cancellation and reentrancy rules. See [image profile and remaining dependencies](../components/local-compute.md#device-images-and-samplers).

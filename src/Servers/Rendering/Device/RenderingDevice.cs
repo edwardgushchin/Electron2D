@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <summary>A local, owner-thread compute device with owned buffer, shader and uniform-set identities.</summary>
 /// <remarks>Create through RenderingServer.CreateLocalRenderingDevice. Compute lists record in order; Submit
 /// starts execution and Sync waits. Buffer reads synchronize pending work. Resource identities never cross devices.
-/// This compute slice supports storage and uniform buffers; graphics pipelines and texture descriptors remain unavailable.</remarks>
+/// The compute profile supports buffers, sampled images/samplers and writable images; graphics pipelines remain unavailable.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
     /// <summary>Identifies the executable compute stage.</summary>
@@ -43,7 +43,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         /// <summary>A storage buffer with dynamic offset.</summary>
         StorageBufferDynamic = 11
     }
-    private enum Kind { Storage, Uniform, Shader, Pipeline, Set }
+    private enum Kind { Storage, Uniform, Shader, Pipeline, Set, Texture, Sampler }
     private sealed class Entry
     {
         internal Kind Kind;
@@ -51,11 +51,13 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         internal byte[] Data = [];
         internal uint Size;
         internal StorageBufferUsage Usage;
+        internal TextureInfo? Texture;
+        internal bool LinearSampling;
         internal RID Shader;
         internal string Name = "";
         internal uint Set;
         internal Binding[] Layout = [];
-        internal Dictionary<int, RID> Bindings = [];
+        internal Dictionary<int, RID[]> Bindings = [];
     }
     private readonly GPUPhysicsDevice _context = new();
     private readonly Dictionary<RID, Entry> _entries = [];
@@ -197,7 +199,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <returns>True for a live executable pipeline of this device.</returns>
     public bool ComputePipelineIsValid(RID pipeline) { Access(); return _entries.TryGetValue(pipeline, out var e) && e.Kind == Kind.Pipeline && _entries.ContainsKey(e.Shader); }
 
-    /// <summary>Creates a copied set of validated buffer bindings.</summary>
+    /// <summary>Creates a copied set of validated buffer, sampled-image and writable-image bindings.</summary>
     /// <param name="uniforms">Descriptors with one buffer identity per binding.</param>
     /// <param name="shader">The shader whose layout owns this set.</param>
     /// <param name="shaderSet">The shader descriptor-set number.</param>
@@ -208,11 +210,11 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         foreach (var uniform in uniforms)
         {
             ArgumentNullException.ThrowIfNull(uniform); var ids = uniform.GetIDs();
-            if (uniform.Binding < 0 || ids.Length != 1) throw new ArgumentException("Each supported binding needs one buffer.", nameof(uniforms));
+            if (uniform.Binding < 0 || ids.Length == 0) throw new ArgumentException("Each supported binding needs one buffer.", nameof(uniforms));
             var descriptor = program.Layout.SingleOrDefault(b => b.Set == shaderSet && b.Slot == uniform.Binding);
             if (descriptor == default || descriptor.Type != uniform.UniformType) throw new ArgumentException("Descriptor does not match the shader.", nameof(uniforms));
-            Get(ids[0], uniform.UniformType == UniformType.UniformBuffer ? Kind.Uniform : Kind.Storage);
-            if (!entry.Bindings.TryAdd(uniform.Binding, ids[0])) throw new ArgumentException("Duplicate descriptor binding.", nameof(uniforms));
+            ValidateBinding(descriptor, ids);
+            if (!entry.Bindings.TryAdd(uniform.Binding, ids)) throw new ArgumentException("Duplicate descriptor binding.", nameof(uniforms));
         }
         if (program.Layout.Count(b => b.Set == shaderSet) != entry.Bindings.Count) throw new ArgumentException("The uniform set is incomplete.", nameof(uniforms));
         return Add(entry);
@@ -224,7 +226,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         Access();
         if (!_entries.TryGetValue(uniformSet, out var e) || e.Kind != Kind.Set || !_entries.ContainsKey(e.Shader)) return false;
-        foreach (var rid in e.Bindings.Values) if (!_entries.ContainsKey(rid)) return false;
+        foreach (var ids in e.Bindings.Values) foreach (var rid in ids) if (!_entries.ContainsKey(rid)) return false;
         return true;
     }
     /// <summary>Begins an owner-thread compute list.</summary>
@@ -259,16 +261,22 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     {
         if (_pipeline is null) throw new InvalidOperationException("Bind a compute pipeline first.");
         var buffers = stackalloc SDL.GPUStorageBufferReadWriteBinding[8]; var count = 0;
+        var images = stackalloc SDL.GPUStorageTextureReadWriteBinding[8]; var imageCount = 0;
+        var samplers = stackalloc SDL.GPUTextureSamplerBinding[16]; var samplerCount = 0;
         foreach (var descriptor in _pipeline.Layout)
         {
             if (!_sets.TryGetValue(descriptor.Set, out var set) || !ReferenceEquals(Get(set.Shader), _pipeline)) throw new InvalidOperationException("Bind each pipeline resource set first.");
-            var buffer = Get(set.Bindings[descriptor.Slot]);
-            if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
+            var ids = set.Bindings[descriptor.Slot];
+            var buffer = Get(ids[0]);
+            if (descriptor.Type == UniformType.Image) { images[descriptor.Native] = new() { Texture = buffer.Handle!.DangerousGetHandle() }; imageCount++; }
+            else if (descriptor.Type == UniformType.SamplerWithTexture) { samplers[descriptor.Native] = new() { Sampler = buffer.Handle!.DangerousGetHandle(), Texture = Get(ids[1]).Handle!.DangerousGetHandle() }; samplerCount++; }
+            else if (descriptor.Type == UniformType.StorageBuffer) { buffers[descriptor.Native] = new() { Buffer = buffer.Handle!.DangerousGetHandle() }; count++; }
             else fixed (byte* data = buffer.Data) SDL.PushGPUComputeUniformData(_command, (uint)descriptor.Native, (nint)data, buffer.Size);
         }
-        var pass = SDL.BeginGPUComputePass(_command, 0, 0, (nint)buffers, (uint)count);
+        var pass = SDL.BeginGPUComputePass(_command, (nint)images, (uint)imageCount, (nint)buffers, (uint)count);
         if (pass == 0) throw GPUPhysicsDevice.Failure("begin compute dispatch for " + _pipeline.Name);
         SDL.BindGPUComputePipeline(pass, _pipeline.Handle!.DangerousGetHandle());
+        if (samplerCount != 0) SDL.BindGPUComputeSamplers(pass, 0, (nint)samplers, (uint)samplerCount);
         if (indirect is null) SDL.DispatchGPUCompute(pass, xGroups, yGroups, zGroups);
         else SDL.DispatchGPUComputeIndirect(pass, indirect.Handle!.DangerousGetHandle(), offset);
         SDL.EndGPUComputePass(pass);
