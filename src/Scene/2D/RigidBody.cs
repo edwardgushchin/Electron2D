@@ -194,12 +194,21 @@ public partial class RigidBody : PhysicsBody
     }
 
     /// <summary>Gets or sets whether an idle body may sleep.</summary>
-    /// <remarks>Disabling automatic sleep wakes a dynamic body, including detached configuration.</remarks>
+    /// <remarks>Disabling automatic sleep wakes a dynamic body, including detached direct server configuration.
+    /// Assignment rejects during a borrowed numerical implementation call before changing configuration.</remarks>
     /// <value>True by default.</value>
+    /// <exception cref="InvalidOperationException">Assignment is off the scene owner thread or inside a borrowed numerical implementation call.</exception>
     public bool CanSleep
     {
         get { ThrowIfDisposed(); return _canSleep; }
-        set { EnsureMutable(); _canSleep = value; if (HasBackend) Backend.SetCanSleep(value); else if (!value && !_freeze) _sleeping = false; }
+        set
+        {
+            EnsureMutable(); Space?.EnsureImplementationWriteAccess();
+            _canSleep = value;
+            if (HasBackend) Backend.SetCanSleep(value);
+            if (!value && HasServerMode && EffectiveBodyMode is PhysicsServer.BodyMode.Rigid or PhysicsServer.BodyMode.RigidLinear) SetServerSleeping(false);
+            else if (!value && !_freeze) _sleeping = false;
+        }
     }
 
     /// <summary>Gets or sets whether the body is currently asleep.</summary>

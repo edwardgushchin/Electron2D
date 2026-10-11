@@ -31,7 +31,7 @@ subclasses and PhysicsDirectBodyState.
 | Operation/state | Contract |
 | --- | --- |
 | `Owners`, `Space`, `Backend` | Resolve the live scene/server owner and its attachment adapter. |
-| `GetTransform`/`SetTransform`, velocity/sleep pairs, `SetAxisVelocity`, `RestoreSceneState` | Shared typed state, static-support wakeup and role-specific retained configuration. |
+| `GetTransform`/`SetTransform`, velocity/sleep pairs, `SetAxisVelocity`, `RestoreSceneState` | Shared typed state, non-preparing reads, numerical write guards, static-support wakeup and role-specific retained configuration; disabling sleep wakes detached/live direct dynamic scene profiles. |
 | `EnsureMutable`, `GetView`, `InvalidateView`, `ValidateView` | Enforce world phase/current attachment identity; replace a disposed view and invalidate all older attachments. |
 | `View*`, `CaptureViewContacts` | Forward live state/contact capture through the validated attachment adapter; retain no concrete solver references. |
 | `ApplyMassProfile`, `SetMassProfile`, `SetAttachedMassProfile`, `MassProperties` | Share profile validation and scene projection; retain mass, inertia and center in scene units. Detached calls reuse PhysicsMass.Geometry; attached compilation belongs to the adapter. |

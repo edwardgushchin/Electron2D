@@ -1,6 +1,6 @@
 # Entity
 
-Last updated: 2026-10-07
+Last updated: 2026-10-11
 
 **Inherits:** [CanvasItem](CanvasItem.md)
 
@@ -504,3 +504,5 @@ Transform assignments commit immediately, including equal values. Enabled local 
 CanvasGroup and BackBufferCopy now derive directly from Entity, preserving the separate spatial canvas branch and exact typed placement/factory rules. See [composition](../components/canvas-rendering.md#group-composition-and-screen-snapshots).
 
 CPUParticles is an implemented spatial subclass. It inherits logical positioning and lifecycle, while its default world drawing retains emitted canvas positions independently of later emitter transforms. See [CPU particles](CPUParticles.md).
+
+Inherited transform setters on a physics body reject during a borrowed numerical implementation call before changing pose. This includes local/global transform, translation, rotation, scale, skew and movement helpers. Ordinary scene and force/state callbacks retain transform access.

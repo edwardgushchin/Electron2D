@@ -2069,6 +2069,56 @@
       "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDampMode(Electron2D.RID)",
       "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetTransform(Electron2D.RID)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearVelocity(Electron2D.RID)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularVelocity(Electron2D.RID)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetSleeping(Electron2D.RID)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCanSleep(Electron2D.RID)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetTransform(Electron2D.RID,Electron2D.Transform)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetLinearVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetAngularVelocity(Electron2D.RID,System.Single)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetSleeping(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetCanSleep(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
     }
   ],
   "extras": [
@@ -6800,6 +6850,14 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0063/0075/0103: all four modes execute for scene/raw body RIDs through the selected implementation. Independent public-only and CPU/GPU consumers verify all five scene siblings, initial/live mode authoring, kilogram mass, impulses, velocities, static surfaces, kinematic targets, sleep, owner/numerical guards, reentry, checkpoints, portable state and zero warmed full frames. Direct scene modes retain an independent runtime profile; configured scene role edits restore scene control and MakeStatic temporarily overrides it. Complete numerical-extension and final platform/performance acceptance remain separate gates."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_state(RID:,int:PhysicsServer2D.BodyState)",
+        "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
     }
   ]
 }

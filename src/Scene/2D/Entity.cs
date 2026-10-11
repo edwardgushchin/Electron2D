@@ -3,7 +3,8 @@ namespace Electron2D;
 /// <summary>A spatial canvas node with position, rotation, scale and skew.</summary>
 /// <remarks>Use this node as an empty spatial parent or derive a drawable game object from it. Transform setters
 /// commit immediately, including equal assignments. Enabled local notifications are synchronous while attached;
-/// global notifications coalesce until scene delivery or ForceUpdateTransform.</remarks>
+/// global notifications coalesce until scene delivery or ForceUpdateTransform. A physics body rejects transform
+/// assignments from a borrowed numerical implementation call before changing its pose.</remarks>
 public class Entity : CanvasItem
 {
     /// <summary>Creates a detached spatial node with an identity transform.</summary>
@@ -552,6 +553,7 @@ public class Entity : CanvasItem
 
     private void SetTransform(Transform transform)
     {
+        if (this is PhysicsBody body) body.Space?.EnsureImplementationWriteAccess();
         EnsureFinite(transform, nameof(transform));
 
         _transform = transform;

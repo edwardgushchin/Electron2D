@@ -337,9 +337,11 @@ PhysicsServer now shares transform, linear/angular velocity, sleeping, automatic
 sleep permission and axis velocity with scene bodies and direct views. Raw
 kinematic targets execute along a path on the next nonzero active step while
 virtual surface velocity stays separate. PhysicsServerStateTests exercises CPU/GPU
-state, reentry, wakeup, guards and warmed allocation. Remaining server identity,
-filter getters, process/shape type and backend registration operations are still
-separate gaps in the full completion boundary.
+state, reentry, wakeup, guards and warmed allocation. The separate registered
+consumer exercises all five typed state pairs on raw RIDs and every scene body
+type, non-preparing initial/live reads, inherited pose/sleep borrowing guards and
+detached/live wake requests. Full numerical extension and performance acceptance
+remain open; see the registered adapter and contract audit.
 
 ## Complete reported contact impulses
 

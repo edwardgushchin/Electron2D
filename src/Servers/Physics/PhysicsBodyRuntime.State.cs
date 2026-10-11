@@ -112,6 +112,7 @@ internal sealed partial class PhysicsBodyRuntime
         {
             if (Space is not null) Backend.SetCanSleep(canSleep);
             _canSleep = canSleep;
+            if (!canSleep && Dynamic && owner.Scene is { HasServerMode: true } scene) scene.SetServerSleeping(false);
         }
     }
 

@@ -10,7 +10,7 @@ public static partial class BackendChecks
         protected override void SetCollisionExceptions(ReadOnlySpan<(RID From, RID To)> pairs) { Exceptions.Clear(); foreach (var p in pairs) Exceptions.Add(p); }
         internal RID Space => SpaceRID;
         internal bool Ready, Finished, FailSolve, FailInit, FailFinish, FailDisposal;
-        internal int Steps, Flushes, Synchronizations, Pairs, DebugReads;
+        internal int Steps, Flushes, Synchronizations, Pairs, DebugReads, StatePreparations;
         internal bool BadDebugCount, BadDebugPoint;
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook;
@@ -175,6 +175,7 @@ public static partial class BackendChecks
         protected override void Detach() { Detached = true; solver.Bodies.Remove(rid); }
         protected override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
         {
+            solver.StatePreparations++;
             Omit = configuration.OmitForces;
             if (Omit) { Force = default; Torque = 0; return; }
             Force += configuration.PendingForce; if (!Locked) Torque += configuration.PendingTorque;
