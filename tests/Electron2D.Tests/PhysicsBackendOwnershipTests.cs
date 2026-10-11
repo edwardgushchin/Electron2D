@@ -10,6 +10,7 @@ internal static partial class PhysicsBackendOwnershipTests
         NamedFactories(backend);
         ShapePairs(backend);
         ContactPublication(backend);
+        ForceInputs(backend);
         Lifecycle(backend);
         ExtensionBinding(backend);
         SelectedViews(backend);

@@ -20,6 +20,7 @@
     <Compile Include="../../examples/IterationRoutes/IterationAssets.cs;../../examples/IterationRoutes/IterationScene.cs" Link="Examples/IterationRoutes/%(Filename)%(Extension)" />
     <Compile Include="../../examples/AnimatedTiles/AnimatedTileScene.cs;../../examples/AnimatedTiles/AnimatedTileAssets.cs" Link="Examples/AnimatedTiles/%(Filename)%(Extension)" />
     <Compile Include="../../examples/TileRoutes/TileRouteScene.cs;../../examples/TileRoutes/TileRouteAssets.cs" Link="Examples/TileRoutes/%(Filename)%(Extension)" />
+    <Compile Include="../../examples/SceneTiles/SceneTileAssets.cs" Link="Examples/SceneTiles/SceneTileAssets.cs" />
     <Compile Include="../../examples/BakedRoutes/RouteScene.cs;../../examples/BakedRoutes/RouteAssets.cs" Link="Examples/BakedRoutes/%(Filename)%(Extension)" />
     <Compile Include="../../examples/AsyncGallery/Gallery.cs;../../examples/AsyncGallery/GalleryAssets.cs" Link="Examples/AsyncGallery/%(Filename)%(Extension)" />
     <Compile Include="../../examples/PhysicsNetwork/*.cs" Exclude="../../examples/PhysicsNetwork/Program.cs" Link="Examples/PhysicsNetwork/%(Filename)%(Extension)" />

@@ -18,7 +18,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (body is RigidBody or CharacterBody)
             {
                 if (!uniform) ResolveAreaFields(body.CollisionLayer, NativeCollider(body.Backend).Shapes, body.GlobalPosition, out gravity, out linearDamp, out angularDamp);
-                NativeCollider(body.Backend).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
+                ApplyBodyFields(runtime, gravity, linearDamp, angularDamp, delta);
                 if (body is CharacterBody character) character.SetResolvedGravity(runtime.Gravity);
             }
             runtime.ApplyBeforeStep(body);
@@ -35,7 +35,7 @@ internal sealed partial class CPUPhysicsWorldBackend
             if (body.Mode != PhysicsServer.BodyMode.Static)
             {
                 if (!uniform) ResolveAreaFields(body.CollisionLayer, NativeCollider(body.Backend).Shapes, body.GetTransform().Origin, out gravity, out linearDamp, out angularDamp);
-                NativeCollider(body.Backend).ApplyResolvedFields(runtime, gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
+                ApplyBodyFields(runtime, gravity, linearDamp, angularDamp, delta);
             }
             runtime.ApplyBeforeStep(null);
             body.PrepareMotion(delta);
@@ -44,6 +44,15 @@ internal sealed partial class CPUPhysicsWorldBackend
         }
         if (captureCallbacks) Space.PrepareCallbackBodies();
         return hasKinematicBodies;
+    }
+
+    private void ApplyBodyFields(PhysicsBodyRuntime runtime, Vector2 gravity, float linearDamp, float angularDamp, double delta)
+    {
+        var fields = NativeCollider(runtime.Backend).ApplyResolvedFields(runtime.CaptureIntegrationConfiguration(),
+            new(runtime.Gravity, runtime.LinearDamp, runtime.AngularDamp, runtime.FieldsInitialized),
+            gravity, linearDamp, angularDamp, Space.DefaultGravity, delta);
+        runtime.Gravity = fields.Gravity; runtime.LinearDamp = fields.LinearDamp; runtime.AngularDamp = fields.AngularDamp;
+        runtime.FieldsInitialized = fields.Initialized;
     }
 
 }

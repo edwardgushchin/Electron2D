@@ -1,8 +1,9 @@
 namespace Electron2D;
 
-/// <summary>Draws an atlas tile layer and generates tile-owned collision bodies and navigation regions in its selected world.</summary>
+/// <summary>Draws atlas tiles, places scene tiles and integrates their physics and navigation consumers in the selected world.</summary>
 /// <remarks>Cell and resource edits are batched until the tree flushes deferred work or UpdateInternals is called.
-/// Generated bodies and navigation regions do not appear as child nodes. Queries and contacts report this layer as their collider object.</remarks>
+/// Generated atlas bodies and navigation regions do not appear as child nodes; their queries report this layer.
+/// Scene tiles instantiate ordinary children with null authored ownership. Their colliders retain their own identities and existing transform constraints.</remarks>
 public partial class TileMapLayer : Entity
 {
     /// <summary>Selects diagnostic overlay visibility independently of ordinary tile drawing.</summary>
@@ -42,14 +43,14 @@ public partial class TileMapLayer : Entity
             MarkAll();
         }
     }
-    /// <summary>Gets or sets whether tiles render and generate collision bodies.</summary>
+    /// <summary>Gets or sets whether atlas tiles execute and scene alternatives instantiate; disabling retires their consumers.</summary>
     public bool Enabled { get { ThrowIfDisposed(); return _enabled; } set { EnsureMutable(); if (_enabled == value) return; _enabled = value; MarkAll(); } }
     /// <summary>Gets or sets whether this layer generates physics bodies.</summary>
-    public bool CollisionEnabled { get { ThrowIfDisposed(); return _collisionEnabled; } set { EnsureMutable(); if (_collisionEnabled == value) return; _collisionEnabled = value; MarkAll(); } }
+    public bool CollisionEnabled { get { ThrowIfDisposed(); return _collisionEnabled; } set { EnsureMutable(); if (_collisionEnabled == value) return; _collisionEnabled = value; MarkAll(scenes: false); } }
     /// <summary>Gets or sets the positive number of cells along each physical quadrant side, 16 by default.</summary>
-    public int PhysicsQuadrantSize { get { ThrowIfDisposed(); return _quadrantSize; } set { EnsureMutable(); if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_quadrantSize == value) return; _quadrantSize = value; MarkAll(); } }
+    public int PhysicsQuadrantSize { get { ThrowIfDisposed(); return _quadrantSize; } set { EnsureMutable(); if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value)); if (_quadrantSize == value) return; _quadrantSize = value; MarkAll(scenes: false); } }
     /// <summary>Gets or sets whether generated bodies use kinematic instead of static motion.</summary>
-    public bool UseKinematicBodies { get { ThrowIfDisposed(); return _kinematic; } set { EnsureMutable(); if (_kinematic == value) return; _kinematic = value; MarkAll(); } }
+    public bool UseKinematicBodies { get { ThrowIfDisposed(); return _kinematic; } set { EnsureMutable(); if (_kinematic == value) return; _kinematic = value; MarkAll(scenes: false); } }
     /// <summary>Gets or sets the policy for drawing tile collision geometry.</summary>
     public DebugVisibilityMode CollisionVisibilityMode
     { get { ThrowIfDisposed(); return _collisionVisibility; } set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_collisionVisibility == value) return; _collisionVisibility = value; QueueRedraw(); } }
@@ -79,7 +80,7 @@ public partial class TileMapLayer : Entity
     /// <summary>Erases every authored cell.</summary>
     public void Clear() { EnsureMutable(); if (_cells.Count == 0) return; foreach (var coord in _cells.Keys) _dirtyCells.Add(coord); _cells.Clear(); MarkAll(); }
     /// <summary>Removes cells whose source, atlas coordinates or alternative no longer exists.</summary>
-    public void FixInvalidTiles() { EnsureMutable(); foreach (var coord in _cells.Keys.ToArray()) if (Resolve(_cells[coord]) is null) EraseCell(coord); }
+    public void FixInvalidTiles() { EnsureMutable(); foreach (var coord in _cells.Keys.ToArray()) if (ResolveSource(_cells[coord]) is null) EraseCell(coord); }
     /// <summary>Returns a cell's source identity, or minus one for an empty cell.</summary>
     /// <param name="coords">Layer cell coordinates.</param>
     /// <returns>Returns a cell's source identity, or minus one for an empty cell.</returns>
@@ -167,7 +168,7 @@ public partial class TileMapLayer : Entity
     /// <returns>Returns physical quadrant coordinates for a generated body; quadrant size one identifies a cell.</returns>
     public Vector2i GetCoordsForBodyRID(RID body) { ThrowIfDisposed(); return _bodyCoords.TryGetValue(body, out var c) ? c : throw new ArgumentException("The body does not belong to this layer.", nameof(body)); }
     /// <summary>Schedules recreation of per-cell runtime tile data.</summary>
-    public void NotifyRuntimeTileDataUpdate() { EnsureMutable(); MarkAll(); }
+    public void NotifyRuntimeTileDataUpdate() { EnsureMutable(); MarkAll(scenes: false); }
     /// <summary>Chooses which visible enabled cells need an owned runtime copy of tile data.</summary>
     /// <param name="coords">Layer cell coordinates.</param>
     /// <returns>Chooses which visible enabled cells need an owned runtime copy of tile data.</returns>
@@ -188,7 +189,7 @@ public partial class TileMapLayer : Entity
         ThrowIfDisposed(); return _cells.TryGetValue(coords, out var c) && (c.Alternative & bit) != 0;
     }
     private void MarkCell(Vector2i coords) { _drawingDirty = true; _dirtyCells.Add(coords); Schedule(); Changed?.Invoke(); }
-    private void MarkAll() { _drawingDirty = true; _allDirty = true; Schedule(); Changed?.Invoke(); }
+    private void MarkAll(bool scenes = true) { _sceneAllDirty |= scenes; _drawingDirty = true; _allDirty = true; Schedule(); Changed?.Invoke(); }
     private void Schedule() { QueueRedraw(); if (_queued || !IsInsideTree) return; _queued = true; Tree!.Defer(_deferredUpdate); }
     private void DeferredUpdate() { _queued = false; if (!IsDisposed && IsInsideTree) UpdateInternals(); }
     private void SetChanged(Resource _) => MarkAll();
@@ -197,14 +198,14 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void OnEnterTree() { base.OnEnterTree(); MarkAll(); }
     /// <inheritdoc />
-    protected override void OnExitTree() { try { ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
+    protected override void OnExitTree() { try { ReleaseSceneCells(exiting: true); ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
         base.OnNotification(what);
         if (what == NotificationWorldChanged && IsInsideTree) { MoveWorld(); MoveNavigationWorld(); }
         else if (what == NotificationTransformChanged && IsInsideTree) { UpdateBodyTransforms(); UpdateNavigationTransforms(); }
-        else if (what == NotificationVisibilityChanged) MarkAll();
+        else if (what == NotificationVisibilityChanged) MarkAll(scenes: false);
         else if (what is NotificationEnterCanvas or NotificationExitCanvas) UpdateCanvas(what == NotificationExitCanvas ? 0 : GetCanvasLayerNode()?.InstanceID ?? 0);
     }
     /// <inheritdoc />
@@ -213,7 +214,7 @@ public partial class TileMapLayer : Entity
     protected override void Dispose(bool disposing)
     {
         try { if (disposing) DetachSet(); base.Dispose(disposing); }
-        finally { if (disposing) { ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); Changed = null; } }
+        finally { if (disposing) { _sceneCells.Clear(); ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); Changed = null; } }
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateTileLayer;

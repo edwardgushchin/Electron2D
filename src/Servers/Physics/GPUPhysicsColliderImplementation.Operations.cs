@@ -97,7 +97,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
         if (!awake)
         {
             if (GPU.GetMode(GPUHandle) >= PhysicsServer.BodyMode.Rigid)
-                PrepareGPUParameters(PhysicsServer.Service.BodyRuntime(Owner.RID));
+                GPUPhysicsWorldBackend.SynchronizeIntegrationInputs(this, PhysicsServer.Service.BodyRuntime(Owner.RID));
             Space.FlushGPUWakes();
         }
         GPU.SetSleeping(GPUHandle, !awake);

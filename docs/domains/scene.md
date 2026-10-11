@@ -260,3 +260,5 @@ The executable [multiline editing component](../components/multiline-editing.md)
 [Tile navigation layers](../components/tiles.md#navigation-layers) connect typed TileSet masks and borrowed TileData polygons to scene-owned NavigationServer regions, runtime cell data, root-local baking and retained diagnostic drawing. Global navigation diagnostics remain separate work.
 
 [Atlas frame animation and padding](../components/tiles.md#atlas-frame-animation-and-padding) provide complete frame reservations/configuration, source-owned transient padded textures and retained timed TileMapLayer drawing. Physics/navigation geometry remains independent of visual frames.
+
+[Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.

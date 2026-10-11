@@ -1319,6 +1319,56 @@
       "godot": "TileSet::property:uv_clipping",
       "electron2d": "property:Electron2D.TileSet.UVClipping()",
       "reason": "ADRs 0004/0034/0101: borrowed typed tile materials, checked relative Z, unchanged-geometry Y anchors, floored independent rendering quadrants, conditional X reversal and region UV limits execute through layer-owned retained canvas items. Full field/resource graph copying and fresh process storage, all 48 native grid placements, selected CPU/GPU collision/navigation, actual material/Z/Y/X/UV pixels, live GLSL/HLSL GPU parameters, compatibility shader rejection, failure preflight/lifetime and 24 forced-redraw warmed zero-managed-allocation frames are checked by TileDrawingTests."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:create_scene_tile(PackedScene:,int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.CreateSceneTile(Electron2D.PackedScene,System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:get_next_scene_tile_id()",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetNextSceneTileID()",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:get_scene_tile_id(int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTileID(System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:get_scene_tile_scene(int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTileScene(System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:get_scene_tiles_count()",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTilesCount()",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:has_scene_tile_id(int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.HasSceneTileID(System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:remove_scene_tile(int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.RemoveSceneTile(System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:set_scene_tile_id(int:,int:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.SetSceneTileID(System.Int32,System.Int32)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "TileSetScenesCollectionSource::method:set_scene_tile_scene(int:,PackedScene:)",
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.SetSceneTileScene(System.Int32,Electron2D.PackedScene)",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": "class:TileSetScenesCollectionSource",
+      "electron2d": "T:Electron2D.TileSetScenesCollectionSource",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
     }
   ],
   "extras": [
@@ -1491,6 +1541,61 @@
       "electron2d": "method:Electron2D.TileSet.SetCustomDataLayerType`1(System.Int32)",
       "reason": "Direct generic factory preparation for a configured CLR custom tile type; portable application values use existing codec/resource contracts.",
       "adr": "ADR 0001/0013/0095/0101"
+    },
+    {
+      "electron2d": "constructor:Electron2D.TileSetScenesCollectionSource..ctor()",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.CreateDuplicateInstance()",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.Dispose(System.Boolean)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetPropertyDescriptors()",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetTileID(System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.GetTilesCount()",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
+    },
+    {
+      "electron2d": "method:Electron2D.TileSetScenesCollectionSource.HasTile(Electron2D.Vector2i)",
+      "reason": "ADRs 0004/0008/0014/0101: typed resource construction, six inherited single-slot/alternative overrides and protected duplication/storage/lifetime hooks. The source borrows templates; its consuming layer owns independent ordinary child scene instances.",
+      "adr": "ADR 0004/0008/0014/0101"
     }
   ],
   "statusGroups": [
@@ -1882,6 +1987,36 @@
       ],
       "state": "Excluded",
       "reason": "ADR 0004 pinned ed1daf0bf001b61586d9930840f2f1394092c079 TileData.xml deprecated metadata: get_occluder uses get_occluder_polygon instead; set_occluder uses set_occluder_polygon instead. Current plural polygon API retains its first actual light/occlusion renderer/resource trigger. No deprecated mirror or implementation trigger."
+    },
+    {
+      "godot": [
+        "class:TileSetScenesCollectionSource"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": [
+        "TileSetScenesCollectionSource::method:create_scene_tile(PackedScene:,int:)",
+        "TileSetScenesCollectionSource::method:get_next_scene_tile_id()",
+        "TileSetScenesCollectionSource::method:get_scene_tile_id(int:)",
+        "TileSetScenesCollectionSource::method:get_scene_tile_scene(int:)",
+        "TileSetScenesCollectionSource::method:get_scene_tiles_count()",
+        "TileSetScenesCollectionSource::method:has_scene_tile_id(int:)",
+        "TileSetScenesCollectionSource::method:remove_scene_tile(int:)",
+        "TileSetScenesCollectionSource::method:set_scene_tile_id(int:,int:)",
+        "TileSetScenesCollectionSource::method:set_scene_tile_scene(int:,PackedScene:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0101: borrowed canvas-rooted PackedScene definitions, sorted full nonnegative authored identities, monotonic/wrapping free identity selection, guarded mutation, shared template notifications/copy/file graphs and deferred ordinary scene children. TileSceneTests checks fresh process reconstruction, transforms, validity repair, lifetime, unchanged identity/allocation and failed creation/reentry. Editor placeholder methods retain their exact editor consumer trigger; physics descendants retain the unit-global-scale/zero-skew body contract."
+    },
+    {
+      "godot": [
+        "TileSetScenesCollectionSource::method:get_scene_tile_display_placeholder(int:)",
+        "TileSetScenesCollectionSource::method:set_scene_tile_display_placeholder(int:,bool:)"
+      ],
+      "state": "Blocked",
+      "reason": "Trigger: executable editor tile-authoring/preview workspace consuming scene-source placeholder metadata, with editor host/hint and actual placeholder drawing under ADRs 0027/0090/0101. The editor currently supplies its branded startup screen only. Runtime instancing is independent; no inert placeholder storage or public switches are exposed."
     }
   ]
 }

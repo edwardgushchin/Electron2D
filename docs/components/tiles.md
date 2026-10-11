@@ -126,7 +126,7 @@ The initial native bracket put a collection immediately before measurement and r
 
 ## Remaining boundaries
 
-Scene-collection sources and tile occlusion retain their own prerequisites. Per-tile materials/order now execute through retained items. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
+Scene-collection runtime sources execute; their editor placeholder consumer and tile occlusion retain their own prerequisites. Per-tile materials/order now execute through retained items. Their exact members remain open in coverage. Large-map rebuild throughput, native allocator tracing, cross-platform execution, editor authoring, tile-specific network spawn topology and full GPU physics acceptance are not established by these checks. General backend extensions remain separate work.
 
 ## Navigation baking integration
 
@@ -254,3 +254,33 @@ The native failure path retains all previous drawing identities after an unrepre
 The internal headless command compiler retains atlas geometry/animation replay when no rendering session exists. It establishes prepared geometry/time only; material/order/canvas publication and real pixels use the actual retained renderer workflow above. This is separate from a native output acceptance claim under ADR 0090.
 
 Navigation/collision diagnostic geometry uses a separate relative Z=max-minus-one item, matching its overlay role. It remains visible with tile Z/Y grouping and can tint authored child route lines; the route pixel check now verifies the composited color rather than requiring its previous uncovered opaque blue.
+
+## Scene collections
+
+TileSetScenesCollectionSource borrows nullable canvas-rooted PackedScene definitions at the single tile coordinate (0,0); scene IDs are alternatives. Definition IDs are nonnegative, sorted and independent of atlas pixel reservations. Automatic selection retains a nonzero cursor and wraps at 1073741823. Exact authored lookups precede transformed-ID fallback; actual layer cell resolution explicitly masks transform flags. This corrects ambiguous high authored IDs while retaining the existing cell identity encoding. Scene data is absent: GetCellTileData returns null, and atlas runtime-data callbacks exclude scene alternatives.
+
+```csharp
+using var collection = new TileSetScenesCollectionSource();
+int sceneID = collection.CreateSceneTile(prefab); // Borrowed canvas-rooted PackedScene.
+int sourceID = set.AddSource(collection);
+layer.TileSet = set;
+layer.SetCell(new(2, -1), sourceID, Vector2i.Zero, sceneID);
+```
+
+Caller context: live set/layer and a prefab whose stored root is CanvasItem. Detached authoring stores cells; tree entry queues instantiation. UpdateInternals publishes explicitly. Root Entity transforms include the cell basis and authored local transform, while Control roots add cell position and preserve their own transform fields. Runtime roots are ordinary children with null Owner and are not packed as authored children. Their descendants retain normal processing, world, body and navigation behavior; scene colliders report the actual CollisionObject rather than the TileMapLayer. Atlas-only switches do not disable these independent bodies/regions.
+
+Definition edits validate before source mutation. Shared template events publish once per source, and disposal clears borrowed definitions without disposing caller resources on source removal/disposal. Shallow copies borrow templates, deep copies duplicate them; files preserve shared references and the next-ID cursor. Root metadata is available before validated resource assignments during archive restoration.
+
+Layer hiding and atlas-only settings preserve instance identity. Disabling, clear/erasure, invalid/null definitions and tree exit retire children at the tree deletion safe point. Reparented roots leave cell ownership. Failed prepare/ready callbacks clean candidates and retain prior instances; ancestor-template cycles reject before recursive allocation. Runtime roots use unique names independent of their template names. Template/root changes may require allocating authoring work; unchanged frames do not recreate scenes.
+
+The [SceneTiles](../../examples/SceneTiles/Program.cs) public consumer writes a portable scene and loads it in another process. Its upper row shows all eight image transforms; its lower row places ordinary static bodies and navigation regions. Existing PhysicsBody unit-global-scale/zero-skew constraints reject reflected/scaled body scenes. The missing physics shape-transform consumer is explicit; rendering-only flags are independently executable. Editor display-placeholder API remains unexposed/Blocked until the editor tile workspace, host/hint and actual placeholder drawing exist.
+
+Scene validation, typed file reconstruction and actual native pixels have separate checks. Foreign platforms, native allocator tracing, editor/user acceptance and large scene-map throughput remain unverified.
+
+### Scene collection verification
+
+TileSceneTests passed exact/flagged and sorted IDs, full nonnegative authored ID range, next-cursor wrap, shared template change/disposal, rejected roots before mutation, deep/shallow copies, guarded scene/cell ownership, Entity/Control placement, null TileData, FixInvalidTiles, deferred creation/deletion, disable/exit/reentry, unchanged update allocations, fresh-process shared/high-ID graphs, failed ready callback cleanup and ancestor-template recursion rejection. Resource archives first exposed the unprepared-template-root failure; metadata restoration order fixed it without bypassing source validation.
+
+The public SceneTiles authoring command wrote a portable scene in a separate process. gpu/compatibility × CPU/GPU native sessions each passed sixteen ordinary scene children, eight visual transform flag pixels, eight actual child-owned static bodies/navigation regions, atlas-only toggle identity preservation, hidden rendering with retained simulation, disable/reenable/clear lifetime, and reflected-body rejection with prior collider/navigation retention and candidate cleanup. Each measured 24 complete warmed forced-redraw owner intervals at 0 managed bytes. Four 288x128 captures have SHA-256 `2397240e054e3d87fa7592a0c8895448497c090c4c200beca7d67ae05e8617cf`; one was inspected.
+
+The full executable check harness passed before main synchronization; focused fresh-graph and all four native sessions also passed after the immutable physics input commit was incorporated. These establish current Linux/native and managed behavior, not editor acceptance, foreign platforms, native allocator totals, large-map throughput or user visual acceptance.

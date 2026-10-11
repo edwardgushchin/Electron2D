@@ -8,7 +8,7 @@ public partial class TileMapLayer
     private sealed record GeneratedNavigation(RID RID, NavigationPolygon Polygon, Transform CellTransform);
     private readonly Dictionary<Vector2i, List<GeneratedNavigation>> _navigationCells = [];
     /// <summary>Gets or sets whether enabled tiles generate navigation regions, independently of drawing visibility.</summary>
-    public bool NavigationEnabled { get { ThrowIfDisposed(); return _navigationEnabled; } set { EnsureMutable(); if (_navigationEnabled == value) return; _navigationEnabled = value; MarkAll(); } }
+    public bool NavigationEnabled { get { ThrowIfDisposed(); return _navigationEnabled; } set { EnsureMutable(); if (_navigationEnabled == value) return; _navigationEnabled = value; MarkAll(scenes: false); } }
     /// <summary>Gets or sets navigation polygon overlay visibility; Default follows the tree navigation hint.</summary>
     public DebugVisibilityMode NavigationVisibilityMode { get { ThrowIfDisposed(); return _navigationVisibility; } set { EnsureMutable(); if (!Enum.IsDefined(value)) throw new ArgumentOutOfRangeException(nameof(value)); if (_navigationVisibility == value) return; _navigationVisibility = value; QueueRedraw(); Changed?.Invoke(); } }
     /// <summary>Returns the borrowed explicit map, the current world map inside a tree, or an empty RID while detached.</summary>
@@ -16,7 +16,7 @@ public partial class TileMapLayer
     /// <summary>Assigns a borrowed map; an empty RID restores the current world map.</summary>
     /// <param name="map">Live navigation map, or an empty RID for automatic world selection.</param>
     public void SetNavigationMap(RID map)
-    { EnsureMutable(); if (map.IsValid()) NavigationServer.Service.ValidateTileMap(map, Tree); if (_navigationMap == map) return; _navigationMap = map; MarkAll(); }
+    { EnsureMutable(); if (map.IsValid()) NavigationServer.Service.ValidateTileMap(map, Tree); if (_navigationMap == map) return; _navigationMap = map; MarkAll(scenes: false); }
     private void UpdateNavigation(Vector2i[] changed)
     {
         if (!IsInsideTree || !_enabled || !_navigationEnabled || _tileSet is not { IsDisposed: false }) { ReleaseNavigation(); return; }

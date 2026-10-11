@@ -135,16 +135,6 @@ public partial class RigidBody
         if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);
     }
 
-    internal void ApplyConstantForces()
-    {
-        if (_constantForce == Vector2.Zero && _constantTorque == 0) return;
-        if (_freeze || PhysicsMadeStatic || !HasBackend || !Backend.IsAwake) return;
-        if (_constantForce != Vector2.Zero)
-            Backend.ApplyCentralForce(_constantForce, wake: false);
-        if (_constantTorque != 0)
-            Backend.ApplyTorque(_constantTorque, wake: false);
-    }
-
     private void WakeForPersistentForce()
     {
         if (HasBackend && !_freeze && !PhysicsMadeStatic) Backend.SetAwake(true);

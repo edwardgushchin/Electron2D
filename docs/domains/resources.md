@@ -205,3 +205,5 @@ AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typ
 [NoiseGenerationTests](../../tests/Electron2D.Tests/NoiseGenerationTests.cs), the 142 pinned image/kernel cases and [NoiseGenerationRenderingTests](../../tests/Electron2D.Tests/NoiseGenerationRenderingTests.cs) verify deferred/background image production, source snapshots, failures/lifetime, complete portable/local graphs and actual queued old/new pixels. See [Noise](../components/noise.md) for exact measurements and platform limits.
 
 [Per-tile drawing](../components/tiles.md#per-tile-materials-and-draw-order) now connects material resources, Z/Y offsets, UV clipping and stored layer grouping/order to actual retained canvas output.
+
+[Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.

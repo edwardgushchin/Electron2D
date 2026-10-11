@@ -1,6 +1,6 @@
 # ResourceArchiveRead
 
-Last updated: 2026-10-05
+Last updated: 2026-10-11
 
 Internal/private runtime implementation. **Source:** [ResourceArchive.cs](../../src/Core/IO/ResourceArchive.cs).
 
@@ -15,3 +15,5 @@ See [resource-file component](../components/resource-files.md) for ownership, in
 ## Verification
 
 ResourceArchiveTests exercises the public producer/consumer boundary, graph and scene state, metadata, malformed rollback, exact file ownership and separate-process lifecycle. Foreign/AOT/rendered/editor/native-allocation and human gates remain separate.
+
+Typed tile scene references now resolve registered TileSetScenesCollectionSource graphs. Archive restoration prepares PackedScene root metadata before dependent validated resource properties; internal canvas-root validation reads stored compiled factory types without executing factories.

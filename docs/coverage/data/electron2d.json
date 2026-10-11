@@ -10248,6 +10248,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.TileSetScenesCollectionSource",
+    "kind": "type",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "TileSetScenesCollectionSource",
+    "signature": "public sealed class Electron2D.TileSetScenesCollectionSource",
+    "visibility": "public",
+    "baseType": "Electron2D.TileSetSource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.TileSetSource",
     "kind": "type",
     "declaringType": "Electron2D.TileSetSource",
@@ -18845,6 +18860,19 @@
     "declaringType": "Electron2D.TileSetAtlasSource",
     "name": ".ctor",
     "signature": "public TileSetAtlasSource()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.TileSetScenesCollectionSource..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": ".ctor",
+    "signature": "public TileSetScenesCollectionSource()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -155877,6 +155905,382 @@
       {
         "name": "speed",
         "type": "System.Single",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode mode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicate, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E force)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "mode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicate",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "force",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.CreateSceneTile(Electron2D.PackedScene,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "CreateSceneTile",
+    "signature": "public System.Int32 CreateSceneTile(Electron2D.PackedScene packedScene, System.Int32 idOverride = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "packedScene",
+        "type": "Electron2D.PackedScene",
+        "default": null
+      },
+      {
+        "name": "idOverride",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetAlternativeTileID(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetAlternativeTileID",
+    "signature": "public override System.Int32 GetAlternativeTileID(Electron2D.Vector2i atlasCoords, System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetAlternativeTilesCount(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetAlternativeTilesCount",
+    "signature": "public override System.Int32 GetAlternativeTilesCount(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetNextSceneTileID()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetNextSceneTileID",
+    "signature": "public System.Int32 GetNextSceneTileID()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTileID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetSceneTileID",
+    "signature": "public System.Int32 GetSceneTileID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTileScene(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetSceneTileScene",
+    "signature": "public Electron2D.PackedScene GetSceneTileScene(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.PackedScene",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetSceneTilesCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetSceneTilesCount",
+    "signature": "public System.Int32 GetSceneTilesCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetTileID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetTileID",
+    "signature": "public override Electron2D.Vector2i GetTileID(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Vector2i",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.GetTilesCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "GetTilesCount",
+    "signature": "public override System.Int32 GetTilesCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.HasAlternativeTile(Electron2D.Vector2i,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "HasAlternativeTile",
+    "signature": "public override System.Boolean HasAlternativeTile(Electron2D.Vector2i atlasCoords, System.Int32 alternativeTile)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      },
+      {
+        "name": "alternativeTile",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.HasSceneTileID(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "HasSceneTileID",
+    "signature": "public System.Boolean HasSceneTileID(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.HasTile(Electron2D.Vector2i)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "HasTile",
+    "signature": "public override System.Boolean HasTile(Electron2D.Vector2i atlasCoords)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "atlasCoords",
+        "type": "Electron2D.Vector2i",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.RemoveSceneTile(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "RemoveSceneTile",
+    "signature": "public System.Void RemoveSceneTile(System.Int32 id)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.SetSceneTileID(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "SetSceneTileID",
+    "signature": "public System.Void SetSceneTileID(System.Int32 id, System.Int32 newID)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "newID",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.TileSetScenesCollectionSource.SetSceneTileScene(System.Int32,Electron2D.PackedScene)",
+    "kind": "method",
+    "declaringType": "Electron2D.TileSetScenesCollectionSource",
+    "name": "SetSceneTileScene",
+    "signature": "public System.Void SetSceneTileScene(System.Int32 id, Electron2D.PackedScene packedScene)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "packedScene",
+        "type": "Electron2D.PackedScene",
         "default": null
       }
     ],

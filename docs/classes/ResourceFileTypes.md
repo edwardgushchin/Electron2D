@@ -140,3 +140,5 @@ NavigationPolygon outlines/settings/generated geometry and NavigationMeshSourceG
 The built-in TileMapPattern factory and typed pattern-array codec support standalone resources and TileSet pattern lists in portable scene graphs; pattern cell records and extent restore through compiled descriptors. See [reusable patterns](../components/tiles.md#reusable-patterns).
 
 Portable value codec and resource registration also prepare direct per-T custom tile factories; application registrations must exist in a fresh loading process. See [custom data](../components/tiles.md#typed-custom-data).
+
+Typed tile scene references now resolve registered TileSetScenesCollectionSource graphs. Archive restoration prepares PackedScene root metadata before dependent validated resource properties; internal canvas-root validation reads stored compiled factory types without executing factories.

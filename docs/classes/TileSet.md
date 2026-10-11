@@ -1211,3 +1211,5 @@ See [materials and ordering](../components/tiles.md#per-tile-materials-and-draw-
 **summary:** Gets or sets whether atlas sampling is constrained to the selected region's texel centers.
 
 **value:** False by default; true prevents neighboring atlas texels from bleeding during filtered sampling.
+
+Sources now include TileSetScenesCollectionSource. Ownership transfer/copy/storage preserves scene source identity and shared template graphs without stealing source instances; scene descendants use their own physics/navigation resources.

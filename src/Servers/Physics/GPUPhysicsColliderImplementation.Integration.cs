@@ -2,14 +2,12 @@ namespace Electron2D;
 
 internal sealed partial class GPUPhysicsColliderImplementation
 {
-    internal override void PrepareDefaultForces(PhysicsBodyRuntime runtime, PhysicsBody? scene)
+    internal override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
     {
-        var rigid = scene as RigidBody;
-        if (!(rigid?.CustomIntegrator ?? runtime.OmitForces))
+        if (!configuration.OmitForces)
         {
-            if (runtime.PendingForce != Vector2.Zero) ApplyCentralForce(runtime.PendingForce, false);
-            if (runtime.PendingTorque != 0 && !runtime.RotationLocked) ApplyTorque(runtime.PendingTorque, false);
+            if (configuration.PendingForce != Vector2.Zero) ApplyCentralForce(configuration.PendingForce, false);
+            if (configuration.PendingTorque != 0 && !configuration.RotationLocked) ApplyTorque(configuration.PendingTorque, false);
         }
-        runtime.PendingForce = default; runtime.PendingTorque = 0;
     }
 }

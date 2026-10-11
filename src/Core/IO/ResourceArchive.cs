@@ -470,7 +470,8 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
             loadGraph.LoadDependencies(dependencies.Length, index => LoadIdentity(dependencies[index]));
         }
         else for (var i = 0; i < count; i++) LoadIdentity(i);
-        for (var i = 0; i < count; i++)
+        // Validate scene references against prepared root metadata, independent of archive table order.
+        foreach (var i in Enumerable.Range(0, count).OrderBy(index => _resources[index] is PackedScene ? 0 : 1))
         {
             var d = _definitions[i];
             if (d.Path.Length != 0) continue;

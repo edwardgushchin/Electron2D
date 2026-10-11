@@ -359,6 +359,7 @@ public sealed partial class ThemeDB
         ["TileMapPattern"] = ["TileMapPattern", "Resource", "ElectronObject"],
         ["TileSet"] = ["TileSet", "Resource", "ElectronObject"],
         ["TileSetAtlasSource"] = ["TileSetAtlasSource", "TileSetSource", "Resource", "ElectronObject"],
+        ["TileSetScenesCollectionSource"] = ["TileSetScenesCollectionSource", "TileSetSource", "Resource", "ElectronObject"],
         ["TileSetSource"] = ["TileSetSource", "Resource", "ElectronObject"],
         ["Timer"] = ["Timer", "Node", "ElectronObject"],
         ["Translation"] = ["Translation", "Resource", "ElectronObject"],

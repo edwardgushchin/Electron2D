@@ -106,3 +106,5 @@ TileSet/TileSetAtlasSource factories and source-owned TileData descriptors now p
 Custom tile graphs store ordered definition names/configured type IDs, then each alternative's actual type IDs and typed values. Copies, cache replacement and standalone sources preserve actual values independently of configured types. Application codecs/resource factories prepare the same direct custom-data factories in fresh processes. See [typed custom data](tiles.md#typed-custom-data).
 
 Tile drawing graphs store borrowed materials, Z/Y offsets, UVClipping and rendering quadrant/order policy through exact typed descriptors. Fresh-process TileDrawingTests reconstructs the authored graph; generated drawing items/commands stay transient.
+
+[Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.

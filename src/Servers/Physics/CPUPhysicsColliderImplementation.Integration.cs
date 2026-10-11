@@ -2,31 +2,28 @@ namespace Electron2D;
 
 internal sealed partial class CPUPhysicsColliderImplementation
 {
-    internal override void PrepareDefaultForces(PhysicsBodyRuntime runtime, PhysicsBody? scene)
+    internal override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
     {
-        var rigid = scene as RigidBody;
-        if (rigid?.CustomIntegrator ?? runtime.OmitForces)
+        if (configuration.OmitForces)
         {
             SetGravityScale(0); ClearTransientForces();
-            runtime.PendingForce = default; runtime.PendingTorque = 0;
             return;
         }
-        if (runtime.PendingForce != Vector2.Zero) ApplyCentralForce(runtime.PendingForce, false);
-        if (runtime.PendingTorque != 0 && !runtime.RotationLocked) ApplyTorque(runtime.PendingTorque, false);
-        runtime.PendingForce = default; runtime.PendingTorque = 0;
-        if (rigid is not null) { rigid.ApplyConstantForces(); return; }
-        SetGravityScale(runtime.BodyGravityScale);
-        if (runtime.ConstantForce != Vector2.Zero) ApplyCentralForce(runtime.ConstantForce, false);
-        if (runtime.ConstantTorque != 0) ApplyTorque(runtime.ConstantTorque, false);
+        if (configuration.PendingForce != Vector2.Zero) ApplyCentralForce(configuration.PendingForce, false);
+        if (configuration.PendingTorque != 0 && !configuration.RotationLocked) ApplyTorque(configuration.PendingTorque, false);
+        if (configuration.RefreshGravityScale) SetGravityScale(configuration.GravityScale);
+        if (!configuration.ApplyPersistentForces) return;
+        if (configuration.ConstantForce != Vector2.Zero) ApplyCentralForce(configuration.ConstantForce, false);
+        if (configuration.ConstantTorque != 0) ApplyTorque(configuration.ConstantTorque, false);
     }
-    internal void ApplyResolvedFields(PhysicsBodyRuntime runtime, Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
+    internal PhysicsBodyFields ApplyResolvedFields(in PhysicsBodyIntegrationConfiguration configuration, in PhysicsBodyFields previous,
+        Vector2 gravity, float linearDamp, float angularDamp, Vector2 defaultGravity, double delta)
     {
-        var rigid = runtime.Owners.Scene as RigidBody;
-        var gravityScale = rigid?.GravityScale ?? runtime.BodyGravityScale;
-        var ownLinear = rigid?.LinearDamp ?? runtime.BodyLinearDamp;
-        var ownAngular = rigid?.AngularDamp ?? runtime.BodyAngularDamp;
-        var linearMode = rigid?.LinearDampMode ?? runtime.BodyLinearDampMode;
-        var angularMode = rigid?.AngularDampMode ?? runtime.BodyAngularDampMode;
+        var gravityScale = configuration.GravityScale;
+        var ownLinear = configuration.LinearDamp;
+        var ownAngular = configuration.AngularDamp;
+        var linearMode = configuration.LinearDampMode;
+        var angularMode = configuration.AngularDampMode;
         var scaledGravity = gravity * gravityScale;
         var resolvedLinear = linearMode == RigidBody.DampMode.Replace ? ownLinear : linearDamp + ownLinear;
         var resolvedAngular = angularMode == RigidBody.DampMode.Replace ? ownAngular : angularDamp + ownAngular;
@@ -36,8 +33,8 @@ internal sealed partial class CPUPhysicsColliderImplementation
         if (!scaledGravity.IsFinite() || !acceleration.IsFinite() || !float.IsFinite(resolvedLinear) ||
             !float.IsFinite(resolvedAngular) || !float.IsFinite(linearFactor) || !float.IsFinite(angularFactor))
             throw new InvalidOperationException("The resolved body field exceeds the finite simulation range.");
-        var changed = runtime.FieldsInitialized && (runtime.Gravity != scaledGravity || runtime.LinearDamp != resolvedLinear || runtime.AngularDamp != resolvedAngular);
-        ApplyFieldMotion(changed, runtime.Omitted, linearFactor, angularFactor, acceleration);
-        runtime.Gravity = scaledGravity; runtime.LinearDamp = resolvedLinear; runtime.AngularDamp = resolvedAngular; runtime.FieldsInitialized = true;
+        var changed = previous.Initialized && (previous.Gravity != scaledGravity || previous.LinearDamp != resolvedLinear || previous.AngularDamp != resolvedAngular);
+        ApplyFieldMotion(changed, configuration.OmitForces, linearFactor, angularFactor, acceleration);
+        return new(scaledGravity, resolvedLinear, resolvedAngular, true);
     }
 }

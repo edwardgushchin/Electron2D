@@ -1,6 +1,6 @@
 # TileSetSource
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 **Namespace:** `Electron2D`. **Source:** [TileSetSource.cs](../../src/Scene/Resources/TileSetSource.cs).
 
@@ -189,3 +189,5 @@ Tests whether a base tile exists at the coordinates.
 ## Verification
 
 TileMapLayerTests exercises this type through explicit CPU/GPU worlds, typed resources, fresh-process scenes and the real window workflow. [Recorded measurements and remaining gates](../components/tiles.md#verification) keep native, rendering, throughput and platform claims separate. Owning decision: [ADR 0101](../decisions/tiles.md#adr-0101).
+
+TileSetScenesCollectionSource implements the inherited identity family with one coordinate slot and scene IDs as alternatives. It borrows PackedScene definitions; physics/navigation layer resize hooks affect atlas data only, while scene descendants retain their own node resources. See [Scene collections](../components/tiles.md#scene-collections).

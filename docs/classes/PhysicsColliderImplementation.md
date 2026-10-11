@@ -48,3 +48,7 @@ Resolved fields and exception invalidation dispatch through the selected collide
 | --- | --- |
 | `PhysicsBodyFields ReadResolvedFields(in PhysicsBodyFields current)` | Return complete current observer fields in engine units; CPU preserves its completed common values, GPU samples its qualified resident cache. Common publication validates all fields atomically. |
 | `void InvalidateCollisionExceptions()` | Notify this attachment's actual world owner of changed shared exception authoring, without exposing native pair handles. |
+
+## Value-only integration preparation
+
+[Force and policy inputs](../components/physics-backends.md#value-only-body-integration-inputs) now separate engine-owned authoring/command state from numerical preparation. Default forces use PhysicsBodyForceConfiguration; CPU fields and GPU parameters use PhysicsBodyIntegrationConfiguration. Pending command retirement and GPU dirty flags stay in the binding layer; numerical methods receive finite authored values and return complete field/preparation results. CPU/GPU/no-device, replay, parameter and full operation checks remain the acceptance boundaries; public registration stays open.

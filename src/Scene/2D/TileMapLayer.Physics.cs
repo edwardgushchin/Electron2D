@@ -18,14 +18,14 @@ public partial class TileMapLayer
     private Transform _shapeBasis = Transform.Identity;
 
     /// <summary>Publishes pending tile edits now; cannot run during a solver or overlap callback.</summary>
-    /// <remarks>Geometry compilation is allocating authoring work. Unchanged layers do no work.
-    /// Updates outside the tree retain authored cells but do not create physics bodies.</remarks>
+    /// <remarks>Geometry and scene preparation are allocating authoring work. Unchanged layers do no work.
+    /// Updates outside the tree retain authored cells without creating generated consumers. Scene deletion completes at a tree safe point.</remarks>
     public void UpdateInternals()
     {
         EnsureMutable(); if (_updating) throw new InvalidOperationException("Tile updates cannot be reentered.");
         if (!_allDirty && _dirtyCells.Count == 0) return;
         Tree?.EnsurePhysicsParticipationChange();
-        var all = _allDirty; var changed = all ? _cells.Keys.Union(_dirtyCells).ToArray() : _dirtyCells.ToArray();
+        var all = _allDirty; var sceneAll = _sceneAllDirty; _sceneAllDirty = false; var changed = all ? _cells.Keys.Union(_dirtyCells).ToArray() : _dirtyCells.ToArray();
         _allDirty = false; _dirtyCells.Clear(); _updating = true;
         try
         {
@@ -53,9 +53,10 @@ public partial class TileMapLayer
                 _shapeBasis = ShapeBasis();
             }
             UpdateNavigation(changed);
+            UpdateSceneCells(changed, sceneAll);
             QueueRedraw();
         }
-        catch { _allDirty = true; throw; }
+        catch { _allDirty = true; _sceneAllDirty = true; throw; }
         finally { _updating = false; }
     }
     private Vector2i QuadrantFor(Vector2i coords) => new(FloorDivide(coords.X, _quadrantSize), FloorDivide(coords.Y, _quadrantSize));

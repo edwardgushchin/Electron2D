@@ -17,6 +17,10 @@ public sealed class PackedScene : Resource
     private SceneState _state;
     private bool _stateExported;
     private bool _packing;
+    internal Type? CanvasRootType
+    {
+        get { ThrowIfDisposed(); lock (_gate) { ThrowIfDisposed(); return _data.Nodes.Length != 0 && typeof(CanvasItem).IsAssignableFrom(_data.Nodes[0].Factory.RuntimeType) ? _data.Nodes[0].Factory.RuntimeType : null; } }
+    }
 
     /// <summary>Initializes an empty packed scene.</summary>
     public PackedScene()
