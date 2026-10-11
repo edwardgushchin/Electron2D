@@ -2119,6 +2119,36 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_state(RID:,int:PhysicsServer2D.BodyState,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetCanSleep(Electron2D.RID,System.Boolean)",
       "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_max_contacts_reported(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetMaxContactsReported(Electron2D.RID)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_max_contacts_reported(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetMaxContactsReported(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_is_omitting_force_integration(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyIsOmittingForceIntegration(Electron2D.RID)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_omit_force_integration(RID:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetOmitForceIntegration(Electron2D.RID,System.Boolean)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_state_sync_callback(RID:,Callable:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetStateSyncCallback(Electron2D.RID,System.Action<Electron2D.PhysicsDirectBodyState>)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_force_integration_callback(RID:,Callable:,Variant:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback(Electron2D.RID,System.Action<Electron2D.PhysicsDirectBodyState>)",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
     }
   ],
   "extras": [
@@ -6858,6 +6888,18 @@
       ],
       "state": "Partial",
       "reason": "ADR 0070/0103: all five typed state pairs share scene/raw selected state, non-preparing initial/live reads, inherited scene pose/sleep numerical guards and detached/live wake requests for every scene body type. Independent public-only checks include actual motion, direct views and zero warm allocations. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_get_max_contacts_reported(RID:)",
+        "PhysicsServer2DExtension::method:_body_set_max_contacts_reported(RID:,int:)",
+        "PhysicsServer2DExtension::method:_body_is_omitting_force_integration(RID:)",
+        "PhysicsServer2DExtension::method:_body_set_omit_force_integration(RID:,bool:)",
+        "PhysicsServer2DExtension::method:_body_set_state_sync_callback(RID:,Callable:)",
+        "PhysicsServer2DExtension::method:_body_set_force_integration_callback(RID:,Callable:,Variant:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
     }
   ]
 }

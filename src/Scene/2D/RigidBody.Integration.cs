@@ -8,13 +8,15 @@ public partial class RigidBody
 
     /// <summary>Gets or sets omission of ordinary gravity, damping and accumulated force integration.</summary>
     /// <value>False by default. Impulses, motion and solver contacts remain active when true.</value>
-    /// <remarks>Use the post-solver integration hook to implement custom velocity changes. The flag is stored in packed scenes.</remarks>
+    /// <remarks>Use the post-solver integration hook to implement custom velocity changes. The flag is stored in packed scenes.
+    /// Assignment rejects while a numerical implementation call is borrowed, before changing configuration.</remarks>
+    /// <exception cref="InvalidOperationException">Assignment is off the scene owner thread or inside a borrowed numerical implementation call.</exception>
     public bool CustomIntegrator
     {
         get { ThrowIfDisposed(); return _customIntegrator; }
         set
         {
-            EnsureMutable();
+            EnsureMutable(); Space?.EnsureImplementationWriteAccess();
             _customIntegrator = value; GPUParametersDirty = true;
             if (HasBackend) Backend.SetGravityScale(value ? 0 : _gravityScale);
         }
