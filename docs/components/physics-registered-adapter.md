@@ -133,3 +133,27 @@ the point-motion velocity interval 0.49..0.51 includes the changing field distan
 
 The two extension parameter rows remain Partial. Arbitrary geometry, full
 numerical/extension acceptance and final platform/performance gates remain open.
+
+## Parameter reads and preparation
+
+Configured mass, explicit inertia/custom center, friction, bounce, gravity scale
+and damping parameters project guarded common authoring without invoking
+PrepareContactPolicy, RebuildShapes or other numerical preparation hooks.
+Automatic inertia/center getters retain current-geometry preparation outside
+numerical borrowing. They reject inside a numerical hook before preparation,
+while configured values remain readable. Setter preparation is unchanged.
+
+The public-only consumer reads the complete ten-parameter family during actual
+initial scene/raw attachment and a live velocity hook and asserts no numerical
+preparation. Automatic inertia for a 2 kg circle changes from 9 to 36 when radius
+changes from 3 to 6, within 0.0001. Explicit values then remain unchanged. After
+64 warmups, 128 paired scene/raw read cycles require zero owner/all-thread managed
+bytes. The original runtime triggered numerical preparation from an initial
+identity hook; this is a behavior regression, not an API-count change. General
+numerical/extension and final performance acceptance remain open.
+
+Material revision polling is retained in the authoring read path: friction/bounce
+getters clear superseded overrides and mark later shape preparation dirty even
+when an earlier resource subscriber prevented the scene callback. This performs
+no numerical hook. The public-only consumer injects failures for both channels;
+the general material regression remains part of acceptance.

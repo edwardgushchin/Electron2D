@@ -163,3 +163,5 @@ Generated SPIR-V SHA-256, untracked build outputs:
 - Bodies: `f3e5735e476ebda0be0e23ade496e7ed382e7b4e8fe1e2b1f3ff356563697160`.
 - Contact preparation: `7e2c6bd6aab022d478d950b877982791e7a7c7160e6b7521792c4013c683f106`.
 - Joint preparation: `b07c33319cdad81756b6503e586ab9c18eed68bc569ac0289cd666dee42f9270`.
+
+[Parameter reads](physics-registered-adapter.md#parameter-reads-and-preparation) project configured values without numerical preparation. Automatic inertia/center reads still synchronize current geometry outside numerical borrowing; preparation rejects inside a numerical hook. Initial/live scene/raw and zero-allocation public-only checks execute; full solver/extension acceptance remains open.

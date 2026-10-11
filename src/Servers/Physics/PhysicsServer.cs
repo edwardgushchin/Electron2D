@@ -6,6 +6,7 @@ namespace Electron2D;
 /// implementation hook is borrowed, before changing retained authoring. This includes partial initial attachment.
 /// Body force, mass, integration, motion, sleep and callback authoring, and Area/default-world field writes,
 /// reject during selected numerical hooks.
+/// Authored parameter reads do not prepare solver state. Automatic inertia/center reads may prepare current geometry and reject numerical borrowing before doing so.
 /// Guarded authored reads remain available; ordinary body-state extension forwarding and post-solver callbacks keep their write access.</remarks>
 public sealed partial class PhysicsServer : ElectronObject
 {

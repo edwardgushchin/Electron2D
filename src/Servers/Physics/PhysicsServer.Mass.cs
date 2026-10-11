@@ -6,13 +6,18 @@ public sealed partial class PhysicsServer
     {
         ThrowIfDisposed();
         var runtime = BodyRuntime(body);
-        var owners = runtime.Owners;
         runtime.EnsureAccess(writing);
-        if (runtime.Space is not null)
-        {
-            if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
-        }
+        if (writing) PrepareParameters(runtime);
         return runtime;
+    }
+
+    private static void PrepareParameters(PhysicsBodyRuntime runtime)
+    {
+        var space = runtime.Space;
+        if (space is null) return;
+        space.EnsureImplementationWriteAccess();
+        var owners = runtime.Owners;
+        if (owners.Scene is { } scene) scene.PrepareBackend(); else owners.Server!.PrepareBackend();
     }
 
     private static float ConfiguredMass(PhysicsBodyRuntime runtime) => runtime.Owners.Scene is RigidBody rigid ? rigid.Mass : runtime.Mass;
@@ -37,7 +42,9 @@ public sealed partial class PhysicsServer
     {
         var runtime = ParameterRuntime(body, writing: false);
         var value = ConfiguredInertia(runtime);
-        return value > 0 ? value : runtime.MassProperties.Inertia;
+        if (value > 0) return value;
+        PrepareParameters(runtime);
+        return runtime.MassProperties.Inertia;
     }
 
     internal void BodySetCenterOfMassCore(RID body, Vector2 center)
@@ -49,7 +56,9 @@ public sealed partial class PhysicsServer
     internal Vector2 BodyGetCenterOfMassCore(RID body)
     {
         var runtime = ParameterRuntime(body, writing: false);
-        return ConfiguredCenter(runtime) ?? runtime.MassProperties.Center;
+        if (ConfiguredCenter(runtime) is { } center) return center;
+        PrepareParameters(runtime);
+        return runtime.MassProperties.Center;
     }
 
     internal void BodyResetMassPropertiesCore(RID body)

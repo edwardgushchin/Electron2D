@@ -2019,6 +2019,56 @@
       "godot": "PhysicsServer2DExtension::method:_area_get_param(RID:,int:PhysicsServer2D.AreaParameter)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaGetPriority(Electron2D.RID)",
       "reason": "ADR 0103/0058: the complete ten-field typed profile remains engine-owned; Area slots dispatch SetAreaFields and space defaults dispatch PrepareWorld before a nonzero interval. Guarded typed getters preserve all fields and space shortcuts. Public-only independent circle field reduction exercises all override modes, priority, point distance, vector magnitude, masks, monitor independence, ordinary callback edits and zero warmed edited full frames; numerical-hook writes reject before mutation. Arbitrary solver geometry/response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetMass(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetInertia(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCenterOfMass(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetFriction(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetBounce(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetGravityScale(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDamp(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDamp(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetLinearDampMode(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_param(RID:,int:PhysicsServer2D.BodyParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetAngularDampMode(Electron2D.RID)",
+      "reason": "ADR 0073/0076/0103: all ten typed body parameter getters project engine-owned authoring without numerical preparation; automatic inertia/center prepare current geometry outside numerical borrowing and reject before preparation inside a numerical hook. The separate public-only consumer verifies actual initial/live scene/raw reads, unchanged preparation counters, automatic circle inertia 9 to 36 after a radius edit and zero warm allocations. Full solver/extension acceptance remains open."
     }
   ],
   "extras": [

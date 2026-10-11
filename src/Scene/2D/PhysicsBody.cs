@@ -119,6 +119,13 @@ public abstract partial class PhysicsBody : CollisionObject
         _preparedGeometryEpoch = geometryEpoch;
     }
 
+    internal void PollMaterialRevision()
+    {
+        if (Space is null || _materialOverride is not { } material || material.Revision == _appliedMaterialRevision) return;
+        PhysicsServer.Service.BodyRuntime(PhysicsRID).ResetMaterialOverrides();
+        MarkShapesDirty();
+    }
+
     internal virtual void ApplySceneTransform(Vector2 position, float rotation) =>
         Backend.SetPose(position, rotation);
 

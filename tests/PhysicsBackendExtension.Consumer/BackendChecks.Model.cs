@@ -16,6 +16,7 @@ public static partial class BackendChecks
         internal Action<RID>? IdentityHook;
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
+        internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal PhysicsAreaFieldConfiguration Fields;
@@ -182,7 +183,7 @@ public static partial class BackendChecks
         protected override bool HasMotionMode(PhysicsServer.BodyMode mode) => Mode == mode || mode == PhysicsServer.BodyMode.Rigid && Mode == PhysicsServer.BodyMode.RigidLinear;
         protected override void SetMotionMode(PhysicsServer.BodyMode mode) => Mode = mode;
         protected override void SetContactReporting(bool enabled) { }
-        protected override void PrepareContactPolicy() { }
+        protected override void PrepareContactPolicy() => solver.PolicyHook?.Invoke(rid);
         protected override void PrepareIntegration(in PhysicsBodyIntegrationConfiguration configuration, double delta)
         {
             Locked = configuration.LockRotation; Omit = configuration.OmitForces;

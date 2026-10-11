@@ -39,3 +39,9 @@ They verify exact ten-component delivery, monitoring independence, numerical
 borrow/owner rejection, registry-lock boundaries and ordinary callback edits.
 After 64 warmups, 64 edited full frames require zero owner/all-thread managed bytes.
 The fixture does not certify arbitrary shapes or a complete production solver.
+
+Parameter read checks inspect all ten authored body parameters during real
+initial scene/raw attachment and live numerical callbacks without preparation.
+Automatic circle inertia still observes geometry edits; automatic preparation
+rejects numerical borrowing before invoking hooks. After 64 warmups, 128 paired
+scene/raw read cycles require zero owner/all-thread managed bytes.

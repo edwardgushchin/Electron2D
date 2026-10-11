@@ -15,8 +15,18 @@ internal sealed partial class PhysicsBodyRuntime
     private RigidBody.DampMode _bodyAngularDampMode;
     internal RigidBody.DampMode BodyAngularDampMode { get => _bodyAngularDampMode; set { GPUParametersDirty |= _bodyAngularDampMode != value; _bodyAngularDampMode = value; } }
 
-    internal float GetFriction() => FrictionOverride ?? Owners.Scene?.MaterialOverride?.ComputedFriction ?? 1;
-    internal float GetBounce() => BounceOverride ?? Owners.Scene?.MaterialOverride?.ComputedBounce ?? 0;
+    internal float GetFriction()
+    {
+        var scene = Owners.Scene;
+        scene?.PollMaterialRevision();
+        return FrictionOverride ?? scene?.MaterialOverride?.ComputedFriction ?? 1;
+    }
+    internal float GetBounce()
+    {
+        var scene = Owners.Scene;
+        scene?.PollMaterialRevision();
+        return BounceOverride ?? scene?.MaterialOverride?.ComputedBounce ?? 0;
+    }
     internal void ResetMaterialOverrides() { FrictionOverride = null; BounceOverride = null; }
 
     internal void SetMaterialParameter(float value, bool friction)

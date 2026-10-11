@@ -737,7 +737,8 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>An explicit override or geometry-derived kilograms times squared scene units; zero before an automatic profile is first resolved by attachment or a geometry-dependent force call.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or requires automatic geometry preparation while a numerical hook is borrowed.</exception>
+    /// <remarks>Explicit configuration reads do not prepare numerical state. Automatic geometry reads synchronize pending shapes outside numerical borrowing.</remarks>
     public static float BodyGetInertia(RID body) => Service.BodyGetInertiaCore(body);
 
     /// <summary>Sets a custom center of mass relative to body origin in local scene units.</summary>
@@ -753,7 +754,8 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <returns>Local scene-unit center, or zero before automatic geometry is first resolved.</returns>
     /// <exception cref="ArgumentException">The RID does not identify a live body.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner or during solver ownership.</exception>
+    /// <exception cref="InvalidOperationException">Attached access is off-owner, during solver ownership or requires automatic geometry preparation while a numerical hook is borrowed.</exception>
+    /// <remarks>Explicit configuration reads do not prepare numerical state. Automatic geometry reads synchronize pending shapes outside numerical borrowing.</remarks>
     public static Vector2 BodyGetCenterOfMass(RID body) => Service.BodyGetCenterOfMassCore(body);
 
     /// <summary>Restores automatic center and inertia while retaining configured body mass.</summary>
