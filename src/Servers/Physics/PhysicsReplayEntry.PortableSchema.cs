@@ -22,6 +22,14 @@ internal sealed partial class PhysicsReplayEntry
             var geometry = slot.Shape.GetGeometry(); schema.Add((int)geometry.Kind); schema.Add(geometry.A); schema.Add(geometry.B);
             schema.Add(geometry.Radius); schema.Add(geometry.SlideOnSlope); schema.Add(geometry.Points.Length);
             foreach (var point in geometry.Points) schema.Add(point);
+            if (geometry.Kind == PhysicsShapeGeometry.ShapeKind.Custom)
+            {
+                var data = slot.Shape.GetGeometryData(); schema.Add(data.GetCustomFormatID());
+                var bytes = data.GetCustomData(); schema.Add(bytes.Length); foreach (var value in bytes) schema.Add((uint)value);
+                schema.Add(data.Bounds.Position); schema.Add(data.Bounds.Size);
+                var mass = data.GetCustomMassProperties(); schema.Add(mass.Mass); schema.Add(mass.Inertia); schema.Add(mass.Center);
+                var lines = data.GetCustomDrawingSegments(); schema.Add(lines.Length); foreach (var point in lines) schema.Add(point);
+            }
         }
         if (_rigid is { } rigidState)
         {

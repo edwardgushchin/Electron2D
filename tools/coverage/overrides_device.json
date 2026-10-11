@@ -493,8 +493,8 @@
       ]
     },
     {
-      "state": "Blocked",
-      "reason": "ADR 0028: local devices have explicit Submit/Sync ownership without frame-driven owner-thread callback delivery. Requires an executable readback completion/lifetime contract and a completion pump integrated with the owning host, including callback failure and disposal, before exposing typed callbacks; a synchronous callback is not an async implementation.",
+      "state": "Unimplemented",
+      "reason": "ADR 0028: GPU download and local Submit/Sync primitives are present. Trigger: the next complete queued asynchronous readback slice, with request-time data snapshots, typed owner-thread callback delivery during local completion, callback failure/reentrancy and free/dispose lifetime checks. No additional frame-host or backend dependency is required for local devices.",
       "godot": [
         "RenderingDevice::method:buffer_get_data_async(RID:,Callable:,int:,int:)"
       ]

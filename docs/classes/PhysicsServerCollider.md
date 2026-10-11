@@ -74,3 +74,5 @@ in bulk. Queries and further simulation remain rejected. See the
 [Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.
 
 The query-result boundary also reads each raw logical slot's disabled state without exposing native fixtures. Direct-space extension results must identify a current active slot in the queried world and satisfy its sampled filters. See [typed extension validation](../components/physics-space-extensions.md).
+
+[Custom collision geometry](../components/physics-custom-geometry.md) now provides copied canonical data, exact mass/bounds, diagnostic segments and standalone pair callbacks to registered implementations. Built-in compilation rejects unsupported custom geometry before mutation. Portable schema covers the custom authoring payload; detached force preparation resolves exact custom mass while automatic getters retain cached-resolution semantics.

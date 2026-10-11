@@ -3,7 +3,7 @@ namespace Electron2D;
 /// <summary>Immutable exact local collision geometry supplied by a shape resource.</summary>
 /// <remarks>Factories validate scene-unit data and copy contours. The data owns no RID, body, world or rendering
 /// resource. Reuse an instance until authoring changes; all runtime geometry consumers borrow it without copying.</remarks>
-public sealed class ShapeGeometry
+public sealed partial class ShapeGeometry
 {
     private readonly PhysicsShapeGeometry.ShapeKind _kind;
     private readonly Vector2 _a, _b;
@@ -19,7 +19,7 @@ public sealed class ShapeGeometry
     }
 
     /// <summary>Gets the actual represented collision primitive.</summary>
-    /// <value>The corresponding built-in physics geometry type.</value>
+    /// <value>The corresponding geometry type, including Custom for a caller-defined format.</value>
     public PhysicsServer.ShapeType Type => _kind switch
     {
         PhysicsShapeGeometry.ShapeKind.Circle => PhysicsServer.ShapeType.Circle,
@@ -29,6 +29,7 @@ public sealed class ShapeGeometry
         PhysicsShapeGeometry.ShapeKind.ConvexPolygon => PhysicsServer.ShapeType.ConvexPolygon,
         PhysicsShapeGeometry.ShapeKind.ConcavePolygon => PhysicsServer.ShapeType.ConcavePolygon,
         PhysicsShapeGeometry.ShapeKind.SeparationRay => PhysicsServer.ShapeType.SeparationRay,
+        PhysicsShapeGeometry.ShapeKind.Custom => PhysicsServer.ShapeType.Custom,
         _ => PhysicsServer.ShapeType.WorldBoundary
     };
 

@@ -80,6 +80,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal void AddShape(PhysicsServerShape shape, Transform localTransform, bool disabled)
     {
         ValidateTransform(localTransform);
+        if (!disabled) PhysicsShapeBackend.RequireSupported(Space, shape.Geometry);
         _slots.Add(new(shape, localTransform, disabled));
         if (Space is null) return;
         try { RebuildShapes(); }
@@ -110,6 +111,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         if ((uint)index >= (uint)_slots.Count) throw new ArgumentOutOfRangeException(nameof(index));
         var previous = _slots[index];
         if (previous.Disabled == disabled) return;
+        if (!disabled) PhysicsShapeBackend.RequireSupported(Space, previous.Shape.Geometry);
         _slots[index] = previous with { Disabled = disabled };
         try { RebuildShapes(); }
         catch { _slots[index] = previous; RebuildShapes(); throw; }
@@ -135,6 +137,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         var previous = Slot(index);
         if (previous == next) return;
+        if (!next.Disabled) PhysicsShapeBackend.RequireSupported(Space, next.Shape.Geometry);
         _slots[index] = next;
         try { RebuildShapes(); }
         catch { _slots[index] = previous; RebuildShapes(); throw; }
@@ -214,6 +217,22 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
         return _backend.GetTransform();
     }
 
+    private bool _validatingGeometry;
+    internal void EnsureGeometryLifetimeAccess()
+    {
+        if (_validatingGeometry) throw new InvalidOperationException("A collider cannot be released or transferred while its geometry is borrowed.");
+    }
+    internal void ValidateGeometry(PhysicsSpace space)
+    {
+        if (space.ActualBackend == PhysicsServer.Backend.Extension) return;
+        EnsureGeometryLifetimeAccess(); _validatingGeometry = true;
+        try
+        {
+            foreach (var slot in _slots)
+                if (!slot.Disabled && !slot.Shape.Geometry.IsDisposed) PhysicsShapeBackend.RequireSupported(space, slot.Shape.Geometry);
+        }
+        finally { _validatingGeometry = false; }
+    }
     internal void AppendMassGeometry(PhysicsMass.Geometry geometry)
     {
         foreach (var slot in _slots)

@@ -20,7 +20,7 @@ Create a command buffer with `StorageBufferCreate(bytes, usage: RenderingDevice.
 
 [RenderingDeviceTests.Transfers](../../tests/Electron2D.Tests/RenderingDeviceTests.Transfers.cs) is the executable public-API consumer: one shader calculates counts from storage data, a GPU copy moves the command, and another shader dispatches from it. It also executes producer/consumer dispatches in one list. The prepared update/clear/dispatch/copy/span-readback chain measures zero owner-thread managed bytes; this does not measure driver or native allocations.
 
-Asynchronous readback remains absent: the local device has explicit Submit/Sync ownership and no frame-driven callback delivery contract. Implement it with a specified owner-thread completion lifecycle before exposing callbacks; a synchronous callback disguised as async does not meet that requirement.
+Asynchronous readback remains unimplemented. The existing GPU download and local Submit/Sync primitives support its next slice: queue request-time snapshots, then deliver typed callbacks on the owner thread when local work completes. Callback failure/reentrancy and free/dispose behavior must be implemented together; no additional frame-host or native backend prerequisite is needed for local devices.
 
 ## Build and example
 

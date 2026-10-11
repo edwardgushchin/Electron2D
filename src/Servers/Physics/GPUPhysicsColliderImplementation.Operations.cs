@@ -45,7 +45,7 @@ internal sealed partial class GPUPhysicsColliderImplementation
             if (!slot.Enabled) continue;
             if (!slot.Transform.IsFinite() || !slot.Transform.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(slot.Transform.Skew))
                 throw new InvalidOperationException("Physics shapes require unit scale and zero skew.");
-            if (!slot.Shape.IsDisposed) _ = slot.Shape.GetGeometryData();
+            if (!slot.Shape.IsDisposed) PhysicsShapeBackend.RequireBuiltIn(slot.Shape);
         }
         GPUSensor = sensor; GPUMask = mask; ClearGPUShapes();
         foreach (ref readonly var slot in slots)

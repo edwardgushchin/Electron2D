@@ -28,6 +28,9 @@ internal static class PhysicsShapeCollision
         Validate(secondPose, secondMotion);
         count = 0;
         var firstKind = first.GetGeometry().Kind; var secondKind = second.GetGeometry().Kind;
+        if (firstKind == Kind.Custom || secondKind == Kind.Custom)
+            return ShapeGeometry.CollideCustom(first.GetGeometryData(), firstPose, firstMotion,
+                second.GetGeometryData(), secondPose, secondMotion, contacts, out count);
         if (firstKind == Kind.WorldBoundary || secondKind == Kind.WorldBoundary)
             return BoundaryContact(first, firstPose, firstMotion, second, secondPose, secondMotion, contacts, out count);
         if (firstKind == Kind.ConcavePolygon && secondKind == Kind.ConcavePolygon ||

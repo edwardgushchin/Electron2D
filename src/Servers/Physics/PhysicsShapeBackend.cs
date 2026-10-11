@@ -16,6 +16,18 @@ internal static class PhysicsShapeBackend
     // The compiled cache neither owns nor keeps a resource alive. Points remain the authoring source.
     private static readonly ConditionalWeakTable<Shape, PolygonCache> PolygonHulls = new();
 
+    internal static void RequireSupported(PhysicsSpace? space, Shape shape)
+    {
+        if (shape.IsDisposed || space is null || space.ActualBackend == PhysicsServer.Backend.Extension) return;
+        space.BeginExtensionCallback();
+        try { RequireBuiltIn(shape); }
+        finally { space.EndExtensionCallback(); }
+    }
+    internal static void RequireBuiltIn(Shape shape)
+    {
+        if (shape.GetGeometryData().Type == PhysicsServer.ShapeType.Custom)
+            throw new NotSupportedException("Custom geometry requires a registered physics implementation.");
+    }
     internal static B2Vec2 ToBackend(Vector2 value) => new(value.X * PhysicsSpace.MetersPerUnit, value.Y * PhysicsSpace.MetersPerUnit);
 
     private sealed record PolygonCache(ulong Revision, B2Hull[] Hulls);

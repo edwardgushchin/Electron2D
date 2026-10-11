@@ -52,13 +52,13 @@ public static partial class BackendChecks
                 {
                     if (a.RID.GetID() >= b.RID.GetID() || a.IsArea || b.IsArea || a.Shapes == 0 || b.Shapes == 0 ||
                         (a.Mask & b.Layer) == 0 && (b.Mask & a.Layer) == 0 || Exceptions.Contains((a.RID, b.RID)) || Exceptions.Contains((b.RID, a.RID))) continue;
-                    var difference = b.Position - a.Position; var distance = difference.Length(); var extent = a.Radius + b.Radius;
-                    if (distance > extent || a.InvMass + b.InvMass == 0) continue;
-                    var normal = distance == 0 ? Vector2.Right : difference / distance; var inverse = a.InvMass + b.InvMass;
-                    a.Position -= normal * (extent - distance) * (a.InvMass / inverse);
-                    b.Position += normal * (extent - distance) * (b.InvMass / inverse);
+                    if (a.InvMass + b.InvMass == 0 || !Contact(a, b, out var normal, out var depth, out _)) continue;
+                    var inverse = a.InvMass + b.InvMass;
+                    a.Position -= normal * depth * (a.InvMass / inverse);
+                    b.Position += normal * depth * (b.InvMass / inverse);
                     var impulse = normal * MathF.Max(0, -(b.Velocity - a.Velocity).Dot(normal) / inverse);
                     a.AddImpulse(-impulse, 0); b.AddImpulse(impulse, 0);
+                    Contact(a, b, out _, out _, out var contactPoint); a.ContactPoint = b.ContactPoint = contactPoint;
                     a.ContactPeer = b.RID; a.ContactNormal = -normal; a.ContactImpulse = -impulse;
                     b.ContactPeer = a.RID; b.ContactNormal = normal; b.ContactImpulse = impulse; Pairs++;
                 }
@@ -77,11 +77,22 @@ public static partial class BackendChecks
             var self = Bodies[area]; var count = 0;
             foreach (var other in Bodies.Values)
                 if (other != self && other.Shapes > 0 && self.Shapes > 0 && (self.Mask & other.Layer) != 0 &&
-                    (!other.IsArea || other.Monitorable) && self.Position.DistanceTo(other.Position) < self.Radius + other.Radius)
+                    (!other.IsArea || other.Monitorable) && Overlap(self, other))
                 { if (count < output.Length) output[count] = new(other.RID, 0, 0); count++; }
             return count;
         }
-        protected override bool AreaContainsPoint(RID area, Vector2 point, uint mask) { var b = Bodies[area]; return (b.Layer & mask) != 0 && point.DistanceTo(b.Position) <= b.Radius; }
+        protected override bool AreaContainsPoint(RID area, Vector2 point, uint mask) { var b = Bodies[area]; return (b.Layer & mask) != 0 && Annulus.Contains(point, b.Position, b.Hole, b.Radius); }
+        private static bool Overlap(Body a, Body b)
+        {
+            var d = a.Position.DistanceTo(b.Position);
+            return d <= a.Radius + b.Radius && d + b.Radius >= a.Hole && d + a.Radius >= b.Hole;
+        }
+        private static bool Contact(Body a, Body b, out Vector2 normal, out float depth, out Vector2 point)
+        {
+            if (a.Hole > 0 && b.Hole > 0) throw new NotSupportedException("The fixture exercises custom annulus/circle contacts.");
+            if (b.Hole > 0) { var hit = Annulus.Contact(b.Position, b.Hole, b.Radius, a.Position, a.Radius, out normal, out depth, out point); normal = -normal; return hit; }
+            return Annulus.Contact(a.Position, a.Hole, a.Radius, b.Position, b.Radius, out normal, out depth, out point);
+        }
         protected override void EndStep(Exception? failure) { }
         protected override void FlushQueries() => Flushes++;
         protected override void EndSync(Exception? failure) => Synchronizations++;
@@ -103,7 +114,8 @@ public static partial class BackendChecks
     private sealed partial class Body(Solver solver, RID rid, bool area)
     {
         internal RID ContactPeer;
-        internal Vector2 ContactNormal, ContactImpulse;
+        internal Vector2 ContactNormal, ContactImpulse, ContactPoint;
+        internal float Hole;
         internal RID RID => rid;
         internal float InvMass => InverseMass;
         internal Transform Pose => GetTransform();
@@ -166,7 +178,7 @@ public static partial class BackendChecks
         {
             Shapes = 0; Layer = layer; Mask = mask;
             foreach (ref readonly var s in slots)
-                if (s.Enabled) { if (s.Shape is not CircleShape circle) throw new NotSupportedException("The independent test solver exercises circles only."); Radius = circle.Radius; Shapes++; }
+                if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
         }
         protected override (Vector2 Position, float Rotation) GetPose() => (Position, Rotation);
         protected override Transform GetTransform() => new(Rotation, Position);
@@ -194,7 +206,7 @@ public static partial class BackendChecks
         protected override float InverseMass => Dynamic ? 1 / Mass : 0;
         protected override float InverseInertia => Dynamic && !Locked ? 1 / Inertia : 0;
         protected override PhysicsMassProperties ApplyMassProfile(float mass, float inertia, Vector2? center)
-        { Mass = mass; Inertia = inertia > 0 ? inertia : MathF.Max(.001f, mass * Radius * Radius / 2); _center = center ?? default; return new(Mass, Inertia, _center); }
+        { Mass = mass; Inertia = inertia > 0 ? inertia : MathF.Max(.001f, mass * (Radius * Radius + Hole * Hole) / 2); _center = center ?? default; return new(Mass, Inertia, _center); }
         protected override void WakeTouching() { }
         protected override Vector2 GetPointVelocity(Vector2 offset) => LinearVelocity + new Vector2(-offset.Y, offset.X) * AngularVelocity;
         protected override Vector2 GetWorldPointVelocity(Vector2 point) => GetPointVelocity(point - CenterOfMass);
@@ -204,7 +216,7 @@ public static partial class BackendChecks
         {
             if (solver.ContactFailure == rid) throw new InvalidOperationException("Injected contact publication failure.");
             if (contacts.IsEmpty || !ContactPeer.IsValid()) return 0;
-            var peer = solver.Bodies[ContactPeer]; var point = Position - ContactNormal * Radius;
+            var peer = solver.Bodies[ContactPeer]; var point = ContactPoint;
             contacts[0] = new(rid, 0, peer.RID, 0, point, point, ContactNormal, GetWorldPointVelocity(point), peer.GetWorldPointVelocity(point), ContactImpulse);
             return 1;
         }

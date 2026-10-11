@@ -133,7 +133,26 @@ interception would leave scene behavior and direct queries outside the extension
   Bounds, drawing, CPU/GPU compilation, mass, queries, contacts and replay consume
   that same representation. This is procedural resource authoring, not approximation
   of an unsupported geometry algorithm. ShapeGetType reports its actual represented
-  primitive. Registered custom-solver geometry and CustomShapeCreate remain open.
+  primitive.
+- Custom geometry uses the same immutable ShapeGeometry value with an explicit
+  format ID, bounded copied canonical bytes, finite bounds, copied diagnostic
+  segment pairs and exact unit-density mass/center/polar inertia. These are
+  shape-specific serialized data, not an object bag or solver handle. The author
+  supplies a typed synchronous shape-pair algorithm for standalone resource
+  queries; selected world implementations consume the same data for their own
+  numerical queries and solving. Canonical bytes, format, bounds, mass and drawing
+  participate in portable authoring compatibility; callback objects never enter
+  network payloads. Authors must use a stable format and canonical encoding.
+  The pinned [extension header](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/servers/physics_2d/physics_server_2d_extension.h)
+  and XML expose eight built-in shape factories, not a custom_shape_create hook.
+  C# CustomShapeCreate is an initialized construction projection of the existing
+  Custom shape identity, typed shape data and owned RID capability; it adds no
+  fictional reference census member. It requires custom geometry and copies a concrete
+  CustomShape resource, avoiding an inert unconfigured factory result. Built-in
+  attachment/query compilation rejects Custom before destroying existing shapes
+  or transferring a body; it never substitutes a supported primitive. Custom
+  geometry mutation retains RID identity, invalidates compilation and private
+  checkpoints, and rejects incompatible portable correction before mutation.
 
 ### Current implementation boundary
 

@@ -5,6 +5,7 @@ public static partial class BackendChecks
     public static void Run()
     {
         Solver? solver = null;
+        CustomChecks();
         SelectionChecks();
         DebugFailureChecks();
         var calls = 0;

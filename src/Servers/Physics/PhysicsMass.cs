@@ -19,10 +19,23 @@ internal static class PhysicsMass
     internal sealed class Geometry
     {
         private readonly List<B2ShapeProxy> _solid = [], _all = [];
-        internal void Clear() { _solid.Clear(); _all.Clear(); }
+        private readonly List<B2MassData> _custom = [];
+        internal void Clear() { _solid.Clear(); _all.Clear(); _custom.Clear(); }
         internal void Append(Shape shape, Transform pose, bool sensor)
         {
             if (shape.IsDisposed) return;
+            var geometry = shape.GetGeometryData();
+            if (geometry.Type == PhysicsServer.ShapeType.Custom)
+            {
+                if (!pose.IsFinite() || !pose.Scale.IsEqualApprox(Vector2.One) || !Mathf.IsZeroApprox(pose.Skew))
+                    throw new ArgumentException("Mass geometry requires finite unit-scale poses.", nameof(pose));
+                if (!sensor)
+                {
+                    var profile = geometry.GetCustomMassProperties();
+                    _custom.Add(new(profile.Mass * InertiaScale, PhysicsShapeBackend.ToBackend(pose * profile.Center), profile.Inertia / profile.Mass * InertiaScale));
+                }
+                return;
+            }
             var first = _all.Count;
             AppendProxies(shape, pose, _all);
             if (!sensor && shape.GetGeometry().Kind is not (PhysicsShapeGeometry.ShapeKind.SeparationRay or PhysicsShapeGeometry.ShapeKind.WorldBoundary))
@@ -30,7 +43,7 @@ internal static class PhysicsMass
         }
         internal Properties Calculate(float mass, float inertia, Vector2? center)
         {
-            var data = PhysicsMass.Calculate(_solid, mass, inertia, center);
+            var data = PhysicsMass.Calculate(_solid, mass, inertia, center, _custom);
             foreach (var proxy in _all)
                 for (var i = 0; i < proxy.count; i++)
                 {
@@ -75,7 +88,7 @@ internal static class PhysicsMass
         }
     }
 
-    internal static B2MassData Calculate(IReadOnlyList<B2ShapeProxy> proxies, float mass, float inertia, Vector2? customCenter)
+    internal static B2MassData Calculate(IReadOnlyList<B2ShapeProxy> proxies, float mass, float inertia, Vector2? customCenter, IReadOnlyList<B2MassData>? custom = null)
     {
         Validate(mass, inertia, customCenter);
         var weight = 0d;
@@ -91,6 +104,9 @@ internal static class PhysicsMass
                 centerX += (double)sample.mass * sample.center.X;
                 centerY += (double)sample.mass * sample.center.Y;
             }
+            if (!segments && custom is not null)
+                foreach (var sample in custom)
+                { weight += sample.mass; centerX += (double)sample.mass * sample.center.X; centerY += (double)sample.mass * sample.center.Y; }
             if (weight > 0) break;
             segments = true;
         }
@@ -112,6 +128,12 @@ internal static class PhysicsMass
                 moment += mass * (sample.mass / weight) * (sample.rotationalInertia + dx * dx + dy * dy);
             }
         }
+        if (inertia == 0 && weight > 0 && !segments && custom is not null)
+            foreach (var sample in custom)
+            {
+                var dx = sample.center.X - centerX; var dy = sample.center.Y - centerY;
+                moment += mass * (sample.mass / weight) * (sample.rotationalInertia + dx * dx + dy * dy);
+            }
         var result = new B2MassData(mass, new((float)centerX, (float)centerY), (float)moment);
         if (!double.IsFinite(weight) || !float.IsFinite(result.center.X) || !float.IsFinite(result.center.Y) ||
             !float.IsFinite(result.center.X * result.center.X + result.center.Y * result.center.Y) ||

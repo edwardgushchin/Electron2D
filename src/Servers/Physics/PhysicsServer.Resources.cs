@@ -35,6 +35,7 @@ public sealed partial class PhysicsServer
         PhysicsShapeGeometry.ShapeKind.Capsule => ShapeType.Capsule,
         PhysicsShapeGeometry.ShapeKind.ConvexPolygon => ShapeType.ConvexPolygon,
         PhysicsShapeGeometry.ShapeKind.ConcavePolygon => ShapeType.ConcavePolygon,
+        PhysicsShapeGeometry.ShapeKind.Custom => ShapeType.Custom,
         _ => throw new NotSupportedException("The geometry has no registered shape type.")
     };
 
@@ -141,6 +142,7 @@ public sealed partial class PhysicsServer
         {
             var slot = scene.GlobalShapeSlot(index);
             if ((slot.DisabledOverride ?? slot.Owner.Disabled) == disabled) return;
+            if (!disabled) PhysicsShapeBackend.RequireSupported(scene is PhysicsBody sceneBody ? sceneBody.Space : ((Area)scene).Space, slot.Shape);
             slot.DisabledOverride = disabled; scene.MarkShapesDirty();
         }
         else owners.Server!.SetShapeDisabled(index, disabled);
@@ -153,6 +155,7 @@ public sealed partial class PhysicsServer
         {
             var slot = scene.GlobalShapeSlot(index);
             if ((slot.DisabledOverride ?? slot.Owner.Disabled) == disabled) return;
+            if (!disabled) PhysicsShapeBackend.RequireSupported(scene is PhysicsBody sceneBody ? sceneBody.Space : ((Area)scene).Space, slot.Shape);
             slot.DisabledOverride = disabled; scene.MarkShapesDirty();
         }
         else owners.Server!.SetShapeDisabled(index, disabled);
@@ -283,6 +286,7 @@ public sealed partial class PhysicsServer
         }
         else if (collider is not null)
         {
+            collider.EnsureGeometryLifetimeAccess();
             if (collider.SpaceRID.IsValid())
             {
                 var owner = GetSceneSpace(collider.SpaceRID);
@@ -392,6 +396,7 @@ public sealed partial class PhysicsServer
     {
         var owners = ShapeOwners(owner, isArea, writing: true);
         var resource = GetShape(shape);
+        if (!disabled) PhysicsShapeBackend.RequireSupported(owners.Scene is PhysicsBody body ? body.Space : owners.Scene is Area area ? area.Space : owners.Server?.Space, resource.Geometry);
         if (owners.Scene is { } scene) scene.AddServerShape(resource, transform, disabled);
         else owners.Server!.AddShape(resource, transform, disabled);
     }
@@ -399,9 +404,11 @@ public sealed partial class PhysicsServer
     private void SetSpace(RID owner, RID spaceRID, bool isArea)
     {
         var collider = GetCollider(owner, isArea);
+        collider.EnsureGeometryLifetimeAccess();
         if (collider.SpaceRID == spaceRID) return;
         PhysicsSpace? next = spaceRID.IsValid() ? GetSceneSpace(spaceRID) : null;
         next?.EnsureAttachmentAccess();
+        if (next is not null) collider.ValidateGeometry(next);
         var oldRID = collider.SpaceRID;
         PhysicsSpace? old = oldRID.IsValid() ? GetSceneSpace(oldRID) : null;
         old?.EnsureQueryAccess();
