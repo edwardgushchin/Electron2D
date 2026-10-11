@@ -329,6 +329,12 @@
       "electron2d": "enumValue:Electron2D.RenderingDevice.StorageBufferUsage.DispatchIndirect()",
       "state": "Implemented",
       "reason": "ADR 0028: executable GPU buffer copy/clear and indirect compute chains with GPU-produced group counts, ordered native passes, typed roles, device-owned RIDs and validated ranges/lifetimes. All storage/uniform copy directions execute; storage-to-uniform synchronizes. Overlapping same-buffer copies reject; arbitrary byte copy offsets and four-byte clear sizes are supported. RenderingDeviceTests.Transfers covers real Linux/Vulkan execution, zero groups and prepared zero owner-thread managed allocations; other platforms and native allocations remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::method:buffer_get_data_async(RID:,Callable:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.BufferGetDataAsync(Electron2D.RID,System.Action<System.Byte[]>,System.UInt32,System.UInt32)",
+      "state": "Implemented",
+      "reason": "ADR 0028: local queued readback captures request-time bytes and delivers typed owner-thread callbacks at Submit/Sync or safe completion boundaries. Snapshot arrays are independent; prepared caller-Memory reads reuse native transfers and queue entries. FIFO nested delivery, aggregated callback failures, source freeing, disposal cancellation and custom-memory reentrancy guards execute in real Linux/Vulkan tests; other platforms and native allocator measurements remain unverified."
     }
   ],
   "extras": [
@@ -370,6 +376,11 @@
     {
       "electron2d": "method:Electron2D.RenderingDevice.ValidateDisposal()",
       "reason": "Managed construction, disposal or Resource duplication projection of the corresponding reference Object/Resource lifetime; introduces no separate game capability.",
+      "adr": "ADRs 0004/0014/0028"
+    },
+    {
+      "electron2d": "method:Electron2D.RenderingDevice.BufferGetDataAsync(Electron2D.RID,System.Memory<System.Byte>,System.Action,System.UInt32)",
+      "reason": "Caller-owned asynchronous Memory projection avoids allocating result arrays and safely carries storage beyond the request call; shares the executable local queued-readback contract.",
       "adr": "ADRs 0004/0014/0028"
     }
   ],
@@ -493,11 +504,11 @@
       ]
     },
     {
-      "state": "Unimplemented",
-      "reason": "ADR 0028: GPU download and local Submit/Sync primitives are present. Trigger: the next complete queued asynchronous readback slice, with request-time data snapshots, typed owner-thread callback delivery during local completion, callback failure/reentrancy and free/dispose lifetime checks. No additional frame-host or backend dependency is required for local devices.",
+      "state": "Implemented",
       "godot": [
         "RenderingDevice::method:buffer_get_data_async(RID:,Callable:,int:,int:)"
-      ]
+      ],
+      "reason": "ADR 0028: local queued readback captures request-time bytes and delivers typed owner-thread callbacks at Submit/Sync or safe completion boundaries. Snapshot arrays are independent; prepared caller-Memory reads reuse native transfers and queue entries. FIFO nested delivery, aggregated callback failures, source freeing, disposal cancellation and custom-memory reentrancy guards execute in real Linux/Vulkan tests; other platforms and native allocator measurements remain unverified."
     }
   ]
 }

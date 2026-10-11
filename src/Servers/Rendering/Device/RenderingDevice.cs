@@ -66,7 +66,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private long _activeList, _nextList;
     private nint Device => _context.Device;
     internal RenderingDevice() { }
-    private void Access() { ThrowIfDisposed(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A local device belongs to its creating thread."); }
+    private void Access() { ThrowIfDisposed(); if (_owner != Environment.CurrentManagedThreadId) throw new InvalidOperationException("A local device belongs to its creating thread."); if (_accessingReadbackMemory) throw new InvalidOperationException("A readback memory accessor cannot reenter its device."); }
     private Entry Get(RID rid) { Access(); return _entries.TryGetValue(rid, out var entry) ? entry : throw new ArgumentException("The RID is not a live resource of this device.", nameof(rid)); }
     private Entry Get(RID rid, Kind kind) { var entry = Get(rid); return entry.Kind == kind ? entry : throw new ArgumentException("The RID has the wrong resource kind.", nameof(rid)); }
     private RID Add(Entry entry) { var rid = RID.Allocate(); _entries.Add(rid, entry); return rid; }
@@ -74,7 +74,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     private void List(long id) { Access(); if (_activeList == 0 || id != _activeList) throw new ArgumentException("The compute list is not active.", nameof(id)); }
     private nint Commands()
     {
-        if (_fence != 0) Sync();
+        if (_fence != 0 || _submittedReadbacks.Count != 0) CompleteSubmission();
         if (_command == 0) { _command = SDL.AcquireGPUCommandBuffer(Device); if (_command == 0) throw GPUPhysicsDevice.Failure("acquire compute commands"); }
         return _command;
     }
@@ -147,6 +147,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="offsetBytes">First byte to read.</param>
     /// <param name="sizeBytes">Bytes to read, or zero for the remaining buffer.</param>
     /// <returns>An independent array containing the completed device data.</returns>
+    /// <remarks>A nonempty storage read delivers completed asynchronous callbacks after copying its result.</remarks>
+    /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     public byte[] BufferGetData(RID buffer, uint offsetBytes = 0, uint sizeBytes = 0)
     {
         var entry = Get(buffer); Range(entry, offsetBytes, sizeBytes);
@@ -156,6 +158,8 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     /// <param name="buffer">A live buffer.</param>
     /// <param name="destination">Determines the number of bytes to read.</param>
     /// <param name="offsetBytes">First byte to read.</param>
+    /// <remarks>A nonempty storage read delivers completed asynchronous callbacks after copying its result.</remarks>
+    /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     public void BufferGetData(RID buffer, Span<byte> destination, uint offsetBytes = 0)
     {
         IdleList(); var entry = Get(buffer); Range(entry, offsetBytes, (uint)destination.Length);
@@ -164,11 +168,12 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
         entry.Download ??= Transfer(entry.Size, SDL.GPUTransferBufferUsage.Download);
         var copy = SDL.BeginGPUCopyPass(Commands()); if (copy == 0) throw GPUPhysicsDevice.Failure("begin buffer read");
         SDL.DownloadFromGPUBuffer(copy, new() { Buffer = entry.Handle!.DangerousGetHandle(), Offset = offsetBytes, Size = (uint)destination.Length }, new() { TransferBuffer = entry.Download.DangerousGetHandle() });
-        SDL.EndGPUCopyPass(copy); Submit(); Sync();
+        SDL.EndGPUCopyPass(copy); Submit(); CompleteSubmission();
         var pointer = SDL.MapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle(), false);
         if (pointer == 0) throw GPUPhysicsDevice.Failure("map buffer read");
         try { new ReadOnlySpan<byte>((void*)pointer, destination.Length).CopyTo(destination); }
         finally { SDL.UnmapGPUTransferBuffer(Device, entry.Download.DangerousGetHandle()); }
+        DeliverReadbacks();
     }
 
     /// <summary>Validates and creates a compute shader from compiled bytecode.</summary>
@@ -274,32 +279,44 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
     public void ComputeListAddBarrier(long computeList) => List(computeList);
     /// <summary>Ends the active list without submitting it.</summary>
     public void ComputeListEnd() { List(_activeList); _activeList = 0; _pipeline = null; _sets.Clear(); }
-    /// <summary>Submits all recorded uploads and compute lists.</summary>
+    /// <summary>Submits all recorded uploads, compute lists and readback requests.</summary>
+    /// <remarks>Host-only and empty readback batches also require Sync before another explicit Submit.</remarks>
     public void Submit()
     {
-        IdleList(); if (_fence != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
-        if (_command == 0) return;
-        var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
-        if (_fence == 0) throw GPUPhysicsDevice.Failure("submit compute commands");
+        IdleList(); if (_fence != 0 || _submittedReadbacks.Count != 0) throw new InvalidOperationException("Synchronize the previous submission first.");
+        if (_command != 0)
+        {
+            var command = _command; _command = 0; _fence = SDL.SubmitGPUCommandBufferAndAcquireFence(command);
+            if (_fence == 0)
+            {
+                while (_recordedReadbacks.TryDequeue(out var cancelled)) RecycleReadback(cancelled);
+                throw GPUPhysicsDevice.Failure("submit compute commands");
+            }
+        }
+        while (_recordedReadbacks.TryDequeue(out var request)) _submittedReadbacks.Enqueue(request);
     }
-    /// <summary>Waits for the submitted work and releases its fence.</summary>
+    /// <summary>Waits for submitted work, releases its fence and delivers completed readback callbacks.</summary>
+    /// <remarks>Callbacks run once in request order on the owner thread. Nested Sync defers callback
+    /// delivery to the outer delivery loop. Disposal during a callback cancels remaining callbacks.</remarks>
+    /// <exception cref="AggregateException">One or more callbacks failed; other completed callbacks were attempted.</exception>
     public void Sync()
     {
-        IdleList(); if (_fence == 0) return;
-        var fence = _fence;
-        if (!SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1)) throw GPUPhysicsDevice.Failure("wait for compute commands");
-        SDL.ReleaseGPUFence(Device, _fence); _fence = 0;
+        IdleList(); CompleteSubmission(); DeliverReadbacks();
     }
     /// <summary>Returns the selected compute-device name.</summary>
     /// <returns>The native device description.</returns>
     public string GetDeviceName() { Access(); return _context.DeviceName; }
     /// <summary>Frees a resource after completing pending work.</summary>
     /// <param name="rid">A live identity owned by this device.</param>
-    /// <remarks>Borrowers become invalid; they may still be freed explicitly.</remarks>
+    /// <remarks>Borrowers become invalid; they may still be freed explicitly. Pending readbacks complete
+    /// before removal; their callbacks run after the resource is removed.</remarks>
+    /// <exception cref="AggregateException">One or more completed readback callbacks failed.</exception>
     public void FreeRID(RID rid)
     {
-        IdleList(); var entry = Get(rid); if (_fence != 0) Sync(); if (_command != 0) { Submit(); Sync(); }
+        IdleList(); var entry = Get(rid); CompleteSubmission();
+        if (_command != 0 || _recordedReadbacks.Count != 0) { Submit(); CompleteSubmission(); }
         _entries.Remove(rid); entry.Handle?.Dispose(); entry.Upload?.Dispose(); entry.Download?.Dispose();
+        DeliverReadbacks();
     }
     /// <inheritdoc />
     protected override void ValidateDisposal() { Access(); if (_activeList != 0) throw new InvalidOperationException("End the compute list before disposing the device."); base.ValidateDisposal(); }
@@ -311,7 +328,7 @@ public sealed unsafe partial class RenderingDevice : ElectronObject
             if (_command != 0) { SDL.CancelGPUCommandBuffer(_command); _command = 0; }
             if (_fence != 0) { var fence = _fence; SDL.WaitForGPUFences(Device, true, (nint)(&fence), 1); SDL.ReleaseGPUFence(Device, _fence); _fence = 0; }
             foreach (var e in _entries.Values) { e.Handle?.Dispose(); e.Upload?.Dispose(); e.Download?.Dispose(); }
-            _entries.Clear(); _context.Dispose();
+            _entries.Clear(); CancelReadbacks(); _context.Dispose();
         }
         base.Dispose(disposing);
     }

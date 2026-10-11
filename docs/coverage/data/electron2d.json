@@ -132285,6 +132285,74 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.BufferGetDataAsync(Electron2D.RID,System.Action\u003CSystem.Byte[]\u003E,System.UInt32,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "BufferGetDataAsync",
+    "signature": "public System.Void BufferGetDataAsync(Electron2D.RID buffer, System.Action\u003CSystem.Byte[]\u003E callback, System.UInt32 offsetBytes = 0, System.UInt32 sizeBytes = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action\u003CSystem.Byte[]\u003E",
+        "default": null
+      },
+      {
+        "name": "offsetBytes",
+        "type": "System.UInt32",
+        "default": "0"
+      },
+      {
+        "name": "sizeBytes",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.BufferGetDataAsync(Electron2D.RID,System.Memory\u003CSystem.Byte\u003E,System.Action,System.UInt32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "BufferGetDataAsync",
+    "signature": "public System.Void BufferGetDataAsync(Electron2D.RID buffer, System.Memory\u003CSystem.Byte\u003E destination, System.Action callback, System.UInt32 offsetBytes = 0)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "buffer",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "destination",
+        "type": "System.Memory\u003CSystem.Byte\u003E",
+        "default": null
+      },
+      {
+        "name": "callback",
+        "type": "System.Action",
+        "default": null
+      },
+      {
+        "name": "offsetBytes",
+        "type": "System.UInt32",
+        "default": "0"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.BufferUpdate(Electron2D.RID,System.UInt32,System.UInt32,System.ReadOnlySpan\u003CSystem.Byte\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",

@@ -2,7 +2,7 @@
 
 Last updated: 2026-10-11
 
-**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs). **Component:** [Local compute](../components/local-compute.md).
+**Namespace:** `Electron2D`. **Declaration:** `public sealed class Electron2D.RenderingDevice`. **Source:** [RenderingDevice.cs](../../src/Servers/Rendering/Device/RenderingDevice.cs), [RenderingDevice.Readback.cs](../../src/Servers/Rendering/Device/RenderingDevice.Readback.cs). **Component:** [Local compute](../components/local-compute.md).
 
 **Inherits:** [ElectronObject](ElectronObject.md).
 
@@ -41,6 +41,8 @@ byte[] result = device.BufferGetData(buffer);
 | `public System.Byte[] BufferGetData(Electron2D.RID buffer, System.UInt32 offsetBytes = 0, System.UInt32 sizeBytes = 0)` | Synchronizes and copies a buffer range into an independent array. |
 | `public System.Void BufferCopy(Electron2D.RID sourceBuffer, Electron2D.RID destinationBuffer, System.UInt32 sourceOffset, System.UInt32 destinationOffset, System.UInt32 sizeBytes)` | Copies disjoint validated byte ranges; storage copies stay on the GPU timeline. |
 | `public System.Void BufferClear(Electron2D.RID buffer, System.UInt32 offset, System.UInt32 sizeBytes)` | Zeros a range with a size divisible by four. |
+| `public System.Void BufferGetDataAsync(Electron2D.RID buffer, System.Action<System.Byte[]> callback, System.UInt32 offsetBytes = 0, System.UInt32 sizeBytes = 0)` | Queues a request-time snapshot and delivers an owned array at local completion. |
+| `public System.Void BufferGetDataAsync(Electron2D.RID buffer, System.Memory<System.Byte> destination, System.Action callback, System.UInt32 offsetBytes = 0)` | Queues a snapshot into caller-owned storage; prepared queue/transfer resources are reused. |
 | `public System.Void BufferUpdate(Electron2D.RID buffer, System.UInt32 offset, System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data)` | Updates a validated byte range of a buffer. |
 | `public System.Void ComputeListAddBarrier(System.Int64 computeList)` | Establishes a full dependency after prior dispatches in this list. |
 | `public System.Int64 ComputeListBegin()` | Begins an owner-thread compute list. |
@@ -57,7 +59,7 @@ byte[] result = device.BufferGetData(buffer);
 | `public Electron2D.RID ShaderCreateFromSPIRV(Electron2D.RDShaderSPIRV spirvData, System.String name = "")` | Validates and creates a compute shader from compiled bytecode. |
 | `public Electron2D.RID StorageBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default, Electron2D.RenderingDevice.StorageBufferUsage usage = 0)` | Creates a zero-initialized read/write storage buffer with an optional indirect-command role. |
 | `public System.Void Submit()` | Submits all recorded uploads and compute lists. |
-| `public System.Void Sync()` | Waits for the submitted work and releases its fence. |
+| `public System.Void Sync()` | Waits for submitted work, releases its fence and delivers completed readback callbacks. |
 | `public Electron2D.RID UniformBufferCreate(System.UInt32 sizeBytes, System.ReadOnlySpan<System.Byte> data = default)` | Creates a constant uniform buffer. |
 | `public Electron2D.RID UniformSetCreate(System.ReadOnlySpan<Electron2D.RDUniform> uniforms, Electron2D.RID shader, System.UInt32 shaderSet)` | Creates a copied set of validated buffer bindings. |
 | `public System.Boolean UniformSetIsValid(Electron2D.RID uniformSet)` | Reports whether a set and every borrowed resource remain alive. |
@@ -295,7 +297,7 @@ Submits all recorded uploads and compute lists.
 public System.Void Sync()
 ```
 
-Waits for the submitted work and releases its fence.
+Waits for submitted work, releases its fence and delivers completed readback callbacks.
 
 <a id="member-2488ae168080"></a>
 ### UniformBufferCreate(System.UInt32, System.ReadOnlySpan<System.Byte>)
@@ -351,10 +353,28 @@ protected override System.Void ValidateDisposal()
 
 ## Verification and limits
 
-[RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous transfer APIs and additional platforms are not established by this slice.
+[RenderingDeviceTests](../../tests/Electron2D.Tests/RenderingDeviceTests.cs) checks actual native computation, buffer/descriptor/barrier semantics, resource copying/storage and invalid lifetime/thread access. [Local compute](../components/local-compute.md) records the supported module/resource profile. Broader device graphics APIs, asynchronous texture transfer APIs and additional platforms are not established by this slice.
 
 ## Buffer transfer and indirect dispatch descriptions
 
 `BufferCopy` takes source/destination RID identities, byte offsets and a byte size. All storage/uniform combinations execute; storage-to-uniform synchronizes, uniform-to-storage snapshots the host bytes, and storage-to-storage needs no CPU readback. Same-buffer overlapping ranges throw `ArgumentException`. Unaligned byte copies are supported. `BufferClear` takes a byte offset and a four-byte-divisible size; other sizes throw `ArgumentOutOfRangeException`. Both reject active compute lists, wrong/freed/foreign identities and ranges outside either buffer, including invalid empty operations.
 
 `StorageBufferCreate` accepts [StorageBufferUsage](RenderingDevice.StorageBufferUsage.md); zero is the ordinary read/write role, and DispatchIndirect also permits command reads. Unknown flag bits reject before resource creation. `ComputeListDispatchIndirect` takes an active list, an indirect-capable storage buffer and an aligned byte offset. Twelve bytes must fit. The three uint counts remain on the GPU; the producer must stay within device limits. Zero groups skip execution. Pipeline and set validation is shared with direct dispatch; each closes its native compute pass to order subsequent consumers. [RenderingDeviceTests.Transfers](../../tests/Electron2D.Tests/RenderingDeviceTests.Transfers.cs) verifies the complete chain and edge cases on the native GPU backend.
+
+## Asynchronous readback descriptions
+
+BufferGetDataAsync validates the owning thread, buffer identity/kind, range and absence of an active compute list before queuing. Both callbacks must be nonnull. The array overload uses `sizeBytes == 0` for the remainder, and gives the callback its independent result. The Memory overload uses destination length for the range; retain valid storage without reading or modifying it until the callback. Empty and uniform-buffer requests still defer callback delivery until submission and completion.
+
+```csharp
+byte[] output = new byte[1024];
+device.BufferGetDataAsync(buffer, output.AsMemory(), () => Consume(output));
+device.Submit();
+DoOtherCPUWork();
+device.Sync();
+```
+
+The request records the snapshot before subsequent buffer updates or dispatches; it waits for no result of its own. Automatic waits for prior device work collect data without running callbacks. Sync, nonempty synchronous storage reads and FreeRID deliver completions in FIFO order on the owner thread. A synchronous read copies its result before invoking callbacks. FreeRID removes its resource before invoking callbacks. Nested Sync queues new completions behind the existing batch. Callback exceptions do not replay callbacks or suppress other completed callbacks: delivery throws AggregateException containing all original failures. A callback may dispose the device; remaining undelivered callbacks then cancel. Ordinary disposal also cancels requests, finishes submitted GPU work and releases the retained transfer pool.
+
+[RenderingDeviceTests.Readback](../../tests/Electron2D.Tests/RenderingDeviceTests.Readback.cs) verifies real compute snapshots, source updates, independent retained arrays, caller storage, queue/transfer reuse, native owner-thread delivery, host/empty requests, invalid inputs, nested operations, freeing sources, callback failures and disposal. Prepare the largest range and concurrent count for zero managed infrastructure allocations with the Memory overload; output arrays are intentional allocations. This establishes Linux/Vulkan behavior; other platforms and native/driver allocator measurements remain unverified.
+
+Caller-defined MemoryManager accessors cannot reenter this device while its destination span is being acquired. Attempts to synchronize, mutate or dispose it throw InvalidOperationException before native mapping or state mutation. A failed destination acquisition retains the submitted request for retry or cancellation during disposal. The native readback fixture verifies this guard and invalidated caller memory.

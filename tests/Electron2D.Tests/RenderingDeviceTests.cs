@@ -56,6 +56,7 @@ internal static partial class RenderingDeviceTests
             Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Prepared device dispatch and span readback allocate no owner-thread managed memory.");
             Transfers(device, buffer, shader);
             Indirect(device, pipeline, dataSet, parameters, buffer, uniformBuffer);
+            Readbacks(device, pipeline, dataSet, parameters, buffer, uniformBuffer);
             Reject<ArgumentOutOfRangeException>(() => device.BufferGetData(buffer, uint.MaxValue));
             Reject<ArgumentException>(() => device.UniformSetCreate([dataBinding, dataBinding], shader, 3));
             Reject<InvalidOperationException>(() => Task.Run(() => device.GetDeviceName()).GetAwaiter().GetResult());
