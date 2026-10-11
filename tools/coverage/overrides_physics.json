@@ -1824,6 +1824,141 @@
       "godot": "PhysicsServer2DExtension::method:_body_get_collision_priority(RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionPriority(Electron2D.RID)",
       "reason": "ADR 0103: attachment-scoped SetCollisionPriority receives the retained finite positive value after initial identity publication and on live edits; BodyGetCollisionPriority projects authoritative facade metadata. The separate public-only consumer verifies initial/live/transfer delivery and failed-initial-hook cleanup. Numerical priority response in an arbitrary third-party solver and complete extension-operation acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_add_shape(RID:,RID:,Transform2D:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_clear_shapes(RID:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_collision_layer(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetCollisionLayer(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_collision_mask(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetCollisionMask(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_shape(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetShape(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_shape_count(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetShapeCount(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_get_shape_transform(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.AreaGetShapeTransform(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_remove_shape(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_collision_layer(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_collision_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_shape(RID:,int:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_shape_disabled(RID:,int:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_area_set_shape_transform(RID:,int:,Transform2D:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_add_shape(RID:,RID:,Transform2D:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_clear_shapes(RID:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_collision_layer(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionLayer(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_collision_mask(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetCollisionMask(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_shape(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetShape(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_shape_count(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetShapeCount(Electron2D.RID)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_shape_transform(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetShapeTransform(Electron2D.RID,System.Int32)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_remove_shape(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_collision_layer(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_collision_mask(RID:,int:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_shape(RID:,int:,RID:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_shape_as_one_way_collision(RID:,int:,bool:,float:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_shape_disabled(RID:,int:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_shape_transform(RID:,int:,Transform2D:)",
+      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
+      "reason": "ADR 0103: shared engine-owned logical slots project through the attached RebuildShapes span; layer/mask edits dispatch UpdateFilter and getters project guarded facade authoring. Separate public-only body/Area and scene regressions verify initial/live borrowed-write rejection, actual replacement/disable/query membership and zero warmed filter/query allocation. Transform/one-way data delivery is checked; arbitrary solver response, shapes and complete extension acceptance remain open."
     }
   ],
   "extras": [
@@ -3439,10 +3574,6 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsBackendCollider.RebuildShapes(System.ReadOnlySpan<Electron2D.PhysicsColliderShape>,System.UInt32,System.UInt32,System.Boolean,System.Single,System.Single,System.Single)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.RestorePose()",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
@@ -3504,10 +3635,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsBackendCollider.SetTargetPose(Electron2D.Transform,System.Double)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsBackendCollider.UpdateFilter(System.UInt32,System.UInt32,System.Boolean)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {

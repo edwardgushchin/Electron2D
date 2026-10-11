@@ -564,3 +564,5 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 
 
 Registered [initial collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now publishes detached object/canvas IDs and priority before shape preparation. The public-only consumer verifies first queries, body/Area transfers, scene canvas membership, initial-hook cleanup and zero warmed edited-query allocation. Full extension-operation acceptance remains open.
+
+Registered [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring) now applies the same pre-mutation guard to raw/scene body and Area slots, filters and shared server-shape data/lifetime, including initial attachment. The public-only consumer exercises actual query membership and zero warmed filter/query allocation. Arbitrary numerical response and complete extension acceptance remain open.

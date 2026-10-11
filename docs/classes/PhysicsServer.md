@@ -862,3 +862,5 @@ Public [registered implementations](../components/physics-registered-adapter.md)
 
 
 Registered [initial collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) receives retained object/canvas IDs and priority before shapes. Body/Area live metadata writes and raw release/transfer reject a borrowed extension scope before changing bindings, including initial attachment before SpaceRID publication. Common getters and weak sampled query identities retain their existing contract.
+
+Body/Area shape-slot and layer/mask writes, shared server-shape data replacement and release reject while their registered implementation is borrowed, before changing retained authoring. This also covers partial initial attachment; guarded getters and immutable result construction retain their existing access. See [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring).

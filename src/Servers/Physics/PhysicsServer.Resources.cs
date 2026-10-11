@@ -83,7 +83,7 @@ public sealed partial class PhysicsServer
         foreach (var collider in SnapshotColliders())
             if (collider.UsesShape(entry))
             {
-                EnsureColliderSpaceAccessible(collider);
+                EnsureColliderSpaceAccessible(collider, writing: true);
                 users.Add(collider);
             }
         var sceneUsers = SceneShapeUsers(entry);
@@ -317,7 +317,7 @@ public sealed partial class PhysicsServer
                 throw new InvalidOperationException("A Shape resource owns this RID and its lifetime.");
             var users = SnapshotColliders();
             foreach (var user in users)
-                if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user);
+                if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user, writing: true);
             var sceneUsers = SceneShapeUsers(shape);
             foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
             foreach (var user in users) user.RemoveShape(shape);
@@ -417,8 +417,9 @@ public sealed partial class PhysicsServer
         catch { old?.Add(collider, oldRID); throw; }
     }
 
-    private void EnsureColliderSpaceAccessible(PhysicsServerCollider collider)
+    private static void EnsureColliderSpaceAccessible(PhysicsServerCollider collider, bool writing = false)
     {
-        if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).EnsureQueryAccess();
+        if (writing) collider.EnsureGeometryLifetimeAccess();
+        collider.Space?.EnsureQueryAccess();
     }
 }

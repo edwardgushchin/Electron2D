@@ -471,3 +471,5 @@ close complete extension operations or final CPU/GPU performance acceptance.
 
 
 Registered [collider metadata](physics-registered-adapter.md#initial-collider-metadata) now reaches Attach-time object/canvas/priority hooks as well as live edits. Public body/Area queries, weak identities, transfers and initial-hook failures execute in a separate consumer. Ten extension rows now have explicit Partial projections; numerical priority and full operation acceptance remain open.
+
+[Borrowed shape authoring](physics-registered-adapter.md#borrowed-shape-authoring) now rejects raw/scene body and Area slot/filter edits and shared server-shape replacement/release before mutation, including partial initial attachment. The independent consumer checks ordinary numerical query membership and zero warmed filter/query allocation. The complete 27-member shape/filter projection remains Partial; arbitrary numerical semantics and full extension acceptance remain open.

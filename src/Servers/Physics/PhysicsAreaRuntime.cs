@@ -25,6 +25,7 @@ internal sealed class PhysicsAreaRuntime(RID rid)
         Space?.EnsureQueryAccess();
         if (writing)
         {
+            Space?.EnsureExtensionHierarchyChange();
             if (_dispatching) throw new InvalidOperationException("Area monitor configuration cannot change from its callback.");
             owners.Scene?.EnsureMonitorConfigurationChange();
         }

@@ -18,7 +18,7 @@ public sealed partial class PhysicsServer
         }
         var server = GetCollider(rid, isArea);
         if (contactResult) server.Space?.EnsureContactResultAccess();
-        else EnsureColliderSpaceAccessible(server);
+        else EnsureColliderSpaceAccessible(server, writing);
         return (null, server);
     }
 

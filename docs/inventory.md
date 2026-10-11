@@ -1191,3 +1191,5 @@ Selected body contact publication belongs to existing [PhysicsDirectBodyState/Ex
 | [Physics](domains/physics.md) | [Custom geometry](components/physics-custom-geometry.md) | [CustomShape](classes/CustomShape.md), [ShapeCollisionAlgorithm](classes/ShapeCollisionAlgorithm.md) | [resource](../src/Scene/Resources/CustomShape.cs), [data and pair algorithm](../src/Scene/Resources/ShapeGeometry.Custom.cs) | Public | Immutable custom format data, exact mass/bounds, diagnostic drawing, standalone pair dispatch, selected numerical participation and authoring-qualified replay. |
 
 GPU body publication scheduling and its existing store/space roles are described in [changed publication](components/gpu-body-publication.md); adaptive transfer and valid-cache reuse add no public types or CPU solver mirror.
+
+Registered body/Area shape and filter operations retain shared authoring and dispatch attached numerical hooks; initial/live borrowed writes reject before mutation. See [borrowed shape authoring](components/physics-registered-adapter.md#borrowed-shape-authoring). This adds no production declarations.

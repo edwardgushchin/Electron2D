@@ -57,10 +57,13 @@ public abstract class PhysicsBackendCollider
     /// <param name="value">The retained finite positive priority, initially 1 unless authored otherwise.</param>
     protected internal abstract void SetCollisionPriority(float value);
     /// <summary>Supplies the selected implementation operation: update filter.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Nested body/Area shape-slot,
+    /// filter, shared server-shape data and release writes reject before changing retained authoring. Reads remain guarded and available.</remarks>
     protected internal abstract void UpdateFilter(uint layer, uint mask, bool wakeBody);
     /// <summary>Supplies the selected implementation operation: rebuild shapes.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.
+    /// Nested body/Area shape-slot, filter, shared server-shape data and release writes reject before changing retained authoring,
+    /// including initial attachment before the public space binding is committed.</remarks>
     protected internal abstract void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce);
     /// <summary>Supplies the selected implementation operation: get pose.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>

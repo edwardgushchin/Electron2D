@@ -669,3 +669,5 @@ The [image-array slice](../components/texture-arrays.md) adds typed TextureLayer
 
 
 Registered [collider metadata](../components/physics-registered-adapter.md#initial-collider-metadata) now has explicit typed projections for all ten object/canvas/priority operations. Attach-time publication, live edits, two-world transfers, weak results, failed hooks and zero warmed edited queries execute. These rows remain Partial; numerical priority and complete extension-operation acceptance remain open.
+
+[Borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring) now guards initial/live raw and scene body/Area slot/filter edits and shared server-shape replacement/release. Twenty-seven extension shape/filter operations project through existing RebuildShapes/UpdateFilter and guarded facade getters; rows remain Partial pending arbitrary solver semantics and complete acceptance.

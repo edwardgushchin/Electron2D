@@ -14,6 +14,7 @@ public static partial class BackendChecks
         internal bool BadDebugCount, BadDebugPoint;
         internal RID ContactFailure;
         internal Action<RID>? IdentityHook;
+        internal Action<RID>? ShapeHook, FilterHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
         internal PhysicsAreaFieldConfiguration Fields;
@@ -141,6 +142,7 @@ public static partial class BackendChecks
         internal bool IsArea => area;
         internal bool Monitoring, Monitorable = true;
         internal uint Layer, Mask;
+        internal PhysicsColliderShape LastShape;
         internal ulong Canvas, ObjectID;
         internal float Priority;
         internal Vector2 Position, Velocity, Force, Surface;
@@ -193,10 +195,12 @@ public static partial class BackendChecks
         { solver.IdentityHook?.Invoke(rid); ObjectID = objectID; Canvas = canvasID; }
         protected override void SetCollisionPriority(float value)
         { solver.PriorityHook?.Invoke(); Priority = value; }
-        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { Layer = layer; Mask = mask; }
+        protected override void UpdateFilter(uint layer, uint mask, bool wakeBody) { solver.FilterHook?.Invoke(rid); Layer = layer; Mask = mask; }
         protected override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {
+            solver.ShapeHook?.Invoke(rid);
             Shapes = 0; Layer = layer; Mask = mask;
+            LastShape = slots.IsEmpty ? default : slots[^1];
             foreach (ref readonly var s in slots)
                 if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
         }

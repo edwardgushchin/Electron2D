@@ -228,7 +228,8 @@ public sealed partial class PhysicsServer
     /// <param name="area">A live Area RID.</param>
     /// <param name="mask">All accepted category bits; default one.</param>
     /// <exception cref="ArgumentException">The RID does not identify a live Area.</exception>
-    /// <exception cref="InvalidOperationException">Attached access is off-owner, solver-owned, or receiver configuration is mutated from its own callback.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook,
+    /// or receiver configuration changes from its own callback; authoring is unchanged.</exception>
     public static void AreaSetCollisionMask(RID area, uint mask) => Service.AreaSetCollisionMaskCore(area, mask);
 
     /// <summary>Gets the Area's 32 collision-layer bits.</summary>
@@ -937,6 +938,7 @@ public sealed partial class PhysicsServer
     /// <param name="data">Caller-owned source geometry; later edits do not affect the server copy.</param>
     /// <exception cref="ArgumentException">The RID is not a live shape or the resource has another concrete type.</exception>
     /// <exception cref="ObjectDisposedException">The supplied resource is disposed.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void ShapeSetData(RID shape, Shape data) => Service.ShapeSetDataCore(shape, data);
 
     /// <summary>Returns a caller-owned duplicate of server shape geometry.</summary>
@@ -949,6 +951,7 @@ public sealed partial class PhysicsServer
     /// <param name="shape">A live server shape RID.</param>
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodyAddShape(RID body, RID shape, Transform? transform = null, bool disabled = false) => Service.BodyAddShapeCore(body, shape, transform, disabled);
 
     /// <summary>Adds a typed server shape to an Area sensor as one indexed owner slot.</summary>
@@ -956,6 +959,7 @@ public sealed partial class PhysicsServer
     /// <param name="shape">A live server shape RID.</param>
     /// <param name="transform">Finite local pose, or null for identity.</param>
     /// <param name="disabled">Whether this slot initially contributes no fixtures.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaAddShape(RID area, RID shape, Transform? transform = null, bool disabled = false) => Service.AreaAddShapeCore(area, shape, transform, disabled);
 
     /// <summary>Gets the number of indexed shape slots on a body, including disabled slots.</summary>
@@ -972,22 +976,26 @@ public sealed partial class PhysicsServer
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no fixtures.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetShapeDisabled(RID body, int index, bool disabled) => Service.BodySetShapeDisabledCore(body, index, disabled);
 
     /// <summary>Enables or disables one indexed Area shape slot.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
     /// <param name="disabled">Whether the slot contributes no sensor fixtures.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaSetShapeDisabled(RID area, int index, bool disabled) => Service.AreaSetShapeDisabledCore(area, index, disabled);
 
     /// <summary>Removes one indexed body shape slot and its fixtures.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodyRemoveShape(RID body, int index) => Service.BodyRemoveShapeCore(body, index);
 
     /// <summary>Removes one indexed Area shape slot and its fixtures.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="index">Zero-based shape-owner slot index.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaRemoveShape(RID area, int index) => Service.AreaRemoveShapeCore(area, index);
 
     /// <summary>Moves a body into a live space, or detaches it with an empty RID.</summary>
@@ -1091,7 +1099,7 @@ public sealed partial class PhysicsServer
     /// <param name="layer">All layer bits, including zero and bit 32.</param>
     /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionLayer(RID body, uint layer) => Service.BodySetCollisionLayerCore(body, layer);
 
     /// <summary>Gets a body's complete 32-bit collision-layer mask.</summary>
@@ -1106,7 +1114,7 @@ public sealed partial class PhysicsServer
     /// <param name="mask">All accepted category bits, including zero and bit 32.</param>
     /// <remarks>Assignments wake the body and its contact neighbors, even for unchanged bits. Motion queries observe changes immediately; contacts and overlap events update on the next step.</remarks>
     /// <exception cref="ArgumentException">The RID is not a live body.</exception>
-    /// <exception cref="InvalidOperationException">An attached world is accessed off-thread, stepping or failed.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetCollisionMask(RID body, uint mask) => Service.BodySetCollisionMaskCore(body, mask);
 
     /// <summary>Gets a body's complete 32-bit collision-mask value.</summary>
@@ -1119,6 +1127,8 @@ public sealed partial class PhysicsServer
     /// <summary>Sets an Area's 32 collision-layer bits.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <param name="layer">All accepted layer bits, including zero and bit 32.</param>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook,
+    /// or receiver configuration changes from its own callback; authoring is unchanged.</exception>
     public static void AreaSetCollisionLayer(RID area, uint layer) => Service.AreaSetCollisionLayerCore(area, layer);
 
     /// <summary>Sets whether scene monitoring Areas may detect a server-created Area.</summary>
@@ -1183,7 +1193,7 @@ public sealed partial class PhysicsServer
     /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">An owner or shape RID is stale or has the wrong kind.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetShape(RID body, int index, RID shape) => Service.BodySetShapeCore(body, index, shape);
 
     /// <summary>Replaces one Area's slot resource while retaining its index and local policies.</summary>
@@ -1193,7 +1203,7 @@ public sealed partial class PhysicsServer
     /// <remarks>The collider borrows geometry; it does not free either resource. Child node properties are unchanged.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">An owner or shape RID is stale or has the wrong kind.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaSetShape(RID area, int index, RID shape) => Service.AreaSetShapeCore(area, index, shape);
 
     /// <summary>Changes one body slot's local pose without moving the body or other slots.</summary>
@@ -1203,7 +1213,7 @@ public sealed partial class PhysicsServer
     /// <remarks>A later group or child transform edit replaces its slot overrides.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The pose is nonfinite/scaled/skewed or the RID has the wrong kind.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetShapeTransform(RID body, int index, Transform transform) => Service.BodySetShapeTransformCore(body, index, transform);
 
     /// <summary>Changes one Area slot's local pose without moving the Area or other slots.</summary>
@@ -1213,21 +1223,21 @@ public sealed partial class PhysicsServer
     /// <remarks>A later group or child transform edit replaces its slot overrides.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent.</exception>
     /// <exception cref="ArgumentException">The pose is nonfinite/scaled/skewed or the RID has the wrong kind.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaSetShapeTransform(RID area, int index, Transform transform) => Service.AreaSetShapeTransformCore(area, index, transform);
 
     /// <summary>Removes all body slots and fixtures without freeing their shape resources.</summary>
     /// <param name="body">A live scene or server body RID.</param>
     /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.</remarks>
     /// <exception cref="ArgumentException">The owner RID is stale or not a body.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodyClearShapes(RID body) => Service.BodyClearShapesCore(body);
 
     /// <summary>Removes all Area slots and sensor fixtures without freeing their shape resources.</summary>
     /// <param name="area">A live scene or server Area RID.</param>
     /// <remarks>Scene owner identities and child nodes remain; a later child resource edit can rebuild its group.</remarks>
     /// <exception cref="ArgumentException">The owner RID is stale or not an Area.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void AreaClearShapes(RID area) => Service.AreaClearShapesCore(area);
 
     /// <summary>Changes one body slot's one-way policy for contacts and body motion tests.</summary>
@@ -1238,7 +1248,7 @@ public sealed partial class PhysicsServer
     /// <param name="direction">Finite slot-local direction, normalized once; null selects downward and zero remains zero.</param>
     /// <exception cref="ArgumentOutOfRangeException">The index is absent or margin is invalid.</exception>
     /// <exception cref="ArgumentException">Direction is nonfinite, or the RID is stale/wrong-kind.</exception>
-    /// <exception cref="InvalidOperationException">The attached world is off-owner or stepping.</exception>
+    /// <exception cref="InvalidOperationException">An attached world is off-owner, stepping or borrowing an implementation hook; authoring is unchanged.</exception>
     public static void BodySetShapeAsOneWayCollision(RID body, int index, bool enable, float margin, Vector2? direction = null) => Service.BodySetShapeAsOneWayCollisionCore(body, index, enable, margin, direction);
 
     /// <summary>Returns a live direct-query view of a physics space.</summary>

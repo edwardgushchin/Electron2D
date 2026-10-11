@@ -94,3 +94,5 @@ body and Area assignment, two-world transfer, clear/disposed objects, exact 64-b
 canvas filtering through actual point queries, scene CanvasLayer membership, failed
 initial hooks, owner/borrow guards and 64 warmup/128 edited query cycles with zero
 owner/all-thread managed bytes. Native allocation and foreign platforms are unverified.
+
+Body/Area shape slots, filters and shared server-shape data/lifetime cannot change from a borrowed hook, including partial initial attachment. Rejection precedes common authoring mutation; guarded logical reads remain available. See [borrowed shape authoring](../components/physics-registered-adapter.md#borrowed-shape-authoring).

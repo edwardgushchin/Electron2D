@@ -22,7 +22,7 @@ PhysicsServerManager.RegisterServer and SetDefaultServer now execute through a r
 
 The public immutable configuration/result family includes body integration/forces, Area fields, joints, sleep/contact policy, logical shape slots, resolved fields, mass properties, overlap/shape contacts, statistics and one-way episodes. Collider and joint objects are fresh per attachment; checkpoint objects provide private history hooks. Query exclusion spans are passed explicitly and borrowed only during the synchronous call. The consumer compiles without internal access and executes both SceneTree frames and explicitly owned SpaceStep.
 
-Arbitrary custom geometry and every extension operation's acceptance remain open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Backend rows stay Partial or Blocked where their named path is absent; the bounded test solver does not certify the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
+Every extension operation's acceptance remains open under [ADR 0103](../decisions/physics-extensions.md#adr-0103). Backend rows stay Partial or Blocked where their named path is absent; the bounded test solver does not certify the full production contract. Native allocator, cross-platform, real-rendered output and final performance acceptance are unverified here.
 
 Initialization/Finish/disposal failure injection retains all three errors after retirement. Scene diagnostic capture executes the selected ReadDebugContacts hook after synchronization; invalid count or nonfinite points reject before diagnostic publication and fail the started interval.
 
@@ -69,3 +69,23 @@ writes now reject a borrowed extension scope before assignment; raw lifetime
 preflight uses the live world reference to reject release/transfer during that
 scope. Both body and Area initial hooks exercise these paths. Typed immutable
 result construction and supported nested query scratch keep their existing paths.
+
+## Borrowed shape authoring
+
+Body/Area slot add, replace, transform, disable, remove and clear, body one-way
+settings, collision layers/masks, shared server-shape data replacement and release
+reject inside a registered hook before changing common authoring or numerical
+state. Raw colliders use their live world reference even during initial attachment
+before the public SpaceRID is committed. Qualified immutable result construction
+and guarded logical getters retain their existing read access. This does not
+claim a blanket ban on every engine operation from a hook.
+
+The public-only ShapeMutationChecks exercises initial identity, live shape and
+filter hooks, scene body/Area entry, owner-thread rejection and actual query
+membership after ordinary replacement, disable, removal, clear and shared data
+edits. It samples delivered transform/one-way values; the bounded circle solver
+does not certify arbitrary transform or one-way numerical response. After 64
+warmups, 128 layer-edit/point-query cycles require zero owner/all-thread managed
+bytes. The old runtime failed the initial BodyClearShapes rejection before the
+shared guard. The 27 corresponding extension shape/filter setter/getter rows
+remain Partial; generic geometry and complete solver acceptance remain open.
