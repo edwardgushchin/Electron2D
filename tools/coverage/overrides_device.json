@@ -2187,32 +2187,32 @@
     {
       "godot": "class:Texture2DRD",
       "electron2d": "T:Electron2D.TextureRD",
-      "state": "Partial",
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "class:TextureLayeredRD",
       "electron2d": "T:Electron2D.TextureLayeredRD",
-      "state": "Partial",
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "class:Texture2DArrayRD",
       "electron2d": "T:Electron2D.TextureArrayRD",
-      "state": "Partial",
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "Texture2DRD::property:texture_rd_rid",
       "electron2d": "property:Electron2D.TextureRD.TextureRDRID()",
-      "state": "Partial",
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "TextureLayeredRD::property:texture_rd_rid",
       "electron2d": "property:Electron2D.TextureLayeredRD.TextureRDRID()",
-      "state": "Partial",
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "state": "Implemented",
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     },
     {
       "godot": "Texture2DRD::property:resource_local_to_scene",
@@ -2690,13 +2690,15 @@
       "reason": "ADR 0028: backend-specific format filter-feature queries are not exposed by the native portable API; requires a verified feature query/adapter rather than a guess from scalar type."
     },
     {
-      "state": "Partial",
+      "state": "Implemented",
       "godot": [
         "class:Texture2DRD",
         "class:TextureLayeredRD",
-        "class:Texture2DArrayRD"
+        "class:Texture2DArrayRD",
+        "Texture2DRD::property:texture_rd_rid",
+        "TextureLayeredRD::property:texture_rd_rid"
       ],
-      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. Integer light/normal/specular/mask composition still requires scalar-aware composition shaders; foreign platforms and native allocator behavior remain unverified."
+      "reason": "ADR 0028: retained-device ordinary/array float, signed and unsigned sampled images execute native direct/atlas/proxy and GLSL/DXC-HLSL material descriptors. Signedness/shape/default/override/reload checks and 8/16/32-bit raw-valued float32 mip snapshots execute; lossless integer bits remain in device byte readback. IntegerCanvasTests verifies real Linux/Vulkan pixels and 24 warm plus 32 active frames with zero owner-thread managed bytes. IntegerLightingTests verifies all 27 diffuse/normal/specular scalar combinations against float references, raw-valued signed/unsigned point-light atlas masks and alpha clipping, live clear/free/rebind/resize and zero owner-thread managed bytes. ShaderMaterial light receivers still require automatic source/pipeline composition; foreign platforms and native allocator behavior remain unverified."
     }
   ]
 }

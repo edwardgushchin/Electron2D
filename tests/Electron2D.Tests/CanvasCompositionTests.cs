@@ -137,7 +137,8 @@ internal static class CanvasCompositionTests
     }
     private static void Effects(ShaderMaterial material, string language)
     {
-        var window = new Window { Size = new(128, 64) }; window.AddChild(new Box { Extent = new(128, 64) }); window.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); window.AddChild(new Box { Fill = Colors.Blue, Extent = new(128, 64) }); var group = new CanvasGroup { Position = new(8, 8), FitMargin = 10, ClearMargin = 0, Material = material }; var child = new Box { Fill = Colors.Lime }; group.AddChild(child); window.AddChild(group); material.SetShaderParameter("offset", new Vector2(8, 0)); material.SetShaderParameter("unpremultiply", 1f); var stage = 0;
+        // Native decorations can enlarge smaller clients after their first frame.
+        var window = new Window { Size = new(256, 128) }; window.AddChild(new Box { Extent = new(128, 64) }); window.AddChild(new BackBufferCopy { CopyMode = BackBufferCopyMode.Viewport }); window.AddChild(new Box { Fill = Colors.Blue, Extent = new(128, 64) }); var group = new CanvasGroup { Position = new(8, 8), FitMargin = 10, ClearMargin = 0, Material = material }; var child = new Box { Fill = Colors.Lime }; group.AddChild(child); window.AddChild(group); material.SetShaderParameter("offset", new Vector2(8, 0)); material.SetShaderParameter("unpremultiply", 1f); var stage = 0;
         window.Ready += _ =>
         {
             var renderer = RenderingServer.Service!; RenderingServer.SetDefaultClearColor(Colors.Black); RenderingServer.FramePostDraw += () =>

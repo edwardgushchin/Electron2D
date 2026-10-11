@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-10
+Last updated: 2026-10-11
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -166,4 +166,4 @@ The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook map
 
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
 
-Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the remaining scalar-aware composition dependencies.
+Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.

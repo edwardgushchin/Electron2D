@@ -1,4 +1,7 @@
-Texture2D<float4> TEXTURE : register(t0, space2);
+#ifndef DIFFUSE_TYPE
+#define DIFFUSE_TYPE float4
+#endif
+Texture2D<DIFFUSE_TYPE> TEXTURE : register(t0, space2);
 SamplerState canvasSampler : register(s0, space2);
 Texture2D<float4> SCREEN_TEXTURE : register(t1, space2);
 SamplerState screenSampler : register(s1, space2);

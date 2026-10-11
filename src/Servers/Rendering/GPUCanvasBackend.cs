@@ -184,7 +184,8 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         if (lightingUsed) PrepareLightingAtlas(lighting);
         if (sdfUsed) PrepareSDF(lighting);
         var lightingBytes = lightingUsed || sdfUsed ? lighting.Bytes : 0;
-        var vertexBytes = checked((vertices.Length + (sdfUsed ? 6 : 0)) * sizeof(CanvasVertex));
+        var maskFirst = checked(vertices.Length + (sdfUsed ? 6 : 0));
+        var vertexBytes = checked((maskFirst + (lightingUsed ? lighting.Masks.Count * 6 : 0)) * sizeof(CanvasVertex));
         var uploadBytes = checked(lightingBytes + vertexBytes + instances.Length * sizeof(CanvasInstance));
         EnsureBuffers(uploadBytes);
         var command = SDL.AcquireGPUCommandBuffer(Device);
@@ -203,6 +204,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                     if (lightingBytes != 0) lighting.CopyTo(new Span<byte>((void*)mapped, lightingBytes));
                     vertices.CopyTo(new Span<CanvasVertex>((void*)(mapped + lightingBytes), vertices.Length));
                     if (sdfUsed) WriteSDFVertices(new Span<CanvasVertex>((void*)(mapped + lightingBytes + vertices.Length * sizeof(CanvasVertex)), 6), lighting);
+                    if (lightingUsed) WriteLightingMaskVertices(new Span<CanvasVertex>((void*)(mapped + lightingBytes + maskFirst * sizeof(CanvasVertex)), lighting.Masks.Count * 6), lighting);
                     instances.CopyTo(new Span<CanvasInstance>((void*)(mapped + lightingBytes + vertexBytes), instances.Length));
                 }
                 finally { SDL.UnmapGPUTransferBuffer(Device, _transfer.DangerousGetHandle()); }
@@ -211,7 +213,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
                     new SDL.GPUBufferRegion { Buffer = _vertexBuffer!.DangerousGetHandle(), Size = (uint)uploadBytes }, true);
                 SDL.EndGPUCopyPass(copy);
             }
-            if (lightingUsed) CopyLightingAtlas(command, lighting);
+            if (lightingUsed) CopyLightingAtlas(command, lighting, lightingBytes, maskFirst);
             if (sdfUsed) DrawSDF(command, lighting, lightingBytes, vertices.Length);
             if (!clearEnabled) Blit(command, output.Current.DangerousGetHandle(), output.Next.DangerousGetHandle(), new(0, 0, size.X, size.Y));
             pass = BeginPass(command, output.Next.DangerousGetHandle(), clearEnabled ? SDL.GPULoadOp.Clear : SDL.GPULoadOp.Load, clear);
@@ -366,7 +368,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
     private SDL.GPUTextureSamplerBinding CanvasBinding(CanvasBatch batch)
     {
         var texture = batch.Texture;
-        if (texture is CanvasTexture channels) texture = channels.DiffuseTexture;
+        texture = (Texture?)ShaderTexture.Source(texture);
         if (texture is null)
         {
             if (_whiteTexture is null)
@@ -536,7 +538,9 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         _layeredTextures.Clear(); _usedLayeredTextures.Clear();
         _textures.Clear(); _usedTextures.Clear(); _textureBindings.Clear(); _usedMaterials.Clear();
         foreach (var sampler in _samplers.Values) sampler.Dispose();
-        _samplers.Clear(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose(); _sdfTarget?.Dispose(); _sdfPipeline?.Dispose();
+        _samplers.Clear(); _whiteTexture?.Dispose(); _lightAtlas?.Dispose();
+        foreach (var pipeline in _lightMaskPipelines) pipeline?.Dispose();
+        _sdfTarget?.Dispose(); _sdfPipeline?.Dispose();
         _pipelines.Clear(); _clearPipeline?.Dispose(); ReleaseTargets(); _vertexBuffer?.Dispose(); _transfer?.Dispose(); _vertexShader.Dispose(); _instancedVertexShader.Dispose();
         if (_windowClaimed) SDL.ReleaseWindowFromGPUDevice(Device, _window);
         _device.Dispose();

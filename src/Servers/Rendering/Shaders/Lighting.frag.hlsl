@@ -1,8 +1,17 @@
-Texture2D<float4> TEXTURE : register(t0, space2);
+#ifndef SPECULAR_TYPE
+#define SPECULAR_TYPE float4
+#endif
+#ifndef NORMAL_TYPE
+#define NORMAL_TYPE float4
+#endif
+#ifndef DIFFUSE_TYPE
+#define DIFFUSE_TYPE float4
+#endif
+Texture2D<DIFFUSE_TYPE> TEXTURE : register(t0, space2);
 SamplerState colorSampler : register(s0, space2);
-Texture2D<float4> NORMAL_TEXTURE : register(t1, space2);
+Texture2D<NORMAL_TYPE> NORMAL_TEXTURE : register(t1, space2);
 SamplerState normalSampler : register(s1, space2);
-Texture2D<float4> SPECULAR_TEXTURE : register(t2, space2);
+Texture2D<SPECULAR_TYPE> SPECULAR_TEXTURE : register(t2, space2);
 SamplerState specularSampler : register(s2, space2);
 Texture2D<float4> LIGHT_ATLAS : register(t3, space2);
 SamplerState lightSampler : register(s3, space2);
@@ -47,10 +56,10 @@ float3 reflection(float3 normal, float3 lightVector, float3 lightColor, float3 b
     return diffuse + specularColor * lightColor * amount;
 }
 float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv : TEXCOORD1) : SV_Target0 {
-    float4 base = color * TEXTURE.Sample(colorSampler, uv);
+    float4 base = color * float4(TEXTURE.Sample(colorSampler, uv));
     float3 normal = float3(0, 0, 1);
     if (counts.z != 0) {
-        float2 mapped = NORMAL_TEXTURE.Sample(normalSampler, uv).rg * float2(2, -2) - float2(1, -1);
+        float2 mapped = float4(NORMAL_TEXTURE.Sample(normalSampler, uv)).rg * float2(2, -2) - float2(1, -1);
         float3 local = float3(mapped, sqrt(max(0, 1 - dot(mapped, mapped))));
         float2 dx = ddx(uv), dy = ddy(uv);
         float determinant = cross2(dx, dy);
@@ -62,7 +71,7 @@ float4 main(float4 position : SV_Position, float4 color : TEXCOORD0, float2 uv :
             normal = dot(normal, normal) > 0.000001 ? normalize(normal) : float3(0, 0, 1);
         }
     }
-    float4 map = SPECULAR_TEXTURE.Sample(specularSampler, uv);
+    float4 map = float4(SPECULAR_TEXTURE.Sample(specularSampler, uv));
     float3 specularColor = specular.rgb * (counts.w != 0 ? map.rgb : 1);
     float3 result = item.w == 2 ? base.rgb : base.rgb * ambient.rgb;
     float lightOnlyAlpha = 0;

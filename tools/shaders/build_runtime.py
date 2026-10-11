@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import itertools
 import os
 from pathlib import Path
 import subprocess
@@ -36,15 +37,25 @@ def generate(output, source_root=ROOT):
                 if dependency.is_file() and dependency.suffix != '.spv':
                     digest.update(dependency.relative_to(directory).as_posix().encode())
                     digest.update(dependency.read_bytes())
+            programs = [(source, source.stem, []) for source in sources if '.inc.' not in source.name]
             for source in sources:
-                if '.inc.' in source.name:
-                    continue
+                if source.name == 'Lighting.frag.hlsl':
+                    for types in itertools.product(range(3), repeat=3):
+                        if types == (0, 0, 0):
+                            continue
+                        defines = [f'-D{name}_TYPE={("float4", "int4", "uint4")[kind]}'
+                                   for name, kind in zip(('DIFFUSE', 'NORMAL', 'SPECULAR'), types)]
+                        programs.append((source, f'Lighting{"".join(map(str, types))}.frag', defines))
+                elif source.name == 'Clip.frag.hlsl':
+                    for kind in (1, 2):
+                        programs.append((source, f'Clip{kind}.frag', [f'-DDIFFUSE_TYPE={("float4", "int4", "uint4")[kind]}']))
+            for source, stem, defines in programs:
                 stage = source.stem.rsplit('.', 1)[-1]
                 if stage not in ('vert', 'frag', 'comp'):
                     raise ValueError(f'Unknown built-in shader stage: {source}')
-                name = f'{domain}/{source.stem}.spv'
+                name = f'{domain}/{stem}.spv'
                 target = output / name
-                fingerprint = digest.hexdigest()
+                fingerprint = hashlib.sha256(digest.digest() + ' '.join(defines).encode()).hexdigest()
                 old = previous.get(name, {})
                 if (old.get('source') == fingerprint and target.exists() and
                         old.get('binary') == hashlib.sha256(target.read_bytes()).hexdigest()):
@@ -56,7 +67,7 @@ def generate(output, source_root=ROOT):
                     command = [str(compiler), '-V', '--target-env', 'vulkan1.0', '-S', stage, '-e', 'main']
                     if source.suffix == '.hlsl':
                         command += ['-D', '--hlsl-iomap']
-                    subprocess.run([*command, '-o', str(compiled), str(source)], check=True)
+                    subprocess.run([*command, *defines, '-o', str(compiled), str(source)], check=True)
                     subprocess.run([str(validator), '--target-env', 'vulkan1.0', str(compiled)], check=True)
                     data = compiled.read_bytes()
                     if not target.exists() or target.read_bytes() != data:
