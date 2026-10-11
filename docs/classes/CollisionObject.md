@@ -10,6 +10,11 @@ Last updated: 2026-10-11
 
 Actual physical space participation can be assigned through PhysicsServer for both Body and Area roles. Transfer preflight borrows scene geometry and rejects authoring/lifetime changes before mutation; numerical authoring and hierarchy guards include detached or imported attachments. [Common space bindings](../components/physics-registered-adapter.md#common-space-bindings) records the lifecycle and verified boundary.
 
+Geometry preflight publishes its borrow presence before invoking source hooks,
+including before the first solver attachment, and releases it in finally on
+success or failure. Empty hierarchy checks may skip their scan only when neither
+geometry preflight nor any scene/raw attachment exists in the process.
+
 ## Description
 
 The spatial collision-filter base used by scene physics bodies and areas. Its category and mask are unsigned 32-bit values, retaining every reference bit including bit 32. A direct CollisionShape child contributes the fixture. Layer/mask assignments update existing fixture metadata without rebuilding geometry. A body pair is eligible when either mask includes the opposite layer; each dynamic endpoint receives impulse and position correction only when its own mask includes the other layer. The other endpoint still contributes its actual point velocity. Assignments wake the body and touching neighbors, including when bits are unchanged. A monitoring Area tests its mask against the other object's layer without requiring the other's mask to include the area. The class keeps backend IDs private and supplies viewport pointer picking under ADR 0099.

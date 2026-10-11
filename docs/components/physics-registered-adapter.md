@@ -216,6 +216,15 @@ Node authoring and hierarchy guards inspect actual attachments even outside the
 SceneTree world list. Engine pose publication remains permitted during the ordinary
 step phase; a trial that applied the release-phase guard there was rejected.
 
+Empty scans now use conservative process-wide attachment and scene-preflight
+presence. Geometry hooks remain guarded before the first attachment; detach
+cleanup and failed preflight balance their presence in finally. Any scene/raw
+attachment retains the original checks. [Ownership regression
+checks](../../tests/Electron2D.Tests/PhysicsBackendOwnershipTests.GuardPresence.cs)
+exercise first preflight reentry, failed geometry, detach and world retirement on
+CPU/GPU. This reduces [cold scene lifecycle
+cost](physics-scene-performance.md#empty-hierarchy-guard-scans), not solver work.
+
 Initial or later target-addition failure retires any partial attachment before
 restoring the source. Restoration failure attempts retirement and preserves all
 errors in an AggregateException. Departure callbacks can report a committed

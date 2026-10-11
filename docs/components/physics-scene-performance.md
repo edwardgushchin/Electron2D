@@ -103,3 +103,63 @@ Ignored evidence is in `bin/physics-scene-pipeline/2026-10-11/adaptive-color-rou
 ## 4096-body check at 567be307
 
 With 1600 warmup and 256 measured complete frames, CPU/GPU p50 was 19.1687/18.8702 ms, p95 22.0300/21.2113 ms and p99 25.2851/22.2909 ms. Both returned zero and retained 0/0 owner/all-thread bytes; penetration/escape were .274915/.207642 and .234089/.132935 against the unchanged .601 limit. This roughly 1.6 percent median difference from one desktop pair does not establish a repeatable advantage. Evidence is `bin/physics-scene-pipeline/2026-10-11/567be307-4096`. The separate [16,384 server-body window checks](physics-current-performance.md#window-checks-at-567be307) retain their distinct workload and measurement scope.
+
+## Monitored scene checks at d70110a6
+
+The unchanged complete scene protocol above ran on main d70110a628221fa8f3925d1473380f8bd782c04b. Both implementations used 1600 warmup ticks. Two 4096-body pairs measured 256 and 1024 frames; one 16,384-body pair measured 256. Every pair completed with exit zero and valid physical/publication gates, with all requested bodies, eight monitored contacts and interpolation retained. These are sequential shared-desktop trials, not isolated statistical repetitions.
+
+Loaded runtime SHA-256 was `db84c287ededc10fdc059132df8d38319911b7a14facd2f7f7141775497f1bdc`; test DLL was `ab6523a7a66cf23e3dda028888459299e6b406ba5b59be352848960addc9a14c`. These measurements precede the empty-scan change below.
+
+| Bodies / samples | Backend | Mean, ms | p50 / p95 / p99 / max, ms | Owner / all-thread bytes |
+| --- | --- | ---: | --- | --- |
+| 4096 / 256 | CPU | 20.1142 | 20.0298 / 22.5672 / 24.0379 / 25.9840 | 0 / 0 |
+| 4096 / 256 | GPU | 18.7077 | 18.5367 / 21.3748 / 23.3528 / 27.9854 | 0 / 0 |
+| 4096 / 1024 | CPU | 19.5380 | 19.3491 / 21.1144 / 22.3172 / 38.8692 | 0 / 0 |
+| 4096 / 1024 | GPU | 18.3105 | 18.1863 / 20.5982 / 22.2982 / 33.1032 | 0 / 0 |
+| 16384 / 256 | CPU | 162.3769 | 109.8843 / 352.5091 / 502.0655 / 505.0431 | 0 / 0 |
+| 16384 / 256 | GPU | 65.8914 | 65.5029 / 72.9492 / 82.5432 / 100.4959 | 0 / 0 |
+
+GPU medians were 7.5 and 6.0 percent lower in the two 4096-body pairs, and 40.4 percent lower at 16,384. The 16,384 CPU tail is substantial and is retained above; its cause is not established. This demonstrates an advantage in these measured full monitored workloads, with desktop variability and final acceptance still open. It does not establish rendered FPS or all-scene superiority.
+
+| Bodies / samples | GPU upload / readback B per tick | Uniform B / submissions per tick | Summed wait p50 / p95 / p99 / max, ms |
+| --- | --- | --- | --- |
+| 4096 / 256 | 65816 / 2966640.3125 | 61768.7500 / 19.113281 | 6.5177 / 7.9977 / 8.7323 / 9.4362 |
+| 4096 / 1024 | 65816 / 2966640.8750 | 61644.4688 / 19.117188 | 6.5114 / 7.9679 / 8.6487 / 9.5292 |
+| 16384 / 256 | 262424 / 11863144.4375 | 63757.1250 / 19.058594 | 19.6330 / 23.7507 / 33.5729 / 48.1518 |
+
+These waits are already included in complete-frame cost. Readback serves current scene/contact observers and includes capacity-sized destinations; native allocator accounting and reduced publication traffic remain open. All six results have penetration/escape below .601, finite motion below 1000 and final energy below 1.02 times initial energy. At 16,384, CPU penetration/escape is .291941/.299999 and GPU .257734/.192383. Full phase means, motion/energy/contact evidence and diagnostic hashes remain in the raw reports.
+
+| Raw report under bin/physics-scene-pipeline/2026-10-11 | SHA-256 |
+| --- | --- |
+| `d70110a6-4096/CPU.json` | `5ea969309da765a44fad862f65053e790ea0761ef20068ad3de899d8947141c5` |
+| `d70110a6-4096/GPU.json` | `cf5062cd6820b2b5362da112c109d5858e3bb1e8f3ab356891108ef1820bb9fd` |
+| `d70110a6-repeat-4096/CPU.json` | `7abb52dfbd91355e91788af2ee8dda5473cc55414e358c4e653526c713eb8696` |
+| `d70110a6-repeat-4096/GPU.json` | `2204957c8b621c3ddcefd20e100a6c06bb916920554e64ec0790e19a47ebbb45` |
+| `d70110a6-16384/CPU.json` | `a1fbea3293250374103c630b7542f4e838ab7c68ddf1e156077308e90d6079a4` |
+| `d70110a6-16384/GPU.json` | `bccf3e05d234fff0689b7ab12546bb0717cf942a288a4c33521f9311030e6496` |
+
+## Empty hierarchy guard scans
+
+Physics authoring and structural/lifetime checks previously traversed ancestor/descendant nodes even when no actual solver attachment or geometry preflight existed. Conservative process-wide attachment and geometry-borrow presence now skips only that empty case. Tree extension hierarchy guards execute first; any scene/raw attachment or preflight retains the existing actual-space, thread, borrow and external-object checks. Attachment cleanup and preflight finally blocks balance the counters even on failure. The optimization adds no public API and changes no solver work, physical settings or observer quality.
+
+A separate lifecycle-only CPU control/candidate pair built the same 16,384 RigidBody/CollisionShape scene. The control temporarily removed only the two early returns; counters, assertions and diagnostic timing remained. Both processes returned zero.
+
+| Lifecycle-only trial | Scene setup, ms | Cleanup, ms |
+| --- | ---: | ---: |
+| Control | 18917.9187 | 17836.5843 |
+| Empty scan skip | 3970.6192 | 10137.4176 |
+
+Setup includes body authoring and SceneTree construction/attachment. Cleanup explicitly disposes tree, walls, root, resources and world. Lifecycle-only exits before simulation: it cannot establish warmed step time, allocation, physical gates or FPS. One sequential pair demonstrates the cold cost reduction; it is not a repeated statistical benchmark. The remaining attached hierarchy checks still scan conservatively while any world has attachments.
+
+Reproduce using the existing scene command with ELECTRON2D_PHYSICS_PERFORMANCE_LIFECYCLE_ONLY=1, COUNT=16384 and BACKEND=cpu. Output adds separate CPU/GPU-lifecycle.json even during full simulations. Ignored evidence includes lifecycle-control-16384, lifecycle-candidate-16384 and their build/run logs. CPU/GPU ownership checks execute first preflight mutation rejection, failed source geometry, balanced detach and world retirement.
+
+## Empty-scan candidate full-frame regression
+
+The unchanged 4096-body protocol also ran with 1600 warmup and 256 measured frames after restoring the two early returns. Both CPU/GPU completed with exit zero, valid physical/publication gates and 0/0 owner/all-thread managed bytes. Loaded runtime/test SHA-256 were `26b4f54d8eb142f0707d31e1b1e4779178bec4c8403c62db6a28dfd0d8fed41d` / `fb48b52ef838d3638c66a55cfb3c410cd9ce2fa79fc6d3946b76b0e7586b6cfc`.
+
+| Backend | Mean, ms | p50 / p95 / p99 / max, ms |
+| --- | ---: | --- |
+| CPU | 36.1473 | 21.2365 / 136.6726 / 233.7914 / 289.1697 |
+| GPU | 27.3332 | 19.8834 / 68.1241 / 73.7828 / 74.4669 |
+
+CPU and GPU tails increased in this run; their cause is unproven. This run establishes contract/allocation regression coverage for the guard change, not an improvement in solver or frame latency. The earlier d70110a6 comparisons retain their own executable identities. Raw reports and separate lifecycle timing are under bin/physics-scene-pipeline/2026-10-11/guard-candidate-4096. Real rendered-window FPS, network performance, native allocator accounting, other platforms and complete goal acceptance were not established by this slice.

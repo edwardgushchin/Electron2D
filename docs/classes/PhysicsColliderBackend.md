@@ -15,6 +15,13 @@ Last updated: 2026-10-11
 
 ## Responsibility and ownership
 
+A conservative process-wide attachment count gates empty scene hierarchy checks.
+It counts scene and raw colliders after selected implementation creation, before
+attachment hooks, and balances in detach cleanup even when cleanup throws.
+The count owns no collider or world and does not replace world/thread/borrow
+validation while any attachment exists. Scene geometry preflight has a separate
+presence count because it can run before the first attachment.
+
 The retained PhysicsColliderBackend now keeps common RID, weak object/canvas association, priority and attachment generation. PhysicsWorldBackend.CreateCollider creates a fresh PhysicsColliderImplementation for the actual selected solver. CPUPhysicsColliderImplementation owns native body/world references, fixture IDs, exact saved pose and mass/contact-policy scratch; GPUPhysicsColliderImplementation owns resident handles, shape/query leases, authored policy and qualified publication/replay caches. Pose, motion, sleep, locks, forces, mass, shape rebuild/filtering, surface velocity, contacts and portable operations dispatch to that same attachment. A world transfer retires the old implementation while retaining public identity and authored/observable state. Native CPU and resident GPU facets remain exclusively in concrete owners; public registration and complete extension contexts are still open under ADR 0103.
 
 PhysicsBody, Area and PhysicsServerCollider share the retained identity facade. The

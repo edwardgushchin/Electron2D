@@ -35,6 +35,8 @@ internal static class PhysicsPipelinePerformance
 
     private static void Measure(PhysicsServer.Backend backend, int count, int warmup, int samples)
     {
+        var setupStart = Stopwatch.GetTimestamp();
+        var lifecycleOnly = Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_LIFECYCLE_ONLY") == "1";
         const double delta = 1d / 144;
         const float radius = 6, mass = .2f;
         var bottom = Math.Max(638, 216 + ((count + 49) / 50) * 12.5f + 28);
@@ -80,8 +82,10 @@ internal static class PhysicsPipelinePerformance
             body.AddChild(new CollisionShape { Shape = circle }); root.AddChild(body); bodies[i] = body;
         }
         using var tree = new SceneTree(root) { PhysicsInterpolation = true };
+        var setupMS = Stopwatch.GetElapsedTime(setupStart).TotalMilliseconds;
         try
         {
+            if (lifecycleOnly) return;
             PhysicsServer.AreaSetGravity(world.Space, 980);
             PhysicsServer.AreaSetLinearDamp(world.Space, 0); PhysicsServer.AreaSetAngularDamp(world.Space, 0);
             PhysicsServer.SpaceSetSolverIterations(world.Space, 16);
@@ -213,7 +217,22 @@ internal static class PhysicsPipelinePerformance
             Check(valid, $"Scene pipeline gates: managed {allocated}/{total} B, escape/penetration {maxEscape}/{maxPenetration} <= {penetrationLimit}, speed {maxSpeed}, energy {energy}/{initialEnergy}");
             void Append(Vector2 value) { Check(value.IsFinite(), "Reported contact values are finite"); contactValues.Add(value.X); contactValues.Add(value.Y); }
         }
-        finally { tree.Dispose(); foreach (var wall in walls) wall.Dispose(); }
+        finally
+        {
+            var cleanupStart = Stopwatch.GetTimestamp();
+            tree.Dispose(); foreach (var wall in walls) wall.Dispose(); root.Dispose(); surface.Dispose(); circle.Dispose(); world.Dispose();
+            var lifecycle = JsonSerializer.Serialize(new
+            {
+                backend = backend.ToString(),
+                bodies = count,
+                lifecycleOnly,
+                setupMS,
+                cleanupMS = Stopwatch.GetElapsedTime(cleanupStart).TotalMilliseconds
+            });
+            Console.WriteLine(lifecycle);
+            if (Environment.GetEnvironmentVariable("ELECTRON2D_PHYSICS_PERFORMANCE_OUTPUT") is { } output)
+            { Directory.CreateDirectory(output); File.WriteAllText(System.IO.Path.Combine(output, backend + "-lifecycle.json"), lifecycle + Environment.NewLine); }
+        }
     }
 
     private static object Distribution(double[] values)
