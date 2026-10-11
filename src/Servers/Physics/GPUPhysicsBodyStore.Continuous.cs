@@ -25,7 +25,7 @@ internal sealed unsafe partial class GPUPhysicsBodyStore
     internal void SetCCDMode(BodyHandle body, CCDMode mode)
     {
         Validate(body);
-        if (!Enum.IsDefined(mode)) throw new ArgumentOutOfRangeException(nameof(mode));
+        if (mode is not (CCDMode.Disabled or CCDMode.CastRay or CCDMode.CastShape)) throw new ArgumentOutOfRangeException(nameof(mode));
         ref var slot = ref _slots[body.Index];
         if (slot.CCDMode == mode) return;
         if (slot.Mode >= PhysicsServer.BodyMode.Rigid) _ccdBodyCount += (mode != CCDMode.Disabled ? 1 : 0) - (slot.CCDMode != CCDMode.Disabled ? 1 : 0);

@@ -2244,6 +2244,76 @@
       "godot": "PhysicsServer2DExtension::method:_area_set_space(RID:,RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.AreaSetSpace(Electron2D.RID,Electron2D.RID)",
       "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Empty hierarchy scans now use conservative process-wide attachment/preflight presence; CPU/GPU GuardPresence checks preserve first geometry-hook rejection and balanced detach/retirement. Registered arbitrary numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_add_constant_central_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantCentralForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_add_constant_force(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_add_constant_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyAddConstantTorque(Electron2D.RID,System.Single)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_central_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_central_impulse(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyCentralImpulse(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_force(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyForce(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_impulse(RID:,Vector2:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyImpulse(Electron2D.RID,Electron2D.Vector2,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorque(Electron2D.RID,System.Single)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_apply_torque_impulse(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyApplyTorqueImpulse(Electron2D.RID,System.Single)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_constant_force(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantForce(Electron2D.RID)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_get_constant_torque(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodyGetConstantTorque(Electron2D.RID)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_axis_velocity(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetAxisVelocity(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_constant_force(RID:,Vector2:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantForce(Electron2D.RID,Electron2D.Vector2)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_set_constant_torque(RID:,float:)",
+      "electron2d": "method:Electron2D.PhysicsServer.BodySetConstantTorque(Electron2D.RID,System.Single)",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
     }
   ],
   "extras": [
@@ -6961,6 +7031,26 @@
       ],
       "state": "Partial",
       "reason": "ADR 0063/0103: all four scene/raw space operations share actual attachment identity and selected creation/retirement, preserving hierarchy, world descriptors and driver ownership. Public-only SceneSpaceChecks executes all five body siblings and Area, queries/motion, detached/live/owned-space transfers, scene reclaim, view invalidation, source preflight/owner/borrow guards, initial/late target failures and double rollback, with 64 warmed measured full frames at 0/0 owner/all-thread bytes on CPU/GPU/registered paths. Native/platform/final physics acceptance remains separate. Empty hierarchy scans now use conservative process-wide attachment/preflight presence; CPU/GPU GuardPresence checks preserve first geometry-hook rejection and balanced detach/retirement. Registered arbitrary numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_add_constant_central_force(RID:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_add_constant_force(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_add_constant_torque(RID:,float:)",
+        "PhysicsServer2DExtension::method:_body_apply_central_force(RID:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_apply_central_impulse(RID:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_apply_force(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_apply_impulse(RID:,Vector2:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_apply_torque(RID:,float:)",
+        "PhysicsServer2DExtension::method:_body_apply_torque_impulse(RID:,float:)",
+        "PhysicsServer2DExtension::method:_body_get_constant_force(RID:)",
+        "PhysicsServer2DExtension::method:_body_get_constant_torque(RID:)",
+        "PhysicsServer2DExtension::method:_body_set_axis_velocity(RID:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_set_constant_force(RID:,Vector2:)",
+        "PhysicsServer2DExtension::method:_body_set_constant_torque(RID:,float:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0057/0074/0103: common scene/raw force totals and current mass/rotated-center calculations dispatch through selected PrepareDefaultForces/ApplyImpulse/velocity hooks. Public-only force checks execute CPU/GPU/independent registered response, all scene/server/direct actions, detached/static pending lifetime, persistent moment capture, nonfinite/overflow rejection and axis projection. 64 warmup/128 edited full frames allocate 0/0 owner/all-thread bytes, including the first frame after collection. GPU CCD policy validation no longer reconstructs enum metadata after collection. Complete numerical-extension acceptance remains open."
     }
   ]
 }

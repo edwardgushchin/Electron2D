@@ -238,3 +238,32 @@ managed bytes. Registered checks inject initial and post-attachment capacity
 failures, double restoration failure, detached/imported numerical mutation and
 procedural source-preflight reentry before a real transfer to CPU. Native allocator,
 other platforms, rendered/FPS and complete numerical-extension acceptance remain open.
+
+## Force, impulse and axis response
+
+The common facade owns transient/persistent totals, finite candidate validation and
+positioned moments about the current rotated center of mass. Selected
+`PrepareDefaultForces`, `ApplyImpulse` and velocity hooks execute their numerical
+response. A positioned constant force captures its moment once; subsequent body
+rotation does not recalculate that stored torque. Impulses use current mass and
+unlocked inertia. Pending forces survive detach and static participation, then
+apply once at the next eligible dynamic tick. Invalid input or moment overflow
+rejects before observable motion/constants change. Axis velocity preserves the
+perpendicular component; a zero axis preserves motion.
+
+The separate public-only [force consumer](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.Forces.cs)
+(`--forces`, optionally `--cpu` or `--gpu`) exercises all thirteen force operations
+and axis velocity on scene and raw bodies, using server, scene and direct views.
+[Lifetime checks](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ForcesLifetime.cs)
+cover detach/reentry, static/dynamic transitions, expired views and invalid inputs.
+Linear and angular response tolerances are 0.0001 scene units/s and radians/s:
+they allow float integration and private unit conversions without accepting a
+missing force, mass factor or positioned moment. Constant torque tolerance is
+0.00001; vector totals, identities and rejected-write retention compare exactly.
+CPU, resident GPU and the independent registered circle solver each pass 64
+warmup and 128 measured edited full PhysicsFrame cycles at 0/0 owner/all-thread
+managed bytes. Collection occurs after warmup, so the first following frame is
+included. GPU CCD validation uses the three explicit valid modes rather than
+reconstructing enum metadata after collection; an isolated old validation probe
+reproduced the 248-byte allocation found in that first frame. These fourteen
+extension rows remain Partial pending complete numerical-extension acceptance.

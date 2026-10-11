@@ -6,6 +6,7 @@ public static partial class BackendChecks
     {
         Solver? solver = null;
         StateChecks();
+        ForceChecks();
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();

@@ -14,8 +14,11 @@ public abstract class PhysicsBackendCollider
     /// <summary>Supplies the selected implementation operation: detach.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract void Detach();
-    /// <summary>Supplies the selected implementation operation: prepare default forces.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Prepares the eligible body's transient and persistent force input for the next outer physics tick.</summary>
+    /// <remarks>The engine retains pending totals across detach and non-dynamic participation and consumes them after this operation succeeds.
+    /// Positioned moments are already resolved about the center at the original call; do not recompute them from the current pose.
+    /// Persistent totals repeat each eligible tick. Omitted integration suppresses ordinary forces while immediate impulses remain available.
+    /// Values use scene units under the owning world's lifetime and owner-thread guard.</remarks>
     protected internal abstract void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration);
     /// <summary>Supplies the selected implementation operation: has motion mode.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
@@ -154,8 +157,10 @@ public abstract class PhysicsBackendCollider
     /// <summary>Supplies the selected implementation operation: get world point velocity.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
     protected internal abstract Vector2 GetWorldPointVelocity(Vector2 point);
-    /// <summary>Supplies the selected implementation operation: apply impulse.</summary>
-    /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
+    /// <summary>Applies an immediate world-axis impulse and its resolved center-of-mass moment.</summary>
+    /// <remarks>The engine resolves positioned input against the current rotated center and validates candidate motion before this call.
+    /// Use the current selected mass and unlocked inertia. Non-dynamic roles do not dispatch this operation.
+    /// Linear impulse and moment use scene units and squared scene units respectively; backend conversions remain private.</remarks>
     protected internal abstract void ApplyImpulse(Vector2 impulse, float moment);
     /// <summary>Supplies the selected implementation operation: set surface velocity.</summary>
     /// <remarks>Invoked by the owning world under its lifetime and owner-thread guard. Values use engine units; spans are borrowed for this call only.</remarks>
