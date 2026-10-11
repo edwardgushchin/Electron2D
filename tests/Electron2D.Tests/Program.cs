@@ -9,6 +9,7 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_LIGHTING") == "1") { IntegerLightingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_INTEGER_CANVAS") == "1") { IntegerCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") { RenderingDeviceCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }

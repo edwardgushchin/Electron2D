@@ -2,7 +2,7 @@ namespace Electron2D;
 
 /// <summary>A canvas texture borrowing a sampled image from the active rendering device.</summary>
 /// <remarks>The device image remains caller-owned. Drawing samples native GPU storage directly; GetImage
-/// performs explicit readback. Integer sampling requires nearest filtering; snapshots convert raw integer lanes to float32 RGBA with float32 precision. Device identities are transient and are not saved in resource archives.</remarks>
+/// performs explicit readback. Built-in lighting and alpha clipping preserve raw integer channels on GPU. Integer sampling requires nearest filtering; snapshots convert raw integer lanes to float32 RGBA with float32 precision. Device identities are transient and are not saved in resource archives.</remarks>
 public sealed class TextureRD : Texture
 {
     private RenderingDevice? _device;

@@ -10,9 +10,18 @@ internal static class BuiltInShaders
 
     internal static readonly byte[] SDF = Read("SDF.frag.spv");
 
-    internal static readonly byte[] Lighting = Read("Lighting.frag.spv");
+    private static readonly byte[][] LightingVariants = ReadLighting();
+    internal static byte[] Lighting(int diffuse, int normal, int specular) => LightingVariants[diffuse * 9 + normal * 3 + specular];
+    private static byte[][] ReadLighting()
+    {
+        var result = new byte[27][];
+        for (var d = 0; d < 3; d++) for (var n = 0; n < 3; n++) for (var s = 0; s < 3; s++)
+                    result[d * 9 + n * 3 + s] = Read(d + n + s == 0 ? "Lighting.frag.spv" : $"Lighting{d}{n}{s}.frag.spv");
+        return result;
+    }
 
-    internal static readonly byte[] Clip = Read("Clip.frag.spv");
+    private static readonly byte[][] ClipVariants = [Read("Clip.frag.spv"), Read("Clip1.frag.spv"), Read("Clip2.frag.spv")];
+    internal static byte[] Clip(int scalar) => ClipVariants[scalar];
 
     private static byte[] Read(string name)
     {
