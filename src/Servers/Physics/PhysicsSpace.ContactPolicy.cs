@@ -6,6 +6,7 @@ internal sealed partial class PhysicsSpace
     internal void SetSolverIterations(int value)
     {
         EnsureQueryAccess();
+        EnsureImplementationWriteAccess();
         if (value <= 0) throw new ArgumentOutOfRangeException(nameof(value));
         if (SolverIterations == value) return;
         SolverIterations = value;
@@ -15,7 +16,7 @@ internal sealed partial class PhysicsSpace
     internal PhysicsContactSettings ContactSettings { get; private set; }
     internal void SetContactSettings(in PhysicsContactSettings settings)
     {
-        EnsureQueryAccess(); settings.Validate(); if (ContactSettings == settings) return;
+        EnsureQueryAccess(); EnsureImplementationWriteAccess(); settings.Validate(); if (ContactSettings == settings) return;
         ContactSettings = settings;
         _backend.SetContactSettings(settings);
     }

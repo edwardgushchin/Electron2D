@@ -2,28 +2,36 @@
 
 Last updated: 2026-10-11
 
+[World policy borrowing](physics-registered-adapter.md#borrowed-world-policies)
+now rejects all nine typed space parameter writes and local activation during
+selected numerical hooks, including equal-value writes before nested dispatch.
+Initial/live/nested hooks, ordinary callback edits and warmed edited full frames
+execute through the separate public-only consumer. The four extension parameter/
+activation census rows now map to their actual guarded paths as Partial; arbitrary
+registered numerical policy response and full extension acceptance remain open.
+
 [Selected observation and collision policy](physics-backends.md#selected-observation-and-collision-policy)
 now routes resolved fields, collision-exception invalidation/synchronization and
 portable preparation/batch observation through the actual selected owner. Common
 server/replay/map code retains engine identities and values without GPU handles
-or snapshots. Public named registration and the complete external family remain open.
+or snapshots. Named registration and typed external dispatch now execute; complete numerical-extension acceptance remains open.
 
 [Selected checkpoint ownership](physics-backends.md#selected-checkpoint-ownership)
 now keeps GPU publication reports, epochs and collider caches with resident solver
 history. Common replay uses engine field values and guarded selected preparation,
-capture, validation, restore and release. Public registration remains open.
+capture, validation, restore and release. Named registration now executes; complete numerical-extension acceptance remains open.
 
 [Shared joint inputs and ownership](physics-backends.md#shared-joint-inputs-and-native-ownership)
 now pass complete engine-unit configuration values to selected constraints. CPU
 spring scheduling resolves actual native attachments from its owner, including
 wrapped implementations; matching retirement preserves replacement attachments.
-Public named registration and the complete external family remain open.
+Named registration and typed external dispatch now execute; complete numerical-extension acceptance remains open.
 
 [Shared collider inputs](physics-backends.md#shared-collider-shape-inputs)
 now project scene/raw body and Area authoring into one selected implementation
 span. Exact resources, transforms, logical disabled indices and one-way policy
 remain observable; source preflight, recursive preparation and scratch lifetime
-are guarded. Public registration and the complete external family remain open.
+are guarded. Named registration and typed external dispatch now execute; complete numerical-extension acceptance remains open.
 
 [Selected lifecycle](physics-backends.md#selected-lifecycle-and-activity)
 now dispatches owner initialization, atomic local activation, query/event flushing
@@ -35,27 +43,28 @@ and the full external operation family remain open.
 resident handles and concrete GPU casts from the common collider facade.
 Actual attachments stay in the resident store; selected wrappers retain publication,
 Area/query/joint behavior and local/portable restoration. Identity/priority edits
-reach selected hooks. Public registration and the complete operation family stay open.
+reach selected hooks. Named registration and typed operation dispatch now execute; full numerical operation acceptance stays open.
 
 [CPU collider ownership](physics-backends.md#cpu-collider-ownership) removes native
 body/shape aliases and CPU implementation casts from shared scene/server/collider
 types. Actual native storage belongs to the CPU world; wrapped collider operations
 retain real contacts, Area/CCD/query behavior, retirement and portable state. This
-closes an internal ownership bypass, not the public registered operation family.
+closes an internal ownership bypass, not full public registered numerical-operation acceptance.
 
 [Selected direct-state construction](physics-backends.md#selected-direct-state-construction)
 now executes internal owner-created query/state extensions through World/server
 access and real scene/raw callbacks. Binding, cache identity, contact snapshots,
 failed factory rollback, later callback delivery and zero warmed allocation execute
-on CPU/GPU/no-device. Public named registration and the full server-operation family
-remain open. The stale tile-collider-object reason was reconciled against the
+on CPU/GPU/no-device. Named registration and typed server-operation dispatch now execute; complete
+numerical extension acceptance remains open. The stale tile-collider-object reason was reconciled against the
 existing CPU/GPU TileMapLayer contact and object-association tests.
 
-[Same-revision dense performance](physics-current-performance.md) now records
-CPU/GPU full-step and real-window advantage at 65,536 awake bodies, with matching
-source/assembly digests, zero warmed managed allocation and passing physical
-gates. This closes no declaration gap: registered implementations/custom algorithms,
-native/foreign acceptance and sustained 60 Hz remain open.
+[Same-revision dense performance](physics-current-performance.md) records the
+current 16,384-body server-instance window advantage and its distinct 4096-body
+monitored scene trial, with zero warmed managed allocation and physical gates.
+The historical 65,536-body trials retain their revision and scope. These close no
+declaration gap: complete registered numerical-operation acceptance, repeatable
+scene advantage, native/foreign acceptance and sustained 60 Hz remain open.
 
 [Public joint conformance](physics-joint-policies.md#public-cpu-gpu-conformance) now runs
 pin/groove/spring, server identity/lifecycle and solver policies through explicitly
@@ -114,7 +123,7 @@ The built-in world ownership boundary now executes through a fresh internal CPU/
 ## Baseline and scope
 
 Original audit baseline: `8e4f876d70782c7ec5473d3107c4c2d1b01ed902`.
-Current filter review continues local `main` at `36d8dfcf3f5fedb2414446926cb1bd162c328109` plus the directional filter change described below.
+The directional filter review recorded local `main` at `36d8dfcf3f5fedb2414446926cb1bd162c328109` plus the directional filter change described below; later slices are recorded above and in the generated ledger.
 The historical `119bd016` gap list is superseded by current source and coverage.
 The repository pins Godot `4.7.2-stable`, commit
 `ed1daf0bf001b61586d9930840f2f1394092c079`; this audit does not substitute a newer
@@ -132,7 +141,7 @@ Shared ancestors are counted once rather than once per body class.
 coverage classifier supplies all states. Its regression check verifies the report
 against the class tables and catches omitted new descendants or duplicate IDs.
 
-At this baseline, the physics families contain 892 declarations: 525 Implemented,
+At the original census baseline, the physics families contained 892 declarations: 525 Implemented,
 45 Partial, 241 Blocked, 41 Unimplemented and 40 Excluded. Shared inherited families
 contain 491 declarations; selected cross-domain consumers contain 78. These counts
 include class/enum rows and generic inherited API; they are not feature counts or

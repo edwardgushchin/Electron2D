@@ -19,6 +19,8 @@ public static partial class BackendChecks
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
+        internal Action? WorldPolicyHook;
+        internal int WorldPolicyCalls;
         internal PhysicsAreaFieldConfiguration Fields;
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
         protected override bool ResultsReady => Ready;
@@ -29,11 +31,12 @@ public static partial class BackendChecks
             base.Dispose(disposing);
             if (disposing && FailDisposal) throw new InvalidOperationException("Disposal failure");
         }
-        protected override void SetActive(bool active) { }
-        protected override void SetSleepSettings(in PhysicsSleepSettings settings) { }
-        protected override void SetContactSettings(in PhysicsContactSettings settings) { }
-        protected override void SetSolverIterations(int value) { }
-        protected override void SetConstraintDefaultBias(float value) { }
+        protected override void SetActive(bool active) => WorldPolicy();
+        protected override void SetSleepSettings(in PhysicsSleepSettings settings) => WorldPolicy();
+        protected override void SetContactSettings(in PhysicsContactSettings settings) => WorldPolicy();
+        protected override void SetSolverIterations(int value) => WorldPolicy();
+        protected override void SetConstraintDefaultBias(float value) => WorldPolicy();
+        private void WorldPolicy() { WorldPolicyCalls++; WorldPolicyHook?.Invoke(); }
         protected override void PrepareSolverCapacity(int bodies, int shapes, int joints) { }
         protected override void PrepareMonitoringCapacity(int bodies, int shapes) { }
         protected override PhysicsBackendStatistics ReadStatistics()

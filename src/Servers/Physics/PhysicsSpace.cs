@@ -15,7 +15,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal float ConstraintDefaultBias { get; private set; }
     internal void SetConstraintDefaultBias(float value)
     {
-        EnsureQueryAccess(); PhysicsJointRuntime.ValidateBias(value);
+        EnsureQueryAccess(); EnsureImplementationWriteAccess(); PhysicsJointRuntime.ValidateBias(value);
         if (ConstraintDefaultBias == value) return;
         ConstraintDefaultBias = value; _backend.SetConstraintDefaultBias(value);
     }
@@ -104,6 +104,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void SetActive(bool active)
     {
         EnsureQueryAccess();
+        EnsureImplementationWriteAccess();
         EnsureInitializationComplete();
         if (_changingActive) throw new InvalidOperationException("Physics activation cannot reenter its selected implementation.");
         _changingActive = true;
@@ -159,7 +160,7 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EndImplementationCallback() { _implementationCallbackDepth--; EndExtensionCallback(); }
     internal void EnsureImplementationWriteAccess()
     {
-        if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Body authoring cannot change while a numerical physics implementation hook is borrowed.");
+        if (_implementationCallbackDepth != 0) throw new InvalidOperationException("Physics authoring cannot change while a numerical physics implementation hook is borrowed.");
     }
     internal void EnsureImplementationRelease()
     {

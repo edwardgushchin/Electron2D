@@ -2149,6 +2149,81 @@
       "godot": "PhysicsServer2DExtension::method:_body_set_force_integration_callback(RID:,Callable:,Variant:)",
       "electron2d": "method:Electron2D.PhysicsServer.BodySetForceIntegrationCallback(Electron2D.RID,System.Action<Electron2D.PhysicsDirectBodyState>)",
       "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSleepSettings(ref Electron2D.PhysicsSleepSettings)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetContactSettings(ref Electron2D.PhysicsContactSettings)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSolverIterations(System.Int32)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetConstraintDefaultBias(System.Single)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyTimeToSleep(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactRecycleRadius(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxSeparation(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactDefaultBias(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxAllowedPenetration(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetSolverIterations(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetConstraintDefaultBias(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_set_active(RID:,bool:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.SetActive(System.Boolean)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_space_is_active(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceIsActive(Electron2D.RID)",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
     }
   ],
   "extras": [
@@ -2949,17 +3024,7 @@
       "adr": "ADRs 0003, 0013, 0054"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyLinearVelocitySleepThreshold(Electron2D.RID)",
-      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
-      "adr": "ADRs 0004, 0087, 0089"
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyLinearVelocitySleepThreshold(Electron2D.RID,System.Single)",
-      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
-      "adr": "ADRs 0004, 0087, 0089"
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyAngularVelocitySleepThreshold(Electron2D.RID)",
       "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
       "adr": "ADRs 0004, 0087, 0089"
     },
@@ -2969,27 +3034,12 @@
       "adr": "ADRs 0004, 0087, 0089"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetBodyTimeToSleep(Electron2D.RID)",
-      "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
-      "adr": "ADRs 0004, 0087, 0089"
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetBodyTimeToSleep(Electron2D.RID,System.Single)",
       "reason": "Concrete typed branch of the existing space parameter dispatcher, beside constraint default bias; shared world sleep behavior and guards execute.",
       "adr": "ADRs 0004, 0087, 0089"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactDefaultBias(Electron2D.RID)",
-      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
-      "adr": "ADRs 0004, 0098"
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactDefaultBias(Electron2D.RID,System.Single)",
-      "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
-      "adr": "ADRs 0004, 0098"
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxAllowedPenetration(Electron2D.RID)",
       "reason": "Concrete typed space parameter operation with shared contact policy, validation and lifecycle.",
       "adr": "ADRs 0004, 0098"
     },
@@ -3029,27 +3079,12 @@
       "adr": "ADRs 0013, 0098"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetSolverIterations(Electron2D.RID)",
-      "reason": "Concrete typed integer branch of the space-parameter dispatcher; owner/phase guards, world capture and convergence behavior execute.",
-      "adr": "ADRs 0004, 0098"
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetSolverIterations(Electron2D.RID,System.Int32)",
       "reason": "Concrete typed integer branch of the space-parameter dispatcher; owner/phase guards, world capture and convergence behavior execute.",
       "adr": "ADRs 0004, 0098"
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactRecycleRadius(Electron2D.RID)",
-      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
-      "adr": "ADRs 0004, 0098"
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceSetContactRecycleRadius(Electron2D.RID,System.Single)",
-      "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
-      "adr": "ADRs 0004, 0098"
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServer.SpaceGetContactMaxSeparation(Electron2D.RID)",
       "reason": "Concrete typed branch of the complete space parameter family; validated geometric contact-history policy executes.",
       "adr": "ADRs 0004, 0098"
     },
@@ -4284,27 +4319,7 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SetActive(System.Boolean)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServerBackend.SetCollisionExceptions(System.ReadOnlySpan<System.ValueTuple<Electron2D.RID, Electron2D.RID>>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SetConstraintDefaultBias(System.Single)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SetContactSettings(ref Electron2D.PhysicsContactSettings)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSleepSettings(ref Electron2D.PhysicsSleepSettings)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.SetSolverIterations(System.Int32)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -6284,7 +6299,7 @@
         "PhysicsServer2D::method:space_set_active(RID:,bool:)"
       ],
       "state": "Implemented",
-      "reason": "ADR 0089: atomic global enable and owner-thread local world policy gate actual native/body/joint/monitor steps; explicit SpaceCreate defaults inactive and SceneTree activates its world. PhysicsActivityTests verifies native motion/spring, paused queries/configuration, pending force and previous interval retention, no catchup, scene callbacks/timers, errors/thread/lifetime boundaries and 64 warmed mixed skipped/active frames without managed allocation."
+      "reason": "ADR 0089: atomic global enable and owner-thread local world policy gate actual native/body/joint/monitor steps; explicit SpaceCreate defaults inactive and SceneTree activates its world. PhysicsActivityTests verifies native motion/spring, paused queries/configuration, pending force and previous interval retention, no catchup, scene callbacks/timers, errors/thread/lifetime boundaries and 64 warmed mixed skipped/active frames without managed allocation. WorldPolicyChecks verifies numerical-hook rejection before mutation, ordinary callback writes and zero warm edited full-frame allocations; registered numerical response remains separately open."
     },
     {
       "godot": [
@@ -6354,7 +6369,7 @@
         "PhysicsServer2D::method:space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)"
       ],
       "state": "Implemented",
-      "reason": "All nine parameter capabilities execute through concrete typed getters/setters: contact recycling, maximum separation/penetration, contact/constraint bias, sleep thresholds/duration and solver iterations. CPU and independent GPU policies have shared behavior, lifetime and allocation tests (ADRs 0087/0089/0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "All nine parameter capabilities execute through concrete typed getters/setters: contact recycling, maximum separation/penetration, contact/constraint bias, sleep thresholds/duration and solver iterations. CPU and independent GPU policies have shared behavior, lifetime and allocation tests (ADRs 0087/0089/0098). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open. WorldPolicyChecks verifies numerical-hook rejection before mutation, ordinary callback writes and zero warm edited full-frame allocations; registered numerical response remains separately open."
     },
     {
       "godot": [
@@ -6900,6 +6915,16 @@
       ],
       "state": "Partial",
       "reason": "ADR 0070/0103: common scene/raw omission, contact caps and typed force/sync callbacks execute on CPU/GPU and an independent public-only solver. Initial/live numerical and scene setter guards precede mutation; ordinary callbacks preserve force-scene-sync ordering, committed edits after errors, typed userdata and zero warm allocation. Impulses and real capped contact response remain active during omission. Full numerical-extension acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_space_set_param(RID:,int:PhysicsServer2D.SpaceParameter,float:)",
+        "PhysicsServer2DExtension::method:_space_get_param(RID:,int:PhysicsServer2D.SpaceParameter)",
+        "PhysicsServer2DExtension::method:_space_set_active(RID:,bool:)",
+        "PhysicsServer2DExtension::method:_space_is_active(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103: common engine-owned world policies project through selected sleep/contact/iteration/constraint and activation hooks. PhysicsBackendExtension.Consumer WorldPolicyChecks verifies all nine typed values, initial/live/nested numerical borrow rejection before mutation or selected dispatch (including equal writes), ordinary post-solver edits, owner guards and 128 warmed edited full frames at 0/0 owner/all-thread bytes. Arbitrary numerical policy response and complete extension acceptance remain open."
     }
   ]
 }

@@ -111,6 +111,23 @@ PhysicsBodyExtension.Consumer forwarding test and was replaced by the numerical
 scope guard. Generic solver response and the complete extension contract remain
 open; these checks do not certify all parameter or mode semantics.
 
+## Borrowed world policies
+
+The three sleep values, four contact values, solver iterations, default constraint
+bias and local activation share numerical borrowing guards before assignment or
+an equal-value early return. This prevents a selected attachment or policy hook
+from recursively changing the common profile or invoking another selected policy
+hook. Reads retain owner/phase guards, and ordinary post-solver callbacks can edit
+the next interval. Process-wide SetActive retains its independent atomic contract.
+
+The public-only WorldPolicyChecks reproduces the initial attachment bypass, then
+checks initial/live attachment and nested policy/activation hooks, every typed
+getter/setter, retained values, no nested selected calls, off-owner rejection and
+ordinary raw state-sync edits. With real scene and raw bodies, 64 warmup and 128
+measured edited full frames retain zero owner/all-thread managed bytes. The
+bounded consumer verifies dispatch and guards; it does not certify arbitrary
+registered numerical sleep/contact response, native allocations or other platforms.
+
 ## Registered Area fields
 
 The ten typed Area fields and the space-default shortcut retain one common

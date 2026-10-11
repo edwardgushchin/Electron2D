@@ -16,6 +16,8 @@ Public operations and events use static access to the retained object under [ADR
 
 The process-wide registry for typed 2D physics RIDs. It registers each SceneTree's selected CPU/GPU world and its scene CollisionObject identities, and can also create explicit spaces, bodies, Areas, joints and the eight implemented shape families. A server-created collider can join either kind of space; [World](World.md) and `SpaceGetDirectState` query that same solver state. RID values never expose Box2D IDs and never resolve to a later object after free. The server singleton cannot be disposed by consumers.
 
+World sleep/contact parameters, solver iterations, default constraint bias and local activation reject writes while that world's numerical implementation hook is borrowed, before changing authoring or calling another hook. Equal writes follow the same guard. Authored getters and ordinary post-solver callback edits remain available; process-wide `SetActive` retains its separate atomic policy. [World policy checks](../components/physics-registered-adapter.md#borrowed-world-policies) exercise this boundary through a public-only consumer.
+
 ## Example
 
 ```csharp

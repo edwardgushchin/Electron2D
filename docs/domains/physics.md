@@ -2,6 +2,12 @@
 
 Last updated: 2026-10-11
 
+[World policy borrowing](../components/physics-registered-adapter.md#borrowed-world-policies)
+guards all nine typed space parameters and local activation before common
+authoring or nested selected dispatch. Ordinary post-solver edits remain available;
+the public-only consumer checks initial/live/nested hooks and zero warm edited
+full-frame allocations. Complete numerical extension acceptance remains open.
+
 [Selected motion-result publication](../components/physics-backends.md#selected-motion-result-publication) now validates geometry, logical identities and filters before scene movement or caller result replacement. Engine-sampled weak object identity and borrowed lifetime cover raw/scene/CharacterBody motion; failures release the query without committing a tick. Public named registration now executes through PhysicsServerManager; arbitrary custom geometry and full extension acceptance remain open.
 
 [Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)

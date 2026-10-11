@@ -9,6 +9,7 @@ public static partial class BackendChecks
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();
+        WorldPolicyChecks();
         AreaFieldChecks();
         BodyMutationChecks();
         ShapeMutationChecks();

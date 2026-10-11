@@ -18,7 +18,7 @@ public sealed partial class PhysicsServer
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or unrepresentable.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetBodyLinearVelocitySleepThreshold(RID space, float value) => Service.SpaceSetBodyLinearVelocitySleepThresholdCore(space, value);
 
     /// <summary>Gets the world's quiet velocity threshold in radians per second.</summary>
@@ -37,7 +37,7 @@ public sealed partial class PhysicsServer
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or unrepresentable.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetBodyAngularVelocitySleepThreshold(RID space, float value) => Service.SpaceSetBodyAngularVelocitySleepThresholdCore(space, value);
 
     /// <summary>Gets the world's quiet duration in seconds.</summary>
@@ -56,7 +56,7 @@ public sealed partial class PhysicsServer
     /// Explicit body sleep and CanSleep remain independent. Inactive worlds do not accumulate quiet time.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or unrepresentable.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the world's owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetBodyTimeToSleep(RID space, float value) => Service.SpaceSetBodyTimeToSleepCore(space, value);
 
 }

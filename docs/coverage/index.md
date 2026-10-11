@@ -2,6 +2,13 @@
 
 Last updated: 2026-10-11
 
+[World policy borrowing](../components/physics-registered-adapter.md#borrowed-world-policies)
+now guards all nine typed space parameters and local activation during numerical
+hooks, before authored mutation or nested dispatch. A separate public-only consumer
+checks initial/live/nested hooks, equal writes, ordinary post-solver edits and zero
+warm edited full-frame memory. The four extension parameter/activation rows map to
+their actual paths as Partial; full registered numerical response remains open.
+
 The renderer-retained device now executes compute/image work before direct canvas consumers through TextureRD/TextureLayeredRD/TextureArrayRD and owned server wrappers. Real ordinary/atlas/proxy and HLSL/GLSL array pixels, queued snapshots, GPU conversion, lifetime/error cleanup and warmed allocation gates execute on Linux/Vulkan. Scalar-aware integer light/mask composition, alternate sRGB views and renderer-managed upload/viewport export remain precise Partial dependencies; see [the device image contract](../components/local-compute.md#device-images-in-canvas).
 
 [Selected observation and collision policy](../components/physics-backends.md#selected-observation-and-collision-policy)

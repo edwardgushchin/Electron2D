@@ -15,7 +15,7 @@ public sealed partial class PhysicsServer
     /// <remarks>SpaceCreate starts inactive; the SceneTree activates its own world. Local policy survives global
     /// suspension. Queries and configuration work while inactive; reactivation consumes no skipped time.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or not a physics space.</exception>
-    /// <exception cref="InvalidOperationException">The space is off-owner or currently solving.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetActive(RID space, bool active) => Service.SpaceSetActiveCore(space, active);
 
     /// <summary>Returns a physics space's local activation policy.</summary>
@@ -563,7 +563,7 @@ public sealed partial class PhysicsServer
     /// <remarks>Updates and wakes zero-bias joints. Explicit nonzero joint bias is preserved; contact-separation bias is separate.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has the wrong resource or joint role.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is outside the documented finite range.</exception>
-    /// <exception cref="InvalidOperationException">Access violates the owning world thread or phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetConstraintDefaultBias(RID space, float value) => Service.SpaceSetConstraintDefaultBiasCore(space, value);
 
     /// <summary>Returns whether the relative angle is limited.</summary>

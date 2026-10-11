@@ -32,7 +32,7 @@ public sealed partial class PhysicsServer
     /// not query margins or collision-event hysteresis. Changed values wake dynamics; equal writes preserve sleep.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or outside its representable range.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetContactRecycleRadius(RID space, float value) => Service.SpaceSetContactRecycleRadiusCore(space, value);
 
     /// <summary>Gets the world's maximum normal separation or tangential drift of cached contacts.</summary>
@@ -49,7 +49,7 @@ public sealed partial class PhysicsServer
     /// not query margins or collision-event hysteresis. Changed values wake dynamics; equal writes preserve sleep.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is negative, nonfinite or outside its representable range.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetContactMaxSeparation(RID space, float value) => Service.SpaceSetContactMaxSeparationCore(space, value);
 
     /// <summary>Gets the number of contact and joint solver sweeps per simulation substep.</summary>
@@ -66,7 +66,7 @@ public sealed partial class PhysicsServer
     /// A changed value wakes dynamics and resets quiet timers; an equal value preserves them.</remarks>
     /// <exception cref="ArgumentException">The RID does not identify a live space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The count is not positive.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetSolverIterations(RID space, int value) => Service.SpaceSetSolverIterationsCore(space, value);
 
     /// <summary>Gets the world's outer-tick contact correction fraction.</summary>
@@ -84,7 +84,7 @@ public sealed partial class PhysicsServer
     /// Positional correction is distributed over the tick's actual substep durations.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite, negative or outside its documented range.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetContactDefaultBias(RID space, float value) => Service.SpaceSetContactDefaultBiasCore(space, value);
 
     /// <summary>Gets the world's contact penetration slack.</summary>
@@ -102,7 +102,7 @@ public sealed partial class PhysicsServer
     /// Positional correction is distributed over the tick's actual substep durations.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or does not identify a space.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite, negative or outside its documented range.</exception>
-    /// <exception cref="InvalidOperationException">Access violates owner thread or solver phase.</exception>
+    /// <exception cref="InvalidOperationException">Access violates owner-thread or solver-phase rules, or a numerical implementation hook is borrowed. Borrowed writes reject before mutation, including equal values.</exception>
     public static void SpaceSetContactMaxAllowedPenetration(RID space, float value) => Service.SpaceSetContactMaxAllowedPenetrationCore(space, value);
 
 }

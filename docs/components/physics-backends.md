@@ -730,7 +730,7 @@ backends, custom geometry and the complete extension dispatch families remain op
 
 ## Owned world operations
 
-World initialization, authored sleep/contact/iteration/default-joint application, native worker selection, solver/sensor scratch preparation and completed process statistics now execute through the selected implementation. Common PhysicsSpace retains validation, authored values and observer publication. CPU owns native world defaults, arena/dormant budgets and sensor-statistics traversal; GPU applies store policies, invalidates observation epochs and prepares resident-consumer scratch without CPU motion storage. Public registration and direct-state extensions remain open.
+World initialization, authored sleep/contact/iteration/default-joint application, native worker selection, solver/sensor scratch preparation and completed process statistics now execute through the selected implementation. Common PhysicsSpace retains validation, authored values and observer publication. CPU owns native world defaults, arena/dormant budgets and sensor-statistics traversal; GPU applies store policies, invalidates observation epochs and prepares resident-consumer scratch without CPU motion storage. Named registration and typed direct-state extensions now execute; complete numerical-extension acceptance remains open. [World policy borrowing](physics-registered-adapter.md#borrowed-world-policies) guards all nine typed parameters and local activation before authoring or nested selected dispatch, while ordinary post-solver edits remain available.
 
 The dormant-capacity fast path also removes repeated whole-population scans when
 no dynamic body has ever allowed sleeping. The existing public dense-pile fixture
