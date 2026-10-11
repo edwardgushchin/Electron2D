@@ -60,9 +60,12 @@ internal sealed partial class PhysicsSpace
             if (body.Scene is not RigidBody &&
                 (body.Runtime.MaxContacts > 0 || body.Runtime.View is { IsDisposed: false, HasCapturedContacts: true }) && Current(body))
             {
-                var view = body.Runtime.GetView(this); view.CaptureContacts();
-                try { view.ProjectContacts(); }
-                catch (Exception error) { (errors ??= []).Add(error); }
+                try { var view = body.Runtime.GetView(this); view.CaptureContacts(); view.ProjectContacts(); }
+                catch (Exception error)
+                {
+                    if (HasBackendFailure) throw;
+                    (errors ??= []).Add(error);
+                }
             }
         }
     }

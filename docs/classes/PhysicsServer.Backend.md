@@ -1,6 +1,6 @@
 # PhysicsServer.Backend
 
-Last updated: 2026-10-09
+Last updated: 2026-10-11
 
 - Declaration: `public enum PhysicsServer.Backend`
 - Source: [PhysicsServer.Backends.cs](../../src/Servers/Physics/PhysicsServer.Backends.cs)
@@ -14,6 +14,7 @@ body and joint detach/reattach lifecycle rather than silently migrating a solver
 | --- | ---: | --- |
 | `CPU` | 0 | Managed Box2D.NET world. No renderer, window or compute device is needed. |
 | `GPU` | 1 | Independent resident compute world. No Box2D world or CPU solver is created. |
+| `Extension` | 2 | Distinct identity for an independent typed implementation; enum-based creation rejects it. Public named registration remains open. |
 
 Use `PhysicsServer.SpaceCreate(PhysicsServer.Backend.GPU, allowCPUFallback: true)`
 for a caller-owned server space or `new World(PhysicsServer.Backend.GPU, true)`

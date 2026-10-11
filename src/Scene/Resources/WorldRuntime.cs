@@ -20,7 +20,7 @@ internal sealed class WorldRuntime
     internal WorldRuntime(bool sceneOwned, PhysicsServer.Backend backend = PhysicsServer.Backend.CPU, bool allowCPUFallback = false,
         Func<PhysicsSpace, PhysicsWorldBackend>? factory = null, PhysicsBackendRegistry.Selection? selection = null)
     {
-        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        if (backend is not (PhysicsServer.Backend.CPU or PhysicsServer.Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(backend));
         if (factory is not null && selection is not null) throw new ArgumentException("A world cannot select two physics factories.");
         RequestedBackend = selection?.Registration.BuiltIn ?? backend; _allowCPUFallback = allowCPUFallback; _backendFactory = factory; _backendSelection = selection;
         SceneOwned = sceneOwned; Canvas = RenderingCanvasRegistry.Register(world: this);

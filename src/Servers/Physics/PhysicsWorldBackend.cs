@@ -50,8 +50,8 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
     internal abstract bool ResultsReady { get; }
     internal abstract void CompleteBody(PhysicsServerCollider body);
     internal abstract void CompleteBody(PhysicsBody body);
-    internal abstract void CollectContacts();
-    internal abstract void ScanAreas();
+    internal abstract void CollectContacts(ref List<Exception>? errors);
+    internal abstract void ScanAreas(ref List<Exception>? errors);
     internal abstract bool AreaContainsPoint(Area area, Vector2 point, uint mask);
     internal abstract void EndStep(Exception? failure);
     internal virtual void StepNative(float delta, int substeps) => throw new InvalidOperationException("This physics space has no CPU solver world.");
@@ -75,7 +75,7 @@ internal abstract partial class PhysicsWorldBackend(PhysicsSpace space, PhysicsS
 
     internal static PhysicsWorldBackend Create(PhysicsSpace space, PhysicsServer.Backend requested, bool allowCPUFallback)
     {
-        if (!Enum.IsDefined(requested)) throw new ArgumentOutOfRangeException(nameof(requested));
+        if (requested is not (PhysicsServer.Backend.CPU or PhysicsServer.Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(requested));
         if (requested == PhysicsServer.Backend.CPU) return new CPUPhysicsWorldBackend(space, requested);
         try { return new GPUPhysicsWorldBackend(space); }
         catch (Exception error) when (allowCPUFallback && error is InvalidOperationException or NotSupportedException or DllNotFoundException or EntryPointNotFoundException)

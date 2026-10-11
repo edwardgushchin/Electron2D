@@ -2,6 +2,17 @@ namespace Electron2D;
 
 public sealed partial class PhysicsServer
 {
+    internal bool IsAreaCollider(RID collider)
+    {
+        var scene = ResolveSceneObject(collider);
+        if (scene is not null) return scene is Area;
+        lock (_registryGate) return _serverColliders.TryGetValue(collider, out var server) && server.IsArea;
+    }
+    internal bool IsColliderShapeEnabled(RID collider, int slot, bool contactResult = false)
+    {
+        var owners = ShapeOwners(collider, IsAreaCollider(collider), contactResult: contactResult);
+        return owners.Scene?.GlobalShapeSlot(slot).Active ?? !owners.Server!.IsShapeDisabled(slot);
+    }
     internal MotionResultData ValidateMotionResult(PhysicsSpace space, RID body, in MotionResultData data,
         RID[] excludedBodies, ulong[] excludedObjects)
     {

@@ -20,7 +20,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         return false;
     }
 
-    internal override void ScanAreas() { ScanSceneAreas(); ScanAreaMonitors(); }
+    internal override void ScanAreas(ref List<Exception>? errors) { ScanSceneAreas(); ScanAreaMonitors(); }
 
     private void ScanSceneAreas()
     {

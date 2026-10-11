@@ -78,7 +78,7 @@ internal sealed partial class GPUPhysicsWorldBackend
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) { character.CaptureSolverPose(); character.SetResolvedGravity(body.Runtime.Gravity); }
     }
-    internal override void CollectContacts() => CollectBodyContactRange(0, Space.Bodies.Count, 0, Space);
+    internal override void CollectContacts(ref List<Exception>? errors) => CollectBodyContactRange(0, Space.Bodies.Count, 0, Space);
     internal override void EndStep(Exception? failure)
     {
         if (failure is not null && _intervalEntered && (GPUStore.HasFailed || GPUStore.SubmissionCount != _intervalSubmissions)) Space.FailGPUStep(failure);

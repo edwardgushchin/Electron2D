@@ -33786,6 +33786,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.PhysicsServer.Backend.Extension()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.PhysicsServer.Backend",
+    "name": "Extension",
+    "signature": "public const Electron2D.PhysicsServer.Backend Extension = 2",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.PhysicsServer.Backend",
+    "value": "2"
+  },
+  {
     "id": "enumValue:Electron2D.PhysicsServer.Backend.GPU()",
     "kind": "enumValue",
     "declaringType": "Electron2D.PhysicsServer.Backend",

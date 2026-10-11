@@ -27,7 +27,7 @@ internal sealed partial class CPUPhysicsWorldBackend
         if (body is AnimatableBody animatable) animatable.SyncPose();
         else if (body is CharacterBody character) character.CaptureSolverPose();
     }
-    internal override void CollectContacts()
+    internal override void CollectContacts(ref List<Exception>? errors)
     {
         CaptureBodyMotions(); var world = b2GetWorldFromId(WorldID); var count = Space.Bodies.Count;
         if (world.workerCount == 1 || count < 256) PhysicsSpace.CollectBodyContactRange(0, count, 0, Space);

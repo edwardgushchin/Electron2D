@@ -1,8 +1,9 @@
 namespace Electron2D;
 
 /// <summary>Retains the current selected joint attachment while common resource identity stays in its runtime.</summary>
-internal sealed partial class PhysicsJointBackend
+internal sealed partial class PhysicsJointBackend(RID rid = default)
 {
+    internal RID RID { get; } = rid;
     private PhysicsJointImplementation? _implementation;
     internal PhysicsJointImplementation? Implementation => _implementation;
     private PhysicsJointImplementation Attached => _implementation ?? throw new InvalidOperationException("The joint has no solver attachment.");

@@ -20,7 +20,7 @@ internal sealed partial class GPUPhysicsWorldBackend
     private readonly GPUPhysicsBodyStore.ShapeQuery[] _gpuAreaQuery = new GPUPhysicsBodyStore.ShapeQuery[1];
     private GPUPhysicsBodyStore.ShapeQueryHit[] _gpuAreaHits = [];
 
-    internal override void ScanAreas()
+    internal override void ScanAreas(ref List<Exception>? errors)
     {
         foreach (var area in Space.Areas)
             ScanGPUArea(area.Backend, area, PhysicsServer.Service.FindAreaRuntime(area.PhysicsRID));

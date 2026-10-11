@@ -8,14 +8,16 @@ public sealed partial class PhysicsServer
         /// <summary>Managed CPU physics; does not require a graphics device.</summary>
         CPU,
         /// <summary>Independent physics with resident state and compute execution on the GPU.</summary>
-        GPU
+        GPU,
+        /// <summary>A world implementation supplied through the typed extension contract.</summary>
+        Extension
     }
 
     /// <summary>Creates an inactive physics space using an explicitly selected implementation.</summary>
     /// <param name="backend">Requested CPU or GPU implementation, independently of the renderer.</param>
     /// <param name="allowCPUFallback">Allows CPU startup when the requested GPU cannot initialize. False by default.</param>
     /// <returns>A caller-owned RID; activate with SpaceSetActive and release with FreeRID.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">The backend value is unknown.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The backend is not a selectable built-in implementation.</exception>
     /// <exception cref="InvalidOperationException">GPU initialization fails and fallback is disabled.</exception>
     /// <remarks>Fallback occurs only during creation. A failed GPU step never replays on CPU.</remarks>
     public static RID SpaceCreate(Backend backend, bool allowCPUFallback = false) => Service.SpaceCreateCore(backend, allowCPUFallback);

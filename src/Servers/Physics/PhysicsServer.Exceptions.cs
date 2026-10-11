@@ -117,12 +117,14 @@ public sealed partial class PhysicsServer
         if (collider.Space is null) collider.MarkShapesDirty(); else collider.Backend.InvalidateCollisionExceptions();
     }
 
-    internal void CopyCollisionExceptions(List<(RID From, RID To)> destination)
+    internal void CopyCollisionExceptions(List<(RID From, RID To)> destination, bool includeJoints = false)
     {
         lock (_registryGate)
         {
             destination.Clear();
             foreach (var pair in _bodyExceptions) foreach (var target in pair.Value) destination.Add((pair.Key, target));
+            if (includeJoints)
+                foreach (var pair in _jointBodyExceptions) foreach (var target in pair.Value) destination.Add((pair.Key, target));
         }
     }
 }

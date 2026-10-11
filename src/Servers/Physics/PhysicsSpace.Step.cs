@@ -27,7 +27,7 @@ internal sealed partial class PhysicsSpace
                 try { backend.CompleteBody(body); }
                 catch (Exception error) { (errors ??= []).Add(error); }
             }
-            backend.CollectContacts();
+            backend.CollectContacts(ref errors);
             foreach (var body in _bodies)
                 if (body is RigidBody rigid)
                 {
@@ -40,7 +40,7 @@ internal sealed partial class PhysicsSpace
                     rigid.QueueContactChanges(_contactEvents);
                 }
             RecordStepPhase(5, ref profileMark);
-            backend.ScanAreas(); CaptureBodyStates(ref errors); PublishStatistics();
+            backend.ScanAreas(ref errors); CaptureBodyStates(ref errors); PublishStatistics();
             RecordStepPhase(6, ref profileMark);
         }
         catch (Exception error) { failure = error; (errors ??= []).Add(error); }

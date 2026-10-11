@@ -94,8 +94,8 @@ internal static partial class PhysicsBackendOwnershipTests
         internal override void SyncResults() => _inner.SyncResults();
         internal override void CompleteBody(PhysicsServerCollider body) => _inner.CompleteBody(body);
         internal override void CompleteBody(PhysicsBody body) => _inner.CompleteBody(body);
-        internal override void CollectContacts() => _inner.CollectContacts();
-        internal override void ScanAreas() => _inner.ScanAreas();
+        internal override void CollectContacts(ref List<Exception>? errors) => _inner.CollectContacts(ref errors);
+        internal override void ScanAreas(ref List<Exception>? errors) => _inner.ScanAreas(ref errors);
         internal override bool AreaContainsPoint(Area area, Vector2 point, uint mask) => _inner.AreaContainsPoint(area, point, mask);
         internal override void EndStep(Exception? failure) => _inner.EndStep(failure);
         internal override PhysicsRayResult? IntersectRay(Vector2 from, Vector2 to, uint mask, RID[] excluded, bool collideWithAreas, bool collideWithBodies, bool hitFromInside) => _inner.IntersectRay(from, to, mask, excluded, collideWithAreas, collideWithBodies, hitFromInside);

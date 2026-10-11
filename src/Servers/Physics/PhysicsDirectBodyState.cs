@@ -354,8 +354,10 @@ public class PhysicsDirectBodyState : ElectronObject
             finally { (_contacts, _backendContacts) = (_backendContacts, _contacts); _contactCount = previousCount; }
             return;
         }
+        var retainedCount = _contactCount;
         _contactCount = 0;
-        _runtime.CaptureViewContacts(this);
+        try { _runtime.CaptureViewContacts(this); }
+        catch { _contactCount = retainedCount; throw; }
     }
 
     internal void ProjectContacts()

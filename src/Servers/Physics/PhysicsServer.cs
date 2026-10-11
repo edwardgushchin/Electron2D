@@ -82,7 +82,7 @@ public sealed partial class PhysicsServer : ElectronObject
         PhysicsBackendRegistry.Selection? selection = null)
     {
         ThrowIfDisposed();
-        if (!Enum.IsDefined(backend)) throw new ArgumentOutOfRangeException(nameof(backend));
+        if (backend is not (Backend.CPU or Backend.GPU)) throw new ArgumentOutOfRangeException(nameof(backend));
         if (selection is null && factory is null) selection = _backendRegistry.Resolve(backend.ToString());
         var rid = RID.Allocate();
         var space = new PhysicsSpace(rid);

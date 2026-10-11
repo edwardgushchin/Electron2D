@@ -58,3 +58,5 @@ in scene units, carries the same motor/bias/force/softness settings and retains
 common RID and reattachment lifetime. Springs execute in the device solver.
 Single-body pins use the GPU world-anchor representation without a hidden CPU body.
 See [backend selection](../components/physics-backends.md).
+
+[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.

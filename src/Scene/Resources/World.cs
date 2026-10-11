@@ -14,7 +14,7 @@ public sealed class World : Resource
     /// <summary>Creates a world with an explicitly selected lazy physics implementation.</summary>
     /// <param name="backend">CPU or GPU physics, independently of the renderer.</param>
     /// <param name="allowCPUFallback">Allows CPU startup if the requested GPU cannot initialize.</param>
-    /// <exception cref="ArgumentOutOfRangeException">The backend value is unknown.</exception>
+    /// <exception cref="ArgumentOutOfRangeException">The backend is not a selectable built-in implementation.</exception>
     /// <remarks>The device is initialized only on first physics access. Duplicates share the same selected runtime.</remarks>
     public World(PhysicsServer.Backend backend, bool allowCPUFallback = false) : this(new WorldRuntime(false, backend, allowCPUFallback)) { }
     internal World(WorldRuntime runtime) { _runtime = runtime; runtime.Retain(); }
@@ -23,7 +23,7 @@ public sealed class World : Resource
     /// <value>The original CPU or GPU choice.</value>
     public PhysicsServer.Backend RequestedPhysicsBackend { get { ThrowIfDisposed(); _runtime.EnsureAlive(); return _runtime.RequestedBackend; } }
     /// <summary>Gets the selected implementation, initializing the physics space if needed.</summary>
-    /// <value>The actual CPU or GPU implementation after startup policy is applied.</value>
+    /// <value>The actual implementation after startup policy is applied.</value>
     /// <exception cref="InvalidOperationException">GPU startup fails with fallback disabled.</exception>
     public PhysicsServer.Backend PhysicsBackend { get { ThrowIfDisposed(); return _runtime.Space.ActualBackend; } }
     /// <summary>Gets the GPU startup failure that caused CPU fallback, initializing physics if needed.</summary>

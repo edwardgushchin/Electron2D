@@ -148,6 +148,17 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void EnsureWorldBindingChange() { EnsureQueryAccess(); EnsureWorldRelease(); }
     private int _extensionCallbackDepth;
     internal void BeginExtensionCallback() { EnsureQueryAccess(); _extensionCallbackDepth++; }
+    internal void BeginImplementationCallback(bool cleanup = false)
+    {
+        if (_disposed && !cleanup) throw new ObjectDisposedException(nameof(PhysicsSpace));
+        if (Environment.CurrentManagedThreadId != _ownerThreadID) throw new InvalidOperationException("Physics implementations require the space owner thread.");
+        _extensionCallbackDepth++;
+    }
+    internal void EnsureImplementationRelease()
+    {
+        if (Environment.CurrentManagedThreadId != _ownerThreadID || _stepping || _extensionCallbackDepth != 0)
+            throw new InvalidOperationException("A selected physics implementation cannot be released off-owner or while borrowed.");
+    }
     internal void EndExtensionCallback() => _extensionCallbackDepth--;
     internal void BeginBackendCallback() { EnsureReleaseAccess(); _extensionCallbackDepth++; }
     internal void BeginBackendPublication()

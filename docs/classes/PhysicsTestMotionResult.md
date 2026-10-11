@@ -62,3 +62,5 @@ Selected motion dispatch now borrows world lifetime for the whole query and vali
 Assigned object identity is sampled with each query result, including raw server objects.
 Rebinding does not retarget earlier results; disposal/collection makes object resolution null
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
+
+[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.

@@ -64,3 +64,5 @@ ordering; old CPU handle checks remain supplementary lifecycle diagnostics.
 ## Solver policies
 
 Bias (default zero), MaxBias/MaxForce (default float.MaxValue) are common authored values. SetBias/SetMaxBias/SetMaxForce validate before mutation; ApplySolverPolicy updates an attached backend without reanchoring. PinSoftness defaults zero, is nonnegative inverse-mass compliance, and is changed through SetPinSoftness. General policy survives Clear and raw concrete replacement; the pin-specific value resets on replacement. Scene descriptors serialize the same shared values. See [joint policies](../components/physics-joint-policies.md) for units, wake/history behavior and tests.
+
+[Registered numerical adapter](../components/physics-registered-adapter.md) now connects an internal value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public factories/backend classes, arbitrary custom geometry and full external acceptance remain open.

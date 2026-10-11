@@ -100,6 +100,7 @@ public sealed class PhysicsTestMotionParameters : ElectronObject
 public sealed class PhysicsTestMotionResult : ElectronObject
 {
     private MotionResultData _data;
+    internal MotionResultData Data { get { ThrowIfDisposed(); return _data; } }
 
     /// <summary>Creates an empty result writable by a motion-query implementation.</summary>
     public PhysicsTestMotionResult() { }

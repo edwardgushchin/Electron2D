@@ -11,7 +11,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     internal RID BodyA { get; private set; }
     internal RID BodyB { get; private set; }
     internal const float MaxExtentSceneUnits = 10_000_000;
-    internal PhysicsJointBackend Backend { get; } = new();
+    internal PhysicsJointBackend Backend { get; } = new(rid);
     internal bool HasBackend => Backend.IsAttached;
     internal Transform FrameA { get; private set; } = Transform.Identity;
     internal Transform FrameB { get; private set; } = Transform.Identity;
