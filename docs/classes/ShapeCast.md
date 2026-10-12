@@ -1,6 +1,6 @@
 # ShapeCast
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 **Inherits:** [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -76,3 +76,5 @@ Rebinding does not retarget earlier results; disposal/collection makes object re
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
 
 [Physics canvas diagnostics](../components/physics-debug.md) describes this node's retained geometry, live redraw, ordinary canvas behavior and CPU/GPU/native checks.
+
+TileMapLayerTests verifies generated tile-layer owner projection on public CPU/GPU worlds. Cached casts retain the sampled live layer when generated body RIDs retire, then resolve null after layer disposal; the associated physical RID and logical index retain their sampled meaning.

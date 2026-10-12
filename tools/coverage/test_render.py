@@ -194,7 +194,7 @@ def main():
                  if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(grid_rows) == 44 and all(" | Implemented | " in row for row in grid_rows)
     assert "../../classes/AStarGrid.md" in class_rows["AStarGrid2D"]
-    assert "../../classes/Area.md" in class_rows["Area2D"] and " | Partial | " in class_rows["Area2D"]
+    assert "../../classes/Area.md" in class_rows["Area2D"] and " | Implemented | " in class_rows["Area2D"]
     assert "../../classes/AnimatableBody.md" in class_rows["AnimatableBody2D"] and " | Implemented | " in class_rows["AnimatableBody2D"]
     animatable_rows = [row for row in pages[CLASS_PAGES / "AnimatableBody2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -220,14 +220,14 @@ def main():
     assert len(ray_node_rows) == 22
     assert {state: sum(f" | {state} | " in row for row in ray_node_rows)
             for state in ("Implemented", "Partial", "Blocked")} == {
-                "Implemented": 20, "Partial": 2, "Blocked": 0}
+                "Implemented": 22, "Partial": 0, "Blocked": 0}
     assert "../../classes/RayCast.md" in class_rows["RayCast2D"]
     shape_cast_rows = [row for row in pages[CLASS_PAGES / "ShapeCast2D.md"].splitlines()
                        if row.startswith("| [`") and "github.com/godotengine" in row]
     assert len(shape_cast_rows) == 28
     assert {state: sum(f" | {state} | " in row for row in shape_cast_rows)
             for state in ("Implemented", "Partial", "Blocked")} == {
-                "Implemented": 26, "Partial": 2, "Blocked": 0}
+                "Implemented": 28, "Partial": 0, "Blocked": 0}
     assert "../../classes/ShapeCast.md" in class_rows["ShapeCast2D"]
     character_rows = [row for row in pages[CLASS_PAGES / "CharacterBody2D.md"].splitlines()
                       if row.startswith("| [`") and "github.com/godotengine" in row]
@@ -278,7 +278,7 @@ def main():
     assert "../../classes/PhysicsDirectSpaceState.md" in class_rows["PhysicsDirectSpaceState2D"]
     assert "| Implemented |" in next(row for row in direct_rows.splitlines()
                                        if row.startswith("| [`method intersect_ray("))
-    assert "| Partial |" in next(row for row in direct_rows.splitlines()
+    assert "| Implemented |" in next(row for row in direct_rows.splitlines()
                                    if row.startswith("| [`method intersect_point("))
     assert all(" | Implemented | " in next(row for row in direct_rows.splitlines()
                                           if row.startswith(f"| [`method {name}("))
@@ -432,9 +432,9 @@ def main():
                                           if row.startswith(f"| [`method {name}("))
                for name in ("move_and_collide", "test_move"))
     for name, count, implemented, partial, blocked in (
-        ("KinematicCollision2D", 14, 11, 3, 0),
+        ("KinematicCollision2D", 14, 14, 0, 0),
         ("PhysicsTestMotionParameters2D", 8, 8, 0, 0),
-        ("PhysicsTestMotionResult2D", 14, 12, 2, 0)):
+        ("PhysicsTestMotionResult2D", 14, 14, 0, 0)):
         rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines()
                 if row.startswith("| [`") and "github.com/godotengine" in row]
         assert len(rows) == count
@@ -470,7 +470,7 @@ def main():
     assert len(area_rows) == 36
     assert {state: sum(f" | {state} | " in row for row in area_rows)
             for state in ("Implemented", "Partial", "Unimplemented", "Blocked")} == {
-                "Implemented": 28, "Partial": 8, "Unimplemented": 0, "Blocked": 0}
+                "Implemented": 36, "Partial": 0, "Unimplemented": 0, "Blocked": 0}
     listener_rows = pages[CLASS_PAGES / "AudioListener2D.md"]
     assert "Electron2D.AudioListener" in listener_rows
     assert all(" | Implemented | " in row for row in listener_rows.splitlines() if row.startswith("| [`"))
@@ -491,14 +491,14 @@ def main():
                for prefix in ("method _integrate_forces", "property bool custom_integrator"))
     assert "| Implemented |" in next(row for row in body_rows.splitlines()
                                        if row.startswith("| [`property int linear_damp_mode"))
-    for prefix, status in (("method get_colliding_bodies", "Partial"),
+    for prefix, status in (("method get_colliding_bodies", "Implemented"),
                            ("method get_contact_count", "Implemented"),
                            ("property bool contact_monitor", "Implemented"),
                            ("property int max_contacts_reported", "Implemented"),
-                           ("signal body_entered", "Partial"),
-                           ("signal body_exited", "Partial"),
-                           ("signal body_shape_entered", "Partial"),
-                           ("signal body_shape_exited", "Partial"),
+                           ("signal body_entered", "Implemented"),
+                           ("signal body_exited", "Implemented"),
+                           ("signal body_shape_entered", "Implemented"),
+                           ("signal body_shape_exited", "Implemented"),
                            ("signal sleeping_state_changed", "Implemented")):
         assert f" | {status} | " in next(row for row in body_rows.splitlines()
                                        if row.startswith(f"| [`{prefix}"))

@@ -4,7 +4,7 @@ Last updated: 2026-10-08
 
 Choose each next executable vertical slice by user API value, dependent work unlocked and current-backend feasibility. Resolve its applicable Partial rows with behavior evidence; do not treat easy isolated audits as the roadmap. `Unmapped` Electron2D rows need an exact upstream link or documented typed-C# rationale. The 3D/GDScript exclusions are not delivery work.
 
-1. Close 1606 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
+1. Close 1583 partially implemented rows and 0 unmapped Electron2D declarations within connected executable slices, including core, input, scene, resource and image domains.
 2. Complete 900 missing declarations in already represented type families; split each type by its documented dependency trigger.
 3. Complete the missing 2D renderer integrations, then GUI/theme and tiles; complete CPU and independent GPU physics under ADR 0054; audio/navigation/animation; asset loaders and networking; and the self-hosted editor. Finish specific display/input host gaps at their documented triggers. The first executable GL/EGL/GLX fallback slice must audit each of the five blocked `DisplayServer.HandleType` identities against its actual driver and window-associated context under ADR 0042.
 
@@ -52,7 +52,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [Translation](classes/Translation.md) | 0 | 9 |
 | [TranslationDomain](classes/TranslationDomain.md) | 0 | 9 |
 | [DisplayServer](classes/DisplayServer.md) | 0 | 8 |
-| [Area2D](classes/Area2D.md) | 0 | 7 |
 | [ParallaxBackground](classes/ParallaxBackground.md) | 0 | 7 |
 | [RegEx](classes/RegEx.md) | 0 | 7 |
 | [InputEventScreenDrag](classes/InputEventScreenDrag.md) | 0 | 6 |
@@ -65,7 +64,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [MainLoop](classes/MainLoop.md) | 0 | 5 |
 | [PackedScene](classes/PackedScene.md) | 0 | 5 |
 | [RDTextureView](classes/RDTextureView.md) | 0 | 5 |
-| [RigidBody2D](classes/RigidBody2D.md) | 0 | 5 |
 | [AudioStreamOggVorbis](classes/AudioStreamOggVorbis.md) | 0 | 3 |
 | [ParallaxLayer](classes/ParallaxLayer.md) | 0 | 3 |
 | [ShaderMaterial](classes/ShaderMaterial.md) | 0 | 3 |
@@ -75,7 +73,6 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | 0 | 2 |
 | [InputEventMouse](classes/InputEventMouse.md) | 0 | 2 |
 | [InputEventScreenTouch](classes/InputEventScreenTouch.md) | 0 | 2 |
-| [KinematicCollision2D](classes/KinematicCollision2D.md) | 0 | 2 |
 | [LineEdit](classes/LineEdit.md) | 0 | 2 |
 | [RDShaderSource](classes/RDShaderSource.md) | 0 | 2 |
 | [ThemeDB](classes/ThemeDB.md) | 0 | 2 |
@@ -88,12 +85,8 @@ These classes already have an Electron2D type. The counts scope work; they do no
 | [FileDialog](classes/FileDialog.md) | 0 | 1 |
 | [ImporterMesh](classes/ImporterMesh.md) | 0 | 1 |
 | [OptimizedTranslation](classes/OptimizedTranslation.md) | 0 | 1 |
-| [PhysicsDirectSpaceState2D](classes/PhysicsDirectSpaceState2D.md) | 0 | 1 |
-| [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | 0 | 1 |
 | [RDFramebufferPass](classes/RDFramebufferPass.md) | 0 | 1 |
-| [RayCast2D](classes/RayCast2D.md) | 0 | 1 |
 | [RichTextLabel](classes/RichTextLabel.md) | 0 | 1 |
-| [ShapeCast2D](classes/ShapeCast2D.md) | 0 | 1 |
 | [Texture2DRD](classes/TextureRD.md) | 0 | 1 |
 | [TileSetAtlasSource](classes/TileSetAtlasSource.md) | 0 | 1 |
 | [Timer](classes/Timer.md) | 0 | 1 |

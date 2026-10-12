@@ -198,7 +198,15 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void OnEnterTree() { base.OnEnterTree(); MarkAll(); }
     /// <inheritdoc />
-    protected override void OnExitTree() { try { ReleaseSceneCells(exiting: true); ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); _allDirty = true; UpdateCells(_cells.Keys.ToArray(), true); } finally { base.OnExitTree(); } }
+    protected override void OnExitTree()
+    {
+        List<Exception>? errors = null;
+        PhysicsSpace.Cleanup(() => ReleaseSceneCells(exiting: true), ref errors);
+        ReleaseConsumers(ref errors); _allDirty = true;
+        PhysicsSpace.Cleanup(() => UpdateCells(_cells.Keys.ToArray(), true), ref errors);
+        PhysicsSpace.Cleanup(base.OnExitTree, ref errors);
+        PhysicsSpace.FinishCleanup(errors);
+    }
     /// <inheritdoc />
     protected override void OnNotification(int what)
     {
@@ -213,8 +221,19 @@ public partial class TileMapLayer : Entity
     /// <inheritdoc />
     protected override void Dispose(bool disposing)
     {
-        try { if (disposing) DetachSet(); base.Dispose(disposing); }
-        finally { if (disposing) { _sceneCells.Clear(); ReleasePhysics(); ReleaseNavigation(); ReleaseDrawing(); ReleaseDrawingDiagnostics(); ClearRuntimeData(); Changed = null; } }
+        List<Exception>? errors = null;
+        if (disposing) PhysicsSpace.Cleanup(DetachSet, ref errors);
+        PhysicsSpace.Cleanup(() => base.Dispose(disposing), ref errors);
+        if (disposing) { _sceneCells.Clear(); ReleaseConsumers(ref errors); Changed = null; }
+        PhysicsSpace.FinishCleanup(errors);
+    }
+    private void ReleaseConsumers(ref List<Exception>? errors)
+    {
+        PhysicsSpace.Cleanup(ReleasePhysics, ref errors);
+        PhysicsSpace.Cleanup(ReleaseNavigation, ref errors);
+        PhysicsSpace.Cleanup(ReleaseDrawing, ref errors);
+        PhysicsSpace.Cleanup(ReleaseDrawingDiagnostics, ref errors);
+        PhysicsSpace.Cleanup(ClearRuntimeData, ref errors);
     }
     /// <inheritdoc />
     protected override Func<Node> CreateSceneInstanceFactory() => CreateTileLayer;

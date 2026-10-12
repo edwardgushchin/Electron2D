@@ -1,6 +1,6 @@
 # PhysicsTestMotionResult
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** ElectronObject · **Source:** [PhysicsTestMotion.cs](../../src/Servers/Physics/PhysicsTestMotion.cs) · **Component:** [Physics server and direct queries](../components/physics-queries.md)
 
@@ -56,7 +56,7 @@ Sets finite global `travel` in scene units, clears collision identity, indices, 
 Selected motion dispatch now borrows world lifetime for the whole query and validates its completed output before caller replacement or scene movement. Finite travel/contact values, ordered fractions, the requested moving RID, live enabled logical slots, same-space bodies, moving-mask/target-layer filtering, symmetric body/joint exceptions and explicit RID/object exclusions are checked. Collider object identity is sampled by the engine; supplied identity cannot retarget a result. Misses clear collision payload and must report completed motion. Same-space recursive motion rejects because the selected solver owns reusable query scratch; query failures retire borrowing without advancing or poisoning the world. Public registration remains open under ADR 0103.
 
 
-[PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server-only and scene identities, shape indices, point/normal, fractions, travel/remainder, exclusions and no-hit reset. Virtual tile collision objects remain [Partial](../coverage/classes/PhysicsTestMotionResult2D.md). Native allocation, other platforms and owner acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
+[PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks server-only and scene identities, shape indices, point/normal, fractions, travel/remainder, exclusions and no-hit reset. TileMapLayerTests now verifies generated tile-layer owners on public CPU/GPU worlds, including individual body RIDs and logical shape slots; Native allocation, other platforms and owner acceptance are unverified. See [ADR 0063](../decisions/physics.md#adr-0063).
 
 
 Assigned object identity is sampled with each query result, including raw server objects.

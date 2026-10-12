@@ -5623,16 +5623,16 @@
         "Area2D::signal:body_shape_entered(RID:,Node2D:,int:,int:)",
         "Area2D::signal:body_shape_exited(RID:,Node2D:,int:,int:)"
       ],
-      "state": "Partial",
-      "reason": "Scene/server body shape pairs execute with nullable RID/object payload and both indices; virtual tile body payload requires typed tile-body integration (ADR 0055, ShapePairEventTests)."
+      "state": "Implemented",
+      "reason": "ADRs 0055/0058/0101: selected CPU/GPU scene/raw monitoring projects generated TileMapLayer owners, deduplicated object snapshots and object events, while shape events preserve each body RID and both logical indices. TileMapLayerTests verifies Area/rigid entry and departure, filter edits, replacement, reentry, weak-owner lifetime and callback failures. Prepared replacements remain layer-owned; every old body/shape and other layer consumer retires before cleanup errors escape. Other inherited capabilities are accounted on their declaring families."
     },
     {
       "godot": [
         "RigidBody2D::signal:body_shape_entered(RID:,Node:,int:,int:)",
         "RigidBody2D::signal:body_shape_exited(RID:,Node:,int:,int:)"
       ],
-      "state": "Partial",
-      "reason": "Logical scene body shape-pair events execute with RID and sampled indices; virtual tile payload requires the existing tile-body integration trigger (ADR 0058, ShapePairEventTests)."
+      "state": "Implemented",
+      "reason": "ADRs 0055/0058/0101: selected CPU/GPU scene/raw monitoring projects generated TileMapLayer owners, deduplicated object snapshots and object events, while shape events preserve each body RID and both logical indices. TileMapLayerTests verifies Area/rigid entry and departure, filter edits, replacement, reentry, weak-owner lifetime and callback failures. Prepared replacements remain layer-owned; every old body/shape and other layer consumer retires before cleanup errors escape. Other inherited capabilities are accounted on their declaring families."
     },
     {
       "godot": [
@@ -5848,16 +5848,16 @@
       "godot": [
         "class:KinematicCollision2D"
       ],
-      "state": "Partial",
-      "reason": "Typed travel, remainder, contact and scene shape owners execute; virtual tile collision-object and shape owners await typed tile-body integration (ADR 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0101: current scene and raw motion results retain sampled body RID/object identity and logical shape slots, including generated TileMapLayer bodies. TileMapLayerTests verifies both server BodyTestMotion and scene TestMove/KinematicCollision owner projection; generated server geometry has no scene shape-owner node, so GetColliderShape is null. Existing PhysicsMotionTests/ShapeOwnerTests cover ordinary and arbitrary scene owners, copied motion values, errors and lifetime."
     },
     {
       "godot": [
         "KinematicCollision2D::method:get_collider()",
         "KinematicCollision2D::method:get_collider_shape()"
       ],
-      "state": "Partial",
-      "reason": "Scene body objects and direct shape owners resolve; virtual tile collision owners require typed tile-body integration (ADR 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0101: current scene and raw motion results retain sampled body RID/object identity and logical shape slots, including generated TileMapLayer bodies. TileMapLayerTests verifies both server BodyTestMotion and scene TestMove/KinematicCollision owner projection; generated server geometry has no scene shape-owner node, so GetColliderShape is null. Existing PhysicsMotionTests/ShapeOwnerTests cover ordinary and arbitrary scene owners, copied motion values, errors and lifetime."
     },
     {
       "godot": [
@@ -5906,15 +5906,15 @@
       "godot": [
         "class:PhysicsTestMotionResult2D"
       ],
-      "state": "Partial",
-      "reason": "Typed motion result fields execute; collider object projection remains Partial for virtual tile collision bodies (ADR 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0101: current scene and raw motion results retain sampled body RID/object identity and logical shape slots, including generated TileMapLayer bodies. TileMapLayerTests verifies both server BodyTestMotion and scene TestMove/KinematicCollision owner projection; generated server geometry has no scene shape-owner node, so GetColliderShape is null. Existing PhysicsMotionTests/ShapeOwnerTests cover ordinary and arbitrary scene owners, copied motion values, errors and lifetime."
     },
     {
       "godot": [
         "PhysicsTestMotionResult2D::method:get_collider()"
       ],
-      "state": "Partial",
-      "reason": "Scene bodies resolve and server-only bodies return null; virtual tile collision bodies require typed tile-owner integration (ADR 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0101: current scene and raw motion results retain sampled body RID/object identity and logical shape slots, including generated TileMapLayer bodies. TileMapLayerTests verifies both server BodyTestMotion and scene TestMove/KinematicCollision owner projection; generated server geometry has no scene shape-owner node, so GetColliderShape is null. Existing PhysicsMotionTests/ShapeOwnerTests cover ordinary and arbitrary scene owners, copied motion values, errors and lifetime."
     },
     {
       "godot": [
@@ -5938,15 +5938,15 @@
       "godot": [
         "class:ShapeCast2D"
       ],
-      "state": "Partial",
-      "reason": "Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
     },
     {
       "godot": [
         "ShapeCast2D::method:get_collider(int:)"
       ],
-      "state": "Partial",
-      "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
     },
     {
       "godot": [
@@ -5984,15 +5984,15 @@
       "godot": [
         "class:RayCast2D"
       ],
-      "state": "Partial",
-      "reason": "Cached typed scene queries and retained collision-state diagnostics execute on CPU/GPU worlds. Virtual tile collider owner projection remains open (ADRs 0063/0100)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
     },
     {
       "godot": [
         "RayCast2D::method:get_collider()"
       ],
-      "state": "Partial",
-      "reason": "Scene CollisionObject hits and null server-only results execute; virtual TileMap collision bodies require a typed tile-owner object projection (ADRs 0008 and 0063)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0100/0101: retained scene cast state executes through public CPU/GPU worlds and projects generated TileMapLayer owners with their individual body RIDs and logical shape indices. TileMapLayerTests checks actual RayCast/ShapeCast hits and sampled weak owner lifetime across generated-body retirement and layer disposal. Unassigned raw collider objects remain null; diagnostics and ordinary query policies retain their separate executable checks."
     },
     {
       "godot": [
@@ -6103,8 +6103,8 @@
       "godot": [
         "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"
       ],
-      "state": "Partial",
-      "reason": "Typed ordered/deduplicated point results, array/span caps, exact canvas identity, masks and exclusions execute for scene/server colliders and internally on independent GPU. Actual tile collision generation/lookup and public independent-GPU binding remain open (ADR 0063, PhysicsCanvasTests)."
+      "state": "Implemented",
+      "reason": "ADRs 0063/0101: public CPU/GPU ordered/deduplicated point results and array/span caps preserve scene/raw/tile owner identities, masks/exclusions and exact canvas IDs. PhysicsCanvasTests and TileMapLayerTests verify nondefault/default tile canvas filtering, reparent/replacement, sampled weak owner disposal and 64 warmed full frame/span-query cycles with zero owner/all-thread bytes. Array exports intentionally allocate."
     },
     {
       "godot": [
@@ -6469,8 +6469,8 @@
         "RigidBody2D::signal:body_entered(Node:)",
         "RigidBody2D::signal:body_exited(Node:)"
       ],
-      "state": "Partial",
-      "reason": "Current scene-body snapshots and deduplicated transitions use the same deepest retained points as direct state. Tile-map virtual collision bodies remain to be integrated."
+      "state": "Implemented",
+      "reason": "ADRs 0058/0101: monitored scene/raw contacts project live node associations, including generated TileMapLayer owners, into deduplicated arrays and object entry/departure events. TileMapLayerTests verifies real public CPU/GPU contacts, multiple generated RIDs per owner, filter edits and retirement; ShapePairEventTests/PhysicsReportOnlyTests cover ordinary body monitoring, logical shapes and zero warmed allocation."
     },
     {
       "godot": [
@@ -6527,8 +6527,8 @@
       "godot": [
         "class:Area2D"
       ],
-      "state": "Partial",
-      "reason": "Directional monitoring, priority gravity/damping, audio routing and logical shape-pair events execute (ADRs 0047, 0055 and 0056). Virtual tile-body object/event payloads remain incomplete."
+      "state": "Implemented",
+      "reason": "ADRs 0055/0058/0101: selected CPU/GPU scene/raw monitoring projects generated TileMapLayer owners, deduplicated object snapshots and object events, while shape events preserve each body RID and both logical indices. TileMapLayerTests verifies Area/rigid entry and departure, filter edits, replacement, reentry, weak-owner lifetime and callback failures. Prepared replacements remain layer-owned; every old body/shape and other layer consumer retires before cleanup errors escape. Other inherited capabilities are accounted on their declaring families."
     },
     {
       "godot": [
@@ -6567,8 +6567,8 @@
         "Area2D::signal:body_entered(Node2D:)",
         "Area2D::signal:body_exited(Node2D:)"
       ],
-      "state": "Partial",
-      "reason": "Current PhysicsBody nodes work, but the reference also reports tile-map virtual collision bodies; trigger: tile collision-owner integration with the area space."
+      "state": "Implemented",
+      "reason": "ADRs 0055/0058/0101: selected CPU/GPU scene/raw monitoring projects generated TileMapLayer owners, deduplicated object snapshots and object events, while shape events preserve each body RID and both logical indices. TileMapLayerTests verifies Area/rigid entry and departure, filter edits, replacement, reentry, weak-owner lifetime and callback failures. Prepared replacements remain layer-owned; every old body/shape and other layer consumer retires before cleanup errors escape. Other inherited capabilities are accounted on their declaring families."
     },
     {
       "godot": [

@@ -1,6 +1,6 @@
 # Tile grids, animated atlases and physical layers
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Scope and ownership
 
@@ -286,3 +286,7 @@ The public SceneTiles authoring command wrote a portable scene in a separate pro
 The full executable check harness passed before main synchronization; focused fresh-graph and all four native sessions also passed after the immutable physics input commit was incorporated. These establish current Linux/native and managed behavior, not editor acceptance, foreign platforms, native allocator totals, large-map throughput or user visual acceptance.
 
 [Canvas lights and occlusion](canvas-lights.md) now integrate scene and retained sources, normal/specular channels, open/closed contours, tile policies and programmable signed-distance-field sampling. See that component for actual renderer limits and verification boundaries.
+
+Prepared replacement bodies acquire the layer maps before any prior-body departure callback. Every old body and owned shape is retired even if a handler throws; completed replacement ownership is retained and errors escape after cleanup. UpdateInternals marks failed remaining work for retry. Exit/disposal also attempts navigation, drawing, diagnostic and runtime-data cleanup after physics failures. TileMapLayerTests checks replacement, disabling, exit/reentry and disposal with throwing shape-departure handlers on CPU/GPU, including actual navigation-region retirement.
+
+Generated tile bodies retain TileMapLayer owner identity and individual RIDs through Area/rigid object and shape events, point/ray/shape/rest queries, scene casts and scene/server motion results. Object snapshots/events deduplicate multiple bodies for one layer; shape payloads retain remote/local logical indices. Generated server geometry has no scene shape-owner node. Explicit CPU/GPU tests check canvas-qualified point queries, reparenting, sampled weak owner lifetime and 64 warmed full-frame/span-query cycles at zero owner/all-thread managed bytes. Native allocations, other platforms and visual acceptance remain unverified.

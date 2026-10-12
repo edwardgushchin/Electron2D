@@ -114,7 +114,7 @@ The six query methods read the most recently committed snapshot, even after a no
 <a id="events"></a>
 ### Area and body entry/exit events
 
-Object-level events are raised once per other node even when multiple shape pairs overlap. The argument is the other area or spatial body. Physics backend stepping and body synchronization finish before callbacks; event handlers may remove or reparent nodes. A throwing handler does not replay the committed transition on the next frame, and other queued transitions still run before an aggregate exception reaches the physics-frame caller. Zero-delta frames do not change snapshots or emit events. Shape-index events require typed physics identity and shape-owner APIs and remain separate coverage rows.
+Object-level events are raised once per other node even when multiple shape pairs overlap. The argument is the other area or associated spatial entity, including a generated tile-layer owner. Physics backend stepping and body synchronization finish before callbacks; event handlers may remove or reparent nodes. A throwing handler does not replay the committed transition on the next frame, and other queued transitions still run before an aggregate exception reaches the physics-frame caller. Zero-delta frames do not change snapshots or emit events. Shape-index events require typed physics identity and shape-owner APIs and remain separate coverage rows.
 
 ## Lifecycle, errors and verification
 
@@ -193,3 +193,5 @@ Attachment departure resets applied shape revisions in a finally block. Other ob
 
 
 [Shared Area monitor conformance](../components/physics-registered-adapter.md#area-pose-and-monitor-publication) verifies scene policy changes from this Area's external server callback as well as scene events. Changed Monitoring/Monitorable values reject before mutation; equal assignments remain harmless in ordinary callbacks. CPU/GPU/registered tests deliver 128 entries/128 exits through 64 warmed pose-edited frames at zero owner/all-thread managed bytes.
+
+TileMapLayerTests verifies deduplicated layer membership across several generated bodies, logical shape-entry/departure payloads, filter changes, prepared replacement and exception-safe retirement on CPU/GPU. A last-body departure reports the object exit once; throwing shape handlers cannot preserve stale members.

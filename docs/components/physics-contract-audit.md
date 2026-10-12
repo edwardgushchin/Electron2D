@@ -1,5 +1,7 @@
 # Physics contract and backend audit
 
+[Tile owner projections and failure cleanup](tiles.md) now execute through explicit CPU/GPU tests, including object deduplication, shape/RID payloads, canvas and weak lifetime, scene/server motion and callback-failed replacement/retirement. The formerly tile-blocked Area, KinematicCollision, PhysicsTestMotionResult and point-query rows are reconciled against actual production paths. This closes those recorded implementation triggers; full inherited, numerical-extension, network/platform and performance acceptance remain open.
+
 Last updated: 2026-10-12
 
 [Common space bindings](physics-registered-adapter.md#common-space-bindings) now execute all four Body/Area space

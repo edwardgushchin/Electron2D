@@ -3,7 +3,7 @@
 <a id="adr-0101"></a>
 ## ADR 0101: Tile layers own generated physics bodies
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ### Status
 
@@ -20,6 +20,8 @@ Under [ADR 0004](product.md#adr-0004) and [ADR 0008](scene.md#adr-0008), `TileSe
 A layer batches authored cell/resource changes. `UpdateInternals` explicitly publishes them; the scene tree also flushes queued updates. Physics is generated through the shared server API in the layer's selected `World`, using static or kinematic bodies with owner association to the layer. Bodies are grouped by physical quadrant, physics layer, surface velocity and one-way policy; changed geometry replaces affected generated bodies. Shape geometry includes cell transforms and layer scale/skew. Layer transform updates preserve body identities when the shape basis does not change. No generated physics child nodes are added to the authored hierarchy.
 
 `GetCoordsForBodyRID` returns quadrant coordinates; a quadrant size of one makes these cell coordinates. Owner projections preserve the layer and the individual body RID through queries, motion results, direct-state contacts and overlap events. Hiding drawing does not disable collision. Disabling the layer or collision removes generated bodies. Exit, disposal and world replacement release or move their server resources, including canvas association.
+
+Prepared replacement bodies acquire the layer maps before any prior-body departure callback. Every old body and owned shape is retired even if a handler throws; completed replacement ownership is retained and errors escape after cleanup. UpdateInternals marks failed remaining work for retry. Successful departure callbacks may detach/dispose the updating layer; the remaining publication stops before reading retired node state. Exit/disposal also attempts navigation, drawing, diagnostic and runtime-data cleanup after physics failures. TileMapLayerTests checks replacement, disabling, exit/reentry and disposal with throwing shape-departure handlers on CPU/GPU, including actual navigation-region retirement.
 
 The executable implementation supports square, isometric, half-offset square and hexagonal cells, all six coordinate layouts and both offset axes. `TileShape`, `TileLayout`, `TileOffsetAxis` and `CellNeighbor` are namespace enums under ADR 0051; the first three are stored TileSet properties. Square cells ignore layout and offset axis. Map/local conversion and named neighbors share one geometry kernel used by drawing, generated physics and navigation, including source parsing. Cell images and authored polygons keep their own geometry; grid shape changes placement, not the contents of a tile. Occlusion remains an explicit coverage gap. Resource/scene storage uses typed property descriptors and compiled factories; generated bodies and runtime tile-data copies are not serialized.
 

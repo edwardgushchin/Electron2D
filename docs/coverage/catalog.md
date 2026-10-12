@@ -47,7 +47,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [AnimationPlayer](classes/AnimationPlayer.md) | AnimationMixer | Partial | 53 |
 | [AnimationRootNode](classes/AnimationRootNode.md) | AnimationNode | Implemented | 0 |
 | [AnimationTree](classes/AnimationTree.md) | AnimationMixer | Partial | 12 |
-| [Area2D](classes/Area2D.md) | CollisionObject2D | Partial | 35 |
+| [Area2D](classes/Area2D.md) | CollisionObject2D | Implemented | 35 |
 | [Area3D](classes/Area3D.md) | CollisionObject3D | Excluded | 42 |
 | [AreaLight3D](classes/AreaLight3D.md) | Light3D | Excluded | 7 |
 | [Array](classes/Array.md) | — | Excluded | 72 |
@@ -417,7 +417,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [Joint3D](classes/Joint3D.md) | Node3D | Excluded | 5 |
 | [JointLimitation3D](classes/JointLimitation3D.md) | Resource | Excluded | 0 |
 | [JointLimitationCone3D](classes/JointLimitationCone3D.md) | JointLimitation3D | Excluded | 1 |
-| [KinematicCollision2D](classes/KinematicCollision2D.md) | RefCounted | Partial | 13 |
+| [KinematicCollision2D](classes/KinematicCollision2D.md) | RefCounted | Implemented | 13 |
 | [KinematicCollision3D](classes/KinematicCollision3D.md) | RefCounted | Excluded | 14 |
 | [Label](classes/Label.md) | Control | Implemented | 42 |
 | [Label3D](classes/Label3D.md) | GeometryInstance3D | Excluded | 49 |
@@ -634,7 +634,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PhysicsShapeQueryParameters3D](classes/PhysicsShapeQueryParameters3D.md) | RefCounted | Excluded | 9 |
 | [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | RefCounted | Implemented | 7 |
 | [PhysicsTestMotionParameters3D](classes/PhysicsTestMotionParameters3D.md) | RefCounted | Excluded | 8 |
-| [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Partial | 13 |
+| [PhysicsTestMotionResult2D](classes/PhysicsTestMotionResult2D.md) | RefCounted | Implemented | 13 |
 | [PhysicsTestMotionResult3D](classes/PhysicsTestMotionResult3D.md) | RefCounted | Excluded | 14 |
 | [PinJoint2D](classes/PinJoint2D.md) | Joint2D | Implemented | 6 |
 | [PinJoint3D](classes/PinJoint3D.md) | Joint3D | Excluded | 9 |
@@ -690,7 +690,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [RID](classes/RID.md) | — | Implemented | 10 |
 | [RandomNumberGenerator](classes/RandomNumberGenerator.md) | RefCounted | Implemented | 9 |
 | [Range](classes/Range.md) | Control | Implemented | 17 |
-| [RayCast2D](classes/RayCast2D.md) | Node2D | Partial | 21 |
+| [RayCast2D](classes/RayCast2D.md) | Node2D | Implemented | 21 |
 | [RayCast3D](classes/RayCast3D.md) | Node3D | Excluded | 25 |
 | [Rect2](classes/Rect2.md) | — | Implemented | 27 |
 | [Rect2i](classes/Rect2i.md) | — | Implemented | 23 |
@@ -772,7 +772,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ShaderMaterial](classes/ShaderMaterial.md) | Material | Partial | 3 |
 | [Shape2D](classes/Shape2D.md) | Resource | Implemented | 7 |
 | [Shape3D](classes/Shape3D.md) | Resource | Excluded | 3 |
-| [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Partial | 27 |
+| [ShapeCast2D](classes/ShapeCast2D.md) | Node2D | Implemented | 27 |
 | [ShapeCast3D](classes/ShapeCast3D.md) | Node3D | Excluded | 29 |
 | [Shortcut](classes/Shortcut.md) | Resource | Implemented | 4 |
 | [Signal](classes/Signal.md) | — | Excluded | 15 |

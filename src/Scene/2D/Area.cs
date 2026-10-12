@@ -116,7 +116,7 @@ public sealed partial class Area : CollisionObject
     }
 
     /// <summary>Returns the current body-overlap snapshot.</summary>
-    /// <returns>A caller-owned array of spatial bodies updated from the last nonzero fixed step.</returns>
+    /// <returns>A caller-owned deduplicated array of live associated spatial entities, including generated tile-layer owners, from the last nonzero fixed step.</returns>
     /// <exception cref="InvalidOperationException">An attached area is read off its scene owner thread.</exception>
     /// <exception cref="ObjectDisposedException">The area has been disposed.</exception>
     public Entity[] GetOverlappingBodies()

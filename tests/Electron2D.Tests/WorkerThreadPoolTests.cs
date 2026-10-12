@@ -1,10 +1,23 @@
 using Electron2D;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 internal static class WorkerThreadPoolTests
 {
     internal static void Run()
     {
+        if (WorkerThreadPool.Service.HasRuntime)
+        {
+            Check(Environment.GetEnvironmentVariable("ELECTRON2D_TEST_WORKER_POOL") != "1", "Standalone worker-pool startup checks require a fresh host.");
+            var start = new ProcessStartInfo(Environment.ProcessPath!) { UseShellExecute = false, RedirectStandardOutput = true, RedirectStandardError = true };
+            if (System.IO.Path.GetFileNameWithoutExtension(Environment.ProcessPath) == "dotnet") start.ArgumentList.Add(typeof(WorkerThreadPoolTests).Assembly.Location);
+            start.Environment["ELECTRON2D_TEST_WORKER_POOL"] = "1";
+            using var child = Process.Start(start)!;
+            var output = child.StandardOutput.ReadToEndAsync(); var error = child.StandardError.ReadToEndAsync();
+            if (!child.WaitForExit(60000)) { child.Kill(entireProcessTree: true); throw new InvalidOperationException("Worker-pool startup checks timed out."); }
+            var message = output.GetAwaiter().GetResult() + error.GetAwaiter().GetResult();
+            Check(child.ExitCode == 0, message); Console.Write(message); return;
+        }
         ValidationAndCapacity(); ParallelGroups(); Priorities(); NestedWaits(); ConcurrentWaits(false); ConcurrentWaits(true); FailuresAndLifetime(); ContextAndShutdown(); AllocationBudget(); PublicSceneWorkflow();
         Console.WriteLine("Worker pool: identities, bounded preparation, priority/parallel groups, progress, nested/concurrent waits, failures, lifetime, context, scene publication and warmed sender/worker allocation checks passed.");
     }

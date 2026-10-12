@@ -1,6 +1,6 @@
 # TileMapLayer
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Source:** [TileMapLayer.cs](../../src/Scene/2D/TileMapLayer.cs).
 
@@ -901,3 +901,7 @@ Scene-source cells instantiate ordinary owned-at-runtime child hierarchies throu
 [Canvas lights and occlusion](../components/canvas-lights.md) records this type's receiving/material, resource, occlusion, sampling or static-service consumer, with current GPU and compatibility behavior.
 
 Generated tile items consume the layer's [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters), including TileData material overrides. Active generated declarations participate in typed getters/lists; server mutations of generated drawing remain layer-owned. Native InstanceUniformTests verifies values without rebuilding tile drawing.
+
+Prepared replacement bodies acquire the layer maps before any prior-body departure callback. Every old body and owned shape is retired even if a handler throws; completed replacement ownership is retained and errors escape after cleanup. UpdateInternals marks failed remaining work for retry. Exit/disposal also attempts navigation, drawing, diagnostic and runtime-data cleanup after physics failures. TileMapLayerTests checks replacement, disabling, exit/reentry and disposal with throwing shape-departure handlers on CPU/GPU, including actual navigation-region retirement.
+
+Generated tile bodies retain TileMapLayer owner identity and individual RIDs through Area/rigid object and shape events, point/ray/shape/rest queries, scene casts and scene/server motion results. Object snapshots/events deduplicate multiple bodies for one layer; shape payloads retain remote/local logical indices. Generated server geometry has no scene shape-owner node. Explicit CPU/GPU tests check canvas-qualified point queries, reparenting, sampled weak owner lifetime and 64 warmed full-frame/span-query cycles at zero owner/all-thread managed bytes. Native allocations, other platforms and visual acceptance remain unverified.

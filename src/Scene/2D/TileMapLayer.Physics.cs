@@ -11,7 +11,16 @@ public partial class TileMapLayer
         internal readonly Vector2i Quadrant = quadrant;
         internal readonly Shape[] Shapes = shapes;
         internal readonly Transform DrawTransform = drawTransform;
-        internal void Release() { try { PhysicsServer.FreeRID(RID); } finally { foreach (var shape in Shapes) shape.Dispose(); } }
+        internal void Release() => Release(RID, Shapes);
+        internal static void Release(RID rid, Shape[] shapes)
+        {
+            List<Exception>? errors = null;
+            if (rid.IsValid())
+                try { PhysicsServer.FreeRID(rid); } catch (Exception error) { (errors ??= []).Add(error); }
+            foreach (var shape in shapes)
+                try { shape.Dispose(); } catch (Exception error) { (errors ??= []).Add(error); }
+            PhysicsSpace.FinishCleanup(errors);
+        }
     }
     private readonly Dictionary<Vector2i, List<GeneratedBody>> _quadrants = [];
     private readonly Dictionary<RID, Vector2i> _bodyCoords = [];
@@ -19,7 +28,9 @@ public partial class TileMapLayer
 
     /// <summary>Publishes pending tile edits now; cannot run during a solver or overlap callback.</summary>
     /// <remarks>Geometry and scene preparation are allocating authoring work. Unchanged layers do no work.
-    /// Updates outside the tree retain authored cells without creating generated consumers. Scene deletion completes at a tree safe point.</remarks>
+    /// Updates outside the tree retain authored cells without creating generated consumers. Scene deletion completes at a tree safe point.
+    /// Prepared replacement bodies acquire layer ownership before old-body departure callbacks. Retirement failures are reported
+    /// after every old body and owned shape is released; committed replacements remain owned and pending updates can be retried.</remarks>
     public void UpdateInternals()
     {
         EnsureMutable(); if (_updating) throw new InvalidOperationException("Tile updates cannot be reentered.");
@@ -49,7 +60,11 @@ public partial class TileMapLayer
             {
                 var dirtyQuadrants = all ? new HashSet<Vector2i>(_quadrants.Keys) : [];
                 foreach (var coords in changed) dirtyQuadrants.Add(QuadrantFor(coords));
-                foreach (var quadrant in dirtyQuadrants) RebuildQuadrant(quadrant);
+                foreach (var quadrant in dirtyQuadrants)
+                {
+                    RebuildQuadrant(quadrant);
+                    if (IsDisposed || !IsInsideTree) return;
+                }
                 _shapeBasis = ShapeBasis();
             }
             UpdateNavigation(changed);
@@ -125,16 +140,32 @@ public partial class TileMapLayer
                     }
                     prepared.Add(new(body, quadrant, shapes, new Transform(0, origin) * basis.AffineInverse()));
                 }
-                catch { if (body.IsValid()) PhysicsServer.FreeRID(body); foreach (var shape in shapes) shape.Dispose(); throw; }
+                catch (Exception error)
+                {
+                    try { GeneratedBody.Release(body, shapes); }
+                    catch (Exception cleanup) { throw new AggregateException(error, cleanup); }
+                    throw;
+                }
             }
             var space = GetWorld()!.Space;
             foreach (var body in prepared) PhysicsServer.BodySetSpace(body.RID, space);
         }
-        catch { foreach (var body in prepared) body.Release(); throw; }
-        ReleaseQuadrant(quadrant);
-        if (prepared.Count == 0) return;
-        _quadrants.Add(quadrant, prepared);
-        foreach (var body in prepared) _bodyCoords.Add(body.RID, quadrant);
+        catch (Exception error)
+        {
+            List<Exception>? errors = [error]; ReleaseBodies(prepared, ref errors);
+            PhysicsSpace.FinishCleanup(errors); throw;
+        }
+        // Prepared bodies must acquire layer ownership before retirement callbacks can throw.
+        _quadrants.Remove(quadrant, out var previous);
+        if (prepared.Count != 0)
+        {
+            _quadrants.Add(quadrant, prepared);
+            foreach (var body in prepared) _bodyCoords.Add(body.RID, quadrant);
+        }
+        if (previous is not null)
+        {
+            List<Exception>? errors = null; ReleaseBodies(previous, ref errors); PhysicsSpace.FinishCleanup(errors);
+        }
     }
     private static Shape[] Compile(PathsD paths)
     {
@@ -165,15 +196,20 @@ public partial class TileMapLayer
         if ((alternative & TileSetAtlasSource.TransformFlipV) != 0) point.Y = -point.Y;
         return point;
     }
-    private void ReleaseQuadrant(Vector2i quadrant)
+    private void ReleaseBodies(List<GeneratedBody> bodies, ref List<Exception>? errors)
     {
-        if (!_quadrants.Remove(quadrant, out var bodies)) return;
-        foreach (var body in bodies) { _bodyCoords.Remove(body.RID); body.Release(); }
+        foreach (var body in bodies)
+        {
+            _bodyCoords.Remove(body.RID);
+            try { body.Release(); } catch (Exception error) { (errors ??= []).Add(error); }
+        }
     }
     private void ReleasePhysics()
     {
-        foreach (var bodies in _quadrants.Values) foreach (var body in bodies) body.Release();
+        List<Exception>? errors = null;
+        foreach (var bodies in _quadrants.Values) ReleaseBodies(bodies, ref errors);
         _quadrants.Clear(); _bodyCoords.Clear();
+        PhysicsSpace.FinishCleanup(errors);
     }
     private void MoveWorld()
     {

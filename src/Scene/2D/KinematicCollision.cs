@@ -32,7 +32,7 @@ public sealed class KinematicCollision : ElectronObject
     }
 
     /// <summary>Returns the live object association captured with this collision.</summary>
-    /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
+    /// <returns>The borrowed instance, including a generated tile-layer owner, or null when unassigned, disposed or collected.</returns>
     public ElectronObject? GetCollider() { ThrowIfDisposed(); return _data.ColliderIdentity.Target; }
 
     /// <summary>Returns the sampled collider instance ID.</summary>
@@ -45,6 +45,7 @@ public sealed class KinematicCollision : ElectronObject
 
     /// <summary>Returns the collider's logical shape-owner object.</summary>
     /// <returns>A live child or arbitrary configured owner object, or null when absent, disposed or server-only.</returns>
+    /// <remarks>Generated tile bodies retain their layer association through GetCollider but have no scene shape-owner node.</remarks>
     public ElectronObject? GetColliderShape()
     {
         ThrowIfDisposed();

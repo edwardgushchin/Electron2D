@@ -164,7 +164,7 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     }
 
     /// <summary>Returns the live object association captured by the motion test.</summary>
-    /// <returns>The borrowed instance, or null when unassigned, disposed or collected.</returns>
+    /// <returns>The borrowed instance, including a generated tile-layer owner, or null when unassigned, disposed or collected.</returns>
     public ElectronObject? GetCollider() { ThrowIfDisposed(); return _data.ColliderIdentity.Target; }
 
     /// <summary>Returns the sampled object association ID, including server-bound instances.</summary>
