@@ -12,6 +12,22 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 
 Numerical hooks cannot change their world's sleep/contact policy, iteration count, default joint bias or local active flag through PhysicsServer. These writes reject before mutation or nested hook dispatch, including equal values. Authored getters stay readable outside solver-owned phases; ordinary post-solver game callbacks can edit the next interval's policies.
 
+## Public properties
+
+| Signature | Contract |
+| --- | --- |
+| `public bool IsFlushingQueries { get; }` | The current world's completed-notification delivery phase, shared with PhysicsServer.SpaceIsFlushingQueries. |
+
+### IsFlushingQueries
+
+True during force/integration/state/sleep callbacks, selected FlushQueries and
+contact/Area observers. False when this world has no active delivery phase;
+nested ordinary queries keep that phase and another world's phase is independent.
+The read observes lifecycle only, allocates nothing and remains available during
+terminal-error cleanup. Unbound/off-owner reads throw InvalidOperationException;
+disposed implementation/world reads throw ObjectDisposedException. It does not
+replace the existing structural, authoring, reentry or failed-world guards.
+
 ## Public methods
 
 | Signature | Contract |

@@ -530,3 +530,8 @@ real numerical hooks and 1024 outer queries plus 64 warm frames at 0/0 managed
 bytes; registered samples also include nested motion/ray queries. The two helper
 rows are Implemented; the broader motion operation, arbitrary geometry and complete
 physics acceptance remain open.
+
+[Notification delivery status](physics-registered-adapter.md#notification-delivery-status)
+now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
+Body integration/state callbacks, contacts, Areas and sleep events are included;
+exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.

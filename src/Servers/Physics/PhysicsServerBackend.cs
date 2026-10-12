@@ -23,6 +23,24 @@ public abstract class PhysicsServerBackend : ElectronObject
     /// <summary>Gets the immutable engine-assigned world identity during implementation hooks.</summary>
     /// <value>A live space after factory binding; invalid before binding.</value>
     protected RID SpaceRID => _space;
+    /// <summary>Gets whether this world's completed physics notifications are being delivered.</summary>
+    /// <value>True during body force/integration/state and sleep callbacks, selected query flushing,
+    /// and contact/Area notification delivery; false when this world has no active delivery phase.</value>
+    /// <remarks>This shared lifecycle read does not inspect numerical state or allocate. It remains available
+    /// during terminal-error notification cleanup. Nested queries retain an ongoing delivery phase;
+    /// nested other-world delivery has independent status.
+    /// Normal completion and callback errors clear the delivery phase.</remarks>
+    /// <exception cref="InvalidOperationException">The implementation is unbound or called off-owner.</exception>
+    /// <exception cref="ObjectDisposedException">The implementation or its world is disposed.</exception>
+    public bool IsFlushingQueries
+    {
+        get
+        {
+            ThrowIfDisposed();
+            if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
+            return PhysicsServer.SpaceIsFlushingQueries(_space);
+        }
+    }
     /// <summary>Tests whether a RID is excluded from this world's current synchronous body-motion test.</summary>
     /// <param name="body">The identity to test for exact membership, including inert or foreign RIDs.</param>
     /// <returns>True when listed in the active motion test's body exclusions; false outside a motion test.</returns>

@@ -21,3 +21,8 @@ Inherited public `IsBodyExcludedFromMotionTest(RID)` and
 membership. Their complete contracts are documented on
 [PhysicsServerBackend](PhysicsServerBackend.md#public-methods), with executable
 CPU/GPU/registered conformance in [Motion-test exclusions](../components/physics-registered-adapter.md#motion-test-exclusions).
+
+[Notification delivery status](../components/physics-registered-adapter.md#notification-delivery-status)
+now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
+Body integration/state callbacks, contacts, Areas and sleep events are included;
+exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.

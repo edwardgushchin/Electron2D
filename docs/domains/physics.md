@@ -645,3 +645,8 @@ Common CPU/GPU/registered scene/raw checks cover actual filtering, shared object
 associations, nested scopes, atomic errors and lifecycle; 1024 queries plus 64 warm
 frames allocate zero owner/all-thread managed bytes. Both helper census rows are
 implemented; complete registered numerical motion and geometry remain open.
+
+[Notification delivery status](../components/physics-registered-adapter.md#notification-delivery-status)
+now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
+Body integration/state callbacks, contacts, Areas and sleep events are included;
+exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.

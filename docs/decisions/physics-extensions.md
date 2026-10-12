@@ -126,6 +126,14 @@ interception would leave scene behavior and direct queries outside the extension
   RID/shape ownership, finite values, result counts and fractions; it must not trust
   forged backend object identities. Query exclusions are scoped to the current
   synchronous invocation and restored in finally, including nesting and exceptions.
+  The shared world owns notification-delivery status: public backend
+  IsFlushingQueries and static PhysicsServer.SpaceIsFlushingQueries(RID) read the
+  same owner-thread/lifetime-qualified flag. It includes body force/integration/state,
+  sleep, contact and Area notification callbacks and selected FlushQueries;
+  ordinary simulation/query hooks are outside that phase unless a query is nested
+  inside ongoing notification delivery. Status reads do not
+  observe numerical state and remain available during terminal-error notification
+  cleanup. Preserve existing callback order, mutation guards and error aggregation.
   Motion-test membership helpers are public operations on the world-owned
   PhysicsServerBackend/Extension: IsBodyExcludedFromMotionTest(RID) and
   IsObjectExcludedFromMotionTest(ulong), using the same object-ID type as motion

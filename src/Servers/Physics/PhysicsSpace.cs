@@ -99,6 +99,16 @@ internal sealed partial class PhysicsSpace : IDisposable
     internal void CommitAreaScan(Area area) => area.CommitOverlapScan(_overlapEvents);
 
     internal bool IsActive => _backend?.IsActive == true;
+    internal bool IsFlushingQueries
+    {
+        get
+        {
+            ObjectDisposedException.ThrowIf(_disposed, this);
+            if (Environment.CurrentManagedThreadId != _ownerThreadID)
+                throw new InvalidOperationException("Physics notification status requires the space owner thread.");
+            return _dispatchingBodyStates || _backend?.IsFlushingQueries == true;
+        }
+    }
     private bool _changingActive;
 
     internal void SetActive(bool active)

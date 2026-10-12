@@ -28,6 +28,7 @@ public static partial class BackendChecks
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
+        internal Action? FlushHook, SyncHook;
         internal Action<RID>? MotionHook;
         internal Action? WorldPolicyHook;
         internal Action? CapacityHook;
@@ -120,8 +121,8 @@ public static partial class BackendChecks
             return Annulus.Contact(a.Position, a.Hole, a.Radius, b.Position, b.Radius, out normal, out depth, out point);
         }
         protected override void EndStep(Exception? failure) { }
-        protected override void FlushQueries() => Flushes++;
-        protected override void EndSync(Exception? failure) => Synchronizations++;
+        protected override void FlushQueries() { Flushes++; FlushHook?.Invoke(); }
+        protected override void EndSync(Exception? failure) { Synchronizations++; SyncHook?.Invoke(); }
         protected override void Finish() { FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
         protected override PhysicsBackendCheckpoint CreateCheckpoint() => new History(this);

@@ -522,6 +522,7 @@ Source: [PhysicsServer.Activity.cs](../../src/Servers/Physics/PhysicsServer.Acti
 | `public static void SetActive(bool active)` | Atomic process-wide policy for subsequent world intervals; default true. |
 | `public static void SpaceSetActive(RID space, bool active)` | Local activation for a live scene or caller-owned world. |
 | `public static bool SpaceIsActive(RID space)` | Stored local policy, independent of global suspension. |
+| `public static bool SpaceIsFlushingQueries(RID space)` | Owner-qualified completed-notification status, including body/state and contact/Area/sleep delivery. |
 
 ```csharp
 RID space = PhysicsServer.SpaceCreate(); // Inactive.
@@ -915,3 +916,18 @@ All typed common/pin/spring parameter getter/setter pairs share retained scene/r
 
 
 BodySetContactsReportedDepthThreshold(RID, float) and BodyGetContactsReportedDepthThreshold(RID) retain scene/raw reporting policy. Zero disables filtering; positive finite scene-unit thresholds include equal/deeper candidates on the next publication, preserving completed snapshots and physical response. [Shared conformance](../components/physics-registered-adapter.md#contact-reporting-depth) covers CPU/GPU/registered guards, lifetime, history and zero warm allocation.
+
+[Notification delivery status](../components/physics-registered-adapter.md#notification-delivery-status)
+now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
+Body integration/state callbacks, contacts, Areas and sleep events are included;
+exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.
+
+### SpaceIsFlushingQueries
+
+`public static bool SpaceIsFlushingQueries(RID space)` reads a live scene-owned
+or explicitly created world's notification phase, requiring its owner thread.
+It shares the backend property's value, including nested queries and terminal-error
+cleanup, without numerical reads or allocations. Unknown/non-space/retired RIDs
+throw ArgumentException; off-owner reads throw InvalidOperationException; disposed
+service/space reads throw ObjectDisposedException. Ordinary false status does not
+certify that a failed world can step again.

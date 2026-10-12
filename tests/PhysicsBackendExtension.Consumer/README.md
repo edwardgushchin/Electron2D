@@ -55,3 +55,7 @@ motion filtering, object associations and zero-allocation checks. Registered
 probes exercise actual helper calls, nested query/world scopes, parameter edits,
 callback/invalid-result atomicity and lifetime/failure/thread guards. A positive
 hook counter requires lazy world initialization to have actually occurred.
+
+`--notification-phase` (optionally `--cpu`/`--gpu`) checks completed-notification
+status in actual body/state/contact/Area/sleep callbacks, nested world/query
+scopes, errors and retirement, with zero warm full-frame allocations.

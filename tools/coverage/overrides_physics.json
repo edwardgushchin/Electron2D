@@ -2544,6 +2544,11 @@
       "godot": "PhysicsServer2DExtension::method:body_test_motion_is_excluding_object(int:)",
       "electron2d": "method:Electron2D.PhysicsServerBackend.IsObjectExcludedFromMotionTest(System.UInt64)",
       "reason": "ADR 0103: exact world-scoped authored motion-input membership, with owner/lifetime/failure guards, no identity resolution/copy, original inputs retained across parameter edits, nested ordinary/other-world queries and finally cleanup after hook/result errors. Public-only CPU/GPU/registered scene/raw filtering and object association checks execute 1024 outer queries plus 64 warm full frames at zero owner/all-thread bytes; registered hooks, nested queries, unbound/disposed/off-owner/terminal failure checks execute. The broader numerical motion/geometry contract remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_is_flushing_queries()",
+      "electron2d": "property:Electron2D.PhysicsServerBackend.IsFlushingQueries()",
+      "reason": "ADR 0103/0095: common world-owned notification status includes scene/raw force/integration/state/sleep callbacks and selected flush/contact/Area delivery, preserving order and error aggregation. Owner/lifetime-qualified lifecycle reads stay available during terminal cleanup; nested query/other-world scopes are independent. Public-only CPU/GPU/registered checks execute real callbacks, failure continuation, retirement, reentry and 64 warm frames at zero managed allocation. Complete extension numerical/geometry acceptance remains open."
     }
   ],
   "extras": [
@@ -5325,6 +5330,10 @@
     {
       "electron2d": "property:Electron2D.PhysicsBodyContact.Depth()",
       "reason": "ADR 0070/0103: immutable typed contact construction/publication carries finite signed sampled penetration depth in scene units. Explicit numerical depth and boundary-anchor derivation preserve scene/raw result identity, common positive-threshold filtering and capped numerical selection without exposing backend storage."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.SpaceIsFlushingQueries(Electron2D.RID)",
+      "reason": "ADR 0103/0095: explicit per-world static lifecycle-status projection for built-in and registered notification observers; shares the implementation property and preserves owner/lifetime/error guards without numerical reads or allocations."
     }
   ],
   "statusGroups": [
@@ -7361,6 +7370,13 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0103: exact world-scoped authored motion-input membership, with owner/lifetime/failure guards, no identity resolution/copy, original inputs retained across parameter edits, nested ordinary/other-world queries and finally cleanup after hook/result errors. Public-only CPU/GPU/registered scene/raw filtering and object association checks execute 1024 outer queries plus 64 warm full frames at zero owner/all-thread bytes; registered hooks, nested queries, unbound/disposed/off-owner/terminal failure checks execute. The broader numerical motion/geometry contract remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_is_flushing_queries()"
+      ],
+      "state": "Implemented",
+      "reason": "ADR 0103/0095: common world-owned notification status includes scene/raw force/integration/state/sleep callbacks and selected flush/contact/Area delivery, preserving order and error aggregation. Owner/lifetime-qualified lifecycle reads stay available during terminal cleanup; nested query/other-world scopes are independent. Public-only CPU/GPU/registered checks execute real callbacks, failure continuation, retirement, reentry and 64 warm frames at zero managed allocation. Complete extension numerical/geometry acceptance remains open."
     }
   ]
 }

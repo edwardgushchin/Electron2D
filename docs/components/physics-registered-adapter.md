@@ -518,3 +518,43 @@ adding --cpu or --gpu for a built-in owner. Ignored outcomes, copied-runtime
 fingerprints and logs are under bin/physics-motion-exclusions/2026-10-12/final-main.
 This implements the two membership helpers; arbitrary registered geometry and
 complete motion-operation numerical acceptance remain open.
+
+## Notification delivery status
+
+PhysicsServerBackend.IsFlushingQueries and
+PhysicsServer.SpaceIsFlushingQueries(RID) read the same common-world phase.
+It includes the previously separate force/integration/state callback interval,
+selected FlushQueries, sleep changes and contact/Area event delivery. Nested
+ordinary queries retain the ongoing phase; other worlds have independent status.
+No callback reordering, numerical policy, mutation guard or error aggregation
+changes. Status remains an owner/lifetime-qualified lifecycle read during
+terminal-error cleanup, observing no solver state and allocating no storage.
+
+The pinned implementation wraps body state and Area call_queries under its flush
+flag; see the [server phase](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_physics_server_2d.cpp)
+and [space delivery](https://github.com/godotengine/godot/blob/ed1daf0bf001b61586d9930840f2f1394092c079/modules/godot_physics_2d/godot_space_2d.cpp).
+The C# implementation-object projection keeps shared observer ownership under
+ADR 0103 and static service access under ADR 0095.
+
+[BackendChecks.NotificationPhase.cs](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.NotificationPhase.cs)
+executes real scene/raw force and state callbacks, a RigidBody subclass integration
+hook, contact enter/exit, scene/raw Area observers and sleep transitions on CPU,
+GPU and a registered solver. It asserts true inside delivery and false outside;
+registered solve/end-sync hooks, nested query/other-world step, callback/flush
+exceptions, reentry rejection, invalid/stale RIDs, unbound/disposed/off-owner
+reads and terminal failure cleanup are separate controls. The registered sleep
+control changes implementation-owned awake state; CPU/GPU use automatic sleep and
+policy wake. Explicit user Sleeping assignment suppresses that event by contract
+and was rejected as a test trigger.
+
+After 128 warmup frames, 64 full measured frames retain real observer transitions
+and zero owner/all-thread managed allocation. Cold errors, threads, sleep controls
+and GC/finalizer draining are outside the sampled bracket. Status/membership and
+callback counts are exact; this test does not compare backend trajectories or
+certify complete registered geometry/numerical behavior. CPU, GPU, registered and
+registered-with-GPU-unavailable processes all exit zero, including cold controls
+after the printed sample counters. Reproduce with --notification-phase, optionally
+--cpu or --gpu. The unavailable-GPU control removes display/runtime variables,
+selects invalid GPU/Vulkan drivers and a dummy video driver. Logs, outcomes and
+the fingerprinted independent runtime remain ignored under
+bin/physics-notification-phase/2026-10-12/final.

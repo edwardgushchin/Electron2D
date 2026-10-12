@@ -130433,6 +130433,25 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.SpaceIsFlushingQueries(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "SpaceIsFlushingQueries",
+    "signature": "public static System.Boolean SpaceIsFlushingQueries(Electron2D.RID space)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.SpaceSetActive(Electron2D.RID,System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -213500,6 +213519,19 @@
     "name": "HasFailure",
     "signature": "protected internal System.Boolean HasFailure { get;  }",
     "visibility": "protected internal",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.PhysicsServerBackend.IsFlushingQueries()",
+    "kind": "property",
+    "declaringType": "Electron2D.PhysicsServerBackend",
+    "name": "IsFlushingQueries",
+    "signature": "public System.Boolean IsFlushingQueries { get;  }",
+    "visibility": "public",
     "baseType": null,
     "interfaces": null,
     "parameters": [],
