@@ -70,3 +70,6 @@ The shared runtime rejects scene/raw parameter and local path/geometry writes in
 
 
 Clear and Configure share the numerical authoring guard. Public make preflights both incoming body owners before preparing either, including an Empty resource and a detached first endpoint. [Registered connection lifetime](physics-registered-adapter.md#joint-connection-lifetime) checks pending/clear/replacement/reentry, errors, callbacks and warmed active frames on CPU/GPU/registered worlds.
+
+
+Dependent retirement now continues after a joint detach error and unregisters its old world membership. Body free clears every dependent role before dropping the body identity; caller-owned joint free retires its RID after validated cleanup begins. Authoring clear/make retains its separate retry policy.

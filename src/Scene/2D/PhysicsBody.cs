@@ -76,13 +76,19 @@ public abstract partial class PhysicsBody : CollisionObject
     internal void DetachBackend()
     {
         PhysicsServer.Service.InvalidateBodyView(PhysicsRID);
-        if (Space is null) return;
-        if (!Space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
-            rigid.OnBackendAdvanced();
-        if (!Space.HasBackendFailure) CaptureServerMotion();
-        Backend.Detach();
+        var space = Space;
+        if (space is null) return;
+        List<Exception>? errors = null;
+        PhysicsSpace.Cleanup(() =>
+        {
+            if (!space.HasBackendFailure && this is RigidBody rigid && Backend.HasMotionMode(PhysicsServer.BodyMode.Rigid))
+                rigid.OnBackendAdvanced();
+            if (!space.HasBackendFailure) CaptureServerMotion();
+        }, ref errors);
+        PhysicsSpace.Cleanup(Backend.Detach, ref errors);
         _appliedShapeRevisions.Clear();
         _shapesDirty = true;
+        PhysicsSpace.FinishCleanup(errors);
     }
 
     internal void PrepareBackend()

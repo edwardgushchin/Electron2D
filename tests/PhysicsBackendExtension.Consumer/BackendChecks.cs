@@ -10,6 +10,7 @@ public static partial class BackendChecks
         ExceptionChecks();
         JointParameterChecks();
         JointLifecycleChecks();
+        ResourceReleaseChecks();
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();

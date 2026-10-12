@@ -119,6 +119,17 @@ Frees only caller-owned server resources. Joint free removes its native handle a
 
 Space release rejects while a physics step or any body/contact/Area callback is live, preserving its RID and implementation. Once cleanup starts, it attempts all participant and solver releases; AggregateException reports failures after the space RID/direct view are unregistered. An injected worker cleanup failure verifies native world destruction and registry removal.
 
+All caller-owned kinds now preflight related access before mutation. Once cleanup
+starts, every dependent/attachment/shape-user action is attempted and the freed RID
+retires despite errors. A lone error retains its type/stack; multiple errors
+aggregate. Motion capture or one joint failure cannot skip collider detach or
+other joint cleanup. Shared shape retirement removes every common user slot and
+retains dirty numerical preparation after an error. Reentry resets scene shape
+revisions. A collider being freed rejects rebind/recursive free from departure
+observers, while all queued observer deliveries retain their own errors. Retained
+body views expire by attachment generation; an old direct-space RID query rejects
+with ArgumentException after space free. See [resource retirement evidence](../components/physics-registered-adapter.md#resource-retirement).
+
 ## Verification and limits
 
 [PhysicsQueryTests](../../tests/Electron2D.Tests/PhysicsQueryTests.cs) checks scene/server shared world, explicit stepping, six shape families, filters, modes, cross-space moves and RID lifecycle. [PhysicsShapeQueryTests](../../tests/Electron2D.Tests/PhysicsShapeQueryTests.cs) checks direct shape operations; [PhysicsMotionTests](../../tests/Electron2D.Tests/PhysicsMotionTests.cs) checks body motion; [PhysicsCollisionExceptionTests](../../tests/Electron2D.Tests/PhysicsCollisionExceptionTests.cs) checks unilateral scene/server lists, live solver and motion filtering, owner/target lifetime and warmed allocation. Remaining server methods, world boundaries, dynamic separation-ray response, backend extensions, joint tuning/debug drawing and tile collider identity remain open; the [contract audit](../components/physics-contract-audit.md) tracks both backend obligations. Scene Area field/event delivery does not yet represent server-only colliders in typed object-level events. Query paths scan fixtures linearly; native allocator accounting, other platforms and large-world throughput remain unverified. See [ADR 0063](../decisions/physics.md#adr-0063).

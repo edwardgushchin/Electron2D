@@ -2489,6 +2489,11 @@
       "godot": "PhysicsServer2DExtension::method:_joint_make_pin(RID:,Vector2:,RID:,RID:)",
       "electron2d": "method:Electron2D.PhysicsServer.JointMakePin(Electron2D.RID,Electron2D.Vector2,Electron2D.RID,Electron2D.RID)",
       "reason": "ADR 0087/0103: common RID creation/type and selected CreateJoint/Attach/Detach retain actual scene/raw identity, role, sampled frames and independent pair contributions. Clear and replacement reject initial/live factory/attachment/release borrowing before authoring; both incoming body owners preflight before either is prepared. Public-only CPU/GPU/registered checks cover all three roles, pending endpoint entry/free, invalid kind/geometry/role, reentry, owner and ordinary callback behavior, factory/null/reuse/attach/detach error preservation with explicit retry, real spring response, and 64 warmed active-joint complete frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_free_rid(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServer.FreeRID(Electron2D.RID)",
+      "reason": "ADR 0063/0087/0103: common caller-owned Shape/Body/Area/Joint/Space retirement executes selected detach/Finish/disposal with complete preflight and retained scene ownership. Public-only CPU/GPU/registered checks cover all five RID kinds, all scene body siblings/Area, initial/live/release borrowing, stale/generation-qualified views, shared shape removal/retry, pending/reentry, departure observer errors without resurrection, and 64 post-release active steps at 0/0 owner/all-thread bytes. Independent failure injection retains all five body-cleanup and thirteen world-cleanup errors; failed cleanup still drops numerical objects and registry entries. Single errors preserve type/stack; multiple failures aggregate. Complete extension numerical, native/foreign and final network/performance acceptance remain open."
     }
   ],
   "extras": [
@@ -7263,6 +7268,13 @@
       ],
       "state": "Partial",
       "reason": "ADR 0087/0103: common RID creation/type and selected CreateJoint/Attach/Detach retain actual scene/raw identity, role, sampled frames and independent pair contributions. Clear and replacement reject initial/live factory/attachment/release borrowing before authoring; both incoming body owners preflight before either is prepared. Public-only CPU/GPU/registered checks cover all three roles, pending endpoint entry/free, invalid kind/geometry/role, reentry, owner and ordinary callback behavior, factory/null/reuse/attach/detach error preservation with explicit retry, real spring response, and 64 warmed active-joint complete frames at 0/0 owner/all-thread bytes. Registered pin/groove numerical response and complete extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_free_rid(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0063/0087/0103: common caller-owned Shape/Body/Area/Joint/Space retirement executes selected detach/Finish/disposal with complete preflight and retained scene ownership. Public-only CPU/GPU/registered checks cover all five RID kinds, all scene body siblings/Area, initial/live/release borrowing, stale/generation-qualified views, shared shape removal/retry, pending/reentry, departure observer errors without resurrection, and 64 post-release active steps at 0/0 owner/all-thread bytes. Independent failure injection retains all five body-cleanup and thirteen world-cleanup errors; failed cleanup still drops numerical objects and registry entries. Single errors preserve type/stack; multiple failures aggregate. Complete extension numerical, native/foreign and final network/performance acceptance remain open."
     }
   ]
 }

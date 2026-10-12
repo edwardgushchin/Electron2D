@@ -291,10 +291,15 @@ public sealed partial class PhysicsServer
                 owner.EnsureReleaseAccess(); owner.EnsureExtensionHierarchyChange();
             }
             if (!collider.IsArea) EnsureJointBodyMembershipChange(rid, releasing: true);
-            try { if (collider.SpaceRID.IsValid()) GetSceneSpace(collider.SpaceRID).Remove(collider); }
+            collider.Releasing = true;
+            List<Exception>? errors = null;
+            try
+            {
+                if (collider.Space is { } owner) PhysicsSpace.Cleanup(() => owner.Remove(collider), ref errors);
+                if (!collider.IsArea) PhysicsSpace.Cleanup(() => ClearJointsForBody(rid), ref errors);
+            }
             finally
             {
-                if (!collider.IsArea) ClearJointsForBody(rid);
                 lock (_registryGate)
                 {
                     _serverColliders.Remove(rid);
@@ -304,11 +309,14 @@ public sealed partial class PhysicsServer
                     _jointBodyExceptions.Remove(rid);
                 }
             }
+            PhysicsSpace.FinishCleanup(errors);
         }
         else if (joint is not null)
         {
-            joint.EnsureAccess(releasing: true); joint.Clear();
-            lock (_registryGate) _jointRuntimes.Remove(rid);
+            joint.EnsureAccess(releasing: true);
+            joint.EnsureWriteAccess();
+            try { joint.Clear(); }
+            finally { lock (_registryGate) _jointRuntimes.Remove(rid); }
         }
         else if (shape is not null)
         {
@@ -319,10 +327,15 @@ public sealed partial class PhysicsServer
                 if (user.UsesShape(shape)) EnsureColliderSpaceAccessible(user, writing: true);
             var sceneUsers = SceneShapeUsers(shape);
             foreach (var scene in sceneUsers) EnsureSceneShapeAccess(scene, writing: true);
-            foreach (var user in users) user.RemoveShape(shape);
-            foreach (var scene in sceneUsers) scene.RemoveServerShape(shape);
-            try { shape.Geometry.ReleaseServerGeometry(); }
+            List<Exception>? errors = null;
+            try
+            {
+                foreach (var user in users) PhysicsSpace.Cleanup(() => user.RemoveShape(shape), ref errors);
+                foreach (var scene in sceneUsers) PhysicsSpace.Cleanup(() => scene.RemoveServerShape(shape), ref errors);
+                PhysicsSpace.Cleanup(shape.Geometry.ReleaseServerGeometry, ref errors);
+            }
             finally { lock (_registryGate) _serverShapes.Remove(rid); }
+            PhysicsSpace.FinishCleanup(errors);
         }
     }
 

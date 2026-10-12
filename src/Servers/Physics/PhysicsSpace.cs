@@ -284,16 +284,18 @@ internal sealed partial class PhysicsSpace : IDisposable
         PhysicsServer.Service.EnsureJointBodyMembershipChange(body.PhysicsRID, releasing: true);
         if (_bodies.Count > 0 && ReferenceEquals(_bodies[^1], body)) _bodies.RemoveAt(_bodies.Count - 1);
         else if (!_bodies.Remove(body)) return;
-        foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(body.PhysicsRID);
-        foreach (var joint in _joints) joint.BodyLeaving(body);
-        if (body is RigidBody departing) { _contactBodies.Remove(departing); departing.CaptureBackendSleep(); }
-        body.DetachBackend();
-        if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID);
-        if (body is RigidBody removed) removed.ClearContactState();
-        foreach (var rigid in _contactBodies) rigid.ForgetContact(body.PhysicsRID, _contactEvents);
-        foreach (var area in _areas) area.Forget(body, _overlapEvents);
-        ForgetAreaMonitors(body.PhysicsRID);
-        _backend.FlushQueryEvents();
+        List<Exception>? errors = null;
+        foreach (var runtime in _jointRuntimes) Cleanup(() => runtime.BodyLeaving(body.PhysicsRID), ref errors);
+        foreach (var joint in _joints) Cleanup(() => joint.BodyLeaving(body), ref errors);
+        if (body is RigidBody departing) { _contactBodies.Remove(departing); Cleanup(departing.CaptureBackendSleep, ref errors); }
+        Cleanup(body.DetachBackend, ref errors);
+        Cleanup(() => { if (!HasBackendFailure) PhysicsServer.Service.NotifyJointBodySpaceChanged(body.PhysicsRID); }, ref errors);
+        if (body is RigidBody removed) Cleanup(removed.ClearContactState, ref errors);
+        foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(body.PhysicsRID, _contactEvents), ref errors);
+        foreach (var area in _areas) Cleanup(() => area.Forget(body, _overlapEvents), ref errors);
+        Cleanup(() => ForgetAreaMonitors(body.PhysicsRID), ref errors);
+        Cleanup(_backend.FlushQueryEvents, ref errors);
+        FinishCleanup(errors);
     }
 
     internal void Add(Joint joint)
@@ -353,13 +355,15 @@ internal sealed partial class PhysicsSpace : IDisposable
             _serverColliders.RemoveAt(_serverColliders.Count - 1);
         else if (!_serverColliders.Remove(collider)) return;
         if (collider.IsArea) _serverAreaCount--;
-        if (!collider.IsArea) foreach (var runtime in _jointRuntimes) runtime.BodyLeaving(collider.RID);
-        foreach (var rigid in _contactBodies) rigid.ForgetContact(collider.RID, _contactEvents);
-        foreach (var area in _areas) area.ForgetRID(collider.RID, _overlapEvents);
-        ForgetAreaMonitors(collider.RID);
-        collider.DetachBackend();
-        if (!HasBackendFailure && !collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID);
-        _backend.FlushQueryEvents();
+        List<Exception>? errors = null;
+        if (!collider.IsArea) foreach (var runtime in _jointRuntimes) Cleanup(() => runtime.BodyLeaving(collider.RID), ref errors);
+        foreach (var rigid in _contactBodies) Cleanup(() => rigid.ForgetContact(collider.RID, _contactEvents), ref errors);
+        foreach (var area in _areas) Cleanup(() => area.ForgetRID(collider.RID, _overlapEvents), ref errors);
+        Cleanup(() => ForgetAreaMonitors(collider.RID), ref errors);
+        Cleanup(collider.DetachBackend, ref errors);
+        Cleanup(() => { if (!HasBackendFailure && !collider.IsArea) PhysicsServer.Service.NotifyJointBodySpaceChanged(collider.RID); }, ref errors);
+        Cleanup(_backend.FlushQueryEvents, ref errors);
+        FinishCleanup(errors);
     }
 
     internal void Remove(Area area)
@@ -368,11 +372,26 @@ internal sealed partial class PhysicsSpace : IDisposable
         if (_disposed) return;
         if (_stepping) throw new InvalidOperationException("Physics areas cannot leave a world while it is stepping.");
         if (!_areas.Remove(area)) return;
-        area.DetachBackend();
-        area.ClearOverlaps();
-        foreach (var other in _areas) other.Forget(area, _overlapEvents);
-        ForgetAreaMonitors(area.PhysicsRID);
-        _backend.FlushQueryEvents();
+        List<Exception>? errors = null;
+        Cleanup(area.DetachBackend, ref errors);
+        Cleanup(area.ClearOverlaps, ref errors);
+        foreach (var other in _areas) Cleanup(() => other.Forget(area, _overlapEvents), ref errors);
+        Cleanup(() => ForgetAreaMonitors(area.PhysicsRID), ref errors);
+        Cleanup(_backend.FlushQueryEvents, ref errors);
+        FinishCleanup(errors);
+    }
+
+    internal static void Cleanup(Action action, ref List<Exception>? errors)
+    {
+        try { action(); }
+        catch (Exception error) { (errors ??= []).Add(error); }
+    }
+
+    internal static void FinishCleanup(List<Exception>? errors)
+    {
+        if (errors is null) return;
+        if (errors.Count == 1) System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(errors[0]).Throw();
+        throw new AggregateException("Physics-resource cleanup failed.", errors);
     }
 
     internal static bool ProfilingEnabled;

@@ -1,6 +1,6 @@
 # PhysicsServerCollider
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal sealed partial class PhysicsServerCollider` · **Inherits:** System.Object
 
@@ -81,3 +81,6 @@ The query-result boundary also reads each raw logical slot's disabled state with
 
 
 Raw collider release/transfer preflight checks the live backend world reference, including the interval before Attach completes. A borrowed implementation hook cannot retire or retarget that partial attachment; [identity tests](../components/physics-registered-adapter.md#initial-collider-metadata) verify body and Area cleanup and retry.
+
+
+Releasing prevents rebind or recursive free from departure callbacks. Detach attempts motion capture and numerical retirement independently; errors cannot skip the latter. Shared shape removal marks retained authoring dirty before preparation, so a failed numerical update retries at the next query/step.

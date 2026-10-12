@@ -154,9 +154,11 @@ public sealed partial class PhysicsServer
 
     internal void ClearJointsForBody(RID body)
     {
+        List<Exception>? errors = null;
         lock (_registryGate)
             foreach (var runtime in _jointRuntimes.Values)
-                if (runtime.BodyA == body || runtime.BodyB == body) runtime.Clear();
+                if (runtime.BodyA == body || runtime.BodyB == body) PhysicsSpace.Cleanup(runtime.Clear, ref errors);
+        PhysicsSpace.FinishCleanup(errors);
     }
     internal float JointGetBiasCore(RID joint) => GetJoint(joint).Bias;
     internal void JointSetBiasCore(RID joint, float value) => GetJoint(joint).SetBias(value);

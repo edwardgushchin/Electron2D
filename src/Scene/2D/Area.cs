@@ -187,9 +187,8 @@ public sealed partial class Area : CollisionObject
     {
         PhysicsServer.Service.FindAreaRuntime(PhysicsRID)?.Reset();
         if (Space is null) return;
-        Backend.Detach();
-        _appliedShapeRevisions.Clear();
-        _shapesDirty = true;
+        try { Backend.Detach(); }
+        finally { _appliedShapeRevisions.Clear(); _shapesDirty = true; }
     }
 
     internal void PrepareBackend()

@@ -72,3 +72,6 @@ EnsureWriteAccess checks attached scene, current joint and endpoint worlds befor
 
 
 Clear and Configure check EnsureWriteAccess before detaching or changing retained role/endpoints. Public make methods also preflight both incoming body owners before preparing either. Engine pre-solve scene preparation retains its internal path. Invalid candidates preserve the old connection; selected attachment failure leaves the validated role pending for explicit make retry. Detach errors retire the matching numerical attachment and a repeated clear completes common cleanup.
+
+
+DetachSpace unregisters the old membership in a finally block even when numerical detach throws. Common identity/role/frame records retain the existing authoring retry policy; FreeRID separately preflights access and retires the caller-owned identity after cleanup starts.

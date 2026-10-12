@@ -1178,10 +1178,14 @@ public sealed partial class PhysicsServer
     /// After a backend failure, colliders and joints can still be released; their raw storage is reclaimed
     /// with the failed space without traversing partially published simulation graphs. Space release rejects
     /// during live physics callbacks. Once cleanup starts, all owned participants and the selected solver are
-    /// attempted; the space RID and direct view are unregistered even when cleanup reports aggregated failures.</remarks>
+    /// attempted. Kind, ownership, thread and borrowing checks precede mutation. Once caller-owned retirement starts,
+    /// the RID is unregistered even when dependent, motion, attachment, shape-user or observer cleanup reports errors.
+    /// A collider being freed cannot rebind or recursively free itself from departure callbacks. Shared shape-user
+    /// preparation failures retain dirty authoring for the next query or step. A single error preserves its type;
+    /// multiple cleanup errors aggregate.</remarks>
     /// <exception cref="ArgumentException">The RID is stale or has no server-owned resource.</exception>
     /// <exception cref="InvalidOperationException">The RID belongs to a scene owner or the space is being stepped or dispatching callbacks.</exception>
-    /// <exception cref="AggregateException">Space cleanup encountered errors after attempting all owned resources.</exception>
+    /// <exception cref="AggregateException">Multiple resource cleanup actions failed after all required attempts.</exception>
     public static void FreeRID(RID rid) => Service.FreeRIDCore(rid);
 
     /// <summary>Returns the current shape resource RID at a body's global logical index.</summary>

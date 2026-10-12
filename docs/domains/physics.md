@@ -618,3 +618,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Joint connection lifetime](../components/physics-registered-adapter.md#joint-connection-lifetime) now checks complete creation/type/clear/make dispatch, initial/live numerical rejection, incoming endpoint preflight and selected attachment failure/retry. Registered pin/groove numerical acceptance and the final network/performance gates remain open.
+
+
+[Resource retirement](../components/physics-registered-adapter.md#resource-retirement) now completes caller-owned Shape/Body/Area/Joint/Space cleanup after errors, preserves every failure and prevents departure observers from resurrecting a freed collider. Shared geometry and scene reentry retain their dirty preparation paths. Full extension/network/performance acceptance remains open.

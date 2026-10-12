@@ -197,10 +197,8 @@ public abstract class Joint : Entity
 
     internal void DetachBackend()
     {
-        DetachJoint();
-        _space = null;
-        _serverOverride = false;
-        _dirty = true;
+        try { DetachJoint(); }
+        finally { _space = null; _serverOverride = false; _dirty = true; }
     }
 
     internal virtual void ValidateJointConfiguration(PhysicsBody first, PhysicsBody second, Transform transform)
@@ -241,9 +239,8 @@ public abstract class Joint : Entity
 
     private void DetachJoint()
     {
-        Runtime.Clear();
-        _bodyA = null;
-        _bodyB = null;
+        try { Runtime.Clear(); }
+        finally { _bodyA = null; _bodyB = null; }
     }
 
     /// <inheritdoc />

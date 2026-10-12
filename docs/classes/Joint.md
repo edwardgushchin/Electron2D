@@ -123,3 +123,6 @@ Path, geometry and all common/concrete parameter writes reject initial/live sele
 
 
 Server clear and connection replacement share the numerical writer guard. It covers the attached scene world while unconfigured and both new body owners before preparation. [Connection lifetime checks](../components/physics-registered-adapter.md#joint-connection-lifetime) exercise all concrete scene/raw roles and retained identity.
+
+
+Attachment departure resets node-space, endpoint and dirty/reentry records even when numerical cleanup fails. The retained RID and authored paths remain scene-owned; subsequent valid entry creates a fresh attachment.

@@ -70,9 +70,12 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     {
         if (IsArea) PhysicsServer.Service.FindAreaRuntime(RID)?.Reset();
         PhysicsServer.Service.InvalidateBodyView(RID);
-        if (Space is null) return;
-        if (!Space.HasBackendFailure) CaptureMotion();
-        _backend.Detach();
+        var space = Space;
+        if (space is null) return;
+        List<Exception>? errors = null;
+        PhysicsSpace.Cleanup(() => { if (!space.HasBackendFailure) CaptureMotion(); }, ref errors);
+        PhysicsSpace.Cleanup(_backend.Detach, ref errors);
+        PhysicsSpace.FinishCleanup(errors);
     }
 
     internal void AddShape(PhysicsServerShape shape, Transform localTransform, bool disabled)
@@ -93,6 +96,7 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     internal bool RemoveShape(PhysicsServerShape shape)
     {
         var removed = _slots.RemoveAll(slot => ReferenceEquals(slot.Shape, shape)) != 0;
+        if (removed) _shapesDirty = true;
         if (removed && Space is not null) RebuildShapes();
         return removed;
     }
@@ -216,8 +220,10 @@ internal sealed partial class PhysicsServerCollider(RID rid, bool isArea)
     }
 
     private bool _validatingGeometry;
+    internal bool Releasing;
     internal void EnsureGeometryLifetimeAccess()
     {
+        if (Releasing) throw new InvalidOperationException("A collider being released cannot be rebound or released recursively.");
         Space?.EnsureExtensionHierarchyChange();
         if (_validatingGeometry) throw new InvalidOperationException("A collider cannot be released or transferred while its geometry is borrowed.");
     }

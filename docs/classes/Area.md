@@ -1,6 +1,6 @@
 # Area
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Inherits:** [CollisionObject](CollisionObject.md), [Entity](Entity.md), CanvasItem, Node, ElectronObject
 
@@ -187,3 +187,6 @@ Explicitly bound Entity/Area instances participate in typed overlap arrays and e
 [Directional filter mutation](../components/physics-filters.md) shares scene/server/tile metadata and query rules across CPU/GPU; it updates existing fixtures, preserving shape/resource identity. Body assignments wake the body and contact neighbors, including unchanged bits; Area snapshots update on the next step.
 
 [Registered Area fields](../components/physics-registered-adapter.md#registered-area-fields) now exercise the complete typed profile/default shortcut through the selected hooks, including independent override/point/mask response and zero warmed edited full frames. Numerical-hook writes reject before mutation; authored reads and ordinary Area callback edits retain their guards and overlap history. Generic solver/extension acceptance remains open.
+
+
+Attachment departure resets applied shape revisions in a finally block. Other observer cleanup continues after numerical detach errors, and subsequent valid entry uses a fresh attachment.

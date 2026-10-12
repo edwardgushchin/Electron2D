@@ -148,9 +148,8 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     internal void DetachSpace()
     {
-        DetachNative();
-        var old = Space; Space = null;
-        old?.RemoveJointRuntime(this);
+        try { DetachNative(); }
+        finally { var old = Space; Space = null; old?.RemoveJointRuntime(this); }
     }
 
     private void DetachNative()

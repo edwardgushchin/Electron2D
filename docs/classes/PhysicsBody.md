@@ -107,3 +107,6 @@ Selected motion geometry and logical identities pass [shared output validation](
 [Common server modes](../components/physics-registered-adapter.md#common-server-mode-family) now project all four modes through scene and raw RIDs, with independent scene descriptors, effective state/force response, pose publication, reentry and replay. CPU/GPU/registered checks share the public consumer; complete solver and final performance acceptance remain open.
 
 Exception edits request wakeup for duplicate additions and absent removals, and reject numerical-hook writes before changing the owner list. CPU contact policy updates cached flags while retaining geometry. [Shared public checks](../components/physics-registered-adapter.md#collision-exception-authoring-and-response) exercise every body sibling and selected backend.
+
+
+Departure attempts state capture and numerical detach independently and resets shape revisions for reentry after either error. [Resource retirement](../components/physics-registered-adapter.md#resource-retirement) checks every concrete body sibling and expired views.

@@ -21,6 +21,10 @@ public static partial class BackendChecks
         internal Action<RID>? JointFactoryHook, JointReleaseHook;
         internal bool FailJointFactory, NullJointFactory, FailJointAttach, FailJointDetach;
         internal PhysicsBackendJoint? ReusedJoint;
+        internal Action<RID>? BodyReleaseHook;
+        internal Action? InitHook, FinishHook;
+        internal bool FailBodyDetach;
+        internal RID MotionFailure, ShapeFailure;
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
@@ -31,7 +35,7 @@ public static partial class BackendChecks
         protected override bool HasFailure { get { StatusHook?.Invoke(); return false; } }
         protected override bool ResultsReady => Ready;
         protected override int PreparedBodyCapacity => Bodies.Count;
-        protected override void Initialize() { if (FailInit) throw new InvalidOperationException("Initialization failure"); }
+        protected override void Initialize() { InitHook?.Invoke(); if (FailInit) throw new InvalidOperationException("Initialization failure"); }
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
@@ -116,7 +120,7 @@ public static partial class BackendChecks
         protected override void EndStep(Exception? failure) { }
         protected override void FlushQueries() => Flushes++;
         protected override void EndSync(Exception? failure) => Synchronizations++;
-        protected override void Finish() { Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
+        protected override void Finish() { FinishHook?.Invoke(); Finished = true; Bodies.Clear(); Joints.Clear(); if (FailFinish) throw new InvalidOperationException("Finish failure"); }
         protected override void PrepareCheckpoint() { }
         protected override PhysicsBackendCheckpoint CreateCheckpoint() => new History(this);
         protected override void PreparePortableCapture() { }
@@ -187,7 +191,11 @@ public static partial class BackendChecks
         internal int Shapes;
         protected override void Attach(Vector2 position, float rotation, in PhysicsBodyConfiguration configuration)
         { Position = position; Rotation = rotation; Mode = configuration.Mode; Velocity = configuration.LinearVelocity; Angular = configuration.AngularVelocity; Awake = !configuration.Sleeping; CanSleep = configuration.CanSleep; Locked = configuration.LockRotation; }
-        protected override void Detach() { Detached = true; solver.Bodies.Remove(rid); }
+        protected override void Detach()
+        {
+            try { solver.BodyReleaseHook?.Invoke(rid); if (solver.FailBodyDetach) throw new InvalidOperationException("Collider detach failure"); }
+            finally { Detached = true; solver.Bodies.Remove(rid); }
+        }
         protected override void PrepareDefaultForces(in PhysicsBodyForceConfiguration configuration)
         {
             solver.StatePreparations++;
@@ -218,13 +226,18 @@ public static partial class BackendChecks
         protected override void RebuildShapes(ReadOnlySpan<PhysicsColliderShape> slots, uint layer, uint mask, bool sensor, float density, float friction, float bounce)
         {
             solver.ShapeHook?.Invoke(rid);
+            if (solver.ShapeFailure == rid) throw new InvalidOperationException("Shape retirement failure");
             Shapes = 0; Layer = layer; Mask = mask;
             LastShape = slots.IsEmpty ? default : slots[^1];
             foreach (ref readonly var s in slots)
                 if (s.Enabled) { var dimensions = Annulus.Dimensions(s.Shape.GetGeometryData()); Radius = dimensions.Outer; Hole = dimensions.Inner; Shapes++; }
         }
         protected override (Vector2 Position, float Rotation) GetPose() => (Position, Rotation);
-        protected override Transform GetTransform() => new(Rotation, Position);
+        protected override Transform GetTransform()
+        {
+            if (solver.MotionFailure == rid) throw new InvalidOperationException("Motion capture failure");
+            return new(Rotation, Position);
+        }
         protected override Transform SampleJointLocalFrame(Vector2 point, float angle) => GetTransform().AffineInverse() * new Transform(angle, point);
         protected override (Vector2 LinearVelocity, float AngularVelocity, bool Sleeping) GetSolverMotion() => (Velocity, Angular, !Awake);
         protected override Vector2 LinearVelocity => Mode == PhysicsServer.BodyMode.Static ? Surface : Velocity;

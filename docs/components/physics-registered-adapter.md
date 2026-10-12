@@ -371,3 +371,40 @@ outside this allocation bracket. The six extension creation/type/clear/make rows
 remain Partial: registered pin/groove numerical response and complete extension
 acceptance are still open. Native allocations, other platforms, final networking
 and real-window/performance acceptance are unverified here.
+
+
+## Resource retirement
+
+Common FreeRID owns caller-created Shape/Body/Area/Joint/Space lifetime; selected
+objects own numerical cleanup. Kind/ownership/thread/solver/borrowing/geometry
+preflight precedes any change. After retirement begins, all dependent joint,
+motion capture, collider detach, shared shape-user and world Finish/disposal
+actions are attempted. A single error keeps type/stack; several aggregate without
+masking earlier failures. Registry entries retire even when cleanup reports an
+error. Source body/Area resources retain their identities after a space is freed.
+
+Earlier code removed body membership before a dependent joint error could abort
+numerical detach. A retry then returned at the missing membership entry and dropped
+the RID while the solver still owned a ghost body. Departure observers could also
+rebind a body before final registry removal. Cleanup now continues through all
+remaining stages, and a releasing collider rejects rebind/recursive free. Shared
+shape removal marks dirty preparation before a failing numerical hook; the next
+query/step retries retained authoring. Scene body/Area/joint departure resets
+attachment/revision records in finally paths for fresh reentry.
+
+The independent public-only `--resources` checks all five caller-owned RID kinds,
+all five scene body siblings, scene Area/joints, borrowed identity rejection,
+initial/live/release hooks, off-owner access, generation-expired body views,
+stale direct-space queries, shared shape-user clearing, failed preparation retry
+and explicit reentry. Its body-free injection retains exactly five errors: three
+joints, motion capture and collider detach. World-free injection retains thirteen:
+three joints, eight colliders, Finish and implementation disposal. Both real sensor
+departure callbacks execute despite observer errors; rebind rejects and departures
+are not repeated by the next interval. CPU/GPU share these named public checks.
+After 64 warmup steps, 64 active steps after shape retirement/recovery allocate
+0 owner/all-thread managed bytes, with six bodies and three constraints. Cold
+resource creation/retirement intentionally allocates outside that bracket.
+
+The extension FreeRID row remains Partial until complete numerical-extension
+acceptance. Native allocation, other platforms, final network scenarios and
+real-window/performance acceptance are unverified here.

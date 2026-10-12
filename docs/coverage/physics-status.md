@@ -38,7 +38,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [PhysicsPointQueryParameters2D](classes/PhysicsPointQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 7 | 0 | 0 | 0 | 0 |
 | [PhysicsRayQueryParameters2D](classes/PhysicsRayQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 9 | 0 | 0 | 0 | 0 |
 | [PhysicsServer2D](classes/PhysicsServer2D.md) | [Object](classes/Object.md) | 154 | 6 | 0 | 1 | 54 |
-| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 90 | 3 | 48 | 0 |
+| [PhysicsServer2DExtension](classes/PhysicsServer2DExtension.md) | [PhysicsServer2D](classes/PhysicsServer2D.md) | 0 | 91 | 3 | 47 | 0 |
 | [PhysicsServer2DManager](classes/PhysicsServer2DManager.md) | [Object](classes/Object.md) | 3 | 0 | 0 | 0 | 0 |
 | [PhysicsShapeQueryParameters2D](classes/PhysicsShapeQueryParameters2D.md) | [RefCounted](classes/RefCounted.md) | 10 | 0 | 0 | 0 | 0 |
 | [PhysicsTestMotionParameters2D](classes/PhysicsTestMotionParameters2D.md) | [RefCounted](classes/RefCounted.md) | 8 | 0 | 0 | 0 | 0 |
@@ -56,7 +56,7 @@ The scope takes every descendant of the explicit physics roots, follows the full
 | [StaticBody2D](classes/StaticBody2D.md) | [PhysicsBody2D](classes/PhysicsBody2D.md) | 4 | 0 | 0 | 0 | 0 |
 | [World2D](classes/World2D.md) | [Resource](classes/Resource.md) | 5 | 0 | 0 | 0 | 0 |
 | [WorldBoundaryShape2D](classes/WorldBoundaryShape2D.md) | [Shape2D](classes/Shape2D.md) | 3 | 0 | 0 | 0 | 0 |
-| **Total** | | 660 | 126 | 3 | 49 | 54 |
+| **Total** | | 660 | 127 | 3 | 48 | 54 |
 
 Every open declaration in this group follows. Its class table retains mapped signatures, source links, implemented evidence and exact exclusion reasons.
 
@@ -186,7 +186,7 @@ Every open declaration in this group follows. Its class table retains mapped sig
 | [`PhysicsServer2DExtension::method:_end_sync()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_finish()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_flush_queries()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
-| [`PhysicsServer2DExtension::method:_free_rid(RID:)`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
+| [`PhysicsServer2DExtension::method:_free_rid(RID:)`](classes/PhysicsServer2DExtension.md) | Partial | ADR 0063/0087/0103: common caller-owned Shape/Body/Area/Joint/Space retirement executes selected detach/Finish/disposal with complete preflight and retained scene ownership. Public-only CPU/GPU/registered checks cover all five RID kinds, all scene body siblings/Area, initial/live/release borrowing, stale/generation-qualified views, shared shape removal/retry, pending/reentry, departure observer errors without resurrection, and 64 post-release active steps at 0/0 owner/all-thread bytes. Independent failure injection retains all five body-cleanup and thirteen world-cleanup errors; failed cleanup still drops numerical objects and registry entries. Single errors preserve type/stack; multiple failures aggregate. Complete extension numerical, native/foreign and final network/performance acceptance remain open. |
 | [`PhysicsServer2DExtension::method:_get_process_info(int:PhysicsServer2D.ProcessInfo)`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_init()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |
 | [`PhysicsServer2DExtension::method:_is_flushing_queries()`](classes/PhysicsServer2DExtension.md) | Unimplemented | No mapped C# declaration; trigger: next complete PhysicsServer2DExtension API slice. |

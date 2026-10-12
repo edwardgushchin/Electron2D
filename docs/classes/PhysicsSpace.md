@@ -1,6 +1,6 @@
 # PhysicsSpace
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal sealed partial class PhysicsSpace : IDisposable`
 
@@ -275,3 +275,6 @@ GPU publication reuses a complete snapshot only when its publication epoch match
 
 
 The existing borrowed-extension hierarchy guard also rejects object/canvas/priority binding changes and raw collider release/transfer, including partial initial attachments. This prevents recursive metadata publication before authoring changes; qualified immutable result construction retains its current access scope.
+
+
+Membership removal now attempts every dependent joint, state capture, numerical detach and contact/Area observer cleanup before reporting errors. Internal Cleanup/FinishCleanup collect errors while preserving a lone exception type/stack. A failed numerical detach cannot leave a collider outside common membership but alive in the selected solver. [Resource retirement](../components/physics-registered-adapter.md#resource-retirement) records complete scope and limits.
