@@ -82,6 +82,25 @@ public abstract class PhysicsServerBackend : ElectronObject
         if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
         return PhysicsServer.Service.GetBodyCollisionExceptions(body, PhysicsServer.Service.GetSceneSpace(_space));
     }
+    /// <summary>Reads immutable current authored geometry without cloning its shape resource.</summary>
+    /// <param name="shape">A live shape RID; the resource need not be attached to this world.</param>
+    /// <returns>The cached exact local geometry, valid independently of later edits or resource disposal.</returns>
+    /// <remarks>Available during numerical hooks without querying solver state. A procedural supplier runs
+    /// under world borrowing and must not mutate authoring or lifetime. Engine reads reuse cached data;
+    /// supplier code controls allocations on the first demand after an edit.</remarks>
+    /// <exception cref="ArgumentException">The RID is not a live shape.</exception>
+    /// <exception cref="InvalidOperationException">The implementation is unbound, access is forbidden, or geometry evaluation fails.</exception>
+    /// <exception cref="ObjectDisposedException">The implementation, world or shape is disposed.</exception>
+    protected ShapeGeometry GetShapeGeometry(RID shape)
+    {
+        ThrowIfDisposed();
+        if (!_space.IsValid()) throw new InvalidOperationException("The physics implementation is not bound to a world.");
+        var space = PhysicsServer.Service.GetSceneSpace(_space);
+        space.EnsureImplementationInputReadAccess();
+        space.BeginImplementationCallback();
+        try { return PhysicsServer.Service.GetShapeGeometry(shape).GetGeometryData(); }
+        finally { space.EndImplementationCallback(); }
+    }
     /// <summary>Rejects caller disposal while this implementation belongs to its world.</summary>
     protected sealed override void ValidateDisposal()
     {

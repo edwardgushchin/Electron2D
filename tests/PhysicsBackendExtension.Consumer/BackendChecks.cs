@@ -15,6 +15,7 @@ public static partial class BackendChecks
         RunContactThreshold();
         RunMotionExclusions();
         RunNotificationPhase();
+        RunShapePairs();
         IntegrationChecks();
         MotionRoleChecks();
         ParameterReadChecks();

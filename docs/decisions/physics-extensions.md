@@ -126,6 +126,16 @@ interception would leave scene behavior and direct queries outside the extension
   RID/shape ownership, finite values, result counts and fractions; it must not trust
   forged backend object identities. Query exclusions are scoped to the current
   synchronous invocation and restored in finally, including nesting and exceptions.
+  Public PhysicsServer.ShapeCollide selects an explicit live space for the two
+  resource-pair implementation hook; BodyCollideShape selects the body's actual
+  attachment or the detached resource path. Caller spans hold alternating global
+  points, with pair count and atomic validated publication. These are logical
+  shape-slot operations independent of scene collision filters and slot enables;
+  preserve the independent swept-region rules of ADR 0069. Standalone Shape
+  methods retain their resource-only ownership. Protected backend GetShapeGeometry
+  reads immutable current authored data by live shape RID without cloning a
+  resource or querying numerical state; qualify owner/lifetime/failure access and
+  borrow the world while evaluating a procedural supplier.
   The shared world owns notification-delivery status: public backend
   IsFlushingQueries and static PhysicsServer.SpaceIsFlushingQueries(RID) read the
   same owner-thread/lifetime-qualified flag. It includes body force/integration/state,

@@ -59,3 +59,9 @@ hook counter requires lazy world initialization to have actually occurred.
 `--notification-phase` (optionally `--cpu`/`--gpu`) checks completed-notification
 status in actual body/state/contact/Area/sleep callbacks, nested world/query
 scopes, errors and retirement, with zero warm full-frame allocations.
+
+
+`--shape-pairs` (optionally `--cpu`/`--gpu`) uses public selected shape/body pairs,
+immutable authored geometry, real custom-hole contacts, nested staging and atomic
+error/lifetime guards. Its 64 warm full frames execute 320 outer queries with zero
+managed allocation; the registered numerical fixture remains bounded.

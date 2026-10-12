@@ -45,7 +45,7 @@ public static partial class BackendChecks
                     b.Canvas == parameters.CanvasInstanceID && Annulus.Contains(parameters.Position, b.Position, b.Hole, b.Radius)) _pointHits.Add(new(b.RID, 0));
             _pointHits.Sort(static (a, b) => a.ColliderRID.GetID().CompareTo(b.ColliderRID.GetID())); return _pointHits;
         }
-        private static float Radius(RID rid) { using var shape = PhysicsServer.ShapeGetData(rid); return Annulus.Dimensions(shape.GetGeometryData()).Outer; }
+        private float Radius(RID rid) => Annulus.Dimensions(GetShapeGeometry(rid)).Outer;
         protected override List<PhysicsShapeResult> CollectShapeHits(PhysicsShapeQueryParameters parameters, ReadOnlySpan<RID> excluded)
         {
             _shapeHits.Clear(); var radius = Radius(parameters.ShapeRID) + parameters.Margin;
@@ -80,23 +80,55 @@ public static partial class BackendChecks
             var hits = CollectShapeContacts(parameters, excluded, 1); if (hits.Count == 0) return null;
             var h = hits[0]; var b = Bodies[h.RID]; return new(h.RID, 0, h.ColliderPoint, (h.QueryPoint - b.Position).Normalized(), b.PointVelocity(h.ColliderPoint));
         }
+        internal Action? PairHook;
+        internal int PairQueries, PairFault;
+        internal ShapeGeometry ReadGeometry(RID shape) => GetShapeGeometry(shape);
         protected override bool CollideShapes(RID first, Transform firstPose, Vector2 firstMotion, RID second,
-            Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count) =>
-            Pair(firstPose.Origin, Radius(first), secondPose.Origin, Radius(second), firstMotion - secondMotion, contacts, out count);
+            Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
+        {
+            PairQueries++;
+            var a = GetShapeGeometry(first); var b = GetShapeGeometry(second);
+            bool hit;
+            if (a.Type == PhysicsServer.ShapeType.Custom)
+                hit = Annulus.Collide(a, firstPose, firstMotion, b, secondPose, secondMotion, contacts, out count);
+            else if (b.Type == PhysicsServer.ShapeType.Custom)
+            {
+                hit = Annulus.Collide(b, secondPose, secondMotion, a, firstPose, firstMotion, contacts, out count);
+                for (var i = 0; i < count * 2; i += 2) (contacts[i], contacts[i + 1]) = (contacts[i + 1], contacts[i]);
+            }
+            else hit = Pair(firstPose.Origin, a.GetCircleRadius(), firstMotion, secondPose.Origin, b.GetCircleRadius(), secondMotion, contacts, out count);
+            PairHook?.Invoke();
+            if (PairFault == 1) count = contacts.Length / 2 + 1;
+            else if (PairFault == 2) count = -1;
+            else if (PairFault == 3) { count = 1; hit = false; }
+            else if (PairFault == 4 && !contacts.IsEmpty) { contacts[0] = new(float.NaN, 0); count = 1; }
+            else if (PairFault == 5) throw new InvalidOperationException("Pair hook failure");
+            return hit;
+        }
         protected override bool BodyCollideShape(RID body, int index, RID shape, Transform pose, Vector2 motion, Span<Vector2> contacts, out int count)
         {
-            if (index != 0) throw new ArgumentOutOfRangeException(nameof(index)); var b = Bodies[body];
-            return Pair(b.Position, b.Radius, pose.Origin, Radius(shape), -motion, contacts, out count);
+            var b = Bodies[body];
+            var local = PhysicsServer.BodyGetShapeTransform(body, index);
+            return CollideShapes(PhysicsServer.BodyGetShape(body, index), new Transform(b.Rotation, b.Position) * local,
+                Vector2.Zero, shape, pose, motion, contacts, out count);
         }
-        private static bool Pair(Vector2 first, float firstRadius, Vector2 second, float secondRadius, Vector2 motion, Span<Vector2> contacts, out int count)
+        private static bool Pair(Vector2 first, float firstRadius, Vector2 firstMotion, Vector2 second, float secondRadius,
+            Vector2 secondMotion, Span<Vector2> contacts, out int count)
         {
-            count = 0; if (!Sweep(first, motion, second, firstRadius + secondRadius, out var f)) return false;
+            var endA = first + firstMotion; var endB = second + secondMotion;
+            var a = first; var b = Geometry.GetClosestPointToSegment(a, second, endB); var distance = a.DistanceSquaredTo(b);
+            Consider(endA, Geometry.GetClosestPointToSegment(endA, second, endB));
+            Consider(Geometry.GetClosestPointToSegment(second, first, endA), second);
+            Consider(Geometry.GetClosestPointToSegment(endB, first, endA), endB);
+            if (Geometry.SegmentIntersectsSegment(first, endA, second, endB) is { } crossing) { a = b = crossing; distance = 0; }
+            count = 0; if (distance > (firstRadius + secondRadius) * (firstRadius + secondRadius)) return false;
             if (contacts.Length >= 2)
             {
-                var center = first + motion * f; var normal = (second - center).Normalized();
-                contacts[0] = center + normal * firstRadius; contacts[1] = second - normal * secondRadius; count = 1;
+                var normal = a == b ? Vector2.Right : (b - a).Normalized();
+                contacts[0] = a + normal * firstRadius; contacts[1] = b - normal * secondRadius; count = 1;
             }
             return true;
+            void Consider(Vector2 x, Vector2 y) { var d = x.DistanceSquaredTo(y); if (d < distance) { a = x; b = y; distance = d; } }
         }
         protected override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)

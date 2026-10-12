@@ -45,7 +45,7 @@ internal static class Annulus
         var root = MathF.Sqrt(d); var near = (-b - root) / a; var far = (-b + root) / a;
         fraction = near >= 0 ? near : far; return fraction >= 0 && fraction <= 1;
     }
-    private static bool Collide(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
+    internal static bool Collide(ShapeGeometry first, Transform firstPose, Vector2 firstMotion,
         ShapeGeometry second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts, out int count)
     {
         var a = Dimensions(first); var b = Dimensions(second);

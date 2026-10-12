@@ -558,3 +558,43 @@ after the printed sample counters. Reproduce with --notification-phase, optional
 selects invalid GPU/Vulkan drivers and a dummy video driver. Logs, outcomes and
 the fingerprinted independent runtime remain ignored under
 bin/physics-notification-phase/2026-10-12/final.
+
+
+## Public shape-pair dispatch
+
+PhysicsServer.ShapeCollide selects an explicit live space for CollideShapes;
+BodyCollideShape selects the body's actual attachment or detached resource path.
+Previously the selected resource-pair hook had only an internal test entry point.
+Both public calls retain logical shape-slot poses, independent swept regions,
+zero-capacity collision truth, pair counts and atomic staged global-point output.
+Disabled slots, filters and other objects do not suppress an explicit pair.
+
+Protected GetShapeGeometry borrows immutable current authored data without the
+resource clones formerly used by the public-only test solver's shape queries.
+It supports all built-in data families and custom data, numerical input reads,
+revision retention and owner/lifetime/failure guards. Procedural suppliers execute
+under world borrowing; exceptions restore that scope. User supplier allocation
+on a cache miss remains outside the engine's cached-read guarantee.
+
+[BackendChecks.ShapePairs.cs](../../tests/PhysicsBackendExtension.Consumer/BackendChecks.ShapePairs.cs)
+uses public API only. CPU/GPU checks cover every built-in pair family; registered
+checks execute circle swept regions and static annulus/circle contacts with a real
+hole and reversed ownership. Scene/raw/detached transformed slots, disabled slots,
+zero filters/capacity, untouched output tails, five invalid/throwing hook modes,
+same/other-world nested staging, supplier errors, retirement, failed worlds and
+owner/solver guards execute. Boundary distances use a 0.0001 scene-unit tolerance
+for finite float geometry; discrete counts/identity and untouched tails are exact.
+
+After 128 warmup frames, 64 full frames each execute five outer public queries
+(320 total) at zero owner/all-thread managed bytes on CPU/GPU/registered owners.
+Registered samples include 512 selected hooks from outer and same-world nested
+calls plus independent other-world queries. Cold GC/finalizers, thread, error and
+supplier controls are outside the bracket. Run --shape-pairs, optionally --cpu or
+--gpu; ignored process logs and copied-runtime fingerprints are under
+bin/physics-public-shape-pairs/2026-10-12/final.
+
+The built-in resource-pair evaluator remains managed geometry; this change does
+not claim device acceleration for standalone resource pairs. The bounded external
+fixture does not certify arbitrary geometry, moving-annulus contact boundaries
+or full extension numerical acceptance. The two pair rows and typed shape-data
+read are Partial; broader motion/solver acceptance remains open.

@@ -28,6 +28,21 @@ terminal-error cleanup. Unbound/off-owner reads throw InvalidOperationException;
 disposed implementation/world reads throw ObjectDisposedException. It does not
 replace the existing structural, authoring, reentry or failed-world guards.
 
+## Authored geometry access
+
+`protected ShapeGeometry GetShapeGeometry(RID shape)` returns immutable current
+local geometry for any live shape RID, without cloning the resource. Cached data
+survives later edits/disposal. Every built-in family and custom canonical data are
+available; this does not impose a particular collision algorithm on the backend.
+
+Bound/live owner-thread and failed-world guards apply. Numerical hooks may read
+this authored input without solver reentry. Procedural suppliers execute under
+world borrowing, reject authoring/lifetime writes, and restore the borrow after
+errors. First-demand supplier allocations remain caller-controlled. Invalid or
+retired shape RIDs reject; unbound/disposed/off-owner implementations reject.
+[Public pair conformance](../components/physics-registered-adapter.md#public-shape-pair-dispatch)
+exercises the read, its guards and geometry revision lifetime.
+
 ## Public methods
 
 | Signature | Contract |

@@ -931,3 +931,22 @@ cleanup, without numerical reads or allocations. Unknown/non-space/retired RIDs
 throw ArgumentException; off-owner reads throw InvalidOperationException; disposed
 service/space reads throw ObjectDisposedException. Ordinary false status does not
 certify that a failed world can step again.
+
+
+### Selected shape-pair queries
+
+`ShapeCollide(RID space, RID first, Transform firstPose, Vector2 firstMotion,
+RID second, Transform secondPose, Vector2 secondMotion, Span<Vector2> contacts,
+out int count)` dispatches through the addressed live space. Resources need not
+be attached. `BodyCollideShape(RID body, int index, RID shape, Transform pose,
+Vector2 motion, Span<Vector2> contacts, out int count)` chooses the body's actual
+attachment, or standalone resource geometry while detached. The logical slot pose
+includes its body pose; disabled slots and zero filters remain explicit inputs.
+
+Even-length caller spans contain alternating first/body and second-shape global
+points. `count` is a pair count. A hit can return zero pairs at zero capacity;
+misses and unused tails preserve caller storage. All returned counts and points
+validate before publication. Invalid RID/slot/pose/capacity, off-owner/solver/failed
+world access and hook failures reject without partially replacing output.
+[Public-only conformance](../components/physics-registered-adapter.md#public-shape-pair-dispatch)
+covers CPU/GPU and an independent numerical implementation.

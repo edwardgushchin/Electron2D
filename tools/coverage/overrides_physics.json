@@ -2549,6 +2549,21 @@
       "godot": "PhysicsServer2DExtension::method:_is_flushing_queries()",
       "electron2d": "property:Electron2D.PhysicsServerBackend.IsFlushingQueries()",
       "reason": "ADR 0103/0095: common world-owned notification status includes scene/raw force/integration/state/sleep callbacks and selected flush/contact/Area delivery, preserving order and error aggregation. Owner/lifetime-qualified lifecycle reads stay available during terminal cleanup; nested query/other-world scopes are independent. Public-only CPU/GPU/registered checks execute real callbacks, failure continuation, retirement, reentry and 64 warm frames at zero managed allocation. Complete extension numerical/geometry acceptance remains open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_collide(RID:,Transform2D:,Vector2:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.CollideShapes(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_collide_shape(RID:,int:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_get_data(RID:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.GetShapeGeometry(Electron2D.RID)",
+      "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
     }
   ],
   "extras": [
@@ -4500,10 +4515,6 @@
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CapturePortableOneWays(System.Span<Electron2D.PhysicsBackendOneWay>)",
       "reason": "ADR 0103/0094: typed selected implementation portable continuation. The public-only consumer verifies current output capacity after growth/shrink, invalid identity/shape/piece and duplicate rejection before encoding, previous-packet preservation, alternate local RIDs, real pass-through/contact impulse and 64 warmed capture/apply cycles with zero allocation. Full generic solver, separate-process extension and foreign-platform acceptance remain open."
     },
@@ -4525,10 +4536,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.CollectShapeHits(Electron2D.PhysicsShapeQueryParameters,System.ReadOnlySpan<Electron2D.RID>)",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.CollideShapes(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -5334,6 +5341,14 @@
     {
       "electron2d": "method:Electron2D.PhysicsServer.SpaceIsFlushingQueries(Electron2D.RID)",
       "reason": "ADR 0103/0095: explicit per-world static lifecycle-status projection for built-in and registered notification observers; shares the implementation property and preserves owner/lifetime/error guards without numerical reads or allocations."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.ShapeCollide(Electron2D.RID,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103/0095/0069: static public typed projection of selected resource/body pair implementation operations; explicit world/body attachment selection, caller pair spans and validated atomic output. Public-only CPU/GPU/registered consumers execute the path and zero warm allocations; full registered numerical acceptance remains open."
+    },
+    {
+      "electron2d": "method:Electron2D.PhysicsServer.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span<Electron2D.Vector2>,ref System.Int32)",
+      "reason": "ADR 0103/0095/0069: static public typed projection of selected resource/body pair implementation operations; explicit world/body attachment selection, caller pair spans and validated atomic output. Public-only CPU/GPU/registered consumers execute the path and zero warm allocations; full registered numerical acceptance remains open."
     }
   ],
   "statusGroups": [
@@ -7176,14 +7191,6 @@
     },
     {
       "godot": [
-        "PhysicsServer2DExtension::method:_body_collide_shape(RID:,int:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
-        "PhysicsServer2DExtension::method:_shape_collide(RID:,Transform2D:,Vector2:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Current projection has real selected world dispatch; the applicable complete reference operation and custom geometry audit remains required."
-    },
-    {
-      "godot": [
         "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)"
       ],
       "state": "Blocked",
@@ -7377,6 +7384,15 @@
       ],
       "state": "Implemented",
       "reason": "ADR 0103/0095: common world-owned notification status includes scene/raw force/integration/state/sleep callbacks and selected flush/contact/Area delivery, preserving order and error aggregation. Owner/lifetime-qualified lifecycle reads stay available during terminal cleanup; nested query/other-world scopes are independent. Public-only CPU/GPU/registered checks execute real callbacks, failure continuation, retirement, reentry and 64 warm frames at zero managed allocation. Complete extension numerical/geometry acceptance remains open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_shape_collide(RID:,Transform2D:,Vector2:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
+        "PhysicsServer2DExtension::method:_body_collide_shape(RID:,int:,RID:,Transform2D:,Vector2:,void*:,int:,int32_t*:)",
+        "PhysicsServer2DExtension::method:_shape_get_data(RID:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
     }
   ]
 }

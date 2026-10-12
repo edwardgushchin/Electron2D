@@ -127424,6 +127424,55 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.BodyCollideShape(Electron2D.RID,System.Int32,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span\u003CElectron2D.Vector2\u003E,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "BodyCollideShape",
+    "signature": "public static System.Boolean BodyCollideShape(Electron2D.RID body, System.Int32 index, Electron2D.RID shape, Electron2D.Transform pose, Electron2D.Vector2 motion, System.Span\u003CElectron2D.Vector2\u003E contacts, out System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "body",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "pose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "motion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "contacts",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.BodyCreate()",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -129968,6 +130017,65 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.PhysicsServer.ShapeCollide(Electron2D.RID,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Span\u003CElectron2D.Vector2\u003E,ref System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServer",
+    "name": "ShapeCollide",
+    "signature": "public static System.Boolean ShapeCollide(Electron2D.RID space, Electron2D.RID first, Electron2D.Transform firstPose, Electron2D.Vector2 firstMotion, Electron2D.RID second, Electron2D.Transform secondPose, Electron2D.Vector2 secondMotion, System.Span\u003CElectron2D.Vector2\u003E contacts, out System.Int32 count)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "space",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "first",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "firstPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "firstMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "second",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "secondPose",
+        "type": "Electron2D.Transform",
+        "default": null
+      },
+      {
+        "name": "secondMotion",
+        "type": "Electron2D.Vector2",
+        "default": null
+      },
+      {
+        "name": "contacts",
+        "type": "System.Span\u003CElectron2D.Vector2\u003E",
+        "default": null
+      },
+      {
+        "name": "count",
+        "type": "ref System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.PhysicsServer.ShapeGetData(Electron2D.RID)",
     "kind": "method",
     "declaringType": "Electron2D.PhysicsServer",
@@ -131346,6 +131454,25 @@
       }
     ],
     "returnType": "System.Nullable\u003CElectron2D.PhysicsRestInfo\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.PhysicsServerBackend.GetShapeGeometry(Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.PhysicsServerBackend",
+    "name": "GetShapeGeometry",
+    "signature": "protected Electron2D.ShapeGeometry GetShapeGeometry(Electron2D.RID shape)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "shape",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ShapeGeometry",
     "value": null
   },
   {

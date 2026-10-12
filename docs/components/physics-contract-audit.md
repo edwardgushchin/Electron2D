@@ -535,3 +535,9 @@ physics acceptance remain open.
 now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
 Body integration/state callbacks, contacts, Areas and sleep events are included;
 exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.
+
+
+[Public shape-pair dispatch](physics-registered-adapter.md#public-shape-pair-dispatch) now reaches selected
+CPU/GPU/registered owners, with immutable authored geometry reads, logical scene/raw
+and detached slots, atomic output and zero warm full-frame/query allocation.
+The mapped pair/data rows remain Partial until complete numerical acceptance.

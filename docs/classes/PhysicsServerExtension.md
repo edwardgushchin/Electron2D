@@ -26,3 +26,9 @@ CPU/GPU/registered conformance in [Motion-test exclusions](../components/physics
 now shares world-scoped lifecycle state across CPU/GPU and registered implementations.
 Body integration/state callbacks, contacts, Areas and sleep events are included;
 exceptions and nested calls preserve the existing delivery/order/cleanup guarantees.
+
+
+Inherited `GetShapeGeometry(RID)` provides exact immutable authored data for the
+selected `CollideShapes` and `BodyCollideShape` hooks, now reachable through public
+PhysicsServer pair queries. See [public pair dispatch](../components/physics-registered-adapter.md#public-shape-pair-dispatch)
+for identity, atomic output, nested borrowing and verification limits.
