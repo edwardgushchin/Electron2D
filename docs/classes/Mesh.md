@@ -28,6 +28,7 @@ int count = mesh.GetSurfaceCount();
 | --- | --- |
 | `protected Mesh()` | Initializes the reusable mesh resource contract. |
 | `protected override System.Void Dispose(System.Boolean disposing)` |  |
+| `public Electron2D.PlaceholderMesh CreatePlaceholder()` | Creates a caller-owned surface-free mesh with copied local visibility bounds. |
 | `public Electron2D.Rect2 GetAABB()` | Returns the axis-aligned visibility bounds of this two-dimensional mesh. |
 | `public System.Int32 GetBlendShapeCount()` | Gets the number of named blend shapes. |
 | `public System.String GetBlendShapeName(System.Int32 index)` | Gets one shape's authored name. |
@@ -382,3 +383,9 @@ System.ObjectDisposedException: The mesh or material is disposed.
 ## LOD behavior
 
 Authored levels use copied positive local edge-error thresholds and shorter complete index sets over an indexed base. Drawing selects the largest threshold within one framebuffer pixel from the greatest singular value of the full transformed basis. Bounds, arrays and face/index counts preserve full geometry. Morph output and tangent regeneration retain levels. AMS6 persists LODs and targets and reads AMS1–5. See [authored LOD indices](../components/meshes.md#authored-lod-indices-and-scale-selection).
+
+### CreatePlaceholder
+
+`public Electron2D.PlaceholderMesh CreatePlaceholder()`
+
+Creates a caller-owned surface-free mesh retaining the current visibility bounds. See [missing-resource recovery](../components/resource-files.md#missing-resource-recovery) for strict/tolerant policy, lifetime and actual verification limits.

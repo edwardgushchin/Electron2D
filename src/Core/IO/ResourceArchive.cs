@@ -3,7 +3,7 @@ using System.IO.Compression;
 using System.Security.Cryptography;
 namespace Electron2D;
 
-internal static class ResourceArchive
+internal static partial class ResourceArchive
 {
     internal const int Limit = 67108864;
     internal static bool IsPath(string path) => System.IO.Path.GetExtension(path).Equals(".e2dres", StringComparison.OrdinalIgnoreCase) || System.IO.Path.GetExtension(path).Equals(".e2dscene", StringComparison.OrdinalIgnoreCase);
@@ -44,7 +44,7 @@ internal static class ResourceArchive
         if (uid == ResourceUID.InvalidID) uid = ResourceUID.CreateID();
         var file = new byte[checked(64 + encoded.Length)];
         "E2DASSET"u8.CopyTo(file);
-        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 1);
+        BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(8), 2);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(12), (int)flags);
         BinaryPrimitives.WriteInt64LittleEndian(file.AsSpan(16), uid);
         BinaryPrimitives.WriteInt32LittleEndian(file.AsSpan(24), payload.Length);
@@ -62,7 +62,7 @@ internal static class ResourceArchive
         using var stream = System.IO.File.OpenRead(absolute);
         Span<byte> header = stackalloc byte[24];
         if (stream.Read(header) != header.Length || !header[..8].SequenceEqual("E2DASSET"u8)) return ResourceUID.InvalidID;
-        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) != 1 || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
+        if (BinaryPrimitives.ReadInt32LittleEndian(header[8..]) is not (1 or 2) || stream.Length < 64) throw new InvalidDataException("Unsupported resource UID header.");
         var id = BinaryPrimitives.ReadInt64LittleEndian(header[16..]);
         return id >= 0 ? id : throw new InvalidDataException("Invalid resource UID.");
     }
@@ -82,13 +82,15 @@ internal static class ResourceArchive
         var info = new FileInfo(absolute);
         if (info.Length is < 64 or > Limit + 64) throw new InvalidDataException("Invalid resource file size.");
         var bytes = System.IO.File.ReadAllBytes(absolute);
-        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) != 1) throw new InvalidDataException("Unsupported resource archive version.");
+        if (!bytes.AsSpan(0, 8).SequenceEqual("E2DASSET"u8) || BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8)) is not (1 or 2)) throw new InvalidDataException("Unsupported resource archive version.");
         if (BinaryPrimitives.ReadInt64LittleEndian(bytes.AsSpan(16)) < 0) throw new InvalidDataException("Invalid archive UID.");
         return bytes;
     }
-    internal static byte[] ReadPayload(string path, out bool bigEndian)
+    internal static byte[] ReadPayload(string path, out bool bigEndian) => ReadPayload(path, out bigEndian, out _);
+    internal static byte[] ReadPayload(string path, out bool bigEndian, out int version)
     {
         var bytes = ReadFile(path);
+        version = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(8));
         var flags = (SaverFlags)BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(12));
         if ((flags & ~(SaverFlags)127) != 0) throw new InvalidDataException("Unknown archive flags.");
         var rawSize = BinaryPrimitives.ReadInt32LittleEndian(bytes.AsSpan(24));
@@ -121,8 +123,8 @@ internal static class ResourceArchive
     }
     internal static ResourceArchiveRead Decode(string path, ResourceLoader.CacheMode mode)
     {
-        var payload = ReadPayload(path, out var bigEndian);
-        var context = new ResourceArchiveRead(path, mode, bigEndian);
+        var payload = ReadPayload(path, out var bigEndian, out var version);
+        var context = new ResourceArchiveRead(path, mode, bigEndian, version, ResourceLoader.AbortOnMissingResources);
         try
         {
             context.Decode(payload);
@@ -138,7 +140,7 @@ internal static class ResourceArchive
     }
     internal static ArchiveDefinition[] Inspect(string path, out bool bigEndian)
     {
-        var payload = ReadPayload(path, out bigEndian);
+        var payload = ReadPayload(path, out bigEndian, out var version);
         using var stream = new StreamPeerBuffer
         {
             DataArray = payload,
@@ -147,20 +149,7 @@ internal static class ResourceArchive
         var count = stream.Get32();
         if (count is < 1 or > 65536) throw new InvalidDataException("Invalid resource table.");
         var definitions = new ArchiveDefinition[count];
-        for (var i = 0; i < count; i++)
-        {
-            var type = ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream));
-            if (!typeof(Resource).IsAssignableFrom(type.Type)) throw new InvalidDataException("Resource metadata includes a node type.");
-            var name = ResourceArchiveStrings.Read(stream);
-            var marker = stream.GetU8();
-            if (marker > 1) throw new InvalidDataException("Invalid metadata marker.");
-            var sceneID = ResourceArchiveStrings.Read(stream);
-            var dependency = ResourceArchiveStrings.Read(stream);
-            var uid = stream.Get64();
-            var size = stream.Get32();
-            if (size < 0 || size > stream.GetAvailableBytes()) throw new InvalidDataException("Invalid metadata payload size.");
-            definitions[i] = new(type, name, marker == 1, sceneID, dependency, uid, stream.GetData(size));
-        }
+        for (var i = 0; i < count; i++) definitions[i] = ReadDefinition(stream, version, ResourceLoader.AbortOnMissingResources);
         if (stream.GetAvailableBytes() != 0 || definitions[0].Path.Length != 0) throw new InvalidDataException("Invalid archive metadata root or trailing bytes.");
         return definitions;
     }
@@ -168,6 +157,8 @@ internal static class ResourceArchive
     {
         ArgumentNullException.ThrowIfNull(renames);
         var definitions = Inspect(path, out var bigEndian);
+        var original = ReadFile(path);
+        var version = BinaryPrimitives.ReadInt32LittleEndian(original.AsSpan(8));
         using var output = new StreamPeerBuffer
         {
             BigEndian = bigEndian
@@ -184,6 +175,7 @@ internal static class ResourceArchive
                 uid = ResourceSaver.GetResourceIDForPath(target);
             }
             ResourceArchiveStrings.Write(output, d.Type.ID);
+            if (version >= 2) WriteRole(output, d);
             ResourceArchiveStrings.Write(output, d.Name);
             output.PutU8(d.Local ? (byte)1 : (byte)0);
             ResourceArchiveStrings.Write(output, d.SceneID);
@@ -194,7 +186,6 @@ internal static class ResourceArchive
         }
         var payload = output.DataArray;
         if (payload.Length > Limit) throw new InvalidDataException("Dependency rewrite exceeds archive budget.");
-        var original = ReadFile(path);
         var flags = (SaverFlags)BinaryPrimitives.ReadInt32LittleEndian(original.AsSpan(12));
         var encoded = payload;
         if ((flags & SaverFlags.Compress) != 0)
@@ -213,7 +204,7 @@ internal static class ResourceArchive
     }
     internal static string[] Dependencies(string path, bool addTypes)
     {
-        var payload = ReadPayload(path, out var bigEndian);
+        var payload = ReadPayload(path, out var bigEndian, out var version);
         using var stream = new StreamPeerBuffer
         {
             DataArray = payload,
@@ -225,13 +216,18 @@ internal static class ResourceArchive
         for (var i = 0; i < count; i++)
         {
             var type = ResourceArchiveStrings.Read(stream);
+            if (version >= 2)
+            {
+                var role = stream.GetU8(); if (role > 1) throw new InvalidDataException("Invalid resource role.");
+                if (role == 1) { var bounds = new Rect2(stream.GetFloat(), stream.GetFloat(), stream.GetFloat(), stream.GetFloat()); if (!bounds.IsFinite() || !bounds.End.IsFinite() || bounds.Size.X < 0 || bounds.Size.Y < 0) throw new InvalidDataException("Invalid mesh metadata bounds."); }
+            }
             _ = ResourceArchiveStrings.Read(stream);
-            _ = stream.GetU8();
+            if (stream.GetU8() > 1) throw new InvalidDataException("Invalid resource metadata flag.");
             _ = ResourceArchiveStrings.Read(stream);
             var dependency = ResourceArchiveStrings.Read(stream);
             var uid = stream.Get64();
             var size = stream.Get32();
-            if (size < 0 || size > stream.GetAvailableBytes()) throw new InvalidDataException("Invalid resource payload size.");
+            if (size < 0 || size > stream.GetAvailableBytes() || uid < -1 || dependency.Length != 0 && (size != 0 || i == 0)) throw new InvalidDataException("Invalid resource payload size.");
             stream.Seek(checked(stream.GetPosition() + size));
             if (dependency.Length != 0)
             {
@@ -244,8 +240,8 @@ internal static class ResourceArchive
     }
 
 }
-internal sealed record ArchiveDefinition(ResourceFileType Type, string Name, bool Local, string SceneID, string Path, long UID, byte[] Payload);
-internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlags flags)
+internal sealed record ArchiveDefinition(ResourceFileType Type, string Name, bool Local, string SceneID, string Path, long UID, byte[] Payload, ResourceArchiveRole Role = ResourceArchiveRole.Resource, Rect2 Bounds = default);
+internal sealed partial class ResourceArchiveWrite(Resource root, string path, SaverFlags flags)
 {
     private readonly Dictionary<Resource, int> _ids = new(ReferenceEqualityComparer.Instance);
     private readonly List<Resource> _resources = [];
@@ -270,18 +266,21 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
         for (var i = 0; i < _resources.Count; i++)
         {
             var resource = _resources[i];
-            var type = ResourceFileTypes.Get(resource.GetType());
+            var role = resource is Mesh ? ResourceArchiveRole.Mesh : ResourceArchiveRole.Resource;
+            var bounds = resource is Mesh mesh ? mesh.GetAABB() : default;
+            var type = MissingResourceData.For(resource) is { } missing && missing.OriginalClass.Length != 0 ? ResourceArchive.ResolveType(missing.OriginalClass, role, false) : ResourceFileTypes.Get(resource.GetType());
             var external = !ReferenceEquals(resource, root) && !resource.IsBuiltIn && (flags & SaverFlags.BundleResources) == 0;
             if (external)
             {
                 var target = resource.ResourcePath;
                 var uid = ResourceSaver.GetResourceIDForPath(target);
                 if ((flags & SaverFlags.RelativePaths) != 0) target = System.IO.Path.GetRelativePath(System.IO.Path.GetDirectoryName(ResourceArchive.Absolute(path))!, ResourceArchive.Absolute(target));
-                definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, resource.ResourceSceneUniqueID, target, uid, []));
+                definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, resource.ResourceSceneUniqueID, target, uid, [], role, bounds));
                 continue;
             }
             using var stream = NewStream();
-            if (resource is PackedScene packed) WriteScene(stream, packed.FileData);
+            if (MissingResourceData.For(resource) is { } opaque && opaque.OriginalClass.Length != 0) WriteMissing(stream, opaque);
+            else if (resource is PackedScene packed) WriteScene(stream, packed.FileData);
             else if (resource is Image image) WriteImage(stream, image);
             else if (resource is ImageTexture texture)
             {
@@ -304,7 +303,7 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
             var sceneID = resource.ResourceSceneUniqueID;
             if (!ReferenceEquals(resource, root) && (flags & SaverFlags.ReplaceSubresourcePaths) != 0 && sceneID.Length == 0) sceneID = Resource.GenerateSceneUniqueID();
             _sceneIDs.Add(resource, sceneID);
-            definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, sceneID, "", -1, stream.DataArray));
+            definitions.Add(new(type, resource.ResourceName, resource.ResourceLocalToScene, sceneID, "", -1, stream.DataArray, role, bounds));
         }
         var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
         foreach (var d in definitions.Skip(1).Where(d => d.Path.Length == 0 && d.SceneID.Length != 0)) if (!sceneIDs.Add(d.SceneID)) throw new InvalidDataException("Duplicate subresource scene ID.");
@@ -313,6 +312,7 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
         foreach (var d in definitions)
         {
             ResourceArchiveStrings.Write(output, d.Type.ID);
+            ResourceArchive.WriteRole(output, d);
             ResourceArchiveStrings.Write(output, d.Name);
             output.PutU8(d.Local ? (byte)1 : (byte)0);
             ResourceArchiveStrings.Write(output, d.SceneID);
@@ -353,6 +353,8 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
             if (descriptor.ValueType != property.Value.ValueType) throw new InvalidDataException("Stored property schema changed.");
             ResourceArchiveStrings.Write(stream, property.Name);
             ResourceArchiveStrings.Write(stream, ResourceFileTypes.ValueID(property.Value.ValueType));
+            stream.PutU8((byte)MissingResourceData.Role(property.Value.ValueType));
+            stream.PutU8(BigEndian ? (byte)1 : (byte)0);
             using var value = NewStream();
             descriptor.WriteFileValue(owner, property.Value, this, value);
             var data = value.DataArray;
@@ -398,7 +400,7 @@ internal sealed class ResourceArchiveWrite(Resource root, string path, SaverFlag
     }
 
 }
-internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode mode, bool bigEndian) : IDisposable
+internal sealed partial class ResourceArchiveRead(string path, ResourceLoader.CacheMode mode, bool bigEndian, int version, bool abortOnMissing) : IDisposable
 {
     internal readonly List<Resource> Owned = [];
     private Resource?[] _resources = [];
@@ -423,20 +425,7 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
         if (count == 0) throw new InvalidDataException("Empty resource table.");
         _resources = new Resource?[count];
         _definitions = new ArchiveDefinition[count];
-        for (var i = 0; i < count; i++)
-        {
-            var type = ResourceFileTypes.Get(ResourceArchiveStrings.Read(stream));
-            if (!typeof(Resource).IsAssignableFrom(type.Type)) throw new InvalidDataException("Resource table includes a node factory.");
-            var name = ResourceArchiveStrings.Read(stream);
-            var marker = stream.GetU8();
-            if (marker > 1) throw new InvalidDataException("Invalid local-resource flag.");
-            var sceneID = ResourceArchiveStrings.Read(stream);
-            var dependency = ResourceArchiveStrings.Read(stream);
-            var uid = stream.Get64();
-            var length = Count(stream, ResourceArchive.Limit);
-            if (length > stream.GetAvailableBytes()) throw new InvalidDataException("Truncated resource payload.");
-            _definitions[i] = new(type, name, marker == 1, sceneID, dependency, uid, stream.GetData(length));
-        }
+        for (var i = 0; i < count; i++) _definitions[i] = ResourceArchive.ReadDefinition(stream, version, abortOnMissing);
         if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing archive payload.");
         var sceneIDs = new HashSet<string>(StringComparer.Ordinal);
         foreach (var definition in _definitions.Skip(1)) { if (definition.UID < -1 || definition.Path.Length != 0 && definition.Payload.Length != 0) throw new InvalidDataException("Invalid external resource metadata."); if (definition.Path.Length == 0 && definition.SceneID.Length != 0 && !sceneIDs.Add(definition.SceneID)) throw new InvalidDataException("Duplicate subresource scene ID."); }
@@ -451,9 +440,13 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
                 var dependencyMode = mode is ResourceLoader.CacheMode.IgnoreDeep or ResourceLoader.CacheMode.ReplaceDeep ? mode : ResourceLoader.CacheMode.Reuse;
                 var stage = ResourceLoadGraph.Current;
                 var cachedDependency = stage is null ? Resource.GetRegisteredPath(target) : null;
-                var resource = ResourceLoader.LoadFileResource(target, dependencyMode, d.Type.Type);
+                if (!abortOnMissing && version >= 2 && Resource.GetRegisteredPath(target) is null && ResourceArchive.IsPath(target) && !System.IO.File.Exists(ResourceArchive.Absolute(target)))
+                {
+                    var missing = ResourceArchive.CreateMissing(d.Type.ID, d.Role, d.Bounds); missing.SetPathCache(target); Owned.Add(missing); _resources[i] = missing; return;
+                }
+                var resource = ResourceLoader.LoadFileResource(target, dependencyMode, abortOnMissing ? d.Type.Type : d.Role == ResourceArchiveRole.Mesh ? typeof(Mesh) : typeof(Resource));
                 if (stage is null && !ReferenceEquals(cachedDependency, resource)) Owned.Add(resource);
-                if (resource.GetType() != d.Type.Type) throw new InvalidDataException("External resource type does not match its schema.");
+                if (resource.GetType() != d.Type.Type && !(MissingResourceData.For(resource) is { } opaque && opaque.OriginalClass == d.Type.ID && (resource is Mesh ? ResourceArchiveRole.Mesh : ResourceArchiveRole.Resource) == d.Role)) throw new InvalidDataException("External resource type does not match its schema.");
                 _resources[i] = resource;
             }
             else
@@ -482,7 +475,8 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
             resource.ResourceSceneUniqueID = d.SceneID;
             if (i > 0) resource.SetPathCache(path + "::" + (d.SceneID.Length == 0 ? i.ToString(System.Globalization.CultureInfo.InvariantCulture) : d.SceneID));
             using var value = Stream(d.Payload);
-            if (resource is PackedScene packed) packed.LoadFileData(ReadScene(value));
+            if (MissingResourceData.For(resource) is { } opaque && opaque.OriginalClass.Length != 0) { if (resource is PlaceholderMesh placeholder) placeholder.AABB = d.Bounds; ReadMissing(value, opaque); }
+            else if (resource is PackedScene packed) packed.LoadFileData(ReadScene(value));
             else if (resource is Image image) ReadImage(value, image);
             else if (resource is ImageTexture texture)
             {
@@ -531,6 +525,9 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
         {
             var name = ResourceArchiveStrings.Read(stream);
             var schema = ResourceArchiveStrings.Read(stream);
+            var role = version >= 2 ? (ResourceFieldRole)stream.GetU8() : (ResourceFieldRole?)null;
+            var endian = version >= 2 ? stream.GetU8() : bigEndian ? (byte)1 : (byte)0;
+            if (endian > 1) throw new InvalidDataException("Invalid property byte order.");
             if (!names.Add(name)) throw new InvalidDataException("Duplicate stored property.");
             var descriptor = descriptors.FirstOrDefault(p => p.Name == name && p.IsStored && !p.IsReadOnly);
             if (descriptor is null && owner is Node node && ResourceFileTypes.FindValueType(schema) is
@@ -539,9 +536,10 @@ internal sealed class ResourceArchiveRead(string path, ResourceLoader.CacheMode 
             if (owner is CanvasItem canvas && ResourceFileTypes.FindValueType(schema) is { } storedType && descriptor?.ValueType != storedType) descriptor = InstanceUniformState.StoredParameter(canvas, name, storedType) ?? descriptor;
             if (descriptor is null) throw new InvalidDataException("Unknown stored property.");
             if (ResourceFileTypes.ValueID(descriptor.ValueType) != schema) throw new InvalidDataException("Stored property type mismatch.");
+            if (role is not null && role != MissingResourceData.Role(descriptor.ValueType)) throw new InvalidDataException("Stored property role mismatch.");
             var size = Count(stream, ResourceArchive.Limit);
             if (size > stream.GetAvailableBytes()) throw new InvalidDataException("Truncated stored value.");
-            using var value = Stream(stream.GetData(size));
+            using var value = new StreamPeerBuffer { DataArray = stream.GetData(size), BigEndian = endian == 1 };
             values[i] = (descriptor, descriptor.ReadFileValue(this, value));
             if (owner is not Node || values[i].Item2 is not StoredNodeReferenceValue && !typeof(Resource).IsAssignableFrom(descriptor.ValueType))
             {

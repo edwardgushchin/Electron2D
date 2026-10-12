@@ -519,10 +519,18 @@ def main():
     assert len(loader_rows) == 26
     assert {state: sum(f" | {state} | " in row for row in loader_rows)
             for state in ("Implemented", "Partial", "Blocked", "Unimplemented")} == {
-                "Implemented": 20, "Partial": 4, "Blocked": 1, "Unimplemented": 1}
+                "Implemented": 21, "Partial": 4, "Blocked": 0, "Unimplemented": 1}
     for row in loader_rows:
         if "load_threaded_" in row or "ThreadLoadStatus" in row:
             assert " | Implemented | " in row, row
+    abort_row = next(row for row in loader_rows if "set_abort_on_missing_resources" in row)
+    assert " | Implemented | " in abort_row and "version-2" in abort_row
+    for name in ("MissingResource", "PlaceholderMesh"):
+        rows = [row for row in pages[CLASS_PAGES / f"{name}.md"].splitlines() if row.startswith("| [`")]
+        assert rows and all(" | Implemented | " in row for row in rows), name
+    assert "Rect2" in next(row for row in pages[CLASS_PAGES / "PlaceholderMesh.md"].splitlines() if row.startswith("| [`property"))
+    missing_node_rows = [row for row in pages[CLASS_PAGES / "MissingNode.md"].splitlines() if row.startswith("| [`")]
+    assert len(missing_node_rows) == 5 and all(" | Blocked | " in row and "signal/endpoint" in row for row in missing_node_rows)
     resource_rows = pages[CLASS_PAGES / "Resource.md"].splitlines()
     for name in ("method setup_local_to_scene()", "signal setup_local_to_scene_requested()"):
         row = next(row for row in resource_rows if row.startswith(f"| [`{name}"))

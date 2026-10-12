@@ -251,7 +251,7 @@ The dependency is restricted to local-scene association and is cleared on resour
 
 Ordinary C# event subscribers and `EventConnection` tokens are runtime objects, not stored scene data. Persistent event connections remain deferred under ADR 0010 until a typed stable endpoint identity and handler-binding schema exists. No delegate inspection or reflection fallback is introduced.
 
-ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-1 archives under ADR 0013. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, placeholders, editable instances and tolerant missing-resource recovery remain absent. The unsupported `PackedSceneEditState` values fail explicitly.
+ResourceSaver/ResourceLoader now persist the typed PackedScene model as version-2 archives under ADR 0013, with known version-1 schemas retained. Registered compiled factory IDs replace in-memory delegates in files; no assembly loading or script serialization occurs. File roots own decoded graphs and instances retain internal leases under ADR 0014, including replacement/disposal. Import remapping, editor/inheritance authoring, missing-node placeholders and editable instances remain absent. Generic/Mesh missing-resource recovery executes under ADR 0013; persistent signal/endpoints and other exact asset substitutions retain their stated prerequisites. The unsupported `PackedSceneEditState` values fail explicitly.
 
 ### Consequences
 

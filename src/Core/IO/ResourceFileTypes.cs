@@ -34,6 +34,9 @@ public static partial class ResourceFileTypes
         RegisterResource("SkeletonModificationStackHolder", CreateSkeletonStackHolder);
         RegisterResource("SkeletonModificationPhysicalBones", CreateSkeletonPhysicalBones);
         RegisterResourceArray<SkeletonModification>();
+        RegisterResource("MissingResource", CreateMissingResource);
+        RegisterResource("PlaceholderMesh", CreatePlaceholderMesh);
+        RegisterResourceArray<Resource>();
         RegisterResource("ArrayMesh", CreateArrayMesh);
         RegisterResource("ImporterMesh", CreateImporterMesh);
         RegisterResource("ImmediateMesh", CreateImmediateMesh);
@@ -126,6 +129,8 @@ public static partial class ResourceFileTypes
     private static NavigationLink CreateNavigationLink() => new();
     private static NavigationAgent CreateNavigationAgent() => new();
     private static NavigationObstacle CreateNavigationObstacle() => new();
+    private static MissingResource CreateMissingResource() => new();
+    private static PlaceholderMesh CreatePlaceholderMesh() => new();
     private static ArrayMesh CreateArrayMesh() => new();
     private static ImporterMesh CreateImporterMesh() => new();
     private static ImmediateMesh CreateImmediateMesh() => new();
@@ -232,6 +237,7 @@ public static partial class ResourceFileTypes
     {
         lock (Gate) return ByType.GetValueOrDefault(type) ?? throw new NotSupportedException($"File type {type.Name} has no registered factory.");
     }
+    internal static ResourceFileType? Find(string id) { lock (Gate) return ByID.GetValueOrDefault(id); }
     internal static ResourceFileType Get(string id)
     {
         lock (Gate) return ByID.GetValueOrDefault(id) ?? throw new InvalidDataException($"Unknown file type ID '{id}'.");
@@ -239,12 +245,13 @@ public static partial class ResourceFileTypes
     internal static string ValueID(Type type) => type.IsArray ? ValueID(type.GetElementType()!) + "[]" : type.IsConstructedGenericType ? type.GetGenericTypeDefinition().FullName!.Split('`')[0] + "<" + string.Join(",", type.GetGenericArguments().Select(ValueID)) + ">" : type.FullName!;
     internal static Type? FindValueType(string id)
     {
-        lock (Gate) return Codecs.Keys.Concat(ByType.Keys.SelectMany(Ancestors)).FirstOrDefault(t => ValueID(t) == id);
+        lock (Gate) return Codecs.Keys.Concat(ResourceArrays.Keys).Concat(ByType.Keys.SelectMany(Ancestors)).FirstOrDefault(t => ValueID(t) == id);
     }
     private static IEnumerable<Type> Ancestors(Type type)
     {
         for (Type? current = type; current is not null; current = current.BaseType) yield return current;
     }
+    internal static ResourceValueCodec? FindCodec(Type type) { lock (Gate) return Codecs.GetValueOrDefault(type); }
     internal static bool HasCodec(Type type)
     {
         lock (Gate) return Codecs.ContainsKey(type);
@@ -285,20 +292,24 @@ internal sealed class ResourceFileType(string id, Type type, Func<ElectronObject
         return value;
     }
 }
-internal abstract class ResourceValueCodec;
+internal abstract class ResourceValueCodec { internal abstract void ValidateEncoded(StreamPeerBuffer stream); }
 internal sealed class ResourceValueCodec<T>(Action<StreamPeerBuffer, T> write, Func<StreamPeerBuffer, T> read) : ResourceValueCodec
 {
     internal void Write(StreamPeerBuffer stream, T value) => write(stream, value);
     internal T Read(StreamPeerBuffer stream) => read(stream);
+    internal override void ValidateEncoded(StreamPeerBuffer stream) { _ = read(stream); if (stream.GetAvailableBytes() != 0) throw new InvalidDataException("Trailing scalar data."); }
 }
 
 internal abstract class ResourceArrayCodec
 {
     internal abstract Resource?[] Read(StreamPeerBuffer stream, ResourceArchiveRead context);
+    internal abstract Resource?[] ReadReferences(StreamPeerBuffer stream, Resource?[] references);
 }
 internal sealed class ResourceArrayCodec<T> : ResourceArrayCodec where T : Resource
 {
-    internal override Resource?[] Read(StreamPeerBuffer stream, ResourceArchiveRead context)
+    internal override Resource?[] Read(StreamPeerBuffer stream, ResourceArchiveRead context) => ReadCore(stream, context.Reference);
+    internal override Resource?[] ReadReferences(StreamPeerBuffer stream, Resource?[] references) => ReadCore(stream, id => id >= 0 && id < references.Length ? references[id] : throw new InvalidDataException("Invalid recorded reference."));
+    private static Resource?[] ReadCore(StreamPeerBuffer stream, Func<int, Resource?> reference)
     {
         var count = stream.Get32();
         if (count == -1) return null!;
@@ -306,7 +317,7 @@ internal sealed class ResourceArrayCodec<T> : ResourceArrayCodec where T : Resou
         var values = new T[count];
         for (var i = 0; i < count; i++)
         {
-            var resource = context.Reference(stream.Get32());
+            var resource = reference(stream.Get32());
             if (resource is not null && resource is not T) throw new InvalidDataException("Resource array element type mismatch.");
             values[i] = (T)resource!;
         }

@@ -453,7 +453,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [MeshTexture](classes/MeshTexture.md) | Texture2D | Blocked | 4 |
 | [MethodTweener](classes/MethodTweener.md) | Tweener | Implemented | 3 |
 | [MissingNode](classes/MissingNode.md) | Node | Blocked | 4 |
-| [MissingResource](classes/MissingResource.md) | Resource | Blocked | 2 |
+| [MissingResource](classes/MissingResource.md) | Resource | Implemented | 2 |
 | [MobileVRInterface](classes/MobileVRInterface.md) | XRInterface | Excluded | 11 |
 | [ModifierBoneTarget3D](classes/ModifierBoneTarget3D.md) | SkeletonModifier3D | Excluded | 2 |
 | [MovieWriter](classes/MovieWriter.md) | Object | Blocked | 8 |
@@ -641,7 +641,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [PlaceholderCubemap](classes/PlaceholderCubemap.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderCubemapArray](classes/PlaceholderCubemapArray.md) | PlaceholderTextureLayered | Excluded | 0 |
 | [PlaceholderMaterial](classes/PlaceholderMaterial.md) | Material | Blocked | 0 |
-| [PlaceholderMesh](classes/PlaceholderMesh.md) | Mesh | Blocked | 1 |
+| [PlaceholderMesh](classes/PlaceholderMesh.md) | Mesh | Implemented | 1 |
 | [PlaceholderTexture2D](classes/PlaceholderTexture2D.md) | Texture2D | Blocked | 2 |
 | [PlaceholderTexture2DArray](classes/PlaceholderTexture2DArray.md) | PlaceholderTextureLayered | Implemented | 0 |
 | [PlaceholderTexture3D](classes/PlaceholderTexture3D.md) | Texture3D | Excluded | 1 |

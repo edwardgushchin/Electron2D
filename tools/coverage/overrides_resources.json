@@ -369,6 +369,41 @@
       "godot": "SceneTree::method:reload_current_scene()",
       "electron2d": "method:Electron2D.SceneTree.ReloadCurrentScene()",
       "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate."
+    },
+    {
+      "godot": "class:MissingResource",
+      "electron2d": "T:Electron2D.MissingResource",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "MissingResource::property:original_class",
+      "electron2d": "property:Electron2D.MissingResource.OriginalClass()",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "MissingResource::property:recording_properties",
+      "electron2d": "property:Electron2D.MissingResource.RecordingProperties()",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "ResourceLoader::method:set_abort_on_missing_resources(bool:)",
+      "electron2d": "method:Electron2D.ResourceLoader.SetAbortOnMissingResources(System.Boolean)",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "class:PlaceholderMesh",
+      "electron2d": "T:Electron2D.PlaceholderMesh",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "PlaceholderMesh::property:aabb",
+      "electron2d": "property:Electron2D.PlaceholderMesh.AABB()",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": "Mesh::method:create_placeholder()",
+      "electron2d": "method:Electron2D.Mesh.CreatePlaceholder()",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
     }
   ],
   "statusGroups": [
@@ -377,7 +412,7 @@
         "class:ResourceLoader"
       ],
       "state": "Partial",
-      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: concrete archive schemas for audio/curves/materials/mesh/animation/Theme, worker job tokens, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities."
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/threaded/editor/text-diff/rendered/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: concrete archive schemas for audio/curves/materials/mesh/animation/Theme, worker job tokens, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities. Version-2 generic/Mesh missing-resource recovery now executes; legacy unknown schemas and incompatible concrete Material/Font/AudioStream/Shape references retain exact role/substitution prerequisites."
     },
     {
       "godot": [
@@ -406,14 +441,7 @@
         "ResourceLoader::method:get_recognized_extensions_for_type(String:)"
       ],
       "state": "Partial",
-      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/editor/text-diff/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: further concrete archive schemas, tolerant missing resources, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities. Typed threaded request/status/get and dependency staging/publication now execute under ADR 0013/0104 with separate-process authored/rendered scene checks; these are not remaining blockers."
-    },
-    {
-      "godot": [
-        "ResourceLoader::method:set_abort_on_missing_resources(bool:)"
-      ],
-      "state": "Blocked",
-      "reason": "Trigger: typed tolerant missing-resource placeholders and replacement schema; current archive dependency failures reject/cleanup explicitly. UID/dependency catalogs now execute under ADR 0013."
+      "reason": "ADRs 0013/0014/0023/0090/0095 executable typed archive slice: static retained services, ordered borrowed format hooks, immutable compiled schema/factory registration, versioned resource/scene files, UID catalog/header persistence, external/relative/bundled graphs, endian/compression flags, atomic writes, typed values/node references and internal file-root/scene-instance leases. ResourceArchiveTests executes graph cycles, deep modes, metadata rewrite, custom formats, font native layout, UI theme/pixels/shapes, scene change/reload/spawner path registration, old-instance replacement lifetime and separate-process file reconstruction/lifecycle. Typed exceptions/types/codecs replace Error/Variant/class-name discovery; temporary ChangePath restores registration after failure. Registered resource payload schemas are explicit; missing import/pack/editor/text-diff/foreign/native-allocation and human acceptance gates remain separate. Remaining load/exists/discovery scope: further concrete archive schemas, import remapping and resource-directory listing; formats and UID/dependencies themselves execute. Direct file::subresource reload additionally requires identity-table lookup and ownership rebasing; internal paths are currently visible metadata and stored-reference identities. Typed threaded request/status/get and dependency staging/publication now execute under ADR 0013/0104 with separate-process authored/rendered scene checks; these are not remaining blockers. Version-2 generic/Mesh missing-resource recovery now executes; legacy unknown schemas and incompatible concrete Material/Font/AudioStream/Shape references retain exact role/substitution prerequisites."
     },
     {
       "godot": [
@@ -506,6 +534,30 @@
         "class:ResourceSaver",
         "class:ResourceUID"
       ]
+    },
+    {
+      "godot": [
+        "Mesh::method:create_placeholder()",
+        "MissingResource::property:original_class",
+        "MissingResource::property:recording_properties",
+        "PlaceholderMesh::property:aabb",
+        "ResourceLoader::method:set_abort_on_missing_resources(bool:)",
+        "class:MissingResource",
+        "class:PlaceholderMesh"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: version-2 role-aware typed missing resources preserve scalar byte order, actual references/aliases/cycles and original factory identity; copied and restored mesh bounds use the accepted Rect2 projection. Strict/default policy, corruption/cache rollback, duplicate/local/fresh reconstruction and actual GPU/compatibility recovery are verified separately from foreign/native-allocation/owner gates."
+    },
+    {
+      "godot": [
+        "class:MissingNode",
+        "MissingNode::property:original_class",
+        "MissingNode::property:original_scene",
+        "MissingNode::property:recording_properties",
+        "MissingNode::property:recording_signals"
+      ],
+      "state": "Blocked",
+      "reason": "Exact prerequisite: typed persistent scene signal/endpoint storage and binding, plus missing-node factory/reference projection. Version-2 resource field roles do not implement node signal recording or missing-node hierarchy restoration (ADRs 0013/0023). No inert recording switch."
     }
   ],
   "extras": [
@@ -603,6 +655,121 @@
       "electron2d": "method:Electron2D.SceneState.Dispose(System.Boolean)",
       "state": "Implemented",
       "reason": "Protected SceneState deterministic cleanup for its exported file-graph snapshot lease under ADRs 0013/0014/0023. ResourceArchiveTests verifies final resource snapshot survival and release after template disposal; internal unexported state adds no extra owner."
+    },
+    {
+      "electron2d": "constructor:Electron2D.MissingResource..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "constructor:Electron2D.PlaceholderMesh..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.GetRecordedProperty`1(System.String)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.MissingResource.SetRecordedProperty`1(System.String,TValue)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.CreateDuplicateInstance()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.Dispose(System.Boolean)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnGetAABB()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnGetSurfaceCount()",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetArrayIndexLen(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetArrayLen(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetArrays(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetFormat(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetMaterial(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceGetPrimitiveType(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.OnSurfaceSetMaterial(System.Int32,Electron2D.Material)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.PlaceholderMesh.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "state": "Implemented",
+      "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
     }
   ]
 }

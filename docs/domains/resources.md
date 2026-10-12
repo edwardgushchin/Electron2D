@@ -1,6 +1,6 @@
 # Resources domain
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Image-array resources](../components/texture-arrays.md) execute copied homogeneous layers, typed samplers/defaults, shape-aware reload, source archives, actual GPU layer/mip upload and owned/proxy RIDs. Ordinary texture drawing retains its separate resource branch. Current native evidence is Linux Wayland GPU; compatibility rejects shader use. Compressed/integer formats and foreign/native-allocation acceptance retain exact dependencies.
 
@@ -213,3 +213,5 @@ AudioBusLayout and all 27 concrete audio-effect schemas now use the existing typ
 The active GPU renderer now retains a RenderingDevice and directly samples its ordinary/array images through TextureRD, TextureLayeredRD and TextureArrayRD. Native allocations stay on the device timeline; canvas frames require no CPU snapshot/upload. Borrowed/owned canvas wrapper lifetimes, role validation, transient archive bindings, readback conversion, alias replacement and automatic global submission are described in [local compute](../components/local-compute.md#device-images-in-canvas).
 
 Integer device image consumers now validate float/signed/unsigned sampled scalar types and array roles, migrate reload bindings and use nearest native integer sampling. Cold snapshots expose raw-valued float32 RGBA; byte device readback preserves all integer bits. See [the integer canvas checkpoint](../components/local-compute.md#integer-canvas-sampling-checkpoint) for executable evidence and the connected scalar-aware lighting and alpha-mask behavior.
+
+[Missing-resource recovery](../components/resource-files.md#missing-resource-recovery) executes typed opaque field storage, version-2 identity relocation and strict/tolerant synchronous/threaded policy. Unknown mesh factories retain bounded surface-free placeholders and can recover actual geometry in a later compiled process. Legacy unknown schemas, missing Node/signal schemas and other exact asset-family substitutions remain explicit dependencies.

@@ -2139,13 +2139,6 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: typed missing-asset placeholder mesh and loader consumer (ADR 0092).",
-      "godot": [
-        "Mesh::method:create_placeholder()"
-      ]
-    },
-    {
-      "state": "Blocked",
       "reason": "Trigger: first 2D light/shadow mesh consumer with actual visible effect (ADR 0092).",
       "godot": [
         "ArrayMesh::property:shadow_mesh"

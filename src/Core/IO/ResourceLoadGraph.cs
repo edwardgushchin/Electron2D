@@ -1,6 +1,6 @@
 namespace Electron2D;
 
-internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool useSubThreads, CancellationToken cancellation)
+internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool useSubThreads, CancellationToken cancellation, bool abortOnMissingResources)
 {
     internal sealed class Entry(string path, ResourceLoader.CacheMode mode)
     {
@@ -25,6 +25,7 @@ internal sealed class ResourceLoadGraph(ResourceFormatLoader[] formats, bool use
     private int _completed;
     private Entry? _root;
     internal static ResourceLoadGraph? Current => _current;
+    internal bool AbortOnMissingResources { get; } = abortOnMissingResources;
     internal ResourceFormatLoader[] Formats { get; } = formats;
     internal bool UseSubThreads { get; } = useSubThreads;
     internal object EntryGate => _entry!.Gate;

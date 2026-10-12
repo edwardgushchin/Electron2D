@@ -26,6 +26,13 @@ public sealed partial class ResourceLoader : ElectronObject
     }
 
     internal static readonly ResourceLoader Runtime = new();
+    private bool _abortOnMissing = true;
+    [ThreadStatic] private static bool? _archiveMissingPolicy;
+    internal static bool AbortOnMissingResources => ResourceLoadGraph.Current?.AbortOnMissingResources ?? _archiveMissingPolicy ?? Volatile.Read(ref Runtime._abortOnMissing);
+    /// <summary>Selects whether newly loaded archive graphs reject absent resource factories/dependencies.</summary>
+    /// <param name="abort">True for strict failure, the default; false enables bounded version-2 placeholders.</param>
+    /// <remarks>Captured once for each load graph/request. Corruption, incompatible typed references and factory/codec failures always reject.</remarks>
+    public static void SetAbortOnMissingResources(bool abort) => Volatile.Write(ref Runtime._abortOnMissing, abort);
     internal readonly ResourceFileRegistry FileTypes = new();
     private readonly object _loadGate = new();
     private readonly List<ResourceFormatLoader> _fileLoaders = [new ResourceArchiveLoader(), new ScriptSourceLoader()];
@@ -183,6 +190,7 @@ public sealed partial class ResourceLoader : ElectronObject
         {
             var cached = Resource.GetRegisteredPath(path); if (cacheMode == CacheMode.Reuse && cached is not null) { if (expectedType is not null && !expectedType.IsInstanceOfType(cached)) throw new InvalidOperationException("Cached resource does not match requested type."); return cached; }
             _fileLoads ??= new(StringComparer.Ordinal); var fileKey = ResourceArchive.Absolute(path); if (_fileLoads.Count >= 64 || !_fileLoads.Add(fileKey)) throw new InvalidDataException("External file dependency cycle requires bundled resources.");
+            var previousPolicy = _archiveMissingPolicy; _archiveMissingPolicy ??= Volatile.Read(ref Runtime._abortOnMissing);
             try
             {
                 using var context = ResourceArchive.Decode(path, cacheMode); var parsed = context.Root; if (expectedType is not null && !expectedType.IsInstanceOfType(parsed)) throw new InvalidDataException("File resource does not match requested type.");
@@ -193,7 +201,7 @@ public sealed partial class ResourceLoader : ElectronObject
                 }
                 var loaded = context.ReleaseRoot(); try { if (cacheMode is CacheMode.Ignore or CacheMode.IgnoreDeep) loaded.SetPathCache(path); else if (cached is not null) loaded.TakeOverPath(path); else loaded.ResourcePath = path; ResourceUID.SetID(ResourceArchive.ReadUID(path), path); return loaded; } catch { loaded.Dispose(); throw; }
             }
-            finally { _fileLoads.Remove(fileKey); }
+            finally { _archiveMissingPolicy = previousPolicy; _fileLoads.Remove(fileKey); }
         }
     }
 

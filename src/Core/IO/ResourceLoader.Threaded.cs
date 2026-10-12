@@ -22,6 +22,7 @@ public sealed partial class ResourceLoader
         internal readonly Type Type;
         internal readonly CacheMode Mode;
         internal readonly bool Parallel;
+        internal readonly bool AbortOnMissing = ResourceLoader.AbortOnMissingResources;
         internal readonly CancellationToken Cancellation;
         internal readonly SceneTree? Tree;
         internal readonly Action Publish;
@@ -64,7 +65,7 @@ public sealed partial class ResourceLoader
         {
             if (Runtime._threadRequests.TryGetValue(path, out var existing))
             {
-                if (existing.Type != typeof(TResource) || existing.Mode != cacheMode || existing.Parallel != useSubThreads || existing.Cancellation != cancellationToken || !ReferenceEquals(existing.Tree, publicationTree)) throw new InvalidOperationException("A pending resource request has different options.");
+                if (existing.Type != typeof(TResource) || existing.Mode != cacheMode || existing.Parallel != useSubThreads || existing.AbortOnMissing != ResourceLoader.AbortOnMissingResources || existing.Cancellation != cancellationToken || !ReferenceEquals(existing.Tree, publicationTree)) throw new InvalidOperationException("A pending resource request has different options.");
                 existing.Consumers = checked(existing.Consumers + 1); return;
             }
             if (Runtime._threadRequests.Count >= 128) throw new InvalidOperationException("At most 128 resource requests may retain uncollected results.");
@@ -79,7 +80,7 @@ public sealed partial class ResourceLoader
         ResourceLoadGraph? graph = null;
         try
         {
-            graph = new(LoaderSnapshot(), request.Parallel, request.Cancellation);
+            graph = new(LoaderSnapshot(), request.Parallel, request.Cancellation, request.AbortOnMissing);
             lock (Runtime._threadGate) request.Graph = graph;
             graph.Prepare(request.Path, request.Mode, request.Type);
         }

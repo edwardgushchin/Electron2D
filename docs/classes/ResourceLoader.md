@@ -1,6 +1,6 @@
 # ResourceLoader
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public sealed partial class Electron2D.ResourceLoader`. **Source:** [ResourceLoader.cs](../../src/Core/IO/ResourceLoader.cs).
 
@@ -29,6 +29,7 @@ tree.ProcessFrame(0);
 
 | Complete C# signature | Contract |
 | --- | --- |
+| `public static System.Void SetAbortOnMissingResources(System.Boolean abort)` | Selects captured strict/tolerant version-2 missing-factory/dependency loading; true initially. |
 | `public static System.Void AddResourceFormatLoader(Electron2D.ResourceFormatLoader formatLoader, System.Boolean atFront = false)` | Registers a borrowed typed file loader without duplicating identity. |
 | `public static System.Boolean Exists<TResource>(System.String path)` | Reports whether a supported resource file exists or is already cached. |
 | `public static TResource GetCachedRef<TResource>(System.String path)` | Gets a live cached resource of the requested type, or null when absent. |
@@ -237,3 +238,9 @@ if (status is ResourceLoader.ThreadLoadStatus.Loaded or ResourceLoader.ThreadLoa
 ```
 
 A successful scene instance retains its decoded resource graph after template disposal. [AsyncGallery](../../examples/AsyncGallery/README.md) demonstrates fresh-process file authoring, two background image dependencies and actual owner-thread scene consumption. Foreign/AOT/Web bootstrap, native allocations and human acceptance remain separate gates.
+
+### SetAbortOnMissingResources
+
+`public static System.Void SetAbortOnMissingResources(System.Boolean abort)`
+
+Selects whether newly loaded archive graphs reject absent resource factories/dependencies. See [missing-resource recovery](../components/resource-files.md#missing-resource-recovery) for strict/tolerant policy, lifetime and actual verification limits.

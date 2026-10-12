@@ -17,6 +17,7 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
     public override Type[] GetClassesUsed(string path)
     {
         var definitions = ResourceArchive.Inspect(path, out var bigEndian);
+        var version = System.Buffers.Binary.BinaryPrimitives.ReadInt32LittleEndian(ResourceArchive.ReadFile(path).AsSpan(8));
         var types = new HashSet<Type>();
         foreach (var d in definitions)
         {
@@ -45,6 +46,7 @@ internal sealed class ResourceArchiveLoader : ResourceFormatLoader
                 {
                     _ = ResourceArchiveStrings.Read(stream);
                     _ = ResourceArchiveStrings.Read(stream);
+                    if (version >= 2) { _ = stream.GetU8(); _ = stream.GetU8(); }
                     var size = stream.Get32();
                     if (size < 0 || size > stream.GetAvailableBytes()) throw new InvalidDataException();
                     stream.Seek(stream.GetPosition() + size);

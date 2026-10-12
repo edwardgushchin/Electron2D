@@ -1,6 +1,6 @@
 # ResourceLoadGraph
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 Internal staged graph implementation in [ResourceLoadGraph.cs](../../src/Core/IO/ResourceLoadGraph.cs), compiled into Electron2D.dll. No public constructor/backend surface is exported. [Threaded resource loading](../components/threaded-resource-loading.md) owns its actual verification and limits.
 
@@ -9,3 +9,5 @@ Entry records retain path/cache policy, preparation gate, dependency records, pr
 Preparation returns independent data and captured contexts. Planning chooses current cache identities; publication rewrites stored/opaque references before compatible copying or fresh registration. Archive contexts transfer local/new external ownership, copied graphs retain existing lease semantics, and cleanup attempts all unused contexts. The synchronous loader gate protects owner publication; worker preparation bypasses that global cache gate and does not mutate live cache resources.
 
 Records, parser buffers, closures and preparation may allocate outside the hot interval. Terminal status polling reuses retained request state and is separately checked. Foreign/native allocation and target acceptance are not inferred from this managed implementation.
+
+Version-2 role-aware missing-resource storage, snapshot policy and reference relocation are described in [missing resource recovery](../components/resource-files.md#missing-resource-recovery). Known version-1 schemas remain readable; unknown legacy identities do not become safe placeholders.

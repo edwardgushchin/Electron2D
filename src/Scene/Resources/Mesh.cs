@@ -111,6 +111,9 @@ public abstract partial class Mesh : Resource
     {
         lock (_ridGate) { ThrowIfDisposed(); return (_boundsCache ??= new(this, Transform.Identity, Colors.White)).GetLocalBounds(); }
     }
+    /// <summary>Creates a caller-owned surface-free mesh retaining the current visibility bounds.</summary>
+    /// <returns>A new PlaceholderMesh with copied local bounds.</returns>
+    public PlaceholderMesh CreatePlaceholder() => new() { AABB = GetAABB() };
     /// <summary>Gets copied local vertices for every triangle face.</summary>
     /// <returns>Three vertices per face; point and line surfaces contribute no vertices.</returns>
     /// <remarks>Indexed and sequential triangles and triangle strips are expanded in surface order.

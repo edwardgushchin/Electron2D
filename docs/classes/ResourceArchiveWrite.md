@@ -1,6 +1,6 @@
 # ResourceArchiveWrite
 
-Last updated: 2026-10-05
+Last updated: 2026-10-12
 
 Internal/private runtime implementation. **Source:** [ResourceArchive.cs](../../src/Core/IO/ResourceArchive.cs).
 
@@ -15,3 +15,5 @@ See [resource-file component](../components/resource-files.md) for ownership, in
 ## Verification
 
 ResourceArchiveTests exercises the public producer/consumer boundary, graph and scene state, metadata, malformed rollback, exact file ownership and separate-process lifecycle. Foreign/AOT/rendered/editor/native-allocation and human gates remain separate.
+
+Version-2 role-aware missing-resource storage, snapshot policy and reference relocation are described in [missing resource recovery](../components/resource-files.md#missing-resource-recovery). Known version-1 schemas remain readable; unknown legacy identities do not become safe placeholders.
