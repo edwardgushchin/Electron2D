@@ -1,9 +1,12 @@
 using Electron2D;
 
-internal static class PhysicsMotionTests
+internal sealed class PhysicsMotionTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsMotionTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyServerMotion();
         VerifySceneMotion();
         VerifyRecoveryAndOneWay();
@@ -11,13 +14,13 @@ internal static class PhysicsMotionTests
         VerifyShapeOwnerIndices();
         VerifyTangentialSlopeContact();
         VerifyCompoundRecovery();
-        Console.WriteLine("Physics body motion sweep and typed server/scene result checks passed.");
+        Console.WriteLine($"Physics body motion sweep and typed server/scene result checks passed on {backend}; 64 warmed scene/compound queries use 0/0 owner/all B.");
     }
 
-    private static void VerifyServerMotion()
+    private void VerifyServerMotion()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var mover = PhysicsServer.BodyCreate();
         var obstacle = PhysicsServer.BodyCreate();
         var circleRID = PhysicsServer.CircleShapeCreate();
@@ -67,11 +70,12 @@ internal static class PhysicsMotionTests
         PhysicsServer.FreeRID(floorRID); PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifySceneMotion()
+    private void VerifySceneMotion()
     {
         using var probe = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var mover = new StaticBody { Name = "Mover" };
         var localShape = new CollisionShape { Shape = probe };
         mover.AddChild(localShape);
@@ -80,6 +84,7 @@ internal static class PhysicsMotionTests
         floor.AddChild(floorCollision);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         using var tested = new KinematicCollision();
         Check(mover.TestMove(Transform.Identity, new(0, 120), tested) &&
               mover.Position == Vector2.Zero && tested.GetColliderRID() == floor.GetRID() &&
@@ -132,11 +137,11 @@ internal static class PhysicsMotionTests
               !serverResult.GetColliderRID().IsValid(),
             "Server motion excludes a scene collider by its managed instance ID.");
         for (var frame = 0; frame < 64; frame++) mover.TestMove(Transform.Identity, new(0, 120), tested);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) mover.TestMove(Transform.Identity, new(0, 120), tested);
         var allocated = GC.GetAllocatedBytesForCurrentThread() - before;
-        Check(allocated == 0,
-            $"Warmed unchanged scene body motion tests allocate no managed bytes on the owner thread: {allocated}.");
+        Check(allocated == 0 && GC.GetTotalAllocatedBytes(true) == allBefore,
+            $"Warmed unchanged scene body motion tests allocate no managed bytes on owner/all threads: {allocated}.");
         localShape.Disabled = true;
         Check(!mover.TestMove(Transform.Identity, new(0, 120), tested),
             "A body without active shape fixtures traverses freely.");
@@ -147,11 +152,12 @@ internal static class PhysicsMotionTests
         Reject<InvalidOperationException>(() => mover.MoveAndCollide(new(0, 120)));
     }
 
-    private static void VerifyRecoveryAndOneWay()
+    private void VerifyRecoveryAndOneWay()
     {
         using var probe = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(200, 20) };
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var mover = new StaticBody { Name = "MovingBody" };
         mover.AddChild(new CollisionShape { Shape = probe });
         var floor = new StaticBody { Name = "OneWayFloor", Position = new(0, 100) };
@@ -159,6 +165,7 @@ internal static class PhysicsMotionTests
         floor.AddChild(surface);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         using var result = new KinematicCollision();
         var fromAbove = new Transform(0, Vector2.One, 0, new(0, 50));
         Check(mover.TestMove(fromAbove, new(0, 80), result) &&
@@ -190,7 +197,7 @@ internal static class PhysicsMotionTests
             "An owned collision polygon supplies the same one-way recovery margin.");
     }
 
-    private static void VerifyMarginPacking()
+    private void VerifyMarginPacking()
     {
         var root = new Node();
         var shape = new CollisionShape { Name = "Shape", OneWayCollisionMargin = 2.5f };
@@ -204,11 +211,12 @@ internal static class PhysicsMotionTests
             "Borrowed and owned one-way geometry keep their margin through PackedScene.");
     }
 
-    private static void VerifyShapeOwnerIndices()
+    private void VerifyShapeOwnerIndices()
     {
         using var probe = new CircleShape();
         using var floorShape = new RectangleShape { Size = new(50, 10) };
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var mover = new StaticBody { Name = "Mover" };
         mover.AddChild(new CollisionShape { Name = "FarProbe", Shape = probe, Position = new(-100, 0) });
         var nearProbe = new CollisionShape { Name = "NearProbe", Shape = probe };
@@ -219,6 +227,7 @@ internal static class PhysicsMotionTests
         floor.AddChild(nearFloor);
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         using var hit = mover.MoveAndCollide(new(0, 130), testOnly: true);
         Check(hit is not null && hit.GetColliderShapeIndex() == 1 &&
               ReferenceEquals(hit.GetLocalShape(), nearProbe) &&
@@ -226,29 +235,31 @@ internal static class PhysicsMotionTests
             "Motion results retain direct shape-owner indices across unrelated fixture slots.");
     }
 
-    private static void VerifyTangentialSlopeContact()
+    private void VerifyTangentialSlopeContact()
     {
         using var circle = new CircleShape();
         using var slope = new SegmentShape { A = new(-100, 20), B = new(100, -20) };
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var mover = new StaticBody { Name = "Mover", Position = new(-80, 106) };
         mover.AddChild(new CollisionShape { Shape = circle });
         var floor = new StaticBody { Name = "Slope", Position = new(0, 100) };
         floor.AddChild(new CollisionShape { Shape = slope });
         root.AddChild(mover); root.AddChild(floor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         using var hit = mover.MoveAndCollide(new(100, 0), testOnly: true);
         Check(hit is not null && hit.GetNormal().X < -0.1f &&
               hit.GetNormal().Y < -0.9f && hit.GetTravel().X < 5,
             "A body touching an ascending segment reports an inward tangential sweep instead of tunneling through it.");
     }
 
-    private static void VerifyCompoundRecovery()
+    private void VerifyCompoundRecovery()
     {
         var points = new Vector2[12]; for (var i = 0; i < points.Length; i++) points[i] = new Vector2(20, 0).Rotated(-i * Mathf.Tau / points.Length);
         using var polygon = new ConvexPolygonShape { Points = points }; using var floorShape = new RectangleShape { Size = new(200, 20) };
         using var circle = new CircleShape { Radius = 5 };
-        var space = PhysicsServer.SpaceCreate(); var mover = PhysicsServer.BodyCreate(); var obstacle = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var mover = PhysicsServer.BodyCreate(); var obstacle = PhysicsServer.BodyCreate();
         using var query = new PhysicsTestMotionParameters { From = new(0, new(0, 95)), Motion = new(0, 120), RecoveryAsCollision = true };
         using var result = new PhysicsTestMotionResult();
         try
@@ -258,8 +269,8 @@ internal static class PhysicsMotionTests
             Check(PhysicsServer.BodyTestMotion(mover, query, result) && result.GetTravel().Y < -18 && result.GetCollisionNormal().Y < -.9f,
                 "A whole convex contour recovers outward instead of oscillating between its internal pieces.");
             for (var i = 0; i < 64; i++) PhysicsServer.BodyTestMotion(mover, query, result);
-            var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) PhysicsServer.BodyTestMotion(mover, query, result);
-            Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Warmed full-contour recovery reuses collision scratch.");
+            var allBefore = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) PhysicsServer.BodyTestMotion(mover, query, result);
+            Check(GC.GetAllocatedBytesForCurrentThread() == allocated && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed full-contour recovery reuses collision scratch.");
             PhysicsServer.BodySetShape(mover, 0, circle.GetRID()); PhysicsServer.BodySetShape(obstacle, 0, polygon.GetRID()); PhysicsServer.BodySetTransform(obstacle, Transform.Identity);
             query.From = new(0, new(0, -5)); query.Motion = Vector2.Zero;
             Check(PhysicsServer.BodyTestMotion(mover, query, result) && result.GetTravel().Length() > 10 && result.GetCollisionNormal().Y < -.7f,

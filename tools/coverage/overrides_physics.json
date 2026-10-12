@@ -6104,7 +6104,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_point(PhysicsPointQueryParameters2D:,int:)"
       ],
       "state": "Implemented",
-      "reason": "ADRs 0063/0101: public CPU/GPU ordered/deduplicated point results and array/span caps preserve scene/raw/tile owner identities, masks/exclusions and exact canvas IDs. PhysicsCanvasTests and TileMapLayerTests verify nondefault/default tile canvas filtering, reparent/replacement, sampled weak owner disposal and 64 warmed full frame/span-query cycles with zero owner/all-thread bytes. Array exports intentionally allocate."
+      "reason": "ADRs 0063/0101: public CPU/GPU ordered/deduplicated point results and array/span caps preserve scene/raw/tile owner identities, masks/exclusions and exact canvas IDs. PhysicsCanvasTests and TileMapLayerTests verify nondefault/default tile canvas filtering, reparent/replacement, sampled weak owner disposal and 64 warmed full frame/span-query cycles with zero owner/all-thread bytes. Array exports intentionally allocate. Complete PhysicsMotionTests/PhysicsQueryTests/PhysicsShapeQueryTests now execute on explicit public CPU/GPU worlds with unchanged numerical bounds, scene/raw identity/lifetime, compound/one-way/inside filtering, array/span/cap behavior and 64/128 warmed queries at 0/0 owner/all-thread managed bytes. Native/platform/performance and full custom numerical acceptance remain separate."
     },
     {
       "godot": [
@@ -6114,7 +6114,7 @@
         "PhysicsDirectSpaceState2D::method:intersect_shape(PhysicsShapeQueryParameters2D:,int:)"
       ],
       "state": "Implemented",
-      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures. Initial overlaps and directed containment treat complete compound slots, excluding internal seams (ADR 0063, PhysicsShapeQueryTests). Public CPU/GPU world queries execute. ConvexPolygonShapeTests verifies 128 warmed alternating shared/standalone overlap/contact/rest/motion cycles at zero owner/all-thread bytes; the GPU adapter rebinds one lease without retaining past resources. Lifecycle/thread/rejected replacements are checked by GPUPhysicsShapeQueryTests. Full cross-family numerical conformance remains separate."
+      "reason": "Typed shape RID/resource queries execute swept overlap, eight-refinement safe/unsafe motion, contact pairs and deepest rest information with RID/index identity, filters and live scene/server fixtures. Initial overlaps and directed containment treat complete compound slots, excluding internal seams (ADR 0063, PhysicsShapeQueryTests). Public CPU/GPU world queries execute. ConvexPolygonShapeTests verifies 128 warmed alternating shared/standalone overlap/contact/rest/motion cycles at zero owner/all-thread bytes; the GPU adapter rebinds one lease without retaining past resources. Lifecycle/thread/rejected replacements are checked by GPUPhysicsShapeQueryTests. Full cross-family numerical conformance remains separate. Complete PhysicsMotionTests/PhysicsQueryTests/PhysicsShapeQueryTests now execute on explicit public CPU/GPU worlds with unchanged numerical bounds, scene/raw identity/lifetime, compound/one-way/inside filtering, array/span/cap behavior and 64/128 warmed queries at 0/0 owner/all-thread managed bytes. Native/platform/performance and full custom numerical acceptance remain separate."
     },
     {
       "godot": [
@@ -6453,7 +6453,7 @@
         "PhysicsServer2D::method:body_test_motion(RID:,PhysicsTestMotionParameters2D:,PhysicsTestMotionResult2D:)"
       ],
       "state": "Implemented",
-      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Shared public CPU/GPU character, platform and directed-ray scenarios now execute through ELECTRON2D_TEST_GPU_MOTION_SCENES; complete inherited/query-family conformance remains open."
+      "reason": "Directed ray recovery, sliding-ray sweeps and flag-controlled non-sliding ray floor snap execute with ordinary body motion and typed results; complete-convex recovery and directed containment reject internal seams (ADRs 0063, 0067, 0068; PhysicsMotionTests, CharacterBodyTests, SeparationRayShapeTests). Shared public CPU/GPU character, platform and directed-ray scenarios now execute through ELECTRON2D_TEST_GPU_MOTION_SCENES; complete inherited/query-family conformance remains open. Complete PhysicsMotionTests/PhysicsQueryTests/PhysicsShapeQueryTests now execute on explicit public CPU/GPU worlds with unchanged numerical bounds, scene/raw identity/lifetime, compound/one-way/inside filtering, array/span/cap behavior and 64/128 warmed queries at 0/0 owner/all-thread managed bytes. Native/platform/performance and full custom numerical acceptance remain separate."
     },
     {
       "godot": [

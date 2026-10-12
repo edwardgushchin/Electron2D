@@ -71,6 +71,12 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_CANVAS") == "1") 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_TEXTURE_TRANSFERS") == "1") { RenderingDeviceTextureTransferTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_TEXTURES") == "1") { RenderingDeviceTextureTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_REGISTERED_BACKEND") == "1") { PhysicsRegisteredBackendTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_QUERY_CONTRACT") is { } queryContract)
+{
+    var backend = queryContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
+    PhysicsMotionTests.Run(backend); PhysicsQueryTests.Run(backend); PhysicsShapeQueryTests.Run(backend);
+    return;
+}
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_AREA_CONTRACT") is { } areaContract)
 {
     var backend = areaContract == "gpu" ? PhysicsServer.Backend.GPU : PhysicsServer.Backend.CPU;
@@ -226,13 +232,13 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_CCD_CONTRACT") == "1
     return;
 }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CCD") == "1") { PhysicsCCDTests.Run(Environment.GetEnvironmentVariable("ELECTRON2D_SANDBOX_GPU_SOLVER") == "1"); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") == "1") { GPUPhysicsMotionQueryTests.Run(); PhysicsMotionTests.Run(); SeparationRayShapeTests.Run(); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") == "1") { GPUPhysicsShapeQueryTests.Run(); GPUPhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(); ShapeCastTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_MOTION_QUERIES") == "1") { GPUPhysicsMotionQueryTests.Run(); PhysicsMotionTests.Run(PhysicsServer.Backend.GPU); SeparationRayShapeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_SHAPE_QUERIES") == "1") { GPUPhysicsShapeQueryTests.Run(); GPUPhysicsQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU); ShapeCastTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_OBJECTS") == "1") { PhysicsObjectBindingTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_OBJECTS_GPU") == "1") { PhysicsObjectBindingTests.Run(true); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CANVAS") == "1") { PhysicsCanvasTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PHYSICS_CANVAS_GPU") == "1") { PhysicsCanvasTests.Run(true); return; }
-if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_QUERIES") == "1") { GPUPhysicsQueryTests.Run(); PhysicsCanvasTests.Run(true); PhysicsCanvasTests.Run(); PhysicsQueryTests.Run(); RayCastTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_QUERIES") == "1") { GPUPhysicsQueryTests.Run(); PhysicsCanvasTests.Run(true); PhysicsCanvasTests.Run(); PhysicsQueryTests.Run(PhysicsServer.Backend.GPU); RayCastTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_REPORTS") == "1") { GPUPhysicsReportTests.Run(); PhysicsContactImpulseTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_FIELDS") == "1") { GPUPhysicsFieldTests.Run(); PhysicsServerAreaFieldTests.Run(PhysicsServer.Backend.GPU); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_GPU_KINEMATIC") == "1") { GPUPhysicsKinematicTests.Run(); PhysicsSurfaceVelocityTests.Run(false); PhysicsServerStateTests.Run(false); return; }
@@ -895,7 +901,7 @@ PhysicsGPUPublicationTests.Run(false);
 PhysicsHostPreparationTests.Run(false);
 PhysicsBackendOwnershipTests.Run(PhysicsServer.Backend.CPU);
 PhysicsResultConstructionTests.Run(PhysicsServer.Backend.CPU);
-PhysicsQueryTests.Run();
+PhysicsQueryTests.Run(); PhysicsQueryTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCanvasTests.Run();
 PhysicsObjectBindingTests.Run();
 PhysicsFilterTests.Run();
@@ -909,8 +915,8 @@ TileSceneTests.Run();
 LightingTests.Run();
 TileLayoutTests.Run();
 TileMapLayerTests.Run(PhysicsServer.Backend.CPU);
-PhysicsShapeQueryTests.Run();
-PhysicsMotionTests.Run();
+PhysicsShapeQueryTests.Run(); PhysicsShapeQueryTests.Run(PhysicsServer.Backend.GPU);
+PhysicsMotionTests.Run(); PhysicsMotionTests.Run(PhysicsServer.Backend.GPU);
 PhysicsCCDTests.Run();
 PhysicsCollisionExceptionTests.Run();
 CharacterBodyTests.Run();

@@ -1,18 +1,21 @@
 using Electron2D;
 
-internal static class PhysicsQueryTests
+internal sealed class PhysicsQueryTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsQueryTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyParameters();
         VerifySceneRayAndRID();
         VerifyServerResourcesAndPointQueries();
         VerifyServerShapeFamilies();
         VerifyCompoundInside();
-        Console.WriteLine("Physics RID, scene/server ray and point query checks passed.");
+        Console.WriteLine($"Physics RID, scene/server ray and point query checks passed on {backend}; 64 warmed compound rays use 0/0 owner/all B.");
     }
 
-    private static void VerifyParameters()
+    private void VerifyParameters()
     {
         using var ray = new PhysicsRayQueryParameters();
         Check(ray.From == Vector2.Zero && ray.To == Vector2.Zero &&
@@ -42,14 +45,15 @@ internal static class PhysicsQueryTests
             "Invalid point edits reject before mutation.");
     }
 
-    private static void VerifySceneRayAndRID()
+    private void VerifySceneRayAndRID()
     {
         var empty = new RID();
         Check(!empty.IsValid() && empty.GetID() == 0 && empty == default,
             "An empty RID has identity zero.");
         using var floorShape = new RectangleShape { Size = new(100, 20) };
         using var sensorShape = new RectangleShape { Size = new(100, 20) };
-        var root = new Node();
+        using var selectedWorld = new World(backend);
+        var root = new SubViewport { World = selectedWorld };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100), CollisionMask = 0 };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var area = new Area { Name = "Area", Position = new(0, 50) };
@@ -61,6 +65,7 @@ internal static class PhysicsQueryTests
               bodyRID.GetID() == new RID(bodyRID).GetID(),
             "A scene collision object has a copyable, ordered, nonempty RID.");
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(selectedWorld.Space) == backend, "Query fixture uses its explicitly selected backend.");
         World world = floor.GetWorld() ?? throw new InvalidOperationException("Attached body has no world.");
         Check(ReferenceEquals(world, area.GetWorld()) && world.Space.IsValid(),
             "Canvas items in one tree share a physics world and space RID.");
@@ -144,13 +149,15 @@ internal static class PhysicsQueryTests
         tree.Dispose();
         Check(bodyRID.IsValid(), "An externally held RID remains nonzero after its object is freed.");
         Reject<ObjectDisposedException>(() => floor.GetRID());
+        Check(reopened.IntersectRay(ray) is null, "Caller-owned World aliases outlive the tree while scene collider geometry retires.");
+        duplicate.Dispose(); reopenedWorld!.Dispose(); selectedWorld.Dispose();
         Reject<ArgumentException>(() => reopened.IntersectRay(ray));
     }
 
-    private static void VerifyServerResourcesAndPointQueries()
+    private void VerifyServerResourcesAndPointQueries()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         var shape = PhysicsServer.CircleShapeCreate();
         using var circle = new CircleShape();
@@ -263,7 +270,7 @@ internal static class PhysicsQueryTests
         var movedPosition = PhysicsServer.BodyGetTransform(body).Origin.Y;
         Check(movedPosition > 50,
             "Explicit server spaces advance a dynamic body through the real solver.");
-        var transientSpace = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(transientSpace, true);
+        var transientSpace = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(transientSpace, true);
         PhysicsServer.BodySetSpace(body, transientSpace);
         Check(MathF.Abs(PhysicsServer.BodyGetTransform(body).Origin.Y - movedPosition) < 0.001f &&
               PhysicsServer.SpaceGetDirectState(transientSpace).IntersectRay(ray)?.ColliderRID == body,
@@ -286,7 +293,7 @@ internal static class PhysicsQueryTests
         Check(PhysicsServer.BodyGetMode(body) == PhysicsServer.BodyMode.RigidLinear,
             "RigidLinear remains an executable distinct mode with rotation locking.");
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
-        var otherSpace = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(otherSpace, true);
+        var otherSpace = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(otherSpace, true);
         PhysicsServer.BodySetSpace(body, otherSpace);
         Check(PhysicsServer.BodyGetSpace(body) == otherSpace &&
               PhysicsServer.SpaceGetDirectState(otherSpace).IntersectRay(ray)?.ColliderRID == body,
@@ -313,10 +320,10 @@ internal static class PhysicsQueryTests
         PhysicsServer.FreeRID(area);
     }
 
-    private static void VerifyServerShapeFamilies()
+    private void VerifyServerShapeFamilies()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         var capsuleRID = PhysicsServer.CapsuleShapeCreate();
@@ -361,13 +368,13 @@ internal static class PhysicsQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyCompoundInside()
+    private void VerifyCompoundInside()
     {
         var points = new Vector2[12];
         for (var i = 0; i < points.Length; i++) points[i] = new Vector2(12, 0).Rotated(Mathf.Tau * i / points.Length);
         using var polygon = new ConvexPolygonShape { Points = points };
         using var circle = new CircleShape { Radius = 3 };
-        var space = PhysicsServer.SpaceCreate(); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var body = PhysicsServer.BodyCreate(); var area = PhysicsServer.AreaCreate();
         using var ray = PhysicsRayQueryParameters.Create(Vector2.Zero, new(0, -40));
         try
         {
@@ -390,9 +397,9 @@ internal static class PhysicsQueryTests
             ray.From = new(0, 40); ray.To = new(0, -40);
             Check(view.IntersectRay(ray) is { ShapeIndex: 0, Position.Y: > 11 and < 13 }, "An outside ray still hits the compound outer boundary.");
             for (var i = 0; i < 32; i++) view.IntersectRay(ray);
-            var bytes = GC.GetAllocatedBytesForCurrentThread();
+            var allBefore = GC.GetTotalAllocatedBytes(true); var bytes = GC.GetAllocatedBytesForCurrentThread();
             for (var i = 0; i < 64; i++) view.IntersectRay(ray);
-            Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Warmed compound ray queries allocate zero managed bytes.");
+            Check(GC.GetAllocatedBytesForCurrentThread() == bytes && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed compound ray queries allocate zero managed bytes.");
         }
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(area); PhysicsServer.FreeRID(space); }
     }

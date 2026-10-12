@@ -1,9 +1,12 @@
 using Electron2D;
 
-internal static class PhysicsShapeQueryTests
+internal sealed class PhysicsShapeQueryTests(PhysicsServer.Backend backend)
 {
-    internal static void Run()
+    internal static void Run(PhysicsServer.Backend backend = PhysicsServer.Backend.CPU) => new PhysicsShapeQueryTests(backend).RunCore();
+
+    private void RunCore()
     {
+        _ = GC.GetAllocatedBytesForCurrentThread(); _ = GC.GetTotalAllocatedBytes(true);
         VerifyParametersAndBorrowedShapeRID();
         VerifyOverlapAndMotion();
         VerifyContactsAndRestInfo();
@@ -12,13 +15,15 @@ internal static class PhysicsShapeQueryTests
         VerifyCompoundInitialCast();
         VerifySceneShapeQueries();
         VerifyCallerOwnedResults();
-        Console.WriteLine("Physics shape-query overlap, motion, contacts and rest checks passed.");
+        Console.WriteLine($"Physics shape-query overlap, motion, contacts and rest checks passed on {backend}; warmed cast/rest/compound/span queries use 0/0 owner/all B.");
     }
 
-    private static void VerifyCallerOwnedResults()
+    private void VerifyCallerOwnedResults()
     {
-        using var root = new SubViewport();
+        using var world = new World(backend);
+        using var root = new SubViewport { World = world };
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         using var box = new RectangleShape { Size = new(40, 40) };
         var body = new StaticBody();
         body.AddChild(new CollisionShape { Shape = box });
@@ -41,14 +46,14 @@ internal static class PhysicsShapeQueryTests
         Check(direct.IntersectShape(shape, shapeBuffer.AsSpan(0, 1)) == 1 && direct.IntersectPoint(point, pointBuffer.AsSpan(0, 1)) == 1 && direct.CollideShape(shape, contacts.AsSpan(0, 3)) == 1, "Destination capacity truncates only after stable ordering and keeps complete pairs.");
         Check(direct.IntersectShape(shape, Span<PhysicsShapeResult>.Empty) == 0 && direct.IntersectPoint(point, Span<PhysicsPointResult>.Empty) == 0 && direct.CollideShape(shape, contacts.AsSpan(0, 1)) == 0, "Empty or sub-pair capacity writes no results.");
         for (var i = 0; i < 128; i++) { direct.IntersectShape(shape, shapeBuffer); direct.IntersectPoint(point, pointBuffer); direct.CollideShape(shape, contacts); direct.IntersectRay(ray); }
-        var allocated = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var allocated = GC.GetAllocatedBytesForCurrentThread();
         for (var i = 0; i < 128; i++)
         {
             direct.IntersectShape(shape, shapeBuffer); direct.IntersectPoint(point, pointBuffer); direct.CollideShape(shape, contacts); direct.IntersectRay(ray);
             shape.Transform = new Transform(0, new Vector2(i % 2 == 0 ? 100 : 0, 0));
             point.Position = shape.Transform.Origin;
         }
-        Check(GC.GetAllocatedBytesForCurrentThread() == allocated, "Warmed active/miss point, shape, contact and excluded-ray queries allocate zero managed bytes.");
+        Check(GC.GetAllocatedBytesForCurrentThread() == allocated && GC.GetTotalAllocatedBytes(true) == allBefore, "Warmed active/miss point, shape, contact and excluded-ray queries allocate zero managed bytes.");
         shape.Exclude = [body.GetRID()]; point.Exclude = [body.GetRID()];
         Check(direct.IntersectShape(shape, shapeBuffer) == 0 && direct.IntersectPoint(point, pointBuffer) == 0 && direct.CollideShape(shape, contacts) == 0, "Span query exclusions are shared with the copied-result contract.");
         Reject<ArgumentNullException>(() => direct.IntersectShape(null!, shapeBuffer));
@@ -56,7 +61,7 @@ internal static class PhysicsShapeQueryTests
         Reject<ArgumentNullException>(() => direct.CollideShape(null!, contacts));
     }
 
-    private static void VerifyParametersAndBorrowedShapeRID()
+    private void VerifyParametersAndBorrowedShapeRID()
     {
         var server = PhysicsServer.Service;
         using var query = new PhysicsShapeQueryParameters();
@@ -81,7 +86,7 @@ internal static class PhysicsShapeQueryTests
         Check(ReferenceEquals(query.Shape, circle), "An equal RID assignment retains the borrowed resource.");
         Reject<InvalidOperationException>(() => PhysicsServer.FreeRID(borrowedRID));
         Reject<InvalidOperationException>(() => PhysicsServer.ShapeSetData(borrowedRID, circle));
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         PhysicsServer.BodySetMode(body, PhysicsServer.BodyMode.Static);
         PhysicsServer.BodyAddShape(body, borrowedRID);
@@ -117,10 +122,10 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyOverlapAndMotion()
+    private void VerifyOverlapAndMotion()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
@@ -207,10 +212,10 @@ internal static class PhysicsShapeQueryTests
             "The shape RID path executes without retaining the original managed resource.");
         query.Transform = new(0, Vector2.One, 0, new(0, 70));
         for (var frame = 0; frame < 64; frame++) direct.CastMotion(query);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) direct.CastMotion(query);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed unchanged shape casts allocate no managed memory on the owner thread.");
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) == allBefore,
+            "Warmed unchanged shape casts allocate no managed memory on owner/all threads.");
         PhysicsServer.FreeRID(shapeRID);
         Reject<ArgumentException>(() => direct.IntersectShape(query));
         PhysicsServer.FreeRID(area);
@@ -220,10 +225,10 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyContactsAndRestInfo()
+    private void VerifyContactsAndRestInfo()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         var floorRID = PhysicsServer.RectangleShapeCreate();
         using var floor = new RectangleShape { Size = new(200, 10) };
@@ -252,10 +257,10 @@ internal static class PhysicsShapeQueryTests
               hit.Point.Y is > 93 and < 98 && hit.LinearVelocity == Vector2.Zero,
             "Rest info reports the server-only collider, outward normal, point and zero static velocity.");
         for (var frame = 0; frame < 64; frame++) direct.GetRestInfo(query);
-        var before = GC.GetAllocatedBytesForCurrentThread();
+        var allBefore = GC.GetTotalAllocatedBytes(true); var before = GC.GetAllocatedBytesForCurrentThread();
         for (var frame = 0; frame < 64; frame++) direct.GetRestInfo(query);
-        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0,
-            "Warmed unchanged rest queries allocate no managed memory on the owner thread.");
+        Check(GC.GetAllocatedBytesForCurrentThread() - before == 0 && GC.GetTotalAllocatedBytes(true) == allBefore,
+            "Warmed unchanged rest queries allocate no managed memory on owner/all threads.");
         Check(direct.CollideShape(query, 0).Length == 0, "Zero max results produces no contact pairs.");
         Reject<ArgumentOutOfRangeException>(() => direct.CollideShape(query, -1));
         using var boxProbe = new RectangleShape { Size = new(20, 20) };
@@ -275,10 +280,10 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyContactPairFamilies()
+    private void VerifyContactPairFamilies()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var direct = PhysicsServer.SpaceGetDirectState(space);
         using var circle = new CircleShape();
         using var capsule = new CapsuleShape();
@@ -318,11 +323,11 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifyCompoundInitialCast()
+    private void VerifyCompoundInitialCast()
     {
         var points = new Vector2[12]; for (var i = 0; i < points.Length; i++) points[i] = new Vector2(20, 0).Rotated(-i * Mathf.Tau / points.Length);
         using var polygon = new ConvexPolygonShape { Points = points }; using var circle = new CircleShape { Radius = 10 };
-        var space = PhysicsServer.SpaceCreate(); var body = PhysicsServer.BodyCreate();
+        var space = PhysicsServer.SpaceCreate(backend); var body = PhysicsServer.BodyCreate();
         using var query = new PhysicsShapeQueryParameters { Shape = circle, Transform = new(0, new(0, -25)), Motion = new(0, 80) };
         try
         {
@@ -332,8 +337,8 @@ internal static class PhysicsShapeQueryTests
             PhysicsServer.BodyAddShape(body, circle.GetRID(), new(0, new(0, 40)));
             var cast = view.CastMotion(query); Check(cast.SafeFraction is > .5f and < .7f, "Ignoring the initially overlapping slot retains another slot of the same body.");
             for (var i = 0; i < 64; i++) view.CastMotion(query);
-            var bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) view.CastMotion(query);
-            Check(GC.GetAllocatedBytesForCurrentThread() == bytes, "Compound initial-overlap filtering reuses storage.");
+            var allBefore = GC.GetTotalAllocatedBytes(true); var bytes = GC.GetAllocatedBytesForCurrentThread(); for (var i = 0; i < 64; i++) view.CastMotion(query);
+            Check(GC.GetAllocatedBytesForCurrentThread() == bytes && GC.GetTotalAllocatedBytes(true) == allBefore, "Compound initial-overlap filtering reuses storage.");
             using var ray = new SeparationRayShape { Length = 20 };
             query.Shape = ray; query.Transform = new(0, new(0, -10)); query.Motion = Vector2.Zero;
             Check(view.IntersectShape(query).Length == 0 && view.CollideShape(query).Length == 0 && view.GetRestInfo(query) is null,
@@ -354,10 +359,10 @@ internal static class PhysicsShapeQueryTests
         finally { PhysicsServer.FreeRID(body); PhysicsServer.FreeRID(space); }
     }
 
-    private static void VerifyCompoundAndHollowQueries()
+    private void VerifyCompoundAndHollowQueries()
     {
         var server = PhysicsServer.Service;
-        var space = PhysicsServer.SpaceCreate(); PhysicsServer.SpaceSetActive(space, true);
+        var space = PhysicsServer.SpaceCreate(backend); PhysicsServer.SpaceSetActive(space, true);
         var body = PhysicsServer.BodyCreate();
         var circleRID = PhysicsServer.CircleShapeCreate();
         using var circle = new CircleShape { Radius = 5 };
@@ -405,18 +410,20 @@ internal static class PhysicsShapeQueryTests
         PhysicsServer.FreeRID(space);
     }
 
-    private static void VerifySceneShapeQueries()
+    private void VerifySceneShapeQueries()
     {
         using var floorShape = new RectangleShape { Size = new(200, 10) };
         using var sensorShape = new CircleShape();
         using var probe = new CircleShape();
-        var root = new Node();
+        using var world = new World(backend);
+        var root = new SubViewport { World = world };
         var floor = new StaticBody { Name = "Floor", Position = new(0, 100), CollisionMask = 0 };
         floor.AddChild(new CollisionShape { Shape = floorShape });
         var sensor = new Area { Name = "Sensor", Position = new(0, 50) };
         sensor.AddChild(new CollisionShape { Shape = sensorShape });
         root.AddChild(floor); root.AddChild(sensor);
         using var tree = new SceneTree(root);
+        Check(PhysicsServer.SpaceGetBackend(world.Space) == backend, "Query fixture uses its explicitly selected backend.");
         var direct = floor.GetWorld()!.DirectSpaceState;
         using var query = new PhysicsShapeQueryParameters
         {

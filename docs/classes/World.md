@@ -1,6 +1,6 @@
 # World
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class World : Resource`
 - Source: [World.cs](../../src/Scene/Resources/World.cs)
@@ -47,3 +47,5 @@ now run WorldTests with explicit backend selection. The linked record
 separates verified motion/lifetime/allocation cases from remaining physics coverage.
 
 Public [registered implementations](../components/physics-registered-adapter.md) now execute through PhysicsServerManager, World(string) and PhysicsServer.SpaceCreate(string). Requested/actual names retain the captured registration and startup fallback identity. The scoped PhysicsServerBackend/Extension family and immutable inputs/results have a public-only circle/spring consumer; custom geometry and full extension/performance/platform acceptance remain open.
+
+The complete PhysicsQueryTests now verifies explicit CPU/GPU resource ownership: duplicate/recreated World wrappers retain one space and view, SceneTree disposal removes scene colliders while caller-owned aliases still allow empty queries, and releasing the final aliases invalidates retained direct views. The implicit scene-owned world has its separate SceneTree retirement policy.

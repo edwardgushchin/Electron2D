@@ -17,7 +17,7 @@ solver execution or terminal failure. The selected world owner creates cached
 views outside the shared service registry lock. Null/foreign/disposed factory
 results and recursive acquisition reject before cache publication. The internal
 [factory route](../components/physics-backends.md#selected-direct-state-construction)
-executes extensions; public registered backend creation remains open.
+executes extensions; public named registration now executes through the same selected owner. Complete custom numerical/geometry acceptance remains open.
 
 ## Example
 
@@ -80,3 +80,5 @@ current GPU metadata transfer cost.
 The public GPU adapter retains one rebindable query-geometry lease. Alternating live resources reuses its wrapper and retires the previous reference; past resources are not accumulated. ConvexPolygonShapeTests exercises 128 warmed overlap/contact/rest/motion cycles between shared and standalone geometry on CPU/GPU with zero owner/all-thread bytes, preserving current contour results and initial-overlap fractions. GPUPhysicsShapeQueryTests checks successful replacement, null/disposed/thread rejection with preserved previous geometry, and retired lease failure. Geometry uploads and query waits retain their existing separate costs.
 
 TileMapLayerTests checks generated tile owner/RID/logical-slot projection, exact nondefault/default canvas filtering, reparenting and sampled weak owner lifetime on public CPU/GPU worlds. Sixty-four warmed full frames plus span point queries allocate zero owner/all-thread managed bytes on Linux/.NET 10.
+
+The complete PhysicsMotionTests, PhysicsQueryTests and PhysicsShapeQueryTests now use explicitly selected public CPU/GPU worlds. The common suites retain scene/raw identities, view replacement and last-resource retirement, filters/exclusions, compound origin-inside and initial-overlap rules, hollow/segment/convex contact families, one-way recovery, motion fractions/travel and scene shape-owner payloads. Existing numerical bounds are unchanged. Warm gates include both owner/all-thread managed counters: 64 scene-motion, compound recovery/ray/cast/rest queries and 128 alternating span-query cycles require 0/0 bytes. Caller-owned World aliases may outlive the SceneTree; its colliders retire immediately and the view expires after the last World resource is released. Native allocations, foreign platforms, visual and final performance acceptance remain open.
