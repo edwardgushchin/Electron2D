@@ -1306,3 +1306,5 @@ consumer exercises every collider role and 128 full scalar-read frames at 0/0
 managed bytes. Complete geometry/disable and final acceptance remain open.
 
 Native font policies extend FontFile/SystemFont, FontData/FontVariation and authored/generated FontCachePage ownership. Versioned cache decoding, real native strike/autohinter pixels and MIP publication are tracked by [the text component](components/text.md#native-raster-policy-verification).
+
+The existing ProjectSettings/SceneTree and Window/Control families now execute root and forced layout-direction project policies through the shared internal resolver; no additional public type is introduced. See [localization](domains/localization.md) for startup, domain, reflow and verification limits.

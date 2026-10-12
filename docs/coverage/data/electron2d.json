@@ -34854,19 +34854,6 @@
     "value": "2"
   },
   {
-    "id": "enumValue:Electron2D.LayoutDirection.Locale()",
-    "kind": "enumValue",
-    "declaringType": "Electron2D.LayoutDirection",
-    "name": "Locale",
-    "signature": "public const Electron2D.LayoutDirection Locale = 1",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.LayoutDirection",
-    "value": "1"
-  },
-  {
     "id": "enumValue:Electron2D.LayoutDirection.Max()",
     "kind": "enumValue",
     "declaringType": "Electron2D.LayoutDirection",
@@ -218127,6 +218114,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.ProjectSettings.ForceRightToLeftLayoutDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "ForceRightToLeftLayoutDirection",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Boolean\u003E ForceRightToLeftLayoutDirection { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.ProjectSettings.IgnoreJoypadOnUnfocusedApplication()",
     "kind": "property",
     "declaringType": "Electron2D.ProjectSettings",
@@ -219424,6 +219424,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "Electron2D.ProjectSetting\u003CSystem.Boolean\u003E",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ProjectSettings.RootNodeLayoutDirection()",
+    "kind": "property",
+    "declaringType": "Electron2D.ProjectSettings",
+    "name": "RootNodeLayoutDirection",
+    "signature": "public static Electron2D.ProjectSetting\u003CSystem.Int32\u003E RootNodeLayoutDirection { get;  }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.ProjectSetting\u003CSystem.Int32\u003E",
     "value": null
   },
   {

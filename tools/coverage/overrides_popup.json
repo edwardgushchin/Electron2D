@@ -226,11 +226,6 @@
       "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
     },
     {
-      "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE",
-      "electron2d": "enumValue:Electron2D.LayoutDirection.Locale()",
-      "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
-    },
-    {
       "godot": "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
       "electron2d": "enumValue:Electron2D.LayoutDirection.LTR()",
       "reason": "ADRs 0008/0038/0040/0083: executable embedded Window viewport targets, themed Popup/PopupPanel content, input capture/focus, deferred hide and typed scene persistence. Headless/fresh-process and Linux Wayland GPU/compatibility pixel checks cover this profile. Independent native child windows, full window decorations, policy migration, cross-window drag and other target acceptance remain exact prerequisites; inherited rows retain their separate states."
@@ -331,7 +326,6 @@
         "Window::enum:LayoutDirection",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_INHERITED",
-        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LTR",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_MAX",
         "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_RTL",
@@ -367,6 +361,13 @@
         "Window::method:is_layout_rtl()",
         "Viewport::property:gui_embed_subwindows"
       ]
+    },
+    {
+      "godot": [
+        "Window::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE"
+      ],
+      "state": "Excluded",
+      "reason": "Pinned doc/classes/Window.xml enum_value deprecated metadata: Use [constant LAYOUT_DIRECTION_APPLICATION_LOCALE] instead. ADR 0004 excludes deprecated public mirrors; numeric 1 remains ApplicationLocale. No implementation trigger."
     }
   ]
 }

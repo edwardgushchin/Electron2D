@@ -5872,7 +5872,7 @@
       "godot": [
         "RenderingServer::method:canvas_item_add_lcd_texture_rect_region(RID:,Rect2:,RID:,Rect2:,Color:)"
       ],
-      "reason": "Trigger: executable LCD/subpixel glyph coverage texture and component blending/contrast/order policy with backend capability reporting. Ordinary texture modulation and native canvas recording do not supply LCD component coverage."
+      "reason": "Trigger: shared retained LCD command, sampled-alpha coverage gate, RGB component blend with command/ancestor color constants and correct post-material/post-light ordering. SDL_GPU exposes ConstantColor/OneMinusSrcColor and SetGPUBlendConstants; MaterialLightingProgram still needs the LCD sampling epilogue. SDL_Renderer lacks the constant-color factor: a verified alternate composition or explicit backend capability rejection is required. Ordinary texture tinting does not execute the contract."
     },
     {
       "state": "Blocked",

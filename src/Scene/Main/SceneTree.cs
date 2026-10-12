@@ -68,6 +68,8 @@ public sealed partial class SceneTree : MainLoop
     private bool _paused;
     private Node? _editedSceneRoot;
     private bool _debugPathsHint;
+    internal readonly int RootLayoutDirection = ProjectSettings.GetWithOverride(ProjectSettings.RootNodeLayoutDirection);
+    internal readonly bool ForceRTLLayout = ProjectSettings.GetWithOverride(ProjectSettings.ForceRightToLeftLayoutDirection);
     internal readonly Color DebugPathsColor = ProjectSettings.GetWithOverride(ProjectSettings.DebugPathsColor);
     private bool _autoAcceptQuit = true;
     private int _quitRequested;

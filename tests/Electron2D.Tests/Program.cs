@@ -10,6 +10,8 @@ using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
 if (args.Length > 1 && args[0] == "--os-process-child") { OSProcessTests.Child(args); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT_NATIVE") == "1") { ProjectLayoutDirectionNativeTests.Run(); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_PROJECT_LAYOUT") == "1") { ProjectLayoutDirectionTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_FILE_ACCESS") == "1") { VerifyFileAccess(); Console.WriteLine("FileAccess filesystem/encoding/lifecycle regression passed."); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_OS_PROCESS") == "1") { OSProcessTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_RENDERER_TEXTURE_DEVICE") == "1") { RendererTextureDeviceTests.Run(); return; }
@@ -1094,6 +1096,7 @@ VerifyTranslations();
 NodeLocalizationTests.Run();
 TranslationDomainTests.Run();
 LocalizationProjectSettingsTests.Run();
+ProjectLayoutDirectionTests.Run();
 VerifyMathF();
 VerifyColors();
 SpriteTests.Run();

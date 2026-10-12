@@ -1,6 +1,6 @@
 # Window
 
-Last updated: 2026-10-06
+Last updated: 2026-10-12
 
 **Inherits:** [Viewport](Viewport.md)
 
@@ -685,3 +685,9 @@ A native mouse-exit event now clears GUI and physical hover for this specific
 viewport before Window.MouseExited. Cleanup errors are aggregated without skipping
 other exit notifications. PhysicsPickingNativeTests exercises the path under both
 rendering methods and both physical backends on Linux.
+
+## Project layout direction
+
+Window and Control use one domain-aware resolver. An inherited node follows the nearest Window or Control only while ancestor translation domains match. With no such ancestor, `ProjectSettings.RootNodeLayoutDirection` selects 0 application locale, 1 LTR, 2 RTL or 3 system UI locale. `ForceRightToLeftLayoutDirection` forces inherited and application/system locale modes to RTL; explicit LTR/RTL remain authoritative. Each SceneTree samples both settings and feature overrides before entry. Detached nodes use current settings. Authored per-node directions survive scene packing; project defaults do not overwrite them.
+
+Layout-direction and translation notifications reflow geometry and invalidate text; global locale/catalog edits require an explicit translation notification under ADR 0007. Existing locale direction still requires a matching registered catalog or fallback language. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) covers resolution, lifetime and reflow; [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) checks GUI/text pixels on Linux Wayland GPU/compatibility. Foreign targets and owner visual acceptance remain unverified.

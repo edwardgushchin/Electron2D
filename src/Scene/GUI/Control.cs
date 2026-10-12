@@ -155,43 +155,13 @@ public partial class Control : CanvasItem
     }
 
     /// <summary>Reports whether this control currently resolves its layout from right to left.</summary>
+    /// <remarks>Inherited nodes follow same-domain Window/Control ancestry, then the project root policy.
+    /// Forced RTL applies to inherited and locale modes; explicit LTR/RTL remain authoritative. Tree policies are sampled at activation.</remarks>
     public bool IsLayoutRTL()
     {
         ThrowIfDisposed();
         Tree?.EnsureOwnerThread();
-        return _layoutDirection switch
-        {
-            LayoutDirection.LTR => false,
-            LayoutDirection.RTL => true,
-            LayoutDirection.SystemLocale => IsLocaleRTL(CultureInfo.CurrentUICulture),
-            LayoutDirection.ApplicationLocale => IsLocaleRTL(GetApplicationCulture()),
-            _ => InheritedLayoutRTL()
-        };
-    }
-
-    private bool InheritedLayoutRTL()
-    {
-        var domain = TranslationDomain;
-        for (Node? ancestor = Parent; ancestor is not null; ancestor = ancestor.Parent)
-        {
-            if (ancestor.TranslationDomain != domain) break;
-            if (ancestor is Control control) return control.IsLayoutRTL();
-            if (ancestor is Window window) return window.IsLayoutRTL();
-        }
-        return IsLocaleRTL(GetApplicationCulture());
-    }
-
-    private CultureInfo GetApplicationCulture()
-    {
-        return TranslationServer.GetOrAddDomain(TranslationDomain).EffectiveCulture;
-    }
-
-    private bool IsLocaleRTL(CultureInfo culture)
-    {
-        if (!culture.TextInfo.IsRightToLeft) return false;
-        var domain = TranslationServer.GetOrAddDomain(TranslationDomain);
-        return domain.HasTranslationForCulture(culture, exact: false)
-            || TranslationServer.FallbackCulture?.TwoLetterISOLanguageName == culture.TwoLetterISOLanguageName;
+        return LayoutDirectionPolicy.Resolve(this, _layoutDirection);
     }
 
     /// <summary>Gets or sets which horizontal edge stays fixed when the minimum width grows.</summary>

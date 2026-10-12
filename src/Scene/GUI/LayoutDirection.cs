@@ -7,9 +7,6 @@ public enum LayoutDirection
     Inherited = 0,
     /// <summary>Use the active application translation locale.</summary>
     ApplicationLocale = 1,
-    /// <summary>Deprecated alias for <see cref="ApplicationLocale"/>.</summary>
-    [Obsolete("Use ApplicationLocale instead.")]
-    Locale = ApplicationLocale,
     /// <summary>Resolve from left to right.</summary>
     LTR = 2,
     /// <summary>Resolve from right to left.</summary>

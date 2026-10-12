@@ -58,7 +58,7 @@
     {
       "godot": "Control::enum_value:LayoutDirection.LAYOUT_DIRECTION_APPLICATION_LOCALE",
       "electron2d": "enumValue:Electron2D.LayoutDirection.ApplicationLocale()",
-      "reason": "Typed canonical name retains numeric identity 1; the deprecated Locale alias remains a distinct enum declaration."
+      "reason": "Current canonical name retains numeric identity 1; deprecated Locale is excluded under ADR 0004."
     },
     {
       "godot": "Control::method:_get_maximum_size()",
@@ -5263,6 +5263,16 @@
       "godot": "Node::constant:NOTIFICATION_VP_MOUSE_EXIT",
       "electron2d": "constant:Electron2D.Node.NotificationVPMouseExit()",
       "reason": "Executable SubViewportContainer and per-viewport GUI slice under ADRs 0008/0014/0023/0028/0038: exact typed stretch/shrink/minimum/default focus, native sibling texture composition, owned child size, visibility update policy, positional and focus-sensitive nonpositional forwarding, virtual predicate, independent focus/hover/capture/tooltip state, local/shared handled input and connected-section drag targeting. Pinned subviewport_container.cpp and viewport.cpp audit. SubViewportContainerTests checks typed packing, boundaries, two nested transforms, equal/invalid writes, failure continuation, disabled input, pointer entry/exit, forced and automatic cross-viewport drag, description/target behavior and native Wayland GPU/hardware compatibility pixels, cursor and keyboard focus; both HLSL/GLSL consume the native viewport texture. Warm native render plus active position/MouseTarget/modulation mutation intervals cover 64 active and 64 idle frames with zero managed bytes. Input Resource copies retain ADR 0038 ownership and are outside that rendering measurement. Manual Size writes beneath Stretch reject with a typed exception before mutation. File/editor authoring, multiview, independent native subwindows, native allocator totals, other platforms and owner acceptance remain separate prerequisites/gates."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/rendering/root_node_layout_direction",
+      "electron2d": "property:Electron2D.ProjectSettings.RootNodeLayoutDirection()",
+      "reason": "Typed permanent project policy sampled with feature overrides before SceneTree entry; Window and Control share the same domain-aware resolution."
+    },
+    {
+      "godot": "ProjectSettings::property:internationalization/rendering/force_right_to_left_layout_direction",
+      "electron2d": "property:Electron2D.ProjectSettings.ForceRightToLeftLayoutDirection()",
+      "reason": "Typed permanent project policy sampled with feature overrides before SceneTree entry; Window and Control share the same domain-aware resolution."
     }
   ],
   "extras": [
@@ -7652,8 +7662,8 @@
         "ProjectSettings::property:internationalization/rendering/root_node_layout_direction",
         "ProjectSettings::property:internationalization/rendering/force_right_to_left_layout_direction"
       ],
-      "state": "Unimplemented",
-      "reason": "Trigger: one complete Window/Control layout-direction slice with inherited Window policy, root modes 0 application locale/1 LTR/2 RTL/3 system locale, project-wide forced direction rules for inherited and locale modes, translation-change reflow and GUI/text behavior. Control currently resolves local directions, but the root Window direction and text integration are absent (ADRs 0007, 0008 and 0028)."
+      "state": "Implemented",
+      "reason": "ProjectLayoutDirectionTests verifies all four root modes, permanent typed defaults/validation/persistence/feature overrides, independent SceneTree startup snapshots, same-domain Window/Control inheritance through ordinary nodes, domain boundaries, forced inherited/application/system modes with explicit LTR/RTL overrides, translation/layout notification reflow, packing, owner/disposal guards and zero managed bytes in 128 warmed direction queries. Native GUI/text output is verified by ProjectLayoutDirectionNativeTests on Linux Wayland GPU/compatibility. Global locale/catalog edits still require explicit translation notifications; other targets and owner visual acceptance remain unverified."
     },
     {
       "godot": [
@@ -10700,6 +10710,13 @@
         "Viewport::property:handle_input_locally",
         "class:SubViewportContainer"
       ]
+    },
+    {
+      "godot": [
+        "Control::enum_value:LayoutDirection.LAYOUT_DIRECTION_LOCALE"
+      ],
+      "state": "Excluded",
+      "reason": "Pinned doc/classes/Control.xml enum_value deprecated metadata: Use [constant LAYOUT_DIRECTION_APPLICATION_LOCALE] instead. ADR 0004 excludes deprecated public mirrors; numeric 1 remains ApplicationLocale. No implementation trigger."
     }
   ]
 }

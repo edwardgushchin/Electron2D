@@ -4359,7 +4359,7 @@
     },
     {
       "state": "Unimplemented",
-      "reason": "Applicable raster/cache policy antialiasing is not implemented. Add the real FreeType or canvas behavior, source defaults and lifetime tests; no passive compatibility property is exposed.",
+      "reason": "Applicable raster policy needs mono/gray/LCD FreeType bitmap modes, RGB/BGR horizontal/vertical coverage cache identity and the project LCD layout consumer. LCD is coupled to a post-material/post-light sampling stage and component-color blend constants; GPU has native constants, but the current shader composition has no LCD epilogue and SDL_Renderer has no constant-color blend factor. Trigger: complete LCD canvas composition/capability/pixel slice before publishing this policy; grayscale substitution is not an implementation.",
       "godot": [
         "FontFile::property:antialiasing"
       ]

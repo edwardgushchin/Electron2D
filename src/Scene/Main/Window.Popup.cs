@@ -6,19 +6,18 @@ public partial class Window
     private bool _transient, _exclusive, _wrapControls;
     private LayoutDirection _layoutDirection;
     /// <summary>Gets or sets the direction inherited by this window's controls.</summary>
-    /// <value>Inherited initially; root windows resolve the application locale.</value>
+    /// <value>Inherited initially; roots use the project direction policy.</value>
     /// <exception cref="ArgumentOutOfRangeException">The direction is undefined or Max.</exception>
     public LayoutDirection LayoutDirection
     { get { ThrowIfDisposed(); return _layoutDirection; } set { EnsureMutable(); if (value is < LayoutDirection.Inherited or >= LayoutDirection.Max) throw new ArgumentOutOfRangeException(nameof(value)); if (_layoutDirection == value) return; _layoutDirection = value; PropagateNotification(Control.NotificationLayoutDirectionChanged); QueueEmbeddedRedraw(); } }
     /// <summary>Reports whether the resolved window layout direction is right to left.</summary>
     /// <returns>The explicit, inherited or translated locale direction.</returns>
+    /// <remarks>Inherited nodes follow same-domain Window/Control ancestry, then the project root policy.
+    /// Forced RTL applies to inherited and locale modes; explicit LTR/RTL remain authoritative. Tree policies are sampled at activation.</remarks>
     public bool IsLayoutRTL()
     {
         ThrowIfDisposed(); Tree?.EnsureOwnerThread();
-        if (_layoutDirection == LayoutDirection.LTR) return false; if (_layoutDirection == LayoutDirection.RTL) return true;
-        if (_layoutDirection == LayoutDirection.Inherited) for (var parent = Parent; parent is not null; parent = parent.Parent) { if (parent.TranslationDomain != TranslationDomain) break; if (parent is Control control) return control.IsLayoutRTL(); if (parent is Window window) return window.IsLayoutRTL(); }
-        var domain = TranslationServer.GetOrAddDomain(TranslationDomain); var culture = _layoutDirection == LayoutDirection.SystemLocale ? System.Globalization.CultureInfo.CurrentUICulture : domain.EffectiveCulture;
-        return culture.TextInfo.IsRightToLeft && (domain.HasTranslationForCulture(culture, false) || TranslationServer.FallbackCulture?.TwoLetterISOLanguageName == culture.TwoLetterISOLanguageName);
+        return LayoutDirectionPolicy.Resolve(this, _layoutDirection);
     }
     private CanvasLayer? _embeddedLayer;
     private int _embeddedSerial;

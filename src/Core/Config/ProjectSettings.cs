@@ -329,6 +329,18 @@ public sealed partial class ProjectSettings : ProjectSettingsRegistry
     public static ProjectSetting<string> LocaleFallback { get; } =
         new("internationalization/locale/fallback", "en", IsValidProjectLocale);
 
+    /// <summary>Defines the direction used when a control or window has no same-domain layout ancestor.</summary>
+    /// <value>0 selects application locale (default), 1 LTR, 2 RTL and 3 system UI locale.</value>
+    /// <remarks>Sampled with feature overrides at SceneTree construction. Detached nodes use the current setting.</remarks>
+    public static ProjectSetting<int> RootNodeLayoutDirection { get; } =
+        new("internationalization/rendering/root_node_layout_direction", 0, value => value is >= 0 and <= 3);
+
+    /// <summary>Forces inherited and locale-based control and window layout to right to left.</summary>
+    /// <value>False by default. Explicit LTR and RTL choices remain authoritative.</value>
+    /// <remarks>Sampled with feature overrides at SceneTree construction. Detached nodes use the current setting.</remarks>
+    public static ProjectSetting<bool> ForceRightToLeftLayoutDirection { get; } =
+        new("internationalization/rendering/force_right_to_left_layout_direction", false);
+
     /// <summary>Determines whether a newly activated scene root automatically translates messages.</summary>
     /// <value>The permanent typed project setting, true by default; sampled at scene-tree construction.</value>
     public static ProjectSetting<bool> RootNodeAutoTranslate { get; } =

@@ -1,6 +1,6 @@
 # Control
 
-Last updated: 2026-10-06
+Last updated: 2026-10-12
 
 **Inherits:** [CanvasItem](CanvasItem.md) → [Node](Node.md) → [ElectronObject](ElectronObject.md)
 
@@ -22,7 +22,7 @@ Control starts with inherited `PhysicsInterpolationMode.Off`, so UI layout and p
 
 `CustomMinimumSize` combines componentwise with an intrinsic minimum supplied by `OnGetMinimumSize` and zero. `CustomMaximumSize` combines enabled bounds from the intrinsic hook, the caller and a direct parent that propagates its maximum; a negative component means unbounded. Reflow applies the minimum first and then the maximum, so the maximum wins on a conflicting axis. [`GrowDirection`](GrowDirection.md) independently chooses the fixed horizontal and vertical edges for growth or shrinkage. Attached visible controls coalesce size changes through `SceneTree.Defer`, caching one minimum and one maximum callback per control after first use; `Resized` occurs before the corresponding size-change event. Both bounds are queryable immediately. `UpdateMaximumSize` clears each direct non-top-level child's container allocation cache before recursively refreshing its bounds, so increasing a parent maximum cannot preserve an obsolete smaller allocation. Indexed child traversal and cached deferred callbacks avoid per-update enumerator/delegate allocations. [Container](Container.md), [BoxContainer](BoxContainer.md) and [GridContainer](GridContainer.md) now consume sizing flags and propagated allocation bounds. Changing TopLevel on a direct child of a Container clears its allocation cache and requests parent minimum refresh/sort. Desired-size resource consumers and wrapping windows remain separate dependencies.
 
-[`LayoutDirection`](LayoutDirection.md) adds explicit LTR/RTL mirroring after horizontal minimum/maximum resolution. Inherited controls follow the nearest Control in the same translation domain; `ApplicationLocale` and `SystemLocale` use the corresponding managed culture only when a matching catalog or configured fallback permits RTL. Direction changes notify the subtree before callers observe the resolved rectangles. `Position` and `Size` writes remain physical in RTL. Root and forced project direction settings, Window inheritance, exact locale aliases and automatic scene refresh after a process-wide culture change remain Partial.
+[`LayoutDirection`](LayoutDirection.md) adds explicit LTR/RTL mirroring after horizontal minimum/maximum resolution. Inherited controls follow the nearest Window or Control in the same translation domain; `ApplicationLocale` and `SystemLocale` use the corresponding managed culture only when a matching catalog or configured fallback permits RTL. Direction changes notify the subtree before callers observe the resolved rectangles. `Position` and `Size` writes remain physical in RTL. Root and forced project direction settings, Window inheritance, exact locale aliases and automatic scene refresh after a process-wide culture change remain Partial.
 
 `SetPosition`, `SetSize` and `SetGlobalPosition` share the property setters' geometry path. By default they update stored offsets. With `keepOffsets: true`, they calculate anchors from the requested physical rectangle and existing offsets; both parent-area axes must be nonzero or the call fails before mutation. `SetSize` clamps finite requests through the effective minimum and then maximum, including negative requests; `ResetSize` requests zero through that same path. `GetBegin`/`SetBegin` and `GetEnd`/`SetEnd` read or update the corresponding offset pairs with one reflow per write. A global position edit first inverse-transforms through the direct canvas parent and retains the control's pivot/rotation/scale origin.
 
@@ -449,3 +449,9 @@ LocalizeNumeralSystem now defaults true in the typed stored schema and refreshes
 | Complete declaration | Contract |
 | --- | --- |
 | `public System.Boolean LocalizeNumeralSystem { get; set; }` | Generated numeric producer policy; true initially, stored, live translation refresh on changed writes. |
+
+## Project layout direction
+
+Window and Control use one domain-aware resolver. An inherited node follows the nearest Window or Control only while ancestor translation domains match. With no such ancestor, `ProjectSettings.RootNodeLayoutDirection` selects 0 application locale, 1 LTR, 2 RTL or 3 system UI locale. `ForceRightToLeftLayoutDirection` forces inherited and application/system locale modes to RTL; explicit LTR/RTL remain authoritative. Each SceneTree samples both settings and feature overrides before entry. Detached nodes use current settings. Authored per-node directions survive scene packing; project defaults do not overwrite them.
+
+Layout-direction and translation notifications reflow geometry and invalidate text; global locale/catalog edits require an explicit translation notification under ADR 0007. Existing locale direction still requires a matching registered catalog or fallback language. [ProjectLayoutDirectionTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionTests.cs) covers resolution, lifetime and reflow; [ProjectLayoutDirectionNativeTests](../../tests/Electron2D.Tests/ProjectLayoutDirectionNativeTests.cs) checks GUI/text pixels on Linux Wayland GPU/compatibility. Foreign targets and owner visual acceptance remain unverified.
