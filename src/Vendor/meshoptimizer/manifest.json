@@ -1,0 +1,13 @@
+{
+  "upstream": "https://github.com/zeux/meshoptimizer",
+  "commit": "b22872835dbabc56a6e4a366ea9917f62b7daf1a",
+  "version": "1.1.1",
+  "license": "MIT",
+  "files": {
+    "meshoptimizer.h": "497a1d8db6d9549bb4b0346d5f34a9bd67a15fe41d458cdd6a27eb608421f46c",
+    "allocator.cpp": "d2cc48691fe2f4c6d097bf7a766389cfb7f83ca14a5f747e3944332656d02254",
+    "simplifier.cpp": "b645cdaffe9e3eaf64ff77bc82c3e3b8c57c0a4459b7405a0b3d2716ed92d928",
+    "LICENSE.md": "f03037ca7bad1e3eb7f4a63fa6084a8baabd5ba30d3c239a9a7f35705d873e26"
+  },
+  "patches": []
+}

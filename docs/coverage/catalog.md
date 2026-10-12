@@ -379,7 +379,7 @@ Source: Godot `4.7.2-stable` at `ed1daf0bf001b61586d9930840f2f1394092c079`. Ever
 | [ImageTexture3D](classes/ImageTexture3D.md) | Texture3D | Excluded | 2 |
 | [ImageTextureLayered](classes/ImageTextureLayered.md) | TextureLayered | Partial | 2 |
 | [ImmediateMesh](classes/ImmediateMesh.md) | Mesh | Implemented | 10 |
-| [ImporterMesh](classes/ImporterMesh.md) | Resource | Blocked | 25 |
+| [ImporterMesh](classes/ImporterMesh.md) | Resource | Partial | 25 |
 | [ImporterMeshInstance3D](classes/ImporterMeshInstance3D.md) | Node3D | Excluded | 10 |
 | [Input](classes/Input.md) | Object | Partial | 98 |
 | [InputEvent](classes/InputEvent.md) | Resource | Partial | 17 |

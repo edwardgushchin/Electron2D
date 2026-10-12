@@ -5185,6 +5185,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.ImporterMesh",
+    "kind": "type",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "ImporterMesh",
+    "signature": "public sealed class Electron2D.ImporterMesh",
+    "visibility": "public",
+    "baseType": "Electron2D.Resource",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.InlineAlignment",
     "kind": "type",
     "declaringType": "Electron2D.InlineAlignment",
@@ -17000,6 +17015,19 @@
     "declaringType": "Electron2D.ImmediateMesh",
     "name": ".ctor",
     "signature": "public ImmediateMesh()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.ImporterMesh..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": ".ctor",
+    "signature": "public ImporterMesh()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -99684,6 +99712,554 @@
       {
         "name": "uv2",
         "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.AddBlendShape(System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "AddBlendShape",
+    "signature": "public System.Void AddBlendShape(System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.AddSurface(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E,System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E,Electron2D.Material,System.String,Electron2D.Mesh.ArrayFormat)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "AddSurface",
+    "signature": "public System.Void AddSurface(Electron2D.Mesh.PrimitiveType primitive, Electron2D.MeshSurfaceData arrays, System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E blendShapes = null, System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E lods = null, Electron2D.Material material = null, System.String name = \u0022\u0022, Electron2D.Mesh.ArrayFormat flags = None)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "primitive",
+        "type": "Electron2D.Mesh.PrimitiveType",
+        "default": null
+      },
+      {
+        "name": "arrays",
+        "type": "Electron2D.MeshSurfaceData",
+        "default": null
+      },
+      {
+        "name": "blendShapes",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.MeshSurfaceData\u003E",
+        "default": "null"
+      },
+      {
+        "name": "lods",
+        "type": "System.Collections.Generic.IReadOnlyDictionary\u003CSystem.Single, System.Int32[]\u003E",
+        "default": "null"
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": "null"
+      },
+      {
+        "name": "name",
+        "type": "System.String",
+        "default": "\u0022\u0022"
+      },
+      {
+        "name": "flags",
+        "type": "Electron2D.Mesh.ArrayFormat",
+        "default": "None"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.Clear()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "Clear",
+    "signature": "public System.Void Clear()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E,System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "CopyCustomStateTo",
+    "signature": "protected override System.Void CopyCustomStateTo(Electron2D.Resource target, System.Boolean deep, Electron2D.DeepDuplicateMode subresourceMode, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E duplicateSubresource, System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E forceDuplicateSubresource)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "target",
+        "type": "Electron2D.Resource",
+        "default": null
+      },
+      {
+        "name": "deep",
+        "type": "System.Boolean",
+        "default": null
+      },
+      {
+        "name": "subresourceMode",
+        "type": "Electron2D.DeepDuplicateMode",
+        "default": null
+      },
+      {
+        "name": "duplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      },
+      {
+        "name": "forceDuplicateSubresource",
+        "type": "System.Func\u003CElectron2D.Resource, Electron2D.Resource\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.CreateDuplicateInstance()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "CreateDuplicateInstance",
+    "signature": "protected override Electron2D.Resource CreateDuplicateInstance()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Resource",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.Dispose(System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "Dispose",
+    "signature": "protected override System.Void Dispose(System.Boolean disposing)",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "disposing",
+        "type": "System.Boolean",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.FromMesh(Electron2D.Mesh)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "FromMesh",
+    "signature": "public static Electron2D.ImporterMesh FromMesh(Electron2D.Mesh mesh)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "mesh",
+        "type": "Electron2D.Mesh",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.ImporterMesh",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GenerateLODs(System.Single,System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GenerateLODs",
+    "signature": "public System.Void GenerateLODs(System.Single normalMergeAngle, System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E boneTransformArray = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "normalMergeAngle",
+        "type": "System.Single",
+        "default": null
+      },
+      {
+        "name": "boneTransformArray",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetBlendShapeCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetBlendShapeCount",
+    "signature": "public System.Int32 GetBlendShapeCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetBlendShapeName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetBlendShapeName",
+    "signature": "public System.String GetBlendShapeName(System.Int32 index)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "index",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetMesh(Electron2D.ArrayMesh)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetMesh",
+    "signature": "public Electron2D.ArrayMesh GetMesh(Electron2D.ArrayMesh baseMesh = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "baseMesh",
+        "type": "Electron2D.ArrayMesh",
+        "default": "null"
+      }
+    ],
+    "returnType": "Electron2D.ArrayMesh",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceArrays(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceArrays",
+    "signature": "public Electron2D.MeshSurfaceData GetSurfaceArrays(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceBlendShapeArrays(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceBlendShapeArrays",
+    "signature": "public Electron2D.MeshSurfaceData GetSurfaceBlendShapeArrays(System.Int32 surface, System.Int32 shape)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "shape",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.MeshSurfaceData",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceCount()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceCount",
+    "signature": "public System.Int32 GetSurfaceCount()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceFormat(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceFormat",
+    "signature": "public Electron2D.Mesh.ArrayFormat GetSurfaceFormat(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceLODCount(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceLODCount",
+    "signature": "public System.Int32 GetSurfaceLODCount(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceLODIndices(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceLODIndices",
+    "signature": "public System.Int32[] GetSurfaceLODIndices(System.Int32 surface, System.Int32 lod)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "lod",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceLODSize(System.Int32,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceLODSize",
+    "signature": "public System.Single GetSurfaceLODSize(System.Int32 surface, System.Int32 lod)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "lod",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.Single",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceMaterial(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceMaterial",
+    "signature": "public Electron2D.Material GetSurfaceMaterial(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Material",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfaceName(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfaceName",
+    "signature": "public System.String GetSurfaceName(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.GetSurfacePrimitiveType(System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "GetSurfacePrimitiveType",
+    "signature": "public Electron2D.Mesh.PrimitiveType GetSurfacePrimitiveType(System.Int32 surface)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      }
+    ],
+    "returnType": "Electron2D.Mesh.PrimitiveType",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.MergeImporterMeshes(System.Collections.Generic.IReadOnlyList\u003CElectron2D.ImporterMesh\u003E,System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E,System.Boolean)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "MergeImporterMeshes",
+    "signature": "public static Electron2D.ImporterMesh MergeImporterMeshes(System.Collections.Generic.IReadOnlyList\u003CElectron2D.ImporterMesh\u003E importerMeshes, System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E relativeTransforms, System.Boolean deduplicateSurfaces = true)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "importerMeshes",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.ImporterMesh\u003E",
+        "default": null
+      },
+      {
+        "name": "relativeTransforms",
+        "type": "System.Collections.Generic.IReadOnlyList\u003CElectron2D.Transform\u003E",
+        "default": null
+      },
+      {
+        "name": "deduplicateSurfaces",
+        "type": "System.Boolean",
+        "default": "true"
+      }
+    ],
+    "returnType": "Electron2D.ImporterMesh",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.OnResetState()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "OnResetState",
+    "signature": "protected override System.Void OnResetState()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.SetSurfaceMaterial(System.Int32,Electron2D.Material)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "SetSurfaceMaterial",
+    "signature": "public System.Void SetSurfaceMaterial(System.Int32 surface, Electron2D.Material material)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "material",
+        "type": "Electron2D.Material",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImporterMesh.SetSurfaceName(System.Int32,System.String)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "SetSurfaceName",
+    "signature": "public System.Void SetSurfaceName(System.Int32 surface, System.String name)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "surface",
+        "type": "System.Int32",
+        "default": null
+      },
+      {
+        "name": "name",
+        "type": "System.String",
         "default": null
       }
     ],
@@ -207374,6 +207950,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Double",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.ImporterMesh.BlendShapeMode()",
+    "kind": "property",
+    "declaringType": "Electron2D.ImporterMesh",
+    "name": "BlendShapeMode",
+    "signature": "public Electron2D.BlendShapeMode BlendShapeMode { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.BlendShapeMode",
     "value": null
   },
   {

@@ -1564,6 +1564,126 @@
       "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES",
       "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.CompressAttributes()",
       "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
+    },
+    {
+      "godot": "class:ImporterMesh",
+      "electron2d": "T:Electron2D.ImporterMesh",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:add_blend_shape(String:)",
+      "electron2d": "method:Electron2D.ImporterMesh.AddBlendShape(System.String)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:add_surface(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,Material:,String:,int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.AddSurface(Electron2D.Mesh.PrimitiveType,Electron2D.MeshSurfaceData,System.Collections.Generic.IReadOnlyList<Electron2D.MeshSurfaceData>,System.Collections.Generic.IReadOnlyDictionary<System.Single, System.Int32[]>,Electron2D.Material,System.String,Electron2D.Mesh.ArrayFormat)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:clear()",
+      "electron2d": "method:Electron2D.ImporterMesh.Clear()",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:from_mesh(Mesh:)",
+      "electron2d": "method:Electron2D.ImporterMesh.FromMesh(Electron2D.Mesh)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:generate_lods(float:,float:,Array:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GenerateLODs(System.Single,System.Collections.Generic.IReadOnlyList<Electron2D.Transform>)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates. Uses normal-merge degrees and typed 2D bone transforms; the pinned _generate_lods_bind explicitly ignores normal_split_angle, so ADR 0092 omits that inert compatibility parameter."
+    },
+    {
+      "godot": "ImporterMesh::method:get_blend_shape_count()",
+      "electron2d": "method:Electron2D.ImporterMesh.GetBlendShapeCount()",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_blend_shape_mode()",
+      "electron2d": "property:Electron2D.ImporterMesh.BlendShapeMode()",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_blend_shape_name(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetBlendShapeName(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_mesh(ArrayMesh:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetMesh(Electron2D.ArrayMesh)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_arrays(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceArrays(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_blend_shape_arrays(int:,int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceBlendShapeArrays(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_count()",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceCount()",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_format(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceFormat(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_lod_count(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceLODCount(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_lod_indices(int:,int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceLODIndices(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_lod_size(int:,int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceLODSize(System.Int32,System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_material(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceMaterial(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_name(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfaceName(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:get_surface_primitive_type(int:)",
+      "electron2d": "method:Electron2D.ImporterMesh.GetSurfacePrimitiveType(System.Int32)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:merge_importer_meshes(ImporterMesh[]:,Transform3D[]:,bool:)",
+      "electron2d": "method:Electron2D.ImporterMesh.MergeImporterMeshes(System.Collections.Generic.IReadOnlyList<Electron2D.ImporterMesh>,System.Collections.Generic.IReadOnlyList<Electron2D.Transform>,System.Boolean)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates. Transform3D scene coordinates project to existing 2D Transform role; source explicitly discards targets/levels and retains the first joined material. Mixed indexing, reflection/strip rewinding and schema/line-strip safety correct malformed source edge cases."
+    },
+    {
+      "godot": "ImporterMesh::method:set_blend_shape_mode(int:Mesh.BlendShapeMode)",
+      "electron2d": "property:Electron2D.ImporterMesh.BlendShapeMode()",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:set_surface_material(int:,Material:)",
+      "electron2d": "method:Electron2D.ImporterMesh.SetSurfaceMaterial(System.Int32,Electron2D.Material)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "godot": "ImporterMesh::method:set_surface_name(int:,String:)",
+      "electron2d": "method:Electron2D.ImporterMesh.SetSurfaceName(System.Int32,System.String)",
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
     }
   ],
   "extras": [
@@ -1914,6 +2034,30 @@
     {
       "electron2d": "method:Electron2D.RenderingServer.MeshSurfaceGetLODs(Electron2D.RID,System.Int32)",
       "reason": "Pinned public C++ RenderingServer::mesh_surface_get_lods returns packed alternative indices by threshold, projected to typed copied arrays and static process-wide access under ADR 0095. ADR 0092: copied positive finite local error thresholds and shorter complete index sets, sorted queries, full framebuffer-basis singular-value selection and independent MultiMesh levels. Morph/skin/custom channels, tangent regeneration, duplicates and AMS6/fresh scenes preserve the executed geometry; invalid input rejects atomically. Native GPU/compatibility pixels and warm complete frames retain platform/native-allocation limits."
+    },
+    {
+      "electron2d": "constructor:Electron2D.ImporterMesh..ctor()",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "method:Electron2D.ImporterMesh.CopyCustomStateTo(Electron2D.Resource,System.Boolean,Electron2D.DeepDuplicateMode,System.Func<Electron2D.Resource, Electron2D.Resource>,System.Func<Electron2D.Resource, Electron2D.Resource>)",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "method:Electron2D.ImporterMesh.CreateDuplicateInstance()",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "method:Electron2D.ImporterMesh.Dispose(System.Boolean)",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "method:Electron2D.ImporterMesh.GetPropertyDescriptors()",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
+    },
+    {
+      "electron2d": "method:Electron2D.ImporterMesh.OnResetState()",
+      "reason": "ADRs 0013/0092: managed construction, exact resource duplication/local graphs, bounded typed stored-state descriptors, transient compiled-cache reset and disposal implement the inherited Resource host lifecycle; no extra importer domain operation."
     }
   ],
   "statusGroups": [
@@ -2470,6 +2614,50 @@
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FLAG_COMPRESS_ATTRIBUTES"
       ],
       "reason": "ADRs 0051/0092: shared flag values execute canonical UNORM16 UV and six-byte axis/angle frames over float XY, exact partial/copy/archive/morph preservation and real GLSL/HLSL/compatibility pixels. Pinned independent frame precision and warmed managed-zero checks distinguish native/platform limits."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "ImporterMesh::method:add_blend_shape(String:)",
+        "ImporterMesh::method:clear()",
+        "ImporterMesh::method:from_mesh(Mesh:)",
+        "ImporterMesh::method:generate_lods(float:,float:,Array:)",
+        "ImporterMesh::method:get_blend_shape_count()",
+        "ImporterMesh::method:get_blend_shape_mode()",
+        "ImporterMesh::method:get_blend_shape_name(int:)",
+        "ImporterMesh::method:get_mesh(ArrayMesh:)",
+        "ImporterMesh::method:get_surface_arrays(int:)",
+        "ImporterMesh::method:get_surface_blend_shape_arrays(int:,int:)",
+        "ImporterMesh::method:get_surface_count()",
+        "ImporterMesh::method:get_surface_format(int:)",
+        "ImporterMesh::method:get_surface_lod_count(int:)",
+        "ImporterMesh::method:get_surface_lod_indices(int:,int:)",
+        "ImporterMesh::method:get_surface_lod_size(int:,int:)",
+        "ImporterMesh::method:get_surface_material(int:)",
+        "ImporterMesh::method:get_surface_name(int:)",
+        "ImporterMesh::method:get_surface_primitive_type(int:)",
+        "ImporterMesh::method:merge_importer_meshes(ImporterMesh[]:,Transform3D[]:,bool:)",
+        "ImporterMesh::method:set_blend_shape_mode(int:Mesh.BlendShapeMode)",
+        "ImporterMesh::method:set_surface_material(int:,Material:)",
+        "ImporterMesh::method:set_surface_name(int:,String:)"
+      ],
+      "reason": "ADRs 0004/0013/0014/0092: copied raw typed authoring compiles actual ArrayMesh snapshots; independent target definitions, material graphs, exact raw storage and attribute-aware pinned simplification execute through real LOD/morph/skin/instance/group/owned consumers. Framebuffer pixels, independent C++ index fixtures, fresh scenes and warmed managed-zero replay separate native/platform/owner gates."
+    },
+    {
+      "state": "Excluded",
+      "godot": [
+        "ImporterMesh::method:get_lightmap_size_hint()",
+        "ImporterMesh::method:set_lightmap_size_hint(Vector2i:)"
+      ],
+      "reason": "ADRs 0004/0092: 3D lightmap atlas hints have no 2D lighting consumer; no implementation trigger."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:ImporterMesh",
+        "ImporterMesh::method:add_surface(int:Mesh.PrimitiveType,Array:,Array[]:,Dictionary:,Material:,String:,int:)"
+      ],
+      "reason": "Raw authoring, compilation, real simplification/merge, storage and all current 2D consumers execute under ADR 0092. Remaining trigger: shared ARRAY_FLAG_USES_EMPTY_VERTEX_ARRAY requires procedural vertex-shader geometry/non-position storage; these flags reject before mutation until that producer enters its first slice."
     }
   ]
 }

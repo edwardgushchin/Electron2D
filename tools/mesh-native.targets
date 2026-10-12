@@ -1,0 +1,23 @@
+<Project>
+  <PropertyGroup>
+    <Electron2DMeshNativeRID Condition="'$(Electron2DMeshNativeRID)' == ''">$(_Electron2DPrivateNativeRID)</Electron2DMeshNativeRID>
+    <_Electron2DMeshName>libElectron2DMesh.so</_Electron2DMeshName>
+    <_Electron2DMeshName Condition="'$(Electron2DNativePlatform)' == 'MacOS'">libElectron2DMesh.dylib</_Electron2DMeshName>
+    <_Electron2DMeshName Condition="'$(Electron2DNativePlatform)' == 'Windows'">Electron2DMesh.dll</_Electron2DMeshName>
+    <_Electron2DMeshBuild>$(MSBuildThisFileDirectory)../obj/mesh-native/$(Electron2DMeshNativeRID)</_Electron2DMeshBuild>
+    <_Electron2DMeshLibrary>$(_Electron2DMeshBuild)/$(_Electron2DMeshName)</_Electron2DMeshLibrary>
+    <_Electron2DMeshLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true'">$(PkgElectron2D_Linux)/runtimes/$(Electron2DMeshNativeRID)/native/$(_Electron2DMeshName)</_Electron2DMeshLibrary>
+    <_Electron2DMeshLibrary Condition="'$(Electron2DBuildNativeFromSource)' != 'true' and '$(Electron2DNativePlatform)' == 'MacOS'">$(PkgElectron2D_MacOS)/runtimes/$(Electron2DMeshNativeRID)/native/$(_Electron2DMeshName)</_Electron2DMeshLibrary>
+    <_Electron2DMeshLibrary Condition="'$(Electron2DMeshNativeLibrary)' != ''">$(Electron2DMeshNativeLibrary)</_Electron2DMeshLibrary>
+  </PropertyGroup>
+  <ItemGroup>
+    <_Electron2DMeshInput Include="$(MSBuildThisFileDirectory)../src/Vendor/meshoptimizer/*;$(MSBuildThisFileDirectory)mesh-native/*;$(MSBuildThisFileFullPath)" />
+    <None Include="$(_Electron2DMeshLibrary)" Condition="('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS') and ('$(Electron2DBuildNativeFromSource)' == 'true' or Exists('$(_Electron2DMeshLibrary)'))" Link="runtimes/$(Electron2DMeshNativeRID)/native/$(_Electron2DMeshName)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Pack="false" Visible="false" />
+  </ItemGroup>
+  <Target Name="BuildElectron2DMeshNative" BeforeTargets="PrepareForBuild;GetCopyToOutputDirectoryItems;ComputeFilesToPublish" Condition="'$(Electron2DBuildNativeFromSource)' == 'true' and '$(Electron2DMeshNativeLibrary)' == '' and ('$(Electron2DNativePlatform)' == 'Linux' or '$(Electron2DNativePlatform)' == 'MacOS')" Inputs="@(_Electron2DMeshInput)" Outputs="$(_Electron2DMeshLibrary)">
+    <Error Condition="'$(Electron2DMeshNativeRID)' != '$(NETCoreSdkRuntimeIdentifier)'" Text="Private mesh compilation requires the matching target host; foreign profiles use the native bundle producers." />
+    <Exec Command="$(Electron2DNativePython) -B &quot;$(MSBuildThisFileDirectory)mesh-native/check_sources.py&quot;" />
+    <Exec Command="cmake -S &quot;$(MSBuildThisFileDirectory)mesh-native&quot; -B &quot;$(_Electron2DMeshBuild)&quot; -G Ninja -DCMAKE_BUILD_TYPE=Release" />
+    <Exec Command="cmake --build &quot;$(_Electron2DMeshBuild)&quot; --target Electron2DMesh --parallel 2" />
+  </Target>
+</Project>

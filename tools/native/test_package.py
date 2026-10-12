@@ -6,7 +6,7 @@ from pathlib import Path
 import struct
 import tempfile
 import unittest
-from unittest.mock import patch
+from unittest.mock import Mock, patch
 from zipfile import ZipFile
 
 import build_tls
@@ -15,6 +15,24 @@ import test_consumer
 
 
 class NativePackageTests(unittest.TestCase):
+    def test_windows_producer_copies_tls_by_name_after_mesh_insertion(self):
+        with patch.dict("sys.modules", {"windows": Mock()}):
+            import build_windows
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            with patch.object(build_windows.platform, "system", return_value="Windows"), \
+                 patch.dict(build_windows.os.environ, {"VSCMD_ARG_TGT_ARCH": "x64"}), \
+                 patch.object(build_windows.windows, "sdl_import_library"), \
+                 patch.object(build_windows.subprocess, "run"), \
+                 patch.object(build_windows.build_tls, "build"), \
+                 patch.object(build_windows.package, "stage"), \
+                 patch.object(build_windows.shutil, "copy2") as copy:
+                build_windows.build("win-x64", root / "SDL3.dll", root / "artifacts")
+            sources = [call.args[0] for call in copy.call_args_list]
+            self.assertEqual([path.name for path in sources if path.parent.name == "tls"],
+                             ["libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"])
+            self.assertIn("Electron2DMesh.dll", [path.name for path in sources])
+
     def test_default_elf_symbol_versions_resolve_but_nondefault_versions_do_not(self):
         symbols = "0001 T BIO_s_dgram_pair@@OPENSSL_3.2.0\n0002 T ERR_get_error@@OPENSSL_3.0.0\n0003 T TLS_method@LEGACY\n0004 T e2d_audio_select_output\n"
         with patch.object(package.subprocess, "check_output", return_value=symbols):

@@ -181,6 +181,7 @@ public sealed partial class ThemeDB
         ["ImageTexture"] = ["ImageTexture", "Texture", "Resource", "ElectronObject"],
         ["ImageTextureLayered"] = ["ImageTextureLayered", "TextureLayered", "Resource", "ElectronObject"],
         ["ImmediateMesh"] = ["ImmediateMesh", "Mesh", "Resource", "ElectronObject"],
+        ["ImporterMesh"] = ["ImporterMesh", "Resource", "ElectronObject"],
         ["Input"] = ["Input", "ElectronObject"],
         ["InputEvent"] = ["InputEvent", "Resource", "ElectronObject"],
         ["InputEventAction"] = ["InputEventAction", "InputEvent", "Resource", "ElectronObject"],

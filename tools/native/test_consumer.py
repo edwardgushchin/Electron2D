@@ -15,6 +15,16 @@ import package as native_package
 
 ROOT = Path(__file__).resolve().parents[2]
 PROGRAM = '''using Electron2D;
+using var importer = new ImporterMesh();
+var cells = 8;
+var points = new Vector2[(cells + 1) * (cells + 1)];
+for (var y = 0; y <= cells; y++) for (var x = 0; x <= cells; x++) points[y * (cells + 1) + x] = new(x, y);
+var triangles = new List<int>();
+for (var y = 0; y < cells; y++) for (var x = 0; x < cells; x++) { var a = y * (cells + 1) + x; triangles.AddRange(new[] { a, a + 1, a + cells + 2, a, a + cells + 2, a + cells + 1 }); }
+importer.AddSurface(Mesh.PrimitiveType.Triangles, new MeshSurfaceData { Vertices = points, Indices = triangles.ToArray() });
+importer.GenerateLODs(60);
+using var compiledMesh = importer.GetMesh() ?? throw new Exception("Importer did not compile a mesh");
+if (compiledMesh.SurfaceGetLODs(0).Count == 0) throw new Exception("Native mesh simplification failed");
 
 foreach (var name in new[] { "Electron2D.Shaders.Canvas.vert.spv", "Electron2D.Shaders.CanvasInstanced.vert.spv",
     "Electron2D.Shaders.Canvas.frag.spv", "Electron2D.Shaders.Clip.frag.spv", "Electron2D.PhysicsShaders.PhysicsIntegrate.comp.spv" })
@@ -41,7 +51,7 @@ try
     Thread.Sleep(100);
     if (player.GetPlaybackPosition() <= 0 || AudioServer.GetOutputLatency() < 0)
         throw new Exception("Native audio/output bridge failed");
-    Console.WriteLine("Public text, audio and ENet consumer passed");
+    Console.WriteLine("Public text, audio, ENet and mesh consumer passed");
 }
 finally { Engine.Stop(); }
 '''
@@ -109,7 +119,7 @@ def check(feed, rid):
         environment.pop("LD_LIBRARY_PATH", None)
         environment.pop("Electron2DBuildNativeFromSource", None)
         run([dotnet, "build", "Electron2D.csproj", "-c", "Release", "--nologo"], engine, environment)
-        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "native-windows", "native-cross")):
+        if any((engine / "obj" / name).exists() for name in ("text-native", "audio-native", "enet-native", "tls-native", "font-native", "mesh-native", "native-windows", "native-cross")):
             raise RuntimeError("Consumer build created native compilation directories")
         # A package consumer has no reference to the engine source or its private build targets.
         engine_feed = work / "feed"

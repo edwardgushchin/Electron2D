@@ -150,7 +150,7 @@ Native SDL deployment remains a separate platform constraint outside the verifie
 <a id="adr-0012"></a>
 ## ADR 0012: Vendor SDL3-CS and Box2D.NET managed source
 
-Last updated: 2026-10-05
+Last updated: 2026-10-12
 
 - Status: Accepted
 - Scope: Managed dependency ownership, deployment packaging, and future 2D physics, text and audio
@@ -163,6 +163,8 @@ Electron2D distributes one managed runtime assembly and exposes one engine-owned
 SDL3-CS core binding source is pinned in `src/Vendor/SDL3-CS`, and Box2D.NET 3.1.654 source is pinned in `src/Vendor/Box2D.NET`; both compile into `Electron2D.dll`. The first scene-body physics slice is executable under ADR 0054, while server, area, joint and broad shape/query APIs remain incomplete. Native SDL is a separate platform-specific library supplied transitively by the selected Electron2D platform package.
 
 MikkTSpaceSharp source at `b8e44530659f5e98b45eedb3ddd225d759776e68` is approved for structural tangent generation under ADR 0092. Its zlib license, algorithm and allocator provenance are retained in `src/Vendor/MikkTSpaceSharp`; outer visibility and nullable packaging directives are local adaptations. Per-call allocation ownership fixes callback-error cleanup and native-width allocation-size conversion; the allocator patch must be submitted upstream with regression evidence. The source compiles internally into the same runtime assembly, with no new managed or native deployment library. Cold generation owns its temporary unmanaged allocations; renderer replay never invokes the generator. Boundary, failure, memory-balance and reference-parity checks remain required before reporting this dependency integrated.
+
+meshoptimizer 1.1.1 at `b22872835dbabc56a6e4a366ea9917f62b7daf1a` is selected for the structural ImporterMesh simplifier under ADR 0092. The immutable MIT source closure (allocator, simplifier and header) is retained in `src/Vendor/meshoptimizer`. An engine-owned C ABI bridge belongs to the native platform bundles, with internal bindings in Electron2D.dll and no managed backend assembly. It executes only cold import/generation; renderer replay consumes prepared ArrayMesh LODs. Source fingerprints, required exports and target architecture are part of the existing native package producer. Local source integration does not establish package publication or foreign-target acceptance. No upstream source modification is authorized by this selection; any allocation/hot-loop patch follows the user's upstream-PR requirement.
 
 ### Decision
 

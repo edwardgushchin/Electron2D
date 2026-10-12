@@ -260,3 +260,6 @@ Authored mesh LODs now execute from copied threshold/index storage through full 
 
 
 Compressed mesh attribute import now executes through copied canonical UV/frame storage, decoded retained drawing, partial updates, morph/LOD/skin/instance/group integration and AMS7 saved scenes. [The mesh component](../components/meshes.md#compressed-attributes) records exact strides, precision and Linux pixel/zero-managed-allocation evidence. GPU vertex uploads keep the existing canvas layout. Procedural shader-generated empty-position geometry remains a separate producer dependency.
+
+
+[ImporterMesh](../classes/ImporterMesh.md) now turns raw resource/scene authoring into drawable ArrayMesh snapshots and actual automatic LODs. The cold native simplifier is independent of SDL/GPU initialization; ordinary render replay retains existing allocation contracts. [The component](../components/meshes.md#importer-mesh) records raw precision, resource graph/storage, transformed merge and tested native/package boundaries.

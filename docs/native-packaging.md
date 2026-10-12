@@ -1,6 +1,6 @@
 # Electron2D NuGet delivery
 
-Last updated: 2026-10-06
+Last updated: 2026-10-12
 
 ## Installation model
 
@@ -38,6 +38,7 @@ Each RID contributes exactly these files:
 - `runtimes/<RID>/native/libElectron2DTextBreak.so`: private ICU boundary ABI.
 - `runtimes/<RID>/native/libFAudio.so.0`: FAudio with the engine-owned output bridge.
 - `runtimes/<RID>/native/libElectron2DENet.so`: private ENet/socket/codec bridge.
+- `runtimes/<RID>/native/libElectron2DMesh.so`: private attribute-aware mesh simplification bridge.
 
 Staging records the source fingerprint and binary SHA-256 values. Packing rejects missing/extra RIDs, stale source receipts, changed binaries, wrong ELF architectures or SONAMEs, missing bridge exports, and build-machine RPATH/RUNPATH entries. The final package includes that manifest, required notices and transitive build targets; it includes no managed backend DLL. Native files retain their runtime directory in both project and package consumers. Notices flow to `licence/` during publication.
 
@@ -114,3 +115,9 @@ The explicit one-RID pack is a local Linux x64 verification artifact. CI merges 
 The 2026-10-05 dependency refresh changes the private package source fingerprint and SDL dependency to 3.4.18, so all producers must rebuild the `0.1.0-alpha` candidate for this package-family migration. Earlier CI evidence below covers its previous source pins. Local Linux source tests, Wayland rendering and package audits do not establish foreign producer execution or public NuGet availability for this version. The source profile passed the full headless suite, native source/receipt and package checks, and the self-contained Linux inventory audit (68 ELF files, 65 notices). Wayland GPU/compatibility font, material/boolean and noise-texture pixel scenarios passed. The broad rendering runner still reaches the existing explicit Wayland Vulkan hide/show rejection, so that lifecycle is not accepted by these focused results.
 
 Linux x64 local verification exercises fresh source, ProjectReference/NuGet consumers and self-contained publications with native tools blocked and `LD_LIBRARY_PATH` unset. [CI run 37412313488](https://github.com/edwardgushchin/Electron2D/actions/runs/37412313488), at `975c9693`, passed all eighteen producers, seven platform packages, six fresh desktop consumers and the full Build/Tests matrices. All seven desktop full suites and available trimmed/NativeAOT contracts passed, as did four Android native apps, four Apple native simulator apps and source/fresh-package Chromium apps. iOS x64 passed a separate job rerun after first-boot setup timed out; the original command/app deadlines remain unchanged. Physical Apple profiles remain unsigned build-only. These checks are not public NuGet availability, rendered output, physical audio or production-host acceptance. See [Platform verification](platform-verification.md).
+
+## Importer mesh dependency checkpoint
+
+The current candidate adds meshoptimizer 1.1.1 at immutable commit `b22872835dbabc56a6e4a366ea9917f62b7daf1a`. Only its unmodified header, allocator and simplifier sources are vendored, with MIT notices and SHA-256 verification. The private bridge exports `e2d_mesh_scale` and `e2d_mesh_simplify`. It builds as `Electron2DMesh.dll` on Windows, `libElectron2DMesh.dylib` on macOS, `libElectron2DMesh.so` on Linux/Android, and `libElectron2DMesh.a` for Apple/Web static linking. All platform producers and audited file/export manifests include that library. This changes the source fingerprint and requires fresh platform bundles. Previously published packages and foreign execution evidence above do not cover this dependency.
+
+The local Linux x64 candidate passed source integrity, package receipt/export checks and fresh source/ProjectReference/NuGet build and publish consumers with native compilers blocked, including explicit-RID and default-host paths. Those consumers execute public ImporterMesh LOD generation and compile the resulting drawable ArrayMesh. GLSL, HLSL and compatibility rendering also passed focused importer pixel checks with zero managed allocations across 64 active and 64 idle warmed frames. Foreign producer builds, target execution and publication remain required; no new package was published.

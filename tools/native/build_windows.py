@@ -24,6 +24,7 @@ def build(rid, sdl, artifacts):
                 "-DELECTRON2D_SDL_VERSION=" + package.configuration()["sdlVersion"],
                 "-DSDL3_LIBRARIES=" + str(output / "sdl/SDL3.lib")]),
             ("tools/enet-native", "Electron2DENet", "Electron2DENet.dll", []),
+            ("tools/mesh-native", "Electron2DMesh", "Electron2DMesh.dll", []),
             ("tools/font-native", "freetype", "Electron2DFreeType.dll", [])):
         directory = output / target
         subprocess.run(["cmake", "-S", str(root / source), "-B", str(directory), "-G", "Ninja",
@@ -39,7 +40,7 @@ def build(rid, sdl, artifacts):
         destination.mkdir(parents=True, exist_ok=True)
         shutil.copy2(directory / name, destination / name)
     build_tls.build(rid, output / "tls")
-    for name in package.LIBRARIES["Windows"][3:5]:
+    for name in ("libcrypto-3-Electron2D.dll", "libssl-3-Electron2D.dll"):
         shutil.copy2(output / "tls" / name, destination / name)
     package.stage(rid, artifacts)
 

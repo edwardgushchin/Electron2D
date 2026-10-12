@@ -35,6 +35,7 @@ public static partial class ResourceFileTypes
         RegisterResource("SkeletonModificationPhysicalBones", CreateSkeletonPhysicalBones);
         RegisterResourceArray<SkeletonModification>();
         RegisterResource("ArrayMesh", CreateArrayMesh);
+        RegisterResource("ImporterMesh", CreateImporterMesh);
         RegisterResource("ImmediateMesh", CreateImmediateMesh);
         RegisterResource("NavigationPolygon", CreateNavigationPolygon);
         RegisterResource("NavigationMeshSourceGeometryData", CreateNavigationSourceGeometry);
@@ -126,6 +127,7 @@ public static partial class ResourceFileTypes
     private static NavigationAgent CreateNavigationAgent() => new();
     private static NavigationObstacle CreateNavigationObstacle() => new();
     private static ArrayMesh CreateArrayMesh() => new();
+    private static ImporterMesh CreateImporterMesh() => new();
     private static ImmediateMesh CreateImmediateMesh() => new();
     private static Resource CreateResource() => new();
     private static Curve CreateCurveResource() => new();

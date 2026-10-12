@@ -1,6 +1,6 @@
 # NativeLibraries
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 Native binaries come from the explicitly selected `Electron2D.{Platform}` package and its platform-only dependencies. The managed `Electron2D` package contains no native payload or implicit platform references. [Native delivery](../native-packaging.md) records the package/version/RID contract and separates local validation from publication and target execution.
 
@@ -17,7 +17,7 @@ iOS/tvOS compile the ten owned backend import names as `__Internal`, referring t
 
 Installs Electron2D.dll's native import resolver before binding calls. A lazy process-lifetime handle selects canonical `libSDL3.so.0`, Android `libSDL3.so`, `libSDL3.0.dylib` or `SDL3.dll` and shares that core with native dependents. There is intentionally no public setup or unload API.
 
-The private `libElectron2DTextBreak.so`, `libFAudio.so.0` and `libElectron2DENet.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the portable OS/process-architecture RID and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers, including universal macOS HarfBuzz supplied with the neutral `osx` RID. A default desktop build/publish deploys that file into its SDK host's architecture-qualified directory. Ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
+The private `libElectron2DTextBreak.so`, `libFAudio.so.0`, `libElectron2DENet.so` and `libElectron2DMesh.so` live under `runtimes/<RID>/native` beneath the application base directory. macOS uses the corresponding dylibs plus private OpenSSL and WOFF2-capable `libElectron2DFreeType.dylib`. Resolution uses the portable OS/process-architecture RID and `AppContext.BaseDirectory`, independently of the working directory and managed assembly location. The native package targets preserve this directory for project and package consumers, including universal macOS HarfBuzz supplied with the neutral `osx` RID. A default desktop build/publish deploys that file into its SDK host's architecture-qualified directory. Ordinary .NET resolution remains available as a fallback. Build and package ownership follow [ADR 0012](../decisions/product.md#adr-0012).
 
 ## Member summary
 
@@ -53,3 +53,5 @@ Self-contained Linux x64 tests loaded images and GPU shaders with LD_LIBRARY_PAT
 The default Debug apphost was also exercised against the system .NET runtime reporting `arch-x64`. Native resolution selects the packaged `linux-x64` directory by OS and process architecture; it does not require a custom DOTNET_ROOT or a distribution-specific native package.
 
 SPIRV-Cross reflection imports now resolve the already packaged runtime-directory shared library directly before any SDL shadercross/device initialization. CPUParticlesTests creates its custom-data Shader in a fresh GPU host process before Engine.Run, then checks actual native pixels. Windows/macOS/Android names were checked against package artifacts; this Linux execution does not establish their native runtime acceptance. Static browser/Apple shader integrations keep their existing separate gates.
+
+The current importer candidate resolves `Electron2DMesh` directly from the selected desktop RID directory or Android native search path, independently of SDL initialization. Apple uses `__Internal`; Web uses its matching `libElectron2DMesh` static module. The current Linux candidate passed fresh package/source consumers executing public LOD generation with native compilers blocked. Older foreign-platform package evidence above does not cover this additional library.
