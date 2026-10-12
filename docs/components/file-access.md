@@ -1,6 +1,6 @@
 # File and directory access component
 
-Last updated: 2026-10-06
+Last updated: 2026-10-12
 
 ## Scope
 
@@ -32,7 +32,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 - Depends on Core object lifetime and process `ProjectSettings` path resolution.
 - Shares an internal atomic-file helper with `ConfigFile`.
 - Uses .NET BCL compression/cryptography/hash/file/directory/drive/link APIs, native Linux/macOS xattrs, Windows alternate data streams, native filesystem identity/case/capacity metadata, Linux mount/bookmark metadata, and macOS volume/file-package metadata.
-- Does not depend on Scene, SDL, rendering, input, audio, physics, scripting, editor, or resource loading.
+- Ordinary files do not depend on Scene, rendering, input, audio, physics or editor. Process-pipe stream adapters use the Core OS owner and approved internal SDL process/IO binding.
 - Future pack mounts/resource loaders may provide an archive-backed path backend without changing typed binary methods.
 
 ## Invariants
@@ -52,7 +52,7 @@ Sources live in [`src/Core/IO/`](../../src/Core/IO/).
 
 Implemented for raw access, scoped directory navigation/enumeration/mutation, directory-backed `res://`/`user://`, typed binary/text methods, metadata/hashes, temporary files/directories, links, filesystem identity/case/capacity/type queries, Unix permissions, Linux/macOS/Windows extended attributes, DEFLATE/GZip/Brotli, and raw-key/password AES-GCM containers. The executable test host verifies the Linux platform backend; macOS and Windows backends compile but require native-host verification. Android and iOS are product runtime targets, but link and drive enumeration deliberately reject them until host/storage integration exists; neither mobile target has native verification or a claimed extended-attribute backend. Web is also a runtime target, but no browser host or storage integration exists; the first Web host slice must define and verify its filesystem capability boundary.
 
-FastLZ and Zstandard require codec providers that are not integrated. Packed/exported archive filesystems, import remapping, `uid://` identities, and `pipe://` streams require absent pack, resource-loader, resource-UID, and platform-pipe domains. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
+FastLZ and Zstandard require codec providers that are not integrated. Packed/exported archive filesystems and arbitrary named `pipe://` connections require their absent archive/named-pipe domains. Registered UID identities/imported resources use their existing loader/registry paths. OS-created process pipes now execute through the existing FileAccess methods; registered resources and UID paths retain their current loader/registry boundaries. Exact Android storage-volume discovery requires its future host integration. Universal-value storage and shared numeric/thread-local error slots are permanent typed-C# exclusions. No empty compatibility methods exist for these gaps.
 
 ## Verification
 
@@ -69,3 +69,5 @@ The single executable harness covers file and directory success, invalid input, 
 - [0020: Typed file access and transformed-file containers](../decisions/core-data-io.md#adr-0020)
 - [0021: Runtime and editor target platforms](../decisions/product.md#adr-0021)
 - [0022: Typed directory access](../decisions/core-data-io.md#adr-0022)
+
+[Process pipes](processes.md) now add owned non-seekable stdin/stdout/stderr, blocking/nonblocking reads/writes, exact temporary readiness versus EOF and consumed-prefix exceptions. These streams retain native process lifetime and close independently of child termination.

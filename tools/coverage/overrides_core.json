@@ -703,6 +703,72 @@
       "godot": "OS::method:get_system_fonts()",
       "electron2d": "method:Electron2D.OS.GetSystemFonts()",
       "reason": "ADR 0046: SystemFont family/style/collection/variable matching and owned automatic Unicode fallback execute through optional Linux Fontconfig, the existing FreeType/HarfBuzz owner and shared Font/canvas/control paths. SystemFontTests exercises host and isolated variable/collection/empty catalogs, logical face mapping, policy/reader lifetime, resource duplication/fresh process and current native GPU/compatibility prepared output. Other platform providers and additional raster/MSDF capabilities retain exact dependencies."
+    },
+    {
+      "godot": "OS::method:create_instance(PackedStringArray:)",
+      "electron2d": "method:Electron2D.OS.CreateInstance(System.ReadOnlySpan<System.String>)",
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependency: Android application-instance/activity launch adapter; desktop framework-dependent/apphost restart executes."
+    },
+    {
+      "godot": "OS::method:create_process(String:,PackedStringArray:,bool:)",
+      "electron2d": "method:Electron2D.OS.CreateProcess(System.String,System.ReadOnlySpan<System.String>,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: macOS .app bundle launch selection, Android external-process adapter and Windows explicit CREATE_NEW_CONSOLE semantics when the parent already owns a console. Ordinary desktop executable launch executes; foreign host/console acceptance is unverified."
+    },
+    {
+      "godot": "OS::method:execute(String:,PackedStringArray:,Array:,bool:,bool:)",
+      "electron2d": "method:Electron2D.OS.Execute(System.String,System.ReadOnlySpan<System.String>,System.Collections.Generic.ICollection<System.String>,System.Boolean,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: Windows shared stdout/stderr capture preserving native write order (readStderr=true currently rejects), explicit new-console ownership and Android command execution adapter. POSIX merged/stdout-only/default capture executes without implicit shell interpretation."
+    },
+    {
+      "godot": "OS::method:execute_with_pipe(String:,PackedStringArray:,bool:)",
+      "electron2d": "method:Electron2D.OS.ExecuteWithPipe(System.String,System.ReadOnlySpan<System.String>,System.Boolean)",
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: macOS .app helper selection and Android native process/pipe adapter. General named-pipe connections are a separate FileAccess.Open producer; owned process-pipe streams execute."
+    },
+    {
+      "godot": "OS::method:get_process_id()",
+      "electron2d": "method:Electron2D.OS.GetProcessID()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:get_executable_path()",
+      "electron2d": "method:Electron2D.OS.GetExecutablePath()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:get_cmdline_args()",
+      "electron2d": "method:Electron2D.OS.GetCommandLineArgs()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:get_cmdline_user_args()",
+      "electron2d": "method:Electron2D.OS.GetCommandLineUserArgs()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:get_process_exit_code(int:)",
+      "electron2d": "method:Electron2D.OS.GetProcessExitCode(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:is_process_running(int:)",
+      "electron2d": "method:Electron2D.OS.IsProcessRunning(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
+    },
+    {
+      "godot": "OS::method:kill(int:)",
+      "electron2d": "method:Electron2D.OS.Kill(System.Int32)",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Native executable/ID and cloned argv queries execute; user args follow the first --/++ separator. PID reuse resolves current native process for running/kill, while exit history belongs to the most recently created child. Foreign host acceptance is not claimed."
     }
   ],
   "extras": [
@@ -1266,7 +1332,42 @@
     {"electron2d": "method:Electron2D.Script.RegisterNode`1(System.String,System.String,Func<TNode>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
     {"electron2d": "method:Electron2D.Script.RegisterResource`1(System.String,System.String,Func<TResource>,Electron2D.PropertyDescriptor[])", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
     {"electron2d": "property:Electron2D.Script.CompiledType()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
-    {"electron2d": "property:Electron2D.Script.CompiledTypeID()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"}
+    {"electron2d": "property:Electron2D.Script.CompiledTypeID()", "reason": "Compiled-source registration, concrete typed source asset, ordinary class role declarations and resource lifecycle/storage extensions.", "adr": "ADR 0004/0013/0014/0091"},
+    {
+      "electron2d": "T:Electron2D.PipeWriteException",
+      "reason": "Typed C# projection of process-pipe partial-write error state from FileAccess.store_buffer/get_error; BytesWritten identifies consumed prefix without a shared mutable last-error slot.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "T:Electron2D.ProcessPipes",
+      "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "method:Electron2D.ProcessPipes.Dispose()",
+      "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "property:Electron2D.PipeWriteException.BytesWritten()",
+      "reason": "Typed C# projection of process-pipe partial-write error state from FileAccess.store_buffer/get_error; BytesWritten identifies consumed prefix without a shared mutable last-error slot.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "property:Electron2D.ProcessPipes.PID()",
+      "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "property:Electron2D.ProcessPipes.StandardError()",
+      "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    },
+    {
+      "electron2d": "property:Electron2D.ProcessPipes.StandardIO()",
+      "reason": "Operation-specific typed projection of OS.execute_with_pipe fixed pid/stdio/stderr result and deterministic owned stream lifetime; not a universal dictionary or new process capability.",
+      "adr": "docs/decisions/core-data-io.md#adr-0020"
+    }
   ],
   "statusGroups": [
     {
@@ -1814,6 +1915,47 @@
       "state": "Partial",
       "reason": "Current Linux Fontconfig profile enumerates scalable families and resolves style/text/locale requests with exact path/face ownership; unavailable catalogs return empty results. Trigger: owning Windows DirectWrite and Apple CoreText provider slices must connect these same static OS contracts, with actual target discovery/ownership fixtures. Discovery does not depend on a graphics session."
     },
-    {"godot": ["Noise::method:get_noise_1d(float:)", "Noise::method:get_noise_2d(float:,float:)", "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "class:Noise", "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Implemented", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."}
+    {"godot": ["Noise::method:get_noise_1d(float:)", "Noise::method:get_noise_2d(float:,float:)", "Noise::method:get_seamless_image(int:,int:,bool:,bool:,float:,bool:)", "class:Noise", "Noise::method:get_image(int:,int:,bool:,bool:,bool:)"], "state": "Implemented", "reason": "ADRs 0013/0014/0039/0104: complete 2D image producer and deferred-first/background NoiseTexture consumer, independent built-in input snapshots, custom virtual image dispatch, coalesced stale input, owner completion/failure/retry, task/file-graph retirement, null rendering retention, portable/local graphs and diagnostic placeholder sampling. NoiseGenerationTests, 122 pinned image cases and 20 unchanged RGBA kernel cases, fresh-process authoring and actual 48-frame GPU/compatibility consumers verify the exercised profile; pending reads and 25 warmed pending frame intervals allocate zero managed owner bytes. Large-skirt writes clip to output bounds; browser threading, foreign/editor/native allocator/load gates remain separate."},
+    {
+      "godot": [
+        "OS::method:get_process_id()",
+        "OS::method:get_executable_path()",
+        "OS::method:get_cmdline_args()",
+        "OS::method:get_cmdline_user_args()",
+        "OS::method:get_process_exit_code(int:)",
+        "OS::method:is_process_running(int:)",
+        "OS::method:kill(int:)"
+      ],
+      "state": "Implemented",
+      "reason": "ADRs 0004/0020/0095: static process ID/native executable and copied argument/separator queries, retained real owned-child exit status (normal137 versus signal9, unknown-child exceptions), current-PID running/kill with reuse-aware lookup execute in OSProcessTests. Fresh-process/current-instance reports, actual nonzero exit, native and managed kill, invalid IDs and cleanup are verified on Linux/.NET10. Typed C# exceptions replace numeric operation errors; foreign-host acceptance remains unverified."
+    },
+    {
+      "godot": [
+        "OS::method:create_instance(PackedStringArray:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependency: Android application-instance/activity launch adapter; desktop framework-dependent/apphost restart executes."
+    },
+    {
+      "godot": [
+        "OS::method:create_process(String:,PackedStringArray:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: macOS .app bundle launch selection, Android external-process adapter and Windows explicit CREATE_NEW_CONSOLE semantics when the parent already owns a console. Ordinary desktop executable launch executes; foreign host/console acceptance is unverified."
+    },
+    {
+      "godot": [
+        "OS::method:execute(String:,PackedStringArray:,Array:,bool:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: Windows shared stdout/stderr capture preserving native write order (readStderr=true currently rejects), explicit new-console ownership and Android command execution adapter. POSIX merged/stdout-only/default capture executes without implicit shell interpretation."
+    },
+    {
+      "godot": [
+        "OS::method:execute_with_pipe(String:,PackedStringArray:,bool:)"
+      ],
+      "state": "Partial",
+      "reason": "ADRs 0004/0020/0095: static retained OS process service; literal ordered argv, independently running children, current-host/application launch, captured native exit/kill and typed non-seekable stdin/stdout/stderr execute in OSProcessTests. Typed C# exceptions replace launch/numeric error sentinels; output is a string collection and ExecuteWithPipe returns owned ProcessPipes. POSIX capture retains merged write order and discards omitted output/disabled stderr. Nonblocking readiness is distinct from EOF; exact consumed-prefix write retries, UTF8/CR, 4MiB output and finalized stream cleanup execute on Linux/.NET10/SDL3.4.18. Remaining exact dependencies: macOS .app helper selection and Android native process/pipe adapter. General named-pipe connections are a separate FileAccess.Open producer; owned process-pipe streams execute."
+    }
   ]
 }

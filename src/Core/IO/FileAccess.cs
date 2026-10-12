@@ -8,11 +8,15 @@ using IoFileAccess = System.IO.FileAccess;
 
 namespace Electron2D;
 
-/// <summary>Provides seekable binary and text access to ordinary and directory-backed virtual files.</summary>
+/// <summary>Provides binary and text access to ordinary files, directory-backed virtual files and process pipes.</summary>
 /// <remarks>
-/// Instances own their stream until <see cref="Close"/> or disposal. Individual operations are serialized, but a
+/// Instances own their stream until <see cref="Close"/> or disposal. Seekable operations are serialized; process
+/// pipes serialize each read/write direction independently. A
 /// multi-call seek/read/write sequence is not atomic. File operations may block and are unsuitable for real-time frame
 /// callbacks. Compressed and encrypted files are authenticated or decoded completely before their contents are exposed.
+/// Process pipes from OS.ExecuteWithPipe are non-seekable. Nonblocking ReadBytes returns currently available bytes;
+/// temporary emptiness is not EOF. Exact reads may consume a partial value before raising IOException. Nonblocking
+/// writes may raise PipeWriteException with an exact consumed prefix. Closing a pipe does not terminate its child.
 /// </remarks>
 public sealed class FileAccess : ElectronObject
 {
@@ -30,6 +34,8 @@ public sealed class FileAccess : ElectronObject
     private static ReadOnlySpan<byte> EncryptionMagic => "E2DFILE"u8;
 
     private readonly object _gate = new();
+    private readonly object? _pipeWriteGate;
+    private object WriteGate => _pipeWriteGate ?? _gate;
     private readonly string _path;
     private readonly string _absolutePath;
     private readonly FileAccessModeFlags _mode;
@@ -52,9 +58,12 @@ public sealed class FileAccess : ElectronObject
         _absolutePath = absolutePath;
         _mode = mode;
         _stream = stream;
+        _pipeWriteGate = stream is ProcessPipeStream ? new object() : null;
         _encoder = encoder;
         _dirty = encoder is not null && Truncates(mode);
     }
+
+    internal static FileAccess FromProcessPipe(string path, Stream stream, FileAccessModeFlags mode) => new(path, path, mode, stream);
 
     /// <summary>Gets or sets whether multi-byte numeric values use big-endian byte order.</summary>
     /// <value><see langword="false"/> for little-endian order by default.</value>
@@ -117,7 +126,7 @@ public sealed class FileAccess : ElectronObject
             lock (_gate)
             {
                 EnsureOpen();
-                return _eofReached;
+                return _stream is ProcessPipeStream pipe ? pipe.EOFReached : _eofReached;
             }
         }
     }
@@ -473,7 +482,7 @@ public sealed class FileAccess : ElectronObject
     public void Flush()
     {
         ThrowIfDisposed();
-        lock (_gate)
+        lock (WriteGate)
         {
             ThrowIfDisposed();
             FlushLocked();
@@ -607,7 +616,8 @@ public sealed class FileAccess : ElectronObject
     /// <summary>Reads up to a requested number of bytes.</summary>
     /// <param name="length">The nonnegative maximum byte count.</param>
     /// <returns>A new array containing all available requested bytes.</returns>
-    /// <remarks><see cref="EOFReached"/> becomes true when fewer than <paramref name="length"/> bytes are available.</remarks>
+    /// <remarks>For files, EOFReached becomes true after an incomplete read. For a process pipe, temporary emptiness
+    /// returns the available prefix without claiming EOF. Blocking pipes wait until the requested count or EOF.</remarks>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is negative.</exception>
     /// <exception cref="InvalidOperationException">The file is closed or not readable.</exception>
     /// <exception cref="IOException">Reading fails.</exception>
@@ -683,6 +693,7 @@ public sealed class FileAccess : ElectronObject
             if (ReadAtMost(stream, prefix) != prefix.Length)
             {
                 _eofReached = true;
+                if (stream is ProcessPipeStream { EOFReached: false }) throw new IOException("The nonblocking pipe has no complete string length available.");
                 throw new EndOfStreamException("The file ended before a complete string length was read.");
             }
             var length = _bigEndian
@@ -694,6 +705,7 @@ public sealed class FileAccess : ElectronObject
             if (ReadAtMost(stream, bytes) != bytes.Length)
             {
                 _eofReached = true;
+                if (stream is ProcessPipeStream { EOFReached: false }) throw new IOException("The nonblocking pipe has no complete string payload available.");
                 throw new EndOfStreamException("The file ended before the complete string payload was read.");
             }
             return StrictUtf8.GetString(bytes);
@@ -759,7 +771,7 @@ public sealed class FileAccess : ElectronObject
     {
         ThrowIfDisposed();
         Span<byte> bytes = stackalloc byte[2];
-        lock (_gate)
+        lock (WriteGate)
         {
             var stream = EnsureWritable();
             if (_bigEndian)
@@ -781,7 +793,7 @@ public sealed class FileAccess : ElectronObject
     {
         ThrowIfDisposed();
         Span<byte> bytes = stackalloc byte[4];
-        lock (_gate)
+        lock (WriteGate)
         {
             var stream = EnsureWritable();
             if (_bigEndian)
@@ -803,7 +815,7 @@ public sealed class FileAccess : ElectronObject
     {
         ThrowIfDisposed();
         Span<byte> bytes = stackalloc byte[8];
-        lock (_gate)
+        lock (WriteGate)
         {
             var stream = EnsureWritable();
             if (_bigEndian)
@@ -852,7 +864,7 @@ public sealed class FileAccess : ElectronObject
     public void WriteBytes(ReadOnlySpan<byte> bytes)
     {
         ThrowIfDisposed();
-        lock (_gate)
+        lock (WriteGate)
         {
             EnsureWritable().Write(bytes);
             _dirty = bytes.Length > 0 || _dirty;
@@ -885,7 +897,7 @@ public sealed class FileAccess : ElectronObject
         ArgumentNullException.ThrowIfNull(value);
         var bytes = StrictUtf8.GetBytes(value);
         ThrowIfDisposed();
-        lock (_gate)
+        lock (WriteGate)
         {
             var stream = EnsureWritable();
             stream.Write(bytes);
@@ -924,7 +936,7 @@ public sealed class FileAccess : ElectronObject
         ArgumentNullException.ThrowIfNull(value);
         var bytes = StrictUtf8.GetBytes(value);
         ThrowIfDisposed();
-        lock (_gate)
+        lock (WriteGate)
         {
             var stream = EnsureWritable();
             Span<byte> prefix = stackalloc byte[sizeof(uint)];
@@ -1645,7 +1657,7 @@ public sealed class FileAccess : ElectronObject
             {
                 var next = stream.ReadByte();
                 if (next >= 0 && next != '\n')
-                    stream.Position--;
+                { if (stream is ProcessPipeStream pipe) pipe.PushBack((byte)next); else stream.Position--; }
                 break;
             }
             output.WriteByte((byte)value);
@@ -1666,6 +1678,7 @@ public sealed class FileAccess : ElectronObject
             if (ReadAtMost(stream, bytes) != length)
             {
                 _eofReached = true;
+                if (stream is ProcessPipeStream { EOFReached: false }) throw new IOException("The nonblocking pipe has no complete value available.");
                 throw new EndOfStreamException("The file ended before a complete value was read.");
             }
             return bytes;
@@ -1690,7 +1703,7 @@ public sealed class FileAccess : ElectronObject
             {
                 var next = stream.ReadByte();
                 if (next >= 0 && next != '\n')
-                    stream.Position--;
+                { if (stream is ProcessPipeStream pipe) pipe.PushBack((byte)next); else stream.Position--; }
                 break;
             }
             output.WriteByte((byte)value);
@@ -1708,6 +1721,7 @@ public sealed class FileAccess : ElectronObject
             if (ReadAtMost(stream, bytes) != size)
             {
                 _eofReached = true;
+                if (stream is ProcessPipeStream { EOFReached: false }) throw new IOException("The nonblocking pipe has no complete value available.");
                 throw new EndOfStreamException("The file ended before a complete value was read.");
             }
             return decode(bytes);
