@@ -580,3 +580,11 @@ Registered contact diagnostics now prepare capacity before solving and relinquis
 
 
 [Factory-selected direct views](physics-registered-adapter.md#factory-selected-direct-views) now execute through a public-only consumer, including cache identity, an initially empty body-contact snapshot, all six query families, immutable contact publication before scene/raw callbacks and failed-factory retry. Both extension direct-state rows remain Partial; full numerical, platform and performance acceptance stays open.
+
+[Shape correction policy](physics-registered-adapter.md#borrowed-shape-correction-policy)
+now rejects off-owner, numerical/step, geometry-supplier and recursive access writes
+before value, epoch or observer mutation, including equal assignments. The shared
+resource projection executes on CPU/GPU/registered scene/raw users and preserves
+post-solver callback edits and zero warm allocation. Two extension bias rows move
+from Unimplemented to Partial; independent registered correction and general
+geometry-edit preflight remain open.

@@ -983,3 +983,8 @@ extension and platform/performance acceptance remain open.
 
 
 [Registered factory-selected views](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute through a separate public-only consumer: cache identity, an initially empty contact snapshot, synchronized immutable publication before callbacks, result/lifetime validation, recreation and zero warm managed allocations. Independent caller-created body views keep direct hook dispatch; wider numerical-extension acceptance stays open.
+
+Shared Shape.CustomSolverBias edits preflight every scene/raw borrower before
+mutation, including equal assignments, disabled slots and a scene-held server
+geometry view. [Shape](Shape.md#customsolverbias) defines the owner/phase/borrow
+guards, observer failure and retained geometry identity.

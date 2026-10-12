@@ -1208,7 +1208,7 @@
     {
       "godot": "Shape2D::property:custom_solver_bias",
       "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
-      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open."
+      "reason": "World default and per-shape bias mixing, correction slack, live identity-preserving edits, guards, copy/storage and physical impulse response execute on CPU and independent GPU (ADR 0098, PhysicsContactPolicyTests). Selectable independent GPU worlds now execute (PhysicsGPUSpaceTests); full public-path family conformance remains open. All scene/raw owners now preflight policy writes, including equal assignments and geometry suppliers, before mutation (public-only --shape-policy CPU/GPU/registered checks)."
     },
     {
       "godot": "ProjectSettings::property:physics/2d/solver/default_contact_bias",
@@ -2649,6 +2649,16 @@
       "godot": "PhysicsServer2DExtension::method:_space_get_direct_state(RID:)",
       "electron2d": "method:Electron2D.PhysicsServerBackend.CreateDirectSpaceState(Electron2D.RID)",
       "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_get_custom_solver_bias(RID:)",
+      "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
+      "reason": "ADR 0103/0098: common Shape.CustomSolverBias metadata reaches selected collider Shape descriptors; authored reads stay available during numerical hooks. Writes preflight every scene/raw borrower, including disabled/server-owned scene views and equal assignments, before policy/epoch/Changed mutation. Public-only CPU/GPU/registered checks exercise owner, numerical/step/construction and recursive access guards, ordinary post-solver edits, observer failure, retained geometry/RID identity and 128 edited complete warm frames at zero owner/all-thread managed allocation. Complete registered numerical correction, arbitrary geometry and extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_shape_set_custom_solver_bias(RID:,float:)",
+      "electron2d": "property:Electron2D.Shape.CustomSolverBias()",
+      "reason": "ADR 0103/0098: common Shape.CustomSolverBias metadata reaches selected collider Shape descriptors; authored reads stay available during numerical hooks. Writes preflight every scene/raw borrower, including disabled/server-owned scene views and equal assignments, before policy/epoch/Changed mutation. Public-only CPU/GPU/registered checks exercise owner, numerical/step/construction and recursive access guards, ordinary post-solver edits, observer failure, retained geometry/RID identity and 128 edited complete warm frames at zero owner/all-thread managed allocation. Complete registered numerical correction, arbitrary geometry and extension acceptance remain open."
     }
   ],
   "extras": [
@@ -7461,6 +7471,14 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103: selected world factories provide cached generation-qualified body views and scoped query views through the public-only --factory-views consumer. Fresh/disposed-recreated cached contacts start empty without invoking publication hooks; completed immutable contact/identity/impulse snapshots precede raw force/state and scene integration callbacks, while independent caller-created views retain direct dispatch. The consumer exercises all six query families, exclusions/nesting/error validation, public state/forces, disposal/foreign/null/recursive factory failures, retry, detach/reentry and 128 active scene/raw frames with contacts/callbacks/point queries at zero owner/all-thread managed allocation. Full numerical-extension, native allocator, foreign-platform and final performance acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_shape_get_custom_solver_bias(RID:)",
+        "PhysicsServer2DExtension::method:_shape_set_custom_solver_bias(RID:,float:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103/0098: common Shape.CustomSolverBias metadata reaches selected collider Shape descriptors; authored reads stay available during numerical hooks. Writes preflight every scene/raw borrower, including disabled/server-owned scene views and equal assignments, before policy/epoch/Changed mutation. Public-only CPU/GPU/registered checks exercise owner, numerical/step/construction and recursive access guards, ordinary post-solver edits, observer failure, retained geometry/RID identity and 128 edited complete warm frames at zero owner/all-thread managed allocation. Complete registered numerical correction, arbitrary geometry and extension acceptance remain open."
     }
   ]
 }

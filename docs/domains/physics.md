@@ -695,3 +695,9 @@ extension and platform/performance acceptance remain open.
 
 
 [Registered direct-view factories](../components/physics-registered-adapter.md#factory-selected-direct-views) now execute with cached body/query identity, initially empty contact snapshots, immutable publication before scene/raw callbacks and guarded factory failure/retry. This bounded public-only fixture keeps full numerical-extension acceptance open.
+
+[Shape correction policy borrowing](../components/physics-registered-adapter.md#borrowed-shape-correction-policy)
+now preflights scene/raw owners, numerical and own geometry hooks before resource
+policy mutation. CPU/GPU/registered public checks preserve geometry/RID identity,
+ordinary callback access and zero warmed allocation. Complete numerical extension,
+network and performance acceptance remain open.

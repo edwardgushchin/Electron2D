@@ -9,6 +9,7 @@ namespace Electron2D;
 /// and unchanged assignments. Scene paths, geometry, clear and connection replacement use the same guard. Both incoming body owners are checked
 /// before preparing either body for a new connection.
 /// Authored parameter reads do not prepare solver state. Automatic inertia/center reads may prepare current geometry and reject numerical borrowing before doing so.
+/// Shared shape correction policy preflights every scene/raw user before mutation, including equal writes; accepted edits preserve exact geometry.
 /// Guarded authored reads remain available; ordinary body-state extension forwarding and post-solver callbacks keep their write access.
 /// Caller-owned release preflights access before mutation, then completes retirement and preserves all cleanup errors.
 /// Departure observers cannot rebind or recursively release the retiring collider.</remarks>

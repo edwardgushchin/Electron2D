@@ -1244,3 +1244,11 @@ Registered contact diagnostics dispatch capacity preparation through the selecte
 
 
 Registered body/query factory hooks now execute through the public-only PhysicsBackendExtension.Consumer. PhysicsDirectBodyState.PrepareContacts seeds the cached empty snapshot, preserving independent caller-created dispatch and complete validated publication before callbacks. See [factory-selected direct views](components/physics-registered-adapter.md#factory-selected-direct-views).
+
+Shape.CustomSolverBias now preflights all scene/raw borrowers before policy writes,
+including equal assignments, disabled slots and borrowed server geometry views.
+[The public registered/CPU/GPU consumer](components/physics-registered-adapter.md#borrowed-shape-correction-policy)
+verifies owner/step/numerical/construction/reentry guards, ordinary callback edits,
+observer-failure recovery, geometry/RID identity and 128 active warm frames at zero
+owner/all-thread managed allocation. This shared resource policy guard does not
+close arbitrary numerical-extension, geometry-edit or final acceptance gates.

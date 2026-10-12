@@ -767,3 +767,26 @@ native allocator, foreign-platform and final performance acceptance remain open.
 
 
 Factory state-write checks also exposed an asymmetric guard: raw layer/mask setters used the geometry-lifetime path and rejected ordinary body-state forwarding, while scene setters were parameter writes. Both raw setter siblings now use the common body write guard and retain separate release/geometry-borrow validation. Numerical filter hooks still reject nested layer/mask writes, shape addition and RID release before mutation. Scene and raw view writes preserve the same filter values and real wake/query path.
+
+## Borrowed shape correction policy
+
+The common Shape.CustomSolverBias resource property supplies selected collider
+Shape descriptors with authored policy. Its getter remains available during
+numerical borrowing. Valid writes, including equal values, preflight all scene/raw
+users before changing the value or policy epoch. Disabled slots and a scene-held
+server geometry view participate. Owner-thread, numerical/step, own geometry-supplier
+and recursive access violations reject without Changed or geometry mutation.
+Access hooks run outside the resource registry and geometry locks and cannot dispose the shape.
+Retained borrower lists are cleared after success or failure. Ordinary body-state
+callbacks can edit policy; a throwing Changed observer preserves an already
+committed edit. Immutable geometry data and resource RID remain identical.
+
+The public-only `--shape-policy` profile executes on registered, CPU and independent
+GPU worlds. It checks initial attachment and live state/shape/filter hooks, solve
+and status reentry, raw Body/Area sharing, borrowed server geometry through a scene
+owner, foreign-thread equal/changed writes, invalid values and recovery. After 256
+warmup cycles, 128 active complete scene/raw frames with two changing resource
+biases allocate zero owner/all-thread managed bytes. Existing contact-policy tests
+verify physical CPU/GPU correction. The two extension bias rows map to the actual
+common resource projection as Partial; arbitrary registered numerical correction,
+geometry mutation preflight and full extension acceptance remain open.

@@ -1,6 +1,6 @@
 # Shape
 
-Last updated: 2026-10-10
+Last updated: 2026-10-12
 
 **Inherits:** [Resource](Resource.md) · **Inherited By:** [CircleShape](CircleShape.md), [CapsuleShape](CapsuleShape.md), [SegmentShape](SegmentShape.md), [SeparationRayShape](SeparationRayShape.md), [ConvexPolygonShape](ConvexPolygonShape.md), [ConcavePolygonShape](ConcavePolygonShape.md), [RectangleShape](RectangleShape.md), [WorldBoundaryShape](WorldBoundaryShape.md)
 
@@ -110,7 +110,13 @@ policy; direct-space queries retain their separate swept-query semantics.
 `public float CustomSolverBias { get; set; }` defaults to zero (inherit the world).
 A single nonzero bias overrides the world; two nonzero biases use their arithmetic
 mean. Values must be finite in [0,1]. Disposed resources reject access. Invalid
-writes throw ArgumentOutOfRangeException before mutation; equal writes are silent.
+writes throw ArgumentOutOfRangeException before mutation. Before any valid write,
+including an equal value, all scene/raw borrowers preflight owner, phase and numerical
+hook access. Disabled slots and scene users of a server-owned view participate.
+Foreign-owner, active step, geometry-construction and recursive policy-access writes
+throw InvalidOperationException before policy, epoch or Changed mutation. Access
+hooks cannot dispose the resource. Accepted equal writes are silent; ordinary
+post-solver callback edits remain available.
 Changed policy emits Changed but preserves geometry revision, RID, mass and fixtures.
 The policy epoch publishes before callbacks, so a throwing observer cannot hide an
 already committed edit. Borrowers observe it on their next preparation and wake

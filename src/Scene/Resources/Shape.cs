@@ -6,6 +6,9 @@ namespace Electron2D;
 public abstract partial class Shape : Resource
 {
     private float _customSolverBias;
+    private bool _checkingSolverPolicy;
+    private readonly List<CollisionObject> _policySceneUsers = [];
+    private readonly List<PhysicsServerCollider> _policyServerUsers = [];
     private static long _solverPolicyEpoch;
     internal static long SolverPolicyEpoch => Volatile.Read(ref _solverPolicyEpoch);
 
@@ -14,17 +17,34 @@ public abstract partial class Shape : Resource
     /// <remarks>One nonzero shape bias overrides the world; two nonzero biases are averaged.
     /// The fraction is distributed over substeps within the nominal physics tick. It affects positional correction,
     /// not restitution or query margins. Edits preserve geometry and are observed before the next query or step,
-    /// waking affected bodies. Equal writes are silent. This borrowed resource must remain live and unchanged during a step.</remarks>
+    /// waking affected bodies. All attached scene/raw owners are checked before mutation, including equal writes.
+    /// Accepted equal writes are silent. This borrowed resource must remain live and unchanged during a step.</remarks>
     /// <exception cref="ArgumentOutOfRangeException">The value is nonfinite or outside [0,1].</exception>
+    /// <exception cref="InvalidOperationException">An attached owner rejects authoring, or this resource's geometry or policy access hook is borrowed.</exception>
     /// <exception cref="ObjectDisposedException">This resource is disposed.</exception>
     public float CustomSolverBias
     {
         get { ThrowIfDisposed(); return _customSolverBias; }
         set
         {
-            ThrowIfDisposed(); if (!PhysicsContactSettings.ValidBias(value)) throw new ArgumentOutOfRangeException(nameof(value));
-            if (_customSolverBias == value) return;
-            _customSolverBias = value; Interlocked.Increment(ref _solverPolicyEpoch); EmitChanged();
+            lock (_geometryGate)
+            {
+                ThrowIfDisposed(); if (!PhysicsContactSettings.ValidBias(value)) throw new ArgumentOutOfRangeException(nameof(value));
+                if (_readingGeometry || _checkingSolverPolicy) throw new InvalidOperationException("Shape policy cannot change while its geometry or policy access hook is borrowed.");
+                _checkingSolverPolicy = true;
+            }
+            try
+            {
+                PhysicsServer.Service.EnsureShapePolicyAccess(this, _policySceneUsers, _policyServerUsers);
+                lock (_geometryGate)
+                {
+                    ThrowIfDisposed();
+                    if (_customSolverBias == value) return;
+                    _customSolverBias = value; Interlocked.Increment(ref _solverPolicyEpoch);
+                }
+            }
+            finally { lock (_geometryGate) _checkingSolverPolicy = false; }
+            EmitChanged();
         }
     }
 
@@ -112,11 +132,11 @@ public abstract partial class Shape : Resource
     }
 
     /// <summary>Preserves the lifetime of geometry borrowed from a caller-owned server shape.</summary>
-    /// <exception cref="InvalidOperationException">The server RID owns this geometry; release that RID instead.</exception>
+    /// <exception cref="InvalidOperationException">The server RID owns this geometry, or its geometry or policy access hook is borrowed.</exception>
     protected override void ValidateDisposal()
     {
         lock (_geometryGate)
-            if (_readingGeometry) throw new InvalidOperationException("A shape cannot be disposed during its geometry construction hook.");
+            if (_readingGeometry || _checkingSolverPolicy) throw new InvalidOperationException("A shape cannot be disposed during its geometry or policy access hook.");
         lock (_queryRIDGate)
             if (_serverOwned && _serverReleaseThread != Environment.CurrentManagedThreadId) throw new InvalidOperationException("This geometry is borrowed from a server shape RID.");
         base.ValidateDisposal();

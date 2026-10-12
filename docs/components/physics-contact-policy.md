@@ -1,11 +1,24 @@
 # World and shape contact policy
 
-Last updated: 2026-10-09
+Last updated: 2026-10-12
 
 ## Authored policy
 
 [ADR 0098](../decisions/physics-contacts.md#adr-0098) defines Shape.CustomSolverBias
 and typed PhysicsServer world getters/setters for default bias and allowed penetration.
+
+Shape policy writes now preflight every scene/raw borrower before committing a
+value, including equal assignments. This covers disabled slots, scene owners of
+server geometry, owner threads, numerical hooks, active steps and recursive access
+hooks. The shape's own geometry supplier also rejects policy mutation before
+publication. Selected access callbacks run outside the resource registry and geometry locks;
+retained borrower scratch is cleared after success or failure. Geometry, RID and
+Changed observers remain untouched by rejection. Ordinary post-solver policy edits
+retain access, and a throwing Changed observer leaves the committed policy visible.
+The public-only `--shape-policy` CPU/GPU/registered profiles exercise these guards
+and 128 active complete frames after 256 warmup frames with zero owner/all-thread
+managed allocation. Numerical correction remains verified by PhysicsContactPolicyTests;
+these bounded checks do not establish complete extension or performance acceptance.
 [PhysicsContactSettings](../classes/PhysicsContactSettings.md) validates the shared
 policy. New worlds sample ProjectSettings feature overrides: bias 0.8 and slack
 0.3 scene units. Existing worlds retain their settings. Zero shape bias inherits
