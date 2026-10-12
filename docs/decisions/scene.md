@@ -1,6 +1,6 @@
 # Electron2D scene decisions
 
-Last updated: 2026-10-08
+Last updated: 2026-10-13
 
 This bounded document owns the current architectural decisions for scene. Node is the neutral scene-tree base and Entity is the spatial canvas base under ADR 0008; current class pages describe the implemented API. Use [the decision index](index.md) to route other work; read only the affected logs and explicitly linked dependencies.
 
@@ -195,7 +195,7 @@ Electron2D must keep typed C# calls, deterministic ownership, its managed runtim
 <a id="adr-0023"></a>
 ## ADR 0023: Typed in-memory packed scenes
 
-Last updated: 2026-10-01
+Last updated: 2026-10-13
 
 ### Status
 
@@ -231,7 +231,7 @@ Derived node types opt in through `CreateSceneInstanceFactory()`. The factory mu
 
 #### Reconstruction and lifetime
 
-Instantiation creates nodes parent-first, restores typed properties and persistent groups before parenting, assigns `Owner` after hierarchy construction, then restores node references before scene-local resources. Forward references therefore resolve within each new hierarchy; missing targets become null and a target of an incompatible declared type rejects instantiation. SceneState exposes a stored node reference as a string path (empty for null), not as an original or partially instantiated node. The result is detached and does not enter or become ready in a `SceneTree`.
+Instantiation creates nodes parent-first, restores typed properties and persistent groups before parenting, assigns `Owner` after hierarchy construction, then restores node references and validates built-in cross-property state before scene-local resources. Forward references therefore resolve within each new hierarchy; missing targets become null and a target of an incompatible declared type rejects instantiation. SceneState exposes a stored node reference as a string path (empty for null), not as an original or partially instantiated node. The result is detached and does not enter or become ready in a `SceneTree`.
 
 During reconstruction, each captured property must match a writable stored descriptor on the fresh target with the exact captured value type. Control/Window theme overrides have one bounded extension under [ADR 0083](rendering.md#adr-0083): when a fresh target has no descriptor yet, the engine can reconstruct only the reserved `ThemeColorOverride/`, `ThemeConstantOverride/`, `ThemeFontSizeOverride/`, `ThemeIconOverride/`, `ThemeStyleBoxOverride/` and `ThemeFontOverride/` families with exact `Color?`, `int?`, `int?`, `Texture`, `StyleBox` and `Font` value types. The descriptor is newly bound to the target's typed theme API. Unknown prefixes, other node roles, non-stored entries and mismatched types still fail. Captured source-owner delegates are never reused, and this does not add Variant values or general string member dispatch.
 

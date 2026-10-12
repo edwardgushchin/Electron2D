@@ -28,7 +28,7 @@ public partial class AnimationMixer
         foreach (var transport in _audioTransports.Values) try { transport.Dispose(); } catch (Exception error) { CollectException(ref errors, error); }
         _audioTransports.Clear(); _audioBindings.Clear(); ThrowCollected("Audio animation cleanup failed.", errors);
     }
-    private static readonly PropertyDescriptor[] AudioProperties = [new PropertyDescriptor<AnimationMixer, int>(nameof(AudioMaxPolyphony), n => n.AudioMaxPolyphony, (n, v) => n.AudioMaxPolyphony = v, _ => 32)];
+    private static readonly PropertyDescriptor[] AudioProperties = [new PropertyDescriptor<AnimationMixer, int>(nameof(AudioMaxPolyphony), n => n.AudioMaxPolyphony, (n, v) => n.AudioMaxPolyphony = v, _ => 32, stored: true)];
 }
 internal sealed class AnimationAudioTransport : IDisposable
 {

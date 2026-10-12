@@ -1,6 +1,6 @@
 # PackedScene
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md)
 
@@ -291,3 +291,5 @@ The protected `RemapResourceReferences(Func<Resource, Resource> remap)` hook map
 Typed tile scene references now resolve registered TileSetScenesCollectionSource graphs. Archive restoration prepares PackedScene root metadata before dependent validated resource properties; internal canvas-root validation reads stored compiled factory types without executing factories.
 
 Instance parameter descriptors reconstruct captured nullable scalar/vector schemas without requiring a material. Typed aliases restore through their captured schema, with owner/capture validation. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+Built-in cross-property scene validation runs after all stored values and node references are restored, before local-resource setup and scene-instantiated notification. AnimationPlayer uses it to reject unknown next/blend references or incomplete durations. This stays inside the existing failed-instance cleanup boundary.

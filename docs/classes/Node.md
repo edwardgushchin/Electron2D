@@ -1,6 +1,6 @@
 # Node
 
-Last updated: 2026-10-11
+Last updated: 2026-10-13
 
 **Inherits:** [ElectronObject](ElectronObject.md)
 
@@ -1581,3 +1581,5 @@ ancestor/descendant and external-object binding checks, including detached nodes
 This conservative check avoids repeated empty scans during bulk construction and
 final disposal; it does not index individual subtrees. See the [lifecycle
 measurement](../components/physics-scene-performance.md#empty-hierarchy-guard-scans).
+
+Animation controllers use the same owner-thread and scene-capture mutation guards as other nodes. Built-in scene-state validation finishes after stored values/reference restoration and before resource setup or scene-instantiated notifications.

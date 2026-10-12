@@ -77,7 +77,7 @@ internal static class SceneAnimationTests
         a.TrackSetKeyValue(0, 1, 20d); tree.ProcessFrame(.1); Near(replacement.Value, 6); player.ClearCaches(); tree.ProcessFrame(.1); Near(replacement.Value, 8);
         replacement.Hook = () => player.Play("a"); player.Advance(.1); Check(player.IsPlaying(), "Reentrant setter playback remains live."); replacement.Hook = () => throw new ApplicationException("Expected setter failure."); Reject<ApplicationException>(() => player.Advance(.1)); Check(!player.IsPlaying(), "Setter failure pauses controller."); replacement.Hook = null;
         player.Play("a"); library.RemoveAnimation("a"); player.Advance(.1); Check(!player.IsPlaying(), "Removed playback source pauses."); library.AddAnimation("a", a); player.Play("a"); a.Dispose(); player.Advance(.1); Check(!player.IsPlaying(), "Disposed source pauses."); Check(!library.IsDisposed, "Controller does not own libraries.");
-        using var packed = new PackedScene(); using var packRoot = new Node(); var packedPlayer = new AnimationPlayer(); packRoot.AddChild(packedPlayer); packedPlayer.Owner = packRoot; Reject<NotSupportedException>(() => packed.Pack(packRoot));
+        using var packed = new PackedScene(); using var packRoot = new Node(); var packedPlayer = new AnimationPlayer(); packRoot.AddChild(packedPlayer); packedPlayer.Owner = packRoot; packed.Pack(packRoot); using var packedCopy = packed.Instantiate(); Check(packedCopy.GetChild(0) is AnimationPlayer, "Empty authored player packs and instances.");
     }
     private static void Warm()
     {

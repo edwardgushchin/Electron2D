@@ -53,14 +53,6 @@ public class AnimationTree : AnimationMixer
     public string AnimPlayer { get { ThrowIfDisposed(); return _animPlayer; } set { EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(value); _animPlayer = value; _playerDirty = true; GraphChanged(); ReconcilePlayer(); AnimationPlayerChanged?.Invoke(); } }
     /// <summary>Occurs after assigning the animation-player path.</summary>
     public event Action? AnimationPlayerChanged;
-    /// <summary>Returns the inherited automatic animation update phase.</summary>
-    /// <returns>The current phase.</returns>
-    /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public AnimationCallbackModeProcess GetProcessCallback() => CallbackModeProcess;
-    /// <summary>Sets the inherited automatic animation update phase.</summary>
-    /// <param name="mode">A defined phase.</param>
-    /// <exception cref="ObjectDisposedException">This resource/controller or a required borrowed resource has been disposed.</exception>
-    public void SetProcessCallback(AnimationCallbackModeProcess mode) => CallbackModeProcess = mode;
     /// <summary>Reads a declared typed parameter at a graph-node path.</summary>
     /// <typeparam name="TValue">The exact parameter type.</typeparam>
     /// <param name="nodePath">The relative graph path, empty for the root.</param>

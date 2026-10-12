@@ -270,3 +270,5 @@ Window content policies now execute logical-size fitting, raster target selectio
 [Typed clip persistence](../components/scene-animation.md#typed-clip-persistence) loads property/Bézier Animation and AnimationLibrary assets through stable compiled property bindings, then executes existing player/mixer/graph consumers.
 
 [Animation cue persistence](../components/scene-animation.md#cue-persistence) reconstructs all current method/audio/nested track kinds for existing players and graphs using compiled callback IDs and typed resource references.
+
+[Controller scene files](../components/scene-animation.md#controller-scene-files) now preserve exact AnimationMixer/Player authored scene state and load Ready-time autoplay through existing scheduling, with library aliases across nodes. Graph definitions and reset-on-save capture transactions remain distinct dependencies.

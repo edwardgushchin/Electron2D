@@ -557,6 +557,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_BLEND") == "1") { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION_HOST") == "1") { SceneAnimationTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROLLER_FILE_CHILD") is { } controllerChild) { AnimationControllerPersistenceTests.RunChild(controllerChild); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROLLER_FILE_WRITE") is { } controllerWrite) { AnimationControllerPersistenceTests.WriteFixture(controllerWrite); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROLLER_FILE_NATIVE") is { } controllerNative) { AnimationControllerPersistenceTests.RunNative(controllerNative); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CONTROLLER_FILE") == "1") { AnimationControllerPersistenceTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CUE_FILE_CHILD") is { } cueChild) { AnimationCuePersistenceTests.RunChild(cueChild); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CUE_FILE_WRITE") is { } cueWrite) { AnimationCuePersistenceTests.WriteFixture(cueWrite); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_CUE_FILE_NATIVE") is { } cueNative) { AnimationCuePersistenceTests.RunNative(cueNative); return; }
@@ -1011,6 +1016,7 @@ AudioPlaylistTests.Run();
 SceneAnimationTests.Run();
 AnimationOptimizeTests.Run();
 AnimationPersistenceTests.Run();
+AnimationControllerPersistenceTests.Run();
 AnimationCuePersistenceTests.Run();
 SceneAnimationBlendTests.Run();
 AnimationGraphTests.Run();

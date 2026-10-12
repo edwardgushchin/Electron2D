@@ -4,18 +4,19 @@ namespace Electron2D;
 /// <remarks>Play selects immediately and applies keys on the next Advance; Advance(0) applies immediately.
 /// Pause retains position and assignment and clears capture caches and queued names. Stop resets position and speed and optionally applies the start state.
 /// Loops retain overshoot; finite completion holds the endpoint and emits once. Named/default crossfades retain
-/// prior clips while Capture tracks blend from an independent snapshot of current target values.</remarks>
+/// prior clips while Capture tracks blend from an independent snapshot of current target values. Packed scenes
+/// preserve authored options, autoplay and next/blend configuration, excluding live selection, clocks and queues.</remarks>
 public partial class AnimationPlayer : AnimationMixer
 {
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
-        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackDefaultBlendTime), n => n.PlaybackDefaultBlendTime, (n, v) => n.PlaybackDefaultBlendTime = v, _ => 0),
-        new PropertyDescriptor<AnimationPlayer, bool>(nameof(PlaybackAutoCapture), n => n.PlaybackAutoCapture, (n, v) => n.PlaybackAutoCapture = v, _ => true),
-        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackAutoCaptureDuration), n => n.PlaybackAutoCaptureDuration, (n, v) => n.PlaybackAutoCaptureDuration = v, _ => -1),
-        new PropertyDescriptor<AnimationPlayer, Tween.TransitionType>(nameof(PlaybackAutoCaptureTransitionType), n => n.PlaybackAutoCaptureTransitionType, (n, v) => n.PlaybackAutoCaptureTransitionType = v, _ => Tween.TransitionType.Linear),
-        new PropertyDescriptor<AnimationPlayer, Tween.EaseType>(nameof(PlaybackAutoCaptureEaseType), n => n.PlaybackAutoCaptureEaseType, (n, v) => n.PlaybackAutoCaptureEaseType = v, _ => Tween.EaseType.In),
-        new PropertyDescriptor<AnimationPlayer, string>(nameof(Autoplay), n => n.Autoplay, (n, v) => n.Autoplay = v, _ => ""),
-        new PropertyDescriptor<AnimationPlayer, double>(nameof(SpeedScale), n => n.SpeedScale, (n, v) => n.SpeedScale = v, _ => 1),
+        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackDefaultBlendTime), n => n.PlaybackDefaultBlendTime, (n, v) => n.PlaybackDefaultBlendTime = v, _ => 0, stored: true),
+        new PropertyDescriptor<AnimationPlayer, bool>(nameof(PlaybackAutoCapture), n => n.PlaybackAutoCapture, (n, v) => n.PlaybackAutoCapture = v, _ => true, stored: true),
+        new PropertyDescriptor<AnimationPlayer, double>(nameof(PlaybackAutoCaptureDuration), n => n.PlaybackAutoCaptureDuration, (n, v) => n.PlaybackAutoCaptureDuration = v, _ => -1, stored: true),
+        new PropertyDescriptor<AnimationPlayer, Tween.TransitionType>(nameof(PlaybackAutoCaptureTransitionType), n => n.PlaybackAutoCaptureTransitionType, (n, v) => n.PlaybackAutoCaptureTransitionType = v, _ => Tween.TransitionType.Linear, stored: true),
+        new PropertyDescriptor<AnimationPlayer, Tween.EaseType>(nameof(PlaybackAutoCaptureEaseType), n => n.PlaybackAutoCaptureEaseType, (n, v) => n.PlaybackAutoCaptureEaseType = v, _ => Tween.EaseType.In, stored: true),
+        new PropertyDescriptor<AnimationPlayer, string>(nameof(Autoplay), n => n.Autoplay, (n, v) => n.Autoplay = v, _ => "", stored: true),
+        new PropertyDescriptor<AnimationPlayer, double>(nameof(SpeedScale), n => n.SpeedScale, (n, v) => n.SpeedScale = v, _ => 1, stored: true),
     ];
     /// <summary>Creates an idle player with inherited automatic scheduling and deferred method dispatch.</summary>
     public AnimationPlayer() { }
@@ -59,16 +60,6 @@ public partial class AnimationPlayer : AnimationMixer
     public event Action<string>? CurrentAnimationChanged;
     /// <summary>Returns whether animation evaluation is active.</summary>
     public bool IsAnimationActive() => Active;
-    /// <summary>Returns the animation root path.</summary>
-    public string GetRoot() => RootNode;
-    /// <summary>Sets the animation root path.</summary>
-    /// <param name="path">The relative target path.</param>
-    public void SetRoot(string path) => RootNode = path;
-    /// <summary>Returns the automatic animation update phase.</summary>
-    public AnimationCallbackModeProcess GetProcessCallback() => CallbackModeProcess;
-    /// <summary>Sets the automatic animation update phase.</summary>
-    /// <param name="mode">The defined update or process mode.</param>
-    public void SetProcessCallback(AnimationCallbackModeProcess mode) => CallbackModeProcess = mode;
     /// <summary>Returns whether playback is enabled, including with zero speed.</summary>
     public bool IsPlaying() { ThrowIfDisposed(); return _playing; }
     /// <summary>Returns zero while paused, otherwise the signed effective speed.</summary>
@@ -247,6 +238,6 @@ public partial class AnimationPlayer : AnimationMixer
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _queue.Clear(); _next.Clear(); _blendClips.Clear(); _mixFrames.Clear(); _blendTimes.Clear(); AnimationChanged = null; CurrentAnimationChanged = null; } base.Dispose(disposing); }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(GetFileTransitionProperties());
 
 }

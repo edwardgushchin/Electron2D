@@ -1,6 +1,6 @@
 # AnimationMixer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Inherits:** [Node](Node.md)
 
@@ -424,3 +424,16 @@ Nested animation tracks execute clip-name keys against borrowed child players, w
 [Audio tracks](../components/scene-animation.md#audio-tracks) execute borrowed cue sources on prepared player/emitter/polyphonic transports, with offsets, weighted gain, sample/stream selection, pause/cleanup and per-trigger random choices. Native PCM and two GPU/two compatibility public emitter hosts establish current Linux execution; physical listening, driver internals and other platforms remain unverified.
 
 Weighted graph evaluation now retires controlled nested players and audio cues when their binding no longer participates, including state stop/departed clips and nonblended audio. Playback ownership revisions protect user takeovers; already accepted deferred method calls keep their existing safe-point lifetime. [AnimationStateMachineTests](../../tests/Electron2D.Tests/AnimationStateMachineTests.cs) exercises this integration.
+
+
+## Scene storage and factory
+
+The exact built-in type supports PackedScene authoring and typed resource files. See [controller scene files](../components/scene-animation.md#controller-scene-files) for stored configuration, aliases, initialization order, transient state, lifecycle and verification limits. Libraries remain borrowed by controllers; decoded file graphs use the existing template/instance lifetime lease. Application subclasses must supply their own exact factory.
+
+| Protected signature | Contract |
+| --- | --- |
+| `protected override Func<Node> CreateSceneInstanceFactory()` | Returns a static factory for the exact built-in type; other derived types require their own factory. |
+
+### CreateSceneInstanceFactory
+
+Returns a fresh, detached, childless exact-type node. Stored descriptors reconstruct authored libraries and settings. It does not capture the source or transfer its playback state. A derived type without an explicit factory throws NotSupportedException during packing.

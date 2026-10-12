@@ -3,16 +3,17 @@ namespace Electron2D;
 /// <summary>Owns scene animation libraries, typed property bindings and update-phase selection.</summary>
 /// <remarks>Playback controllers derive from this node. Idle and physics use Node's internal scheduling;
 /// manual Advance also works while detached. Tree mutation, resource edits and explicit ClearCaches rebuild
-/// typed target bindings on their next use. Libraries and animations remain caller-owned.</remarks>
+/// typed target bindings on their next use. Libraries and animations remain caller-owned. Exact built-in mixers
+/// store authored libraries/policies in packed scenes; target caches and transports are transient.</remarks>
 public partial class AnimationMixer : Node
 {
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
-        new PropertyDescriptor<AnimationMixer, bool>(nameof(Deterministic), n => n.Deterministic, (n, v) => n.Deterministic = v, _ => false),
-        new PropertyDescriptor<AnimationMixer, AnimationCallbackModeDiscrete>(nameof(CallbackModeDiscrete), n => n.CallbackModeDiscrete, (n, v) => n.CallbackModeDiscrete = v, _ => AnimationCallbackModeDiscrete.Recessive),
-        new PropertyDescriptor<AnimationMixer, bool>(nameof(Active), n => n.Active, (n, v) => n.Active = v, _ => true),
-        new PropertyDescriptor<AnimationMixer, string>(nameof(RootNode), n => n.RootNode, (n, v) => n.RootNode = v, _ => ".."),
-        new PropertyDescriptor<AnimationMixer, AnimationCallbackModeProcess>(nameof(CallbackModeProcess), n => n.CallbackModeProcess, (n, v) => n.CallbackModeProcess = v, _ => AnimationCallbackModeProcess.Idle),
+        new PropertyDescriptor<AnimationMixer, bool>(nameof(Deterministic), n => n.Deterministic, (n, v) => n.Deterministic = v, _ => false, stored: true),
+        new PropertyDescriptor<AnimationMixer, AnimationCallbackModeDiscrete>(nameof(CallbackModeDiscrete), n => n.CallbackModeDiscrete, (n, v) => n.CallbackModeDiscrete = v, _ => AnimationCallbackModeDiscrete.Recessive, stored: true),
+        new PropertyDescriptor<AnimationMixer, bool>(nameof(Active), n => n.Active, (n, v) => n.Active = v, _ => true, stored: true),
+        new PropertyDescriptor<AnimationMixer, string>(nameof(RootNode), n => n.RootNode, (n, v) => n.RootNode = v, _ => "..", stored: true),
+        new PropertyDescriptor<AnimationMixer, AnimationCallbackModeProcess>(nameof(CallbackModeProcess), n => n.CallbackModeProcess, (n, v) => n.CallbackModeProcess = v, _ => AnimationCallbackModeProcess.Idle, stored: true),
     ];
     /// <summary>Selects the automatic animation update phase or explicit manual updates.</summary>
     public enum AnimationCallbackModeProcess
@@ -58,7 +59,7 @@ public partial class AnimationMixer : Node
         EnsureAnimationMutable(); ArgumentNullException.ThrowIfNull(library); ObjectDisposedException.ThrowIf(library.IsDisposed, library); if (!AnimationLibrary.ValidName(name, true) || _libraries.ContainsKey(name)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(name));
         foreach (var item in _libraries.Values) if (ReferenceEquals(item.Library, library)) throw new ArgumentException("The library is already registered.", nameof(library));
         Action<Resource> changed = _ => { _animationIndexDirty = true; InvalidateBindings(); if (!IsDisposed) AnimationListChanged?.Invoke(); };
-        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke();
+        _libraries.Add(name, (library, changed)); library.Changed += changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke();
     }
     /// <summary>Returns a borrowed library by exact namespace.</summary>
     /// <param name="name">The exact ordinal name.</param>
@@ -70,12 +71,12 @@ public partial class AnimationMixer : Node
     public string[] GetAnimationLibraryList() { ThrowIfDisposed(); return _libraries.Keys.Order(StringComparer.Ordinal).ToArray(); }
     /// <summary>Removes a library without disposing it.</summary>
     /// <param name="name">The ordinal animation, library or marker name; empty names are accepted only where explicitly documented.</param>
-    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
+    public void RemoveAnimationLibrary(string name) { EnsureAnimationMutable(); var item = _libraries[name]; _libraries.Remove(name); item.Library.Changed -= item.Changed; _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
     /// <summary>Renames a library namespace without changing its resources.</summary>
     /// <param name="newName">An unoccupied valid replacement name.</param>
     /// <param name="name">The exact ordinal name.</param>
     public void RenameAnimationLibrary(string name, string newName)
-    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
+    { EnsureAnimationMutable(); if (!AnimationLibrary.ValidName(newName, true) || _libraries.ContainsKey(newName)) throw new ArgumentException("Invalid or occupied library namespace.", nameof(newName)); var item = _libraries[name]; _libraries.Remove(name); _libraries.Add(newName, item); _animationIndexDirty = true; InvalidateBindings(); NotifyPropertyListChanged(); AnimationListChanged?.Invoke(); if (!IsDisposed) AnimationLibrariesUpdated?.Invoke(); }
     /// <summary>Tests a qualified library/name or an unqualified default-library animation.</summary>
     /// <param name="name">The exact ordinal name.</param>
     public bool HasAnimation(string name) { ThrowIfDisposed(); ArgumentNullException.ThrowIfNull(name); EnsureAnimationIndex(); return _animationIndex.TryGetValue(name, out var item) && !item.Library.IsDisposed; }
@@ -137,7 +138,7 @@ public partial class AnimationMixer : Node
         FinishAudioFrame();
     }
     internal bool IsBindingCurrent(Animation animation, long generation) => !IsDisposed && _active && _bindingGeneration == generation && (ReferenceEquals(_cachedAnimation, animation) || (!_blendDirty && _blendCaches.ContainsKey(animation)));
-    internal void EnsureAnimationMutable() { ThrowIfDisposed(); Tree?.EnsureOwnerThread(); }
+    internal void EnsureAnimationMutable() => EnsureMutable();
     internal void InvalidateBindings(bool rebuild = true) { InvalidateEvaluation(); if (rebuild) _blendDirty = true; ClearCapture(); StopNestedPlayback(); StopAudioPlayback(); if (rebuild) { _legacyCaches.Clear(); _nestedBindings.Clear(); ClearAudioBindings(); } }
     internal void Started(string name) => AnimationStarted?.Invoke(name);
     internal void Finished(string name) => AnimationFinished?.Invoke(name);
@@ -173,6 +174,6 @@ public partial class AnimationMixer : Node
         ThrowCollected("Animation mixer cleanup failed.", errors);
     }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(MethodProperties).Concat(AudioProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(GetFileLibraryProperties()).Concat(AnimationProperties).Concat(MethodProperties).Concat(AudioProperties);
 
 }

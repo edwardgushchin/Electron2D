@@ -25,8 +25,9 @@ public partial class AnimationPlayer
     /// <param name="animationFrom">The existing source animation.</param>
     /// <param name="animationTo">The existing destination animation.</param>
     /// <param name="seconds">The finite nonnegative duration.</param>
+    /// <remarks>Adding or removing a named pair updates the tooling property list after committing the change.</remarks>
     public void SetBlendTime(string animationFrom, string animationTo, double seconds)
-    { EnsureAnimationMutable(); RequireAnimation(animationFrom); RequireAnimation(animationTo); Nonnegative(seconds); if (seconds == 0) _blendTimes.Remove((animationFrom, animationTo)); else _blendTimes[(animationFrom, animationTo)] = seconds; }
+    { EnsureAnimationMutable(); RequireAnimation(animationFrom); RequireAnimation(animationTo); Nonnegative(seconds); var pair = (animationFrom, animationTo); var existed = _blendTimes.ContainsKey(pair); if (seconds == 0) _blendTimes.Remove(pair); else _blendTimes[pair] = seconds; if (existed != (seconds != 0)) NotifyPropertyListChanged(); }
     /// <summary>Returns an explicitly configured transition duration, or zero.</summary>
     /// <param name="animationFrom">The exact source name.</param>
     /// <param name="animationTo">The exact destination name.</param>

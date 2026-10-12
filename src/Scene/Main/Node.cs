@@ -1886,6 +1886,8 @@ public partial class Node : ElectronObject
             throw new InvalidOperationException("Packed-scene instantiation is already active for this node.");
     }
 
+    internal virtual void ValidateSceneInstance() { }
+
     internal void EndSceneInstantiation() => Volatile.Write(ref _sceneInstantiationDepth, 0);
 
     internal void EnsureSceneActivationAvailable()

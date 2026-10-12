@@ -133,6 +133,8 @@ public sealed class PackedScene : Resource
             if (!IsBuiltInPath(resourcePath))
                 root.SetSceneFilePath(resourcePath);
 
+            foreach (var node in nodes) node.ValidateSceneInstance();
+
             resources.AssignLocalScene(root);
             resources.SetupLocalResources();
             root.AdoptSceneResources(resources.ReleaseCreated());

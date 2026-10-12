@@ -130,3 +130,7 @@ Exact Animation/AnimationLibrary factories and compiled property binding registr
 ## Animation cue integration
 
 The existing track schema supports compiled typed method callbacks/payloads, borrowed AudioStream cues and named child-player commands. Exact AudioStreamWAV storage preserves every authored format/metadata field and tags; file graphs retain stream and resource-argument aliases. See [cue persistence](scene-animation.md#cue-persistence) for IDs, budgets and native execution limits.
+
+## Animation controllers
+
+[Controller scene files](scene-animation.md#controller-scene-files) restore exact AnimationMixer/AnimationPlayer authored libraries, policies, playback options and transitions through dynamic stored descriptors. Whole-scene fresh-process loading reaches ordinary Ready autoplay and both renderer consumers. Runtime transport and selection are omitted; graph definition storage and reset-on-save transactions remain separate prerequisites.

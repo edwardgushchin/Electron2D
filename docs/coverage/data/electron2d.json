@@ -57000,6 +57000,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationMixer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationMixer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationMixer.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationMixer",
@@ -61619,6 +61632,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationPlayer.CreateSceneInstanceFactory()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationPlayer",
+    "name": "CreateSceneInstanceFactory",
+    "signature": "protected override System.Func\u003CElectron2D.Node\u003E CreateSceneInstanceFactory()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Func\u003CElectron2D.Node\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationPlayer.Dispose(System.Boolean)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -61675,19 +61701,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.AnimationPlayer.GetProcessCallback()",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationPlayer",
-    "name": "GetProcessCallback",
-    "signature": "public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.AnimationPlayer.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -61711,19 +61724,6 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String[]",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AnimationPlayer.GetRoot()",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationPlayer",
-    "name": "GetRoot",
-    "signature": "public System.String GetRoot()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "System.String",
     "value": null
   },
   {
@@ -62177,44 +62177,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.AnimationPlayer.SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess)",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationPlayer",
-    "name": "SetProcessCallback",
-    "signature": "public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "mode",
-        "type": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AnimationPlayer.SetRoot(System.String)",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationPlayer",
-    "name": "SetRoot",
-    "signature": "public System.Void SetRoot(System.String path)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "path",
-        "type": "System.String",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.AnimationPlayer.SetSection(System.Double,System.Double)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationPlayer",
@@ -62338,19 +62300,6 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.AnimationTree.GetProcessCallback()",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationTree",
-    "name": "GetProcessCallback",
-    "signature": "public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [],
-    "returnType": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
-    "value": null
-  },
-  {
     "id": "method:Electron2D.AnimationTree.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.AnimationTree",
@@ -62405,25 +62354,6 @@
       {
         "name": "value",
         "type": "TValue",
-        "default": null
-      }
-    ],
-    "returnType": "System.Void",
-    "value": null
-  },
-  {
-    "id": "method:Electron2D.AnimationTree.SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess)",
-    "kind": "method",
-    "declaringType": "Electron2D.AnimationTree",
-    "name": "SetProcessCallback",
-    "signature": "public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)",
-    "visibility": "public",
-    "baseType": null,
-    "interfaces": null,
-    "parameters": [
-      {
-        "name": "mode",
-        "type": "Electron2D.AnimationMixer.AnimationCallbackModeProcess",
         "default": null
       }
     ],

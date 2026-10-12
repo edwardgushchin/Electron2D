@@ -28,5 +28,5 @@ public partial class AnimationMixer
     /// <exception cref="ArgumentOutOfRangeException">The capacity is negative.</exception>
     public void PrepareMethodCallbacks(int pendingCallsPerTrack)
     { EnsureAnimationMutable(); if (pendingCallsPerTrack < 0) throw new ArgumentOutOfRangeException(nameof(pendingCallsPerTrack)); MethodCallbackCapacity = Math.Max(MethodCallbackCapacity, pendingCallsPerTrack); EnsureBlendCaches(); foreach (var cache in _blendCaches.Values) foreach (var binding in cache.Bindings) binding?.PrepareMethodCalls(MethodCallbackCapacity); foreach (var binding in _bindings) binding?.PrepareMethodCalls(MethodCallbackCapacity); }
-    private static readonly PropertyDescriptor[] MethodProperties = [new PropertyDescriptor<AnimationMixer, AnimationCallbackModeMethod>(nameof(CallbackModeMethod), n => n.CallbackModeMethod, (n, v) => n.CallbackModeMethod = v, _ => AnimationCallbackModeMethod.Deferred)];
+    private static readonly PropertyDescriptor[] MethodProperties = [new PropertyDescriptor<AnimationMixer, AnimationCallbackModeMethod>(nameof(CallbackModeMethod), n => n.CallbackModeMethod, (n, v) => n.CallbackModeMethod = v, _ => AnimationCallbackModeMethod.Deferred, stored: true)];
 }

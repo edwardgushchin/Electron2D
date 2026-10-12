@@ -1,6 +1,6 @@
 # AnimationPlayer
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Inherits:** [AnimationMixer](AnimationMixer.md)
 
@@ -147,10 +147,8 @@ Gets or sets the finite signed playback multiplier; zero keeps playback enabled.
 | `protected override System.Void Dispose(System.Boolean disposing)` | Deterministically releases resources owned by this object. |
 | `public System.Double GetBlendTime(System.String animationFrom, System.String animationTo)` | Returns an explicitly configured transition duration, or zero. |
 | `public System.Double GetPlayingSpeed()` | Returns zero while paused, otherwise the signed effective speed. |
-| `public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()` | Returns the automatic animation update phase. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Returns the typed properties exposed to tooling before validation. |
 | `public System.String[] GetQueue()` | Returns an independent array of queued names in playback order. |
-| `public System.String GetRoot()` | Returns the animation root path. |
 | `public System.Double GetSectionEndTime()` | Returns the effective section end. |
 | `public System.Double GetSectionStartTime()` | Returns the effective section start. |
 | `public System.Boolean HasSection()` | Returns whether either section boundary is explicit. |
@@ -169,8 +167,6 @@ Gets or sets the finite signed playback multiplier; zero keeps playback enabled.
 | `public System.Void ResetSection()` | Restores complete-resource playback boundaries. |
 | `public System.Void Seek(System.Double seconds, System.Boolean update = false, System.Boolean updateOnly = false)` | Seeks within the current section; update applies values immediately without completion events. |
 | `public System.Void SetBlendTime(System.String animationFrom, System.String animationTo, System.Double seconds)` | Sets a nonnegative named transition duration; zero removes the entry. |
-| `public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)` | Sets the automatic animation update phase. |
-| `public System.Void SetRoot(System.String path)` | Sets the animation root path. |
 | `public System.Void SetSection(System.Double startTime = -1, System.Double endTime = -1)` | Sets the current playback section, clamping position into it. |
 | `public System.Void SetSectionWithMarkers(System.String startMarker = "", System.String endMarker = "")` | Sets the current section using markers. |
 | `public System.Void Stop(System.Boolean keepState = false)` | Stops, resets position/speed and queued work, and stops still-controlled child players; keepState preserves target values. |
@@ -237,12 +233,6 @@ Returns: The stored duration, excluding wildcard/default fallback.
 
 Returns zero while paused, otherwise the signed effective speed.
 
-<a id="member-e954ec4ca1b7"></a>
-### GetProcessCallback
-
-`public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()`
-
-Returns the automatic animation update phase.
 
 <a id="member-6231664a0888"></a>
 ### GetPropertyDescriptors
@@ -262,12 +252,6 @@ Remarks: Overrides append or replace descriptors; they must not yield null entri
 
 Returns an independent array of queued names in playback order.
 
-<a id="member-28ee67a3149e"></a>
-### GetRoot
-
-`public System.String GetRoot()`
-
-Returns the animation root path.
 
 <a id="member-608db72a88d6"></a>
 ### GetSectionEndTime
@@ -479,23 +463,6 @@ animationTo: The existing destination animation.
 
 seconds: The finite nonnegative duration.
 
-<a id="member-02ec3c7fd9c4"></a>
-### SetProcessCallback
-
-`public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)`
-
-Sets the automatic animation update phase.
-
-mode: The defined update or process mode.
-
-<a id="member-ea937cae2fcd"></a>
-### SetRoot
-
-`public System.Void SetRoot(System.String path)`
-
-Sets the animation root path.
-
-path: The relative target path.
 
 <a id="member-3da7d1a79e22"></a>
 ### SetSection
@@ -563,3 +530,18 @@ Nested animation tracks execute clip-name keys against borrowed child players, w
 [Audio tracks](../components/scene-animation.md#audio-tracks) execute borrowed cue sources on prepared player/emitter/polyphonic transports, with offsets, weighted gain, sample/stream selection, pause/cleanup and per-trigger random choices. Native PCM and two GPU/two compatibility public emitter hosts establish current Linux execution; physical listening, driver internals and other platforms remain unverified.
 
 Weighted graph evaluation now retires controlled nested players and audio cues when their binding no longer participates, including state stop/departed clips and nonblended audio. Playback ownership revisions protect user takeovers; already accepted deferred method calls keep their existing safe-point lifetime. [AnimationStateMachineTests](../../tests/Electron2D.Tests/AnimationStateMachineTests.cs) exercises this integration.
+
+
+## Scene storage and factory
+
+The exact built-in type supports PackedScene authoring and typed resource files. See [controller scene files](../components/scene-animation.md#controller-scene-files) for stored configuration, aliases, initialization order, transient state, lifecycle and verification limits. Libraries remain borrowed by controllers; decoded file graphs use the existing template/instance lifetime lease. Application subclasses must supply their own exact factory.
+
+| Protected signature | Contract |
+| --- | --- |
+| `protected override Func<Node> CreateSceneInstanceFactory()` | Returns a static factory for the exact built-in type; other derived types require their own factory. |
+
+### CreateSceneInstanceFactory
+
+Named blend insertion/removal reports the updated tooling property list after committing.
+
+Returns a fresh, detached, childless exact-type node. Stored descriptors reconstruct authored libraries and settings. It does not capture the source or transfer its playback state. A derived type without an explicit factory throws NotSupportedException during packing.

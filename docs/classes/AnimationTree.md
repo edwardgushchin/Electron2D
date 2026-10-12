@@ -1,6 +1,6 @@
 # AnimationTree
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D` · **Declaration:** `public class Electron2D.AnimationTree` · **Source:** [AnimationTree.cs](../../src/Scene/Animation/AnimationTree.cs).
 
@@ -90,11 +90,9 @@ Gets or sets the borrowed graph root; null disables graph output.
 | --- | --- |
 | `protected override System.Void Dispose(System.Boolean disposing)` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
 | `public TValue GetParameter<TValue>(System.String nodePath, AnimationParameter<TValue> parameter)` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
-| `public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()` | Returns the inherited automatic animation update phase. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
 | `protected override System.Void OnNotification(System.Int32 what)` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
 | `public System.Void SetParameter<TValue>(System.String nodePath, AnimationParameter<TValue> parameter, TValue value)` | Implements the inherited resource copy, metadata or cleanup contract for this concrete type. |
-| `public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)` | Sets the inherited automatic animation update phase. |
 
 ## Method Descriptions
 
@@ -112,16 +110,6 @@ Implements the inherited resource copy, metadata or cleanup contract for this co
 
 Implements the inherited resource copy, metadata or cleanup contract for this concrete type.
 
-<a id="member-397b13188e75"></a>
-### GetProcessCallback
-
-`public Electron2D.AnimationMixer.AnimationCallbackModeProcess GetProcessCallback()`
-
-Returns the inherited automatic animation update phase.
-
-Returns: The current phase.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
 <a id="member-8827b39e6e59"></a>
 ### GetPropertyDescriptors
@@ -144,16 +132,6 @@ Implements the inherited resource copy, metadata or cleanup contract for this co
 
 Implements the inherited resource copy, metadata or cleanup contract for this concrete type.
 
-<a id="member-711f78676212"></a>
-### SetProcessCallback
-
-`public System.Void SetProcessCallback(Electron2D.AnimationMixer.AnimationCallbackModeProcess mode)`
-
-Sets the inherited automatic animation update phase.
-
-mode: A defined phase.
-
-System.ObjectDisposedException: This resource/controller or a required borrowed resource has been disposed.
 
 ## Event summary
 
