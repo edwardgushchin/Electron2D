@@ -12,7 +12,7 @@ public sealed partial class ArrayMesh : Mesh
         internal readonly MeshSurfaceData Data = data;
         internal readonly PrimitiveType Primitive = primitive;
         internal readonly ArrayFormat Format = ArrayFormat.Vertex | ArrayFormat.Use2DVertices | flags |
-            (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
+            (data.Colors.Length != 0 ? ArrayFormat.Color : 0) | (data.UVs.Length != 0 ? ArrayFormat.TexUV : 0) | (data.UV2s.Length != 0 ? ArrayFormat.TexUV2 : 0) | (data.Indices.Length != 0 ? ArrayFormat.Index : 0) | (data.Bones.Length != 0 ? ArrayFormat.Bones | ArrayFormat.Weights : 0);
         internal string Name = "";
         internal Material? Material;
     }
@@ -22,7 +22,7 @@ public sealed partial class ArrayMesh : Mesh
     public ArrayMesh() { }
     /// <summary>Adds one copied two-dimensional surface.</summary>
     /// <param name="primitive">Vertex topology, including points, lines and strips.</param>
-    /// <param name="arrays">Borrowed typed vertex/color/UV/index/skin arrays copied before mutation.</param>
+    /// <param name="arrays">Borrowed typed vertex/color/primary and secondary UV/index/skin arrays copied before mutation.</param>
     /// <param name="blendShapes">Null or empty until the typed deformation consumer is integrated.</param>
     /// <param name="lods">Null or empty until scale-selected index sets are integrated.</param>
     /// <param name="flags">UseDynamicUpdate, Use2DVertices, Use8BoneWeights and matching channel bits. Unsupported bits reject before mutation.</param>
@@ -36,8 +36,8 @@ public sealed partial class ArrayMesh : Mesh
     {
         ArgumentNullException.ThrowIfNull(arrays);
         if (blendShapes is { Count: > 0 } || lods is { Count: > 0 }) throw new NotSupportedException("Morph targets and LOD index sets require their first executable deformation/scale-selection integration.");
-        if ((flags & ~(ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights)) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
-        var copy = arrays.Copy(); copy.Validate(primitive); var inferred = new Surface(copy, primitive, ArrayFormat.None).Format; const ArrayFormat channels = ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
+        if ((flags & ~(ArrayFormat.UseDynamicUpdate | ArrayFormat.Use2DVertices | ArrayFormat.Use8BoneWeights | ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights)) != 0) throw new NotSupportedException("These mesh flags require their attribute storage integration.");
+        var copy = arrays.Copy(); copy.Validate(primitive); var inferred = new Surface(copy, primitive, ArrayFormat.None).Format; const ArrayFormat channels = ArrayFormat.Vertex | ArrayFormat.Color | ArrayFormat.TexUV | ArrayFormat.TexUV2 | ArrayFormat.Index | ArrayFormat.Bones | ArrayFormat.Weights; if ((flags & channels & ~inferred) != 0) throw new ArgumentException("Explicit channel flags require matching typed arrays.", nameof(flags)); if (copy.SkinSlots != 0 && copy.SkinSlots != ((flags & ArrayFormat.Use8BoneWeights) != 0 ? 8 : 4)) throw new ArgumentException("Skin slot count must match the eight-weight flag.", nameof(flags)); copy.QuantizeSkin();
         for (var i = 0; i < copy.Colors.Length; i++) { var color = copy.Colors[i]; copy.Colors[i] = new(Quantize(color.R), Quantize(color.G), Quantize(color.B), Quantize(color.A)); }
         lock (Gate) { ThrowIfDisposed(); _surfaces.Add(new(copy, primitive, flags)); }
         EmitChanged();
@@ -88,32 +88,34 @@ public sealed partial class ArrayMesh : Mesh
         }
         EmitChanged();
     }
-    /// <summary>Updates bytes in a surface's packed color and UV buffer.</summary>
+    /// <summary>Updates bytes in a surface's packed color and primary/secondary UV buffer.</summary>
     /// <param name="surfaceIndex">Existing zero-based surface index.</param>
     /// <param name="offset">Byte offset within the packed attribute buffer.</param>
-    /// <param name="data">Present RGBA8 UNORM bytes followed by present little-endian float UV pairs.</param>
-    /// <remarks>Color uses four bytes per vertex, UV uses eight; partial records retain untouched bytes.
-    /// Validation of the complete affected UV records precedes any write.</remarks>
-    /// <exception cref="ArgumentException">An affected UV becomes nonfinite.</exception>
+    /// <param name="data">Present RGBA8 UNORM bytes followed by present little-endian primary and secondary float UV pairs.</param>
+    /// <remarks>Color uses four bytes per vertex; each UV channel uses eight. Partial records retain untouched bytes.
+    /// Validation of every affected coordinate in both channels precedes any write.</remarks>
+    /// <exception cref="ArgumentException">An affected coordinate becomes nonfinite.</exception>
     /// <exception cref="ArgumentOutOfRangeException">The region exceeds the buffer.</exception>
     public void SurfaceUpdateAttributeRegion(int surfaceIndex, int offset, ReadOnlySpan<byte> data)
     {
         lock (Gate)
         {
-            var surface = Get(surfaceIndex); var colors = surface.Data.Colors.Length != 0; var uvs = surface.Data.UVs.Length != 0;
-            var stride = (colors ? 4 : 0) + (uvs ? 8 : 0); if (stride == 0) throw new InvalidOperationException("The surface has no attribute buffer.");
-            Region(offset, data.Length, surface.Data.Vertices.Length, stride); Span<byte> record = stackalloc byte[12]; var end = (long)offset + data.Length;
+            var surface = Get(surfaceIndex); var colors = surface.Data.Colors.Length != 0; var uvs = surface.Data.UVs.Length != 0; var uv2s = surface.Data.UV2s.Length != 0;
+            var stride = (colors ? 4 : 0) + (uvs ? 8 : 0) + (uv2s ? 8 : 0); if (stride == 0) throw new InvalidOperationException("The surface has no attribute buffer.");
+            Region(offset, data.Length, surface.Data.Vertices.Length, stride); Span<byte> record = stackalloc byte[20]; var end = (long)offset + data.Length;
             for (var pass = 0; pass < 2; pass++)
                 for (var index = offset / stride; index * (long)stride < end; index++)
                 {
-                    var buffer = record[..stride]; var uvOffset = colors ? 4 : 0;
+                    var buffer = record[..stride]; var uvOffset = colors ? 4 : 0; var secondaryOffset = uvOffset + (uvs ? 8 : 0);
                     if (colors) { var color = surface.Data.Colors[index]; buffer[0] = Byte(color.R); buffer[1] = Byte(color.G); buffer[2] = Byte(color.B); buffer[3] = Byte(color.A); }
                     if (uvs) { var uv = surface.Data.UVs[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[uvOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(uvOffset + 4)..], uv.Y); }
+                    if (uv2s) { var uv = surface.Data.UV2s[index]; BinaryPrimitives.WriteSingleLittleEndian(buffer[secondaryOffset..], uv.X); BinaryPrimitives.WriteSingleLittleEndian(buffer[(secondaryOffset + 4)..], uv.Y); }
                     Overlay(buffer, index * (long)stride, offset, data);
-                    if (uvs && !ReadVector(buffer[uvOffset..]).IsFinite()) throw new ArgumentException("Attribute updates must be finite.", nameof(data));
+                    if (uvs && !ReadVector(buffer[uvOffset..]).IsFinite() || uv2s && !ReadVector(buffer[secondaryOffset..]).IsFinite()) throw new ArgumentException("Attribute updates must be finite.", nameof(data));
                     if (pass == 0) continue;
                     if (colors) surface.Data.Colors[index] = new(buffer[0] / 255f, buffer[1] / 255f, buffer[2] / 255f, buffer[3] / 255f);
                     if (uvs) surface.Data.UVs[index] = ReadVector(buffer[uvOffset..]);
+                    if (uv2s) surface.Data.UV2s[index] = ReadVector(buffer[secondaryOffset..]);
                 }
         }
         EmitChanged();

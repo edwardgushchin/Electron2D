@@ -734,6 +734,21 @@
       "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FLAG_USE_8_BONE_WEIGHTS",
       "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.Use8BoneWeights()",
       "reason": "ADRs 0001/0004/0014/0028/0051/0092/0095: executable owned/borrowed two-dimensional palette lifetime, stable scene canvas RID and actual retained four/eight-influence Mesh/MultiMesh deformation. Typed copied uint16 bones and UNORM16 weights, partial skin regions, shared format/stride policy and bounded fresh-process mesh/material archives feed GPU/compatibility pixels. Matrix conjugation, unnormalized sums, finite/ownership/recovery and prepared allocation limits are verified; missing generic owned canvas creation, other attributes/morph/compression and foreign/native-allocator acceptance remain explicit."
+    },
+    {
+      "godot": "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV2()",
+      "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified."
+    },
+    {
+      "godot": "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
+      "electron2d": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV2()",
+      "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified."
+    },
+    {
+      "godot": "ImmediateMesh::method:surface_set_uv2(Vector2:)",
+      "electron2d": "method:Electron2D.ImmediateMesh.SurfaceSetUV2(Electron2D.Vector2)",
+      "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified."
     }
   ],
   "extras": [
@@ -956,12 +971,20 @@
     {
       "electron2d": "method:Electron2D.ArrayMesh.GetPropertyDescriptors()",
       "reason": "ADRs 0001/0013/0092: named typed bone/weight channels replace heterogeneous array selectors; inherited schema persists validated geometry and separate material graph. The payload feeds actual palette deformation, not data-only storage."
+    },
+    {
+      "electron2d": "property:Electron2D.MeshSurfaceData.UV2s()",
+      "reason": "ADRs 0001/0092: named typed secondary texture coordinates replace numeric heterogeneous-array selectors, with executable storage and shader consumer."
+    },
+    {
+      "electron2d": "method:Electron2D.ImmediateMesh.GetPropertyDescriptors()",
+      "reason": "ADR 0092: completed immediate surfaces/material graph use typed bounded archive descriptors; drafts are excluded from file storage."
     }
   ],
   "statusGroups": [
     {
       "state": "Partial",
-      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Further channel/deformation/storage/geometry operations retain exact dependencies.",
+      "reason": "ADR 0092: executable copied typed 2D surfaces, all five topologies, live packed vertex/RGBA8/primary-UV/secondary-UV updates, surface materials, borrowed/owned RID lifetime, node/canvas/server integration. Managed and native GPU/compatibility pixel/warm replay checks distinguish platform/native-allocation limits. Further channel/deformation/storage/geometry operations retain exact dependencies.",
       "godot": [
         "class:ArrayMesh",
         "class:Mesh"
@@ -969,7 +992,7 @@
     },
     {
       "state": "Blocked",
-      "reason": "Trigger: concrete typed normal/tangent/secondary-UV/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
+      "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092).",
       "godot": [
         "ArrayMesh::method:regen_normal_maps()",
         "Mesh::enum:ArrayCustomFormat",
@@ -997,7 +1020,6 @@
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
         "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
-        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
         "Mesh::enum_value:BlendShapeMode.BLEND_SHAPE_MODE_NORMALIZED"
       ]
     },
@@ -1196,17 +1218,10 @@
       ]
     },
     {
-      "state": "Partial",
-      "reason": "ADR 0092: executable incremental 2D surface drafts with late color/UV backfill, topology validation/retry, atomic commit, clear/cancel, borrowed materials, resource/scene copying and live ArrayMesh-backed canvas/RID drawing. Managed and native pixel/warm checks retain platform/native-allocation limits. Secondary UV requires typed byte storage and an actual shader-attribute consumer; SurfaceSetUV2 is absent until that slice.",
+      "state": "Implemented",
+      "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified. All applicable incremental 2D draft methods execute; 3D normal/tangent/vertex operations stay Excluded.",
       "godot": [
         "class:ImmediateMesh"
-      ]
-    },
-    {
-      "state": "Blocked",
-      "reason": "Trigger: typed secondary-UV mesh storage, packed byte format and actual canvas shader-attribute consumer over the executable 2D surface path (ADR 0092). SurfaceSetUV2 must enter that first attribute slice together with MeshSurfaceData and ArrayMesh updates.",
-      "godot": [
-        "ImmediateMesh::method:surface_set_uv2(Vector2:)"
       ]
     },
     {
@@ -1347,11 +1362,10 @@
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_BITS",
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_CUSTOM_MASK",
         "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_NORMAL",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT",
-        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2"
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TANGENT"
       ],
       "state": "Blocked",
-      "reason": "Trigger: concrete typed normal/tangent/secondary-UV/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
+      "reason": "Trigger: concrete typed normal/tangent/custom/compressed channel byte storage and an actual shader-attribute consumer over the mesh path (ADR 0092)."
     },
     {
       "godot": [
@@ -1387,6 +1401,22 @@
       ],
       "state": "Excluded",
       "reason": "ADRs 0001/0092: renderer arrays use named typed MeshSurfaceData fields; exclude only numeric heterogeneous-array selectors, consistently with Mesh.ArrayType. Actual absent channels retain their format/storage/consumer dependencies."
+    },
+    {
+      "state": "Implemented",
+      "reason": "ADR 0092: copied finite typed UV2s, inferred TexUV2, packed partial updates with rollback, AMS2/legacy AMS1 archives, immediate first-use backfill, retained custom/owned/ordinary/hardware/expanded/skin paths and GLSL/HLSL float2 fragment location four. Native pixels, lighting/group/compatibility gates and 64 active plus 64 idle warmed frames are tested; wider platforms/native allocator totals remain unverified.",
+      "godot": [
+        "Mesh::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
+        "RenderingServer::enum_value:ArrayFormat.ARRAY_FORMAT_TEX_UV2",
+        "ImmediateMesh::method:surface_set_uv2(Vector2:)"
+      ]
+    },
+    {
+      "state": "Blocked",
+      "reason": "Trigger: complete executable typed SurfaceTool builder, commit/index/attribute state and mesh production under ADR 0092. Secondary UV storage, packing and shader consumer are now implemented; no standalone inert setter is exposed.",
+      "godot": [
+        "SurfaceTool::method:set_uv2(Vector2:)"
+      ]
     }
   ]
 }

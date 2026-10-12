@@ -31,6 +31,8 @@ public abstract class Mesh : Resource
         Color = 8,
         /// <summary>Primary texture coordinates.</summary>
         TexUV = 16,
+        /// <summary>Secondary texture coordinates.</summary>
+        TexUV2 = 32,
         /// <summary>Vertex ordering indices.</summary>
         Index = 4096,
         /// <summary>Flattened unsigned 16-bit bone indices.</summary>

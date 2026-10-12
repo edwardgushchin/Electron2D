@@ -1,6 +1,6 @@
 # ArrayMesh
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.ArrayMesh` · **Source:** [ArrayMesh.cs](../../src/Scene/Resources/ArrayMesh.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-07
 
 ## Description
 
-Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Colors/UVs/Indices, optional empty deformation/LOD inputs and supported flags. Every channel is copied and validated before adding; vertex/color/UV counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/UV remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
+Concrete copied surface storage. AddSurfaceFromArrays accepts typed Vertices/Colors/UVs/UV2s/Indices, optional empty deformation/LOD inputs and supported flags. Every channel is copied and validated before adding; vertex/color/primary-UV/secondary-UV counts and index bounds must match topology. All five topologies execute. Empty or malformed vertex payloads reject. Colors clamp/truncate to RGBA8 UNORM on import; source getters expose decoded quantized colors, preserving the exercised pinned storage precision. Position/texture coordinates remain float pairs. The new index is the previous GetSurfaceCount. Surfaces default to an empty name and null borrowed material; duplicates names are allowed and search returns the first exact ordinal match. Remove shifts later indices, Clear removes all; borrowed materials remain live. Every edit commits before Changed, including equal name/material writes; listener failure does not undo valid data.
 
 ## Example
 
@@ -56,7 +56,7 @@ Summary: Creates an empty mesh.
 | `public System.String SurfaceGetName(System.Int32 surfaceIndex)` | Gets an authored surface name. |
 | `public System.Void SurfaceRemove(System.Int32 surfaceIndex)` | Removes one surface and shifts subsequent indices down. |
 | `public System.Void SurfaceSetName(System.Int32 surfaceIndex, System.String name)` | Assigns a literal name and emits Changed. |
-| `public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in a surface's packed color and UV buffer. |
+| `public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in a surface's packed color and texture-coordinate buffer. |
 | `public System.Void SurfaceUpdateVertexRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)` | Updates bytes in packed two-float positions in the surface vertex buffer. |
 
 ## Methods and protected extension points descriptions
@@ -69,7 +69,7 @@ Summary: Adds one copied two-dimensional surface.
 
 primitive: Vertex topology, including points, lines and strips.
 
-arrays: Borrowed typed vertex/color/UV/index/skin arrays copied before mutation.
+arrays: Borrowed typed vertex/color/primary-UV/secondary-UV/index/skin arrays copied before mutation.
 
 blendShapes: Null or empty until the typed deformation consumer is integrated.
 
@@ -230,13 +230,13 @@ System.ArgumentNullException: The name is null.
 
 `public System.Void SurfaceUpdateAttributeRegion(System.Int32 surfaceIndex, System.Int32 offset, System.ReadOnlySpan<System.Byte> data)`
 
-Summary: Updates bytes in a surface's packed color and UV buffer.
+Summary: Updates bytes in a surface's packed color and texture-coordinate buffer.
 
 surfaceIndex: Existing zero-based surface index.
 
 offset: Byte offset within the packed attribute buffer.
 
-data: Present RGBA8 UNORM bytes followed by present little-endian float UV pairs.
+data: Present RGBA8 UNORM bytes followed by present primary and secondary little-endian float UV pairs.
 
 Remarks: Color uses four bytes per vertex, UV uses eight; partial records retain untouched bytes. Validation of the complete affected UV records precedes any write.
 
@@ -267,7 +267,7 @@ System.ArgumentOutOfRangeException: The region exceeds the vertex buffer.
 
 [ADR 0092](../decisions/mesh.md#adr-0092) owns typed arrays, pinned exercised byte packing and deferred deformation/channel consumers. [Mesh component](../components/meshes.md) records current scope and executable verification. [MeshTests](../../tests/Electron2D.Tests/MeshTests.cs) checks copied state, updates/rollback, topology, callbacks, lifetime, duplication/scene storage and warmed replay. [MeshRenderingTests](../../tests/Electron2D.Tests/MeshRenderingTests.cs) checks real rendered pixels, primitive profiles, owned server lifetime and active/idle frames on GPU and compatibility. Native allocator totals, other platforms and owner acceptance remain unverified.
 
-Region updates accept byte offsets including partial records. Affected complete X/Y or color/UV records are reconstructed and finite-validated in a first pass, then committed in a second pass without heap allocation. Vertex stride is eight bytes; attribute stride is four RGBA8 bytes plus eight UV bytes when present. Names/materials/data getters validate indices and disposed resource state. Nonempty blendShapes/lods and unknown flags throw NotSupportedException before mutation; matching explicit existing channel bits are supported. Advanced channels remain exact Blocked/Partial coverage; no stubs are shipped.
+Region updates accept byte offsets including partial records. Affected complete X/Y or color/texture-coordinate records are reconstructed and finite-validated in a first pass, then committed in a second pass without heap allocation. Vertex stride is eight bytes; attribute stride is four RGBA8 bytes plus eight bytes per present primary and secondary UV channel, in that order. Names/materials/data getters validate indices and disposed resource state. Nonempty blendShapes/lods and unknown flags throw NotSupportedException before mutation; matching explicit existing channel bits are supported. Advanced channels remain exact Blocked/Partial coverage; no stubs are shipped.
 
 Inherited SurfaceGetArrayLen, SurfaceGetArrayIndexLen, SurfaceGetFormat and SurfaceGetPrimitiveType query the same concrete storage; GetFaces expands its triangle surfaces into independent local Vector2 faces. Vertex and attribute updates execute with or without UseDynamicUpdate, which is a storage-policy hint.
 
@@ -311,3 +311,7 @@ The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-
 ## Surface file state
 
 Exact ArrayMesh files store bounded versioned geometry/topology/flags/name/skin bytes separately from typed Material arrays, preserving aliases. Complete validation precedes replacement. New storage supports 4096 surfaces, 65536 name code units and 64 MiB; import/query/duplicate/file preparation may allocate. Palette attachments and logical identities are transient.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.

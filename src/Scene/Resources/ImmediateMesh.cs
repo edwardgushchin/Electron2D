@@ -4,17 +4,17 @@ namespace Electron2D;
 /// <remarks>A draft is invisible until SurfaceEnd succeeds. Completed surfaces use copied ArrayMesh
 /// storage and the ordinary mesh renderer. Methods are serialized; callers must synchronize a whole
 /// begin/end sequence when sharing a builder. Structural construction may allocate; replay does not
-/// rebuild geometry. Materials are borrowed. Duplication copies completed surfaces, not an active draft.</remarks>
+/// rebuild geometry. Materials are borrowed. Duplication and file storage copy completed surfaces, not an active draft.</remarks>
 public sealed class ImmediateMesh : Mesh
 {
     internal readonly ArrayMesh Surfaces = new();
-    private readonly List<Vector2> _vertices = [], _uvs = [];
+    private readonly List<Vector2> _vertices = [], _uvs = [], _uv2s = [];
     private readonly List<Color> _colors = [];
     private PrimitiveType _primitive;
     private Material? _material;
     private Color _color;
-    private Vector2 _uv;
-    private bool _active, _usesColors, _usesUVs;
+    private Vector2 _uv, _uv2;
+    private bool _active, _usesColors, _usesUVs, _usesUV2s;
 
     /// <summary>Creates an empty mesh without an active draft.</summary>
     public ImmediateMesh() { }
@@ -37,7 +37,7 @@ public sealed class ImmediateMesh : Mesh
         }
     }
 
-    /// <summary>Appends a finite local vertex using the current color and primary UV.</summary>
+    /// <summary>Appends a finite local vertex using the current color and texture-coordinate channels.</summary>
     /// <param name="vertex">Local two-dimensional position.</param>
     /// <exception cref="InvalidOperationException">No surface is being built.</exception>
     /// <exception cref="ArgumentException">The position is not finite.</exception>
@@ -51,6 +51,7 @@ public sealed class ImmediateMesh : Mesh
             _vertices.Add(vertex);
             if (_usesColors) _colors.Add(_color);
             if (_usesUVs) _uvs.Add(_uv);
+            if (_usesUV2s) _uv2s.Add(_uv2);
         }
     }
 
@@ -90,6 +91,24 @@ public sealed class ImmediateMesh : Mesh
         }
     }
 
+    /// <summary>Sets the current secondary UV, enabling that channel on its first call.</summary>
+    /// <param name="uv2">Finite coordinate independent of primary UVs.</param>
+    /// <remarks>The first call backfills previous vertices; later calls affect only new vertices.
+    /// Each new surface begins without a secondary channel.</remarks>
+    /// <exception cref="InvalidOperationException">No surface is being built.</exception>
+    /// <exception cref="ArgumentException">The coordinate is not finite.</exception>
+    /// <exception cref="ObjectDisposedException">The mesh is disposed.</exception>
+    public void SurfaceSetUV2(Vector2 uv2)
+    {
+        lock (Surfaces.Gate)
+        {
+            EnsureActive();
+            if (!uv2.IsFinite()) throw new ArgumentException("Secondary UVs must be finite.", nameof(uv2));
+            if (!_usesUV2s) { for (var i = 0; i < _vertices.Count; i++) _uv2s.Add(uv2); _usesUV2s = true; }
+            _uv2 = uv2;
+        }
+    }
+
     /// <summary>Validates and commits the draft, then emits Changed outside the storage lock.</summary>
     /// <remarks>An empty or incomplete primitive rejects without losing the draft; append the missing
     /// vertices and retry, or cancel with ClearSurfaces. A throwing Changed listener leaves the surface
@@ -104,7 +123,7 @@ public sealed class ImmediateMesh : Mesh
             EnsureActive();
             if (_material is { IsDisposed: true }) throw new ObjectDisposedException(nameof(_material));
             var index = Surfaces.GetSurfaceCount();
-            Surfaces.AddSurfaceFromArrays(_primitive, new() { Vertices = _vertices.ToArray(), Colors = _colors.ToArray(), UVs = _uvs.ToArray() });
+            Surfaces.AddSurfaceFromArrays(_primitive, new() { Vertices = _vertices.ToArray(), Colors = _colors.ToArray(), UVs = _uvs.ToArray(), UV2s = _uv2s.ToArray() });
             Surfaces.Get(index).Material = _material;
             ResetDraft();
         }
@@ -121,7 +140,7 @@ public sealed class ImmediateMesh : Mesh
     }
 
     private void EnsureActive() { ThrowIfDisposed(); if (!_active) throw new InvalidOperationException("Begin a surface before editing it."); }
-    private void ResetDraft() { _active = _usesColors = _usesUVs = false; _vertices.Clear(); _colors.Clear(); _uvs.Clear(); _material = null; }
+    private void ResetDraft() { _active = _usesColors = _usesUVs = _usesUV2s = false; _vertices.Clear(); _colors.Clear(); _uvs.Clear(); _uv2s.Clear(); _material = null; }
     /// <inheritdoc />
     protected override int OnGetSurfaceCount() => Surfaces.GetSurfaceCount();
     /// <inheritdoc />
@@ -142,6 +161,23 @@ public sealed class ImmediateMesh : Mesh
         lock (Surfaces.Gate) { ThrowIfDisposed(); Surfaces.SurfaceSetMaterial(surfaceIndex, material); }
         EmitChanged();
     }
+    private static readonly PropertyDescriptor[] SurfaceProperties =
+    [
+        new PropertyDescriptor<ImmediateMesh, byte[]>("_surface_data", m => m.Surfaces.SaveSurfaces(), (m, v) => m.RestoreSurfaces(v), _ => [], stored: true),
+        new PropertyDescriptor<ImmediateMesh, Material?[]>("_surface_materials", m => m.Surfaces.StoredMaterials, (m, v) => m.RestoreMaterials(v), _ => [], stored: true)
+    ];
+    private void RestoreSurfaces(byte[] bytes)
+    {
+        lock (Surfaces.Gate) { ThrowIfDisposed(); Surfaces.LoadSurfaces(bytes); ResetDraft(); }
+        EmitChanged();
+    }
+    private void RestoreMaterials(Material?[] materials)
+    {
+        lock (Surfaces.Gate) { ThrowIfDisposed(); Surfaces.StoredMaterials = materials; }
+        EmitChanged();
+    }
+    /// <inheritdoc />
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(SurfaceProperties);
     /// <inheritdoc />
     protected override Resource CreateDuplicateInstance() => new ImmediateMesh();
     /// <inheritdoc />

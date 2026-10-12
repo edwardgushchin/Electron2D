@@ -1,6 +1,6 @@
 # RenderingServer
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 - Declaration: `public sealed partial class RenderingServer : ElectronObject`
 - Source: [RenderingServer.cs](../../src/Servers/Rendering/RenderingServer.cs)
@@ -248,7 +248,7 @@ Retained screen regions now sample the same actual render transforms, layer/mask
 
 ## Owned mesh identities
 
-MeshCreate returns an owned empty ArrayMesh identity. MeshAddSurfaceFromArrays, MeshClear, MeshSurfaceRemove, MeshSurfaceUpdateVertexRegion/AttributeRegion and MeshSurfaceSetMaterial require this renderer's ownership before mutation. Resource-owned Mesh.GetRID is borrowed: getters and drawing resolve it, mutations/free reject it. MeshGetSurfaceCount, MeshSurfaceGetArrays, MeshSurfaceGetFormat/PrimitiveType/ArrayLen/ArrayIndexLen and MeshSurfaceGetMaterial expose typed current fields; queries return caller-owned arrays or borrowed materials. Packed stride helpers report eight-byte positions and present four-byte color/eight-byte UV attributes. Owned identities expire at FreeRID/shutdown; mesh cleanup and texture/backend cleanup are attempted separately. Further raw surface/deformation/LOD/extra-channel data remains Partial with exact dependencies. [Mesh component](../components/meshes.md) records runtime and current limits.
+MeshCreate returns an owned empty ArrayMesh identity. MeshAddSurfaceFromArrays, MeshClear, MeshSurfaceRemove, MeshSurfaceUpdateVertexRegion/AttributeRegion and MeshSurfaceSetMaterial require this renderer's ownership before mutation. Resource-owned Mesh.GetRID is borrowed: getters and drawing resolve it, mutations/free reject it. MeshGetSurfaceCount, MeshSurfaceGetArrays, MeshSurfaceGetFormat/PrimitiveType/ArrayLen/ArrayIndexLen and MeshSurfaceGetMaterial expose typed current fields; queries return caller-owned arrays or borrowed materials. Packed stride helpers report eight-byte positions and present four-byte color and separate eight-byte primary/secondary UV attributes. Owned identities expire at FreeRID/shutdown; mesh cleanup and texture/backend cleanup are attempted separately. Further raw surface/deformation/LOD/extra-channel data remains Partial with exact dependencies. [Mesh component](../components/meshes.md) records runtime and current limits.
 
 ## Mesh methods
 
@@ -264,7 +264,7 @@ All methods require a live object; RenderingServer operations require the render
 | `public static System.Int32 MeshSurfaceGetArrayLen(Electron2D.RID mesh, System.Int32 surface)` | Gets the surface vertex count. |
 | `public static Electron2D.MeshSurfaceData MeshSurfaceGetArrays(Electron2D.RID mesh, System.Int32 surface)` | Gets copied typed channels from one mesh surface. |
 | `public static Electron2D.Mesh.ArrayFormat MeshSurfaceGetFormat(Electron2D.RID mesh, System.Int32 surface)` | Gets a live surface's channel and policy mask. |
-| `public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/UV stride for a supported format. |
+| `public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the packed color/texture-coordinate stride for a supported format. |
 | `public static System.Int32 MeshSurfaceGetFormatVertexStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)` | Gets the primary two-dimensional vertex stride for a supported surface format. |
 | `public static Electron2D.Material MeshSurfaceGetMaterial(Electron2D.RID mesh, System.Int32 surface)` | Gets a borrowed material from a live surface. |
 | `public static Electron2D.Mesh.PrimitiveType MeshSurfaceGetPrimitiveType(Electron2D.RID mesh, System.Int32 surface)` | Gets one surface's primitive topology. |
@@ -381,13 +381,13 @@ Returns: The supported surface format.
 
 `public static System.Int32 MeshSurfaceGetFormatAttributeStride(Electron2D.Mesh.ArrayFormat format, System.Int32 vertexCount)`
 
-Summary: Gets the packed color/UV stride for a supported format.
+Summary: Gets the packed color/texture-coordinate stride for a supported format.
 
 format: Surface format mask.
 
 vertexCount: Nonnegative surface vertex count.
 
-Returns: Four bytes for color plus eight bytes for primary UV when present.
+Returns: Four bytes for color plus eight bytes per present primary or secondary UV channel.
 
 System.NotSupportedException: The format requires unsupported channels or non-2D vertices.
 
@@ -467,9 +467,9 @@ mesh: Owned mesh identity.
 
 surface: Existing zero-based index.
 
-offset: Byte offset into color/UV records.
+offset: Byte offset into color/primary-UV/secondary-UV records.
 
-data: Present RGBA8 UNORM bytes followed by present little-endian UV floats.
+data: Present RGBA8 UNORM bytes followed by present primary and secondary little-endian UV pairs.
 
 
 ### MeshSurfaceUpdateVertexRegion
@@ -1205,3 +1205,7 @@ Static scene/retained item setters, effective getters, declaration defaults and 
 | `CanvasItemGetInstanceShaderParameterList(RID instance)` | Immutable copied typed descriptors for effective item/surface shaders. |
 
 A live rendering session and its owner thread are required. Scene and retained item identities share state. Invalid identities and foreign sessions fail; setter capture/generated-tile ownership guards remain in force.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.

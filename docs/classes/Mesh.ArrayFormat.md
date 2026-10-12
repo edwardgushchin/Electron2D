@@ -1,6 +1,6 @@
 # Mesh.ArrayFormat
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public enum Electron2D.Mesh.ArrayFormat` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -24,6 +24,7 @@ var value = Mesh.ArrayFormat.Color;
 | `public const Electron2D.Mesh.ArrayFormat Index = 4096` | Vertex ordering indices. |
 | `public const Electron2D.Mesh.ArrayFormat None = 0` | No channels or policies. |
 | `public const Electron2D.Mesh.ArrayFormat TexUV = 16` | Primary texture coordinates. |
+| `public const Electron2D.Mesh.ArrayFormat TexUV2 = 32` | Secondary texture coordinates. |
 | `public const Electron2D.Mesh.ArrayFormat Use2DVertices = 33554432` | Vertex positions use two floating components. |
 | `public const Electron2D.Mesh.ArrayFormat UseDynamicUpdate = 67108864` | Surface buffers accept explicit region updates. |
 | `public const Electron2D.Mesh.ArrayFormat Vertex = 1` | Vertex positions. |
@@ -111,3 +112,13 @@ Skin records contain eight indices and eight weights instead of four.
 Flattened unsigned normalized 16-bit skin weights.
 
 The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
+
+### TexUV2
+
+`public const Electron2D.Mesh.ArrayFormat TexUV2 = 32`
+
+Secondary texture coordinates. Inferred when UV2s is present; explicit flags require matching data.

@@ -175,6 +175,6 @@ internal sealed class CanvasMesh(Mesh mesh, Transform local, Color modulate)
     {
         var index = data.Indices.Length == 0 ? order : data.Indices[order]; var position = transform * Deform(data, index, palette, toPalette, fromPalette); var color = (data.Colors.Length == 0 ? Colors.White : data.Colors[index]) * modulation;
         if (!position.IsFinite() || !color.IsFinite()) throw new InvalidOperationException("Mesh canvas values overflowed finite coordinates.");
-        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom);
+        return new(snap ? CanvasGeometry.Snap(position) : position, color, data.UVs.Length == 0 ? Vector2.Zero : data.UVs[index], custom, data.UV2s.Length == 0 ? Vector2.Zero : data.UV2s[index]);
     }
 }

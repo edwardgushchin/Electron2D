@@ -59,8 +59,8 @@ public sealed partial class RenderingServer
     /// <summary>Updates packed attribute bytes, including partial records, in an owned mesh.</summary>
     /// <param name="mesh">Owned mesh identity.</param>
     /// <param name="surface">Existing zero-based index.</param>
-    /// <param name="offset">Byte offset into color/UV records.</param>
-    /// <param name="data">Present RGBA8 UNORM bytes followed by present little-endian UV floats.</param>
+    /// <param name="offset">Byte offset into color/primary-UV/secondary-UV records.</param>
+    /// <param name="data">Present RGBA8 UNORM bytes followed by present primary and secondary little-endian UV pairs.</param>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static void MeshSurfaceUpdateAttributeRegion(RID mesh, int surface, int offset, ReadOnlySpan<byte> data) => RequireService().MeshSurfaceUpdateAttributeRegionCore(mesh, surface, offset, data);
 
@@ -72,10 +72,10 @@ public sealed partial class RenderingServer
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int MeshSurfaceGetFormatVertexStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatVertexStrideCore(format, vertexCount);
 
-    /// <summary>Gets the packed color/UV stride for a supported format.</summary>
+    /// <summary>Gets the packed color/texture-coordinate stride for a supported format.</summary>
     /// <param name="format">Surface format mask.</param>
     /// <param name="vertexCount">Nonnegative surface vertex count.</param>
-    /// <returns>Four bytes for color plus eight bytes for primary UV when present.</returns>
+    /// <returns>Four bytes for color plus eight bytes per present primary or secondary UV channel.</returns>
     /// <exception cref="NotSupportedException">The format requires unsupported channels or non-2D vertices.</exception>
     /// <exception cref="InvalidOperationException">The native service is not active.</exception>
     public static int MeshSurfaceGetFormatAttributeStride(Mesh.ArrayFormat format, int vertexCount) => RequireService().MeshSurfaceGetFormatAttributeStrideCore(format, vertexCount);

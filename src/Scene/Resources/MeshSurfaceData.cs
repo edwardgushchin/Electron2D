@@ -16,6 +16,9 @@ public sealed class MeshSurfaceData
     /// <summary>Gets or sets optional primary texture coordinates.</summary>
     /// <value>Empty or one finite normalized-space coordinate per vertex; values outside zero through one retain sampler behavior.</value>
     public Vector2[] UVs { get; set; } = [];
+    /// <summary>Gets or sets optional secondary texture coordinates.</summary>
+    /// <value>Empty or one finite coordinate per vertex; independent of primary UVs and instance shader data.</value>
+    public Vector2[] UV2s { get; set; } = [];
     /// <summary>Gets or sets optional indices defining primitive vertex order.</summary>
     /// <value>Empty initially; each index must address Vertices when consumed.</value>
     public int[] Indices { get; set; } = [];
@@ -31,22 +34,23 @@ public sealed class MeshSurfaceData
     internal MeshSurfaceData Copy()
     {
         ArgumentNullException.ThrowIfNull(Vertices); ArgumentNullException.ThrowIfNull(Colors);
-        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
-        return new() { Vertices = (Vector2[])Vertices.Clone(), Colors = (Color[])Colors.Clone(), UVs = (Vector2[])UVs.Clone(), Indices = (int[])Indices.Clone(), Bones = (int[])Bones.Clone(), Weights = (float[])Weights.Clone() };
+        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(UV2s); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
+        return new() { Vertices = (Vector2[])Vertices.Clone(), Colors = (Color[])Colors.Clone(), UVs = (Vector2[])UVs.Clone(), UV2s = (Vector2[])UV2s.Clone(), Indices = (int[])Indices.Clone(), Bones = (int[])Bones.Clone(), Weights = (float[])Weights.Clone() };
     }
     internal void Validate(Mesh.PrimitiveType primitive)
     {
         ArgumentNullException.ThrowIfNull(Vertices); ArgumentNullException.ThrowIfNull(Colors);
-        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
+        ArgumentNullException.ThrowIfNull(UVs); ArgumentNullException.ThrowIfNull(UV2s); ArgumentNullException.ThrowIfNull(Indices); ArgumentNullException.ThrowIfNull(Bones); ArgumentNullException.ThrowIfNull(Weights);
         if (primitive is < Mesh.PrimitiveType.Points or > Mesh.PrimitiveType.TriangleStrip) throw new ArgumentOutOfRangeException(nameof(primitive));
         if (Vertices.Length == 0) throw new ArgumentException("A surface requires vertex positions.");
-        if (Colors.Length != 0 && Colors.Length != Vertices.Length || UVs.Length != 0 && UVs.Length != Vertices.Length) throw new ArgumentException("Attribute counts must match the vertex count.");
+        if (Colors.Length != 0 && Colors.Length != Vertices.Length || UVs.Length != 0 && UVs.Length != Vertices.Length || UV2s.Length != 0 && UV2s.Length != Vertices.Length) throw new ArgumentException("Attribute counts must match the vertex count.");
         if (Bones.Length != Weights.Length || Bones.Length != 0 && (Bones.LongLength != Vertices.LongLength * 4 && Bones.LongLength != Vertices.LongLength * 8)) throw new ArgumentException("Skin channels require matching four or eight slots per vertex.");
         foreach (var bone in Bones) if ((uint)bone > 65535) throw new ArgumentOutOfRangeException(nameof(Bones));
         foreach (var weight in Weights) if (!float.IsFinite(weight)) throw new ArgumentException("Skin weights must be finite.");
         foreach (var vertex in Vertices) if (!vertex.IsFinite()) throw new ArgumentException("Mesh positions must be finite.");
         foreach (var color in Colors) if (!color.IsFinite()) throw new ArgumentException("Mesh colors must be finite.");
         foreach (var uv in UVs) if (!uv.IsFinite()) throw new ArgumentException("Mesh coordinates must be finite.");
+        foreach (var uv in UV2s) if (!uv.IsFinite()) throw new ArgumentException("Secondary mesh coordinates must be finite.");
         foreach (var index in Indices) if ((uint)index >= (uint)Vertices.Length) throw new ArgumentOutOfRangeException(nameof(Indices));
         var count = Indices.Length == 0 ? Vertices.Length : Indices.Length;
         if (primitive == Mesh.PrimitiveType.Lines && count % 2 != 0 || primitive == Mesh.PrimitiveType.Triangles && count % 3 != 0 || primitive == Mesh.PrimitiveType.LineStrip && count < 2 || primitive == Mesh.PrimitiveType.TriangleStrip && count < 3)

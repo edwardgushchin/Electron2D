@@ -35200,6 +35200,19 @@
     "value": "16"
   },
   {
+    "id": "enumValue:Electron2D.Mesh.ArrayFormat.TexUV2()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.Mesh.ArrayFormat",
+    "name": "TexUV2",
+    "signature": "public const Electron2D.Mesh.ArrayFormat TexUV2 = 32",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Mesh.ArrayFormat",
+    "value": "32"
+  },
+  {
     "id": "enumValue:Electron2D.Mesh.ArrayFormat.Use2DVertices()",
     "kind": "enumValue",
     "declaringType": "Electron2D.Mesh.ArrayFormat",
@@ -98670,6 +98683,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.ImmediateMesh.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.ImmediateMesh",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.ImmediateMesh.OnGetSurfaceCount()",
     "kind": "method",
     "declaringType": "Electron2D.ImmediateMesh",
@@ -98907,6 +98933,25 @@
     "parameters": [
       {
         "name": "uv",
+        "type": "Electron2D.Vector2",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ImmediateMesh.SurfaceSetUV2(Electron2D.Vector2)",
+    "kind": "method",
+    "declaringType": "Electron2D.ImmediateMesh",
+    "name": "SurfaceSetUV2",
+    "signature": "public System.Void SurfaceSetUV2(Electron2D.Vector2 uv2)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "uv2",
         "type": "Electron2D.Vector2",
         "default": null
       }
@@ -207130,6 +207175,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.MeshSurfaceData.UV2s()",
+    "kind": "property",
+    "declaringType": "Electron2D.MeshSurfaceData",
+    "name": "UV2s",
+    "signature": "public Electron2D.Vector2[] UV2s { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.Vector2[]",
     "value": null
   },
   {

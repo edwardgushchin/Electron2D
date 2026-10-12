@@ -1,10 +1,10 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 ## Executable mesh skin integration
 
-Exact ArrayMesh registration uses bounded versioned geometry/skin bytes and typed Material arrays. Fresh .e2dscene processes preserve surface names, flags, skin weights and material aliases and execute the palette consumer. Malformed geometry fails before replacement.
+Exact ArrayMesh/ImmediateMesh registration uses bounded versioned geometry/skin/primary-and-secondary-UV bytes and typed Material arrays. Fresh .e2dscene processes preserve surface names, flags, skin weights and material aliases and execute the palette consumer. Malformed geometry fails before replacement.
 
 ## Physical skeletal integration
 
@@ -108,3 +108,5 @@ Custom tile graphs store ordered definition names/configured type IDs, then each
 Tile drawing graphs store borrowed materials, Z/Y offsets, UVClipping and rendering quadrant/order policy through exact typed descriptors. Fresh-process TileDrawingTests reconstructs the authored graph; generated drawing items/commands stay transient.
 
 [Scene collection tiles](../components/tiles.md#scene-collections) retain shared PackedScene graphs and compiled factory root validation, with deferred ordinary child placement and explicit editor/physics prerequisites.
+
+ImmediateMesh saves completed surfaces and material graph aliases through AMS2 typed storage; AMS1 ArrayMesh data remains readable. Drafts are omitted. MeshUV2Tests verifies fresh-process factories and retained drawing for both mesh resources.

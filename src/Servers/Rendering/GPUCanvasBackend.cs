@@ -112,12 +112,13 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
         var buffers = stackalloc SDL.GPUVertexBufferDescription[2];
         buffers[0] = new() { Slot = 0, Pitch = (uint)sizeof(CanvasVertex), InputRate = SDL.GPUVertexInputRate.Vertex };
         buffers[1] = new() { Slot = 1, Pitch = (uint)sizeof(CanvasInstance), InputRate = SDL.GPUVertexInputRate.Instance };
-        var attributes = stackalloc SDL.GPUVertexAttribute[7];
+        var attributes = stackalloc SDL.GPUVertexAttribute[8];
         attributes[0] = new() { Location = 0, Format = SDL.GPUVertexElementFormat.Float2, Offset = 0 };
         attributes[1] = new() { Location = 1, Format = SDL.GPUVertexElementFormat.Float4, Offset = 8 };
         attributes[2] = new() { Location = 2, Format = SDL.GPUVertexElementFormat.Float2, Offset = 24 };
         attributes[3] = new() { Location = 3, Format = SDL.GPUVertexElementFormat.Float4, Offset = 32 };
         if (instanced) for (uint i = 3; i < 7; i++) attributes[i] = new() { Location = i, BufferSlot = 1, Format = SDL.GPUVertexElementFormat.Float4, Offset = (i - 3) * 16 };
+        attributes[instanced ? 7 : 4] = new() { Location = 7, Format = SDL.GPUVertexElementFormat.Float2, Offset = 48 };
         var blendState = blend switch
         {
             BlendMode.Mix => (SDL.GPUBlendFactor.SrcAlpha, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendFactor.One, SDL.GPUBlendFactor.OneMinusSrcAlpha, SDL.GPUBlendOp.Add),
@@ -148,7 +149,7 @@ internal sealed unsafe partial class GPUCanvasBackend : CanvasBackend
             PrimitiveType = SDL.GPUPrimitiveType.TriangleList,
             // Required when the Android device does not support depth clamping.
             RasterizerState = new() { EnableDepthClip = true },
-            VertexInputState = new() { VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = instanced ? 2u : 1u, VertexAttributes = (nint)attributes, NumVertexAttributes = instanced ? 7u : 4u },
+            VertexInputState = new() { VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = instanced ? 2u : 1u, VertexAttributes = (nint)attributes, NumVertexAttributes = instanced ? 8u : 5u },
             TargetInfo = new() { ColorTargetDescriptions = (nint)(&color), NumColorTargets = 1 }
         };
         return new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _device);

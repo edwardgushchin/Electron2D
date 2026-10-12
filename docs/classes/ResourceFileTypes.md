@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -10,7 +10,7 @@ Last updated: 2026-10-11
 
 ## Executable mesh skin integration
 
-ArrayMesh exact file factory and Material resource-array registration now support bounded geometry/skin bytes with separate material graphs and fresh-process executable mesh consumers.
+ArrayMesh and ImmediateMesh exact file factories and Material resource-array registration now support bounded geometry/skin bytes with separate material graphs and fresh-process executable mesh consumers.
 
 ## Physical skeletal integration
 
@@ -144,3 +144,5 @@ Portable value codec and resource registration also prepare direct per-T custom 
 Typed tile scene references now resolve registered TileSetScenesCollectionSource graphs. Archive restoration prepares PackedScene root metadata before dependent validated resource properties; internal canvas-root validation reads stored compiled factory types without executing factories.
 
 Built-in Shader and ShaderMaterial factories now preserve compiled material graphs in scene archives. Shader payload restoration precedes shared parameter decoding. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+ImmediateMesh saves completed surfaces and material graph aliases through AMS2 typed storage; AMS1 ArrayMesh data remains readable. Drafts are omitted. MeshUV2Tests verifies fresh-process factories and retained drawing for both mesh resources.

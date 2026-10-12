@@ -1,6 +1,6 @@
 # ImmediateMesh
 
-Last updated: 2026-10-03
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class ImmediateMesh : Mesh` · **Source:** [ImmediateMesh.cs](../../src/Scene/Resources/ImmediateMesh.cs).
 
@@ -8,7 +8,7 @@ Last updated: 2026-10-03
 
 ## Description
 
-Builds sequential 2D surfaces through one invisible draft. Begin selects topology and a borrowed material. SetColor/SetUV capture attributes for subsequent vertices; the first setter for a channel also fills all previous draft vertices with that value. End validates and publishes a copied surface into private ArrayMesh storage. A draft never contributes to queries, faces or drawing. All five primitive topologies execute through the existing retained mesh renderer. Points and lines retain its one-framebuffer-pixel policy.
+Builds sequential 2D surfaces through one invisible draft. Begin selects topology and a borrowed material. SetColor/SetUV/SetUV2 capture attributes for subsequent vertices; the first setter for a channel also fills all previous draft vertices with that value. End validates and publishes a copied surface into private ArrayMesh storage. A draft never contributes to queries, faces or drawing. All five primitive topologies execute through the existing retained mesh renderer. Points and lines retain its one-framebuffer-pixel policy.
 
 Methods serialize individual reads/edits. A caller sharing the resource must synchronize the whole begin/edit/end sequence; locking one call does not give a thread exclusive ownership of a draft. Material resources remain borrowed. Completed surface arrays are independent of caller query copies. Structural construction and duplication may allocate. Prepared replay and repeated material/transform edits reuse storage.
 
@@ -48,6 +48,7 @@ Construction is backend-independent. GetRID creates a stable borrowed resource i
 | `public void SurfaceAddVertex2D(Vector2 vertex)` | Captures the current attributes at a finite local position. |
 | `public void SurfaceSetColor(Color color)` | Activates/backfills or changes current color. |
 | `public void SurfaceSetUV(Vector2 uv)` | Activates/backfills or changes primary UV. |
+| `public void SurfaceSetUV2(Vector2 uv2)` | Activates/backfills or changes independent secondary UV. |
 | `public void SurfaceEnd()` | Validates, commits and ends the draft, then emits Changed. |
 | `public void ClearSurfaces()` | Removes completed surfaces and cancels a draft, then emits Changed. |
 
@@ -57,13 +58,13 @@ Construction is backend-independent. GetRID creates a stable borrowed resource i
 
 `public void SurfaceBegin(Mesh.PrimitiveType primitive, Material? material = null)`
 
-Accepts Points, Lines, LineStrip, Triangles or TriangleStrip. A second Begin while active throws InvalidOperationException and retains the first draft. Invalid topology throws ArgumentOutOfRangeException; a disposed material or mesh throws ObjectDisposedException. Material is captured as a borrowed reference. Initially both optional channels are absent, so rendering supplies white color and zero UV.
+Accepts Points, Lines, LineStrip, Triangles or TriangleStrip. A second Begin while active throws InvalidOperationException and retains the first draft. Invalid topology throws ArgumentOutOfRangeException; a disposed material or mesh throws ObjectDisposedException. Material is captured as a borrowed reference. Initially all optional channels are absent, so rendering supplies white color and zero UV.
 
 ### SurfaceAddVertex2D
 
 `public void SurfaceAddVertex2D(Vector2 vertex)`
 
-Appends a finite local position, plus the currently enabled color and UV. Nonfinite input throws ArgumentException before appending. Missing Begin throws InvalidOperationException. Vertices preserve append order with no explicit indices.
+Appends a finite local position, plus the currently enabled color and primary/secondary UV. Nonfinite input throws ArgumentException before appending. Missing Begin throws InvalidOperationException. Vertices preserve append order with no explicit indices.
 
 ### SurfaceSetColor
 
@@ -75,7 +76,13 @@ The first call enables Colors and fills all preceding vertices with `color`. Sub
 
 `public void SurfaceSetUV(Vector2 uv)`
 
-The first call enables primary UV and fills all preceding vertices with `uv`; subsequent calls only affect new vertices. Finite coordinates remain float pairs. Values outside 0..1 use the drawing item's sampler policy. Invalid input and inactive-builder errors follow SurfaceSetColor. Secondary UV is absent pending its actual shader attribute consumer, as recorded in [coverage](../coverage/classes/ImmediateMesh.md).
+The first call enables primary UV and fills all preceding vertices with `uv`; subsequent calls only affect new vertices. Finite coordinates remain float pairs. Values outside 0..1 use the drawing item's sampler policy. Invalid input and inactive-builder errors follow SurfaceSetColor.
+
+### SurfaceSetUV2
+
+`public void SurfaceSetUV2(Vector2 uv2)`
+
+Activates the independent secondary channel, backfilling all preceding draft vertices on its first assignment. Subsequent assignments affect future vertices. Nonfinite input, inactive draft and disposed resource checks match SurfaceSetUV and preserve draft state. Commit stores copied finite float pairs; new drafts reset activation. GPU shader fragments receive float2 at location four. Primary sampling and instance custom values remain independent.
 
 ### SurfaceEnd
 
@@ -127,7 +134,7 @@ Returns the draft's captured topology after validation.
 
 ### OnSurfaceGetFormat
 
-Returns inferred Vertex/Use2DVertices with Color and/or TexUV only when enabled in that surface. New drafts reset activation, independent of prior current attribute values.
+Returns inferred Vertex/Use2DVertices with Color, TexUV and/or TexUV2 only when enabled in that surface. New drafts reset activation, independent of prior current attribute values.
 
 ### OnSurfaceGetMaterial
 
@@ -155,6 +162,18 @@ Cancels the draft, disposes its owned private ArrayMesh and delegates outer reso
 
 [ImmediateMeshTests](../../tests/Electron2D.Tests/ImmediateMeshTests.cs) verifies state/finite/topology boundaries, late attributes/quantization, correction after failed End, observer failure/reentry, shallow/deep alias and local scene copies, query isolation, lifetime and already recorded command updates. Twenty warmup cycles precede 64 active material/transform/record/replay cycles and 64 idle replays; both measure zero managed bytes. [ImmediateMeshRenderingTests](../../tests/Electron2D.Tests/ImmediateMeshRenderingTests.cs) checks seven native pixel phases, resource RID drawing/server queries and all five topologies on Linux Wayland GPU/compatibility. Each backend also measures 64 active frames alternating all five built-in blends with null material and 64 idle frames after 20 warmup frames, from ProcessFrameStarted through FramePostDraw, with zero managed bytes.
 
-Draft growth/structural commit are explicit authoring allocations, not a zero-allocation frame replacement API. UV2 awaits typed storage/packing and a real shader attribute consumer. 3D vertex/normal/tangent operations remain excluded. Inherited advanced mesh members keep their individual dependencies. Native allocator totals, wider platforms, broad performance and owner acceptance remain unverified.
+Draft growth/structural commit are explicit authoring allocations, not a zero-allocation frame replacement API. 3D vertex/normal/tangent operations remain excluded. Inherited advanced mesh members keep their individual dependencies. Native allocator totals, wider platforms, broad performance and owner acceptance remain unverified.
 
 Inherited Mesh.GetAABB returns local Rect2 visibility bounds for every stored vertex, including unreferenced vertices and point/line topologies. Prepared bounds/replay do not copy live ArrayMesh data. MeshInstance resource-change listeners use worker-safe invalidation; attached node setters retain owner/capture guards.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
+
+ImmediateMesh now registers its file factory and forwards completed surface bytes/material references through the same bounded ArrayMesh archive schema. Active drafts are excluded from saving; successful storage restoration cancels a draft, while malformed bytes preserve completed state and the draft. Fresh-process file restoration is checked in MeshUV2Tests.
+
+### GetPropertyDescriptors
+
+`protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors()`
+
+Returns the inherited resource descriptors plus stored completed surface bytes and borrowed material references. Draft data is omitted. The file factory is available in fresh processes.

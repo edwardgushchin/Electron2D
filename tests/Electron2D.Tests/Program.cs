@@ -9,6 +9,8 @@ using System.Text.Json;
 using EngineFileAccess = Electron2D.FileAccess;
 using EngineTimer = Electron2D.Timer;
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_UV2_CHILD") is { } uv2Child) { MeshUV2Tests.RunChild(uv2Child); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_MESH_UV2") == "1") { MeshUV2Tests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SOURCE") == "1") { RenderingDeviceSourceTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_SPECIALIZATION") == "1") { RenderingDeviceSpecializationTests.Run(); return; }
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_DEVICE_PUSH") == "1") { RenderingDevicePushTests.Run(); return; }

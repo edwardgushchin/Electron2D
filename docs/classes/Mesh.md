@@ -1,6 +1,6 @@
 # Mesh
 
-Last updated: 2026-10-03
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public abstract class Electron2D.Mesh` · **Source:** [Mesh.cs](../../src/Scene/Resources/Mesh.cs).
 
@@ -314,3 +314,7 @@ System.ArgumentException: A custom bounds callback supplies an invalid rectangle
 Supplies the local two-dimensional visibility rectangle.
 
 Returns: Finite nonnegative local bounds; the default derives them from prepared surface positions.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.

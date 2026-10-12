@@ -1,6 +1,6 @@
 # MeshSurfaceData
 
-Last updated: 2026-10-07
+Last updated: 2026-10-12
 
 **Namespace:** `Electron2D` · **Declaration:** `public sealed class Electron2D.MeshSurfaceData` · **Source:** [MeshSurfaceData.cs](../../src/Scene/Resources/MeshSurfaceData.cs).
 
@@ -8,7 +8,7 @@ Typed enum or managed payload.
 
 ## Description
 
-Typed replacement for the heterogeneous mesh array-of-arrays. Named fields hold two-dimensional positions, optional matching vertex colors/primary UV optional vertex ordering indices and flattened four/eight bone indices and weights. Setter arrays remain caller-owned until passed to AddSurfaceFromArrays, which copies all channels. Query results own independent arrays. This payload adds no native handle, generic object dispatcher or data-only claim for unsupported channels.
+Typed replacement for the heterogeneous mesh array-of-arrays. Named fields hold two-dimensional positions, optional matching vertex colors/primary and secondary UV, optional vertex ordering indices and flattened four/eight bone indices and weights. Setter arrays remain caller-owned until passed to AddSurfaceFromArrays, which copies all channels. Query results own independent arrays. This payload adds no native handle, generic object dispatcher or data-only claim for unsupported channels.
 
 ## Example
 
@@ -43,6 +43,7 @@ Summary: Creates an empty set of typed surface arrays.
 | `public Electron2D.Color[] Colors { get; set; }` | Gets or sets optional vertex colors. |
 | `public System.Int32[] Indices { get; set; }` | Gets or sets optional indices defining primitive vertex order. |
 | `public Electron2D.Vector2[] UVs { get; set; }` | Gets or sets optional primary texture coordinates. |
+| `public Electron2D.Vector2[] UV2s { get; set; }` | Gets or sets optional secondary texture coordinates. |
 | `public Electron2D.Vector2[] Vertices { get; set; }` | Gets or sets local two-dimensional vertex positions. |
 
 ## Properties descriptions
@@ -73,6 +74,14 @@ Summary: Gets or sets optional primary texture coordinates.
 
 Value: Empty or one finite normalized-space coordinate per vertex; values outside zero through one retain sampler behavior.
 
+
+### UV2s
+
+`public Electron2D.Vector2[] UV2s { get; set; }`
+
+Summary: Gets or sets optional secondary texture coordinates.
+
+Value: Empty or one finite coordinate per vertex; independent of primary UVs and instance shader data.
 
 ### Vertices
 
@@ -112,3 +121,7 @@ Gets or sets flattened skin weights matching Bones.
 Value: Finite values; imports clamp and truncate to unsigned normalized 16-bit weights without normalizing the sum.
 
 The [mesh component](../components/meshes.md#server-palettes-and-foureight-skin-records) owns the actual storage, coordinate, lifetime, callback, archive and verification contract. New palette API uses the existing native-service availability/owner gate. Headless retained geometry and native rendered/backend acceptance remain separately recorded.
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.

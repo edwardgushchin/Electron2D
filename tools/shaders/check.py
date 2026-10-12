@@ -68,7 +68,7 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     external.write_bytes(b'not SPIR-V')
     invoke(external, output, success=False)
     assert output.read_bytes() == previous, 'Invalid bytecode replaced the usable artifact'
-    for stage, stem in [('vertex', 'Canvas.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
+    for stage, stem in [('vertex', 'Canvas.vert'), ('vertex', 'CanvasInstanced.vert'), ('fragment', 'Canvas.frag'), ('fragment', 'Clip.frag')]:
         source = root / f'src/Servers/Rendering/Shaders/{stem}.hlsl'
         invoke(source, output, stage)
         if stem == 'Canvas.frag':
@@ -85,6 +85,17 @@ with tempfile.TemporaryDirectory(prefix='electron2d-import-check-') as directory
     instance_glsl.write_text(instance_glsl.read_text().replace('in vec4 data', 'in vec3 data').replace('result=data', 'result=vec4(data,1)'))
     assert 'varyings' in invoke(instance_glsl, output, success=False)
     assert output.read_bytes() == previous, 'An invalid instance channel replaced the valid program'
+    secondary = directory / 'secondary-uv.glsl'
+    secondary.write_text('#version 450\nlayout(location=4) in vec2 uv2;\nlayout(location=0) out vec4 result;\nvoid main() { result=vec4(uv2,0,1); }\n')
+    invoke(secondary, output)
+    previous = output.read_bytes()
+    secondary.write_text(secondary.read_text().replace('in vec2 uv2', 'in vec3 uv2').replace('vec4(uv2,0,1)', 'vec4(uv2,1)'))
+    assert 'varyings' in invoke(secondary, output, success=False)
+    assert output.read_bytes() == previous, 'An invalid secondary channel replaced the valid program'
+    secondary.write_text('#version 450\nlayout(location=3) in vec2 uv2;\nlayout(location=0) out vec4 result;\nvoid main() { result=vec4(uv2,0,1); }\n')
+    assert 'varyings' in invoke(secondary, output, success=False)
+    assert output.read_bytes() == previous, 'The reserved lighting location replaced the valid program'
+
     missing_uv = directory / 'missing-uv.vert.glsl'
     missing_uv.write_text('''#version 450
 layout(location=0) in vec2 position;

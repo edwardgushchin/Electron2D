@@ -1,6 +1,6 @@
 # Shader
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 - Declaration: `public sealed class Shader : Resource`
 - Source: [Shader.cs](../../src/Scene/Resources/Shader.cs)
@@ -39,7 +39,7 @@ material.SetShaderParameter("tint", Colors.White);
 | `Texture? GetDefaultTextureParameter(string name, int index = 0)` | Gets the borrowed default texture. |
 | [Mode](Shader.Mode.md) | Canvas shader domain. |
 
-The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
+The fragment interface optionally accepts float4 color at location 0 and float2 UV at location 1, raw float4 instance custom at location 2 and secondary float2 UV at location 4. `TEXTURE` at set 2, binding 0 receives the current command texture or white for untextured geometry. It is reserved and omitted from uniform descriptors/default-parameter APIs. An optional scalar float32 TIME member in any valid fragment uniform buffer receives the renderer clock. Its offset and binding are reflected, not fixed. TIME is omitted from material descriptors and parameter APIs; lowercase time remains an ordinary parameter. See the [shared shader interface](../components/shader-materials.md#current-shader-interface).
 
 ## Method descriptions
 
@@ -171,3 +171,7 @@ Integer device image consumers now validate float/signed/unsigned sampled scalar
 [Automatic scene lighting](../components/shader-materials.md#automatic-scene-lighting) composes the computed fragment color before blend, preserving parameters, texture roles, discard, returns, reload and hardware instancing. Normal/specular and point-mask samplers share the native sixteen-binding stage capacity; four user uniform slots remain available. Current rendered evidence is Linux/Vulkan.
 
 The reserved Instance block has separate reflection/descriptor storage. File factories persist copied SPIRV bytes before sampled defaults; the decoder loads Shader before ShaderMaterial parameters. The protected GetPropertyDescriptors override exposes these stored schemas. See [per-item shader parameters](../components/shader-materials.md#per-item-shader-parameters).
+
+## Secondary mesh UV channel
+
+[MeshSurfaceData.UV2s](MeshSurfaceData.md#uv2s) supplies copied finite float pairs independent of primary UV and instance data. [The mesh component](../components/meshes.md#secondary-uv-storage-and-shader-consumer) records packing, archives, shader locations and executable verification.
