@@ -615,3 +615,6 @@ Registered [borrowed shape authoring](../components/physics-registered-adapter.m
 
 
 [Joint parameter authoring](../components/physics-registered-adapter.md#joint-parameter-authoring) now guards the complete common/pin/spring typed family and scene path/geometry during initial/live numerical calls. CPU/GPU/registered checks exercise retained profiles, endpoint reentry and real spring response; registered pin/groove numerical acceptance remains open.
+
+
+[Joint connection lifetime](../components/physics-registered-adapter.md#joint-connection-lifetime) now checks complete creation/type/clear/make dispatch, initial/live numerical rejection, incoming endpoint preflight and selected attachment failure/retry. Registered pin/groove numerical acceptance and the final network/performance gates remain open.

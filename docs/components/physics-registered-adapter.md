@@ -337,3 +337,37 @@ facade family under ADR 0087/0103 and remain Partial. Registered pin/groove nume
 response and complete numerical-extension acceptance remain open; built-in joint
 response uses the existing shared CPU/GPU contract tests. Native allocations, other
 platforms, networking and final window/performance acceptance are unverified here.
+
+
+## Joint connection lifetime
+
+RID creation and type retain common authoring. Selected CreateJoint/Attach/Detach
+own each fresh numerical attachment. Clear and replacement check scene/current
+joint/endpoints before any mutation, including pending initial attachment and
+unchanged clear. Public make checks both incoming body owners before preparing
+either; an Empty joint cannot bypass borrowing through a detached first endpoint.
+Engine pre-solve scene preparation remains valid.
+
+`BackendChecks.JointLifecycleChecks` covers all three raw and scene roles on CPU,
+GPU and the independent fixture. Factory/Attach/live policy/Detach hooks reject
+recursive clear/make/free, including unconfigured scene joints. Invalid kinds,
+nonfinite anchors, duplicate endpoints and mismatched scene roles preserve the old
+profile and attachment. Endpoint exit/reentry preserves sampled frames and values;
+endpoint free clears the role while retaining the joint RID. Ordinary state
+callbacks may clear/remake the next interval's connection.
+
+Independent factory throws, null results and claimed-object reuse reject. Attach
+failure attempts Detach; both errors remain if cleanup also throws. The matching
+numerical attachment retires even on detach error. Validated common role may remain
+pending after an attachment error, or until a failed clear is retried: explicit
+make/clear retry completes the operation. These outside-step authoring errors
+leave the world usable; started solve failures keep the existing terminal policy.
+
+The test also exercises real capped spring response with the existing .001
+scene-unit/s short-run tolerance. After 64 warmup frames, 64 complete frames with
+six active joint records allocate 0 owner/all-thread managed bytes on each backend.
+Cold creation/replacement intentionally creates fresh numerical objects and is
+outside this allocation bracket. The six extension creation/type/clear/make rows
+remain Partial: registered pin/groove numerical response and complete extension
+acceptance are still open. Native allocations, other platforms, final networking
+and real-window/performance acceptance are unverified here.

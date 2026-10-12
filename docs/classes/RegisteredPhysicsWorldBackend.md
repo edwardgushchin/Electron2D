@@ -1,6 +1,6 @@
 # RegisteredPhysicsWorldBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 **Declaration:** `internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBackend` · **Source:** [RegisteredPhysicsWorldBackend.cs](../../src/Servers/Physics/RegisteredPhysicsWorldBackend.cs) · **Component:** [Registered solver adapter](../components/physics-registered-adapter.md)
 
@@ -33,3 +33,6 @@ shape preparation. Retained object/canvas IDs and priority survive detached
 authoring and transfer. Initial hook failure uses existing attachment retirement;
 live metadata edits retain the same typed hooks. Common getters and sampled result
 identities remain authoritative.
+
+
+[Connection lifetime checks](../components/physics-registered-adapter.md#joint-connection-lifetime) now exercise selected factory/attachment/release guards, claimed-object reuse rejection, failed attachment cleanup, dual errors and explicit retry. The common adapter retains identities and frames; each successful reentry creates a fresh numerical attachment.

@@ -428,7 +428,7 @@ public sealed partial class PhysicsServer
     /// <param name="joint">A live scene-owned or caller-owned joint RID.</param>
     /// <remarks>A scene joint remains cleared until scene path/geometry edits or reentry configure it again.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
-    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
+    /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     public static void JointClear(RID joint) => Service.JointClearCore(joint);
 
     /// <summary>Returns the current configured role, including Empty for an unconnected resource.</summary>
@@ -457,9 +457,11 @@ public sealed partial class PhysicsServer
     /// <param name="anchor">Global scene-unit pivot.</param>
     /// <param name="bodyA">First live body RID.</param>
     /// <param name="bodyB">Second live body RID, or empty to attach body A to the fixed world.</param>
-    /// <remarks>Body-local frames are sampled once. Detached bodies connect when they later share a space.</remarks>
+    /// <remarks>Body-local frames are sampled once. Detached bodies connect when they later share a space.
+    /// Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
+    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
-    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
+    /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
     public static void JointMakePin(RID joint, Vector2 anchor, RID bodyA, RID bodyB = default) => Service.JointMakePinCore(joint, anchor, bodyA, bodyB);
 
@@ -470,8 +472,10 @@ public sealed partial class PhysicsServer
     /// <param name="anchorB">Global point used to sample body B's local anchor.</param>
     /// <param name="bodyA">First live body RID; empty rejects.</param>
     /// <param name="bodyB">Second live body RID; empty rejects.</param>
+    /// <remarks>Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
+    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
-    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
+    /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
     public static void JointMakeGroove(RID joint, Vector2 groove1A, Vector2 groove2A, Vector2 anchorB,
         RID bodyA = default, RID bodyB = default) => Service.JointMakeGrooveCore(joint, groove1A, groove2A, anchorB, bodyA, bodyB);
@@ -482,9 +486,11 @@ public sealed partial class PhysicsServer
     /// <param name="anchorB">Second global anchor in scene units.</param>
     /// <param name="bodyA">First live body RID.</param>
     /// <param name="bodyB">Second live body RID; empty rejects.</param>
-    /// <remarks>Resets relaxed length to anchor separation, stiffness to 20 and damping to 1.5 kg/s.</remarks>
+    /// <remarks>Resets relaxed length to anchor separation, stiffness to 20 and damping to 1.5 kg/s.
+    /// Current joint and both incoming bodies reject numerical borrowing before any body preparation or connection change.
+    /// A failed selected attachment retains the validated role for explicit retry; its cleanup errors are preserved.</remarks>
     /// <exception cref="ArgumentException">The RID is stale, has the wrong kind or lacks the requested joint role.</exception>
-    /// <exception cref="InvalidOperationException">A related active world is off-owner or stepping, or a scene joint would change its concrete role/world.</exception>
+    /// <exception cref="InvalidOperationException">A related or incoming world is off-owner, stepping or borrowed by a numerical hook, or a scene joint would change its concrete role/world.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Numeric input is nonfinite, outside the backend extent, or violates the active physical parameter range.</exception>
     public static void JointMakeDampedSpring(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default) => Service.JointMakeDampedSpringCore(joint, anchorA, anchorB, bodyA, bodyB);
 

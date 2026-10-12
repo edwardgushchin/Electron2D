@@ -5,7 +5,8 @@ namespace Electron2D;
 /// and is removed before either backend body leaves. The anchor is sampled at connection time; moving this
 /// node alone does not retune it. Concrete engine-owned subclasses supply the constraint.
 /// Path, geometry and parameter writes reject while a selected numerical hook is borrowed, including initial
-/// attachment and unchanged assignments. Ordinary game callbacks may author the next interval.</remarks>
+/// attachment and unchanged assignments. Server clear and connection replacement share this guard.
+/// Ordinary game callbacks may author the next interval.</remarks>
 public abstract class Joint : Entity
 {
     private static readonly PropertyDescriptor[] JointProperties =

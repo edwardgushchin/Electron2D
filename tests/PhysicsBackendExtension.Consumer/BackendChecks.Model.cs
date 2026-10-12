@@ -18,6 +18,9 @@ public static partial class BackendChecks
         internal Action<RID>? ShapeHook, FilterHook;
         internal Action<RID>? BodyHook;
         internal Action<RID>? JointHook;
+        internal Action<RID>? JointFactoryHook, JointReleaseHook;
+        internal bool FailJointFactory, NullJointFactory, FailJointAttach, FailJointDetach;
+        internal PhysicsBackendJoint? ReusedJoint;
         internal Action<RID>? PolicyHook;
         internal Action? PriorityHook;
         internal Action? StepHook, StatusHook;
@@ -49,7 +52,13 @@ public static partial class BackendChecks
         }
         protected override PhysicsBackendCollider CreateCollider(RID collider, bool area)
         { var b = new Body(this, collider, area); Bodies.Add(collider, b); return b; }
-        protected override PhysicsBackendJoint CreateJoint(RID joint) { var created = new Constraint(this, joint); Joints.Add(joint, created); return created; }
+        protected override PhysicsBackendJoint CreateJoint(RID joint)
+        {
+            if (FailJointFactory) throw new InvalidOperationException("Joint factory failure");
+            if (NullJointFactory) return null!;
+            if (ReusedJoint is { } reused) return reused;
+            var created = new Constraint(this, joint); Joints.Add(joint, created); JointFactoryHook?.Invoke(joint); return created;
+        }
         protected override void BeginStep(double delta) => Ready = false;
         protected override void PrepareWorld(double delta, in PhysicsAreaFieldConfiguration fields) { Fields = fields; PrepareFieldAreas(); }
         protected override void PrepareBodies(double delta) { }
@@ -266,8 +275,16 @@ public static partial class BackendChecks
         private RID _first, _second;
         private bool _attached;
         protected override bool IsAttached => _attached;
-        protected override void Attach(RID first, RID second, in PhysicsJointConfiguration settings) { _first = first; _second = second; Settings = settings; _attached = true; solver.JointHook?.Invoke(rid); }
-        protected override void Detach() { _attached = false; solver.Joints.Remove(rid); }
+        protected override void Attach(RID first, RID second, in PhysicsJointConfiguration settings)
+        {
+            _first = first; _second = second; Settings = settings; _attached = true; solver.JointHook?.Invoke(rid);
+            if (solver.FailJointAttach) throw new InvalidOperationException("Joint attachment failure");
+        }
+        protected override void Detach()
+        {
+            try { solver.JointReleaseHook?.Invoke(rid); if (solver.FailJointDetach) throw new InvalidOperationException("Joint detach failure"); }
+            finally { _attached = false; solver.Joints.Remove(rid); }
+        }
         protected override void ApplySolverPolicy(in PhysicsJointConfiguration settings) { Settings = settings; solver.JointHook?.Invoke(rid); }
         protected override void ApplyPortableFrames(Transform first, Transform second) => Settings = Settings with { FrameA = first, FrameB = second };
         protected override void SetCollideConnected(bool value) { Settings = Settings with { DisableCollision = !value }; solver.JointHook?.Invoke(rid); }

@@ -32,3 +32,6 @@ The engine retains authoring, logical identity, owner-thread/solver guards and o
 
 
 The complete typed facade parameter/flag family projects retained common authoring into Attach, ApplySolverPolicy and the concrete pin/groove hooks. Initial/live hooks cannot recursively change scene/raw paths, geometry or scalars. The independent consumer verifies profile propagation and spring motion; registered pin/groove numerical response remains open.
+
+
+Connection clear and replacement also reject numerical borrowing during CreateJoint, Attach, live policy and Detach. The independent consumer checks pending endpoints, fresh attachment reentry, kind/role/geometry rejection, factory/null/reuse/attach/detach errors and explicit recovery for all three roles. Registered pin/groove numerical response remains open.

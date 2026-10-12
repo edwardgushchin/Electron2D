@@ -1,6 +1,6 @@
 # PhysicsJointBackend
 
-Last updated: 2026-10-11
+Last updated: 2026-10-12
 
 [Shared public family checks](../components/physics-joint-policies.md#public-cpu-gpu-conformance)
 now run through explicitly selected CPU and independent GPU worlds, including
@@ -60,3 +60,6 @@ Single-body pins use the GPU world-anchor representation without a hidden CPU bo
 See [backend selection](../components/physics-backends.md).
 
 [Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+
+
+Selected factory/attach/detach errors are exercised by the public-only consumer: null/reused objects reject, failed Attach attempts Detach, and attachment/cleanup exceptions retain both errors. A detach error still drops the matching implementation; explicit make/clear retry completes common resource state. Common identity survives all these attempts.

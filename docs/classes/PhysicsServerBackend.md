@@ -88,3 +88,6 @@ Protected `RID[] GetCollisionExceptions(RID body)` copies guarded common authori
 
 
 Joint parameter authoring follows the same borrowed numerical boundary as body authoring. Typed facade reads retain common values; immutable PhysicsJointConfiguration and concrete joint hooks carry the full profile. The guard applies during initial attachment and live hooks.
+
+
+The common joint lifecycle retains RID/type/frame authoring while CreateJoint returns fresh selected numerical state. Both incoming body owners preflight before make preparation; current scene/raw connection writes reject factory/attachment/release hooks. [Connection lifetime](../components/physics-registered-adapter.md#joint-connection-lifetime) records error/retry and allocation evidence.

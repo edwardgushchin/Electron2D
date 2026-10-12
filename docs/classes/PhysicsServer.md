@@ -374,6 +374,16 @@ finally
 <a id="jointgettype"></a>
 **JointGetType:** Returns the configured role, which remains concrete while a connection waits for body attachment or temporarily spans different worlds. It returns Empty after allocation, clear or final endpoint free. A disposed RID rejects.
 
+Creation/type/clear/make share common identity with the selected numerical attachment.
+Clear and replacement reject factory/initial/live/release hooks before changing
+configuration. Both incoming body owners are checked before preparing either,
+including an Empty joint with a detached first endpoint. Invalid kind, role or
+geometry candidates preserve the old connection. A selected attachment failure
+retains its validated role for explicit make retry; Attach cleanup attempts Detach
+and preserves both errors if needed. A detach error retires the numerical object
+and repeated clear completes common cleanup. Ordinary game callbacks may clear
+and remake the next interval's connection. See [connection lifetime evidence](../components/physics-registered-adapter.md#joint-connection-lifetime).
+
 <a id="jointdisablecollisionsbetweenbodies"></a>
 <a id="jointisdisabledcollisionsbetweenbodies"></a>
 **Collision policy pair:** True by default. Set/get the shared node/server policy. Active changes preserve local anchors and refresh contact fixtures. Each disabled connection independently contributes to both bodies' contact and motion-test exceptions; snapshots deduplicate explicit and joint targets. Clearing/freeing/toggling one joint cannot remove another joint or explicit exception's contribution. An Empty resource stores policy for its next make.

@@ -69,3 +69,6 @@ Bias (default zero), MaxBias/MaxForce (default float.MaxValue) are common author
 
 
 EnsureWriteAccess checks attached scene, current joint and endpoint worlds before any scalar/path/geometry mutation, including pending attachment and unchanged values. It guards numerical borrowing separately from ordinary query phases so engine spring preparation can resolve automatic rest length before solving.
+
+
+Clear and Configure check EnsureWriteAccess before detaching or changing retained role/endpoints. Public make methods also preflight both incoming body owners before preparing either. Engine pre-solve scene preparation retains its internal path. Invalid candidates preserve the old connection; selected attachment failure leaves the validated role pending for explicit make retry. Detach errors retire the matching numerical attachment and a repeated clear completes common cleanup.

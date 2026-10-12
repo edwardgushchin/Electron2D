@@ -67,3 +67,6 @@ allocation and its subsequent anchor response on CPU and GPU. See the
 
 
 The shared runtime rejects scene/raw parameter and local path/geometry writes inside initial/live numerical hooks before mutation. Typed authoring survives endpoint reentry and ordinary callbacks retain writes. [Registered joint parameters](physics-registered-adapter.md#joint-parameter-authoring) records complete profile propagation, bounded spring response and allocation checks.
+
+
+Clear and Configure share the numerical authoring guard. Public make preflights both incoming body owners before preparing either, including an Empty resource and a detached first endpoint. [Registered connection lifetime](physics-registered-adapter.md#joint-connection-lifetime) checks pending/clear/replacement/reentry, errors, callbacks and warmed active frames on CPU/GPU/registered worlds.

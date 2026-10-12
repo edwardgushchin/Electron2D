@@ -88,7 +88,8 @@ public sealed partial class PhysicsServer
     internal void JointMakePinCore(RID joint, Vector2 anchor, RID bodyA, RID bodyB = default)
     {
         var runtime = GetJoint(joint);
-        PrepareJointBody(bodyA); if (bodyB.IsValid()) PrepareJointBody(bodyB);
+        runtime.EnsureWriteAccess();
+        PrepareJointBodies(bodyA, bodyB, allowWorld: true);
         runtime.ConfigurePin(anchor, bodyA, bodyB); MarkSceneOverride(runtime);
     }
 
@@ -96,20 +97,30 @@ public sealed partial class PhysicsServer
     RID bodyA = default, RID bodyB = default)
     {
         var runtime = GetJoint(joint);
-        PrepareJointBody(bodyA); PrepareJointBody(bodyB);
+        runtime.EnsureWriteAccess();
+        PrepareJointBodies(bodyA, bodyB);
         runtime.ConfigureGroove(groove1A, groove2A, anchorB, bodyA, bodyB); MarkSceneOverride(runtime);
     }
 
     internal void JointMakeDampedSpringCore(RID joint, Vector2 anchorA, Vector2 anchorB, RID bodyA, RID bodyB = default)
     {
         var runtime = GetJoint(joint);
-        PrepareJointBody(bodyA); PrepareJointBody(bodyB);
+        runtime.EnsureWriteAccess();
+        PrepareJointBodies(bodyA, bodyB);
         runtime.ConfigureSpring(anchorA, anchorB, bodyA, bodyB); MarkSceneOverride(runtime);
     }
 
     private static void MarkSceneOverride(PhysicsJointRuntime runtime)
     {
         if (runtime.Scene is { } weak && weak.TryGetTarget(out var scene)) scene.MarkServerOverride();
+    }
+
+    private void PrepareJointBodies(RID first, RID second, bool allowWorld = false)
+    {
+        BodyRuntime(first).EnsureAccess(writing: true);
+        if (second.IsValid() || !allowWorld) BodyRuntime(second).EnsureAccess(writing: true);
+        PrepareJointBody(first);
+        if (second.IsValid()) PrepareJointBody(second);
     }
 
     private void PrepareJointBody(RID rid)

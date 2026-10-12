@@ -77,6 +77,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
     private void Configure(PhysicsServer.JointType type, Vector2 anchorA, Vector2 anchorB, float angle,
         float lower, float upper, RID first, RID second, bool preserve)
     {
+        EnsureWriteAccess();
         if (!anchorA.IsFinite() || !anchorB.IsFinite()) throw new ArgumentOutOfRangeException(nameof(anchorA));
         if (first == second || !first.IsValid()) throw new ArgumentException("Joint endpoints must be distinct live bodies.", nameof(first));
         if (!second.IsValid() && type != PhysicsServer.JointType.Pin)
@@ -141,6 +142,7 @@ internal sealed partial class PhysicsJointRuntime(RID rid, Joint? scene = null, 
 
     internal void Clear()
     {
+        EnsureWriteAccess();
         DetachSpace(); Type = PhysicsServer.JointType.Empty; BodyA = BodyB = default;
     }
 

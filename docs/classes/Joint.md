@@ -120,3 +120,6 @@ Collision-policy setters reject numerical hooks before changing values or endpoi
 
 
 Path, geometry and all common/concrete parameter writes reject initial/live selected numerical hooks before changing retained values, even for unchanged assignments. The attached scene world is checked while the joint is pending. Ordinary game callbacks can author the next interval.
+
+
+Server clear and connection replacement share the numerical writer guard. It covers the attached scene world while unconfigured and both new body owners before preparation. [Connection lifetime checks](../components/physics-registered-adapter.md#joint-connection-lifetime) exercise all concrete scene/raw roles and retained identity.
