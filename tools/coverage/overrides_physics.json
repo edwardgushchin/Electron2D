@@ -2564,6 +2564,11 @@
       "godot": "PhysicsServer2DExtension::method:_shape_get_data(RID:)",
       "electron2d": "method:Electron2D.PhysicsServerBackend.GetShapeGeometry(Electron2D.RID)",
       "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)",
+      "electron2d": "method:Electron2D.PhysicsServerBackend.TestBodyMotion(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.Boolean,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt64>,System.Boolean,Electron2D.PhysicsTestMotionResult)",
+      "reason": "ADR 0103/0063: actual public BodyTestMotion and scene motion dispatch reaches the typed selected TestBodyMotion hook. Common validation retains the authored moving RID, rejects same-world receiver substitution before optional caller output, and preserves full result fields plus query/exclusion scope after errors. Public-only CPU/GPU/registered positive/miss/filter checks execute 1024 warm queries and 64 full frames at zero managed allocation, with registered nested queries, malformed results, scene/raw receiver substitution, no-result and next-valid-call controls; the pre-fix receiver regression is RED. Arbitrary geometry and complete recovery/separation-ray/numerical extension acceptance remain open."
     }
   ],
   "extras": [
@@ -4664,10 +4669,6 @@
     },
     {
       "electron2d": "method:Electron2D.PhysicsServerBackend.SynchronizeCollisionExceptions()",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
-    },
-    {
-      "electron2d": "method:Electron2D.PhysicsServerBackend.TestBodyMotion(Electron2D.RID,Electron2D.Transform,Electron2D.Vector2,System.Single,System.Boolean,System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<System.UInt64>,System.Boolean,Electron2D.PhysicsTestMotionResult)",
       "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open."
     },
     {
@@ -7191,13 +7192,6 @@
     },
     {
       "godot": [
-        "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)"
-      ],
-      "state": "Blocked",
-      "reason": "ADR 0103: typed public world implementation boundary executed by the separate PhysicsBackendExtension.Consumer; immutable values and guarded collider/joint/history/query hooks preserve common identity, observers and lifecycle. Arbitrary geometry and unexercised reference semantics remain open. Current projection has real selected world dispatch; the applicable complete reference operation and custom geometry audit remains required."
-    },
-    {
-      "godot": [
         "class:PhysicsServer2DManager",
         "PhysicsServer2DManager::method:register_server(String:,Callable:)",
         "PhysicsServer2DManager::method:set_default_server(String:,int:)"
@@ -7393,6 +7387,13 @@
       ],
       "state": "Partial",
       "reason": "ADR 0103/0069: public selected ShapeCollide and BodyCollideShape now execute typed hooks, logical scene/raw/detached slot poses, independent swept-region rules, pair spans and atomic output. GetShapeGeometry borrows immutable current authored data without resource clones, with owner/lifetime/failure guards and procedural-supplier borrowing. CPU/GPU built-in pair families and a public-only circle/static-annulus numerical consumer verify real contacts, nesting, invalid results and 320 warm outer queries plus 64 full frames at zero managed allocation. Arbitrary geometry, moving-annulus boundary contacts and complete numerical-extension acceptance remain open."
+    },
+    {
+      "godot": [
+        "PhysicsServer2DExtension::method:_body_test_motion(RID:,Transform2D:,Vector2:,float:,bool:,bool:,PhysicsServer2DExtensionMotionResult*:)"
+      ],
+      "state": "Partial",
+      "reason": "ADR 0103/0063: actual public BodyTestMotion and scene motion dispatch reaches the typed selected TestBodyMotion hook. Common validation retains the authored moving RID, rejects same-world receiver substitution before optional caller output, and preserves full result fields plus query/exclusion scope after errors. Public-only CPU/GPU/registered positive/miss/filter checks execute 1024 warm queries and 64 full frames at zero managed allocation, with registered nested queries, malformed results, scene/raw receiver substitution, no-result and next-valid-call controls; the pre-fix receiver regression is RED. Arbitrary geometry and complete recovery/separation-ray/numerical extension acceptance remain open."
     }
   ]
 }

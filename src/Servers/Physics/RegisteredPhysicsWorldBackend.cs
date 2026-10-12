@@ -205,7 +205,7 @@ internal sealed partial class RegisteredPhysicsWorldBackend : PhysicsWorldBacken
             var hit = _implementation.TestBodyMotion(body, from, motion, margin, recoveryAsCollision, excludedBodies, excludedObjects, collideSeparationRay, _motion);
             var data = _motion.Data;
             if (hit != data.Collided) throw new InvalidOperationException("A motion implementation returned inconsistent collision status.");
-            return data with { OwnerRID = body };
+            return hit ? data : data with { OwnerRID = body };
         }
         finally { Exit(); }
     }

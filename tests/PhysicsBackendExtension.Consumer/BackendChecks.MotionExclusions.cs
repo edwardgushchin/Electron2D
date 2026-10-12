@@ -118,13 +118,33 @@ public static partial class BackendChecks
                 Reject<InvalidOperationException>(() => PhysicsServer.BodyTestMotion(cases[2].Body, cases[2].Parameters, result));
                 Check(result.GetColliderRID() == previous, "An excluded forged motion result preserves caller output"); CheckOutside();
                 solver.Bodies[near.GetRID()].ObjectID = near.InstanceID; solver.MotionHook = regular; Tick();
+                foreach (var query in new[] { cases[0], cases[8] })
+                {
+                    currentBodies = query.Bodies; currentObjects = query.Objects;
+                    Check(PhysicsServer.BodyTestMotion(query.Body, query.Parameters, result), "A valid motion result precedes each receiver-identity rejection");
+                    var before = MotionSnapshot(result);
+                    solver.MotionResultHook = (requested, scratch) =>
+                    {
+                        var surrogate = requested == scene.GetRID() ? raw[0] : scene.GetRID();
+                        scratch.SetCollision(surrogate, scratch.GetCollisionLocalShape(), scratch.GetColliderRID(), scratch.GetColliderShape(),
+                            scratch.GetCollisionPoint() + new Vector2(1, 2), -scratch.GetCollisionNormal(), scratch.GetCollisionDepth(),
+                            scratch.GetColliderVelocity(), scratch.GetTravel() / 2, scratch.GetRemainder(),
+                            scratch.GetCollisionSafeFraction(), scratch.GetCollisionUnsafeFraction());
+                    };
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodyTestMotion(query.Body, query.Parameters, result));
+                    Check(MotionSnapshot(result) == before, "Wrong moving-body identity preserves the entire prior scene/raw caller result"); CheckOutside();
+                    Reject<InvalidOperationException>(() => PhysicsServer.BodyTestMotion(query.Body, query.Parameters)); CheckOutside();
+                    solver.MotionResultHook = null;
+                    Check(PhysicsServer.BodyTestMotion(query.Body, query.Parameters, result) && MotionSnapshot(result) == before,
+                        "Receiver-identity rejection restores the query scope without poisoning the next result");
+                }
             }
             Check(solver is null || hooks >= cases.Count * 64, "Registered checks execute real numerical motion hooks");
             Console.WriteLine($"Motion exclusions backend={world.PhysicsBackend} queries={cases.Count * 64} frames=64 ownerBytes={ownerBytes} allBytes={allBytes} hooks={hooks}.");
         }
         finally
         {
-            if (solver is not null) { solver.MotionHook = null; solver.StepHook = null; }
+            if (solver is not null) { solver.MotionHook = null; solver.MotionResultHook = null; solver.StepHook = null; }
             foreach (var query in cases) query.Parameters.Dispose();
             foreach (var id in raw) PhysicsServer.FreeRID(id);
             if (nestedBody.IsValid()) PhysicsServer.FreeRID(nestedBody);
@@ -148,6 +168,10 @@ public static partial class BackendChecks
             finally { PhysicsServer.FreeRID(failedSpace); }
         }
 
+        static (RID, ulong, ElectronObject?, int, int, Vector2, Vector2, float, Vector2, Vector2, Vector2, float, float) MotionSnapshot(PhysicsTestMotionResult value) =>
+            (value.GetColliderRID(), value.GetColliderID(), value.GetCollider(), value.GetCollisionLocalShape(), value.GetColliderShape(),
+                value.GetCollisionPoint(), value.GetCollisionNormal(), value.GetCollisionDepth(), value.GetColliderVelocity(), value.GetTravel(), value.GetRemainder(),
+                value.GetCollisionSafeFraction(), value.GetCollisionUnsafeFraction());
         void AddCases(RID body, Vector2 origin, RID first, RID second, ulong firstObject, ulong secondObject)
         {
             Add(first, [], []);

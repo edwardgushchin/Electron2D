@@ -158,3 +158,11 @@ Joint parameter authoring follows the same borrowed numerical boundary as body a
 
 
 The common joint lifecycle retains RID/type/frame authoring while CreateJoint returns fresh selected numerical state. Both incoming body owners preflight before make preparation; current scene/raw connection writes reject factory/attachment/release hooks. [Connection lifetime](../components/physics-registered-adapter.md#joint-connection-lifetime) records error/retry and allocation evidence.
+
+
+[Motion result receiver identity](../components/physics-registered-adapter.md#motion-result-receiver-identity)
+preserves the moving RID authored by SetCollision through selected-query validation.
+A same-world result for another moving body rejects before caller publication;
+no-result calls enforce the same rule. SetMotion misses retain normal requested-body
+binding, and rejection restores scope for the next valid query. The numerical
+motion/geometry acceptance remains broader than this identity guarantee.

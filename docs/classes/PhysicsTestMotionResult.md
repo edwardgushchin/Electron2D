@@ -64,3 +64,11 @@ Rebinding does not retarget earlier results; disposal/collection makes object re
 without erasing the sampled ID. See [object associations](../components/physics-object-bindings.md).
 
 [Registered numerical adapter](../components/physics-registered-adapter.md) now connects a public value/RID-only implementation to real scene/raw motion, fields/forces, joints, queries, contact/Area publication, private/portable history and terminal failure. Its independent circle/spring test solver owns its own state and does not wrap a built-in. Public registered factories and the typed family now execute in a separate consumer; arbitrary custom geometry and unexercised operation acceptance remain open.
+
+
+[Motion result receiver identity](../components/physics-registered-adapter.md#motion-result-receiver-identity)
+preserves the moving RID authored by SetCollision through selected-query validation.
+A same-world result for another moving body rejects before caller publication;
+no-result calls enforce the same rule. SetMotion misses retain normal requested-body
+binding, and rejection restores scope for the next valid query. The numerical
+motion/geometry acceptance remains broader than this identity guarantee.

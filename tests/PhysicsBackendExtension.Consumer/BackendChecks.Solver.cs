@@ -130,6 +130,7 @@ public static partial class BackendChecks
             return true;
             void Consider(Vector2 x, Vector2 y) { var d = x.DistanceSquaredTo(y); if (d < distance) { a = x; b = y; distance = d; } }
         }
+        internal Action<RID, PhysicsTestMotionResult>? MotionResultHook;
         protected override bool TestBodyMotion(RID body, Transform from, Vector2 motion, float margin, bool recoveryAsCollision,
             ReadOnlySpan<RID> excludedBodies, ReadOnlySpan<ulong> excludedObjects, bool collideSeparationRay, PhysicsTestMotionResult result)
         {
@@ -144,7 +145,8 @@ public static partial class BackendChecks
                 { best = other; fraction = f; }
             if (best is null) { result.SetMotion(motion); return false; }
             var travel = motion * fraction; var normal = (from.Origin + travel - best.Position).Normalized(); var point = best.Position + normal * best.Radius;
-            result.SetCollision(body, 0, best.RID, 0, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction); return true;
+            result.SetCollision(body, 0, best.RID, 0, point, normal, 0, best.PointVelocity(point), travel, motion - travel, fraction, fraction);
+            MotionResultHook?.Invoke(body, result); return true;
         }
     }
 }

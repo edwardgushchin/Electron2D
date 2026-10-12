@@ -135,7 +135,8 @@ public sealed class PhysicsTestMotionResult : ElectronObject
     /// <param name="unsafeFraction">An unsafe fraction from safeFraction through one.</param>
     /// <remarks>This method does not execute a motion test. Both bodies follow their owner-thread,
     /// solver and failed-world guards. Identity is sampled once from the collider's current association;
-    /// later rebind/disposal does not retarget this result. Validation precedes replacement and warmed calls allocate no managed storage.</remarks>
+    /// later rebind/disposal does not retarget this result. Validation precedes replacement and warmed calls allocate no managed storage.
+    /// The supplied moving-body identity is preserved; selected motion-query output must use its requested body.</remarks>
     /// <exception cref="ArgumentException">An RID is not a live body, or the moving body is its own collider.</exception>
     /// <exception cref="ArgumentOutOfRangeException">A shape index, vector, depth or fraction is invalid.</exception>
     /// <exception cref="InvalidOperationException">Bodies do not share a live space, or access violates its guard.</exception>

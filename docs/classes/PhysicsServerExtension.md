@@ -32,3 +32,11 @@ Inherited `GetShapeGeometry(RID)` provides exact immutable authored data for the
 selected `CollideShapes` and `BodyCollideShape` hooks, now reachable through public
 PhysicsServer pair queries. See [public pair dispatch](../components/physics-registered-adapter.md#public-shape-pair-dispatch)
 for identity, atomic output, nested borrowing and verification limits.
+
+
+[Motion result receiver identity](../components/physics-registered-adapter.md#motion-result-receiver-identity)
+preserves the moving RID authored by SetCollision through selected-query validation.
+A same-world result for another moving body rejects before caller publication;
+no-result calls enforce the same rule. SetMotion misses retain normal requested-body
+binding, and rejection restores scope for the next valid query. The numerical
+motion/geometry acceptance remains broader than this identity guarantee.
