@@ -35,6 +35,7 @@ public static partial class BackendChecks
         PortableEpisodeChecks();
         RunConstruction();
         RunPicking();
+        RunShapeOwners();
         SelectionChecks();
         DebugFailureChecks();
         var calls = 0;

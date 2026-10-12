@@ -226,3 +226,9 @@ now verifies scene Body/Area policy through selected point queries, numerical
 guards and 128 changed-policy full frames at zero managed allocation. Native
 CPU/GPU/registered worlds each pass with both renderers and target pixel checks;
 full registered geometry and final acceptance remain open.
+
+[Shape-owner metadata access](../components/physics-registered-adapter.md#shape-owner-metadata-access)
+now checks actual space ownership/failure for tree-less scene attachments while
+retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
+consumer exercises every collider role and 128 full scalar-read frames at 0/0
+managed bytes. Complete geometry/disable and final acceptance remain open.

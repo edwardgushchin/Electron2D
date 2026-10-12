@@ -893,3 +893,36 @@ restored. This fixture is not a real-time FPS benchmark.
 Frozen evidence and six PNGs are under
 `bin/physics-picking/2026-10-12/final/`. Full registered arbitrary geometry,
 physics/network/performance and platform acceptance remain open.
+
+## Shape-owner metadata access
+
+The complete common owner registry read family now qualifies an attached
+CollisionObject through its actual PhysicsSpace as well as any SceneTree. A
+scene object explicitly bound with BodySetSpace/AreaSetSpace has no Tree, but
+still rejects off-space-owner reads. Detached objects retain ordinary authoring
+access. Attached ordinary getters reject terminal world failure; pure retained
+owner inputs remain readable within selected numerical hooks without preparing
+geometry or recursively querying the backend failure hook.
+
+CreateShapeOwner uses the same failure preflight before allocating a group.
+Other owner setters already resolve their group before mutation. Internal logical
+slot inspection retains its existing guarded caller boundary: contact publication
+and failed-world shape retirement must still inspect slots while ordinary public
+queries are unavailable. Lifecycle cleanup remains available after failure.
+
+The public-only `--shape-owners` consumer runs on CPU/GPU/registered spaces with
+StaticBody, AnimatableBody, CharacterBody, RigidBody, PhysicalBone and Area. It
+checks all eleven authored getter families from a worker on tree-less attachments,
+retained reads/equal-write rejection inside numerical point queries, owner/index
+reindexing and highest-ID reuse, normalized one-way authoring and Area's accepted
+no-effect one-way setters. Registered failure checks exercise every read family,
+set/create rejection and full disposal. The pre-fix consumer rejects the accepted
+worker read as RED; the unchanged checks pass after the common preflight change.
+
+After 128 warmups and full GC/finalizer draining, 128 complete 1/120-s intervals
+read scalar registry metadata on all six roles with 0/0 owner/all-thread managed
+bytes. Caller-owned GetShapeOwners arrays allocate intentionally and are outside
+that scalar/step bracket. Identities and policy values are exact. Frozen evidence
+is under `bin/physics-shape-owners/2026-10-12/final/`. This closes the confirmed
+access defect; full shape-owner geometry/disable, numerical-extension and final
+physics/network/performance acceptance remain open.

@@ -1297,3 +1297,9 @@ now draws remote interpolation and local correction smoothing in a real window
 while CPU authority/late client stay headless. Public snapshot and pixel checks
 verify visible separation without physical-state mutation; renderer choice and
 window FPS/allocation reporting remain separate from physics/replay metrics.
+
+[Shape-owner metadata access](components/physics-registered-adapter.md#shape-owner-metadata-access)
+now checks actual space ownership/failure for tree-less scene attachments while
+retaining numerical authored reads and cleanup. The shared CPU/GPU/registered
+consumer exercises every collider role and 128 full scalar-read frames at 0/0
+managed bytes. Complete geometry/disable and final acceptance remain open.

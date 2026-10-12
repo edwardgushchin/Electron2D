@@ -43,32 +43,32 @@
     {
       "godot": "CollisionObject2D::method:create_shape_owner(Object:)",
       "electron2d": "method:Electron2D.CollisionObject.CreateShapeOwner(Electron2D.ElectronObject)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:get_shape_owner_one_way_collision_direction(int:)",
       "electron2d": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionDirection(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:get_shape_owner_one_way_collision_margin(int:)",
       "electron2d": "method:Electron2D.CollisionObject.GetShapeOwnerOneWayCollisionMargin(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:get_shape_owners()",
       "electron2d": "method:Electron2D.CollisionObject.GetShapeOwners()",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:is_shape_owner_disabled(int:)",
       "electron2d": "method:Electron2D.CollisionObject.IsShapeOwnerDisabled(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:is_shape_owner_one_way_collision_enabled(int:)",
       "electron2d": "method:Electron2D.CollisionObject.IsShapeOwnerOneWayCollisionEnabled(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:remove_shape_owner(int:)",
@@ -78,7 +78,7 @@
     {
       "godot": "CollisionObject2D::method:shape_find_owner(int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeFindOwner(System.Int32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_add_shape(int:,Shape2D:)",
@@ -93,27 +93,27 @@
     {
       "godot": "CollisionObject2D::method:shape_owner_get_owner(int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetOwner(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_get_shape(int:,int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShape(System.UInt32,System.Int32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_get_shape_count(int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeCount(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_get_shape_index(int:,int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetShapeIndex(System.UInt32,System.Int32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_get_transform(int:)",
       "electron2d": "method:Electron2D.CollisionObject.ShapeOwnerGetTransform(System.UInt32)",
-      "reason": "Typed unsigned owner IDs and global logical shape indices project the native owner-group registry; fixtures and owner identity execute under ADR 0071."
+      "reason": "ADR 0071/0088/0103: typed owner IDs and logical indices preserve shared authoring. Attached reads qualify the actual space owner/lifetime/failure even without SceneTree, and remain non-preparing during numerical hooks. Public-only CPU/GPU/registered checks cover all five Body siblings and Area, read-family thread guards, group/index lifetime, failed-world rejection/cleanup and 128 full frames with non-allocating metadata reads at 0/0 managed bytes. GetShapeOwners intentionally returns a caller-owned allocating array. Complete cross-family geometry/disable acceptance remains separate."
     },
     {
       "godot": "CollisionObject2D::method:shape_owner_remove_shape(int:,int:)",
