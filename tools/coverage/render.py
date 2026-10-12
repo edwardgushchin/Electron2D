@@ -683,7 +683,7 @@ def render():
             updated = "2026-10-10"
         if name in {"Texture2DRD", "TextureLayeredRD", "Texture2DArrayRD", "RenderingDevice", "RenderingServer", "RDShaderSPIRV", "RDVertexAttribute", "RDAttachmentFormat", "RDPipelineRasterizationState", "RDPipelineColorBlendState", "RDPipelineColorBlendStateAttachment"}:
             updated = "2026-10-11"
-        if name in {"RenderingDevice", "RDTextureFormat", "RDSamplerState", "RDAttachmentFormat", "RDPipelineDepthStencilState", "RDPipelineRasterizationState"}:
+        if name in {"RenderingDevice", "RDTextureFormat", "RDSamplerState", "RDAttachmentFormat", "RDPipelineDepthStencilState", "RDPipelineRasterizationState", "RDFramebufferPass", "RDPipelineMultisampleState"}:
             updated = "2026-10-12"
         lines = [] if page in page_text else [f"# {page_name} API coverage", "", f"Last updated: {updated}", ""]
         if page_name == "Texture":

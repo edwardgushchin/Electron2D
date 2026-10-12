@@ -26,7 +26,7 @@ internal static class RenderingDeviceGraphicsTests
     }
     internal static void Export(RDShaderSPIRV module, string language)
     {
-        var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_GRAPHICS_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_DEPTH_OUTPUT"); if (directory is null) return; Directory.CreateDirectory(directory);
+        var directory = Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_GRAPHICS_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_DEPTH_OUTPUT") ?? Environment.GetEnvironmentVariable("ELECTRON2D_DEVICE_MSAA_OUTPUT"); if (directory is null) return; Directory.CreateDirectory(directory);
         var remap = typeof(RenderingDevice).GetMethod("Remap", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
         foreach (var stage in new[] { RenderingDevice.ShaderStage.Vertex, RenderingDevice.ShaderStage.Fragment })
         {

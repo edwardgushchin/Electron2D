@@ -13,6 +13,12 @@ public sealed unsafe partial class RenderingDevice
         Samples4 = 2,
         /// <summary>Eight samples per pixel.</summary>
         Samples8 = 3,
+        /// <summary>Sixteen samples; requires an available native sample-count adapter.</summary>
+        Samples16 = 4,
+        /// <summary>Thirty-two samples; requires an available native sample-count adapter.</summary>
+        Samples32 = 5,
+        /// <summary>Sixty-four samples; requires an available native sample-count adapter.</summary>
+        Samples64 = 6,
         /// <summary>Marks the exclusive numeric extent; it is not an executable selection.</summary>
         Max = 7,
     }

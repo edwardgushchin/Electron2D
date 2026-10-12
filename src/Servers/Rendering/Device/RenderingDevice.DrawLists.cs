@@ -19,9 +19,9 @@ public sealed unsafe partial class RenderingDevice
         return region;
     }
     /// <summary>Begins an ordered color and depth/stencil render pass on borrowed framebuffer images.</summary>
-    /// <param name="framebuffer">A live single-sample framebuffer.</param>
+    /// <param name="framebuffer">A live framebuffer with matching raster sample counts and optional resolve destinations.</param>
     /// <param name="drawFlags">Per-target clear or discard load flags; default loads existing pixels.</param>
-    /// <param name="clearColorValues">One clear value per attachment when any clear flag is set; finite float components or raw integer lane bits as in TextureClear.</param>
+    /// <param name="clearColorValues">One clear value per color render slot when a color clear flag is set; finite float components or raw integer lane bits as in TextureClear.</param>
     /// <param name="region">Viewport and initial scissor; zero selects the whole framebuffer.</param>
     /// <param name="clearDepthValue">Finite depth clear from zero through one; defaults to one.</param>
     /// <param name="clearStencilValue">Eight-bit stencil clear; defaults to zero.</param>
@@ -52,7 +52,8 @@ public sealed unsafe partial class RenderingDevice
                 Texture = Get(target.Textures[layout.Colors[i]], Kind.Texture).Handle!.DangerousGetHandle(),
                 ClearColor = new() { R = color.R, G = color.G, B = color.B, A = color.A },
                 LoadOp = (clears & (1u << i)) != 0 ? SDL.GPULoadOp.Clear : (ignores & (1u << i)) != 0 ? SDL.GPULoadOp.DontCare : SDL.GPULoadOp.Load,
-                StoreOp = SDL.GPUStoreOp.Store
+                StoreOp = layout.Resolves[i] >= 0 ? SDL.GPUStoreOp.ResolveAndStore : SDL.GPUStoreOp.Store,
+                ResolveTexture = layout.Resolves[i] >= 0 ? Get(target.Textures[layout.Resolves[i]], Kind.Texture).Handle!.DangerousGetHandle() : 0
             };
         }
         var depth = new SDL.GPUDepthStencilTargetInfo();
@@ -78,7 +79,7 @@ public sealed unsafe partial class RenderingDevice
     public void DrawListBindRenderPipeline(long drawList, RID renderPipeline)
     {
         DrawList(drawList); var entry = Get(renderPipeline, Kind.GraphicsPipeline); Get(entry.Shader, Kind.Shader);
-        if (!FramebufferFormat(entry.Graphics!.FramebufferFormat).Formats.AsSpan().SequenceEqual(FramebufferFormat(_drawTarget!.Format).Formats)) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
+        if (!SameRasterLayout(FramebufferFormat(entry.Graphics!.FramebufferFormat), FramebufferFormat(_drawTarget!.Format))) throw new ArgumentException("The pipeline framebuffer layout does not match.", nameof(renderPipeline));
         _graphicsPipeline = entry; SDL.BindGPUGraphicsPipeline(_drawPass, entry.Handle!.DangerousGetHandle()); SetBlendConstants(entry.Graphics.Constant); SDL.SetGPUStencilReference(_drawPass, entry.Graphics.StencilReference);
     }
     /// <summary>Binds a live borrowed vertex array for subsequent draws.</summary>

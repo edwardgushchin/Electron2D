@@ -16,7 +16,7 @@
       "godot": "class:RenderingDevice",
       "electron2d": "T:Electron2D.RenderingDevice",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil/MSAA/multiview/subpasses, push constants, specialization, geometry/tessellation and further device roles retain precise prerequisites."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
     },
     {
       "godot": "RenderingDevice::enum:ShaderStage",
@@ -2212,7 +2212,7 @@
       "godot": "class:RDAttachmentFormat",
       "electron2d": "T:Electron2D.RDAttachmentFormat",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
     },
     {
       "godot": "RDAttachmentFormat::property:format",
@@ -2223,8 +2223,8 @@
     {
       "godot": "RDAttachmentFormat::property:samples",
       "electron2d": "property:Electron2D.RDAttachmentFormat.Samples()",
-      "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Depth/stencil, MSAA resolve and multiview layouts remain attachment prerequisites."
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
     },
     {
       "godot": "RDAttachmentFormat::property:usage_flags",
@@ -2990,9 +2990,9 @@
     },
     {
       "godot": "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)",
-      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState)",
+      "electron2d": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState)",
       "state": "Partial",
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Required multisample/depth-stencil descriptions depend on their first attachment/state slice; omitted specialization and extra dynamic-state arguments need executable module rewriting and native state adapters."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Optional multisample state follows depth state in the typed managed signature. Nonzero render passes require subpasses and specialization requires shader constant translation; native per-face/depth-bounds states remain separate gaps."
     },
     {
       "godot": "RenderingDevice::method:render_pipeline_is_valid(RID:)",
@@ -3372,6 +3372,102 @@
       "electron2d": "property:Electron2D.RDSamplerState.EnableCompare()",
       "state": "Implemented",
       "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified."
+    },
+    {
+      "godot": "class:RDFramebufferPass",
+      "electron2d": "T:Electron2D.RDFramebufferPass",
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Input/preserve attachments and additional subpasses need native shader/lifetime adapters."
+    },
+    {
+      "godot": "class:RDPipelineMultisampleState",
+      "electron2d": "T:Electron2D.RDPipelineMultisampleState",
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Sample masks are reserved native fields; alpha-to-one and per-sample shading require executing native states."
+    },
+    {
+      "godot": "RDFramebufferPass::constant:ATTACHMENT_UNUSED",
+      "electron2d": "constant:Electron2D.RDFramebufferPass.AttachmentUnused()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_16",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples16()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Numeric vocabulary is retained; unavailable backend sample counts reject rather than downgrade."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_32",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples32()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Numeric vocabulary is retained; unavailable backend sample counts reject rather than downgrade."
+    },
+    {
+      "godot": "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_64",
+      "electron2d": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples64()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Numeric vocabulary is retained; unavailable backend sample counts reject rather than downgrade."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan<Electron2D.RID>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>,System.Int32)",
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Copied one-pass indices execute; multiple subpasses/view counts retain native input/preservation/multiview prerequisites."
+    },
+    {
+      "godot": "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)",
+      "electron2d": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan<Electron2D.RDAttachmentFormat>,System.ReadOnlySpan<Electron2D.RDFramebufferPass>)",
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Copied one-pass indices execute; multiple subpasses/view counts retain native input/preservation/multiview prerequisites."
+    },
+    {
+      "godot": "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)",
+      "electron2d": "method:Electron2D.RenderingDevice.TextureResolveMultisample(Electron2D.RID,Electron2D.RID)",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Typed exceptions replace Error results; source CanCopyFrom and marked destination CanCopyTo are required. Native depth resolve is a distinct unavailable aspect adapter."
+    },
+    {
+      "godot": "RDFramebufferPass::property:color_attachments",
+      "electron2d": "property:Electron2D.RDFramebufferPass.ColorAttachments()",
+      "state": "Partial",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Unused holes in color output locations require a native sparse-target adapter; the current color list is dense."
+    },
+    {
+      "godot": "RDFramebufferPass::property:depth_attachment",
+      "electron2d": "property:Electron2D.RDFramebufferPass.DepthAttachment()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RDFramebufferPass::property:resolve_attachments",
+      "electron2d": "property:Electron2D.RDFramebufferPass.ResolveAttachments()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:enable_alpha_to_coverage",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.EnableAlphaToCoverage()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RDPipelineMultisampleState::property:sample_count",
+      "electron2d": "property:Electron2D.RDPipelineMultisampleState.SampleCount()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RDTextureFormat::property:is_resolve_buffer",
+      "electron2d": "property:Electron2D.RDTextureFormat.IsResolveBuffer()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "godot": "RDTextureFormat::property:samples",
+      "electron2d": "property:Electron2D.RDTextureFormat.Samples()",
+      "state": "Implemented",
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
     }
   ],
   "extras": [
@@ -3639,6 +3735,26 @@
       "electron2d": "method:Electron2D.RDPipelineDepthStencilState.GetPropertyDescriptors()",
       "state": "Implemented",
       "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptors for copied executable depth/stencil configuration."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDFramebufferPass..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptor projection for copied executable native pass/multisample configuration."
+    },
+    {
+      "electron2d": "constructor:Electron2D.RDPipelineMultisampleState..ctor()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptor projection for copied executable native pass/multisample configuration."
+    },
+    {
+      "electron2d": "method:Electron2D.RDFramebufferPass.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptor projection for copied executable native pass/multisample configuration."
+    },
+    {
+      "electron2d": "method:Electron2D.RDPipelineMultisampleState.GetPropertyDescriptors()",
+      "state": "Implemented",
+      "reason": "ADRs 0004/0005/0028: typed construction and inherited descriptor projection for copied executable native pass/multisample configuration."
     }
   ],
   "statusGroups": [
@@ -3726,27 +3842,6 @@
     {
       "state": "Blocked",
       "godot": [
-        "RDTextureFormat::property:is_discardable"
-      ],
-      "reason": "ADR 0028: requires multisample/transient/resolve attachment lifetime integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDTextureFormat::property:is_resolve_buffer"
-      ],
-      "reason": "ADR 0028: requires multisample/transient/resolve attachment lifetime integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
-        "RDTextureFormat::property:samples"
-      ],
-      "reason": "ADR 0028: requires multisample/transient/resolve attachment lifetime integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
-    },
-    {
-      "state": "Blocked",
-      "godot": [
         "RDSamplerState::property:border_color"
       ],
       "reason": "ADR 0028: requires border/unnormalized-coordinate shader sampling integration. Include the configuration member with that prerequisite first executable slice; no inert stored switch is exposed."
@@ -3819,7 +3914,6 @@
       "state": "Blocked",
       "godot": [
         "RenderingDevice::method:texture_is_discardable(RID:)",
-        "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)",
         "RenderingDevice::method:texture_set_discardable(RID:,bool:)"
       ],
       "reason": "ADR 0028: attachment recording and multisample/transient/resolve lifetimes are missing; include these operations with that prerequisite slice."
@@ -4104,15 +4198,6 @@
       "reason": "Trigger: first geometry/tessellation stage adapter and executable pipeline interface slice (ADR 0028)."
     },
     {
-      "state": "Blocked",
-      "godot": [
-        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_16",
-        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_32",
-        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_64"
-      ],
-      "reason": "Trigger: first native MSAA allocation/resolve sample-count support slice (ADR 0028)."
-    },
-    {
       "state": "Excluded",
       "godot": [
         "RenderingDevice::method:barrier(int:RenderingDevice.BarrierMask,int:RenderingDevice.BarrierMask)",
@@ -4159,9 +4244,7 @@
     {
       "state": "Blocked",
       "godot": [
-        "RenderingDevice::method:draw_list_switch_to_next_pass()",
-        "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
-        "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)"
+        "RenderingDevice::method:draw_list_switch_to_next_pass()"
       ],
       "reason": "Trigger: first RDFramebufferPass attachment lifetime, input-attachment shader translation and ordered subpass integration slice (ADR 0028)."
     },
@@ -4186,13 +4269,6 @@
         "class:RDShaderSPIRV"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Geometry/tessellation stages require a backend stage adapter; raytracing stages are excluded by ADR 0001."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "class:RenderingDevice"
-      ],
-      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Partial",
@@ -4321,7 +4397,6 @@
         "RenderingDevice::method:draw_list_enable_scissor(int:,Rect2:)",
         "RenderingDevice::method:draw_list_end()",
         "RenderingDevice::method:draw_list_set_blend_constants(int:,Color:)",
-        "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)",
         "RenderingDevice::method:framebuffer_get_format(RID:)",
         "RenderingDevice::method:framebuffer_is_valid(RID:)",
         "RenderingDevice::method:index_array_create(RID:,int:,int:)",
@@ -4340,14 +4415,6 @@
         "RenderingDevice::method:shader_create_from_spirv(RDShaderSPIRV:,String:)"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Compute and paired vertex/fragment modules execute. Geometry/tessellation stages require a backend stage adapter; raytracing stages remain excluded by ADR 0001."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "RDAttachmentFormat::property:samples",
-        "class:RDAttachmentFormat"
-      ],
-      "reason": "ADR 0028: executable single-sample depth/stencil targets, copied depth/two-sided stencil state, depth bias and comparison sampling. Native GLSL/HLSL pixels, borrowed lifetime, feedback, depth-only/array/mip roles and prepared zero owner-thread managed bytes are checked on Linux/Vulkan; foreign backends and native allocations remain unverified. Remaining native view/transfer/MSAA/subpass, depth-bounds and per-face-mask/reference adapters are accounted for separately."
     },
     {
       "state": "Partial",
@@ -4371,20 +4438,6 @@
         "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_8"
       ],
       "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Native MSAA allocation/resolve is not yet integrated."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)"
-      ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multiview requires layered attachment views and native view-index rendering; view_count is not an inert argument."
-    },
-    {
-      "state": "Partial",
-      "godot": [
-        "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)"
-      ],
-      "reason": "ADR 0028: executable single-sample color graphics on the device timeline, paired GLSL/HLSL stages, copied vertex/attachment/raster/blend descriptions, borrowed vertex/index arrays, shared stage descriptors, direct/indexed/instanced/procedural and GPU-produced indirect commands, scissor/blending, lifetime guards and direct retained canvas texture consumption. Linux/Vulkan pixels, resource storage, queued transfers and prepared zero owner-thread managed allocations are checked; foreign platforms and native allocations remain unverified. Multisample/depth/stencil/multiview layouts require allocation/resolve and native view-index attachment integration."
     },
     {
       "state": "Partial",
@@ -4508,9 +4561,141 @@
     {
       "state": "Partial",
       "godot": [
+        "class:RDFramebufferPass"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Input/preserve attachments and additional subpasses need native shader/lifetime adapters."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDPipelineMultisampleState"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Sample masks are reserved native fields; alpha-to-one and per-sample shading require executing native states."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RDAttachmentFormat::property:samples",
+        "RDFramebufferPass::constant:ATTACHMENT_UNUSED",
+        "RDFramebufferPass::property:depth_attachment",
+        "RDFramebufferPass::property:resolve_attachments",
+        "RDPipelineMultisampleState::property:enable_alpha_to_coverage",
+        "RDPipelineMultisampleState::property:sample_count",
+        "RDTextureFormat::property:is_resolve_buffer",
+        "RDTextureFormat::property:samples"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_16",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_32",
+        "RenderingDevice::enum_value:TextureSamples.TEXTURE_SAMPLES_64"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Numeric vocabulary is retained; unavailable backend sample counts reject rather than downgrade."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:framebuffer_create_multipass(RID[]:,RDFramebufferPass[]:,int:,int:)",
+        "RenderingDevice::method:framebuffer_format_create_multipass(RDAttachmentFormat[]:,RDFramebufferPass[]:,int:)"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Copied one-pass indices execute; multiple subpasses/view counts retain native input/preservation/multiview prerequisites."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::method:texture_resolve_multisample(RID:,RID:)"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Typed exceptions replace Error results; source CanCopyFrom and marked destination CanCopyTo are required. Native depth resolve is a distinct unavailable aspect adapter."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RDFramebufferPass::property:color_attachments"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Unused holes in color output locations require a native sparse-target adapter; the current color list is dense."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "RenderingDevice::method:framebuffer_create(RID[]:,int:,int:)",
+        "RenderingDevice::method:framebuffer_format_create(RDAttachmentFormat[]:,int:)"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Multiview remains a native view/array attachment adapter."
+    },
+    {
+      "state": "Implemented",
+      "godot": [
+        "RenderingDevice::method:framebuffer_format_get_texture_samples(int:,int:)"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. The current native pass is zero; other pass indices reject until subpass integration."
+    },
+    {
+      "state": "Partial",
+      "godot": [
         "RenderingDevice::method:render_pipeline_create(RID:,int:,int:,int:RenderingDevice.RenderPrimitive,RDPipelineRasterizationState:,RDPipelineMultisampleState:,RDPipelineDepthStencilState:,RDPipelineColorBlendState:,int:RenderingDevice.PipelineDynamicStateFlags,int:,RDPipelineSpecializationConstant[]:)"
       ],
-      "reason": "ADR 0028: native copied raster/depth/two-sided stencil/blend state, paired stages and typed layouts execute. Optional depth/stencil state follows the established managed blend/dynamic arguments; null disables tests/writes. Multisample state requires resolve/sample-count ownership, nonzero render passes require subpass integration and specialization requires shader constant translation. Both-visible-face unequal stencil masks/references and depth bounds retain exact native state adapters. Linux/Vulkan pixels and prepared zero managed bytes are checked; foreign backends/native allocations remain unverified."
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Optional multisample state follows depth state in the typed managed signature. Nonzero render passes require subpasses and specialization requires shader constant translation; native per-face/depth-bounds states remain separate gaps."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDFramebufferPass::property:input_attachments"
+      ],
+      "reason": "ADR 0028: Native subpass-input shader descriptor translation and ordered subpass lifetime are absent; enter the first executing subpass slice."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDFramebufferPass::property:preserve_attachments"
+      ],
+      "reason": "ADR 0028: Preservation across additional native subpasses requires their ordered attachment lifetime adapter; not a stored no-op list."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineMultisampleState::property:sample_masks"
+      ],
+      "reason": "ADR 0028: SDL_GPU SampleMask/EnableMask are reserved and must remain zero/false; requires an executing native mask state adapter."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineMultisampleState::property:enable_alpha_to_one"
+      ],
+      "reason": "ADR 0028: SDL_GPU has no alpha-to-one state; requires an executing native alpha-to-one adapter."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineMultisampleState::property:enable_sample_shading"
+      ],
+      "reason": "ADR 0028: SDL_GPU has no per-sample shading state; requires sample-rate shader/raster integration."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDPipelineMultisampleState::property:min_sample_shading"
+      ],
+      "reason": "ADR 0028: Requires the same executing sample-shading state and shader adapter as EnableSampleShading."
+    },
+    {
+      "state": "Blocked",
+      "godot": [
+        "RDTextureFormat::property:is_discardable"
+      ],
+      "reason": "ADR 0028: Native pass discard exists, but per-frame/resource last-use analysis is required to preserve contents needed by later passes before eliminating stores; no inert allocation hint."
+    },
+    {
+      "state": "Partial",
+      "godot": [
+        "class:RDAttachmentFormat",
+        "class:RDTextureFormat",
+        "class:RenderingDevice"
+      ],
+      "reason": "ADR 0028: exact queried MSAA render targets, copied color/depth/resolve slots, native alpha-to-coverage, automatic store-and-resolve and standalone full color resolves with preserved source samples. GLSL/HLSL native fractional edges, depth, reordered MRT resolve, retained canvas and prepared zero owner-thread managed bytes are verified on Linux/Vulkan; native allocations and foreign platforms remain unverified. Native views/transient last-use, subpasses/multiview, raw depth/sample transfer and shader/dynamic-state adapters remain independently accounted for."
     }
   ]
 }

@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-A caller-owned color or depth/stencil attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment or DepthStencilAttachment selects the corresponding role; one sample is required by the current executable pass. MSAA resolve and multiview remain precise coverage prerequisites.
+A caller-owned color or depth/stencil attachment format description. FramebufferFormatCreate copies its encoding, required usage and sample count. ColorAttachment or DepthStencilAttachment selects the corresponding role; all raster targets require the same exact sample count, while resolve destinations require one sample. Explicit pass indices select render/depth/resolve roles. Multiview retains its native prerequisite.
 
 ## Example
 
@@ -26,7 +26,7 @@ var layout = device.FramebufferFormatCreate([attachment]);
 | `public RDAttachmentFormat()` | Creates the default configuration. |
 | `protected override System.Collections.Generic.IEnumerable<Electron2D.PropertyDescriptor> GetPropertyDescriptors()` | Projects the caller-owned configuration through inherited typed property metadata. |
 | `public Electron2D.RenderingDevice.DataFormat Format { get; set; }` | Gets or sets the color or depth/stencil attachment pixel format. |
-| `public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }` | Gets or sets the attachment sample count; the current pass requires one sample. |
+| [`public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }`](#member-99fbfc04c36f) | Gets or sets the exact attachment sample count. |
 | `public Electron2D.RenderingDevice.TextureUsageBits UsageFlags { get; set; }` | Gets or sets the required attachment allocation and transfer roles. |
 
 ## Member descriptions
@@ -72,11 +72,9 @@ Initially RenderingDevice.DataFormat.R8G8B8A8UNORM; validated and copied by its 
 public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }
 ```
 
-Gets or sets the attachment sample count; the current pass requires one sample.
+Gets or sets the exact attachment sample count.
 
 Initially RenderingDevice.TextureSamples.Samples1; validated and copied by its device consumer.
-
-
 <a id="member-88c981d37175"></a>
 ### UsageFlags
 

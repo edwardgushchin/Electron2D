@@ -30,6 +30,7 @@ public sealed unsafe partial class RenderingDevice
         uint sourceMipmap, uint destinationMipmap, uint sourceLayer, uint destinationLayer)
     {
         IdleList(); var source = Get(fromTexture, Kind.Texture); var destination = Get(toTexture, Kind.Texture);
+        if (source.Texture!.Samples != TextureSamples.Samples1 || destination.Texture!.Samples != TextureSamples.Samples1) throw new NotSupportedException("Use multisample resolve rather than raw sample copies.");
         TextureRole(source, TextureUsageBits.CanCopyFrom); TextureRole(destination, TextureUsageBits.CanCopyTo);
         TextureSubresource(source, sourceMipmap, sourceLayer); TextureSubresource(destination, destinationMipmap, destinationLayer);
         if (!size.IsFinite() || size.X < 1 || size.Y < 1 || size.Z != 1) throw new ArgumentOutOfRangeException(nameof(size));
@@ -133,6 +134,12 @@ public sealed unsafe partial class RenderingDevice
         // shortcut: integer clear-lane conversion must be verified before enabling another native driver.
         if (PixelType(info.Format) != 0 && TextureDriver != "vulkan") throw new NotSupportedException("Integer clear lanes require verification of this backend's native conversion.");
         ValidateSignedClear(info.Format, color);
+        if (info.Samples != TextureSamples.Samples1)
+        {
+            if (DepthFormat(info.Format)) throw new NotSupportedException("Clear depth/stencil through a draw pass.");
+            if (PixelType(info.Format) == 0) FiniteColor(color);
+            ClearMultisample(entry, color); return;
+        }
         var scratch = PrepareTextureScratch(entry, true); var command = Commands();
         for (var mip = baseMipmap; mip < baseMipmap + mipmapCount; mip++)
         {

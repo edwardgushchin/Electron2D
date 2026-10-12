@@ -7,7 +7,7 @@ namespace Electron2D;
 /// <remarks>Create a local device through RenderingServer.CreateLocalRenderingDevice or borrow the retained renderer device
 /// through RenderingServer.GetRenderingDevice. Local Submit starts execution and Sync waits; the renderer device
 /// flushes before canvas submission and completes queued reads before FramePostDraw. Buffer reads synchronize pending work. Resource identities never cross devices.
-/// The device executes compute and single-sample color graphics pipelines, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.</remarks>
+/// The device executes compute and color/depth graphics pipelines with exact multisample state and color resolve, with sampled images, storage resources, borrowed vertex/index arrays and framebuffer attachments.</remarks>
 public sealed unsafe partial class RenderingDevice : ElectronObject
 {
     /// <summary>Identifies executable shader stages.</summary>

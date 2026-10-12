@@ -33,6 +33,14 @@ public sealed class RDTextureFormat : ElectronObject
     /// <summary>Gets or sets required allocation, sampling and transfer roles.</summary>
     /// <value>Initially 0; copied when the device creates its resource.</value>
     public RenderingDevice.TextureUsageBits UsageBits { get { ThrowIfDisposed(); return _usageBits; } set { ThrowIfDisposed(); _usageBits = RDTextureConfiguration.Usage(value); } }
+    private RenderingDevice.TextureSamples _samples = RenderingDevice.TextureSamples.Samples1;
+    /// <summary>Selects the exact allocation sample count.</summary>
+    /// <value>Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.</value>
+    public RenderingDevice.TextureSamples Samples { get { ThrowIfDisposed(); return _samples; } set { ThrowIfDisposed(); _samples = value; } }
+    private bool _isResolveBuffer = false;
+    /// <summary>Marks an ordinary single-sample color image as a resolve destination.</summary>
+    /// <value>Initially false; copied and validated at allocation.</value>
+    public bool IsResolveBuffer { get { ThrowIfDisposed(); return _isResolveBuffer; } set { ThrowIfDisposed(); _isResolveBuffer = value; } }
     private readonly HashSet<RenderingDevice.DataFormat> _shareable = [];
     /// <summary>Adds an explicitly allowed alternate view format.</summary>
     /// <param name="format">A concrete format identifier.</param>
@@ -44,6 +52,9 @@ public sealed class RDTextureFormat : ElectronObject
     /// <inheritdoc />
     protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(
         [
+            new PropertyDescriptor<RDTextureFormat, RenderingDevice.TextureSamples>(nameof(Samples), p => p.Samples, (p, v) => p.Samples = v, _ => RenderingDevice.TextureSamples.Samples1),
+            new PropertyDescriptor<RDTextureFormat, bool>(nameof(IsResolveBuffer), p => p.IsResolveBuffer, (p, v) => p.IsResolveBuffer = v, _ => false),
+
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(ArrayLayers), p => p.ArrayLayers, (p, v) => p.ArrayLayers = v, _ => 1),
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(Width), p => p.Width, (p, v) => p.Width = v, _ => 1),
             new PropertyDescriptor<RDTextureFormat, uint>(nameof(Height), p => p.Height, (p, v) => p.Height = v, _ => 1),

@@ -17,6 +17,7 @@ public sealed unsafe partial class RenderingDevice
         var texture = Get(ids[binding.Type == UniformType.SamplerWithTexture ? 1 : 0], Kind.Texture).Texture!;
         if (PixelType(texture.Format) != binding.PixelType) throw new ArgumentException("The shader pixel scalar type does not match the texture format.", nameof(ids));
         if ((texture.Type == TextureType.TextureArray) != binding.Array) throw new ArgumentException("The texture array role does not match the shader.", nameof(ids));
+        if (texture.Samples != TextureSamples.Samples1) throw new NotSupportedException("Multisample shader images require their sample-load descriptor adapter.");
         if (binding.Type == UniformType.SamplerWithTexture)
         {
             var sampler = Get(ids[0], Kind.Sampler); if ((texture.Usage & TextureUsageBits.Sampling) == 0) throw new ArgumentException("Texture lacks the sampling role.", nameof(ids));
@@ -96,7 +97,7 @@ public sealed unsafe partial class RenderingDevice
         41 => DataFormat.R64SINT,
         _ => DataFormat.Max
     };
-    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable);
+    internal sealed record TextureInfo(DataFormat Format, TextureType Type, uint Width, uint Height, uint Layers, uint Mips, TextureUsageBits Usage, uint[] Offsets, uint[] PackedOffsets, uint[] Sizes, uint Total, uint TransferSize, DataFormat[] Shareable, TextureSamples Samples = TextureSamples.Samples1, bool Resolve = false);
     private static SDL.GPUTextureUsageFlags NativeUsage(TextureUsageBits usage)
     {
         var native = (SDL.GPUTextureUsageFlags)0;
@@ -126,7 +127,7 @@ public sealed unsafe partial class RenderingDevice
     /// <summary>Creates a device-owned two-dimensional image or image array with copied mip data.</summary>
     /// <param name="format">Allocation description copied before returning.</param>
     /// <param name="view">Initial view description; native format reinterpretation and swizzles require a view adapter.</param>
-    /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero.</param>
+    /// <param name="data">One tightly packed color mip chain per layer, or empty for zero initialization. Depth/stencil images require empty data and initialize every layer/mip to depth zero and stencil zero. Multisample targets require empty data and initialize every sample through native clears.</param>
     /// <returns>A texture RID belonging to this device.</returns>
     /// <exception cref="NotSupportedException">The requested format, view or allocation role is not supported.</exception>
     public RID TextureCreate(RDTextureFormat format, RDTextureView view, ReadOnlySpan<byte[]> data = default)
@@ -141,7 +142,24 @@ public sealed unsafe partial class RenderingDevice
             view.SwizzleR is not (TextureSwizzle.R or TextureSwizzle.Identity) || view.SwizzleG is not (TextureSwizzle.G or TextureSwizzle.Identity) ||
             view.SwizzleB is not (TextureSwizzle.B or TextureSwizzle.Identity) || view.SwizzleA is not (TextureSwizzle.A or TextureSwizzle.Identity) ||
             shareable.Any(f => f != pixelFormat)) throw new NotSupportedException("Alternate native formats and channel views require texture-view integration.");
-        if (!TextureIsFormatSupportedForUsage(pixelFormat, usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
+        if (!TextureIsFormatSupportedForUsage(pixelFormat, format.Samples != TextureSamples.Samples1 ? usage & ~(TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo) : usage)) throw new NotSupportedException("The device does not support this texture format/usage.");
+        var samples = format.Samples; var resolve = format.IsResolveBuffer;
+        var nativeSamples = ExactSamples(pixelFormat, samples);
+        if (resolve && (samples != TextureSamples.Samples1 || DepthFormat(pixelFormat) || kind != TextureType.Texture || layers != 1 || mips != 1 || (usage & TextureUsageBits.ColorAttachment) == 0)) throw new ArgumentException("Resolve destinations require ordinary single-sample color targets.", nameof(format));
+        if (samples != TextureSamples.Samples1)
+        {
+            var targetRole = DepthFormat(pixelFormat) ? TextureUsageBits.DepthStencilAttachment : TextureUsageBits.ColorAttachment;
+            var allowedUsage = targetRole | (DepthFormat(pixelFormat) ? 0 : TextureUsageBits.CanCopyFrom | TextureUsageBits.CanCopyTo);
+            if (kind != TextureType.Texture || layers != 1 || mips != 1 || !data.IsEmpty || (usage & targetRole) == 0 || (usage & ~allowedUsage) != 0) throw new NotSupportedException("Multisample images require empty ordinary single-mip render targets; sampling, storage and raw transfers require separate adapters.");
+            var multi = new Entry { Kind = Kind.Texture, Texture = new(pixelFormat, kind, width, height, layers, mips, usage, [], [], [], 0, 0, shareable, samples) };
+            try
+            {
+                multi.Handle = new(SDL.CreateGPUTexture(Device, new() { Type = SDL.GPUTextureType.TextureType2D, Format = NativeFormat(pixelFormat), Width = width, Height = height, LayerCountOrDepth = 1, NumLevels = 1, SampleCount = nativeSamples, Usage = NativeUsage(usage) }), h => SDL.ReleaseGPUTexture(Device, h), _context.Handle);
+                if (DepthFormat(pixelFormat)) InitializeDepth(multi); else ClearMultisample(multi, default);
+                return Add(multi);
+            }
+            catch { multi.Handle?.Dispose(); throw; }
+        }
         if (DepthFormat(pixelFormat))
         {
             if (!data.IsEmpty) throw new NotSupportedException("Raw depth/stencil uploads require a native aspect-transfer adapter.");
@@ -165,7 +183,7 @@ public sealed unsafe partial class RenderingDevice
         }
         if (total == 0 || total > int.MaxValue || transferSize > int.MaxValue) throw new ArgumentOutOfRangeException(nameof(format));
         foreach (var bytes in data) if (bytes is null || bytes.Length != total) throw new ArgumentException("Each mip chain must have the exact byte size.", nameof(data));
-        var info = new TextureInfo(pixelFormat, kind, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable);
+        var info = new TextureInfo(pixelFormat, kind, width, height, layers, mips, usage, offsets, packed, sizes, total, transferSize, shareable, samples, resolve);
         var entry = new Entry { Kind = Kind.Texture, Texture = info, Size = total };
         try
         {
@@ -197,6 +215,7 @@ public sealed unsafe partial class RenderingDevice
     {
         IdleList(); var entry = Get(texture, Kind.Texture); Layer(entry, layer);
         if ((entry.Texture!.Usage & TextureUsageBits.CanUpdate) == 0) throw new InvalidOperationException("The texture has no update role.");
+        if (entry.Texture!.Samples != TextureSamples.Samples1) throw new NotSupportedException("Raw multisample updates require an aspect/sample-transfer adapter.");
         if (data.Length != entry.Size) throw new ArgumentException("The layer byte size does not match.", nameof(data));
         UploadTexture(entry, layer, data);
     }
@@ -250,6 +269,7 @@ public sealed unsafe partial class RenderingDevice
     private Entry ReadableTexture(RID texture, uint layer)
     {
         var entry = Get(texture, Kind.Texture); Layer(entry, layer);
+        if (entry.Texture!.Samples != TextureSamples.Samples1) throw new NotSupportedException("Resolve multisample images before CPU readback.");
         if ((entry.Texture!.Usage & (TextureUsageBits.CPURead | TextureUsageBits.CanCopyFrom)) == 0) throw new InvalidOperationException("The texture has no readback role.");
         return entry;
     }
@@ -263,7 +283,7 @@ public sealed unsafe partial class RenderingDevice
     public RDTextureFormat TextureGetFormat(RID texture)
     {
         var info = Get(texture, Kind.Texture).Texture!;
-        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, Mipmaps = info.Mips, TextureType = info.Type, Format = info.Format, UsageBits = info.Usage };
+        var result = new RDTextureFormat { Width = info.Width, Height = info.Height, ArrayLayers = info.Layers, Mipmaps = info.Mips, TextureType = info.Type, Format = info.Format, UsageBits = info.Usage, Samples = info.Samples, IsResolveBuffer = info.Resolve };
         foreach (var format in info.Shareable) result.AddShareableFormat(format);
         return result;
     }

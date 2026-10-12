@@ -12,7 +12,7 @@ public sealed unsafe partial class RenderingDevice
         _ => throw new ArgumentOutOfRangeException(nameof(value))
     };
     private static SDL.GPUBlendOp Blend(BlendOperation value) => Enum.IsDefined(value) && value != BlendOperation.Max ? (SDL.GPUBlendOp)((int)value + 1) : throw new ArgumentOutOfRangeException(nameof(value));
-    /// <summary>Creates an executable single-sample color and depth/stencil graphics pipeline.</summary>
+    /// <summary>Creates an executable color and depth/stencil graphics pipeline with copied multisample state.</summary>
     /// <param name="shader">A live paired vertex/fragment shader.</param>
     /// <param name="framebufferFormat">A color and optional depth/stencil layout on this device.</param>
     /// <param name="vertexFormat">A copied vertex layout, or -1 for procedural vertices.</param>
@@ -21,16 +21,19 @@ public sealed unsafe partial class RenderingDevice
     /// <param name="colorBlendState">Copied blending configuration, with one entry per target.</param>
     /// <param name="dynamicStateFlags">Allows dynamic blend constants; other dynamic states require their native adapters.</param>
     /// <param name="depthStencilState">Copied depth/stencil configuration; null disables both tests and depth writes.</param>
+    /// <param name="multisampleState">Copied sample count and alpha-to-coverage state; null selects one sample.</param>
     /// <returns>A pipeline borrowing the shader identity.</returns>
     /// <exception cref="ArgumentException">Shader interfaces, layouts or configurations disagree.</exception>
     /// <remarks>Depth-bounds tests, sample shading, subpasses and pipeline specialization require additional attachment and shader interfaces.</remarks>
     public RID RenderPipelineCreate(RID shader, int framebufferFormat, int vertexFormat, RenderPrimitive primitive,
-        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null)
+        RDPipelineRasterizationState rasterizationState, RDPipelineColorBlendState colorBlendState, PipelineDynamicStateFlags dynamicStateFlags = 0, RDPipelineDepthStencilState? depthStencilState = null, RDPipelineMultisampleState? multisampleState = null)
     {
         IdleList(); ArgumentNullException.ThrowIfNull(rasterizationState); ArgumentNullException.ThrowIfNull(colorBlendState);
         var program = Get(shader, Kind.Shader); if (program.Stage != ShaderStage.Vertex) throw new ArgumentException("A paired graphics shader is required.", nameof(shader));
         if ((dynamicStateFlags & ~PipelineDynamicStateFlags.BlendConstants) != 0) throw new ArgumentOutOfRangeException(nameof(dynamicStateFlags));
         var target = FramebufferFormat(framebufferFormat);
+        var samples = multisampleState?.SampleCount ?? TextureSamples.Samples1;
+        if (samples != target.Samples) throw new ArgumentException("Pipeline sample count must match the framebuffer raster targets.", nameof(multisampleState));
         using var defaultDepth = depthStencilState is null ? new RDPipelineDepthStencilState() : null;
         var depthState = DepthState(depthStencilState ?? defaultDepth!, rasterizationState, target, out var stencilReference);
         var vertex = vertexFormat == -1 ? new VertexLayout([], [], []) : VertexFormat(vertexFormat);
@@ -92,6 +95,7 @@ public sealed unsafe partial class RenderingDevice
                 },
                 VertexInputState = new() { VertexAttributes = (nint)attributes, NumVertexAttributes = (uint)vertex.Attributes.Length, VertexBufferDescriptions = (nint)buffers, NumVertexBuffers = (uint)vertex.Buffers.Length },
                 DepthStencilState = depthState,
+                MultisampleState = new() { SampleCount = (SDL.GPUSampleCount)samples, EnableAlphaToCoverage = multisampleState?.EnableAlphaToCoverage ?? false },
                 TargetInfo = new() { ColorTargetDescriptions = (nint)colors, NumColorTargets = (uint)attachments.Length, HasDepthStencilTarget = target.DepthIndex >= 0, DepthStencilFormat = target.DepthIndex >= 0 ? NativeFormat(target.Formats[target.DepthIndex]) : SDL.GPUTextureFormat.Invalid }
             };
             var handle = new RenderHandle(SDL.CreateGPUGraphicsPipeline(Device, in info), h => SDL.ReleaseGPUGraphicsPipeline(Device, h), _context.Handle);

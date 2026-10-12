@@ -10,7 +10,7 @@ public sealed class RDAttachmentFormat : ElectronObject
     /// <value>Initially RenderingDevice.DataFormat.R8G8B8A8UNORM; validated and copied by its device consumer.</value>
     public RenderingDevice.DataFormat Format { get { ThrowIfDisposed(); return _format; } set { ThrowIfDisposed(); _format = value; } }
     private RenderingDevice.TextureSamples _samples = RenderingDevice.TextureSamples.Samples1;
-    /// <summary>Gets or sets the attachment sample count; the current pass requires one sample.</summary>
+    /// <summary>Gets or sets the exact attachment sample count.</summary>
     /// <value>Initially RenderingDevice.TextureSamples.Samples1; validated and copied by its device consumer.</value>
     public RenderingDevice.TextureSamples Samples { get { ThrowIfDisposed(); return _samples; } set { ThrowIfDisposed(); _samples = value; } }
     private RenderingDevice.TextureUsageBits _usageFlags = 0;

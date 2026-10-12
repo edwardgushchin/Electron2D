@@ -8203,6 +8203,21 @@
     "value": null
   },
   {
+    "id": "T:Electron2D.RDFramebufferPass",
+    "kind": "type",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "RDFramebufferPass",
+    "signature": "public sealed class Electron2D.RDFramebufferPass",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "T:Electron2D.RDPipelineColorBlendState",
     "kind": "type",
     "declaringType": "Electron2D.RDPipelineColorBlendState",
@@ -8238,6 +8253,21 @@
     "declaringType": "Electron2D.RDPipelineDepthStencilState",
     "name": "RDPipelineDepthStencilState",
     "signature": "public sealed class Electron2D.RDPipelineDepthStencilState",
+    "visibility": "public",
+    "baseType": "Electron2D.ElectronObject",
+    "interfaces": [
+      "System.IDisposable"
+    ],
+    "parameters": null,
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "T:Electron2D.RDPipelineMultisampleState",
+    "kind": "type",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "RDPipelineMultisampleState",
+    "signature": "public sealed class Electron2D.RDPipelineMultisampleState",
     "visibility": "public",
     "baseType": "Electron2D.ElectronObject",
     "interfaces": [
@@ -13819,6 +13849,19 @@
     "value": "\u0022project.e2d\u0022"
   },
   {
+    "id": "constant:Electron2D.RDFramebufferPass.AttachmentUnused()",
+    "kind": "constant",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "AttachmentUnused",
+    "signature": "public const System.Int32 AttachmentUnused = -1",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": "-1"
+  },
+  {
     "id": "constant:Electron2D.RenderingServer.ArrayWeightsSize()",
     "kind": "constant",
     "declaringType": "Electron2D.RenderingServer",
@@ -19195,6 +19238,19 @@
     "value": null
   },
   {
+    "id": "constructor:Electron2D.RDFramebufferPass..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": ".ctor",
+    "signature": "public RDFramebufferPass()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
     "id": "constructor:Electron2D.RDPipelineColorBlendState..ctor()",
     "kind": "constructor",
     "declaringType": "Electron2D.RDPipelineColorBlendState",
@@ -19226,6 +19282,19 @@
     "declaringType": "Electron2D.RDPipelineDepthStencilState",
     "name": ".ctor",
     "signature": "public RDPipelineDepthStencilState()",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": null,
+    "value": null
+  },
+  {
+    "id": "constructor:Electron2D.RDPipelineMultisampleState..ctor()",
+    "kind": "constructor",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": ".ctor",
+    "signature": "public RDPipelineMultisampleState()",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -41057,6 +41126,19 @@
     "value": "0"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples16()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples16",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples16 = 4",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "4"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples2()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.TextureSamples",
@@ -41070,6 +41152,19 @@
     "value": "1"
   },
   {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples32()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples32",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples32 = 5",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "5"
+  },
+  {
     "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples4()",
     "kind": "enumValue",
     "declaringType": "Electron2D.RenderingDevice.TextureSamples",
@@ -41081,6 +41176,19 @@
     "parameters": [],
     "returnType": "Electron2D.RenderingDevice.TextureSamples",
     "value": "2"
+  },
+  {
+    "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples64()",
+    "kind": "enumValue",
+    "declaringType": "Electron2D.RenderingDevice.TextureSamples",
+    "name": "Samples64",
+    "signature": "public const Electron2D.RenderingDevice.TextureSamples Samples64 = 6",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": "6"
   },
   {
     "id": "enumValue:Electron2D.RenderingDevice.TextureSamples.Samples8()",
@@ -135143,6 +135251,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RDFramebufferPass.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RDPipelineColorBlendState.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RDPipelineColorBlendState",
@@ -135185,6 +135306,19 @@
     "id": "method:Electron2D.RDPipelineDepthStencilState.GetPropertyDescriptors()",
     "kind": "method",
     "declaringType": "Electron2D.RDPipelineDepthStencilState",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RDPipelineMultisampleState.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
     "name": "GetPropertyDescriptors",
     "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
     "visibility": "protected",
@@ -138481,6 +138615,35 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.RenderingDevice.FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E,System.Int32)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferCreateMultipass",
+    "signature": "public Electron2D.RID FramebufferCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RID\u003E textures, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes, System.Int32 validateWithFormat = -1)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "textures",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RID\u003E",
+        "default": null
+      },
+      {
+        "name": "passes",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E",
+        "default": null
+      },
+      {
+        "name": "validateWithFormat",
+        "type": "System.Int32",
+        "default": "-1"
+      }
+    ],
+    "returnType": "Electron2D.RID",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreate(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
@@ -138493,6 +138656,30 @@
       {
         "name": "attachments",
         "type": "System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E",
+        "default": null
+      }
+    ],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E,System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "FramebufferFormatCreateMultipass",
+    "signature": "public System.Int32 FramebufferFormatCreateMultipass(System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E attachments, System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E passes)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "attachments",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDAttachmentFormat\u003E",
+        "default": null
+      },
+      {
+        "name": "passes",
+        "type": "System.ReadOnlySpan\u003CElectron2D.RDFramebufferPass\u003E",
         "default": null
       }
     ],
@@ -138662,11 +138849,11 @@
     "value": null
   },
   {
-    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState)",
+    "id": "method:Electron2D.RenderingDevice.RenderPipelineCreate(Electron2D.RID,System.Int32,System.Int32,Electron2D.RenderingDevice.RenderPrimitive,Electron2D.RDPipelineRasterizationState,Electron2D.RDPipelineColorBlendState,Electron2D.RenderingDevice.PipelineDynamicStateFlags,Electron2D.RDPipelineDepthStencilState,Electron2D.RDPipelineMultisampleState)",
     "kind": "method",
     "declaringType": "Electron2D.RenderingDevice",
     "name": "RenderPipelineCreate",
-    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null)",
+    "signature": "public Electron2D.RID RenderPipelineCreate(Electron2D.RID shader, System.Int32 framebufferFormat, System.Int32 vertexFormat, Electron2D.RenderingDevice.RenderPrimitive primitive, Electron2D.RDPipelineRasterizationState rasterizationState, Electron2D.RDPipelineColorBlendState colorBlendState, Electron2D.RenderingDevice.PipelineDynamicStateFlags dynamicStateFlags = 0, Electron2D.RDPipelineDepthStencilState depthStencilState = null, Electron2D.RDPipelineMultisampleState multisampleState = null)",
     "visibility": "public",
     "baseType": null,
     "interfaces": null,
@@ -138709,6 +138896,11 @@
       {
         "name": "depthStencilState",
         "type": "Electron2D.RDPipelineDepthStencilState",
+        "default": "null"
+      },
+      {
+        "name": "multisampleState",
+        "type": "Electron2D.RDPipelineMultisampleState",
         "default": "null"
       }
     ],
@@ -139159,6 +139351,30 @@
       }
     ],
     "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.RenderingDevice.TextureResolveMultisample(Electron2D.RID,Electron2D.RID)",
+    "kind": "method",
+    "declaringType": "Electron2D.RenderingDevice",
+    "name": "TextureResolveMultisample",
+    "signature": "public System.Void TextureResolveMultisample(Electron2D.RID fromTexture, Electron2D.RID toTexture)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "fromTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      },
+      {
+        "name": "toTexture",
+        "type": "Electron2D.RID",
+        "default": null
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {
@@ -214264,6 +214480,45 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDFramebufferPass.ColorAttachments()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "ColorAttachments",
+    "signature": "public System.Int32[] ColorAttachments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDFramebufferPass.DepthAttachment()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "DepthAttachment",
+    "signature": "public System.Int32 DepthAttachment { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDFramebufferPass.ResolveAttachments()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDFramebufferPass",
+    "name": "ResolveAttachments",
+    "signature": "public System.Int32[] ResolveAttachments { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Int32[]",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDPipelineColorBlendState.Attachments()",
     "kind": "property",
     "declaringType": "Electron2D.RDPipelineColorBlendState",
@@ -214667,6 +214922,32 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDPipelineMultisampleState.EnableAlphaToCoverage()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "EnableAlphaToCoverage",
+    "signature": "public System.Boolean EnableAlphaToCoverage { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDPipelineMultisampleState.SampleCount()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDPipelineMultisampleState",
+    "name": "SampleCount",
+    "signature": "public Electron2D.RenderingDevice.TextureSamples SampleCount { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDPipelineRasterizationState.CullMode()",
     "kind": "property",
     "declaringType": "Electron2D.RDPipelineRasterizationState",
@@ -215044,6 +215325,19 @@
     "value": null
   },
   {
+    "id": "property:Electron2D.RDTextureFormat.IsResolveBuffer()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDTextureFormat",
+    "name": "IsResolveBuffer",
+    "signature": "public System.Boolean IsResolveBuffer { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Boolean",
+    "value": null
+  },
+  {
     "id": "property:Electron2D.RDTextureFormat.Mipmaps()",
     "kind": "property",
     "declaringType": "Electron2D.RDTextureFormat",
@@ -215054,6 +215348,19 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.UInt32",
+    "value": null
+  },
+  {
+    "id": "property:Electron2D.RDTextureFormat.Samples()",
+    "kind": "property",
+    "declaringType": "Electron2D.RDTextureFormat",
+    "name": "Samples",
+    "signature": "public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "Electron2D.RenderingDevice.TextureSamples",
     "value": null
   },
   {

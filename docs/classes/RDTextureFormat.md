@@ -8,7 +8,7 @@ Last updated: 2026-10-12
 
 ## Description
 
-A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; Mipmaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth, multisample and transient/resolve lifetimes remain coverage dependencies.
+A caller-owned allocation description copied during TextureCreate. Width and Height are texels; ArrayLayers counts independently sampled 2D images; Mipmaps includes the base level. Values are validated on assignment and again as a complete allocation. One ordinary image has one layer. Data is one tightly packed encoded mip chain per layer, or omitted for zero encoded bytes. Native alignment remains internal. The format vocabulary is queried against the current device; unsupported allocations throw before returning an identity. Alternate shareable formats require a native view adapter and are rejected explicitly. ColorAttachment allocations now feed executable device color passes and retained canvas consumers. Depth/stencil and exact multisample render targets execute. Samples defaults to Samples1; IsResolveBuffer defaults to false and marks a single-sample color resolve destination. Multisample images require empty ordinary single-layer/single-mip target allocations; resolve before sampling or readback. Discardable lifetime hints retain their last-use prerequisite.
 
 ## Example
 
@@ -40,6 +40,8 @@ var texture = device.TextureCreate(format, view);
 | `public Electron2D.RenderingDevice.TextureType TextureType { get; set; }` | Gets or sets ordinary-image or independently sampled array storage. |
 | `public Electron2D.RenderingDevice.TextureUsageBits UsageBits { get; set; }` | Gets or sets required allocation, sampling and transfer roles. |
 | `public System.UInt32 Width { get; set; }` | Gets or sets the base mip width in texels. |
+| [`public System.Boolean IsResolveBuffer { get; set; }`](#member-17c8de36cbaa) | Marks an ordinary single-sample color image as a resolve destination. |
+| [`public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }`](#member-d37fe0333034) | Selects the exact allocation sample count. |
 
 ## Member descriptions
 
@@ -167,3 +169,26 @@ Configurations are independent caller-owned ElectronObject values; disposing a d
 Native GLSL/HLSL and image/filter/mip tests run through ELECTRON2D_TEST_DEVICE_TEXTURES on Linux/Vulkan. Other backends, native allocator measurements, implicit LOD-bias/anisotropy calibration and canvas/device sharing remain unverified. See [Local compute](../components/local-compute.md) and [ADR 0028](../decisions/rendering.md#adr-0028).
 
 Depth/stencil formats accept only DepthStencilAttachment and optional Sampling usage on this profile. Empty data initializes every depth layer/mip to zero through native passes. Raw aspect transfers and depth-bound state retain exact adapters in coverage. See [depth/stencil behavior](../components/local-compute.md#depthstencil-graphics-and-sampling).
+
+<a id="member-17c8de36cbaa"></a>
+### IsResolveBuffer
+
+```csharp
+public System.Boolean IsResolveBuffer { get; set; }
+```
+
+Marks an ordinary single-sample color image as a resolve destination.
+
+Initially false; copied and validated at allocation.
+
+
+<a id="member-d37fe0333034"></a>
+### Samples
+
+```csharp
+public Electron2D.RenderingDevice.TextureSamples Samples { get; set; }
+```
+
+Selects the exact allocation sample count.
+
+Initially RenderingDevice.TextureSamples.Samples1; copied and validated at allocation.
