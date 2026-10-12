@@ -770,6 +770,11 @@
       "electron2d": "method:Electron2D.PlaceholderMesh.RemapResourceReferences(System.Func<Electron2D.Resource, Electron2D.Resource>)",
       "state": "Implemented",
       "reason": "ADRs 0013/0014/0092: typed projection of MissingResource field recording/query, metadata discovery, exact copy/remap/disposal or surface-free Mesh callbacks and lifetime. No CLR string dispatch or unrelated engine capability."
+    },
+    {
+      "electron2d": "method:Electron2D.ResourceFileTypes.RegisterAnimationProperty`2(System.String,PropertyDescriptor<TOwner, TValue>,Func<TValue, TValue, System.Double, TValue>)",
+      "state": "Implemented",
+      "reason": "ADRs 0093/0013/0090: immutable compiled property/interpolator binding IDs reconstruct exact typed value and scalar B\u00e9zier tracks in resource files; no CLR member lookup or delegate serialization. Validation, aliases, endian/cache replacement, atomic write failure and fresh-process playback execute; registered clip pixels verified on Linux Wayland GPU/compatibility."
     }
   ]
 }

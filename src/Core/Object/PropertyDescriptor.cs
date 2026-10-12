@@ -391,6 +391,7 @@ internal sealed class StoredPropertyValue<TValue>(TValue value) : StoredProperty
         Dictionary<string, int> dictionary => (TValue)(object)new Dictionary<string, int>(dictionary, dictionary.Comparer),
         string[] strings => (TValue)(object)strings.Clone(),
         float[] numbers => (TValue)(object)numbers.Clone(),
+        double[] doubles => (TValue)(object)doubles.Clone(),
         int[] integers => (TValue)(object)integers.Clone(),
         Vector2[] points => (TValue)(object)points.Clone(),
         Color[] colors => (TValue)(object)colors.Clone(),

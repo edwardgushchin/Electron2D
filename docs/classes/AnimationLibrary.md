@@ -1,6 +1,6 @@
 # AnimationLibrary
 
-Last updated: 2026-10-04
+Last updated: 2026-10-13
 
 **Inherits:** [Resource](Resource.md)
 
@@ -40,3 +40,7 @@ The source XML describes every own declaration. Public/protected declaration acc
 ## Verification and limits
 
 [SceneAnimationTests](../../tests/Electron2D.Tests/SceneAnimationTests.cs) exercises the complete current property-track playback profile and Linux Wayland GPU/compatibility readback hosts. All own library rows are implemented. Wider clip tracks, mixing/capture, packed/disk persistence, inherited Resource formats and other-platform acceptance retain their separate family states.
+
+File-backed property/Bézier clips and named libraries use the [typed clip persistence contract](../components/scene-animation.md#typed-clip-persistence). Register the exact compiled property binding in each process; unsupported track families reject save.
+
+`GetPropertyDescriptors` extends inherited resource metadata with stored names and typed clip references for the registered file factory.

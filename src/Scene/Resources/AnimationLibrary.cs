@@ -4,7 +4,7 @@ namespace Electron2D;
 /// <remarks>Names are ordinal and exclude slash, colon, comma and opening bracket. Replacement emits removed
 /// then added. Observers run synchronously after committed mutation. Disposal detaches subscriptions without
 /// disposing animations. Access follows the scene owner thread; resource copies preserve aliases.</remarks>
-public sealed class AnimationLibrary : Resource
+public sealed partial class AnimationLibrary : Resource
 {
     private readonly Dictionary<string, (Animation Animation, Action<Resource> Changed)> _animations = new(StringComparer.Ordinal);
     /// <summary>Occurs after a name is added.</summary>

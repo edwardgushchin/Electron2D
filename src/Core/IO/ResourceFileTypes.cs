@@ -82,6 +82,8 @@ public static partial class ResourceFileTypes
         RegisterResource("FontFile", CreateFontFileResource);
         RegisterResource("SystemFont", CreateSystemFontResource);
         RegisterResource("Curve", CreateCurveResource);
+        RegisterResource("Animation", CreateAnimationResource);
+        RegisterResource("AnimationLibrary", CreateAnimationLibraryResource);
         RegisterResource("Gradient", CreateGradientResource);
         RegisterResource("FastNoiseLite", CreateFastNoiseResource);
         RegisterResource("NoiseTexture", CreateNoiseTextureResource);
@@ -99,6 +101,8 @@ public static partial class ResourceFileTypes
         ResourceFileCodecs.Prepare();
         RegisterResourceArray<Font>();
     }
+    private static Animation CreateAnimationResource() => new();
+    private static AnimationLibrary CreateAnimationLibraryResource() => new();
     private static Shader CreateShaderFileResource() => new();
     private static ShaderMaterial CreateShaderMaterialFileResource() => new();
     private static Node CreateNode() => new();
@@ -332,5 +336,6 @@ internal sealed class ResourceFileRegistry
     internal readonly Dictionary<Type, ResourceFileType> ByType = new();
     internal readonly Dictionary<Type, ResourceValueCodec> Codecs = new();
     internal readonly Dictionary<Type, ResourceArrayCodec> ResourceArrays = new();
+    internal readonly Dictionary<string, AnimationFileBinding> AnimationBindings = new(StringComparer.Ordinal);
     internal readonly Dictionary<Type, TileCustomDataType> TileDataTypes = new();
 }

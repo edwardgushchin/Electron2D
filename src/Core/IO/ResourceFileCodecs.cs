@@ -32,6 +32,7 @@ internal static class ResourceFileCodecs
     _ => throw new InvalidDataException("Invalid string marker.")
 }
 );
+        Add<AnimationBezierKey>((s, v) => { s.PutDouble(v.Value); s.PutFloat(v.InHandle.X); s.PutFloat(v.InHandle.Y); s.PutFloat(v.OutHandle.X); s.PutFloat(v.OutHandle.Y); }, s => new(s.GetDouble(), new(s.GetFloat(), s.GetFloat()), new(s.GetFloat(), s.GetFloat())));
         Add<Vector2>((s, v) =>
         {
             s.PutFloat(v.X); s.PutFloat(v.Y);
@@ -123,6 +124,7 @@ internal static class ResourceFileCodecs
         Add<Dictionary<uint, float>>((s, v) => { s.Put32(v.Count); foreach (var pair in v.OrderBy(p => p.Key)) { s.PutU32(pair.Key); s.PutFloat(pair.Value); } }, s => { var count = s.Get32(); if (count < 0 || count > 65536) throw new InvalidDataException("Variation coordinate count exceeds file budget."); var result = new Dictionary<uint, float>(); for (var i = 0; i < count; i++) { var tag = s.GetU32(); var value = s.GetFloat(); if (!float.IsFinite(value) || !result.TryAdd(tag, value)) throw new InvalidDataException("Invalid variation coordinate."); } return result; });
         Arrays<string>();
         Arrays<float>();
+        Arrays<double>();
         Arrays<int>();
         Arrays<byte>();
         Arrays<Vector2>();

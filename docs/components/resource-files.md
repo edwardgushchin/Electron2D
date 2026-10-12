@@ -1,6 +1,6 @@
 # Typed resource and scene files
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 ## Executable mesh skin integration
 
@@ -122,3 +122,7 @@ MissingResource retains original factory identity and exact encoded scalar field
 PlaceholderMesh has a real logical mesh RID and stored Rect2 AABB. It provides no surfaces or fabricated faces/pixels. Mesh.CreatePlaceholder copies source bounds. Missing custom Mesh factories retain their original fields privately; a later process with the compiled factory restores those fields and drawable geometry. Bounds edits and warmed drawing do not allocate new geometry.
 
 MissingResourceTests covers strict/tolerant policy, recording/typed boundaries, scalar snapshots, null arrays, aliases/cycles, deep/shallow identity, subresource rerooting, endian/compression, Replace/corrupt rollback, absent external files, threaded policy capture and version-1 known graphs. Separate processes preserve an unknown graph/custom mesh and then restore their compiled factories. MissingResourceNativeTests checks known-green/absent-black/restored-blue pixels on GPU and compatibility renderers and measures 64 active plus 64 idle complete warmed frames. Evidence: `bin/missing-resource-validation/2026-10-12/`. Native allocation totals, foreign targets and human acceptance remain separate gates.
+
+## Animation clip integration
+
+Exact Animation/AnimationLibrary factories and compiled property binding registrations persist typed value/Bézier curves, resource keys, library aliases and colored markers. Double arrays now have a built-in portable codec and independent stored snapshots for key timing. See [typed clip persistence](scene-animation.md#typed-clip-persistence) for the registration, field budgets and remaining executable-schema triggers.

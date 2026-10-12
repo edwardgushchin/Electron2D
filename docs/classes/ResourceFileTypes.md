@@ -1,6 +1,6 @@
 # ResourceFileTypes
 
-Last updated: 2026-10-12
+Last updated: 2026-10-13
 
 **Namespace:** `Electron2D`. **Declaration:** `public static class Electron2D.ResourceFileTypes`. **Source:** [ResourceFileTypes.cs](../../src/Core/IO/ResourceFileTypes.cs).
 
@@ -148,3 +148,7 @@ Built-in Shader and ShaderMaterial factories now preserve compiled material grap
 ImmediateMesh saves completed surfaces and material graph aliases through AMS2 typed storage; AMS1 ArrayMesh data remains readable. Drafts are omitted. MeshUV2Tests verifies fresh-process factories and retained drawing for both mesh resources.
 
 Version-2 role-aware missing-resource storage, snapshot policy and reference relocation are described in [missing resource recovery](../components/resource-files.md#missing-resource-recovery). Known version-1 schemas remain readable; unknown legacy identities do not become safe placeholders.
+
+## Animation property bindings
+
+`RegisterAnimationProperty<TOwner,TValue>(id, property, interpolate)` registers the immutable compiled binding used by file-backed value and scalar Bézier tracks. Reuse the exact descriptor/interpolator pair while authoring and register the same schema in every loading process. IDs and binding pairs are unique; descriptors must be writable. File data never resolves a CLR member or restores a delegate. See [typed clip persistence](../components/scene-animation.md#typed-clip-persistence).

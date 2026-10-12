@@ -170,6 +170,8 @@ internal abstract class AnimationBezierTrackData : AnimationTypedTrack<Animation
 }
 internal sealed class AnimationBezierTrack<TOwner, TValue>(PropertyDescriptor<TOwner, TValue> descriptor) : AnimationBezierTrackData where TOwner : Node
 {
+    internal override PropertyDescriptor? FileProperty => descriptor;
+    internal override Delegate? FileInterpolator => TweenValue<TValue>.Interpolate;
     internal override string PropertyName => descriptor.Name;
     internal override AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null) { var copy = new AnimationBezierTrack<TOwner, TValue>(descriptor); CopyTo(copy, deep, duplicate); return copy; }
     internal override AnimationBinding? Bind(Node root) { var target = NodePath.Length == 0 ? root : root.GetNodeOrNull(NodePath); return target is TOwner owner ? new Binding(this, owner, descriptor) : null; }

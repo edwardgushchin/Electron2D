@@ -56835,6 +56835,19 @@
     "value": null
   },
   {
+    "id": "method:Electron2D.AnimationLibrary.GetPropertyDescriptors()",
+    "kind": "method",
+    "declaringType": "Electron2D.AnimationLibrary",
+    "name": "GetPropertyDescriptors",
+    "signature": "protected override System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E GetPropertyDescriptors()",
+    "visibility": "protected",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [],
+    "returnType": "System.Collections.Generic.IEnumerable\u003CElectron2D.PropertyDescriptor\u003E",
+    "value": null
+  },
+  {
     "id": "method:Electron2D.AnimationLibrary.HasAnimation(System.String)",
     "kind": "method",
     "declaringType": "Electron2D.AnimationLibrary",
@@ -148916,6 +148929,35 @@
     "interfaces": null,
     "parameters": [],
     "returnType": "System.String",
+    "value": null
+  },
+  {
+    "id": "method:Electron2D.ResourceFileTypes.RegisterAnimationProperty\u00602(System.String,PropertyDescriptor\u003CTOwner, TValue\u003E,Func\u003CTValue, TValue, System.Double, TValue\u003E)",
+    "kind": "method",
+    "declaringType": "Electron2D.ResourceFileTypes",
+    "name": "RegisterAnimationProperty",
+    "signature": "public static System.Void RegisterAnimationProperty\u003CTOwner, TValue\u003E(System.String id, PropertyDescriptor\u003CTOwner, TValue\u003E property, Func\u003CTValue, TValue, System.Double, TValue\u003E interpolate = null)",
+    "visibility": "public",
+    "baseType": null,
+    "interfaces": null,
+    "parameters": [
+      {
+        "name": "id",
+        "type": "System.String",
+        "default": null
+      },
+      {
+        "name": "property",
+        "type": "PropertyDescriptor\u003CTOwner, TValue\u003E",
+        "default": null
+      },
+      {
+        "name": "interpolate",
+        "type": "Func\u003CTValue, TValue, System.Double, TValue\u003E",
+        "default": "null"
+      }
+    ],
+    "returnType": "System.Void",
     "value": null
   },
   {

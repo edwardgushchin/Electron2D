@@ -547,6 +547,11 @@ if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_BLEND") == "1") { 
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION_HOST") == "1") { SceneAnimationTests.RunHost(); return; }
 
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_PERSISTENCE_CHILD") is { } animationFile) { AnimationPersistenceTests.RunChild(animationFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_PERSISTENCE_NATIVE") is { } animationNativeFile) { AnimationPersistenceTests.RunNative(animationNativeFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_PERSISTENCE_WRITE") is { } animationWriteFile) { AnimationPersistenceTests.WriteFixture(animationWriteFile); return; }
+if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_PERSISTENCE") == "1") { AnimationPersistenceTests.Run(); return; }
+
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_ANIMATION_OPTIMIZE") == "1") { AnimationOptimizeTests.Run(); return; }
 
 if (Environment.GetEnvironmentVariable("ELECTRON2D_TEST_SCENE_ANIMATION") == "1") { SceneAnimationTests.Run(); return; }
@@ -990,6 +995,7 @@ AudioPolyphonicTests.Run();
 AudioPlaylistTests.Run();
 SceneAnimationTests.Run();
 AnimationOptimizeTests.Run();
+AnimationPersistenceTests.Run();
 SceneAnimationBlendTests.Run();
 AnimationGraphTests.Run();
 AnimationBlendSpaceTests.Run();

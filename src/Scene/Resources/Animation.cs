@@ -6,7 +6,7 @@ namespace Electron2D;
 /// <remarks>Author on the scene owner thread. Tracks carry immutable typed descriptors and relative node paths;
 /// they never own target nodes. Keys are sorted, equal times replace, and copies have independent containers.
 /// Continuous tracks interpolate; discrete tracks hold the last key. Method keys invoke typed callbacks;
-/// scalar Bézier keys use time/value handle geometry; child-animation keys control relative players. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second.</remarks>
+/// scalar Bézier keys use time/value handle geometry; child-animation keys control relative players. Capture is evaluated by AnimationMixer. Edits raise Changed except imported metadata. Length defaults to one second. Value/Bézier resource files require registered typed property bindings; other track kinds reject save.</remarks>
 public sealed partial class Animation : Resource
 {
     /// <summary>Creates an empty one-second nonlooping typed timeline.</summary>
@@ -14,9 +14,9 @@ public sealed partial class Animation : Resource
     private static readonly PropertyDescriptor[] AnimationProperties =
     [
         new PropertyDescriptor<Animation, bool>(nameof(CaptureIncluded), n => n.CaptureIncluded),
-        new PropertyDescriptor<Animation, double>(nameof(Length), n => n.Length, (n, v) => n.Length = v, _ => 1),
-        new PropertyDescriptor<Animation, double>(nameof(Step), n => n.Step, (n, v) => n.Step = v, _ => .033333335),
-        new PropertyDescriptor<Animation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None),
+        new PropertyDescriptor<Animation, double>(nameof(Length), n => n.Length, (n, v) => n.Length = v, _ => 1, stored: true),
+        new PropertyDescriptor<Animation, double>(nameof(Step), n => n.Step, (n, v) => n.Step = v, _ => .033333335, stored: true),
+        new PropertyDescriptor<Animation, SpriteFrames.LoopMode>(nameof(LoopMode), n => n.LoopMode, (n, v) => n.LoopMode = v, _ => SpriteFrames.LoopMode.None, stored: true),
     ];
     /// <summary>Identifies an endpoint crossed by clip playback.</summary>
     public enum LoopedFlag
@@ -320,7 +320,7 @@ public sealed partial class Animation : Resource
     /// <inheritdoc />
     protected override void Dispose(bool disposing) { if (disposing) { _tracks.Clear(); _markers.Clear(); } base.Dispose(disposing); }
     /// <inheritdoc />
-    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties);
+    protected override IEnumerable<PropertyDescriptor> GetPropertyDescriptors() => base.GetPropertyDescriptors().Concat(AnimationProperties).Concat(GetFileProperties());
 }
 
 internal abstract class AnimationTrack
@@ -328,6 +328,10 @@ internal abstract class AnimationTrack
     internal string Path = "", NodePath = "";
     internal virtual Animation.TrackType Kind => Animation.TrackType.Value;
     internal abstract string PropertyName { get; }
+    internal virtual PropertyDescriptor? FileProperty => null;
+    internal virtual Delegate? FileInterpolator => null;
+    internal virtual IEnumerable<PropertyDescriptor> FileKeyProperties(int track) => [];
+    internal virtual void SetFileTimes(double[] times) => throw new NotSupportedException("This track kind has no portable key schema.");
     internal bool Enabled = true, Imported, LoopWrap = true;
     internal Animation.InterpolationType Interpolation = Animation.InterpolationType.Linear;
     internal Animation.UpdateMode Update;
@@ -365,6 +369,20 @@ internal abstract class AnimationTypedTrack<T> : AnimationTrack
     internal readonly Func<T, T, double, T>? Interpolate;
     protected AnimationTypedTrack(Func<T, T, double, T>? interpolate) { Interpolate = interpolate; if (interpolate is null) Interpolation = Animation.InterpolationType.Nearest; }
     internal virtual T Normalize(T value) => value;
+    internal override void SetFileTimes(double[] times)
+    {
+        Times.Clear(); Transitions.Clear(); Values.Clear();
+        foreach (var time in times) { Times.Add(time); Transitions.Add(1); Values.Add(default!); }
+    }
+    internal override IEnumerable<PropertyDescriptor> FileKeyProperties(int track)
+    {
+        for (var key = 0; key < Times.Count; key++)
+        {
+            var index = key;
+            yield return new PropertyDescriptor<Animation, T>($"Track[{track}].Key[{key}]", a => ((AnimationTypedTrack<T>)a.Get(track)).Values[index],
+                (a, v) => a.TrackSetKeyValue(track, index, v), stored: true);
+        }
+    }
     internal int Insert(double time, T value, double transition)
     { value = Normalize(value); var index = Times.BinarySearch(time); if (index >= 0) { Values[index] = value; Transitions[index] = transition; return index; } index = ~index; Times.Insert(index, time); Values.Insert(index, value); Transitions.Insert(index, transition); return index; }
     internal override void RemoveKey(int key) { Times.RemoveAt(key); Values.RemoveAt(key); Transitions.RemoveAt(key); }
@@ -412,6 +430,8 @@ internal abstract class AnimationTypedTrack<T> : AnimationTrack
 internal sealed class AnimationValueTrack<TOwner, T>(PropertyDescriptor<TOwner, T> property, Func<T, T, double, T>? interpolate) : AnimationTypedTrack<T>(interpolate) where TOwner : Node
 {
     internal override string PropertyName => property.Name;
+    internal override PropertyDescriptor? FileProperty => property;
+    internal override Delegate? FileInterpolator => Interpolate;
     internal override bool Optimize(double velocityError, double angularError, double precision) => AnimationKeyOptimizer.Optimize(this, velocityError, angularError, precision);
     internal override AnimationTrack Copy(bool deep = false, Func<Resource?, Resource?>? duplicate = null) { var copy = new AnimationValueTrack<TOwner, T>(property, Interpolate); CopyTo(copy, deep, duplicate); return copy; }
     internal override AnimationBinding? Bind(Node root) { var target = string.IsNullOrEmpty(NodePath) ? root : root.GetNodeOrNull(NodePath); return target is TOwner owner ? new Binding(this, owner, property) : null; }

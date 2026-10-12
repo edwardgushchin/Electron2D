@@ -39,7 +39,7 @@ Idle/physics modes use Node's internal callbacks and inherited process/pause eli
 
 Resource edits, tree changes, selected clips, root changes and ClearCaches rebuild binding containers on next evaluation. Warmed playback performs no path parsing or value boxing. Each evaluation snapshots bindings and stops after a reentrant control/resource change. Setter failures pause unchanged playback and propagate. Disposed or queued targets and removed/disposed clip sources are handled without transferring resource ownership to the player.
 
-Audio tracks now execute as described below; persistence remains separate applicable work. Three-dimensional transform/blend-shape tracks and their root-motion extraction are excluded by the 2D product decision. PackedScene refuses owned animation nodes because their state has no reconstruction factory; empty factories would silently lose libraries. No editor, disk loader/saver or file-authoring acceptance is claimed.
+Audio tracks now execute as described below; their cue persistence remains separate applicable work. Property/Bézier clip and library files execute through the typed persistence profile below. Three-dimensional transform/blend-shape tracks and their root-motion extraction are excluded by the 2D product decision. PackedScene refuses owned animation nodes because their state has no reconstruction factory; empty factories would silently lose libraries. The resource-file profile below verifies disk authoring/loading and playback; owned animation-node and graph/editor persistence remain separate.
 
 ## Verification
 
@@ -184,3 +184,31 @@ Linear, linear-angle and nearest interpolation participate; nearest only removes
 All tracks commit before one `Changed` notification; a no-op stays quiet. Observer failure does not restore removed keys. Reentrant no-op calls terminate, resource copies retain separate keys, and attached library/mixer caches rebuild through their existing change observers. Length, step, loop mode, path, markers and track metadata are retained. Author on the existing scene owner thread; this does not introduce cross-thread mutation synchronization.
 
 `AnimationOptimizeTests` checks dense scalar/Vector2 reduction, exact sampled poses, irregular times, angle wrap and half turns, velocity and direction thresholds, equal-speed right-angle corners, easing/discrete/custom/cubic preservation, invalid inputs, nonfinite values, copies, active playback, seeking, reverse, loop seams and committed/reentrant/failing notifications. `SceneAnimationTests.RunHost` reduces a 33-key position clip to two before the existing three-stage rendered check, through two complete Linux Wayland GPU and two compatibility lifecycles. These checks do not establish other platforms, native allocation or editor asset persistence.
+
+## Typed clip persistence
+
+`Animation` and `AnimationLibrary` have exact factories in the existing `.e2dres` graph format. Before saving and in every loading process, call `ResourceFileTypes.RegisterAnimationProperty` with a stable portable ID, the exact descriptor used for authoring, and the same custom value interpolator when present. This is allocating application setup. The registration restores one exact Node receiver/value family without member reflection or serialized delegates. Float/double bindings also restore scalar Bézier tracks. Descriptor/interpolator pairs and IDs cannot be registered twice; read-only descriptors reject. A changed application schema needs its own stable ID/version.
+
+Stored state includes timing/loop/step, ordered tracks, relative paths, enabled/imported/loop-wrap/interpolation/update metadata, strictly increasing finite key times, finite transitions, typed key values, Bézier handles, named marker times/colors and named library references. Resource keys and library aliases use the existing graph table and ownership/publication rules. The marker blob has version 1 with a fixed little-endian interior; the outer archive supports its existing byte order, compression, dependencies and cache modes. Files have at most 4096 tracks, 65536 marker records and the existing 65536-field graph budget, with reserved metadata capacity. Storage and loading remain cold allocating work.
+
+Value-property and Bézier tracks execute after loading. Method, audio and nested-player tracks currently reject save because their own portable executable/resource/control schemas are not supplied by this property binding. Owned AnimationPlayer/Mixer/Tree nodes and graph resources still require their own exact stored factories/definitions; this resource slice does not enable their PackedScene reconstruction. Unregistered descriptors or unsupported keys cannot silently lose fields or overwrite an existing asset. Runtime-only unregistered clips still author, copy and play normally.
+
+The public workflow is: register bindings, author a clip and library, `ResourceSaver.Save`, load `AnimationLibrary` in a fresh process, attach it through `AnimationPlayer.AddAnimationLibrary`, and advance or run the ordinary scene host. Native and fresh-process verification results are recorded with the slice checks; editor persistence and other platform acceptance remain separate.
+
+Partial public authoring example; the relative Sprite target is supplied by the consuming scene. Register this same binding once during setup in each process.
+
+```csharp
+var position = new PropertyDescriptor<Entity, Vector2>(
+    nameof(Entity.Position), n => n.Position, (n, v) => n.Position = v);
+ResourceFileTypes.RegisterAnimationProperty("game.entity.position.v1", position);
+using var clip = new Animation();
+int track = clip.AddTrack(position);
+clip.TrackSetPath(track, "Sprite:Position");
+clip.TrackInsertKey(track, 0, new Vector2(16, 16));
+clip.TrackInsertKey(track, 1, new Vector2(48, 16));
+using var library = new AnimationLibrary();
+library.AddAnimation("move", clip);
+ResourceSaver.Save(library, "user://motion.e2dres", SaverFlags.BundleResources);
+```
+
+The loading process registers the same binding, loads `ResourceLoader.Load<AnimationLibrary>("user://motion.e2dres")`, and passes the resulting library to an existing player's `AddAnimationLibrary`. The file owns decoded resource dependencies; the player borrows the library for its normal lifetime.
